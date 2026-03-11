@@ -1,1 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AionSystem Simulator Suite — Physics, Engineering, and Scientific Simulators. Citation-backed. Red-teamed. AION Verified.">
+<title>Simulators — AionSystem · Sheldon K. Salmon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #08090b;
+  --surface: #0e1117;
+  --panel:   #141920;
+  --border:  #1e2730;
+  --amber:   #f0a500;
+  --amber-d: #b07800;
+  --amber-l: #ffc947;
+  --gold:    #D4AF37;
+  --text:    #c4d4de;
+  --muted:   #4e5f6a;
+  --dim:     #2a3540;
+  --mono:    'Share Tech Mono', monospace;
+  --sans:    'Barlow Condensed', sans-serif;
+  --ease:    cubic-bezier(0.16, 1, 0.3, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; }
+body::before {
+  content:''; position:fixed; inset:0;
+  background-image: linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px);
+  background-size:48px 48px; pointer-events:none; z-index:0;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+  background: rgba(8,9,11,0.94); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family:var(--mono); font-size:13px; letter-spacing:3px; color:var(--amber); text-decoration:none; }
+.nav-logo span { color:var(--muted); }
+.nav-back { font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--muted); text-decoration:none; text-transform:uppercase; transition:color 0.2s; }
+.nav-back:hover { color:var(--amber); }
+
+/* WRAPPER */
+.wrapper { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:64px 40px 80px; }
+
+/* PAGE HEADER */
+.page-header { margin-bottom: 56px; }
+.page-eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:4px; color:var(--amber); text-transform:uppercase; margin-bottom:12px; }
+.page-title { font-family:var(--sans); font-size:clamp(36px,6vw,72px); font-weight:900; letter-spacing:2px; text-transform:uppercase; line-height:0.95; color:var(--text); }
+.page-title em { color:var(--amber); font-style:normal; }
+.page-sub { font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:2px; margin-top:16px; line-height:1.8; }
+
+/* FILTER ROW */
+.filter-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:40px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+.filter-btn { font-family:var(--mono); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; padding:6px 14px; background:var(--surface); border:1px solid var(--border); color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.filter-btn:hover { border-color:var(--amber-d); color:var(--text); }
+.filter-btn.active { background:var(--amber); color:#000; border-color:var(--amber); font-weight:700; }
+
+/* SIMULATOR GRID */
+.sim-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+@media (max-width:900px) { .sim-grid { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:560px) { .sim-grid { grid-template-columns:1fr; } }
+
+.sim-card { background:var(--surface); padding:32px; position:relative; overflow:hidden; display:flex; flex-direction:column; gap:0; transition:background 0.2s; }
+.sim-card.live { cursor:pointer; }
+.sim-card.live:hover { background:var(--panel); }
+.sim-card a { text-decoration:none; color:inherit; display:flex; flex-direction:column; height:100%; }
+
+.sim-card::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:var(--amber); transform:scaleX(0); transform-origin:left; transition:transform 0.3s var(--ease);
+}
+.sim-card.live:hover::after { transform:scaleX(1); }
+
+.sim-status { position:absolute; top:20px; right:20px; font-family:var(--mono); font-size:9px; letter-spacing:1.5px; text-transform:uppercase; padding:3px 8px; }
+.status-live { background:rgba(0,230,118,0.1); color:#00e676; border:1px solid #00e676; }
+.status-soon { background:rgba(78,95,106,0.15); color:var(--muted); border:1px solid var(--dim); }
+
+.sim-domain { font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber-d); text-transform:uppercase; margin-bottom:16px; margin-top:4px; }
+.sim-title { font-family:var(--sans); font-size:clamp(22px,3vw,30px); font-weight:900; letter-spacing:1px; text-transform:uppercase; color:var(--text); line-height:1.1; margin-bottom:12px; }
+.sim-desc { font-family:var(--sans); font-size:14px; font-weight:300; color:var(--muted); line-height:1.7; flex:1; margin-bottom:20px; }
+
+.sim-meta { font-family:var(--mono); font-size:10px; color:var(--dim); letter-spacing:1px; line-height:1.9; border-top:1px solid var(--border); padding-top:14px; margin-top:auto; }
+.sim-meta strong { color:var(--amber-d); }
+
+.sim-cta { display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; margin-top:14px; text-decoration:none; }
+.sim-cta:hover { text-decoration:underline; }
+
+/* COMING CARD */
+.sim-card.coming { opacity:0.45; }
+
+/* METHODOLOGY NOTE */
+.method-note { margin-top:40px; background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--amber); padding:24px 28px; display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap; }
+.method-note-icon { font-family:var(--mono); font-size:24px; color:var(--amber); flex-shrink:0; }
+.method-note-text h3 { font-family:var(--sans); font-size:18px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:8px; }
+.method-note-text p { font-family:var(--mono); font-size:11px; color:var(--muted); line-height:1.8; max-width:640px; }
+
+/* FOOTER STRIP */
+footer { border-top:1px solid var(--border); padding:32px 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; max-width:1200px; margin:0 auto; position:relative; z-index:1; }
+footer p { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; }
+footer a { color:var(--amber-d); text-decoration:none; }
+footer a:hover { color:var(--amber); }
+
+@media(max-width:640px){ .wrapper { padding:48px 20px 60px; } nav { padding:0 20px; } footer { padding:24px 20px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <a href="/" class="nav-back">← Back to Home</a>
+</nav>
+
+<div class="wrapper">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-eyebrow">// AionSystem · Simulation Suite</div>
+    <h1 class="page-title">Verified<br><em>Simulators</em></h1>
+    <div class="page-sub">
+      Physics · Engineering · Medical · Financial · Environmental<br>
+      Every simulator: citation-backed · red-teamed · peer-reviewed · AION Verified badge
+    </div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-row">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Physics</button>
+    <button class="filter-btn">Engineering</button>
+    <button class="filter-btn">Medical</button>
+    <button class="filter-btn">Financial</button>
+    <button class="filter-btn">Environmental</button>
+  </div>
+
+  <!-- GRID -->
+  <div class="sim-grid">
+
+    <!-- LIVE: ROLLER COASTER -->
+    <div class="sim-card live">
+      <a href="/simulators/roller-coaster/">
+        <span class="sim-status status-live">● Live</span>
+        <div class="sim-domain">Physics · AP Curriculum</div>
+        <div class="sim-title">Roller Coaster Physics</div>
+        <div class="sim-desc">10 interactive modules — energy conservation, g-forces, loop design, hill profiling, banked curves, spring launches, and full track simulation. Citation-backed against NASA physiological limits.</div>
+        <div class="sim-meta">
+          <strong>Ref:</strong> Tony Wayne AP Physics Guide<br>
+          <strong>Red team:</strong> 2 passes · 10 issues resolved<br>
+          <strong>Client:</strong> Saleem Raja Haja · Kuwait<br>
+          <strong>Date:</strong> March 2026
+        </div>
+        <span class="sim-cta">Launch Simulator →</span>
+      </a>
+    </div>
+
+    <!-- COMING: PROJECTILE -->
+    <div class="sim-card coming">
+      <span class="sim-status status-soon">Coming</span>
+      <div class="sim-domain">Physics · Mechanics</div>
+      <div class="sim-title">Projectile Motion</div>
+      <div class="sim-desc">Cannon launch, drag coefficient, target practice mode, Mars gravity selector. Same AION design system and methodology as the roller coaster suite.</div>
+      <div class="sim-meta"><strong>Status:</strong> Planned — Q2 2026</div>
+    </div>
+
+    <!-- COMING: BRIDGE -->
+    <div class="sim-card coming">
+      <span class="sim-status status-soon">Coming</span>
+      <div class="sim-domain">Engineering · Civil</div>
+      <div class="sim-title">Bridge Structural<br>Load Simulator</div>
+      <div class="sim-desc">Truss stress calculator, material cost estimator, load testing visualizer, failure point prediction, earthquake simulation.</div>
+      <div class="sim-meta"><strong>Status:</strong> Planned — Q2 2026</div>
+    </div>
+
+    <!-- COMING: FLUID -->
+    <div class="sim-card coming">
+      <span class="sim-status status-soon">Coming</span>
+      <div class="sim-domain">Fluid Dynamics · Energy</div>
+      <div class="sim-title">Pipeline Flow<br>Simulator</div>
+      <div class="sim-desc">Bernoulli's principle, Venturi effect, pipe flow with obstacles, Reynolds number visualization. Directly relevant to oil &amp; gas sector infrastructure planning.</div>
+      <div class="sim-meta"><strong>Status:</strong> Planned — Q2 2026</div>
+    </div>
+
+    <!-- COMING: PHARMACOKINETICS -->
+    <div class="sim-card coming">
+      <span class="sim-status status-soon">Coming</span>
+      <div class="sim-domain">Medical · Pharmacology</div>
+      <div class="sim-title">Drug Pharma&shy;cokinetics</div>
+      <div class="sim-desc">Absorption curves, half-life visualization, dosing schedule optimizer, overdose warning system. Pre-med curriculum tool.</div>
+      <div class="sim-meta"><strong>Status:</strong> Planned — Q3 2026</div>
+    </div>
+
+    <!-- COMING: CLIMATE -->
+    <div class="sim-card coming">
+      <span class="sim-status status-soon">Coming</span>
+      <div class="sim-domain">Environmental · Climate</div>
+      <div class="sim-title">Climate Scenario<br>Simulator</div>
+      <div class="sim-desc">CO₂ emission scenarios, temperature projection, sea level rise visualizer, policy impact comparison, tipping point warnings.</div>
+      <div class="sim-meta"><strong>Status:</strong> Planned — Q3 2026</div>
+    </div>
+
+  </div>
+
+  <!-- METHODOLOGY NOTE -->
+  <div class="method-note">
+    <div class="method-note-icon">◈</div>
+    <div class="method-note-text">
+      <h3>AION Verified — What It Means</h3>
+      <p>Every simulator in this suite carries the AION Verified Simulator badge. This means: the physics was verified against cited peer sources, the code was red-teamed for silent errors and edge cases, and the output was peer-reviewed before release. The Red Team tab inside each simulator documents every issue found and how it was resolved. Nothing ships clean without earning it.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>AionSystem · <a href="/">Sheldon K. Salmon</a> · AI Reliability Architect · New York · March 2026</p>
+  <p><a href="/certify/">Verify a badge</a> &nbsp;·&nbsp; <a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></p>
+</footer>
+
+</body>
+</html>
 
