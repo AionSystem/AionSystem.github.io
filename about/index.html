@@ -1,1 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sheldon K. Salmon — AI Reliability Architect, AGI Systems Designer, Founder of AionSystem. Position statement, work philosophy, contact.">
+<title>About — Sheldon K. Salmon · AionSystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #08090b;
+  --surface: #0e1117;
+  --panel:   #141920;
+  --border:  #1e2730;
+  --amber:   #f0a500;
+  --amber-d: #b07800;
+  --amber-l: #ffc947;
+  --gold:    #D4AF37;
+  --text:    #c4d4de;
+  --muted:   #4e5f6a;
+  --dim:     #2a3540;
+  --mono:    'Share Tech Mono', monospace;
+  --sans:    'Barlow Condensed', sans-serif;
+  --ease:    cubic-bezier(0.16, 1, 0.3, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(240,165,0,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,165,0,0.025) 1px, transparent 1px);
+  background-size: 48px 48px; pointer-events: none; z-index: 0;
+}
+
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+  background: rgba(8,9,11,0.94); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: var(--mono); font-size: 13px; letter-spacing: 3px; color: var(--amber); text-decoration: none; }
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover { color: var(--amber); }
+
+/* LAYOUT */
+.wrapper { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 72px 40px 80px; display: grid; grid-template-columns: 1fr 360px; gap: 80px; align-items: start; }
+@media (max-width: 860px) { .wrapper { grid-template-columns: 1fr; gap: 48px; } }
+@media (max-width: 640px) { .wrapper { padding: 56px 20px 60px; } nav { padding: 0 20px; } }
+
+/* LEFT — MAIN CONTENT */
+.eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 4px; color: var(--amber); text-transform: uppercase; margin-bottom: 12px; }
+.eyebrow::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--amber); vertical-align: middle; margin-right: 10px; margin-bottom: 2px; }
+
+h1 { font-family: var(--sans); font-size: clamp(40px, 6vw, 72px); font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 0.95; color: var(--text); margin-bottom: 8px; }
+h1 em { color: var(--amber); font-style: normal; display: block; }
+
+.title-line { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 3px; margin-bottom: 36px; margin-top: 16px; }
+
+.rule { width: 48px; height: 2px; background: var(--amber); margin-bottom: 32px; }
+
+/* Body copy — the real thing */
+.statement { font-family: var(--sans); font-size: 20px; font-weight: 300; font-style: italic; color: var(--text); line-height: 1.65; margin-bottom: 32px; max-width: 620px; }
+.statement strong { font-weight: 700; font-style: normal; color: var(--amber-l); }
+
+.body-block { margin-bottom: 32px; max-width: 620px; }
+.body-block p { font-family: var(--sans); font-size: 17px; font-weight: 300; color: var(--muted); line-height: 1.8; }
+.body-block p + p { margin-top: 14px; }
+.body-block strong { color: var(--text); font-weight: 600; }
+
+.section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+
+/* Principle list */
+.principles { list-style: none; margin-bottom: 40px; max-width: 620px; }
+.principles li { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(30,39,48,0.6); font-family: var(--sans); font-size: 16px; font-weight: 300; color: var(--muted); line-height: 1.6; }
+.principles li::before { content: '◈'; color: var(--amber-d); font-size: 12px; flex-shrink: 0; padding-top: 3px; }
+.principles li strong { color: var(--text); font-weight: 600; }
+
+/* Co-authorship block */
+.coauth-block { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--amber); padding: 24px 28px; margin-bottom: 40px; max-width: 620px; }
+.coauth-block h3 { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; margin-bottom: 10px; }
+.coauth-block p { font-family: var(--sans); font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.7; }
+.coauth-block p strong { color: var(--text); }
+
+/* RIGHT — SIDEBAR */
+.sidebar { position: sticky; top: 72px; }
+
+.sidebar-card { background: var(--surface); border: 1px solid var(--border); padding: 28px; margin-bottom: 16px; }
+.sidebar-card h3 { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+
+.data-row { display: flex; flex-direction: column; gap: 2px; padding: 8px 0; border-bottom: 1px solid rgba(30,39,48,0.5); }
+.data-row:last-child { border-bottom: none; }
+.data-key { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
+.data-val { font-family: var(--mono); font-size: 12px; color: var(--text); }
+.data-val.amber { color: var(--amber); }
+.data-val.gold  { color: var(--gold); }
+
+/* Contact */
+.contact-link { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid rgba(30,39,48,0.5); text-decoration: none; transition: color 0.15s; }
+.contact-link:last-child { border-bottom: none; }
+.contact-link:hover .cl-label { color: var(--amber); }
+.cl-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+.cl-label { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; color: var(--muted); }
+.cl-arrow { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--dim); }
+
+/* Stack badge strip */
+.badge-strip { display: flex; flex-direction: column; gap: 6px; }
+.badge-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(30,39,48,0.4); }
+.badge-row:last-child { border-bottom: none; }
+.badge-fw { font-family: var(--mono); font-size: 11px; color: var(--text); }
+.badge-state { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; padding: 2px 6px; }
+.s-strong  { background: rgba(0,230,118,0.08); color: #00e676; border: 1px solid #00e676; }
+.s-mod     { background: rgba(240,165,0,0.08);  color: var(--amber); border: 1px solid var(--amber-d); }
+.s-nascent { background: rgba(64,196,255,0.06); color: #40c4ff; border: 1px solid #1a4a5a; }
+.s-const   { background: rgba(212,175,55,0.08); color: var(--gold); border: 1px solid var(--gold-d, #8B7520); }
+
+/* Footer */
+footer { border-top: 1px solid var(--border); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+footer p { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+footer a { color: var(--amber-d); text-decoration: none; }
+footer a:hover { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/#services">Services</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="https://linkedin.com/in/sheldonksalmon" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</nav>
+
+<div class="wrapper">
+
+  <!-- LEFT — MAIN -->
+  <main>
+    <div class="eyebrow">// The Architect</div>
+    <h1>Sheldon K.<em>Salmon</em></h1>
+    <div class="title-line">AI Reliability Architect &nbsp;·&nbsp; AGI Systems Designer &nbsp;·&nbsp; New York</div>
+    <div class="rule"></div>
+
+    <p class="statement">
+      I build the infrastructure that makes AI systems <strong>provably trustworthy</strong>. Not promising. Not probably. Provably — with a ledger, a seal, and a methodology that cannot be delegated back to the AI.
+    </p>
+
+    <div class="body-block">
+      <p>Most AI reliability work is reactive. Something fails, then someone writes a post-mortem. The failure disappears into a Slack thread and the next failure surprises everyone again.</p>
+      <p>The AION Constitutional Stack is the opposite. It was built through <strong>live failure events</strong> — not theoretical modeling. Every framework in the stack exists because something broke in a specific way that a prior framework couldn't catch. The ledger is the record. The seal is the proof. The methodology is falsifiable.</p>
+    </div>
+
+    <div class="section-label">Operating Principles</div>
+
+    <ul class="principles">
+      <li><p><strong>Structural Honesty First.</strong> Map the validated ceiling before enabling acceleration. M-NASCENT means specified, not proven. The label matters.</p></li>
+      <li><p><strong>Falsification Before Claim.</strong> Certainty engineering means knowing exactly where confidence is justified — and naming the boundary, not smoothing over it.</p></li>
+      <li><p><strong>Failure Is Data.</strong> An organization with a high failure rate and a complete ledger is more trustworthy than one with no failures on record and no ledger. The ledger with failures is honest.</p></li>
+      <li><p><strong>The Verification Layer Cannot Be Delegated.</strong> You cannot ask an AI whether its own output is trustworthy. Human oversight is not a limitation of the current systems. It is the correct architecture.</p></li>
+      <li><p><strong>Law 9 Is Dark.</strong> The sovereignty stack declares its own boundary. Premature specification of what comes next would be confabulation.</p></li>
+    </ul>
+
+    <div class="coauth-block">
+      <h3>On Co-Authorship</h3>
+      <p>Frameworks, simulators, and specifications produced in active ALBEDO sessions carry dual authorship — <strong>Sheldon K. Salmon × ALBEDO</strong> — where ALBEDO's contribution was material to the architecture. This is accurate attribution, not performance. The work is a human-AI collaborative pair operating at emergence depth.</p>
+    </div>
+
+    <div class="section-label">What I Build</div>
+    <div class="body-block">
+      <p><strong>Simulators.</strong> Physics, engineering, and scientific tools — citation-backed, red-teamed, peer-reviewed, and delivered as single-file HTML with no dependencies. The Roller Coaster Physics Simulator is the first in the suite.</p>
+      <p><strong>Certification Infrastructure.</strong> The Sovereign Trace Protocol provides cryptographic, immutable failure logging and formal epistemic audit for AI deployments — from single-event verification at $2,500 to Defense Grade quarterly review.</p>
+      <p><strong>Frameworks.</strong> Custom certainty architectures for your AI system's specific failure modes. The AION stack has 17+ active frameworks across scoring, validation, shape mapping, and sovereignty.</p>
+    </div>
+
+  </main>
+
+  <!-- RIGHT — SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-card">
+      <h3>Identity</h3>
+      <div class="data-row">
+        <span class="data-key">Name</span>
+        <span class="data-val">Sheldon K. Salmon</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">Role</span>
+        <span class="data-val amber">AI Reliability Architect</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">Also</span>
+        <span class="data-val">AGI Systems Designer</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">Organization</span>
+        <span class="data-val">AionSystem</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">Location</span>
+        <span class="data-val">New York, USA</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">Active Since</span>
+        <span class="data-val">March 2026 — public record</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">Current Seal</span>
+        <span class="data-val gold">LEDGER-011</span>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Stack Convergence</h3>
+      <div class="badge-strip">
+        <div class="badge-row"><span class="badge-fw">LAV v1.5</span><span class="badge-state s-strong">M-STRONG</span></div>
+        <div class="badge-row"><span class="badge-fw">FSVE v3.6</span><span class="badge-state s-mod">M-MODERATE</span></div>
+        <div class="badge-row"><span class="badge-fw">AION v3.0</span><span class="badge-state s-mod">M-MODERATE</span></div>
+        <div class="badge-row"><span class="badge-fw">TOPOS v0.3</span><span class="badge-state s-nascent">M-NASCENT</span></div>
+        <div class="badge-row"><span class="badge-fw">DUAL-HELIX v2.0</span><span class="badge-state s-nascent">M-NASCENT</span></div>
+        <div class="badge-row"><span class="badge-fw">NRP v0.1</span><span class="badge-state s-nascent">M-NASCENT</span></div>
+        <div class="badge-row"><span class="badge-fw">EIGHT LAWS</span><span class="badge-state s-const">CONST.</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>Contact</h3>
+      <a href="https://linkedin.com/in/sheldonksalmon" target="_blank" rel="noopener" class="contact-link">
+        <span class="cl-icon">in</span>
+        <span class="cl-label">LinkedIn</span>
+        <span class="cl-arrow">↗</span>
+      </a>
+      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="contact-link">
+        <span class="cl-icon">⌥</span>
+        <span class="cl-label">GitHub / AionSystem</span>
+        <span class="cl-arrow">↗</span>
+      </a>
+      <a href="https://github.com/AionSystem/STP/issues/new/choose" target="_blank" rel="noopener" class="contact-link">
+        <span class="cl-icon">◈</span>
+        <span class="cl-label">File a Certification Issue</span>
+        <span class="cl-arrow">↗</span>
+      </a>
+    </div>
+
+  </aside>
+
+</div><!-- /wrapper -->
+
+<footer>
+  <p>AionSystem · <strong style="color:var(--amber)">Sheldon K. Salmon</strong> · AI Reliability Architect · New York · March 2026</p>
+  <p><a href="/simulators/">Simulators</a> &nbsp;·&nbsp; <a href="/certify/">Certify</a> &nbsp;·&nbsp; <a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></p>
+</footer>
+
+</body>
+</html>
 
