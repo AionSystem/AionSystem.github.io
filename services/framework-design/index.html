@@ -1,1 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Framework Engineering — AionSystem. Custom certainty frameworks for any domain. Falsifiable by design. Versioned. Convergence-tracked. Built through live failure events. Sheldon K. Salmon, AI Reliability Architect.">
+<meta property="og:title" content="Framework Engineering — AionSystem · Sheldon K. Salmon">
+<meta property="og:description" content="Every other firm sells a framework that describes what to do. We build frameworks that know when they are wrong.">
+<meta property="og:type" content="website">
+<title>Framework Engineering — AionSystem · Sheldon K. Salmon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #08090b;
+  --surface:   #0e1117;
+  --panel:     #141920;
+  --border:    #1e2730;
+  --amber:     #f0a500;
+  --amber-d:   #b07800;
+  --amber-l:   #ffc947;
+  --gold:      #D4AF37;
+  --text:      #c4d4de;
+  --muted:     #4e5f6a;
+  --dim:       #2a3540;
+  --green:     #00e676;
+  --green-d:   #2E7D32;
+  --blue:      #40c4ff;
+  --red:       #ff6b6b;
+  --mono:      'Share Tech Mono', monospace;
+  --sans:      'Barlow Condensed', sans-serif;
+  --ease:      cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-size: 16px;
+  line-height: 1.5; overflow-x: hidden;
+}
+
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(240,165,0,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,165,0,0.018) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px
+  );
+  pointer-events: none; z-index: 0;
+}
+
+/* ── NAV ─────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+  background: rgba(8,9,11,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--mono); font-size: 13px;
+  letter-spacing: 3px; color: var(--amber);
+  text-transform: uppercase; text-decoration: none;
+}
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 2px; color: var(--muted);
+  text-decoration: none; text-transform: uppercase; transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--amber); }
+
+/* ── CANVAS ──────────────── */
+#hero-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%; z-index: 0;
+  opacity: 0.18; pointer-events: none;
+}
+
+/* ── PAGE HEADER ─────────── */
+.page-header {
+  position: relative; z-index: 1;
+  padding: 120px 40px 72px;
+  max-width: 1200px; margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+.breadcrumb {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase; margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.6s var(--ease) 0.1s forwards;
+}
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--amber); }
+.breadcrumb-sep { margin: 0 8px; color: var(--dim); }
+
+.page-header-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 56px; align-items: end;
+}
+.page-header-left {
+  opacity: 0; transform: translateY(16px);
+  animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+}
+.page-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 4px;
+  color: var(--amber); text-transform: uppercase; margin-bottom: 16px;
+}
+.page-eyebrow::before {
+  content: ''; display: inline-block; width: 20px; height: 1px;
+  background: var(--amber); vertical-align: middle;
+  margin-right: 10px; margin-bottom: 2px;
+}
+.page-title {
+  font-family: var(--sans);
+  font-size: clamp(48px, 7vw, 84px); font-weight: 900;
+  letter-spacing: -1px; line-height: 0.9;
+  text-transform: uppercase; color: var(--text);
+}
+.page-title em { display: block; color: var(--amber); font-style: normal; }
+
+.page-header-right {
+  opacity: 0; transform: translateY(12px);
+  animation: fadeUp 0.7s var(--ease) 0.4s forwards;
+}
+.page-premise {
+  font-family: var(--sans); font-size: clamp(16px, 1.8vw, 20px);
+  font-weight: 300; color: var(--muted); line-height: 1.75;
+  max-width: 480px; border-left: 2px solid var(--amber); padding-left: 20px;
+}
+.page-premise strong { color: var(--text); font-weight: 600; }
+
+.premise-counter {
+  margin-top: 28px; display: flex; flex-direction: column; gap: 10px;
+  opacity: 0; animation: fadeIn 0.7s var(--ease) 0.7s forwards;
+}
+.counter-row {
+  display: flex; align-items: baseline; gap: 14px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+}
+.counter-num { font-size: 22px; color: var(--amber); line-height: 1; }
+.counter-label { color: var(--muted); }
+
+/* ── SECTION MACHINERY ───── */
+.content-block { position: relative; z-index: 1; border-bottom: 1px solid var(--border); }
+.block-inner { max-width: 1200px; margin: 0 auto; padding: 72px 40px; }
+.section-id {
+  display: flex; align-items: center; gap: 12px; padding: 12px 0;
+}
+.section-id-num { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber-d); }
+.section-id-line { flex: 1; height: 1px; background: var(--border); }
+
+.block-header {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 56px; margin-bottom: 48px; align-items: start;
+}
+.block-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
+  color: var(--muted); text-transform: uppercase; margin-bottom: 10px;
+}
+.block-title {
+  font-family: var(--sans); font-size: clamp(32px, 4.5vw, 56px);
+  font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text); line-height: 0.95; margin-bottom: 8px;
+}
+.block-title em { display: block; color: var(--amber); font-style: normal; }
+.block-tagline {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--amber-d); letter-spacing: 2px; margin-top: 14px;
+}
+.block-lead {
+  font-family: var(--sans); font-size: clamp(15px, 1.7vw, 19px);
+  font-weight: 300; color: var(--muted); line-height: 1.75;
+}
+.block-lead strong { color: var(--text); font-weight: 600; }
+
+/* ── IS / IS NOT ─────────── */
+.is-not-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 40px;
+}
+.is-col, .isnot-col { background: var(--surface); }
+.col-header {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.col-header.is    { color: var(--green); }
+.col-header.isnot { color: var(--red); }
+.col-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.dot-green { background: var(--green); }
+.dot-red   { background: var(--red); }
+.col-items { list-style: none; padding: 12px 0; }
+.col-items li {
+  font-family: var(--sans); font-size: 15px; font-weight: 300;
+  color: var(--muted); padding: 9px 24px;
+  display: flex; align-items: flex-start; gap: 12px;
+  border-bottom: 1px solid rgba(30,39,48,0.5);
+  line-height: 1.45; transition: background 0.15s;
+}
+.col-items li:hover { background: var(--panel); }
+.col-items li:last-child { border-bottom: none; }
+.col-items li::before { flex-shrink: 0; margin-top: 2px; font-size: 11px; }
+.is-col    .col-items li::before { content: '✓'; color: var(--green); }
+.isnot-col .col-items li::before { content: '✕'; color: var(--red); }
+
+/* ── ANATOMY CARDS ────────── */
+.anatomy-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 32px;
+}
+.anatomy-card {
+  background: var(--bg); padding: 24px 20px;
+  position: relative; overflow: hidden; transition: background 0.2s;
+}
+.anatomy-card:hover { background: var(--surface); }
+.anatomy-card::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 2px;
+  background: var(--amber); transform: scaleY(0); transform-origin: top;
+  transition: transform 0.3s var(--ease);
+}
+.anatomy-card:hover::before { transform: scaleY(1); }
+.anatomy-num {
+  font-family: var(--mono); font-size: 28px; color: var(--dim);
+  font-weight: bold; line-height: 1; margin-bottom: 12px;
+}
+.anatomy-name {
+  font-family: var(--sans); font-size: 16px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 8px;
+}
+.anatomy-desc {
+  font-family: var(--sans); font-size: 13px; font-weight: 300;
+  color: var(--muted); line-height: 1.6;
+}
+.anatomy-tag {
+  margin-top: 14px; display: inline-block;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+  color: var(--amber-d); border: 1px solid var(--dim);
+  padding: 3px 8px; text-transform: uppercase;
+}
+
+/* ── BUILD PROTOCOL ──────── */
+.protocol-track { position: relative; margin-bottom: 32px; }
+.protocol-line {
+  position: absolute; left: 28px; top: 28px; bottom: 28px;
+  width: 1px; background: var(--border); z-index: 0;
+}
+.protocol-step {
+  display: grid; grid-template-columns: 56px 1fr;
+  gap: 24px; margin-bottom: 2px; position: relative; z-index: 1;
+}
+.step-marker {
+  width: 56px; height: 56px; flex-shrink: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 13px; color: var(--amber);
+  letter-spacing: 1px; transition: background 0.2s, border-color 0.2s;
+}
+.protocol-step:hover .step-marker { background: var(--panel); border-color: var(--amber); }
+.step-body {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 18px 22px; transition: background 0.2s;
+}
+.protocol-step:hover .step-body { background: var(--panel); }
+.step-title {
+  font-family: var(--sans); font-size: 17px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 6px;
+}
+.step-desc {
+  font-family: var(--sans); font-size: 14px; font-weight: 300;
+  color: var(--muted); line-height: 1.65;
+}
+.step-output {
+  margin-top: 10px; font-family: var(--mono); font-size: 10px;
+  color: var(--amber-d); letter-spacing: 1.5px;
+}
+.step-output::before { content: 'OUTPUT: '; color: var(--dim); }
+
+/* ── DOMAIN MATRIX ───────── */
+.domain-matrix {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 16px;
+}
+.domain-cell {
+  background: var(--surface); padding: 20px 18px;
+  transition: background 0.2s;
+}
+.domain-cell:hover { background: var(--panel); }
+.domain-cell.reference {
+  background: var(--panel); position: relative; overflow: hidden;
+}
+.domain-cell.reference::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--amber);
+}
+.domain-sector {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase; margin-bottom: 8px;
+}
+.domain-name {
+  font-family: var(--sans); font-size: 16px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text); margin-bottom: 6px;
+}
+.domain-cell.reference .domain-name { color: var(--amber); }
+.domain-examples {
+  font-family: var(--sans); font-size: 12px; font-weight: 300;
+  color: var(--muted); line-height: 1.5;
+}
+.domain-risk {
+  margin-top: 10px; font-family: var(--mono); font-size: 9px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 2px 7px; display: inline-block; border: 1px solid;
+}
+.risk-critical { color: var(--red);   border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.05); }
+.risk-high     { color: #ff9800;      border-color: rgba(255,152,0,0.3);   background: rgba(255,152,0,0.05); }
+.risk-moderate { color: var(--amber); border-color: var(--amber-d);        background: rgba(240,165,0,0.05); }
+.risk-base     { color: var(--muted); border-color: var(--dim);            background: transparent; }
+
+/* ── CONVERGENCE LADDER ──── */
+.convergence-ladder {
+  display: flex; flex-direction: column; gap: 1px;
+  background: var(--border); border: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.ladder-rung {
+  display: grid; grid-template-columns: 180px 1fr 140px;
+  background: var(--bg); transition: background 0.2s;
+}
+.ladder-rung:hover { background: var(--surface); }
+.ladder-rung.rung-active { background: var(--panel); }
+.rung-state {
+  padding: 20px 24px; display: flex; align-items: flex-start;
+  border-right: 1px solid var(--border);
+}
+.rung-badge {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 4px 10px; display: inline-block;
+}
+.rung-nascent  .rung-badge { color: var(--blue);  background: rgba(64,196,255,0.08);  border: 1px solid #1a4a5a; }
+.rung-moderate .rung-badge { color: var(--amber); background: rgba(240,165,0,0.08);   border: 1px solid var(--amber-d); }
+.rung-strong   .rung-badge { color: var(--green); background: rgba(0,230,118,0.08);   border: 1px solid var(--green-d); }
+.rung-vstrong  .rung-badge { color: var(--gold);  background: rgba(212,175,55,0.08);  border: 1px solid rgba(212,175,55,0.3); }
+.rung-const    .rung-badge { color: #fff;          background: rgba(255,255,255,0.06); border: 1px solid #3a4a5a; }
+.rung-criteria {
+  padding: 20px 28px; font-family: var(--sans);
+  font-size: 14px; font-weight: 300; color: var(--muted); line-height: 1.7;
+}
+.rung-criteria strong { color: var(--text); font-weight: 600; }
+.rung-entry {
+  padding: 20px 24px; font-family: var(--mono); font-size: 10px;
+  color: var(--muted); letter-spacing: 1px; white-space: nowrap;
+  border-left: 1px solid var(--border); display: flex; align-items: flex-start;
+}
+
+/* ── DELIVERABLE SPEC ────── */
+.deliverable-spec {
+  background: var(--surface); border: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.deliv-header {
+  padding: 16px 24px; border-bottom: 1px solid var(--border);
+  font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
+  color: var(--amber); text-transform: uppercase;
+}
+.deliv-rows { list-style: none; }
+.deliv-row {
+  display: grid; grid-template-columns: 220px 1fr 130px;
+  border-bottom: 1px solid rgba(30,39,48,0.5);
+  transition: background 0.15s;
+}
+.deliv-row:hover { background: var(--panel); }
+.deliv-row:last-child { border-bottom: none; }
+.deliv-item-name {
+  padding: 14px 24px; font-family: var(--mono); font-size: 12px;
+  color: var(--amber); border-right: 1px solid var(--border);
+  display: flex; align-items: center;
+}
+.deliv-item-desc {
+  padding: 14px 24px; font-family: var(--sans); font-size: 13px;
+  font-weight: 300; color: var(--muted); line-height: 1.55;
+  display: flex; align-items: center;
+}
+.deliv-item-tag {
+  padding: 14px 20px; font-family: var(--mono); font-size: 9px;
+  letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase;
+  border-left: 1px solid var(--border); display: flex; align-items: center;
+}
+
+/* ── REFERENCE CARDS ─────── */
+.ref-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 32px;
+}
+.ref-card {
+  background: var(--surface); padding: 28px 24px;
+  transition: background 0.2s; position: relative; overflow: hidden;
+}
+.ref-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--border); transition: background 0.3s;
+}
+.ref-card:hover { background: var(--panel); }
+.ref-card:hover::before { background: var(--amber); }
+.ref-fw { font-family: var(--mono); font-size: 20px; color: var(--amber); letter-spacing: 2px; margin-bottom: 4px; }
+.ref-version { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 14px; }
+.ref-convergence {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+  padding: 3px 8px; text-transform: uppercase; display: inline-block; margin-bottom: 16px;
+}
+.c-strong   { color: var(--green); background: rgba(0,230,118,0.06);  border: 1px solid var(--green-d); }
+.c-moderate { color: var(--amber); background: rgba(240,165,0,0.06);  border: 1px solid var(--amber-d); }
+.c-nascent  { color: var(--blue);  background: rgba(64,196,255,0.06); border: 1px solid #1a4a5a; }
+.ref-desc {
+  font-family: var(--sans); font-size: 13px; font-weight: 300;
+  color: var(--muted); line-height: 1.6; margin-bottom: 14px;
+}
+.ref-stats { display: flex; flex-direction: column; gap: 5px; }
+.ref-stat {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  letter-spacing: 1px; display: flex; align-items: baseline; gap: 8px;
+}
+.ref-stat::before { content: '—'; color: var(--amber-d); flex-shrink: 0; }
+
+/* ── PRINCIPLES BLOCK ────── */
+.principles-block {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--amber); padding: 28px 32px; margin-bottom: 32px;
+}
+.principles-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  color: var(--amber); text-transform: uppercase; margin-bottom: 16px;
+}
+.principles-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.principles-list li {
+  font-family: var(--sans); font-size: 15px; font-weight: 300;
+  color: var(--muted); display: flex; align-items: flex-start;
+  gap: 12px; line-height: 1.5;
+}
+.principles-list li::before { content: '◈'; color: var(--amber-d); flex-shrink: 0; font-size: 11px; margin-top: 3px; }
+
+/* ── CTA BAR ─────────────── */
+.cta-bar {
+  display: flex; align-items: center; gap: 14px;
+  flex-wrap: wrap; padding: 24px 0; border-top: 1px solid var(--border);
+}
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; text-decoration: none; padding: 12px 22px;
+  border: 1px solid var(--amber); color: var(--amber);
+  background: transparent; transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.cta-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--amber); transform: translateX(-101%);
+  transition: transform 0.25s var(--ease); z-index: 0;
+}
+.cta-btn:hover::before { transform: translateX(0); }
+.cta-btn:hover { color: #000; }
+.cta-btn span { position: relative; z-index: 1; }
+.cta-arrow { font-size: 14px; transition: transform 0.2s; }
+.cta-btn:hover .cta-arrow { transform: translateX(4px); }
+.cta-btn.primary { background: var(--amber); color: #000; }
+.cta-btn.primary::before { background: var(--amber-l); }
+.cta-btn.primary:hover { color: #000; }
+
+/* ── ENGAGE STRIP ────────── */
+.engage-strip {
+  position: relative; z-index: 1;
+  background: var(--surface); border-top: 1px solid var(--border);
+}
+.engage-inner {
+  max-width: 1200px; margin: 0 auto; padding: 64px 40px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
+}
+.engage-heading {
+  font-family: var(--sans); font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text); line-height: 0.95; margin-bottom: 14px;
+}
+.engage-heading em { display: block; color: var(--amber); font-style: normal; }
+.engage-sub {
+  font-family: var(--sans); font-size: 15px; font-weight: 300;
+  color: var(--muted); line-height: 1.7; margin-bottom: 20px;
+}
+.engage-note {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  letter-spacing: 1px; line-height: 1.8;
+}
+.engage-paths { display: flex; flex-direction: column; gap: 10px; }
+.engage-path {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px; background: var(--bg);
+  border: 1px solid var(--border); text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.engage-path:hover { border-color: var(--amber); background: var(--panel); }
+.engage-path-icon { font-size: 18px; flex-shrink: 0; }
+.engage-path-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--amber); text-transform: uppercase; margin-bottom: 3px;
+}
+.engage-path-desc { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); }
+
+/* ── FOOTER ──────────────── */
+footer {
+  position: relative; z-index: 1; border-top: 1px solid var(--border);
+  padding: 40px; max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.footer-id { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; letter-spacing: 1px; }
+.footer-id strong { color: var(--amber); }
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.15s;
+}
+.footer-links a:hover { color: var(--amber); }
+
+/* ── ANIMATIONS ──────────── */
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* ── RESPONSIVE ──────────── */
+@media (max-width: 1000px) {
+  .page-header-inner { grid-template-columns: 1fr; gap: 24px; }
+  .block-header { grid-template-columns: 1fr; gap: 24px; }
+  .anatomy-grid { grid-template-columns: 1fr 1fr; }
+  .domain-matrix { grid-template-columns: 1fr 1fr; }
+  .ref-grid { grid-template-columns: 1fr; }
+  .ladder-rung { grid-template-columns: 1fr; }
+  .rung-entry { border-left: none; border-top: 1px solid var(--border); }
+  .rung-state { border-right: none; border-bottom: 1px solid var(--border); }
+}
+@media (max-width: 700px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .page-header { padding: 96px 20px 48px; }
+  .block-inner { padding: 48px 20px; }
+  .engage-inner { grid-template-columns: 1fr; gap: 32px; padding: 40px 20px; }
+  footer { padding: 32px 20px; }
+  .anatomy-grid { grid-template-columns: 1fr; }
+  .domain-matrix { grid-template-columns: 1fr; }
+  .is-not-grid { grid-template-columns: 1fr; }
+  .protocol-step { grid-template-columns: 1fr; }
+  .protocol-line { display: none; }
+  .deliv-row { grid-template-columns: 1fr; }
+  .deliv-item-name, .deliv-item-tag { border: none; border-bottom: 1px solid var(--border); }
+}
+</style>
+</head>
+<body>
+
+<canvas id="hero-canvas"></canvas>
+
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/" class="active">Services</a></li>
+    <li><a href="/#stack">Stack</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/">Aionsystem</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="/services/">Services</a>
+    <span class="breadcrumb-sep">/</span>
+    Framework Engineering
+  </div>
+  <div class="page-header-inner">
+    <div class="page-header-left">
+      <div class="page-eyebrow">Custom AION Stack · Any Domain</div>
+      <h1 class="page-title">Framework<em>Engineering</em></h1>
+    </div>
+    <div class="page-header-right">
+      <p class="page-premise">
+        Every other firm sells a framework that describes what to do.
+        <strong>We build frameworks that know when they are wrong.</strong>
+        Falsifiable by design. Invalidation conditions declared before deployment.
+        Convergence state honest from day one.
+      </p>
+      <div class="premise-counter">
+        <div class="counter-row">
+          <span class="counter-num">17+</span>
+          <span class="counter-label">Frameworks deployed in the AION stack</span>
+        </div>
+        <div class="counter-row">
+          <span class="counter-num">0</span>
+          <span class="counter-label">Frameworks without explicit invalidation conditions</span>
+        </div>
+        <div class="counter-row">
+          <span class="counter-num">Any</span>
+          <span class="counter-label">Domain — the methodology is domain-agnostic</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 01 — WHAT A FRAMEWORK IS ━━━ -->
+<div class="content-block" id="definition">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 01</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">The AION Definition</div>
+        <div class="block-title">What a Framework<em>Actually Is</em></div>
+        <div class="block-tagline">Not a document. Not an opinion. A reasoning machine with declared failure conditions.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          In the AION methodology, a framework is a structured reasoning system with <strong>exactly one epistemic function per module, explicit invalidation conditions, registered formulas under Protocol I, and a convergence state that measures how much empirical evidence supports it.</strong>
+          <br><br>
+          It is not a best-practices guide. Not a consulting recommendation. Not a methodology deck. It is an instrument — and like any instrument, its first obligation is to report honestly when its measurement is unreliable.
+        </p>
+      </div>
+    </div>
+
+    <div class="is-not-grid">
+      <div class="is-col">
+        <div class="col-header is"><span class="col-dot dot-green"></span>An AION Framework IS</div>
+        <ul class="col-items">
+          <li>A structured reasoning system with one epistemic function per module</li>
+          <li>Falsifiable — carries explicit conditions under which it is invalid</li>
+          <li>Versioned — every change documented with a delta and a trigger</li>
+          <li>Convergence-tracked — M-NASCENT through M-STRONG, honest at each stage</li>
+          <li>Protocol I registered — every quantitative metric has a declared formula</li>
+          <li>CEV-audited — arithmetic verified against edge cases before deployment</li>
+          <li>ECF-tagged — every claim carries [D] / [R] / [S] / [?] epistemic status</li>
+          <li>NBP-equipped — every assertion has a falsification condition and a CF score</li>
+          <li>Deployable in any domain — the core methodology does not change</li>
+          <li>Honest about what it cannot yet measure — M-NASCENT is not a failure</li>
+        </ul>
+      </div>
+      <div class="isnot-col">
+        <div class="col-header isnot"><span class="col-dot dot-red"></span>An AION Framework IS NOT</div>
+        <ul class="col-items">
+          <li>A PowerPoint deck of recommendations</li>
+          <li>A best-practices guide with no failure mode</li>
+          <li>A document that cannot tell you when it is wrong</li>
+          <li>A one-size-fits-all methodology applied uniformly across harm tiers</li>
+          <li>A consulting opinion dressed in framework language</li>
+          <li>A system with undefined metrics that produce unverifiable outputs</li>
+          <li>Declared M-STRONG on day one — that is confabulation</li>
+          <li>A living document quietly updated to match what happened</li>
+          <li>A proprietary black box — invalidation conditions are public by default</li>
+          <li>Patched — defects are documented and rebuilt from first principles, never fixed silently</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="anatomy-grid">
+      <div class="anatomy-card">
+        <div class="anatomy-num">01</div>
+        <div class="anatomy-name">Axiom Register</div>
+        <div class="anatomy-desc">The foundational claims that must hold for the framework to be valid. If an axiom is disputed before execution, the framework halts. Axioms are declared before modules are designed — never retrofitted to match conclusions.</div>
+        <span class="anatomy-tag">Declared before build</span>
+      </div>
+      <div class="anatomy-card">
+        <div class="anatomy-num">02</div>
+        <div class="anatomy-name">Module Isolation</div>
+        <div class="anatomy-desc">Each module is assigned exactly one epistemic function. A module assigned multiple functions cannot enforce boundaries on any of them. Cognitive drift is a structural consequence of role-mixing — not a failure of execution.</div>
+        <span class="anatomy-tag">One function per module</span>
+      </div>
+      <div class="anatomy-card">
+        <div class="anatomy-num">03</div>
+        <div class="anatomy-name">Protocol I Registration</div>
+        <div class="anatomy-desc">Every quantitative metric registered: formula, domain, measurement class, CF score, and at least one falsification condition. Unregistered metrics are [?] unverified. A metric without Protocol I registration cannot produce certified outputs.</div>
+        <span class="anatomy-tag">Every metric has a formula</span>
+      </div>
+      <div class="anatomy-card">
+        <div class="anatomy-num">04</div>
+        <div class="anatomy-name">Invalidation Conditions</div>
+        <div class="anatomy-desc">The exact conditions under which the framework declares itself invalid — not merely uncertain, but structurally unable to produce reliable output. This is not a limitation. It is the primary instrument of trust. A framework without them is a promise.</div>
+        <span class="anatomy-tag">Explicitly declared</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 02 — BUILD PROTOCOL ━━━ -->
+<div class="content-block" id="protocol">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 02</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">7-Phase Build Sequence</div>
+        <div class="block-title">The Build<em>Protocol</em></div>
+        <div class="block-tagline">The sequence is fixed. No phase skips. No shortcuts past Protocol I.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          The build protocol exists because frameworks designed out of order break in the same predictable ways. <strong>Axioms defined after modules produce circular reasoning. Formulas registered after deployment cannot be falsified retroactively.</strong> The sequence enforces architectural integrity before a single measurement is taken.
+        </p>
+      </div>
+    </div>
+
+    <div class="protocol-track">
+      <div class="protocol-line"></div>
+
+      <div class="protocol-step">
+        <div class="step-marker">01</div>
+        <div class="step-body">
+          <div class="step-title">Domain Scoping</div>
+          <div class="step-desc">Define the domain, the failure modes it carries, the harm potential of output error, and the regulatory or epistemic context. Harm Risk Tier is declared here — it governs verification requirements for the entire build. A framework for medical decision support operates at a different epistemic constraint level than a framework for content scoring. These constraints cannot be adjusted after the build begins.</div>
+          <div class="step-output">Domain declaration · Harm Risk Tier · Regulatory context · Scope boundary statement</div>
+        </div>
+      </div>
+
+      <div class="protocol-step">
+        <div class="step-marker">02</div>
+        <div class="step-body">
+          <div class="step-title">Failure Mode Mapping</div>
+          <div class="step-desc">Identify the specific ways this framework can produce wrong outputs. Not theoretical failure — documented failure patterns from analogous systems, from red team sessions, from the AION failure archive. Each failure mode becomes a candidate for an invalidation condition. If you cannot name how a framework fails, you cannot build one that knows when it is failing.</div>
+          <div class="step-output">Failure mode register · Red team candidates · Invalidation condition draft set</div>
+        </div>
+      </div>
+
+      <div class="protocol-step">
+        <div class="step-marker">03</div>
+        <div class="step-body">
+          <div class="step-title">Axiom Registration</div>
+          <div class="step-desc">Governing axioms declared before modules are designed. Each axiom carries an epistemic tag ([D] / [R] / [S]) and a verification statement. Axioms tagged [S] or [?] require explicit CF scores. Any axiom that cannot be stated precisely enough to carry a tag is not ready to be an axiom — it is still a hypothesis. Hypotheses are tracked in the open threads register, not the axiom register.</div>
+          <div class="step-output">Formal axiom register · ECF tags assigned · CF scores for [S] and [?] axioms</div>
+        </div>
+      </div>
+
+      <div class="protocol-step">
+        <div class="step-marker">04</div>
+        <div class="step-body">
+          <div class="step-title">Module Specification</div>
+          <div class="step-desc">Each module specified with: one epistemic function, declared boundaries, explicit prohibitions, input and output constraints, violation conditions, bias safeguards, and domain adapter hooks. The module specification is the contract. If a downstream module receives output from a module declared in violation, it halts. No silent propagation of boundary breaches.</div>
+          <div class="step-output">Module specification set · Fence rules · Violation conditions · Bias safeguard registry</div>
+        </div>
+      </div>
+
+      <div class="protocol-step">
+        <div class="step-marker">05</div>
+        <div class="step-body">
+          <div class="step-title">Protocol I Formula Registration</div>
+          <div class="step-desc">Every quantitative metric registered before any output is generated. Registration requires: formula declaration, domain specification, measurement class, CF score, and at least one falsification condition tied to an FCL entry threshold. A metric without Protocol I registration is tagged [?] and cannot produce certified outputs. This phase surfaces undefined metrics that were assumed to be derivable — the FSVE Gini error and the CPA-001 BRS undefined input were both invisible until this registration was enforced.</div>
+          <div class="step-output">Protocol I registry · Formula set · CF scores · NBP entries for each metric</div>
+        </div>
+      </div>
+
+      <div class="protocol-step">
+        <div class="step-marker">06</div>
+        <div class="step-body">
+          <div class="step-title">CEV Arithmetic Audit</div>
+          <div class="step-desc">Calculated Empirical Verification: every formula verified against edge cases, boundary conditions, and the full domain of valid inputs before deployment. The FSVE v3.5 Gini formula produced negative values for every input — a sign error undetected until CEV was applied. CPA-001 v2.1 carried a BRS formula with an undefined input variable — the primary certainty metric was not computable. CEV does not verify intent. It verifies that the mathematics does what the specification claims.</div>
+          <div class="step-output">CEV finding register · All findings resolved · CEV Audit Record (§ installed in framework)</div>
+        </div>
+      </div>
+
+      <div class="protocol-step">
+        <div class="step-marker">07</div>
+        <div class="step-body">
+          <div class="step-title">Convergence State Declaration</div>
+          <div class="step-desc">The framework is assigned its honest convergence state — M-NASCENT on day one for every framework, regardless of how thoroughly it was designed. Convergence advances through empirical FCL entries from real deployments, not through confidence or elapsed time. The convergence state is public, versioned, and falsifiable. A framework declared M-STRONG without FCL evidence is a misrepresentation of the same kind as a clinical trial with fabricated data.</div>
+          <div class="step-output">Convergence certificate · FCL path declared · Advancement criteria specified</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 03 — DOMAIN RANGE ━━━ -->
+<div class="content-block" id="domains">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 03</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">Domain-Agnostic · Any System</div>
+        <div class="block-title">Every Domain<em>Is In Scope</em></div>
+        <div class="block-tagline">The methodology does not change. The harm tier and adapter parameters do.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          The AION methodology is domain-agnostic by design. The same 7-phase build protocol, the same Protocol I registration, the same CEV audit applies whether the framework governs an AI decision system or a clinical trial pipeline. <strong>What changes is the harm tier, the authoritative source set, the confidence ceilings, and the fail-safe activation conditions.</strong> The architecture beneath them does not.
+        </p>
+      </div>
+    </div>
+
+    <div class="domain-matrix">
+      <div class="domain-cell reference">
+        <div class="domain-sector">Reference Implementation</div>
+        <div class="domain-name">AI Systems</div>
+        <div class="domain-examples">Output certification · Failure logging · Epistemic audit · Prompt architecture · Model evaluation · Benchmark integrity</div>
+        <span class="domain-risk risk-critical">Harm Tier 3–5</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Life Sciences</div>
+        <div class="domain-name">Medical / Clinical</div>
+        <div class="domain-examples">Clinical decision support · Drug safety evaluation · Trial data integrity · Diagnostic pipeline verification · Incident reporting</div>
+        <span class="domain-risk risk-critical">Harm Tier 5</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Infrastructure</div>
+        <div class="domain-name">Defense &amp; Government</div>
+        <div class="domain-examples">Intelligence analysis integrity · Mission parameter verification · Policy decision frameworks · Classified system audit</div>
+        <span class="domain-risk risk-critical">Harm Tier 5</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Compliance</div>
+        <div class="domain-name">Legal &amp; Regulatory</div>
+        <div class="domain-examples">Compliance verification · Jurisdictional constraint mapping · Regulatory filing integrity · Contract scope anchoring · eDiscovery chain</div>
+        <span class="domain-risk risk-high">Harm Tier 4</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Capital Markets</div>
+        <div class="domain-name">Financial Systems</div>
+        <div class="domain-examples">Risk model certainty scoring · Investment recommendation integrity · Algorithmic trading audit · Disclosure verification · Model governance</div>
+        <span class="domain-risk risk-high">Harm Tier 4</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Research</div>
+        <div class="domain-name">Scientific Pipelines</div>
+        <div class="domain-examples">Hypothesis registration integrity · Replication tracking · Peer review epistemic scoring · Data chain verification · Pre-registration enforcement</div>
+        <span class="domain-risk risk-high">Harm Tier 3–4</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Operations</div>
+        <div class="domain-name">Industrial Safety</div>
+        <div class="domain-examples">Process control failure classification · Near-miss logging · Safety margin certainty scoring · Incident report integrity · Cascading failure mapping</div>
+        <span class="domain-risk risk-high">Harm Tier 4–5</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Media &amp; Intelligence</div>
+        <div class="domain-name">Information Systems</div>
+        <div class="domain-examples">Source chain integrity · Claim verification frameworks · Disinformation detection certainty · Editorial decision auditing · Archive chain</div>
+        <span class="domain-risk risk-moderate">Harm Tier 3–4</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Climate &amp; Environment</div>
+        <div class="domain-name">Environmental Models</div>
+        <div class="domain-examples">Scenario model epistemic integrity · Projection uncertainty scoring · Policy recommendation certainty · Data pipeline verification</div>
+        <span class="domain-risk risk-moderate">Harm Tier 3</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Knowledge Systems</div>
+        <div class="domain-name">Education &amp; Assessment</div>
+        <div class="domain-examples">Evaluation framework integrity · Assessment scoring certainty · Learning outcome verification · Credential chain auditing</div>
+        <span class="domain-risk risk-moderate">Harm Tier 2–3</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Supply Chain</div>
+        <div class="domain-name">Operations &amp; Logistics</div>
+        <div class="domain-examples">Vendor claim verification · Supply chain integrity scoring · Provenance chain certainty · Failure cascade mapping · ESG claim verification</div>
+        <span class="domain-risk risk-moderate">Harm Tier 2–3</span>
+      </div>
+      <div class="domain-cell">
+        <div class="domain-sector">Custom</div>
+        <div class="domain-name">Any Domain</div>
+        <div class="domain-examples">If your system produces outputs that inform decisions with real consequences, a certainty framework applies. The domain scoping phase handles everything that is specific to you.</div>
+        <span class="domain-risk risk-base">Tier TBD</span>
+      </div>
+    </div>
+    <p style="font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; margin-top:8px;">
+      Harm Tier governs verification requirements, confidence ceilings, and fail-safe activation conditions. Tier 5 = physical harm or death possible. Tier 1 = negligible consequence. See CDIP v1.5 for full Harm Tier protocol.
+    </p>
+  </div>
+</div>
+
+<!-- ━━━ 04 — CONVERGENCE LADDER ━━━ -->
+<div class="content-block" id="convergence">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 04</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">The Honesty Instrument</div>
+        <div class="block-title">The Convergence<em>Ladder</em></div>
+        <div class="block-tagline">M-NASCENT is not a failure. It is the only honest starting point.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          Convergence state measures how much empirical evidence supports the framework's claims — not how carefully it was designed, not how long it has been in use. <strong>Every framework begins at M-NASCENT. Every advance requires documented FCL entries from real deployments.</strong> A framework declared M-STRONG without FCL evidence is a misrepresentation of the same kind as a clinical trial with fabricated data.
+        </p>
+      </div>
+    </div>
+
+    <div class="convergence-ladder">
+      <div class="ladder-rung rung-nascent">
+        <div class="rung-state"><span class="rung-badge">M-NASCENT</span></div>
+        <div class="rung-criteria">
+          <strong>Specified and internally consistent — not yet empirically calibrated.</strong> Framework architecture is complete: axioms registered, modules specified, Protocol I formulas declared, CEV audit passed, invalidation conditions stated. FCL entries: 0 or below advancement threshold. All quantitative claims carry [S] tags indicating theoretical basis only. This is not a limitation — it is the accurate description of a new instrument before its first field use.
+        </div>
+        <div class="rung-entry">FCL: 0 → threshold</div>
+      </div>
+      <div class="ladder-rung rung-moderate">
+        <div class="rung-state"><span class="rung-badge">M-MODERATE</span></div>
+        <div class="rung-criteria">
+          <strong>Empirically tested — predictive validity partially confirmed.</strong> FCL entries from real deployments logged. Some [S] claims upgraded to [R] or [D] based on observed outcomes. Formula coefficients have initial calibration data. Invalidation conditions have been tested — none triggered, but the test is documented. Edge cases identified in production are recorded in the FCL.
+        </div>
+        <div class="rung-entry">FCL: threshold met</div>
+      </div>
+      <div class="ladder-rung rung-strong">
+        <div class="rung-state"><span class="rung-badge">M-STRONG</span></div>
+        <div class="rung-criteria">
+          <strong>Convergence validated — calibrated across multiple deployment contexts.</strong> Formula coefficients empirically calibrated, not theoretically asserted. Inter-rater reliability targets met. Predictive validity documented across domain variants. Adversarial tests conducted and passed. At least one prior version was superseded by documented findings — the framework has been falsified and rebuilt, not only confirmed. LAV v1.5 is the only framework in the AION stack at this state.
+        </div>
+        <div class="rung-entry">Multi-domain FCL</div>
+      </div>
+      <div class="ladder-rung rung-vstrong">
+        <div class="rung-state"><span class="rung-badge">M-VERY STRONG</span></div>
+        <div class="rung-criteria">
+          <strong>Cross-validated and independently replicated.</strong> Applied by independent auditors outside the original build context. Replication studies confirm core predictive validity. External review has attempted falsification and documented the attempt. At least one major structural revision driven by empirical finding is in the record. This state is rare by design — most frameworks should not reach it.
+        </div>
+        <div class="rung-entry">Independent replication</div>
+      </div>
+      <div class="ladder-rung rung-const">
+        <div class="rung-state"><span class="rung-badge">CONSTITUTIONAL</span></div>
+        <div class="rung-criteria">
+          <strong>Foundational — governs other frameworks, not governed by them.</strong> Reserved for frameworks that define the rules under which all other frameworks operate. In the AION stack, only the EIGHT LAWS hold Constitutional status. A Constitutional framework that fails does not produce a wrong output — it produces a system that can no longer be trusted at all.
+        </div>
+        <div class="rung-entry">Architectural only</div>
+      </div>
+    </div>
+
+    <div class="principles-block">
+      <div class="principles-title">What convergence state is not</div>
+      <ul class="principles-list">
+        <li>Not a quality score — M-NASCENT can be architecturally perfect and empirically untested simultaneously</li>
+        <li>Not a function of elapsed time — a framework used for 10 years with no FCL entries is still M-NASCENT</li>
+        <li>Not awarded — earned through documented FCL entries, not through client confidence or architect assertion</li>
+        <li>Not permanent — a framework at M-STRONG can regress if FCL entries reveal systematic error</li>
+        <li>Not hidden — convergence state is public and versioned in every framework release</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 05 — DELIVERABLE SPEC ━━━ -->
+<div class="content-block" id="deliverables">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 05</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">What You Receive</div>
+        <div class="block-title">The Deliverable<em>Specification</em></div>
+        <div class="block-tagline">Every item is required. None are optional. The framework is not certified without all of them.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          A custom AION framework engagement produces a complete, deployable framework document plus the full supporting architecture needed to maintain it: formula registry, falsification conditions, convergence certificate, and a CEV audit record that cannot be quietly updated after delivery. <strong>You receive not just the framework but the instrument for knowing when it is wrong.</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="deliverable-spec">
+      <div class="deliv-header">Full Deliverable Set — Custom AION Framework Engagement</div>
+      <ul class="deliv-rows">
+        <li class="deliv-row">
+          <span class="deliv-item-name">Framework Document</span>
+          <span class="deliv-item-desc">Complete specification: domain lock, term definitions, axiom register, module set with full specification template per module. All sections in AION-standard format. Version 1.0 on delivery — versioned for all future iterations.</span>
+          <span class="deliv-item-tag">Primary · Versioned</span>
+        </li>
+        <li class="deliv-row">
+          <span class="deliv-item-name">Protocol I Registry</span>
+          <span class="deliv-item-desc">Every quantitative metric registered: formula, domain, measurement class, CF score, inter-rater reliability target, minimum one falsification condition per formula. Unregistered metrics are moved to open threads with [?] status — they do not appear in the live framework.</span>
+          <span class="deliv-item-tag">Required · All metrics</span>
+        </li>
+        <li class="deliv-row">
+          <span class="deliv-item-name">NBP Entry Set</span>
+          <span class="deliv-item-desc">Nullification Boundary Protocol entries for every [S]-tagged claim. Each entry states the exact empirical condition under which the claim is falsified, the resolution protocol, and the required sign-off for revision. These entries are what separate a framework from a collection of opinions.</span>
+          <span class="deliv-item-tag">Required · [S] claims</span>
+        </li>
+        <li class="deliv-row">
+          <span class="deliv-item-name">CEV Audit Record</span>
+          <span class="deliv-item-desc">Full arithmetic verification: every formula scanned for edge cases, boundary conditions, domain errors. Findings register with severity classifications and resolution documentation. A clean CEV record means zero unresolved findings — not zero findings. The distinction matters.</span>
+          <span class="deliv-item-tag">Required · Pre-delivery</span>
+        </li>
+        <li class="deliv-row">
+          <span class="deliv-item-name">Invalidation Conditions</span>
+          <span class="deliv-item-desc">The complete set of conditions under which the framework declares itself invalid — not uncertain, but structurally unable to produce reliable output. Written as falsification tests, not caveats. The framework can fail these tests. That is the point.</span>
+          <span class="deliv-item-tag">Required · All frameworks</span>
+        </li>
+        <li class="deliv-row">
+          <span class="deliv-item-name">ECF Tag Distribution</span>
+          <span class="deliv-item-desc">Every factual claim carries an epistemic tag: [D] data / [R] reasoned / [S] strategic / [?] unverified. Tag distribution summary in framework header. No claim exits without a tag. Tag count is falsifiable — if the numbers do not match the inline tags, it is a protocol failure.</span>
+          <span class="deliv-item-tag">Applied · All claims</span>
+        </li>
+        <li class="deliv-row">
+          <span class="deliv-item-name">Convergence Certificate</span>
+          <span class="deliv-item-desc">Formal convergence state declaration on delivery: M-NASCENT for every new framework. Includes current FCL entry count, advancement threshold, what the first FCL entry requires, and the path to M-MODERATE as a measurable milestone — not a time estimate.</span>
+          <span class="deliv-item-tag">Issued · Day one</span>
+        </li>
+        <li class="deliv-row">
+          <span class="deliv-item-name">Version Delta Architecture</span>
+          <span class="deliv-item-desc">The framework ships with its versioning structure in place — v1.0 with version trigger documentation format ready. Every future revision produces a delta entry: what changed, what triggered the change, what the previous value was, severity of the change. No silent updates.</span>
+          <span class="deliv-item-tag">Infrastructure · v1.0</span>
+        </li>
+        <li class="deliv-row">
+          <span class="deliv-item-name">FCL Path Documentation</span>
+          <span class="deliv-item-desc">The Framework Calibration Log is initialized empty on delivery — this is correct. The FCL path document specifies how to log entries from live deployments, what constitutes a valid FCL entry, the threshold for M-MODERATE advancement, and the review process for convergence state revision.</span>
+          <span class="deliv-item-tag">Empty on delivery</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 06 — REFERENCE IMPLEMENTATIONS ━━━ -->
+<div class="content-block" id="references">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 06</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">Live Evidence Base</div>
+        <div class="block-title">Reference<em>Implementations</em></div>
+        <div class="block-tagline">The AION stack is the proof of the methodology. Not a demo — a deployed record.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          The frameworks offered here are not theoretical. The AION stack itself is built under this methodology — and CEV audits conducted this month found critical errors in deployed frameworks that had been in use. <strong>The methodology found them. The deliverable was corrected. The correction log is public.</strong> That is what the methodology looks like in operation.
+        </p>
+      </div>
+    </div>
+
+    <div class="ref-grid">
+      <div class="ref-card">
+        <div class="ref-fw">FSVE</div>
+        <div class="ref-version">v3.6 — CEV Correction Release · March 2026</div>
+        <span class="ref-convergence c-moderate">M-MODERATE</span>
+        <div class="ref-desc">Certainty Scoring Engine — 6 score dimensions, validity threshold enforcement, multi-perspective reviewer architecture. CEV v3.6 audit found Gini formula sign error producing negative values for all inputs. Corrected. All prior v3.5 laundering clearances using Gini are void and require re-run under v3.6. The error was not visible until CEV was applied. That is the entire argument for the methodology.</div>
+        <div class="ref-stats">
+          <div class="ref-stat">8 CEV findings — 2 critical, 1 structural gap, 2 major, 3 minor</div>
+          <div class="ref-stat">EV: 0.525 — bottleneck E=0.35, empirical not architectural</div>
+          <div class="ref-stat">NBP-FORMULA-GINI-01 — first [D]-tagged NBP entry in FSVE</div>
+          <div class="ref-stat">FCL entries: 0 — convergence honest, not suppressed</div>
+        </div>
+      </div>
+      <div class="ref-card">
+        <div class="ref-fw">LAV</div>
+        <div class="ref-version">v1.5 — Active · March 2026</div>
+        <span class="ref-convergence c-strong">M-STRONG</span>
+        <div class="ref-desc">Linguistic Anchor Validation — the only M-STRONG framework in the AION stack. 45 validated entries, 77.5% running mean. Language precision enforcement for all framework output. M-STRONG status earned through documented FCL entries across multiple deployment contexts. The reference case for what convergence advancement requires in practice — and for how long it takes.</div>
+        <div class="ref-stats">
+          <div class="ref-stat">45 validated entries — active registry</div>
+          <div class="ref-stat">Running mean: 77.5% — above M-STRONG threshold</div>
+          <div class="ref-stat">Only framework in the stack at M-STRONG</div>
+          <div class="ref-stat">The benchmark every other framework is measured against</div>
+        </div>
+      </div>
+      <div class="ref-card">
+        <div class="ref-fw">CPA-001</div>
+        <div class="ref-version">v2.2 — FSVE v3.6 Audit Release · March 2026</div>
+        <span class="ref-convergence c-nascent">M-NASCENT</span>
+        <div class="ref-desc">Cognitive Prompt Architecture — bias-constrained, domain-activatable reasoning framework. FSVE v3.6 review found the BRS formula carried an undefined input variable in v2.1 — the primary certainty metric was not computable. All prior v2.1 BRS values are [?] unverified. v2.2 registers DFS, RS, and OEI formulas under Protocol I for the first time. This is v2.2 because the methodology caught what v2.1 should not have shipped with.</div>
+        <div class="ref-stats">
+          <div class="ref-stat">12 CEV findings — 1 critical, 4 major, 2 moderate, 5 minor</div>
+          <div class="ref-stat">3 Protocol I registrations new in v2.2: DFS, RS, OEI</div>
+          <div class="ref-stat">3 NBP entries — NBP-CPA-001 through NBP-CPA-003</div>
+          <div class="ref-stat">First version that can produce reproducible BRS outputs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="principles-block">
+      <div class="principles-title">What the reference implementations demonstrate</div>
+      <ul class="principles-list">
+        <li>The methodology finds critical errors in frameworks it produced. That is not a failure of the methodology — that is the methodology working exactly as designed.</li>
+        <li>M-NASCENT with zero FCL entries and a clean CEV record is more trustworthy than M-STRONG asserted without evidence.</li>
+        <li>The correction log is always public. There is no incentive to suppress findings — suppression would be detectable in the next CEV audit.</li>
+        <li>Every critical finding strengthens the framework. FSVE v3.6 is a more reliable certainty engine precisely because the Gini error is documented and the correction is registered.</li>
+      </ul>
+    </div>
+
+    <div class="cta-bar">
+      <a href="https://github.com/AionSystem/HIPPOCAMPUS" target="_blank" rel="noopener" class="cta-btn">
+        <span>Full Stack in AION-BRAIN ↗</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ENGAGE STRIP -->
+<div class="engage-strip">
+  <div class="engage-inner">
+    <div>
+      <h2 class="engage-heading">The framework that knows<em>when it is wrong.</em></h2>
+      <p class="engage-sub">
+        Framework engineering engagements begin with a scoping conversation — domain, failure modes, harm tier, deployment context. The deliverable is specified before the build begins. If the scope cannot be defined precisely enough to produce a Protocol I registry, the engagement does not proceed.
+      </p>
+      <p class="engage-note">
+        Engagement via LinkedIn DM. No RFP required — a clear domain statement<br>
+        and willingness to name your failure modes is enough to begin.
+      </p>
+    </div>
+    <div class="engage-paths">
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="engage-path">
+        <span class="engage-path-icon">↗</span>
+        <div>
+          <div class="engage-path-label">Start with LinkedIn</div>
+          <div class="engage-path-desc">Framework engineering begins with a scoping conversation. Domain, failure modes, harm tier. Name the problem before anything is built.</div>
+        </div>
+      </a>
+      <a href="/services/ai-audit/" class="engage-path">
+        <span class="engage-path-icon">◈</span>
+        <div>
+          <div class="engage-path-label">Framework + Certification</div>
+          <div class="engage-path-desc">STP FROZEN-2.0 certification is available alongside a custom framework engagement in the same scope of work.</div>
+        </div>
+      </a>
+      <a href="https://github.com/AionSystem/HIPPOCAMPUS" target="_blank" rel="noopener" class="engage-path">
+        <span class="engage-path-icon">⌬</span>
+        <div>
+          <div class="engage-path-label">Read the Live Stack</div>
+          <div class="engage-path-desc">Every AION framework is in AION-BRAIN. Read the specifications, CEV audit records, convergence certificates — before the conversation starts.</div>
+        </div>
+      </a>
+      <a href="/services/" class="engage-path">
+        <span class="engage-path-icon">←</span>
+        <div>
+          <div class="engage-path-label">All Services</div>
+          <div class="engage-path-desc">Framework engineering · AI output certification · AION verified simulation. Three services, one standard.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-id">
+    <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
+    AI Reliability Architect &nbsp;·&nbsp; New York &nbsp;·&nbsp; March 2026<br>
+    <span style="font-size:10px;">AION v3.0 · CEV v1.0 · © 2026 Sheldon K. Salmon</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, nodes = [], t = 0;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+class Node {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.vx = (Math.random() - 0.5) * 0.14;
+    this.vy = (Math.random() - 0.5) * 0.14;
+    this.r = 1 + Math.random() * 1.8;
+    this.alpha = 0.08 + Math.random() * 0.25;
+    this.pulse = Math.random() * Math.PI * 2;
+    this.pulseSpeed = 0.018 + Math.random() * 0.025;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    this.pulse += this.pulseSpeed;
+    if (this.x < -50 || this.x > W + 50 || this.y < -50 || this.y > H + 50) this.reset();
+  }
+  draw() {
+    const a = this.alpha * (0.6 + 0.4 * Math.sin(this.pulse));
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(240,165,0,${a})`;
+    ctx.fill();
+  }
+}
+
+function drawEdges() {
+  const maxDist = 110;
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < maxDist) {
+        const a = (1 - dist / maxDist) * 0.055;
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(240,165,0,${a})`;
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function init() {
+  resize();
+  for (let i = 0; i < 75; i++) nodes.push(new Node());
+}
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  t += 0.01;
+  drawEdges();
+  nodes.forEach(n => { n.update(); n.draw(); });
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize', resize);
+init(); loop();
+</script>
+
+</body>
+</html>
 
