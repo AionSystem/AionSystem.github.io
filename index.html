@@ -41,7 +41,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ── SCAN LINES + GRID ─────────────────────────────────────── */
 body::before {
   content: '';
   position: fixed;
@@ -69,7 +68,6 @@ body::after {
   z-index: 0;
 }
 
-/* ── NAV ───────────────────────────────────────────────────── */
 nav {
   position: fixed;
   top: 0;
@@ -115,7 +113,6 @@ nav {
 
 .nav-links a:hover { color: var(--amber); }
 
-/* ── HERO ──────────────────────────────────────────────────── */
 .hero {
   position: relative;
   z-index: 1;
@@ -128,7 +125,6 @@ nav {
   margin: 0 auto;
 }
 
-/* Animated canvas bg */
 #hero-canvas {
   position: fixed;
   top: 0; left: 0;
@@ -220,7 +216,6 @@ nav {
   color: var(--amber-l);
 }
 
-/* CTA Row */
 .hero-ctas {
   display: flex;
   gap: 16px;
@@ -273,7 +268,6 @@ nav {
 .cta-arrow { font-size: 14px; transition: transform 0.2s; }
 .cta-btn:hover .cta-arrow { transform: translateX(4px); }
 
-/* Status strip */
 .hero-status {
   display: flex;
   gap: 32px;
@@ -306,7 +300,6 @@ nav {
   text-transform: uppercase;
 }
 
-/* ── SECTION BASE ──────────────────────────────────────────── */
 section {
   position: relative;
   z-index: 1;
@@ -344,7 +337,6 @@ section {
   background: var(--border);
 }
 
-/* ── SERVICES GRID ─────────────────────────────────────────── */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -446,7 +438,6 @@ section {
 
 .service-link:hover { border-bottom-color: var(--amber); }
 
-/* ── WORK / SIMULATOR SHOWCASE ─────────────────────────────── */
 .work-strip {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -542,7 +533,6 @@ section {
   margin-top: 12px;
 }
 
-/* ── STACK SECTION ─────────────────────────────────────────── */
 .stack-table {
   width: 100%;
   border-collapse: collapse;
@@ -587,7 +577,6 @@ section {
 .m-mod     { background: rgba(240,165,0,0.1);  color: var(--amber); border: 1px solid var(--amber-d); }
 .m-nascent { background: rgba(64,196,255,0.08); color: #40c4ff; border: 1px solid #1a4a5a; }
 
-/* ── CERTIFY STRIP ─────────────────────────────────────────── */
 .certify-strip {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -627,7 +616,6 @@ section {
 
 .certify-text a:hover { border-bottom-color: var(--gold); }
 
-/* ── FOOTER ────────────────────────────────────────────────── */
 footer {
   position: relative;
   z-index: 1;
@@ -670,7 +658,6 @@ footer {
 
 .footer-links a:hover { color: var(--amber); }
 
-/* ── ANIMATIONS ────────────────────────────────────────────── */
 @keyframes fadeUp {
   to { opacity: 1; transform: translateY(0); }
 }
@@ -679,7 +666,6 @@ footer {
   to { opacity: 1; }
 }
 
-/* ── MOBILE ────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   nav { padding: 0 20px; }
   .nav-links { display: none; }
@@ -693,10 +679,9 @@ footer {
 </head>
 <body>
 
-<!-- ANIMATED BACKGROUND CANVAS -->
 <canvas id="hero-canvas"></canvas>
 
-<!-- NAV -->
+<!-- NAV — About added -->
 <nav>
   <a href="/" class="nav-logo">AION<span>system</span></a>
   <ul class="nav-links">
@@ -704,7 +689,8 @@ footer {
     <li><a href="#services">Services</a></li>
     <li><a href="#stack">Stack</a></li>
     <li><a href="/certify/">Certify</a></li>
-    <li><a href="https://linkedin.com/in/sheldonksalmon" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
   </ul>
 </nav>
 
@@ -763,7 +749,7 @@ footer {
   </div>
 </div>
 
-<!-- ═══════════ SERVICES ═══════════ -->
+<!-- SERVICES -->
 <section id="services">
   <div class="section-header">
     <span class="section-num">// 01</span>
@@ -817,7 +803,7 @@ footer {
   </div>
 </section>
 
-<!-- ═══════════ WORK ═══════════ -->
+<!-- WORK -->
 <section id="work">
   <div class="section-header">
     <span class="section-num">// 02</span>
@@ -826,7 +812,6 @@ footer {
   </div>
 
   <div class="work-strip">
-    <!-- LIVE -->
     <div class="work-card">
       <div class="work-card-badge">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
@@ -852,7 +837,6 @@ footer {
       <a href="/simulators/roller-coaster/" class="work-link">Launch Simulator →</a>
     </div>
 
-    <!-- PLANNED 1 -->
     <div class="work-card work-card-coming">
       <div class="work-domain">Physics · Mechanics</div>
       <div class="work-title">Projectile<br>Motion Simulator</div>
@@ -864,7 +848,6 @@ footer {
       <span class="coming-pill">Coming Soon</span>
     </div>
 
-    <!-- PLANNED 2 -->
     <div class="work-card work-card-coming">
       <div class="work-domain">Engineering · Civil</div>
       <div class="work-title">Bridge Structural<br>Load Simulator</div>
@@ -875,7 +858,6 @@ footer {
       <span class="coming-pill">Coming Soon</span>
     </div>
 
-    <!-- PLANNED 3 -->
     <div class="work-card work-card-coming">
       <div class="work-domain">Fluid Dynamics · Energy</div>
       <div class="work-title">Pipeline Flow<br>Simulator</div>
@@ -895,7 +877,7 @@ footer {
   </div>
 </section>
 
-<!-- ═══════════ STACK ═══════════ -->
+<!-- STACK -->
 <section id="stack">
   <div class="section-header">
     <span class="section-num">// 03</span>
@@ -961,7 +943,7 @@ footer {
   </div>
 </section>
 
-<!-- ═══════════ CERTIFICATION ═══════════ -->
+<!-- CERTIFICATION -->
 <section id="certify" style="padding-top:0;">
   <div class="section-header">
     <span class="section-num">// 04</span>
@@ -998,7 +980,7 @@ footer {
   </div>
 </section>
 
-<!-- ═══════════ FOOTER ═══════════ -->
+<!-- FOOTER — About added -->
 <footer>
   <div class="footer-id">
     <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
@@ -1008,12 +990,13 @@ footer {
   <ul class="footer-links">
     <li><a href="/simulators/">Simulators</a></li>
     <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
     <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
-    <li><a href="https://linkedin.com/in/sheldonksalmon" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
   </ul>
 </footer>
 
-<!-- ═══════════ CANVAS ANIMATION ═══════════ -->
+<!-- CANVAS ANIMATION -->
 <script>
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
