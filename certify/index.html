@@ -66,14 +66,42 @@ nav {
 .badge-card.sim-card::before { background:var(--gold); }
 .badge-card.aud-card::before { background:var(--blue); }
 
-.badge-card svg { margin-bottom:20px; }
+/* Badge SVG link wrapper */
+.badge-link { display:block; text-decoration:none; margin-bottom:20px; opacity:0.95; transition:opacity 0.2s, transform 0.2s; }
+.badge-link:hover { opacity:1; transform:scale(1.04); }
+.badge-link svg { display:block; }
 
-.badge-card-name { font-family:var(--sans); font-size:16px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:8px; }
+.badge-card-name { font-family:var(--sans); font-size:16px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:4px; text-decoration:none; }
 .stp-card .badge-card-name { color:var(--amber); }
 .sim-card .badge-card-name { color:var(--gold); }
 .aud-card .badge-card-name { color:var(--blue); }
+.badge-card-name:hover { text-decoration:underline; text-underline-offset:3px; }
 
-.badge-card-sub { font-family:var(--mono); font-size:10px; letter-spacing:1px; color:var(--muted); margin-bottom:16px; }
+.badge-card-sub { font-family:var(--mono); font-size:10px; letter-spacing:1px; color:var(--muted); margin-bottom:14px; }
+
+/* BRIEF INSERT — new */
+.badge-brief {
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:1px;
+  line-height:1.7;
+  padding:10px 14px;
+  margin-bottom:14px;
+  width:100%;
+  border:1px solid var(--border);
+}
+.stp-card .badge-brief { border-left:2px solid var(--amber-d); color:var(--amber-d); background:rgba(240,165,0,0.04); }
+.sim-card .badge-brief { border-left:2px solid var(--gold-d); color:var(--gold-d); background:rgba(212,175,55,0.04); }
+.aud-card .badge-brief { border-left:2px solid var(--blue); color:var(--blue); background:rgba(64,196,255,0.04); opacity:0.8; }
+
+.badge-brief a {
+  color:inherit;
+  text-decoration:none;
+  border-bottom:1px solid currentColor;
+  opacity:0.7;
+  transition:opacity 0.15s;
+}
+.badge-brief a:hover { opacity:1; }
 
 .badge-card-desc { font-family:var(--sans); font-size:14px; font-weight:300; color:var(--muted); line-height:1.7; }
 
@@ -124,7 +152,7 @@ nav {
 .cta-block h3 { font-family:var(--sans); font-size:24px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--text); margin-bottom:8px; }
 .cta-block p { font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:24px; }
 .cta-btn { display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; padding:12px 28px; border:1px solid var(--amber); color:#000; background:var(--amber); transition:background 0.2s; }
-.cta-btn:hover { background:var(--amber-l); }
+.cta-btn:hover { background:var(--amber-d); color:#fff; }
 .cta-btn-outline { background:transparent; color:var(--amber); margin-left:12px; }
 .cta-btn-outline:hover { background:rgba(240,165,0,0.08); }
 
@@ -154,21 +182,30 @@ footer a:hover { color:var(--amber); }
 
     <!-- STP CERTIFIED -->
     <div class="badge-card stp-card">
-      <!-- Amber STP badge (simplified inline) -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="90" height="90">
-        <defs>
-          <linearGradient id="bv1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffc947"/><stop offset="50%" stop-color="#f0a500"/><stop offset="100%" stop-color="#b07800"/></linearGradient>
-        </defs>
-        <polygon points="200,30 370,110 370,290 200,370 30,290 30,110" fill="#0f1015" stroke="url(#bv1)" stroke-width="4"/>
-        <polygon points="200,55 345,123 345,277 200,345 55,277 55,123" fill="none" stroke="url(#bv1)" stroke-width="1.5" stroke-opacity="0.5"/>
-        <circle cx="200" cy="200" r="90" fill="none" stroke="url(#bv1)" stroke-width="2"/>
-        <text x="200" y="188" font-family="'Barlow Condensed',sans-serif" font-size="28" font-weight="900" fill="#f0a500" text-anchor="middle" letter-spacing="2">STP</text>
-        <text x="200" y="218" font-family="'Courier New',monospace" font-size="12" fill="#b07800" text-anchor="middle" letter-spacing="2">CERTIFIED</text>
-      </svg>
-      <div class="badge-card-name">STP Certified</div>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
+         target="_blank" rel="noopener" class="badge-link" title="View STP Certification methodology ↗">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="90" height="90">
+          <defs>
+            <linearGradient id="bv1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffc947"/><stop offset="50%" stop-color="#f0a500"/><stop offset="100%" stop-color="#b07800"/></linearGradient>
+          </defs>
+          <polygon points="200,30 370,110 370,290 200,370 30,290 30,110" fill="#0f1015" stroke="url(#bv1)" stroke-width="4"/>
+          <polygon points="200,55 345,123 345,277 200,345 55,277 55,123" fill="none" stroke="url(#bv1)" stroke-width="1.5" stroke-opacity="0.5"/>
+          <circle cx="200" cy="200" r="90" fill="none" stroke="url(#bv1)" stroke-width="2"/>
+          <text x="200" y="188" font-family="'Barlow Condensed',sans-serif" font-size="28" font-weight="900" fill="#f0a500" text-anchor="middle" letter-spacing="2">STP</text>
+          <text x="200" y="218" font-family="'Courier New',monospace" font-size="12" fill="#b07800" text-anchor="middle" letter-spacing="2">CERTIFIED</text>
+        </svg>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
+         target="_blank" rel="noopener" class="badge-card-name">STP Certified</a>
       <div class="badge-card-sub">Sovereign Trace Protocol · FROZEN-2.0</div>
+      <div class="badge-brief">
+        Issued to organizations whose AI deployment infrastructure has been<br>
+        formally audited against the FROZEN-2.0 standard.<br>
+        <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
+           target="_blank" rel="noopener">View full certification methodology ↗</a>
+      </div>
       <div class="badge-divider"></div>
-      <div class="badge-card-desc">Issued to <strong>organizations</strong> whose AI deployment infrastructure has been formally audited and verified against the FROZEN-2.0 standard. Immutable failure capture, transparent remediation, honest epistemic record.</div>
+      <div class="badge-card-desc">Immutable failure capture, transparent remediation, honest epistemic record. Four tiers — Basic through Defense Grade.</div>
       <div class="badge-divider"></div>
       <div class="badge-card-issued">
         <strong>Issued to:</strong> Organizations<br>
@@ -178,93 +215,103 @@ footer a:hover { color:var(--amber); }
       </div>
     </div>
 
-    <!-- AION VERIFIED SIMULATOR — FULL PRECISION BADGE -->
+    <!-- AION VERIFIED SIMULATOR -->
     <div class="badge-card sim-card">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="130" height="130">
-        <defs>
-          <linearGradient id="bv2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#F5E070"/><stop offset="35%" stop-color="#D4AF37"/>
-            <stop offset="65%" stop-color="#C9A028"/><stop offset="100%" stop-color="#8B7520"/>
-          </linearGradient>
-          <linearGradient id="bv2s" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#FAF0A0"/><stop offset="30%" stop-color="#D4AF37"/>
-            <stop offset="70%" stop-color="#B8921E"/><stop offset="100%" stop-color="#7A6418"/>
-          </linearGradient>
-          <linearGradient id="bw2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/>
-            <stop offset="20%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#F5E070"/>
-            <stop offset="80%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/>
-          </linearGradient>
-          <linearGradient id="bd2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#6B5510" stop-opacity="0.1"/>
-            <stop offset="50%" stop-color="#D4AF37" stop-opacity="0.7"/>
-            <stop offset="100%" stop-color="#6B5510" stop-opacity="0.1"/>
-          </linearGradient>
-          <filter id="bwg2" x="-20%" y="-100%" width="140%" height="300%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
-            <feColorMatrix in="blur" type="matrix" values="1 0.8 0 0 0.1 0.7 0.5 0 0 0 0 0 0 0 0 0 0 0 0.8 0" result="gb"/>
-            <feMerge><feMergeNode in="gb"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="bsh2" x="-10%" y="-10%" width="120%" height="120%">
-            <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#D4AF37" flood-opacity="0.3"/>
-          </filter>
-          <path id="bta2"  d="M 78,200 A 122,122 0 0,1 322,200"/>
-          <path id="btsa2" d="M 98,200 A 102,102 0 0,1 302,200"/>
-          <path id="bba2"  d="M 92,200 A 108,108 0 0,0 308,200"/>
-        </defs>
-        <polygon points="368.1,269.6 269.6,368.1 130.4,368.1 31.9,269.6 31.9,130.4 130.4,31.9 269.6,31.9 368.1,130.4" fill="#0d0b08" stroke="url(#bv2)" stroke-width="3" filter="url(#bsh2)"/>
-        <polygon points="358.5,264.9 264.9,358.5 135.1,358.5 41.5,264.9 41.5,135.1 135.1,41.5 264.9,41.5 358.5,135.1" fill="none" stroke="url(#bv2s)" stroke-width="0.8" stroke-opacity="0.5"/>
-        <g>
-          <line x1="355" y1="200" x2="368" y2="200" stroke="url(#bv2)" stroke-width="1.5"/>
-          <line x1="349.7" y1="240.1" x2="356.5" y2="241.9" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="334.2" y1="277.5" x2="340.3" y2="281" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="309.6" y1="309.6" x2="314.6" y2="314.6" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="277.5" y1="334.2" x2="281" y2="340.3" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="240.1" y1="349.7" x2="241.9" y2="356.5" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="200" y1="355" x2="200" y2="368" stroke="url(#bv2)" stroke-width="1.5"/>
-          <line x1="159.9" y1="349.7" x2="158.1" y2="356.5" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="122.5" y1="334.2" x2="119" y2="340.3" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="90.4" y1="309.6" x2="85.4" y2="314.6" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="65.8" y1="277.5" x2="59.7" y2="281" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="50.3" y1="240.1" x2="43.5" y2="241.9" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="45" y1="200" x2="32" y2="200" stroke="url(#bv2)" stroke-width="1.5"/>
-          <line x1="50.3" y1="159.9" x2="43.5" y2="158.1" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="65.8" y1="122.5" x2="59.7" y2="119" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="90.4" y1="90.4" x2="85.4" y2="85.4" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="122.5" y1="65.8" x2="119" y2="59.7" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="159.9" y1="50.3" x2="158.1" y2="43.5" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="200" y1="45" x2="200" y2="32" stroke="url(#bv2)" stroke-width="1.5"/>
-          <line x1="240.1" y1="50.3" x2="241.9" y2="43.5" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="277.5" y1="65.8" x2="281" y2="59.7" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="309.6" y1="90.4" x2="314.6" y2="85.4" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="334.2" y1="122.5" x2="340.3" y2="119" stroke="url(#bv2)" stroke-width="0.8"/>
-          <line x1="349.7" y1="159.9" x2="356.5" y2="158.1" stroke="url(#bv2)" stroke-width="0.8"/>
-        </g>
-        <circle cx="200" cy="200" r="150" fill="none" stroke="url(#bv2)" stroke-width="2.5"/>
-        <circle cx="200" cy="200" r="142" fill="none" stroke="url(#bv2s)" stroke-width="0.8" stroke-dasharray="3 5" stroke-opacity="0.6"/>
-        <circle cx="200" cy="200" r="134" fill="#0d0b08"/>
-        <circle cx="200" cy="200" r="134" fill="none" stroke="url(#bv2)" stroke-width="1.5"/>
-        <polygon points="62,195 57,200 62,205 67,200" fill="url(#bv2)" opacity="0.9"/>
-        <polygon points="338,195 333,200 338,205 343,200" fill="url(#bv2)" opacity="0.9"/>
-        <circle cx="200" cy="66" r="2.5" fill="url(#bv2)" opacity="0.8"/>
-        <circle cx="200" cy="334" r="2.5" fill="url(#bv2)" opacity="0.8"/>
-        <text font-family="'Times New Roman',Georgia,serif" font-size="15" font-weight="bold" letter-spacing="5" fill="url(#bv2s)" text-anchor="middle"><textPath href="#bta2" startOffset="50%">AION · VERIFIED</textPath></text>
-        <text font-family="'Times New Roman',Georgia,serif" font-size="11.5" letter-spacing="7" fill="#C9A028" text-anchor="middle" opacity="0.85"><textPath href="#btsa2" startOffset="50%">· SIMULATOR ·</textPath></text>
-        <text font-family="'Times New Roman',Georgia,serif" font-size="11" font-weight="bold" letter-spacing="3" fill="url(#bv2s)" text-anchor="middle"><textPath href="#bba2" startOffset="50%">SHELDON K. SALMON</textPath></text>
-        <line x1="78" y1="200" x2="142" y2="200" stroke="url(#bd2)" stroke-width="1"/>
-        <line x1="258" y1="200" x2="322" y2="200" stroke="url(#bd2)" stroke-width="1"/>
-        <polygon points="142,197 137,200 142,203 147,200" fill="#C9A028" opacity="0.6"/>
-        <polygon points="258,197 253,200 258,203 263,200" fill="#C9A028" opacity="0.6"/>
-        <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="#D4AF37" stroke-width="8" stroke-linecap="round" opacity="0.1"/>
-        <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#bw2)" stroke-width="2.8" stroke-linecap="round" filter="url(#bwg2)"/>
-        <text x="200" y="167" font-family="'Courier New',monospace" font-size="9" letter-spacing="3" fill="#D4AF37" text-anchor="middle" opacity="0.9">VERIFIED SIMULATION</text>
-        <text x="200" y="242" font-family="'Courier New',monospace" font-size="8" letter-spacing="2.5" fill="#8B7520" text-anchor="middle" opacity="0.8">v1.0 · 2026 · AION STACK</text>
-        <text x="200" y="257" font-family="'Courier New',monospace" font-size="7" letter-spacing="1" fill="#5a4e20" text-anchor="middle" opacity="0.6">NON-TRANSFERABLE · SHA-256 · STP SEALED</text>
-      </svg>
-      <div class="badge-card-name">AION Verified Simulator</div>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
+         target="_blank" rel="noopener" class="badge-link" title="View AION Verified Simulator certification methodology ↗">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="130" height="130">
+          <defs>
+            <linearGradient id="bv2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#F5E070"/><stop offset="35%" stop-color="#D4AF37"/>
+              <stop offset="65%" stop-color="#C9A028"/><stop offset="100%" stop-color="#8B7520"/>
+            </linearGradient>
+            <linearGradient id="bv2s" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#FAF0A0"/><stop offset="30%" stop-color="#D4AF37"/>
+              <stop offset="70%" stop-color="#B8921E"/><stop offset="100%" stop-color="#7A6418"/>
+            </linearGradient>
+            <linearGradient id="bw2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/>
+              <stop offset="20%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#F5E070"/>
+              <stop offset="80%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/>
+            </linearGradient>
+            <linearGradient id="bd2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#6B5510" stop-opacity="0.1"/>
+              <stop offset="50%" stop-color="#D4AF37" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#6B5510" stop-opacity="0.1"/>
+            </linearGradient>
+            <filter id="bwg2" x="-20%" y="-100%" width="140%" height="300%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+              <feColorMatrix in="blur" type="matrix" values="1 0.8 0 0 0.1 0.7 0.5 0 0 0 0 0 0 0 0 0 0 0 0.8 0" result="gb"/>
+              <feMerge><feMergeNode in="gb"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="bsh2" x="-10%" y="-10%" width="120%" height="120%">
+              <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#D4AF37" flood-opacity="0.3"/>
+            </filter>
+            <path id="bta2"  d="M 78,200 A 122,122 0 0,1 322,200"/>
+            <path id="btsa2" d="M 98,200 A 102,102 0 0,1 302,200"/>
+            <path id="bba2"  d="M 92,200 A 108,108 0 0,0 308,200"/>
+          </defs>
+          <polygon points="368.1,269.6 269.6,368.1 130.4,368.1 31.9,269.6 31.9,130.4 130.4,31.9 269.6,31.9 368.1,130.4" fill="#0d0b08" stroke="url(#bv2)" stroke-width="3" filter="url(#bsh2)"/>
+          <polygon points="358.5,264.9 264.9,358.5 135.1,358.5 41.5,264.9 41.5,135.1 135.1,41.5 264.9,41.5 358.5,135.1" fill="none" stroke="url(#bv2s)" stroke-width="0.8" stroke-opacity="0.5"/>
+          <g>
+            <line x1="355" y1="200" x2="368" y2="200" stroke="url(#bv2)" stroke-width="1.5"/>
+            <line x1="349.7" y1="240.1" x2="356.5" y2="241.9" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="334.2" y1="277.5" x2="340.3" y2="281" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="309.6" y1="309.6" x2="314.6" y2="314.6" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="277.5" y1="334.2" x2="281" y2="340.3" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="240.1" y1="349.7" x2="241.9" y2="356.5" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="200" y1="355" x2="200" y2="368" stroke="url(#bv2)" stroke-width="1.5"/>
+            <line x1="159.9" y1="349.7" x2="158.1" y2="356.5" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="122.5" y1="334.2" x2="119" y2="340.3" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="90.4" y1="309.6" x2="85.4" y2="314.6" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="65.8" y1="277.5" x2="59.7" y2="281" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="50.3" y1="240.1" x2="43.5" y2="241.9" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="45" y1="200" x2="32" y2="200" stroke="url(#bv2)" stroke-width="1.5"/>
+            <line x1="50.3" y1="159.9" x2="43.5" y2="158.1" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="65.8" y1="122.5" x2="59.7" y2="119" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="90.4" y1="90.4" x2="85.4" y2="85.4" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="122.5" y1="65.8" x2="119" y2="59.7" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="159.9" y1="50.3" x2="158.1" y2="43.5" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="200" y1="45" x2="200" y2="32" stroke="url(#bv2)" stroke-width="1.5"/>
+            <line x1="240.1" y1="50.3" x2="241.9" y2="43.5" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="277.5" y1="65.8" x2="281" y2="59.7" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="309.6" y1="90.4" x2="314.6" y2="85.4" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="334.2" y1="122.5" x2="340.3" y2="119" stroke="url(#bv2)" stroke-width="0.8"/>
+            <line x1="349.7" y1="159.9" x2="356.5" y2="158.1" stroke="url(#bv2)" stroke-width="0.8"/>
+          </g>
+          <circle cx="200" cy="200" r="150" fill="none" stroke="url(#bv2)" stroke-width="2.5"/>
+          <circle cx="200" cy="200" r="142" fill="none" stroke="url(#bv2s)" stroke-width="0.8" stroke-dasharray="3 5" stroke-opacity="0.6"/>
+          <circle cx="200" cy="200" r="134" fill="#0d0b08"/>
+          <circle cx="200" cy="200" r="134" fill="none" stroke="url(#bv2)" stroke-width="1.5"/>
+          <polygon points="62,195 57,200 62,205 67,200" fill="url(#bv2)" opacity="0.9"/>
+          <polygon points="338,195 333,200 338,205 343,200" fill="url(#bv2)" opacity="0.9"/>
+          <circle cx="200" cy="66" r="2.5" fill="url(#bv2)" opacity="0.8"/>
+          <circle cx="200" cy="334" r="2.5" fill="url(#bv2)" opacity="0.8"/>
+          <text font-family="'Times New Roman',Georgia,serif" font-size="15" font-weight="bold" letter-spacing="5" fill="url(#bv2s)" text-anchor="middle"><textPath href="#bta2" startOffset="50%">AION · VERIFIED</textPath></text>
+          <text font-family="'Times New Roman',Georgia,serif" font-size="11.5" letter-spacing="7" fill="#C9A028" text-anchor="middle" opacity="0.85"><textPath href="#btsa2" startOffset="50%">· SIMULATOR ·</textPath></text>
+          <text font-family="'Times New Roman',Georgia,serif" font-size="11" font-weight="bold" letter-spacing="3" fill="url(#bv2s)" text-anchor="middle"><textPath href="#bba2" startOffset="50%">SHELDON K. SALMON</textPath></text>
+          <line x1="78" y1="200" x2="142" y2="200" stroke="url(#bd2)" stroke-width="1"/>
+          <line x1="258" y1="200" x2="322" y2="200" stroke="url(#bd2)" stroke-width="1"/>
+          <polygon points="142,197 137,200 142,203 147,200" fill="#C9A028" opacity="0.6"/>
+          <polygon points="258,197 253,200 258,203 263,200" fill="#C9A028" opacity="0.6"/>
+          <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="#D4AF37" stroke-width="8" stroke-linecap="round" opacity="0.1"/>
+          <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#bw2)" stroke-width="2.8" stroke-linecap="round" filter="url(#bwg2)"/>
+          <text x="200" y="167" font-family="'Courier New',monospace" font-size="9" letter-spacing="3" fill="#D4AF37" text-anchor="middle" opacity="0.9">VERIFIED SIMULATION</text>
+          <text x="200" y="242" font-family="'Courier New',monospace" font-size="8" letter-spacing="2.5" fill="#8B7520" text-anchor="middle" opacity="0.8">v1.0 · 2026 · AION STACK</text>
+          <text x="200" y="257" font-family="'Courier New',monospace" font-size="7" letter-spacing="1" fill="#5a4e20" text-anchor="middle" opacity="0.6">NON-TRANSFERABLE · SHA-256 · STP SEALED</text>
+        </svg>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
+         target="_blank" rel="noopener" class="badge-card-name">AION Verified Simulator</a>
       <div class="badge-card-sub">Simulation Certification · v1.0 · March 2026</div>
+      <div class="badge-brief">
+        Issued to simulation tools: physics verified, red-teamed,<br>
+        peer-reviewed. Issued by Sheldon K. Salmon under AION methodology.<br>
+        <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
+           target="_blank" rel="noopener">View full certification methodology ↗</a>
+      </div>
       <div class="badge-divider"></div>
-      <div class="badge-card-desc">Issued to <strong>tools and simulations</strong> built under AION methodology. The physics was verified against cited sources, the code was red-teamed across multiple passes, and the output peer-reviewed. Every issue found is documented in the simulator's Red Team tab.</div>
+      <div class="badge-card-desc">Every issue found is documented in the simulator's Red Team tab. The badge is not issued until that documentation is complete.</div>
       <div class="badge-divider"></div>
       <div class="badge-card-issued">
         <strong>Issued to:</strong> Simulation tools<br>
@@ -277,21 +324,31 @@ footer a:hover { color:var(--amber); }
 
     <!-- STP AUDITOR -->
     <div class="badge-card aud-card">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="90" height="90">
-        <defs>
-          <linearGradient id="bv3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#80d8ff"/><stop offset="50%" stop-color="#40c4ff"/><stop offset="100%" stop-color="#0077aa"/></linearGradient>
-        </defs>
-        <polygon points="200,30 370,110 370,290 200,370 30,290 30,110" fill="#08101a" stroke="url(#bv3)" stroke-width="4"/>
-        <polygon points="200,55 345,123 345,277 200,345 55,277 55,123" fill="none" stroke="url(#bv3)" stroke-width="1.5" stroke-opacity="0.4"/>
-        <circle cx="200" cy="200" r="90" fill="none" stroke="url(#bv3)" stroke-width="2"/>
-        <text x="200" y="185" font-family="'Barlow Condensed',sans-serif" font-size="22" font-weight="900" fill="#40c4ff" text-anchor="middle" letter-spacing="2">STP</text>
-        <text x="200" y="210" font-family="'Courier New',monospace" font-size="10" fill="#0077aa" text-anchor="middle" letter-spacing="1">CERTIFIED</text>
-        <text x="200" y="228" font-family="'Courier New',monospace" font-size="10" fill="#0077aa" text-anchor="middle" letter-spacing="1">AUDITOR</text>
-      </svg>
-      <div class="badge-card-name">STP Certified Auditor</div>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
+         target="_blank" rel="noopener" class="badge-link" title="View STP Auditor certification methodology ↗">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="90" height="90">
+          <defs>
+            <linearGradient id="bv3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#80d8ff"/><stop offset="50%" stop-color="#40c4ff"/><stop offset="100%" stop-color="#0077aa"/></linearGradient>
+          </defs>
+          <polygon points="200,30 370,110 370,290 200,370 30,290 30,110" fill="#08101a" stroke="url(#bv3)" stroke-width="4"/>
+          <polygon points="200,55 345,123 345,277 200,345 55,277 55,123" fill="none" stroke="url(#bv3)" stroke-width="1.5" stroke-opacity="0.4"/>
+          <circle cx="200" cy="200" r="90" fill="none" stroke="url(#bv3)" stroke-width="2"/>
+          <text x="200" y="185" font-family="'Barlow Condensed',sans-serif" font-size="22" font-weight="900" fill="#40c4ff" text-anchor="middle" letter-spacing="2">STP</text>
+          <text x="200" y="210" font-family="'Courier New',monospace" font-size="10" fill="#0077aa" text-anchor="middle" letter-spacing="1">CERTIFIED</text>
+          <text x="200" y="228" font-family="'Courier New',monospace" font-size="10" fill="#0077aa" text-anchor="middle" letter-spacing="1">AUDITOR</text>
+        </svg>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
+         target="_blank" rel="noopener" class="badge-card-name">STP Certified Auditor</a>
       <div class="badge-card-sub">Independent Auditor Credential</div>
+      <div class="badge-brief">
+        Issued to individuals authorized to file audit completions<br>
+        to the AION ledger under their own badge number.<br>
+        <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
+           target="_blank" rel="noopener">View full certification methodology ↗</a>
+      </div>
       <div class="badge-divider"></div>
-      <div class="badge-card-desc">Issued to <strong>individuals</strong> authorized to conduct and file audit completions to the AION ledger under their own badge number. SHA-256 sealed at issuance. Non-transferable. Annual cap: 50 sealed audits.</div>
+      <div class="badge-card-desc">SHA-256 sealed at issuance. Non-transferable. Annual cap: 50 sealed audits. Renewable by reapplication only.</div>
       <div class="badge-divider"></div>
       <div class="badge-card-issued">
         <strong>Issued to:</strong> Individual auditors<br>
@@ -323,10 +380,10 @@ footer a:hover { color:var(--amber); }
         <p>
           STP Certified badges are issued through the Sovereign Trace Protocol ledger on GitHub. To verify:<br><br>
           1. Request the organization's Certification Report — it contains a ledger entry ID.<br>
-          2. Look up that entry ID in the <a href="https://github.com/AionSystem/STP" target="_blank" rel="noopener">AionSystem/STP public ledger ↗</a>.<br>
+          2. Look up that entry ID in the <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener">AionSystem/SOVEREIGN-TRACE-PROTOCOL public ledger ↗</a>.<br>
           3. Confirm the entry is signed by Sheldon K. Salmon with a triple-time seal.<br><br>
           A badge with no corresponding ledger entry is not valid. The AION Registry is the source of truth, not the badge itself.<br><br>
-          <a href="https://github.com/AionSystem/STP/blob/main/CERTIFICATION.md" target="_blank" rel="noopener">Full certification methodology ↗</a>
+          <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md" target="_blank" rel="noopener">Full certification methodology ↗</a>
         </p>
       </div>
     </div>
@@ -373,15 +430,15 @@ footer a:hover { color:var(--amber); }
   <div class="cta-block">
     <h3>Engage Certification</h3>
     <p>File a certification issue on GitHub. Automated intake — no call required for Tier 1 and Tier 2.</p>
-    <a href="https://github.com/AionSystem/STP/issues/new/choose" target="_blank" rel="noopener" class="cta-btn">File a Certification Issue ↗</a>
-    <a href="https://github.com/AionSystem/STP/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="cta-btn cta-btn-outline">Read Full Methodology</a>
+    <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="cta-btn">File a Certification Issue ↗</a>
+    <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md" target="_blank" rel="noopener" class="cta-btn cta-btn-outline">Read Full Methodology</a>
   </div>
 
 </div>
 
 <footer>
   <p>AionSystem · <a href="/">Sheldon K. Salmon</a> · AI Reliability Architect · New York · March 2026</p>
-  <p><a href="/simulators/">Simulators</a> &nbsp;·&nbsp; <a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a> &nbsp;·&nbsp; <a href="https://linkedin.com/in/sheldonksalmon" target="_blank" rel="noopener">LinkedIn ↗</a></p>
+  <p><a href="/simulators/">Simulators</a> &nbsp;·&nbsp; <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener">GitHub ↗</a> &nbsp;·&nbsp; <a href="https://linkedin.com/in/sheldonksalmon" target="_blank" rel="noopener">LinkedIn ↗</a></p>
 </footer>
 
 </body>
