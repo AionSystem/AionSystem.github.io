@@ -438,6 +438,31 @@ section {
 
 .service-link:hover { border-bottom-color: var(--amber); }
 
+/* Coming-soon link state — used on cards without a live subpage */
+.service-link-soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  opacity: 0.55;
+  pointer-events: none;
+  user-select: none;
+}
+
+.service-link-soon::before {
+  content: '';
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.5;
+}
+
 .work-strip {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -681,12 +706,12 @@ footer {
 
 <canvas id="hero-canvas"></canvas>
 
-<!-- NAV — About added -->
+<!-- NAV — Services now links to /services/ hub -->
 <nav>
   <a href="/" class="nav-logo">AION<span>system</span></a>
   <ul class="nav-links">
     <li><a href="/simulators/">Simulators</a></li>
-    <li><a href="#services">Services</a></li>
+    <li><a href="/services/">Services</a></li>
     <li><a href="#stack">Stack</a></li>
     <li><a href="/certify/">Certify</a></li>
     <li><a href="/about/">About</a></li>
@@ -715,7 +740,7 @@ footer {
       <span>See the Work</span>
       <span class="cta-arrow">→</span>
     </a>
-    <a href="#services" class="cta-btn">
+    <a href="/services/" class="cta-btn">
       <span>Engage Services</span>
       <span class="cta-arrow">→</span>
     </a>
@@ -758,6 +783,8 @@ footer {
   </div>
 
   <div class="services-grid">
+
+    <!-- CARD 01 — Simulation Creation -->
     <div class="service-card">
       <div class="service-num">01 / Rapid Prototyping</div>
       <span class="service-icon">⚙</span>
@@ -771,8 +798,10 @@ footer {
         <span class="tag">HTML · No Dependencies</span>
       </div>
       <a href="/simulators/" class="service-link">View Simulators →</a>
+      <div class="service-link-soon">Service Details Coming Soon</div>
     </div>
 
+    <!-- CARD 02 — AI Output Certification — LIVE at /services/ai-audit/ -->
     <div class="service-card">
       <div class="service-num">02 / AI Reliability Audit</div>
       <span class="service-icon">🔍</span>
@@ -784,9 +813,10 @@ footer {
         <span class="tag">Failure Logging</span>
         <span class="tag">NIST AI RMF</span>
       </div>
-      <a href="/certify/" class="service-link">Certification Tiers →</a>
+      <a href="/services/ai-audit/" class="service-link">Full Service Details →</a>
     </div>
 
+    <!-- CARD 03 — Framework Engineering -->
     <div class="service-card">
       <div class="service-num">03 / Framework Design</div>
       <span class="service-icon">◈</span>
@@ -799,7 +829,17 @@ footer {
         <span class="tag">Custom Frameworks</span>
       </div>
       <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="service-link">GitHub ↗</a>
+      <div class="service-link-soon">Service Details Coming Soon</div>
     </div>
+
+  </div>
+
+  <!-- All Services CTA -->
+  <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+    <a href="/services/" class="cta-btn" style="display:inline-flex;">
+      <span>All Services</span>
+      <span class="cta-arrow">→</span>
+    </a>
   </div>
 </section>
 
@@ -974,13 +1014,14 @@ footer {
         Certification is not installation. It is formal verification that a deployment meets the FROZEN-2.0 standard — immutable failure capture, transparent remediation, honest epistemic record. Four tiers. No negotiation on scope.<br><br>
         Simulator tools carry the <strong style="color:#D4AF37;">AION Verified Simulator</strong> badge — citation-backed, red-teamed, peer-reviewed.<br><br>
         <a href="/certify/">Verify a badge</a> &nbsp;·&nbsp;
+        <a href="/services/ai-audit/">Certification tiers</a> &nbsp;·&nbsp;
         <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md" target="_blank" rel="noopener">Full methodology ↗</a>
       </p>
     </div>
   </div>
 </section>
 
-<!-- FOOTER — About added -->
+<!-- FOOTER -->
 <footer>
   <div class="footer-id">
     <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
@@ -989,6 +1030,7 @@ footer {
   </div>
   <ul class="footer-links">
     <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/">Services</a></li>
     <li><a href="/certify/">Certify</a></li>
     <li><a href="/about/">About</a></li>
     <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
