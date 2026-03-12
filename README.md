@@ -46,7 +46,7 @@ Full stack: [`AionSystem/HIPPOCAMPUS`](https://github.com/AionSystem/HIPPOCAMPUS
 
 STP is the AI reliability certification infrastructure built and maintained by Sheldon K. Salmon. It provides cryptographic, immutable failure logging and formal epistemic audit for AI deployments.
 
-→ [`AionSystem/STP`](https://github.com/AionSystem/STP) — Full protocol, ledger, certification tiers  
+→ [`AionSystem/SOVEREIGN-TRACE-PROTOCOL`](https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL) — Full protocol, ledger, certification tiers  
 → [`/certify/`](https://aionsystem.github.io/certify/) — Badge verification portal
 
 **Certification tiers:** $2,500 single-event → $25,000/yr Enterprise → $100,000+/yr Strategic → Defense Grade (negotiated)
@@ -71,7 +71,7 @@ Physics, engineering, and scientific simulators built under AION methodology —
 ## Engage
 
 - **LinkedIn:** [Sheldon K. Salmon](https://linkedin.com/in/sheldonksalmon)
-- **Certification inquiries:** File a [`10-audit-request.yml`](https://github.com/AionSystem/STP/issues/new/choose) issue in the STP repo
+- **Certification inquiries:** File a [`10-audit-request.yml`](https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose) issue in the STP repo
 - **Simulator commission:** LinkedIn DM
 
 ---
@@ -79,7 +79,7 @@ Physics, engineering, and scientific simulators built under AION methodology —
 ## Legal
 
 All frameworks, protocols, and methodologies in this repository are © 2026 Sheldon K. Salmon.  
-Commercial use requires a license. See [`AionSystem/STP`](https://github.com/AionSystem/STP) for full terms.  
+Commercial use requires a license. See [`AionSystem/SOVEREIGN-TRACE-PROTOCOL`](https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL) for full terms.  
 Badge use without a current certification license constitutes misrepresentation of audit status.
 
 ---
