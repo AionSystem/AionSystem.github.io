@@ -1,1 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AionSystem Services — AI Reliability Audit, Verified Simulator Creation, AION Stack Framework Engineering. Sheldon K. Salmon, AI Reliability Architect, New York.">
+<meta property="og:title" content="Services — AionSystem · Sheldon K. Salmon">
+<meta property="og:description" content="Three services. One standard: certainty. AI Output Certification · Simulation Creation · Framework Engineering.">
+<meta property="og:type" content="website">
+<title>Services — AionSystem · Sheldon K. Salmon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #08090b;
+  --surface:  #0e1117;
+  --panel:    #141920;
+  --border:   #1e2730;
+  --amber:    #f0a500;
+  --amber-d:  #b07800;
+  --amber-l:  #ffc947;
+  --gold:     #D4AF37;
+  --text:     #c4d4de;
+  --muted:    #4e5f6a;
+  --dim:      #2a3540;
+  --mono:     'Share Tech Mono', monospace;
+  --sans:     'Barlow Condensed', sans-serif;
+  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(240,165,0,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,165,0,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAV ─────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 56px;
+  background: rgba(8,9,11,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--amber);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.nav-logo span { color: var(--muted); }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover,
+.nav-links a.active { color: var(--amber); }
+
+/* ── CANVAS ──────────────────────────────────── */
+#hero-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* ── PAGE HEADER ─────────────────────────────── */
+.page-header {
+  position: relative;
+  z-index: 1;
+  padding: 120px 40px 72px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+
+.breadcrumb {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.6s var(--ease) 0.1s forwards;
+}
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--amber); }
+.breadcrumb-sep { margin: 0 8px; color: var(--dim); }
+
+.page-header-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: end;
+}
+
+.page-header-left {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+}
+
+.page-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.page-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 20px; height: 1px;
+  background: var(--amber);
+  vertical-align: middle;
+  margin-right: 10px;
+  margin-bottom: 2px;
+}
+
+.page-title {
+  font-family: var(--sans);
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.page-title em {
+  display: block;
+  color: var(--amber);
+  font-style: normal;
+}
+
+.page-header-right {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUp 0.7s var(--ease) 0.4s forwards;
+}
+
+.page-premise {
+  font-family: var(--sans);
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 480px;
+  border-left: 2px solid var(--amber);
+  padding-left: 20px;
+}
+.page-premise strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.page-meta {
+  display: flex;
+  gap: 28px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.meta-item {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.meta-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  flex-shrink: 0;
+}
+
+/* ── SERVICE JUMP RAIL ───────────────────────── */
+.service-rail {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  animation: fadeIn 0.6s var(--ease) 0.8s forwards;
+}
+
+.rail-item {
+  flex: 1;
+  background: var(--surface);
+  padding: 20px 24px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.rail-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--amber);
+  transform: scaleX(0);
+  transition: transform 0.3s var(--ease);
+}
+.rail-item:hover { background: var(--panel); }
+.rail-item:hover::after { transform: scaleX(1); }
+
+.rail-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+.rail-label {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+.rail-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+/* ── MAIN CONTENT ────────────────────────────── */
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── SERVICE BLOCK ───────────────────────────── */
+.service-block {
+  border-bottom: 1px solid var(--border);
+}
+
+.service-block-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+
+.service-block-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  margin-bottom: 56px;
+  align-items: start;
+}
+
+.service-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.service-h {
+  font-family: var(--sans);
+  font-size: clamp(36px, 5vw, 60px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 0.95;
+  margin-bottom: 8px;
+}
+.service-h em {
+  display: block;
+  color: var(--amber);
+  font-style: normal;
+}
+
+.service-tagline {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--amber-d);
+  letter-spacing: 2px;
+  margin-top: 16px;
+}
+
+.service-lead {
+  font-family: var(--sans);
+  font-size: clamp(16px, 1.8vw, 20px);
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.75;
+}
+.service-lead strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ── DETAIL GRID ─────────────────────────────── */
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+
+.detail-cell {
+  background: var(--surface);
+  padding: 28px 24px;
+  transition: background 0.2s;
+}
+.detail-cell:hover { background: var(--panel); }
+
+.detail-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--amber-d);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.detail-val {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.6;
+}
+.detail-val.mono {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+/* ── PROCESS STEPS ───────────────────────────── */
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--dim);
+  border: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+
+.process-step {
+  background: var(--bg);
+  padding: 24px 20px;
+  position: relative;
+}
+
+.step-num {
+  font-family: var(--mono);
+  font-size: 32px;
+  color: var(--dim);
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.step-title {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+.step-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.process-connector {
+  position: absolute;
+  right: -1px; top: 50%;
+  transform: translateY(-50%);
+  width: 12px; height: 12px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── CERTIFICATION TIERS ─────────────────────── */
+.tier-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.tier-card {
+  background: var(--surface);
+  padding: 28px 24px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+.tier-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--border);
+  transition: background 0.2s;
+}
+.tier-card:hover { background: var(--panel); }
+.tier-card:hover::before { background: var(--amber); }
+
+.tier-card.featured::before { background: var(--gold); }
+.tier-card.featured { background: var(--panel); }
+
+.tier-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.tier-badge.featured { color: var(--gold); }
+
+.tier-name {
+  font-family: var(--sans);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.tier-price {
+  font-family: var(--mono);
+  font-size: 26px;
+  color: var(--amber);
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+.tier-price.negotiated {
+  font-size: 18px;
+  color: var(--gold);
+}
+
+.tier-cadence {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.tier-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+.tier-includes {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tier-includes li {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+.tier-includes li::before {
+  content: '—';
+  color: var(--amber-d);
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+/* ── FRAMEWORK TABLE ─────────────────────────── */
+.framework-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  margin-bottom: 32px;
+}
+.framework-table th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--amber);
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.framework-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(30,39,48,0.6);
+  background: var(--bg);
+  transition: background 0.15s;
+  vertical-align: top;
+}
+.framework-table tr:hover td { background: var(--surface); }
+.fw-name { color: var(--amber); }
+.fw-fn   { color: var(--text); font-family: var(--sans); font-size: 13px; }
+.fw-state { color: var(--muted); font-size: 11px; }
+
+/* ── DELIVERABLE STRIP ───────────────────────── */
+.deliverable-strip {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.deliv-item {
+  flex: 1;
+  background: var(--bg);
+  padding: 20px 18px;
+}
+.deliv-icon {
+  font-size: 20px;
+  margin-bottom: 10px;
+  display: block;
+}
+.deliv-name {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.deliv-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ── CTA BAR ─────────────────────────────────── */
+.cta-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 12px 24px;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  background: transparent;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--amber);
+  transform: translateX(-101%);
+  transition: transform 0.25s var(--ease);
+  z-index: 0;
+}
+.cta-btn:hover::before { transform: translateX(0); }
+.cta-btn:hover { color: #000; }
+.cta-btn span { position: relative; z-index: 1; }
+.cta-arrow { font-size: 14px; transition: transform 0.2s; }
+.cta-btn:hover .cta-arrow { transform: translateX(4px); }
+
+.cta-btn.primary {
+  background: var(--amber);
+  color: #000;
+}
+.cta-btn.primary::before { background: var(--amber-l); }
+.cta-btn.primary:hover { color: #000; }
+
+.cta-btn.gold {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.cta-btn.gold::before { background: var(--gold); }
+.cta-btn.gold:hover { color: #000; }
+
+.cta-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* ── PRINCIPLES BLOCK ────────────────────────── */
+.principles-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  padding: 32px 36px;
+  margin-bottom: 40px;
+}
+
+.principles-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.principles-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 40px;
+  list-style: none;
+}
+.principles-list li {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+.principles-list li::before {
+  content: '◈';
+  color: var(--amber-d);
+  flex-shrink: 0;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* ── SECTION DIVIDER ─────────────────────────── */
+.section-id {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  margin-bottom: 0;
+}
+.section-id-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--amber-d);
+}
+.section-id-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── SIMULATOR BADGE INLINE ──────────────────── */
+.sim-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.sim-badge-row svg { flex-shrink: 0; }
+.sim-badge-note {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  line-height: 1.8;
+}
+.sim-badge-note strong { color: var(--gold); }
+
+/* ── DOMAIN CHIPS ────────────────────────────── */
+.domain-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.domain-chip {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--amber-d);
+  border: 1px solid var(--dim);
+  padding: 5px 12px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.chip-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--amber); }
+
+/* ── ENGAGEMENT STRIP ────────────────────────── */
+.engage-strip {
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.engage-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.engage-heading {
+  font-family: var(--sans);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 0.95;
+  margin-bottom: 16px;
+}
+.engage-heading em {
+  display: block;
+  color: var(--amber);
+  font-style: normal;
+}
+
+.engage-sub {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.engage-paths {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.engage-path {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.engage-path:hover {
+  border-color: var(--amber);
+  background: var(--panel);
+}
+.engage-path-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.engage-path-text {}
+.engage-path-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.engage-path-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+/* ── FOOTER ──────────────────────────────────── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-id {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.8;
+  letter-spacing: 1px;
+}
+.footer-id strong { color: var(--amber); }
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+.footer-links a:hover { color: var(--amber); }
+
+/* ── ANIMATIONS ──────────────────────────────── */
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 900px) {
+  .page-header-inner { grid-template-columns: 1fr; gap: 24px; }
+  .service-block-header { grid-template-columns: 1fr; gap: 24px; }
+  .tier-row { grid-template-columns: 1fr 1fr; }
+  .process-steps { grid-template-columns: 1fr 1fr; }
+  .detail-grid { grid-template-columns: 1fr 1fr; }
+  .engage-inner { grid-template-columns: 1fr; gap: 32px; }
+  .deliverable-strip { flex-direction: column; }
+  .principles-list { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .page-header { padding: 96px 20px 48px; }
+  .service-block-inner { padding: 48px 20px; }
+  .engage-inner { padding: 40px 20px; }
+  footer { padding: 32px 20px; }
+  .tier-row { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .service-rail { display: none; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="hero-canvas"></canvas>
+
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/" class="active">Services</a></li>
+    <li><a href="/#stack">Stack</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/">Aionsystem</a>
+    <span class="breadcrumb-sep">/</span>
+    Services
+  </div>
+
+  <div class="page-header-inner">
+    <div class="page-header-left">
+      <div class="page-eyebrow">Three services. One standard.</div>
+      <h1 class="page-title">What<em>We Do</em></h1>
+    </div>
+
+    <div class="page-header-right">
+      <p class="page-premise">
+        AI systems fail. The question is whether they fail <strong>honestly</strong> — with an immutable record, a traceable cause, and a transparent remediation. Every service offered here is built to answer that question with precision, not promise.
+      </p>
+      <div class="page-meta">
+        <div class="meta-item">
+          <span class="meta-dot"></span>
+          <span>Active · March 2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-dot"></span>
+          <span>New York</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-dot"></span>
+          <span>AION v3.0 · STP v2.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JUMP RAIL -->
+<div class="service-rail">
+  <a href="#simulation" class="rail-item">
+    <span class="rail-num">01</span>
+    <span class="rail-label">Simulation Creation</span>
+    <span class="rail-sub">Rapid prototyping · AION Verified</span>
+  </a>
+  <a href="#certification" class="rail-item">
+    <span class="rail-num">02</span>
+    <span class="rail-label">AI Output Certification</span>
+    <span class="rail-sub">STP FROZEN-2.0 · Four tiers</span>
+  </a>
+  <a href="#framework" class="rail-item">
+    <span class="rail-num">03</span>
+    <span class="rail-label">Framework Engineering</span>
+    <span class="rail-sub">Custom AION stack · Falsifiable</span>
+  </a>
+</div>
+
+<div class="content-wrapper">
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SERVICE 01 -->
+<div class="service-block" id="simulation">
+  <div class="service-block-inner">
+
+    <div class="section-id">
+      <span class="section-id-num">// 01</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="service-block-header">
+      <div>
+        <div class="service-label">Rapid Prototyping · AION Verified</div>
+        <h2 class="service-h">Simulation<em>Creation</em></h2>
+        <div class="service-tagline">Built in days. Documented for decades.</div>
+
+        <div class="domain-chips">
+          <span class="domain-chip"><span class="chip-dot"></span>Physics</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Engineering</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Medical</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Education</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Environmental</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Financial</span>
+        </div>
+      </div>
+
+      <div>
+        <p class="service-lead">
+          Physics simulators, engineering tools, and educational systems built under the AION methodology — citation-backed, red-teamed, and peer-reviewed. <strong>Every deliverable ships with an AION Verified Simulator badge and a full audit trail.</strong>
+          <br><br>
+          No dependencies. No frameworks that break six months later. A self-contained HTML file that runs forever, does exactly what the citations say it should do, and carries an immutable record of every issue found and resolved during construction.
+        </p>
+      </div>
+    </div>
+
+    <!-- Deliverables -->
+    <div class="deliverable-strip">
+      <div class="deliv-item">
+        <span class="deliv-icon">📐</span>
+        <div class="deliv-name">Citation-Backed Physics</div>
+        <div class="deliv-desc">Every equation sourced to peer-reviewed literature or authoritative curriculum. Reference documented in audit trail.</div>
+      </div>
+      <div class="deliv-item">
+        <span class="deliv-icon">🎯</span>
+        <div class="deliv-name">Red Team Passes</div>
+        <div class="deliv-desc">Minimum two structured adversarial passes before delivery. Issues found, logged, resolved, documented.</div>
+      </div>
+      <div class="deliv-item">
+        <span class="deliv-icon">◈</span>
+        <div class="deliv-name">AION Verified Badge</div>
+        <div class="deliv-desc">The badge is the audit trail. Verification available publicly at /certify/. Not decorative.</div>
+      </div>
+      <div class="deliv-item">
+        <span class="deliv-icon">⚙</span>
+        <div class="deliv-name">Zero Dependencies</div>
+        <div class="deliv-desc">Single HTML file. No npm, no build step, no CDN dependency. It runs in a browser in 2031.</div>
+      </div>
+      <div class="deliv-item">
+        <span class="deliv-icon">📋</span>
+        <div class="deliv-name">Audit Trail</div>
+        <div class="deliv-desc">Full issue log: what was found, when, what was changed. Not a changelog — an honest failure record.</div>
+      </div>
+    </div>
+
+    <!-- Process -->
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Domain Scoping</div>
+        <div class="step-desc">Define the physics / engineering domain, target audience, source authority, and curriculum alignment.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Citation Build</div>
+        <div class="step-desc">Every equation sourced. Every constant verified. Every edge case documented before a line of code is written.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Red Team</div>
+        <div class="step-desc">Two structured adversarial passes. Hostile reviewer, naive reviewer. Issues logged with severity and resolution.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Badge + Delivery</div>
+        <div class="step-desc">AION Verified badge issued. Audit trail sealed. Simulator and full documentation delivered.</div>
+      </div>
+    </div>
+
+    <!-- Principles -->
+    <div class="principles-block">
+      <div class="principles-title">What this is not</div>
+      <ul class="principles-list">
+        <li>Not a template with your numbers plugged in</li>
+        <li>Not a demo that breaks when you touch it</li>
+        <li>Not shipped without an adversarial pass</li>
+        <li>Not a badge that cannot be verified</li>
+        <li>Not dependent on a CDN that will 404 in 18 months</li>
+        <li>Not documented after the fact</li>
+      </ul>
+    </div>
+
+    <div class="cta-bar">
+      <a href="/simulators/roller-coaster/" class="cta-btn primary">
+        <span>See a Live Simulator</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn">
+        <span>Commission a Simulator</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <span class="cta-note">Engagement via LinkedIn DM · Timeline varies by domain complexity</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SERVICE 02 -->
+<div class="service-block" id="certification">
+  <div class="service-block-inner">
+
+    <div class="section-id">
+      <span class="section-id-num">// 02</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="service-block-header">
+      <div>
+        <div class="service-label">STP FROZEN-2.0 · Epistemic Audit</div>
+        <h2 class="service-h">AI Output<em>Certification</em></h2>
+        <div class="service-tagline">Formal verification. Not consultation.</div>
+
+        <div class="domain-chips">
+          <span class="domain-chip"><span class="chip-dot"></span>NIST AI RMF</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Failure Logging</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Epistemic Audit</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Cryptographic Seal</span>
+        </div>
+      </div>
+
+      <div>
+        <p class="service-lead">
+          Certification is not installation of a monitoring tool. It is <strong>formal verification that your AI deployment captures failures immutably, remediates them transparently, and maintains an honest epistemic record.</strong>
+          <br><br>
+          The Sovereign Trace Protocol exists because "responsible AI" without failure documentation is marketing. STP FROZEN-2.0 defines the minimum standard. Certification verifies you meet it — and maintains that verification through a cryptographic ledger that cannot be quietly amended.
+        </p>
+      </div>
+    </div>
+
+    <!-- Tier Row -->
+    <div class="tier-row">
+      <div class="tier-card">
+        <div class="tier-badge">Tier 01 · Single Event</div>
+        <div class="tier-name">Verify</div>
+        <div class="tier-price">$2,500</div>
+        <div class="tier-cadence">One-time audit</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>Single AI deployment event audit</li>
+          <li>Failure capture verification</li>
+          <li>AION Verified badge issued</li>
+          <li>Ledger entry: immutable record</li>
+          <li>Audit report: public summary</li>
+        </ul>
+      </div>
+
+      <div class="tier-card featured">
+        <div class="tier-badge featured">Tier 02 · Annual</div>
+        <div class="tier-name">Enterprise</div>
+        <div class="tier-price">$25,000</div>
+        <div class="tier-cadence">Per year · Quarterly reviews</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>Continuous failure monitoring framework</li>
+          <li>Quarterly epistemic audit passes</li>
+          <li>AION Verified badge: annually renewed</li>
+          <li>Remediation guidance on findings</li>
+          <li>NIST AI RMF alignment report</li>
+          <li>Full ledger access and audit trail</li>
+        </ul>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-badge">Tier 03 · Annual</div>
+        <div class="tier-name">Strategic</div>
+        <div class="tier-price">$100,000<span style="font-size:16px;">+</span></div>
+        <div class="tier-cadence">Per year · Monthly reviews</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>All Enterprise tier inclusions</li>
+          <li>Monthly deep-architecture audit</li>
+          <li>Framework design for your failure modes</li>
+          <li>Custom convergence tracking</li>
+          <li>Board-level epistemic reporting</li>
+          <li>Priority remediation response</li>
+        </ul>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-badge">Tier 04 · Defense Grade</div>
+        <div class="tier-name">Sovereign</div>
+        <div class="tier-price negotiated">Negotiated</div>
+        <div class="tier-cadence">Custom scope · Direct engagement</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>All Strategic tier inclusions</li>
+          <li>DoD-grade documentation standards</li>
+          <li>Classified deployment support</li>
+          <li>Custom STP protocol variants</li>
+          <li>Direct architect engagement</li>
+          <li>Scope negotiated — no ceiling</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Detail grid -->
+    <div class="detail-grid">
+      <div class="detail-cell">
+        <div class="detail-label">What is verified</div>
+        <div class="detail-val">Immutable failure capture · Transparent remediation · Honest epistemic record maintenance</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">What is issued</div>
+        <div class="detail-val">AION Verified badge + cryptographic ledger entry + public audit report summary</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">What cannot be issued</div>
+        <div class="detail-val">Certification without verified failure capture. There is no lighter version of the standard.</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">Protocol version</div>
+        <div class="detail-val mono">STP FROZEN-2.0 · LEDGER-011 current seal</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">Badge misuse</div>
+        <div class="detail-val">Badge use without current certification constitutes misrepresentation. Verifiable publicly at /certify/.</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">Alignment</div>
+        <div class="detail-val">NIST AI RMF · Enterprise and above receive formal alignment mapping</div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <a href="/certify/" class="cta-btn gold">
+        <span>Verify a Badge</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="cta-btn primary">
+        <span>File an Audit Request</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md" target="_blank" rel="noopener" class="cta-btn">
+        <span>Full Methodology ↗</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SERVICE 03 -->
+<div class="service-block" id="framework">
+  <div class="service-block-inner">
+
+    <div class="section-id">
+      <span class="section-id-num">// 03</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="service-block-header">
+      <div>
+        <div class="service-label">Custom AION Stack · Framework Design</div>
+        <h2 class="service-h">Framework<em>Engineering</em></h2>
+        <div class="service-tagline">Built through failure events. Not theory.</div>
+
+        <div class="domain-chips">
+          <span class="domain-chip"><span class="chip-dot"></span>Certainty Scoring</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Failure Architecture</span>
+          <span class="domain-chip"><span class="chip-dot"></span>Epistemic Design</span>
+          <span class="domain-chip"><span class="chip-dot"></span>AI Governance</span>
+        </div>
+      </div>
+
+      <div>
+        <p class="service-lead">
+          The AION stack was not designed from first principles in a comfortable room. <strong>It was built through live failure events — each framework specifying the exact boundary where AI confidence breaks down.</strong>
+          <br><br>
+          Framework engineering for your system means mapping your specific failure modes against the AION methodology, then building falsifiable, versioned, convergence-tracked frameworks for your deployment context. Every framework can produce the output "this score is invalid." That is not a bug. That is the point.
+        </p>
+      </div>
+    </div>
+
+    <!-- Stack reference table -->
+    <table class="framework-table">
+      <thead>
+        <tr>
+          <th>Framework</th>
+          <th>Version</th>
+          <th>Function</th>
+          <th>Convergence State</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fw-name">FSVE</td>
+          <td class="fw-state">v3.6</td>
+          <td class="fw-fn">Certainty Scoring Engine — 6 score dimensions, validity threshold enforcement, multi-perspective reviewer architecture</td>
+          <td class="fw-state">M-MODERATE</td>
+        </tr>
+        <tr>
+          <td class="fw-name">LAV</td>
+          <td class="fw-state">v1.5</td>
+          <td class="fw-fn">Linguistic Anchor Validation — 45 validated entries, 77.5% running mean, language precision enforcement</td>
+          <td class="fw-state">M-STRONG</td>
+        </tr>
+        <tr>
+          <td class="fw-name">TOPOS</td>
+          <td class="fw-state">v0.3</td>
+          <td class="fw-fn">Persistent Shape Architecture — 4 mapping instruments, deformation threshold tracking, TOPOS-BIN archive</td>
+          <td class="fw-state">M-NASCENT</td>
+        </tr>
+        <tr>
+          <td class="fw-name">DUAL-HELIX</td>
+          <td class="fw-state">v2.0</td>
+          <td class="fw-fn">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture, deformation check at output boundary</td>
+          <td class="fw-state">M-NASCENT</td>
+        </tr>
+        <tr>
+          <td class="fw-name">AION</td>
+          <td class="fw-state">v3.0</td>
+          <td class="fw-fn">Depth Acceleration Governor — SRI scoring, 3 scaling boundaries, artifact / node / behavior-kill architecture</td>
+          <td class="fw-state">M-MODERATE</td>
+        </tr>
+        <tr>
+          <td class="fw-name">CDIP</td>
+          <td class="fw-state">v1.5</td>
+          <td class="fw-fn">Constraint-Domain Isolation Protocol — linguistic domain scoring, LDS formula, Protocol I registration</td>
+          <td class="fw-state">M-NASCENT</td>
+        </tr>
+        <tr>
+          <td class="fw-name">EIGHT LAWS</td>
+          <td class="fw-state">v1.0</td>
+          <td class="fw-fn">Sovereignty Stack — individual, societal, biological, reality, civilizational sovereignty · Law 9 dark by design</td>
+          <td class="fw-state">CONSTITUTIONAL</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Process -->
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Failure Mode Mapping</div>
+        <div class="step-desc">Identify the specific failure modes in your AI system — where confidence breaks, where output errors cascade, where uncertainty is silently erased.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Framework Specification</div>
+        <div class="step-desc">Design the framework — one epistemic function per module, explicit invalidation conditions, Protocol I formula registration for every quantitative metric.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-title">CEV Arithmetic Audit</div>
+        <div class="step-desc">Calculated Empirical Verification: every formula verified against edge cases before deployment. Gini errors do not ship.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Convergence Tracking</div>
+        <div class="step-desc">Framework enters the convergence ladder: M-NASCENT → M-MODERATE → M-STRONG → M-VERY STRONG. FCL entries move it forward. Honesty keeps it there.</div>
+      </div>
+    </div>
+
+    <!-- What you get -->
+    <div class="principles-block">
+      <div class="principles-title">What every custom framework carries</div>
+      <ul class="principles-list">
+        <li>Explicit invalidation conditions — it can say "this score is invalid"</li>
+        <li>Protocol I formula registration — every metric has a computation protocol</li>
+        <li>Nullification Boundary Protocol entries — every claim has a falsification condition</li>
+        <li>CEV arithmetic verification pass — no edge-case undefined behavior</li>
+        <li>Convergence state honest from day one — M-NASCENT is not a failure</li>
+        <li>Full version changelog — delta between every version documented</li>
+        <li>ECF tagging throughout — [D] [R] [S] [?] on every claim</li>
+        <li>Framework Calibration Log integration — path from M-NASCENT to M-STRONG</li>
+      </ul>
+    </div>
+
+    <div class="cta-bar">
+      <a href="https://github.com/AionSystem/HIPPOCAMPUS" target="_blank" rel="noopener" class="cta-btn primary">
+        <span>AION-BRAIN Repository ↗</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn">
+        <span>Discuss Your System</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <span class="cta-note">Framework engineering engagements begin with a scoping conversation · LinkedIn</span>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /content-wrapper -->
+
+<!-- ENGAGEMENT STRIP -->
+<div class="engage-strip">
+  <div class="engage-inner">
+    <div>
+      <h2 class="engage-heading">Operators who cannot<em>afford to guess.</em></h2>
+      <p class="engage-sub">If your AI deployment has downstream consequences — to health, to safety, to legal standing, to an organization's credibility — then "pretty sure it works" is not a posture. It is a liability.</p>
+    </div>
+
+    <div class="engage-paths">
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="engage-path">
+        <span class="engage-path-icon">◈</span>
+        <div class="engage-path-text">
+          <div class="engage-path-label">File an Audit Request</div>
+          <div class="engage-path-desc">Open a certification inquiry in the STP repository — structured intake, no ambiguity on scope.</div>
+        </div>
+      </a>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="engage-path">
+        <span class="engage-path-icon">↗</span>
+        <div class="engage-path-text">
+          <div class="engage-path-label">LinkedIn — Direct Message</div>
+          <div class="engage-path-desc">Simulator commissions, framework discussions, and scoping conversations begin here.</div>
+        </div>
+      </a>
+      <a href="/certify/" class="engage-path">
+        <span class="engage-path-icon">🏷</span>
+        <div class="engage-path-text">
+          <div class="engage-path-label">Verify an Existing Badge</div>
+          <div class="engage-path-desc">If someone shows you an AION Verified badge, check it. The ledger is public.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-id">
+    <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
+    AI Reliability Architect &nbsp;·&nbsp; New York &nbsp;·&nbsp; March 2026<br>
+    <span style="font-size:10px;">AION v3.0 · STP v2.0 · LEDGER-011 · © 2026 Sheldon K. Salmon</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</footer>
+
+<!-- CANVAS ANIMATION — identical to index -->
+<script>
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], signals = [], t = 0;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+class Signal {
+  constructor() { this.reset(); }
+  reset() {
+    this.y = Math.random() * H;
+    this.speed = 0.3 + Math.random() * 0.6;
+    this.amp   = 8 + Math.random() * 20;
+    this.freq  = 0.008 + Math.random() * 0.012;
+    this.phase = Math.random() * Math.PI * 2;
+    this.alpha = 0.04 + Math.random() * 0.12;
+    this.width = 0.6 + Math.random() * 0.8;
+    this.life  = 0;
+    this.maxLife = 180 + Math.random() * 240;
+  }
+  draw() {
+    this.life++;
+    if (this.life > this.maxLife) this.reset();
+    const progress = this.life / this.maxLife;
+    const fade = Math.sin(progress * Math.PI);
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(240,165,0,${this.alpha * fade})`;
+    ctx.lineWidth = this.width;
+    for (let x = 0; x <= W; x += 2) {
+      const y = this.y + Math.sin(x * this.freq + this.phase + t * this.speed) * this.amp;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+}
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.r = 0.5 + Math.random() * 1.5;
+    this.vx = (Math.random() - 0.5) * 0.2;
+    this.vy = (Math.random() - 0.5) * 0.2;
+    this.alpha = 0.1 + Math.random() * 0.25;
+  }
+  draw() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(240,165,0,${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+function init() {
+  resize();
+  for (let i = 0; i < 12; i++) signals.push(new Signal());
+  for (let i = 0; i < 60; i++) particles.push(new Particle());
+}
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  t += 0.01;
+  signals.forEach(s => s.draw());
+  particles.forEach(p => p.draw());
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize', resize);
+init();
+loop();
+</script>
+
+</body>
+</html>
 
