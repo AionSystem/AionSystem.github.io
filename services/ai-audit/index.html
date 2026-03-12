@@ -1,1 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI Output Certification — Sovereign Trace Protocol. Immutable failure logging. Epistemic Debt Score. Four tiers from $2,500 to Defense Grade. Sheldon K. Salmon, AI Reliability Architect.">
+<meta property="og:title" content="AI Output Certification — AionSystem · Sovereign Trace Protocol">
+<meta property="og:description" content="Seal what is true. Permanently. SHA-256 binding. Triple-time cryptographic stamp. Four certification tiers. Epistemic Debt Score. FROZEN-2.0.">
+<meta property="og:type" content="website">
+<title>AI Output Certification — AionSystem · Sovereign Trace Protocol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #08090b;
+  --surface:  #0e1117;
+  --panel:    #141920;
+  --border:   #1e2730;
+  --amber:    #f0a500;
+  --amber-d:  #b07800;
+  --amber-l:  #ffc947;
+  --gold:     #D4AF37;
+  --green:    #00e676;
+  --green-d:  #2E7D32;
+  --blue:     #40c4ff;
+  --purple:   #b39ddb;
+  --text:     #c4d4de;
+  --muted:    #4e5f6a;
+  --dim:      #2a3540;
+  --mono:     'Share Tech Mono', monospace;
+  --sans:     'Barlow Condensed', sans-serif;
+  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(240,165,0,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,165,0,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none; z-index: 0;
+}
+
+/* ── NAV ─────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+  background: rgba(8,9,11,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--mono); font-size: 13px;
+  letter-spacing: 3px; color: var(--amber);
+  text-transform: uppercase; text-decoration: none;
+}
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 2px; color: var(--muted);
+  text-decoration: none; text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--amber); }
+
+/* ── CANVAS ────────── */
+#hero-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; opacity: 0.22; pointer-events: none;
+}
+
+/* ── PAGE HEADER ─────── */
+.page-header {
+  position: relative; z-index: 1;
+  padding: 120px 40px 64px;
+  max-width: 1200px; margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+.breadcrumb {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 2px; color: var(--muted);
+  text-transform: uppercase; margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.6s var(--ease) 0.1s forwards;
+}
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--amber); }
+.breadcrumb-sep { margin: 0 8px; color: var(--dim); }
+
+.page-header-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 48px; align-items: end;
+}
+.page-header-left {
+  opacity: 0; transform: translateY(16px);
+  animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+}
+.page-eyebrow {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 4px; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.page-eyebrow::before {
+  content: '';
+  display: inline-block; width: 20px; height: 1px;
+  background: var(--gold); vertical-align: middle;
+  margin-right: 10px; margin-bottom: 2px;
+}
+.page-title {
+  font-family: var(--sans);
+  font-size: clamp(48px, 7vw, 84px);
+  font-weight: 900; letter-spacing: -1px;
+  line-height: 0.9; text-transform: uppercase; color: var(--text);
+}
+.page-title em { display: block; color: var(--gold); font-style: normal; }
+
+.page-header-right {
+  opacity: 0; transform: translateY(12px);
+  animation: fadeUp 0.7s var(--ease) 0.4s forwards;
+}
+.page-premise {
+  font-family: var(--sans);
+  font-size: clamp(16px, 1.8vw, 20px); font-weight: 300;
+  color: var(--muted); line-height: 1.75; max-width: 480px;
+  border-left: 2px solid var(--gold); padding-left: 20px;
+}
+.page-premise strong { color: var(--text); font-weight: 600; }
+
+.page-meta {
+  display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap;
+  opacity: 0; animation: fadeIn 0.7s var(--ease) 0.7s forwards;
+}
+.meta-badge {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 4px 10px; border: 1px solid;
+}
+.badge-frozen { color: var(--green); border-color: var(--green-d); background: rgba(0,230,118,0.05); }
+.badge-doi    { color: var(--blue);  border-color: #1a4a5a;        background: rgba(64,196,255,0.05); }
+.badge-pypi   { color: var(--amber); border-color: var(--amber-d); background: rgba(240,165,0,0.05); }
+.badge-sha    { color: var(--purple);border-color: #3a2a5a;        background: rgba(179,157,219,0.05); }
+
+/* ── SECTION ID ─────── */
+.section-id {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; margin-bottom: 0;
+}
+.section-id-num {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 2px; color: var(--amber-d);
+}
+.section-id-line { flex: 1; height: 1px; background: var(--border); }
+
+/* ── BLOCKS ─────────── */
+.content-block {
+  position: relative; z-index: 1;
+  border-bottom: 1px solid var(--border);
+}
+.block-inner {
+  max-width: 1200px; margin: 0 auto; padding: 72px 40px;
+}
+
+.block-header {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 56px; margin-bottom: 48px; align-items: start;
+}
+.block-title {
+  font-family: var(--sans);
+  font-size: clamp(32px, 4.5vw, 56px); font-weight: 900;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text); line-height: 0.95; margin-bottom: 8px;
+}
+.block-title em { display: block; color: var(--gold); font-style: normal; }
+.block-label {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 3px; color: var(--muted);
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.block-tagline {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--amber-d); letter-spacing: 2px; margin-top: 14px;
+}
+.block-lead {
+  font-family: var(--sans); font-size: clamp(15px, 1.7vw, 19px);
+  font-weight: 300; color: var(--muted); line-height: 1.75;
+}
+.block-lead strong { color: var(--text); font-weight: 600; }
+
+/* ── TRIPLE SEAL DISPLAY ─── */
+.triple-seal {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 32px;
+}
+.seal-item {
+  background: var(--surface); padding: 28px 24px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: background 0.2s;
+}
+.seal-item:hover { background: var(--panel); }
+.seal-glyph { font-size: 22px; }
+.seal-system {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 2px; color: var(--amber);
+  text-transform: uppercase;
+}
+.seal-example {
+  font-family: var(--mono); font-size: 14px; color: var(--text);
+}
+.seal-claim {
+  font-family: var(--sans); font-size: 13px;
+  font-weight: 300; color: var(--muted); line-height: 1.5;
+}
+
+/* ── CODE BLOCK ────── */
+.code-block {
+  background: #060708; border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  padding: 24px 28px; margin-bottom: 32px;
+  font-family: var(--mono); font-size: 12px;
+  line-height: 1.9; overflow-x: auto;
+}
+.code-comment { color: var(--muted); }
+.code-keyword { color: var(--amber); }
+.code-string  { color: var(--green); }
+.code-output  { color: var(--blue); }
+
+/* ── TIER ROW ────────── */
+.tier-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 24px;
+}
+.tier-card {
+  background: var(--surface); padding: 28px 22px;
+  position: relative; overflow: hidden; transition: background 0.2s;
+}
+.tier-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--border); transition: background 0.3s;
+}
+.tier-card:hover { background: var(--panel); }
+.tier-card.t1:hover::before { background: var(--amber); }
+.tier-card.t2::before { background: var(--gold); }
+.tier-card.t2 { background: var(--panel); }
+.tier-card.t3:hover::before { background: var(--purple); }
+.tier-card.t4:hover::before { background: var(--blue); }
+
+.tier-num {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.t1 .tier-num { color: var(--amber-d); }
+.t2 .tier-num { color: var(--gold); }
+.t3 .tier-num { color: var(--purple); }
+.t4 .tier-num { color: var(--blue); }
+
+.tier-name {
+  font-family: var(--sans); font-size: 20px;
+  font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text);
+  margin-bottom: 4px;
+}
+.tier-badge-name {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); letter-spacing: 1px; margin-bottom: 16px;
+}
+.tier-price {
+  font-family: var(--mono); font-size: 28px;
+  letter-spacing: 1px; margin-bottom: 2px;
+}
+.t1 .tier-price { color: var(--amber); }
+.t2 .tier-price { color: var(--gold); }
+.t3 .tier-price { color: var(--purple); }
+.t4 .tier-price { color: var(--blue); }
+
+.tier-cadence {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); letter-spacing: 1px; margin-bottom: 20px;
+}
+.tier-divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+.tier-includes { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.tier-includes li {
+  font-family: var(--sans); font-size: 13px;
+  font-weight: 300; color: var(--muted);
+  display: flex; align-items: flex-start;
+  gap: 8px; line-height: 1.4;
+}
+.tier-includes li::before { content: '—'; flex-shrink: 0; }
+.t1 .tier-includes li::before { color: var(--amber-d); }
+.t2 .tier-includes li::before { color: var(--gold); }
+.t3 .tier-includes li::before { color: var(--purple); }
+.t4 .tier-includes li::before { color: var(--blue); }
+
+.tier-intake {
+  margin-top: 16px; padding: 10px 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); letter-spacing: 1px; line-height: 1.6;
+}
+
+/* ── EDS BLOCK ───────── */
+.eds-block {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--gold); padding: 32px 36px;
+  margin-bottom: 32px;
+}
+.eds-title {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 3px; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 20px;
+}
+.eds-formula {
+  font-family: var(--mono); font-size: 13px;
+  color: var(--text); background: var(--bg);
+  padding: 16px 20px; border: 1px solid var(--border);
+  margin-bottom: 20px; letter-spacing: 1px;
+}
+.eds-components {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+}
+.eds-comp {
+  background: var(--bg); padding: 16px 14px;
+  transition: background 0.2s;
+}
+.eds-comp:hover { background: var(--surface); }
+.eds-comp-label {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 1.5px; color: var(--amber-d);
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.eds-comp-name {
+  font-family: var(--sans); font-size: 13px;
+  font-weight: 600; color: var(--text); margin-bottom: 4px;
+}
+.eds-comp-desc {
+  font-family: var(--sans); font-size: 12px;
+  font-weight: 300; color: var(--muted); line-height: 1.4;
+}
+
+/* ── TEMPLATE TABLE ───── */
+.template-table {
+  width: 100%; border-collapse: collapse;
+  font-family: var(--mono); font-size: 12px; margin-bottom: 24px;
+}
+.template-table th {
+  text-align: left; font-size: 10px;
+  letter-spacing: 2px; color: var(--amber);
+  text-transform: uppercase; padding: 10px 16px;
+  border-bottom: 1px solid var(--border); background: var(--surface);
+}
+.template-table td {
+  padding: 11px 16px; border-bottom: 1px solid rgba(30,39,48,0.6);
+  background: var(--bg); vertical-align: top;
+  transition: background 0.15s;
+}
+.template-table tr:hover td { background: var(--surface); }
+.tmpl-id { color: var(--amber-d); white-space: nowrap; }
+.tmpl-name { color: var(--amber); }
+.tmpl-desc { color: var(--muted); font-family: var(--sans); font-size: 13px; font-weight: 300; }
+.tmpl-flag {
+  display: inline-block; font-size: 9px;
+  letter-spacing: 1px; padding: 2px 6px;
+  text-transform: uppercase; white-space: nowrap;
+}
+.flag-phi    { background: rgba(139,0,0,0.15); color: #ff6b6b; border: 1px solid rgba(139,0,0,0.4); }
+.flag-stripe { background: rgba(0,100,200,0.1); color: var(--blue); border: 1px solid rgba(0,100,200,0.3); }
+.flag-legal  { background: rgba(240,165,0,0.08); color: var(--amber-d); border: 1px solid rgba(240,165,0,0.2); }
+.flag-sha    { background: rgba(179,157,219,0.08); color: var(--purple); border: 1px solid rgba(179,157,219,0.2); }
+
+/* ── DETAIL GRID ───────── */
+.detail-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 32px;
+}
+.detail-cell {
+  background: var(--surface); padding: 24px 22px;
+  transition: background 0.2s;
+}
+.detail-cell:hover { background: var(--panel); }
+.detail-label {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 2px; color: var(--amber-d);
+  text-transform: uppercase; margin-bottom: 8px;
+}
+.detail-val {
+  font-family: var(--sans); font-size: 14px;
+  font-weight: 300; color: var(--text); line-height: 1.6;
+}
+.detail-val.mono { font-family: var(--mono); font-size: 12px; }
+
+/* ── WHO SEALS TABLE ──── */
+.who-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 32px;
+}
+.who-item {
+  background: var(--surface); padding: 20px 22px;
+  display: flex; gap: 14px; align-items: flex-start;
+  transition: background 0.2s;
+}
+.who-item:hover { background: var(--panel); }
+.who-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.who-body {}
+.who-role {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 2px; color: var(--amber);
+  text-transform: uppercase; margin-bottom: 5px;
+}
+.who-what {
+  font-family: var(--sans); font-size: 13px;
+  font-weight: 300; color: var(--muted); line-height: 1.5;
+}
+
+/* ── FROZEN BLOCK ────── */
+.frozen-block {
+  background: #060708; border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  padding: 28px 32px; margin-bottom: 32px;
+}
+.frozen-title {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 3px; color: var(--green);
+  text-transform: uppercase; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.frozen-title::before {
+  content: '❄';
+}
+.frozen-body {
+  font-family: var(--sans); font-size: 15px;
+  font-weight: 300; color: var(--muted); line-height: 1.7;
+}
+.frozen-body strong { color: var(--text); font-weight: 600; }
+
+/* ── AUDITOR BLOCK ────── */
+.auditor-block {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--purple); padding: 28px 32px;
+  margin-bottom: 32px;
+}
+.auditor-title {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 3px; color: var(--purple);
+  text-transform: uppercase; margin-bottom: 14px;
+}
+.auditor-body {
+  font-family: var(--sans); font-size: 15px;
+  font-weight: 300; color: var(--muted); line-height: 1.7;
+}
+.auditor-body strong { color: var(--text); font-weight: 600; }
+.auditor-body a { color: var(--purple); text-decoration: none; border-bottom: 1px solid rgba(179,157,219,0.3); }
+.auditor-body a:hover { border-bottom-color: var(--purple); }
+
+/* ── PROCESS STEPS ────── */
+.process-steps {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1px; background: var(--dim);
+  border: 1px solid var(--border); margin-bottom: 32px;
+}
+.process-step { background: var(--bg); padding: 22px 18px; }
+.step-num {
+  font-family: var(--mono); font-size: 28px;
+  color: var(--dim); font-weight: bold;
+  line-height: 1; margin-bottom: 10px;
+}
+.step-title {
+  font-family: var(--sans); font-size: 14px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 6px;
+}
+.step-desc {
+  font-family: var(--sans); font-size: 13px;
+  font-weight: 300; color: var(--muted); line-height: 1.55;
+}
+
+/* ── CTA BAR ────────── */
+.cta-bar {
+  display: flex; align-items: center; gap: 14px;
+  flex-wrap: wrap; padding: 24px 0;
+  border-top: 1px solid var(--border);
+}
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none; padding: 12px 22px;
+  border: 1px solid var(--amber); color: var(--amber);
+  background: transparent; transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.cta-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--amber); transform: translateX(-101%);
+  transition: transform 0.25s var(--ease); z-index: 0;
+}
+.cta-btn:hover::before { transform: translateX(0); }
+.cta-btn:hover { color: #000; }
+.cta-btn span { position: relative; z-index: 1; }
+.cta-arrow { font-size: 14px; transition: transform 0.2s; }
+.cta-btn:hover .cta-arrow { transform: translateX(4px); }
+
+.cta-btn.primary { background: var(--amber); color: #000; }
+.cta-btn.primary::before { background: var(--amber-l); }
+.cta-btn.primary:hover { color: #000; }
+
+.cta-btn.gold { border-color: var(--gold); color: var(--gold); }
+.cta-btn.gold::before { background: var(--gold); }
+.cta-btn.gold:hover { color: #000; }
+
+.cta-btn.green { border-color: var(--green); color: var(--green); }
+.cta-btn.green::before { background: var(--green); }
+.cta-btn.green:hover { color: #000; }
+
+.cta-note {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); letter-spacing: 1px;
+}
+
+/* ── ENGAGE STRIP ────── */
+.engage-strip {
+  position: relative; z-index: 1;
+  background: var(--surface); border-top: 1px solid var(--border);
+}
+.engage-inner {
+  max-width: 1200px; margin: 0 auto; padding: 64px 40px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center;
+}
+.engage-heading {
+  font-family: var(--sans);
+  font-size: clamp(28px, 3.5vw, 48px); font-weight: 900;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text); line-height: 0.95; margin-bottom: 14px;
+}
+.engage-heading em { display: block; color: var(--gold); font-style: normal; }
+.engage-sub {
+  font-family: var(--sans); font-size: 15px;
+  font-weight: 300; color: var(--muted);
+  line-height: 1.7; margin-bottom: 28px;
+}
+.engage-paths { display: flex; flex-direction: column; gap: 10px; }
+.engage-path {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px; background: var(--bg);
+  border: 1px solid var(--border); text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.engage-path:hover { border-color: var(--gold); background: var(--panel); }
+.engage-path-icon { font-size: 18px; flex-shrink: 0; }
+.engage-path-label {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 2px; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 3px;
+}
+.engage-path-desc {
+  font-family: var(--sans); font-size: 13px;
+  font-weight: 300; color: var(--muted);
+}
+
+/* ── FOOTER ──────────── */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 40px; max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.footer-id {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--muted); line-height: 1.8; letter-spacing: 1px;
+}
+.footer-id strong { color: var(--amber); }
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 2px; color: var(--muted);
+  text-decoration: none; text-transform: uppercase;
+  transition: color 0.15s;
+}
+.footer-links a:hover { color: var(--amber); }
+
+/* ── ANIMATIONS ──── */
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* ── RESPONSIVE ──── */
+@media (max-width: 1000px) {
+  .tier-row { grid-template-columns: 1fr 1fr; }
+  .process-steps { grid-template-columns: repeat(3, 1fr); }
+  .eds-components { grid-template-columns: 1fr 1fr; }
+  .page-header-inner { grid-template-columns: 1fr; gap: 24px; }
+  .block-header { grid-template-columns: 1fr; gap: 24px; }
+}
+@media (max-width: 700px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .page-header { padding: 96px 20px 48px; }
+  .block-inner { padding: 48px 20px; }
+  .engage-inner { grid-template-columns: 1fr; gap: 32px; padding: 40px 20px; }
+  footer { padding: 32px 20px; }
+  .tier-row { grid-template-columns: 1fr; }
+  .triple-seal { grid-template-columns: 1fr; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .who-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr; }
+  .eds-components { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="hero-canvas"></canvas>
+
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/" class="active">Services</a></li>
+    <li><a href="/#stack">Stack</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/">Aionsystem</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="/services/">Services</a>
+    <span class="breadcrumb-sep">/</span>
+    AI Output Certification
+  </div>
+
+  <div class="page-header-inner">
+    <div class="page-header-left">
+      <div class="page-eyebrow">Sovereign Trace Protocol · FROZEN-2.0</div>
+      <h1 class="page-title">AI Output<em>Certification</em></h1>
+    </div>
+    <div class="page-header-right">
+      <p class="page-premise">
+        An organization with a <strong>documented failure history and certified infrastructure</strong> is more trustworthy than one with a clean record and no ledger. Certification verifies you meet the FROZEN-2.0 standard — and maintains that verification through a cryptographic record that cannot be quietly amended.
+      </p>
+      <div class="page-meta">
+        <span class="meta-badge badge-frozen">FROZEN-2.0</span>
+        <span class="meta-badge badge-doi">DOI · Zenodo</span>
+        <span class="meta-badge badge-pypi">PyPI · sovereign-trace</span>
+        <span class="meta-badge badge-sha">SHA-256 Sealed</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ SECTION 01 — WHAT STP IS ━━━ -->
+<div class="content-block" id="what-it-is">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 01</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="block-header">
+      <div>
+        <div class="block-label">The Mechanism</div>
+        <div class="block-title">What Is<em>Being Sealed</em></div>
+        <div class="block-tagline">The stamp is permanent. The stamp is the resolution.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          <strong>For organizations:</strong> Every AI failure deserves a permanent, immutable record. Log it. Seal it. Append the remediation. The record cannot be edited after the fact. The AION-Registry holds public certification outcomes.<br><br>
+          <strong>For individuals:</strong> Write the exact present-moment observation. Seal it with a triple-time cryptographic stamp. The SHA-256 seal is permanent. Tamper-evident. Requires no audience.<br><br>
+          Same mechanism. Same FROZEN-2.0 stamp function. Same SHA-256 seal. Different stakes.
+        </p>
+      </div>
+    </div>
+
+    <!-- Triple-time seal display -->
+    <div class="triple-seal">
+      <div class="seal-item">
+        <span class="seal-glyph">📅</span>
+        <div class="seal-system">Gregorian</div>
+        <div class="seal-example">March 11, 2026</div>
+        <div class="seal-claim">Civic time — the calendar of current civic infrastructure. The administrative record.</div>
+      </div>
+      <div class="seal-item">
+        <span class="seal-glyph">🌑</span>
+        <div class="seal-system">Hebrew Lunisolar</div>
+        <div class="seal-example">11 Adar II 5786</div>
+        <div class="seal-claim">Theological-historical continuity — 5786 years of counted time. Full dehiyot rules. Zero off-by-one.</div>
+      </div>
+      <div class="seal-item">
+        <span class="seal-glyph">🌀</span>
+        <div class="seal-system">13 Moon Dreamspell</div>
+        <div class="seal-example">Day 5, Solar Moon 9/13</div>
+        <div class="seal-claim">Rhythmic time — 13 moons × 28 days, galactic count. A complete alternative temporal frame.</div>
+      </div>
+    </div>
+
+    <p style="font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:32px; letter-spacing:1px;">
+      The triple stamp is not redundancy. It is a claim: this moment of human significance deserves to be held simultaneously in every major civilizational framework for measuring <em>when</em>.
+    </p>
+
+    <!-- Quick install -->
+    <div class="code-block">
+<span class="code-comment"># Install the stamp function</span>
+<span class="code-keyword">pip install</span> sovereign-trace
+
+<span class="code-comment"># Seal a record in three lines</span>
+<span class="code-keyword">from</span> sovereign_trace_stamp <span class="code-keyword">import</span> stamp, display, verify
+
+ts = stamp(<span class="code-string">"AI output failure — exact text of the failure event. Pre-remediation record."</span>)
+<span class="code-keyword">print</span>(display(ts))
+
+<span class="code-output"># 📅 Gregorian:  March 11, 2026</span>
+<span class="code-output"># 🌑 Hebrew:     11 Adar II 5786</span>
+<span class="code-output"># 🌀 Dreamspell: Day 5, Solar Moon 9/13</span>
+<span class="code-output"># 🔒 Seal:       a3f9c12e7d4b8f2a...  [SHA-256 — immutable]</span>
+    </div>
+
+    <div class="cta-bar">
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/QUICKSTART.md" target="_blank" rel="noopener" class="cta-btn green">
+        <span>QUICKSTART.md — First Seal in 5 Minutes ↗</span>
+      </a>
+      <a href="https://pypi.org/project/sovereign-trace/" target="_blank" rel="noopener" class="cta-btn">
+        <span>PyPI · sovereign-trace ↗</span>
+      </a>
+      <a href="https://doi.org/10.5281/zenodo.18941392" target="_blank" rel="noopener" class="cta-btn">
+        <span>Zenodo DOI ↗</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ SECTION 02 — CERTIFICATION TIERS ━━━ -->
+<div class="content-block" id="tiers">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 02</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="block-header">
+      <div>
+        <div class="block-label">STP FROZEN-2.0 · Four Tiers</div>
+        <div class="block-title">Certification<em>Tiers</em></div>
+        <div class="block-tagline">No negotiation on scope. No lighter version of the standard.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          Tiers 1 and 2 submit anytime — payment via Stripe confirms intake automatically. <strong>Tiers 3 and 4 are architect-led. Intake Monday and Tuesday only.</strong> Submissions on other days are voided and non-refundable. Delivery: weekends for all tiers.<br><br>
+          Every certified organization receives an <strong>Epistemic Debt Score (EDS)</strong> — a 0–100 metric measuring AI epistemic integrity across five components. Formula is public.
+        </p>
+      </div>
+    </div>
+
+    <div class="tier-row">
+      <div class="tier-card t1">
+        <div class="tier-num">Tier 01 · Snapshot Verification</div>
+        <div class="tier-name">Snapshot</div>
+        <div class="tier-badge-name">Standard Badge</div>
+        <div class="tier-price">$2,500</div>
+        <div class="tier-cadence">One-time · Up to 10 outputs</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>Up to 10 AI outputs audited</li>
+          <li>SHA-256 sealed ledger entry</li>
+          <li>AION Verified Standard badge issued</li>
+          <li>Immutable public audit record</li>
+          <li>Epistemic Debt Score (EDS)</li>
+        </ul>
+        <div class="tier-intake">
+          Intake: Automated 24/7 via Stripe<br>
+          File: <code>10-audit-request.yml</code>
+        </div>
+      </div>
+
+      <div class="tier-card t2">
+        <div class="tier-num">Tier 02 · Enterprise Certification</div>
+        <div class="tier-name">Enterprise</div>
+        <div class="tier-badge-name">Digital Badge · Annual</div>
+        <div class="tier-price">$25,000<span style="font-size:16px;">/yr</span></div>
+        <div class="tier-cadence">Annual · Full audit + badge license</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>Full AI deployment audit</li>
+          <li>Badge license — annual renewal</li>
+          <li>Continuous failure monitoring framework</li>
+          <li>NIST AI RMF alignment report</li>
+          <li>Epistemic Debt Score — tracked annually</li>
+          <li>Full ledger access + audit trail</li>
+          <li>Remediation guidance on findings</li>
+        </ul>
+        <div class="tier-intake">
+          Intake: Automated 24/7 via Stripe<br>
+          File: <code>10-audit-request.yml</code>
+        </div>
+      </div>
+
+      <div class="tier-card t3">
+        <div class="tier-num">Tier 03 · Strategic Retainer</div>
+        <div class="tier-name">Strategic</div>
+        <div class="tier-badge-name">Elite Badge · Quarterly reviews</div>
+        <div class="tier-price">$100,000<span style="font-size:16px;">+/yr</span></div>
+        <div class="tier-cadence">Annual · Quarterly deep reviews</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>All Enterprise inclusions</li>
+          <li>Quarterly deep-architecture audit</li>
+          <li>Epistemic debt statement — board-level</li>
+          <li>Framework design for your failure modes</li>
+          <li>Custom convergence tracking</li>
+          <li>Priority remediation response</li>
+          <li>EDS trend analysis — quarterly</li>
+        </ul>
+        <div class="tier-intake">
+          Intake: <strong style="color:var(--purple);">Mon–Tue only</strong><br>
+          Other days: voided, non-refundable
+        </div>
+      </div>
+
+      <div class="tier-card t4">
+        <div class="tier-num">Tier 04 · Defense &amp; Government Grade</div>
+        <div class="tier-name">Sovereign</div>
+        <div class="tier-badge-name">Defense Badge · Monthly reviews</div>
+        <div class="tier-price" style="font-size:20px;">Negotiated</div>
+        <div class="tier-cadence">Custom scope · Direct engagement</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>All Strategic inclusions</li>
+          <li>DoD-grade documentation standards</li>
+          <li>Full standards alignment reporting</li>
+          <li>Monthly architecture reviews</li>
+          <li>Classified deployment support</li>
+          <li>Custom STP protocol variants</li>
+          <li>Direct architect engagement — no ceiling</li>
+        </ul>
+        <div class="tier-intake">
+          Intake: <strong style="color:var(--blue);">Mon–Tue only</strong><br>
+          Architect-led · Scope negotiated
+        </div>
+      </div>
+    </div>
+
+    <!-- Governing law note -->
+    <div class="detail-grid">
+      <div class="detail-cell">
+        <div class="detail-label">Governing Law</div>
+        <div class="detail-val">State of New York, United States · Arbitration: JAMS Commercial Rules</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">Delivery Schedule</div>
+        <div class="detail-val">Weekends for all tiers. Intake timing differs by tier — see above.</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">Badge Misuse</div>
+        <div class="detail-val">Badge use without current certification constitutes misrepresentation. Verifiable live at /certify/. Violations logged: <code class="mono">13-integrity-violation.yml</code></div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml" target="_blank" rel="noopener" class="cta-btn primary">
+        <span>File Audit Request</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="/certify/" class="cta-btn gold">
+        <span>Verify a Badge</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="cta-btn">
+        <span>Full Certification Terms ↗</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ SECTION 03 — EPISTEMIC DEBT SCORE ━━━ -->
+<div class="content-block" id="eds">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 03</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="block-header">
+      <div>
+        <div class="block-label">Public Formula · All Certified Organizations</div>
+        <div class="block-title">Epistemic<em>Debt Score</em></div>
+        <div class="block-tagline">0–100. Public formula. No black box.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          Every certified organization receives an Epistemic Debt Score — a 0–100 metric measuring AI epistemic integrity across five components. <strong>The formula is public.</strong> You can read the spec, audit the computation, and verify the score independently. A score is not a pass/fail. It is a measure of how much unacknowledged epistemic liability your AI deployment carries.
+        </p>
+      </div>
+    </div>
+
+    <div class="eds-block">
+      <div class="eds-title">Epistemic Debt Score — EDS Formula</div>
+      <div class="eds-formula">
+        EDS = f(FC, RC, VQ, HR, TT)<br>
+        <span style="color:var(--muted); font-size:11px;">Full computation: EPISTEMIC-DEBT-SCORE.md · Five components · Weighted composite · 0–100 scale</span>
+      </div>
+      <div class="eds-components">
+        <div class="eds-comp">
+          <div class="eds-comp-label">FC</div>
+          <div class="eds-comp-name">Failure Capture</div>
+          <div class="eds-comp-desc">Are failures being logged immutably before remediation begins?</div>
+        </div>
+        <div class="eds-comp">
+          <div class="eds-comp-label">RC</div>
+          <div class="eds-comp-name">Remediation Clarity</div>
+          <div class="eds-comp-desc">Is the remediation path transparent and traceable against the original failure?</div>
+        </div>
+        <div class="eds-comp">
+          <div class="eds-comp-label">VQ</div>
+          <div class="eds-comp-name">Verification Quality</div>
+          <div class="eds-comp-desc">Is output verification systematic — or spot-checked and undocumented?</div>
+        </div>
+        <div class="eds-comp">
+          <div class="eds-comp-label">HR</div>
+          <div class="eds-comp-name">Human Review</div>
+          <div class="eds-comp-desc">Where is human oversight applied and is it documented with the outcome?</div>
+        </div>
+        <div class="eds-comp">
+          <div class="eds-comp-label">TT</div>
+          <div class="eds-comp-name">Temporal Traceability</div>
+          <div class="eds-comp-desc">Can you prove when each failure was logged — before or after its remediation?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/EPISTEMIC-DEBT-SCORE.md" target="_blank" rel="noopener" class="cta-btn gold">
+        <span>Full EDS Formula ↗</span>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/AUDIT-METHODOLOGY.md" target="_blank" rel="noopener" class="cta-btn">
+        <span>Audit Methodology ↗</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ SECTION 04 — SUBMISSION TEMPLATES ━━━ -->
+<div class="content-block" id="templates">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 04</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="block-header">
+      <div>
+        <div class="block-label">14 Structured Templates · Blank Issues Disabled</div>
+        <div class="block-title">Submission<em>Layer</em></div>
+        <div class="block-tagline">Every submission uses a template. No exceptions.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          Structured submissions are made through GitHub Issues using the official template set. Each template produces a structured, legally-declared record before sealing. <strong>Blank issues are disabled.</strong> Every submission uses a template — every template carries native file upload, SHA-256 binding, declaration checkbox, and legal compliance language.
+        </p>
+      </div>
+    </div>
+
+    <table class="template-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Template</th>
+          <th>Use Case</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tmpl-id">01</td>
+          <td class="tmpl-name">ai-failure</td>
+          <td class="tmpl-desc">AI system output failure — identity verified, legal declaration required. Pre-remediation seal.</td>
+          <td><span class="tmpl-flag flag-legal">Declaration</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">02</td>
+          <td class="tmpl-name">research-priority</td>
+          <td class="tmpl-desc">Hypothesis or finding sealed before results are known. Kills HARKing. No institution required.</td>
+          <td><span class="tmpl-flag flag-sha">SHA-256</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">03</td>
+          <td class="tmpl-name">evidence-chain</td>
+          <td class="tmpl-desc">Document or source communication at point of receipt. Chain-of-custody proof.</td>
+          <td><span class="tmpl-flag flag-sha">SHA-256</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">04</td>
+          <td class="tmpl-name">creative-priority</td>
+          <td class="tmpl-desc">Creative work authorship — music, writing, art, design, code. Cryptographic priority proof.</td>
+          <td><span class="tmpl-flag flag-sha">SHA-256</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">05</td>
+          <td class="tmpl-name">clinical-record</td>
+          <td class="tmpl-desc">Clinical incident, trial data, or institutional record. PHI gate active. FDA 21 CFR Part 11 compatible.</td>
+          <td><span class="tmpl-flag flag-phi">PHI Gate</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">06</td>
+          <td class="tmpl-name">scope-anchor</td>
+          <td class="tmpl-desc">Agreed project scope or negotiated position before work begins. Scope creep disputes resolved by the ledger.</td>
+          <td><span class="tmpl-flag flag-legal">Declaration</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">07</td>
+          <td class="tmpl-name">general-trace</td>
+          <td class="tmpl-desc">Any observation, decision, or record that doesn't fit another template. Universal entry point.</td>
+          <td><span class="tmpl-flag flag-sha">SHA-256</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">08</td>
+          <td class="tmpl-name">foresight-seal</td>
+          <td class="tmpl-desc">Dated professional prediction before it resolves. Cryptographic foresight track record — cannot be fabricated after the fact.</td>
+          <td><span class="tmpl-flag flag-sha">SHA-256</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">09</td>
+          <td class="tmpl-name">webeater-link</td>
+          <td class="tmpl-desc">Cryptographic link between two sealed entities — binds a new seal to an existing SHA-256.</td>
+          <td><span class="tmpl-flag flag-sha">SHA-256</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">10</td>
+          <td class="tmpl-name">audit-request</td>
+          <td class="tmpl-desc">Request a certified audit. Stripe payment required at submission. Automated intake for Tiers 1–2.</td>
+          <td><span class="tmpl-flag flag-stripe">Stripe</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">11</td>
+          <td class="tmpl-name">audit-completion</td>
+          <td class="tmpl-desc">STP Certified Auditor files a completed audit to the ledger. Auditor badge verified live on submission.</td>
+          <td><span class="tmpl-flag flag-legal">Auditor Only</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">12</td>
+          <td class="tmpl-name">auditor-application</td>
+          <td class="tmpl-desc">Apply to become an STP Certified Auditor — skills-based vetting, no credentials required.</td>
+          <td><span class="tmpl-flag flag-legal">Application</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">13</td>
+          <td class="tmpl-name">integrity-violation</td>
+          <td class="tmpl-desc">Report badge misuse, bribery, or coercion. Permanent ledger record. Cannot be retracted.</td>
+          <td><span class="tmpl-flag flag-phi">Permanent</span></td>
+        </tr>
+        <tr>
+          <td class="tmpl-id">14</td>
+          <td class="tmpl-name">near-miss</td>
+          <td class="tmpl-desc">AI output that almost caused harm — caught before impact. Near-miss reporting before internal review begins.</td>
+          <td><span class="tmpl-flag flag-legal">Declaration</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cta-bar">
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="cta-btn primary">
+        <span>Open a Submission</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/HOW-TO-SUBMIT.md" target="_blank" rel="noopener" class="cta-btn">
+        <span>HOW-TO-SUBMIT.md ↗</span>
+      </a>
+      <span class="cta-note">New to GitHub? HOW-TO-SUBMIT.md is plain English — no experience required.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ SECTION 05 — WHO SEALS WHAT ━━━ -->
+<div class="content-block" id="who">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 05</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="block-header">
+      <div>
+        <div class="block-label">The Mechanism Is Universal</div>
+        <div class="block-title">Who Seals<em>What</em></div>
+        <div class="block-tagline">The stamp does not care what it seals. A sealed moment is a sealed moment.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          The SHA-256 proof is the same whether the content is an AI failure report, a research hypothesis, a hospital incident record, a contractor's agreed scope, or a professional foresight declaration. <strong>The stake determines how you use the sealed record afterward.</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="who-grid">
+      <div class="who-item">
+        <span class="who-icon">🔍</span>
+        <div class="who-body">
+          <div class="who-role">AI Auditor</div>
+          <div class="who-what">AI system output failure — exact text + screenshots. Public permanent record. Tamper-evident before remediation.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">🏗</span>
+        <div class="who-body">
+          <div class="who-role">AI Developer / Company</div>
+          <div class="who-what">Prompt deployed before launch. If the prompt causes harm later, the sealed record proves what was authorized and when.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">◈</span>
+        <div class="who-body">
+          <div class="who-role">AI Framework Builder</div>
+          <div class="who-what">Framework specification before publishing or citing. Priority record. Proves the design existed before any competing claim.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">📊</span>
+        <div class="who-body">
+          <div class="who-role">AI Evaluator</div>
+          <div class="who-what">Benchmark sealed before running it against a model. Prevents benchmarks being quietly modified after results are known.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">🔬</span>
+        <div class="who-body">
+          <div class="who-role">Researcher / Scientist</div>
+          <div class="who-what">Hypothesis before running the experiment. Kills HARKing. Every field. No institution required.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">📰</span>
+        <div class="who-body">
+          <div class="who-role">Journalist</div>
+          <div class="who-what">Article draft · source document · evidence chain before going to print. If a source is pressured to recant, the sealed record proves what they said before the pressure.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">🏥</span>
+        <div class="who-body">
+          <div class="who-role">Hospital / Clinical Team</div>
+          <div class="who-what">Clinical trial data before analysis. Incident report before review. FDA 21 CFR Part 11 compatible. The record cannot be quietly altered after an adverse outcome.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">📡</span>
+        <div class="who-body">
+          <div class="who-role">Foresight Analyst</div>
+          <div class="who-what">Dated professional prediction before it resolves. A track record of correct sealed predictions — verifiable by anyone — cannot be fabricated after the fact.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">🎵</span>
+        <div class="who-body">
+          <div class="who-role">Musician / Artist / Writer</div>
+          <div class="who-what">Creative work before release or submission. Cryptographic priority proof that costs nothing and requires no lawyer.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">⚖️</span>
+        <div class="who-body">
+          <div class="who-role">Contractor / Freelancer</div>
+          <div class="who-what">Project scope before work begins. Immutable record of what was agreed. Scope creep disputes resolved by the sealed ledger entry.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">🚀</span>
+        <div class="who-body">
+          <div class="who-role">NASA / Space Agency</div>
+          <div class="who-what">Mission parameter file before launch. If a mission fails and a specification dispute arises — the sealed pre-launch document is the ground truth.</div>
+        </div>
+      </div>
+      <div class="who-item">
+        <span class="who-icon">📁</span>
+        <div class="who-body">
+          <div class="who-role">FOIA Researcher / Archivist</div>
+          <div class="who-what">Declassified document at point of receipt. The seal is the chain of custody from institution to researcher. Proves the released version has not been altered.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ SECTION 06 — FROZEN + AUDITORS ━━━ -->
+<div class="content-block" id="protocol">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 06</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="block-header">
+      <div>
+        <div class="block-label">Protocol Architecture</div>
+        <div class="block-title">FROZEN-2.0<em>&amp; Auditors</em></div>
+        <div class="block-tagline">The stamp is only permanent if the code is permanent.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          The mechanism and the auditor ecosystem are two sides of the same integrity guarantee. The stamp function does not change. The auditor network extends reach without diluting standards.
+        </p>
+      </div>
+    </div>
+
+    <!-- Frozen declaration -->
+    <div class="frozen-block">
+      <div class="frozen-title">FROZEN DECLARATION — sovereign_trace_stamp.py</div>
+      <div class="frozen-body">
+        <code style="color:var(--green);">sovereign_trace_stamp.py</code> is <strong>FROZEN-2.0</strong>. Written once, verified once, deployed permanently. No patches. No updates. The stamp it generates is only permanent if the code that generates it is also permanent.<br><br>
+        If a defect is found: <strong>retire the frozen file, document the defect, build FROZEN-3.0 from first principles, re-verify all anchor cases. Never patch.</strong><br><br>
+        <span style="color:var(--muted); font-size:13px;">FROZEN-1.0 is retired. Defect: incomplete dehiyot implementation → Hebrew off-by-one on all 5786 dates. Archived: <code>stamp/FROZEN-1.0-RETIRED/</code>. That disclosure is in the ledger.</span>
+      </div>
+    </div>
+
+    <!-- Auditor ecosystem -->
+    <div class="auditor-block">
+      <div class="auditor-title">STP Certified Auditor Network</div>
+      <div class="auditor-body">
+        <strong>Independent professionals authorized to conduct and file audits directly to the ledger under their own badge.</strong> Skills-based vetting — no credentials required. Every auditor badge verified live against <code>.github/verified-auditors.json</code> on every submission.<br><br>
+        Revoked auditors are published immediately to <code>.github/revoked-auditors.json</code>. The revocation record is permanent. A revoked badge cannot be reinstated.<br><br>
+        Apply via <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=12-auditor-application.yml" target="_blank" rel="noopener">12-auditor-application.yml</a> · See <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/AUDITOR-VETTING-PROCESS.md" target="_blank" rel="noopener">AUDITOR-VETTING-PROCESS.md</a> for full vetting criteria.
+      </div>
+    </div>
+
+    <!-- Audit 5-phase process -->
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Intake</div>
+        <div class="step-desc">Submit via template 10. Stripe payment confirms Tier 1–2 automatically. Tier 3–4: architect review Mon–Tue.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Failure Capture Review</div>
+        <div class="step-desc">Audit verifies failures are being logged immutably — before remediation, not after. The pre-remediation seal is the evidentiary core.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Epistemic Debt Score</div>
+        <div class="step-desc">Five-component EDS computed against public formula. Score reflects current state — not aspirational state.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Ledger Entry</div>
+        <div class="step-desc">Audit outcome sealed to the AION-Registry. SHA-256 binding. The record cannot be amended. The badge is issued against this entry.</div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">05</div>
+        <div class="step-title">Badge Issuance</div>
+        <div class="step-desc">Badge issued. Verifiable live at /certify/. Weekend delivery for all tiers. Badge expiry tied to certification tier period.</div>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener" class="cta-btn primary">
+        <span>STP Repository ↗</span>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=12-auditor-application.yml" target="_blank" rel="noopener" class="cta-btn">
+        <span>Apply to Become an Auditor</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/DISASTER-RECOVERY.md" target="_blank" rel="noopener" class="cta-btn">
+        <span>Disaster Recovery + Offline Verification ↗</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ENGAGE STRIP -->
+<div class="engage-strip">
+  <div class="engage-inner">
+    <div>
+      <h2 class="engage-heading">The ledger is<em>the record.</em></h2>
+      <p class="engage-sub">
+        "Responsible AI" without failure documentation is marketing. The Sovereign Trace Protocol exists because the honest record — logged before remediation, sealed before dispute — is the only record that matters when accountability is tested.
+      </p>
+    </div>
+    <div class="engage-paths">
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml" target="_blank" rel="noopener" class="engage-path">
+        <span class="engage-path-icon">◈</span>
+        <div>
+          <div class="engage-path-label">File an Audit Request</div>
+          <div class="engage-path-desc">Template 10 · Stripe payment confirms Tier 1–2 automatically. Tiers 3–4 Mon–Tue intake.</div>
+        </div>
+      </a>
+      <a href="/certify/" class="engage-path">
+        <span class="engage-path-icon">🏷</span>
+        <div>
+          <div class="engage-path-label">Verify a Badge</div>
+          <div class="engage-path-desc">Live verification against the AION-Registry. Every badge in the ledger. None outside it.</div>
+        </div>
+      </a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/QUICKSTART.md" target="_blank" rel="noopener" class="engage-path">
+        <span class="engage-path-icon">❄</span>
+        <div>
+          <div class="engage-path-label">QUICKSTART — First Seal in 5 Minutes</div>
+          <div class="engage-path-desc">pip install sovereign-trace · Three lines of code · SHA-256 + triple-time stamp.</div>
+        </div>
+      </a>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="engage-path">
+        <span class="engage-path-icon">↗</span>
+        <div>
+          <div class="engage-path-label">LinkedIn — Tiers 3 &amp; 4</div>
+          <div class="engage-path-desc">Strategic and Defense Grade engagements begin with a direct conversation. Mon–Tue intake.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-id">
+    <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
+    AI Reliability Architect &nbsp;·&nbsp; New York &nbsp;·&nbsp; March 2026<br>
+    <span style="font-size:10px;">STP FROZEN-2.0 · LEDGER-011 · © 2026 Sheldon K. Salmon</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener">STP Repo ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</footer>
+
+<!-- CANVAS -->
+<script>
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, signals = [], particles = [], t = 0;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+class Signal {
+  constructor() { this.reset(); }
+  reset() {
+    this.y = Math.random() * H;
+    this.speed = 0.3 + Math.random() * 0.6;
+    this.amp   = 8 + Math.random() * 20;
+    this.freq  = 0.008 + Math.random() * 0.012;
+    this.phase = Math.random() * Math.PI * 2;
+    this.alpha = 0.04 + Math.random() * 0.1;
+    this.width = 0.5 + Math.random() * 0.8;
+    this.life = 0; this.maxLife = 200 + Math.random() * 220;
+    this.gold  = Math.random() > 0.6;
+  }
+  draw() {
+    this.life++;
+    if (this.life > this.maxLife) this.reset();
+    const fade = Math.sin((this.life / this.maxLife) * Math.PI);
+    const col = this.gold ? `rgba(212,175,55,${this.alpha * fade})` : `rgba(240,165,0,${this.alpha * fade})`;
+    ctx.beginPath();
+    ctx.strokeStyle = col;
+    ctx.lineWidth = this.width;
+    for (let x = 0; x <= W; x += 2) {
+      const y = this.y + Math.sin(x * this.freq + this.phase + t * this.speed) * this.amp;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+}
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.r = 0.5 + Math.random() * 1.5;
+    this.vx = (Math.random() - 0.5) * 0.2;
+    this.vy = (Math.random() - 0.5) * 0.2;
+    this.alpha = 0.08 + Math.random() * 0.2;
+    this.gold = Math.random() > 0.5;
+  }
+  draw() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = this.gold
+      ? `rgba(212,175,55,${this.alpha})`
+      : `rgba(240,165,0,${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+function init() {
+  resize();
+  for (let i = 0; i < 14; i++) signals.push(new Signal());
+  for (let i = 0; i < 55; i++) particles.push(new Particle());
+}
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  t += 0.01;
+  signals.forEach(s => s.draw());
+  particles.forEach(p => p.draw());
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize', resize);
+init(); loop();
+</script>
+
+</body>
+</html>
 
