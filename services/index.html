@@ -438,17 +438,6 @@ nav {
   line-height: 1.6;
 }
 
-.process-connector {
-  position: absolute;
-  right: -1px; top: 50%;
-  transform: translateY(-50%);
-  width: 12px; height: 12px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* ── CERTIFICATION TIERS ─────────────────────── */
 .tier-row {
   display: grid;
@@ -669,6 +658,16 @@ nav {
 .cta-btn.gold::before { background: var(--gold); }
 .cta-btn.gold:hover { color: #000; }
 
+/* Coming-soon CTA — non-interactive, muted */
+.cta-btn.soon {
+  border-color: var(--dim);
+  color: var(--muted);
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
+.cta-btn.soon::before { display: none; }
+
 .cta-note {
   font-family: var(--mono);
   font-size: 10px;
@@ -737,23 +736,6 @@ nav {
   height: 1px;
   background: var(--border);
 }
-
-/* ── SIMULATOR BADGE INLINE ──────────────────── */
-.sim-badge-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 32px;
-}
-.sim-badge-row svg { flex-shrink: 0; }
-.sim-badge-note {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 1px;
-  line-height: 1.8;
-}
-.sim-badge-note strong { color: var(--gold); }
 
 /* ── DOMAIN CHIPS ────────────────────────────── */
 .domain-chips {
@@ -837,11 +819,7 @@ nav {
   border-color: var(--amber);
   background: var(--panel);
 }
-.engage-path-icon {
-  font-size: 20px;
-  flex-shrink: 0;
-}
-.engage-path-text {}
+.engage-path-icon { font-size: 20px; flex-shrink: 0; }
 .engage-path-label {
   font-family: var(--mono);
   font-size: 10px;
@@ -1097,8 +1075,13 @@ footer {
       </ul>
     </div>
 
+    <!-- CTA BAR — 01 -->
     <div class="cta-bar">
-      <a href="/simulators/roller-coaster/" class="cta-btn primary">
+      <a href="/services/rapid-prototyping/" class="cta-btn primary soon">
+        <span>Full Service Details</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="/simulators/roller-coaster/" class="cta-btn">
         <span>See a Live Simulator</span>
         <span class="cta-arrow">→</span>
       </a>
@@ -1106,7 +1089,7 @@ footer {
         <span>Commission a Simulator</span>
         <span class="cta-arrow">→</span>
       </a>
-      <span class="cta-note">Engagement via LinkedIn DM · Timeline varies by domain complexity</span>
+      <span class="cta-note">Service page coming soon · Engagement via LinkedIn DM</span>
     </div>
 
   </div>
@@ -1238,12 +1221,17 @@ footer {
       </div>
     </div>
 
+    <!-- CTA BAR — 02 -->
     <div class="cta-bar">
+      <a href="/services/ai-audit/" class="cta-btn primary">
+        <span>Full Service Details</span>
+        <span class="cta-arrow">→</span>
+      </a>
       <a href="/certify/" class="cta-btn gold">
         <span>Verify a Badge</span>
         <span class="cta-arrow">→</span>
       </a>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="cta-btn primary">
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="cta-btn">
         <span>File an Audit Request</span>
         <span class="cta-arrow">→</span>
       </a>
@@ -1382,8 +1370,13 @@ footer {
       </ul>
     </div>
 
+    <!-- CTA BAR — 03 -->
     <div class="cta-bar">
-      <a href="https://github.com/AionSystem/HIPPOCAMPUS" target="_blank" rel="noopener" class="cta-btn primary">
+      <a href="/services/framework-design/" class="cta-btn primary soon">
+        <span>Full Service Details</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="https://github.com/AionSystem/HIPPOCAMPUS" target="_blank" rel="noopener" class="cta-btn">
         <span>AION-BRAIN Repository ↗</span>
         <span class="cta-arrow">→</span>
       </a>
@@ -1391,7 +1384,7 @@ footer {
         <span>Discuss Your System</span>
         <span class="cta-arrow">→</span>
       </a>
-      <span class="cta-note">Framework engineering engagements begin with a scoping conversation · LinkedIn</span>
+      <span class="cta-note">Service page coming soon · Framework engagements begin via LinkedIn</span>
     </div>
 
   </div>
@@ -1449,7 +1442,7 @@ footer {
   </ul>
 </footer>
 
-<!-- CANVAS ANIMATION — identical to index -->
+<!-- CANVAS ANIMATION -->
 <script>
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
@@ -1530,4 +1523,3 @@ loop();
 
 </body>
 </html>
-
