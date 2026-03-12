@@ -1,1 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Rapid Prototyping — AionSystem. PDF framework in 24–48 hours. Live builds, zero-dependency simulators, AION Verified badge. Red-teamed and audited before delivery. Sheldon K. Salmon, AI Reliability Architect.">
+<meta property="og:title" content="Rapid Prototyping — AionSystem · Sheldon K. Salmon">
+<meta property="og:description" content="The framework document is the foundation. Everything else is features built on top of it. 24–48 hours. Red-teamed. AION Verified.">
+<meta property="og:type" content="website">
+<title>Rapid Prototyping — AionSystem · Sheldon K. Salmon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #08090b;
+  --surface:   #0e1117;
+  --panel:     #141920;
+  --border:    #1e2730;
+  --amber:     #f0a500;
+  --amber-d:   #b07800;
+  --amber-l:   #ffc947;
+  --gold:      #D4AF37;
+  --text:      #c4d4de;
+  --muted:     #4e5f6a;
+  --dim:       #2a3540;
+  --green:     #00e676;
+  --green-d:   #2E7D32;
+  --blue:      #40c4ff;
+  --red:       #ff6b6b;
+  --mono:      'Share Tech Mono', monospace;
+  --sans:      'Barlow Condensed', sans-serif;
+  --ease:      cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-size: 16px;
+  line-height: 1.5; overflow-x: hidden;
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(240,165,0,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,165,0,0.018) 1px, transparent 1px);
+  background-size: 48px 48px; pointer-events: none; z-index: 0;
+}
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px
+  ); pointer-events: none; z-index: 0;
+}
+
+/* ── NAV ─────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+  background: rgba(8,9,11,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--mono); font-size: 13px; letter-spacing: 3px;
+  color: var(--amber); text-transform: uppercase; text-decoration: none;
+}
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--amber); }
+
+/* ── CANVAS ──────────────── */
+#hero-canvas {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0; opacity: 0.2; pointer-events: none;
+}
+
+/* ── PAGE HEADER ─────────── */
+.page-header {
+  position: relative; z-index: 1;
+  padding: 120px 40px 72px; max-width: 1200px; margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+.breadcrumb {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase; margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.6s var(--ease) 0.1s forwards;
+}
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--amber); }
+.breadcrumb-sep { margin: 0 8px; color: var(--dim); }
+.page-header-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: end;
+}
+.page-header-left {
+  opacity: 0; transform: translateY(16px);
+  animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+}
+.page-eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 4px;
+  color: var(--amber); text-transform: uppercase; margin-bottom: 16px;
+}
+.page-eyebrow::before {
+  content: ''; display: inline-block; width: 20px; height: 1px;
+  background: var(--amber); vertical-align: middle; margin-right: 10px; margin-bottom: 2px;
+}
+.page-title {
+  font-family: var(--sans); font-size: clamp(48px, 7vw, 84px);
+  font-weight: 900; letter-spacing: -1px; line-height: 0.9;
+  text-transform: uppercase; color: var(--text);
+}
+.page-title em { display: block; color: var(--amber); font-style: normal; }
+.page-header-right {
+  opacity: 0; transform: translateY(12px);
+  animation: fadeUp 0.7s var(--ease) 0.4s forwards;
+}
+.page-premise {
+  font-family: var(--sans); font-size: clamp(16px, 1.8vw, 20px);
+  font-weight: 300; color: var(--muted); line-height: 1.75;
+  max-width: 480px; border-left: 2px solid var(--amber); padding-left: 20px;
+}
+.page-premise strong { color: var(--text); font-weight: 600; }
+
+/* speed clock strip */
+.speed-strip {
+  margin-top: 28px; display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+  opacity: 0; animation: fadeIn 0.7s var(--ease) 0.7s forwards;
+}
+.speed-cell {
+  background: var(--bg); padding: 16px 18px;
+}
+.speed-num {
+  font-family: var(--mono); font-size: 26px; color: var(--amber);
+  line-height: 1; margin-bottom: 4px;
+}
+.speed-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+  color: var(--muted); text-transform: uppercase;
+}
+
+/* ── SECTION MACHINERY ───── */
+.content-block { position: relative; z-index: 1; border-bottom: 1px solid var(--border); }
+.block-inner { max-width: 1200px; margin: 0 auto; padding: 72px 40px; }
+.section-id { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+.section-id-num { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber-d); }
+.section-id-line { flex: 1; height: 1px; background: var(--border); }
+.block-header { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-bottom: 48px; align-items: start; }
+.block-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+.block-title { font-family: var(--sans); font-size: clamp(32px, 4.5vw, 56px); font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: var(--text); line-height: 0.95; margin-bottom: 8px; }
+.block-title em { display: block; color: var(--amber); font-style: normal; }
+.block-tagline { font-family: var(--mono); font-size: 11px; color: var(--amber-d); letter-spacing: 2px; margin-top: 14px; }
+.block-lead { font-family: var(--sans); font-size: clamp(15px, 1.7vw, 19px); font-weight: 300; color: var(--muted); line-height: 1.75; }
+.block-lead strong { color: var(--text); font-weight: 600; }
+
+/* ── FOUNDATION STACK ────── */
+.foundation-stack {
+  display: flex; flex-direction: column; gap: 1px;
+  background: var(--border); border: 1px solid var(--border); margin-bottom: 32px;
+}
+.foundation-layer {
+  display: grid; grid-template-columns: 56px 1fr auto;
+  gap: 0; background: var(--bg); transition: background 0.2s;
+}
+.foundation-layer:hover { background: var(--surface); }
+.foundation-layer.f-base { background: var(--panel); }
+.f-num {
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 11px; color: var(--amber-d);
+  border-right: 1px solid var(--border); padding: 0 16px;
+}
+.f-body { padding: 18px 24px; }
+.f-name {
+  font-family: var(--sans); font-size: 18px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px;
+}
+.foundation-layer.f-base .f-name { color: var(--amber); }
+.foundation-layer:not(.f-base) .f-name { color: var(--text); }
+.f-desc {
+  font-family: var(--sans); font-size: 13px; font-weight: 300;
+  color: var(--muted); line-height: 1.5;
+}
+.f-meta {
+  padding: 18px 24px; display: flex; align-items: center;
+  border-left: 1px solid var(--border); white-space: nowrap;
+  flex-direction: column; justify-content: center; gap: 6px; min-width: 130px;
+}
+.f-time {
+  font-family: var(--mono); font-size: 13px; color: var(--amber); letter-spacing: 1px;
+}
+.f-tag {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+  color: var(--muted); text-transform: uppercase;
+}
+.f-required {
+  font-family: var(--mono); font-size: 9px; padding: 2px 7px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--amber); border: 1px solid var(--amber-d);
+  background: rgba(240,165,0,0.06);
+}
+.f-optional {
+  font-family: var(--mono); font-size: 9px; padding: 2px 7px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--dim);
+}
+
+/* ── VERIFICATION BLOCK ───── */
+.verify-block {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--amber); padding: 28px 32px; margin-bottom: 32px;
+}
+.verify-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  color: var(--amber); text-transform: uppercase; margin-bottom: 20px;
+}
+.verify-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.verify-cell {
+  background: var(--bg); padding: 20px 18px; transition: background 0.2s;
+}
+.verify-cell:hover { background: var(--panel); }
+.verify-gate {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--amber-d); text-transform: uppercase; margin-bottom: 8px;
+}
+.verify-name {
+  font-family: var(--sans); font-size: 16px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text); margin-bottom: 6px;
+}
+.verify-desc {
+  font-family: var(--sans); font-size: 13px; font-weight: 300;
+  color: var(--muted); line-height: 1.55;
+}
+.verify-result {
+  margin-top: 12px; font-family: var(--mono); font-size: 10px;
+  letter-spacing: 1.5px; color: var(--green); text-transform: uppercase;
+}
+.verify-result::before { content: '→ '; color: var(--amber-d); }
+
+/* ── TIER ROW ────────────── */
+.tier-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 24px;
+}
+.tier-card {
+  background: var(--surface); padding: 28px 22px;
+  position: relative; overflow: hidden; transition: background 0.2s;
+}
+.tier-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--border); transition: background 0.3s;
+}
+.tier-card:hover { background: var(--panel); }
+.tier-card.t1:hover::before { background: var(--amber); }
+.tier-card.t2::before { background: var(--gold); }
+.tier-card.t2 { background: var(--panel); }
+.tier-card.t3:hover::before { background: var(--blue); }
+.tier-num {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.t1 .tier-num { color: var(--amber-d); }
+.t2 .tier-num { color: var(--gold); }
+.t3 .tier-num { color: var(--blue); }
+.tier-name {
+  font-family: var(--sans); font-size: 22px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text); margin-bottom: 4px;
+}
+.tier-subtitle {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  letter-spacing: 1px; margin-bottom: 16px;
+}
+.tier-price {
+  font-family: var(--mono); font-size: 30px; letter-spacing: 1px; margin-bottom: 2px;
+}
+.t1 .tier-price { color: var(--amber); }
+.t2 .tier-price { color: var(--gold); }
+.t3 .tier-price { color: var(--blue); }
+.tier-cadence {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  letter-spacing: 1px; margin-bottom: 20px;
+}
+.tier-divider { height: 1px; background: var(--border); margin: 14px 0; }
+.tier-includes { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.tier-includes li {
+  font-family: var(--sans); font-size: 13px; font-weight: 300;
+  color: var(--muted); display: flex; align-items: flex-start;
+  gap: 8px; line-height: 1.4;
+}
+.tier-includes li::before { content: '—'; flex-shrink: 0; }
+.t1 .tier-includes li::before { color: var(--amber-d); }
+.t2 .tier-includes li::before { color: var(--gold); }
+.t3 .tier-includes li::before { color: var(--blue); }
+.tier-turnaround {
+  margin-top: 18px; padding: 10px 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted); letter-spacing: 1px; line-height: 1.7;
+}
+.tier-turnaround strong { color: var(--amber); }
+
+/* ── WHAT TYPES GRID ─────── */
+.types-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 32px;
+}
+.type-card {
+  background: var(--surface); padding: 24px 22px;
+  position: relative; overflow: hidden; transition: background 0.2s;
+}
+.type-card:hover { background: var(--panel); }
+.type-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: var(--border);
+}
+.type-icon { font-size: 24px; margin-bottom: 12px; display: block; }
+.type-name {
+  font-family: var(--sans); font-size: 18px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 8px;
+}
+.type-desc {
+  font-family: var(--sans); font-size: 13px; font-weight: 300;
+  color: var(--muted); line-height: 1.6; margin-bottom: 12px;
+}
+.type-examples {
+  font-family: var(--mono); font-size: 10px; color: var(--amber-d);
+  letter-spacing: 1px; line-height: 1.7;
+}
+.type-caveat {
+  margin-top: 10px; padding: 8px 12px; background: var(--bg);
+  border: 1px solid var(--dim); font-family: var(--mono); font-size: 9px;
+  color: var(--muted); letter-spacing: 1px; line-height: 1.6;
+}
+
+/* ── REFERENCE IMPL ──────── */
+.reference-block {
+  background: var(--bg); border: 1px solid var(--border);
+  margin-bottom: 32px; overflow: hidden; position: relative;
+}
+.reference-block::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--amber), var(--gold), transparent);
+}
+.ref-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+}
+.ref-left {
+  padding: 36px 36px; border-right: 1px solid var(--border);
+}
+.ref-eyebrow {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
+  color: var(--amber-d); text-transform: uppercase; margin-bottom: 14px;
+}
+.ref-title {
+  font-family: var(--sans); font-size: clamp(24px, 3vw, 36px);
+  font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text); line-height: 0.95; margin-bottom: 16px;
+}
+.ref-title em { display: block; color: var(--amber); font-style: normal; }
+.ref-body {
+  font-family: var(--sans); font-size: 14px; font-weight: 300;
+  color: var(--muted); line-height: 1.7; margin-bottom: 20px;
+}
+.ref-body strong { color: var(--text); font-weight: 600; }
+.ref-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.ref-badge {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 4px 10px; border: 1px solid;
+}
+.badge-verified { color: var(--green); border-color: var(--green-d); background: rgba(0,230,118,0.05); }
+.badge-zero     { color: var(--amber); border-color: var(--amber-d); background: rgba(240,165,0,0.05); }
+.badge-physics  { color: var(--blue);  border-color: #1a4a5a;        background: rgba(64,196,255,0.05); }
+.badge-redteam  { color: var(--red);   border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.05); }
+.ref-right {
+  padding: 36px 36px; display: flex; flex-direction: column; justify-content: space-between;
+}
+.ref-stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--border); border: 1px solid var(--border); margin-bottom: 24px;
+}
+.ref-stat-cell {
+  background: var(--surface); padding: 16px 18px; transition: background 0.2s;
+}
+.ref-stat-cell:hover { background: var(--panel); }
+.ref-stat-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+  color: var(--muted); text-transform: uppercase; margin-bottom: 6px;
+}
+.ref-stat-val {
+  font-family: var(--mono); font-size: 14px; color: var(--amber);
+}
+
+/* ── HONEST POSTURE ──────── */
+.honest-block {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--amber); padding: 28px 32px; margin-bottom: 32px;
+}
+.honest-title {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  color: var(--amber); text-transform: uppercase; margin-bottom: 16px;
+}
+.honest-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.honest-list li {
+  font-family: var(--sans); font-size: 15px; font-weight: 300;
+  color: var(--muted); display: flex; align-items: flex-start;
+  gap: 12px; line-height: 1.5;
+}
+.honest-list li::before { content: '◈'; color: var(--amber-d); flex-shrink: 0; font-size: 11px; margin-top: 3px; }
+
+/* ── CTA BAR ─────────────── */
+.cta-bar {
+  display: flex; align-items: center; gap: 14px;
+  flex-wrap: wrap; padding: 24px 0; border-top: 1px solid var(--border);
+}
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; text-decoration: none; padding: 12px 22px;
+  border: 1px solid var(--amber); color: var(--amber);
+  background: transparent; transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.cta-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--amber); transform: translateX(-101%);
+  transition: transform 0.25s var(--ease); z-index: 0;
+}
+.cta-btn:hover::before { transform: translateX(0); }
+.cta-btn:hover { color: #000; }
+.cta-btn span { position: relative; z-index: 1; }
+.cta-arrow { font-size: 14px; transition: transform 0.2s; }
+.cta-btn:hover .cta-arrow { transform: translateX(4px); }
+.cta-btn.primary { background: var(--amber); color: #000; }
+.cta-btn.primary::before { background: var(--amber-l); }
+.cta-btn.primary:hover { color: #000; }
+
+/* ── ENGAGE STRIP ────────── */
+.engage-strip {
+  position: relative; z-index: 1;
+  background: var(--surface); border-top: 1px solid var(--border);
+}
+.engage-inner {
+  max-width: 1200px; margin: 0 auto; padding: 64px 40px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
+}
+.engage-heading {
+  font-family: var(--sans); font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text); line-height: 0.95; margin-bottom: 14px;
+}
+.engage-heading em { display: block; color: var(--amber); font-style: normal; }
+.engage-sub {
+  font-family: var(--sans); font-size: 15px; font-weight: 300;
+  color: var(--muted); line-height: 1.7; margin-bottom: 20px;
+}
+.engage-note {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  letter-spacing: 1px; line-height: 1.8;
+}
+.engage-paths { display: flex; flex-direction: column; gap: 10px; }
+.engage-path {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px; background: var(--bg);
+  border: 1px solid var(--border); text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.engage-path:hover { border-color: var(--amber); background: var(--panel); }
+.engage-path-icon { font-size: 18px; flex-shrink: 0; }
+.engage-path-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--amber); text-transform: uppercase; margin-bottom: 3px;
+}
+.engage-path-desc { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); }
+
+/* ── FOOTER ──────────────── */
+footer {
+  position: relative; z-index: 1; border-top: 1px solid var(--border);
+  padding: 40px; max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.footer-id { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; letter-spacing: 1px; }
+.footer-id strong { color: var(--amber); }
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.15s;
+}
+.footer-links a:hover { color: var(--amber); }
+
+/* ── ANIMATIONS ──────────── */
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* ── RESPONSIVE ──────────── */
+@media (max-width: 1000px) {
+  .page-header-inner { grid-template-columns: 1fr; gap: 24px; }
+  .block-header { grid-template-columns: 1fr; gap: 24px; }
+  .tier-row { grid-template-columns: 1fr; }
+  .types-grid { grid-template-columns: 1fr 1fr; }
+  .ref-inner { grid-template-columns: 1fr; }
+  .ref-left { border-right: none; border-bottom: 1px solid var(--border); }
+  .verify-grid { grid-template-columns: 1fr; }
+  .foundation-layer { grid-template-columns: 1fr; }
+  .f-num { border-right: none; border-bottom: 1px solid var(--border); padding: 12px 24px; justify-content: flex-start; }
+  .f-meta { border-left: none; border-top: 1px solid var(--border); flex-direction: row; }
+}
+@media (max-width: 700px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .page-header { padding: 96px 20px 48px; }
+  .block-inner { padding: 48px 20px; }
+  .engage-inner { grid-template-columns: 1fr; gap: 32px; padding: 40px 20px; }
+  footer { padding: 32px 20px; }
+  .types-grid { grid-template-columns: 1fr; }
+  .speed-strip { grid-template-columns: 1fr; }
+  .ref-stats-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="hero-canvas"></canvas>
+
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/" class="active">Services</a></li>
+    <li><a href="/#stack">Stack</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/">Aionsystem</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="/services/">Services</a>
+    <span class="breadcrumb-sep">/</span>
+    Rapid Prototyping
+  </div>
+  <div class="page-header-inner">
+    <div class="page-header-left">
+      <div class="page-eyebrow">24–48 Hours · Red-Teamed · AION Verified</div>
+      <h1 class="page-title">Rapid<em>Prototyping</em></h1>
+    </div>
+    <div class="page-header-right">
+      <p class="page-premise">
+        The framework document is the foundation. <strong>Everything else — the live build, the simulator, the zero-dependency deploy — is features built on top of it.</strong> Speed comes from the methodology being tight, not from skipping verification. Nothing carries the AION Verified badge before it has been red-teamed and audited.
+      </p>
+      <div class="speed-strip">
+        <div class="speed-cell">
+          <div class="speed-num">24–48h</div>
+          <div class="speed-label">PDF framework delivery</div>
+        </div>
+        <div class="speed-cell">
+          <div class="speed-num">72h+</div>
+          <div class="speed-label">Live build + deploy</div>
+        </div>
+        <div class="speed-cell">
+          <div class="speed-num">0</div>
+          <div class="speed-label">Unverified badge issuances</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 01 — THE FOUNDATION MODEL ━━━ -->
+<div class="content-block" id="foundation">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 01</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">Document First · Always</div>
+        <div class="block-title">The Foundation<em>Model</em></div>
+        <div class="block-tagline">The PDF is not a deliverable. It is the architecture everything else is built from.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          Every engagement starts with a domain statement and a failure mode declaration. From those two inputs, the framework document is built first — always. <strong>The live build, the simulator, the embeddable widget: none of them are built on top of a brief. They are built on top of a verified framework document.</strong> That sequence is what makes the turnaround credible rather than reckless.
+        </p>
+      </div>
+    </div>
+
+    <!-- Foundation stack — layer view -->
+    <div class="foundation-stack">
+      <div class="foundation-layer f-base">
+        <div class="f-num">01</div>
+        <div class="f-body">
+          <div class="f-name">Framework Document — PDF</div>
+          <div class="f-desc">Domain scoped. Failure modes mapped. Axioms registered. Invalidation conditions declared. CEV-audited before delivery. This is the foundation — the specification everything else is built from. No build starts without it.</div>
+        </div>
+        <div class="f-meta">
+          <div class="f-time">24–48h</div>
+          <div class="f-tag">All engagements</div>
+          <span class="f-required">Required</span>
+        </div>
+      </div>
+      <div class="foundation-layer">
+        <div class="f-num">02</div>
+        <div class="f-body">
+          <div class="f-name">HTML Build</div>
+          <div class="f-desc">Interactive implementation of the framework — live in a browser, no backend required. The framework document is the spec; the HTML build is the expression of it. Responsive, styled to AION design system, deployable anywhere.</div>
+        </div>
+        <div class="f-meta">
+          <div class="f-time">+24–48h</div>
+          <div class="f-tag">Added feature</div>
+          <span class="f-optional">Optional</span>
+        </div>
+      </div>
+      <div class="foundation-layer">
+        <div class="f-num">03</div>
+        <div class="f-body">
+          <div class="f-name">Zero-Dependency Build</div>
+          <div class="f-desc">Self-contained — no frameworks, no npm, no runtime dependencies. Pure HTML, CSS, JavaScript. Runs offline. Embeds anywhere. Survives indefinitely without maintenance. The Roller Coaster simulator is a zero-dependency build.</div>
+        </div>
+        <div class="f-meta">
+          <div class="f-time">+24h</div>
+          <div class="f-tag">Added feature</div>
+          <span class="f-optional">Optional</span>
+        </div>
+      </div>
+      <div class="foundation-layer">
+        <div class="f-num">04</div>
+        <div class="f-body">
+          <div class="f-name">GitHub Repo + Live Deploy</div>
+          <div class="f-desc">Full repository with versioned source, deploy configuration, and a live URL via GitHub Pages. Architect has full ownership from day one. The repo is yours — not a hosted service that disappears when the engagement ends.</div>
+        </div>
+        <div class="f-meta">
+          <div class="f-time">+24h</div>
+          <div class="f-tag">Added feature</div>
+          <span class="f-optional">Optional</span>
+        </div>
+      </div>
+      <div class="foundation-layer">
+        <div class="f-num">05</div>
+        <div class="f-body">
+          <div class="f-name">Embeddable Widget</div>
+          <div class="f-desc">Self-contained component that drops into any existing site — a single script tag or iframe, no conflicts with existing styles or scripts. Designed for client-facing deployment without touching the host site's architecture.</div>
+        </div>
+        <div class="f-meta">
+          <div class="f-time">+24h</div>
+          <div class="f-tag">Added feature</div>
+          <span class="f-optional">Optional</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="honest-block">
+      <div class="honest-title">What the speed number means — and does not mean</div>
+      <ul class="honest-list">
+        <li>24–48 hours is the honest turnaround on the framework document — not on a rough draft and not on a fully live product</li>
+        <li>The speed is possible because the methodology is tight. The scoping conversation is the compression point — the clearer the domain and failure modes, the faster the build</li>
+        <li>AI-assisted development is the honest description of how the builds are produced. AION Verified means the output was red-teamed and audited regardless of how the code was generated</li>
+        <li>A prototype that has not been red-teamed does not carry the badge. The badge is the guarantee, not the speed</li>
+        <li>Complexity that cannot be contained in a clean framework document in 48 hours is a scope problem, not a time problem — and that is identified in the scoping conversation, not discovered in delivery</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 02 — AION VERIFIED STANDARD ━━━ -->
+<div class="content-block" id="verified">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 02</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">The Badge Standard</div>
+        <div class="block-title">AION<em>Verified</em></div>
+        <div class="block-tagline">Red-teamed and audited before the badge is issued. No exceptions.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          The AION Verified badge is not issued on delivery. It is issued after the prototype has passed three gates — in sequence, all mandatory. <strong>A prototype that fails any gate does not receive the badge. It receives a findings report and a revised scope.</strong> The badge is the evidence that all three gates passed. Not the claim — the evidence.
+        </p>
+      </div>
+    </div>
+
+    <div class="verify-block">
+      <div class="verify-title">AION Verified — Three Gates</div>
+      <div class="verify-grid">
+        <div class="verify-cell">
+          <div class="verify-gate">Gate 01</div>
+          <div class="verify-name">CEV Audit</div>
+          <div class="verify-desc">Every formula, every computation, every output range verified against edge cases and boundary conditions. The same arithmetic audit applied to every AION framework. A calculation that produces wrong output under valid inputs fails this gate — regardless of whether it has been noticed in use.</div>
+          <div class="verify-result">Zero unresolved CEV findings</div>
+        </div>
+        <div class="verify-cell">
+          <div class="verify-gate">Gate 02</div>
+          <div class="verify-name">Red Team</div>
+          <div class="verify-desc">Adversarial testing against the declared failure modes from the scoping conversation. The red team is not trying to break the interface — it is trying to break the logic. Outputs are tested for plausibility at extreme inputs, internal consistency, and alignment with the underlying framework specification.</div>
+          <div class="verify-result">All failure modes tested and documented</div>
+        </div>
+        <div class="verify-cell">
+          <div class="verify-gate">Gate 03</div>
+          <div class="verify-name">Framework Alignment</div>
+          <div class="verify-desc">The live build is verified against the framework document it was built from. No undocumented behavior. No outputs the specification does not account for. The build is an expression of the document — not a separate thing that happens to look related to it.</div>
+          <div class="verify-result">Build matches specification exactly</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 03 — PROTOTYPE TYPES ━━━ -->
+<div class="content-block" id="types">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 03</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">What Gets Built</div>
+        <div class="block-title">Prototype<em>Types</em></div>
+        <div class="block-tagline">Jack of all trades. Honest about where the limits are.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          Every prototype type listed here has been built and delivered under the AION methodology. <strong>The methodology is domain-agnostic — the type of prototype changes, the verification standard does not.</strong> Where a type is not in scope, that is stated plainly below rather than discovered in the delivery conversation.
+        </p>
+      </div>
+    </div>
+
+    <div class="types-grid">
+      <div class="type-card">
+        <span class="type-icon">⚙️</span>
+        <div class="type-name">Physics Simulators</div>
+        <div class="type-desc">Citation-backed physical models rendered as interactive, zero-dependency builds. Every constant sourced. Every formula named. Red-teamed against physical edge cases before the badge is issued.</div>
+        <div class="type-examples">Roller coaster dynamics · Structural load · Fluid behavior · Orbital mechanics · Thermodynamic systems</div>
+      </div>
+      <div class="type-card">
+        <span class="type-icon">◈</span>
+        <div class="type-name">Decision Frameworks</div>
+        <div class="type-desc">Scoring tools, evaluation systems, and structured decision architectures built from the AION framework methodology. Protocol I registered formulas. Invalidation conditions declared. Outputs that can report when they are unreliable.</div>
+        <div class="type-examples">Certainty scoring · Epistemic audit tools · Risk classification · Evaluation rubrics · Compliance checkers</div>
+      </div>
+      <div class="type-card">
+        <span class="type-icon">💡</span>
+        <div class="type-name">Interactive Explainers</div>
+        <div class="type-desc">Educational tools that make complex systems navigable — controls that expose the underlying mechanics, real-time feedback, layered complexity from surface to depth. Built for audiences who need to understand what they are working with, not just use it.</div>
+        <div class="type-examples">Concept walkthroughs · Training tools · Parameter explorers · Domain onboarding · Methodology demonstrations</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--dim); padding:20px 24px; margin-bottom:32px;">
+      <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:8px;">Out of Primary Scope</div>
+      <div style="font-family:var(--sans); font-size:14px; font-weight:300; color:var(--muted); line-height:1.65;">
+        Data visualization dashboards and complex data pipeline tools require deeper engineering investment than this engagement covers cleanly. They can be scoped separately — but they are not in the standard rapid prototyping offering. If your request is primarily a dashboard, that conversation starts differently.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 04 — PRICING TIERS ━━━ -->
+<div class="content-block" id="pricing">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 04</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">Three Tiers · Document to Full Deploy</div>
+        <div class="block-title">Engagement<em>Tiers</em></div>
+        <div class="block-tagline">Every tier starts with the same framework document. Features are additive.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          Pricing reflects what is being delivered — not the domain, not the client size. <strong>The framework document is the constant. The live build, the repository, the zero-dependency deploy are what the tier determines.</strong> All tiers include the full verification sequence before the AION Verified badge is issued.
+        </p>
+      </div>
+    </div>
+
+    <div class="tier-row">
+      <div class="tier-card t1">
+        <div class="tier-num">Tier 01 · Framework</div>
+        <div class="tier-name">Foundation</div>
+        <div class="tier-subtitle">PDF Framework Document · Verified</div>
+        <div class="tier-price">$2,500</div>
+        <div class="tier-cadence">One-time · 24–48 hour delivery</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>Domain scoping conversation</li>
+          <li>Full framework document — PDF</li>
+          <li>Axiom register + module specification</li>
+          <li>Protocol I formula registry</li>
+          <li>Invalidation conditions declared</li>
+          <li>CEV arithmetic audit</li>
+          <li>Red team findings report</li>
+          <li>AION Verified badge — on pass</li>
+          <li>Convergence certificate — M-NASCENT</li>
+        </ul>
+        <div class="tier-turnaround">
+          <strong>24–48 hours</strong> from completed domain + failure mode statement.<br>
+          Intake: LinkedIn DM. Scope confirmed before clock starts.
+        </div>
+      </div>
+
+      <div class="tier-card t2">
+        <div class="tier-num">Tier 02 · Build</div>
+        <div class="tier-name">Live Build</div>
+        <div class="tier-subtitle">Framework + Interactive HTML Deploy</div>
+        <div class="tier-price">$5,000</div>
+        <div class="tier-cadence">One-time · 72–96 hour delivery</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>Everything in Foundation tier</li>
+          <li>Interactive HTML build from framework spec</li>
+          <li>Zero-dependency — no npm, no runtime</li>
+          <li>Responsive — mobile and desktop</li>
+          <li>AION design system applied</li>
+          <li>Framework alignment verification</li>
+          <li>GitHub repo — full ownership</li>
+          <li>Live URL via GitHub Pages</li>
+          <li>AION Verified badge on build</li>
+        </ul>
+        <div class="tier-turnaround">
+          <strong>72–96 hours</strong> from completed brief.<br>
+          Additional features (embeddable widget, custom domain) quoted on scope.
+        </div>
+      </div>
+
+      <div class="tier-card t3">
+        <div class="tier-num">Tier 03 · Custom</div>
+        <div class="tier-name">Custom Scope</div>
+        <div class="tier-subtitle">Complex Builds · Domain-Specific Architecture</div>
+        <div class="tier-price" style="font-size:22px; margin-top:4px;">Negotiated</div>
+        <div class="tier-cadence">Scoped engagement · Timeline declared in brief</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>Everything in Live Build tier</li>
+          <li>Multi-module framework architectures</li>
+          <li>Physics or domain-specific simulation</li>
+          <li>Embeddable widget build</li>
+          <li>Multi-version delivery with delta docs</li>
+          <li>Framework + certification combined</li>
+          <li>STP AION audit trail integration</li>
+          <li>Ongoing convergence tracking</li>
+          <li>Custom red team scope — not standard</li>
+        </ul>
+        <div class="tier-turnaround">
+          Timeline declared in scope document before engagement begins.<br>
+          <strong>Intake: LinkedIn DM only.</strong> No RFP required.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 05 — REFERENCE IMPLEMENTATION ━━━ -->
+<div class="content-block" id="reference">
+  <div class="block-inner">
+    <div class="section-id">
+      <span class="section-id-num">// 05</span>
+      <span class="section-id-line"></span>
+    </div>
+    <div class="block-header">
+      <div>
+        <div class="block-label">Live Proof · Not a Demo</div>
+        <div class="block-title">Reference<em>Implementation</em></div>
+        <div class="block-tagline">Not built to show what is possible. Built to solve a real verification problem.</div>
+      </div>
+      <div>
+        <p class="block-lead">
+          The Roller Coaster Physics Simulator is the clearest demonstration of what the methodology produces: <strong>citation-backed physics, zero dependencies, fully interactive, red-teamed before badge issuance, running live with no maintenance overhead.</strong> It was not built as a portfolio piece. It was built because physics simulators used in safety contexts need to be verifiable — and the AION methodology is the verification infrastructure.
+        </p>
+      </div>
+    </div>
+
+    <div class="reference-block">
+      <div class="ref-inner">
+        <div class="ref-left">
+          <div class="ref-eyebrow">Reference Implementation · Physics Simulator</div>
+          <div class="ref-title">Roller Coaster<em>Physics Simulator</em></div>
+          <div class="ref-body">
+            A real-time roller coaster dynamics simulator built on <strong>citation-backed physics equations</strong> — not approximations, not tuned constants, not feel-good numbers. Every formula sourced. Every physical constant named. The simulation computes energy conservation, g-force loading, speed through each section, and safe operating limits in real time as you adjust track parameters.
+            <br><br>
+            Zero dependencies. No libraries. No npm. No CDN calls. The entire simulator is a single HTML file that runs in any browser, offline, indefinitely, without maintenance.
+          </div>
+          <div class="ref-badges">
+            <span class="ref-badge badge-verified">AION Verified</span>
+            <span class="ref-badge badge-zero">Zero Dependencies</span>
+            <span class="ref-badge badge-physics">Citation-Backed Physics</span>
+            <span class="ref-badge badge-redteam">Red-Teamed</span>
+          </div>
+          <div class="cta-bar" style="border-top:none; padding-top:0;">
+            <a href="/simulators/roller-coaster/" class="cta-btn primary">
+              <span>Launch Simulator</span>
+              <span class="cta-arrow">→</span>
+            </a>
+            <a href="/simulators/" class="cta-btn">
+              <span>All Simulators</span>
+            </a>
+          </div>
+        </div>
+        <div class="ref-right">
+          <div class="ref-stats-grid">
+            <div class="ref-stat-cell">
+              <div class="ref-stat-label">Dependencies</div>
+              <div class="ref-stat-val">0 — stdlib only</div>
+            </div>
+            <div class="ref-stat-cell">
+              <div class="ref-stat-label">Delivery Format</div>
+              <div class="ref-stat-val">Single HTML file</div>
+            </div>
+            <div class="ref-stat-cell">
+              <div class="ref-stat-label">Physics Standard</div>
+              <div class="ref-stat-val">Citation-backed</div>
+            </div>
+            <div class="ref-stat-cell">
+              <div class="ref-stat-label">Badge Status</div>
+              <div class="ref-stat-val" style="color:var(--green);">AION Verified ✓</div>
+            </div>
+            <div class="ref-stat-cell">
+              <div class="ref-stat-label">Red Team</div>
+              <div class="ref-stat-val">Passed — pre-badge</div>
+            </div>
+            <div class="ref-stat-cell">
+              <div class="ref-stat-label">Maintenance</div>
+              <div class="ref-stat-val">None required</div>
+            </div>
+          </div>
+          <div class="honest-block" style="margin-bottom:0;">
+            <div class="honest-title">What this build demonstrates</div>
+            <ul class="honest-list" style="gap:8px;">
+              <li>The framework document came first — the simulator is an expression of the specification</li>
+              <li>Zero dependencies is a design decision, not a constraint — it makes the output permanently deployable</li>
+              <li>The badge was issued after the red team pass, not before delivery</li>
+              <li>AI-assisted build — AION Verified means the output was audited, not that the code was hand-written</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ENGAGE STRIP -->
+<div class="engage-strip">
+  <div class="engage-inner">
+    <div>
+      <h2 class="engage-heading">Start with a domain.<em>Name the failure modes.</em></h2>
+      <p class="engage-sub">
+        That is the entire intake requirement. A clear domain statement and a willingness to specify what the prototype must not do wrong. The scoping conversation takes less than 30 minutes. The framework document follows in 24–48 hours.
+      </p>
+      <p class="engage-note">
+        All engagements via LinkedIn DM.<br>
+        No RFP. No brief template. Just the domain and the failure modes.
+      </p>
+    </div>
+    <div class="engage-paths">
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="engage-path">
+        <span class="engage-path-icon">↗</span>
+        <div>
+          <div class="engage-path-label">Start the Conversation</div>
+          <div class="engage-path-desc">LinkedIn DM. Domain + failure modes. Scope confirmed before the clock starts. 24–48 hours to framework document delivery.</div>
+        </div>
+      </a>
+      <a href="/simulators/" class="engage-path">
+        <span class="engage-path-icon">⚙️</span>
+        <div>
+          <div class="engage-path-label">See Live Builds</div>
+          <div class="engage-path-desc">All AION Verified simulators running live. Zero-dependency builds. Citation-backed. Red-teamed before badge issuance.</div>
+        </div>
+      </a>
+      <a href="/services/framework-design/" class="engage-path">
+        <span class="engage-path-icon">◈</span>
+        <div>
+          <div class="engage-path-label">Custom Framework Engineering</div>
+          <div class="engage-path-desc">Need a full enterprise-grade framework for your domain — not just a prototype? Framework Engineering is the full engagement.</div>
+        </div>
+      </a>
+      <a href="/services/ai-audit/" class="engage-path">
+        <span class="engage-path-icon">🔒</span>
+        <div>
+          <div class="engage-path-label">AI Output Certification</div>
+          <div class="engage-path-desc">Prototyping and STP FROZEN-2.0 certification can be scoped as a single engagement. The framework document is the shared foundation.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-id">
+    <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
+    AI Reliability Architect &nbsp;·&nbsp; New York &nbsp;·&nbsp; March 2026<br>
+    <span style="font-size:10px;">AION v3.0 · CEV v1.0 · © 2026 Sheldon K. Salmon</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, lines = [], t = 0;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+class Line {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = -20;
+    this.y = 40 + Math.random() * (H - 80);
+    this.speed = 0.8 + Math.random() * 2.2;
+    this.len = 40 + Math.random() * 120;
+    this.alpha = 0.05 + Math.random() * 0.12;
+    this.width = 0.5 + Math.random() * 1;
+    this.trail = [];
+    this.amp = Math.random() > 0.5 ? (2 + Math.random() * 6) : 0;
+    this.freq = 0.04 + Math.random() * 0.06;
+    this.phase = Math.random() * Math.PI * 2;
+  }
+  update() {
+    this.x += this.speed;
+    const yOff = this.amp * Math.sin(this.x * this.freq + this.phase);
+    this.trail.push({ x: this.x, y: this.y + yOff });
+    if (this.trail.length > this.len) this.trail.shift();
+    if (this.x > W + 40) this.reset();
+  }
+  draw() {
+    if (this.trail.length < 2) return;
+    ctx.beginPath();
+    ctx.moveTo(this.trail[0].x, this.trail[0].y);
+    for (let i = 1; i < this.trail.length; i++) {
+      ctx.lineTo(this.trail[i].x, this.trail[i].y);
+    }
+    ctx.strokeStyle = `rgba(240,165,0,${this.alpha})`;
+    ctx.lineWidth = this.width;
+    ctx.stroke();
+  }
+}
+
+function init() {
+  resize();
+  for (let i = 0; i < 18; i++) {
+    const l = new Line();
+    l.x = Math.random() * W;
+    lines.push(l);
+  }
+}
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  t += 0.01;
+  lines.forEach(l => { l.update(); l.draw(); });
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize', resize);
+init(); loop();
+</script>
+
+</body>
+</html>
 
