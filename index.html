@@ -23,673 +23,159 @@
   --text:     #c4d4de;
   --muted:    #4e5f6a;
   --dim:      #2a3540;
+  --cyan:     #00d4ff;
+  --teal:     #00b894;
+  --edu:      #4ade80;
   --mono:     'Share Tech Mono', monospace;
   --sans:     'Barlow Condensed', sans-serif;
   --ease:     cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 16px;
-  line-height: 1.5;
-  overflow-x: hidden;
-}
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.5; overflow-x: hidden; }
 
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(240,165,0,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(240,165,0,0.025) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
-  z-index: 0;
+  content: ''; position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(240,165,0,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(240,165,0,0.025) 1px, transparent 1px);
+  background-size: 48px 48px; pointer-events: none; z-index: 0;
 }
-
 body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.08) 2px,
-    rgba(0,0,0,0.08) 4px
-  );
-  pointer-events: none;
-  z-index: 0;
+  content: ''; position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+  pointer-events: none; z-index: 0;
 }
 
 nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  height: 56px;
-  background: rgba(8,9,11,0.92);
-  backdrop-filter: blur(12px);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+  background: rgba(8,9,11,0.92); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
-
-.nav-logo {
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: 3px;
-  color: var(--amber);
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
+.nav-logo { font-family: var(--mono); font-size: 13px; letter-spacing: 3px; color: var(--amber); text-transform: uppercase; text-decoration: none; }
 .nav-logo span { color: var(--muted); }
-
-.nav-links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: var(--muted);
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: color 0.2s;
-}
-
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
 .nav-links a:hover { color: var(--amber); }
 
-.hero {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 56px 40px 80px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+.hero { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 56px 40px 80px; max-width: 1200px; margin: 0 auto; }
 
-#hero-canvas {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  opacity: 0.35;
-  pointer-events: none;
-}
+#hero-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.35; pointer-events: none; }
 
-.hero-eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 4px;
-  color: var(--amber);
-  text-transform: uppercase;
-  margin-bottom: 20px;
-  opacity: 0;
-  transform: translateY(12px);
-  animation: fadeUp 0.7s var(--ease) 0.2s forwards;
-}
+.hero-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; color: var(--amber); text-transform: uppercase; margin-bottom: 20px; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.2s forwards; }
+.hero-eyebrow::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--amber); vertical-align: middle; margin-right: 12px; margin-bottom: 2px; }
 
-.hero-eyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 24px;
-  height: 1px;
-  background: var(--amber);
-  vertical-align: middle;
-  margin-right: 12px;
-  margin-bottom: 2px;
-}
+.hero-name { font-family: var(--sans); font-size: clamp(48px, 8vw, 96px); font-weight: 900; letter-spacing: -1px; line-height: 0.92; color: var(--text); text-transform: uppercase; opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s var(--ease) 0.35s forwards; }
+.hero-name em { display: block; color: var(--amber); font-style: normal; }
 
-.hero-name {
-  font-family: var(--sans);
-  font-size: clamp(48px, 8vw, 96px);
-  font-weight: 900;
-  letter-spacing: -1px;
-  line-height: 0.92;
-  color: var(--text);
-  text-transform: uppercase;
-  opacity: 0;
-  transform: translateY(16px);
-  animation: fadeUp 0.8s var(--ease) 0.35s forwards;
-}
+.hero-title { margin-top: 24px; font-family: var(--mono); font-size: clamp(13px, 1.6vw, 17px); color: var(--muted); letter-spacing: 3px; text-transform: uppercase; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.5s forwards; }
+.hero-divider { width: 64px; height: 2px; background: var(--amber); margin: 32px 0; opacity: 0; animation: fadeUp 0.6s var(--ease) 0.65s forwards; }
 
-.hero-name em {
-  display: block;
-  color: var(--amber);
-  font-style: normal;
-}
+.hero-mission { font-family: var(--sans); font-size: clamp(18px, 2.5vw, 26px); font-weight: 300; font-style: italic; color: var(--text); max-width: 640px; line-height: 1.5; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.75s forwards; }
+.hero-mission strong { font-style: normal; font-weight: 700; color: var(--amber-l); }
 
-.hero-title {
-  margin-top: 24px;
-  font-family: var(--mono);
-  font-size: clamp(13px, 1.6vw, 17px);
-  color: var(--muted);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  opacity: 0;
-  transform: translateY(12px);
-  animation: fadeUp 0.7s var(--ease) 0.5s forwards;
-}
+.hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 40px; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.9s forwards; }
 
-.hero-divider {
-  width: 64px;
-  height: 2px;
-  background: var(--amber);
-  margin: 32px 0;
-  opacity: 0;
-  animation: fadeUp 0.6s var(--ease) 0.65s forwards;
-}
-
-.hero-mission {
-  font-family: var(--sans);
-  font-size: clamp(18px, 2.5vw, 26px);
-  font-weight: 300;
-  font-style: italic;
-  color: var(--text);
-  max-width: 640px;
-  line-height: 1.5;
-  opacity: 0;
-  transform: translateY(12px);
-  animation: fadeUp 0.7s var(--ease) 0.75s forwards;
-}
-
-.hero-mission strong {
-  font-style: normal;
-  font-weight: 700;
-  color: var(--amber-l);
-}
-
-.hero-ctas {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 40px;
-  opacity: 0;
-  transform: translateY(12px);
-  animation: fadeUp 0.7s var(--ease) 0.9s forwards;
-}
-
-.cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-decoration: none;
-  padding: 12px 24px;
-  border: 1px solid var(--amber);
-  color: var(--amber);
-  background: transparent;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-
-.cta-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--amber);
-  transform: translateX(-101%);
-  transition: transform 0.25s var(--ease);
-  z-index: 0;
-}
-
+.cta-btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; padding: 12px 24px; border: 1px solid var(--amber); color: var(--amber); background: transparent; transition: all 0.2s; position: relative; overflow: hidden; }
+.cta-btn::before { content: ''; position: absolute; inset: 0; background: var(--amber); transform: translateX(-101%); transition: transform 0.25s var(--ease); z-index: 0; }
 .cta-btn:hover::before { transform: translateX(0); }
 .cta-btn:hover { color: #000; }
 .cta-btn span { position: relative; z-index: 1; }
-
-.cta-btn.primary {
-  background: var(--amber);
-  color: #000;
-}
+.cta-btn.primary { background: var(--amber); color: #000; }
 .cta-btn.primary::before { background: var(--amber-l); }
 .cta-btn.primary:hover { color: #000; }
-
 .cta-arrow { font-size: 14px; transition: transform 0.2s; }
 .cta-btn:hover .cta-arrow { transform: translateX(4px); }
 
-.hero-status {
-  display: flex;
-  gap: 32px;
-  flex-wrap: wrap;
-  margin-top: 60px;
-  padding-top: 32px;
-  border-top: 1px solid var(--border);
-  opacity: 0;
-  animation: fadeIn 0.8s var(--ease) 1.1s forwards;
-}
+.hero-status { display: flex; gap: 32px; flex-wrap: wrap; margin-top: 60px; padding-top: 32px; border-top: 1px solid var(--border); opacity: 0; animation: fadeIn 0.8s var(--ease) 1.1s forwards; }
+.status-item { display: flex; flex-direction: column; gap: 4px; }
+.status-val { font-family: var(--mono); font-size: 22px; color: var(--amber); letter-spacing: 1px; }
+.status-key { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
 
-.status-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+section { position: relative; z-index: 1; padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+.section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
+.section-num { font-family: var(--mono); font-size: 11px; color: var(--amber); letter-spacing: 2px; }
+.section-title { font-family: var(--sans); font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
+.section-line { flex: 1; height: 1px; background: var(--border); }
 
-.status-val {
-  font-family: var(--mono);
-  font-size: 22px;
-  color: var(--amber);
-  letter-spacing: 1px;
-}
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+@media (max-width: 800px) { .services-grid { grid-template-columns: 1fr; } }
 
-.status-key {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-section {
-  position: relative;
-  z-index: 1;
-  padding: 80px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 48px;
-}
-
-.section-num {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--amber);
-  letter-spacing: 2px;
-}
-
-.section-title {
-  font-family: var(--sans);
-  font-size: clamp(28px, 4vw, 44px);
-  font-weight: 900;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text);
-}
-
-.section-line {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-}
-
-@media (max-width: 800px) {
-  .services-grid { grid-template-columns: 1fr; }
-}
-
-.service-card {
-  background: var(--surface);
-  padding: 36px 32px;
-  position: relative;
-  overflow: hidden;
-  transition: background 0.2s;
-}
-
-.service-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--amber);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s var(--ease);
-}
-
+.service-card { background: var(--surface); padding: 36px 32px; position: relative; overflow: hidden; transition: background 0.2s; }
+.service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--amber); transform: scaleX(0); transform-origin: left; transition: transform 0.3s var(--ease); }
 .service-card:hover { background: var(--panel); }
 .service-card:hover::before { transform: scaleX(1); }
 
-.service-num {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-
-.service-icon {
-  font-size: 28px;
-  margin-bottom: 16px;
-  display: block;
-}
-
-.service-title {
-  font-family: var(--sans);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--amber);
-  margin-bottom: 12px;
-}
-
-.service-desc {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 300;
-  color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 24px;
-}
-
-.service-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tag {
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  color: var(--amber-d);
-  border: 1px solid var(--dim);
-  padding: 3px 8px;
-  text-transform: uppercase;
-}
-
-.service-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 24px;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--amber);
-  text-decoration: none;
-  text-transform: uppercase;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s;
-}
-
+.service-num { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
+.service-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+.service-title { font-family: var(--sans); font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-bottom: 12px; }
+.service-desc { font-family: var(--sans); font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+.service-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--amber-d); border: 1px solid var(--dim); padding: 3px 8px; text-transform: uppercase; }
+.service-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-decoration: none; text-transform: uppercase; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
 .service-link:hover { border-bottom-color: var(--amber); }
+.service-link-soon { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; opacity: 0.55; pointer-events: none; user-select: none; }
+.service-link-soon::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--muted); opacity: 0.5; }
 
-/* Coming-soon link state — used on cards without a live subpage */
-.service-link-soon {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--muted);
-  text-transform: uppercase;
-  opacity: 0.55;
-  pointer-events: none;
-  user-select: none;
-}
+/* WORK STRIP */
+.work-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 680px) { .work-strip { grid-template-columns: 1fr; } }
 
-.service-link-soon::before {
-  content: '';
-  display: inline-block;
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--muted);
-  opacity: 0.5;
-}
-
-.work-strip {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-@media (max-width: 680px) {
-  .work-strip { grid-template-columns: 1fr; }
-}
-
-.work-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 28px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s, transform 0.2s;
-}
-
-.work-card:hover {
-  border-color: var(--amber);
-  transform: translateY(-2px);
-}
-
-.work-card-badge {
-  position: absolute;
-  top: 20px; right: 20px;
-}
-
-.work-card-badge svg {
-  width: 44px; height: 44px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-
+.work-card { background: var(--surface); border: 1px solid var(--border); padding: 28px; position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+.work-card:hover { border-color: var(--amber); transform: translateY(-2px); }
+.work-card-badge { position: absolute; top: 20px; right: 20px; }
+.work-card-badge svg { width: 44px; height: 44px; opacity: 0.7; transition: opacity 0.2s; }
 .work-card:hover .work-card-badge svg { opacity: 1; }
 
-.work-domain {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--amber-d);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
+.work-live-tag { position: absolute; top: 20px; left: 20px; font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; background: rgba(0,230,118,0.1); color: #00e676; border: 1px solid #00e676; }
 
-.work-title {
-  font-family: var(--sans);
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--text);
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
+.work-domain { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber-d); text-transform: uppercase; margin-bottom: 12px; }
+.work-domain.cyan { color: var(--cyan); }
+.work-domain.edu  { color: var(--edu); }
 
-.work-meta {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.8;
-  margin-bottom: 20px;
-}
-
-.work-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--amber);
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
+.work-title { font-family: var(--sans); font-size: 24px; font-weight: 700; letter-spacing: 1px; color: var(--text); margin-bottom: 8px; text-transform: uppercase; }
+.work-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+.work-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-decoration: none; text-transform: uppercase; }
+.work-link.cyan { color: var(--cyan); }
+.work-link.edu  { color: var(--edu); }
 .work-link:hover { text-decoration: underline; }
 
-.work-card-coming {
-  opacity: 0.4;
-  pointer-events: none;
-}
+.work-card-coming { opacity: 0.4; pointer-events: none; }
+.coming-pill { display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--muted); border: 1px solid var(--dim); padding: 2px 8px; text-transform: uppercase; margin-top: 12px; }
 
-.coming-pill {
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--muted);
-  border: 1px solid var(--dim);
-  padding: 2px 8px;
-  text-transform: uppercase;
-  margin-top: 12px;
-}
+/* Accent border per domain */
+.work-card.live-field  { border-left: 2px solid var(--cyan); }
+.work-card.live-edu    { border-left: 2px solid var(--edu); }
 
-.stack-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--mono);
-  font-size: 12px;
-}
-
-.stack-table th {
-  text-align: left;
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--amber);
-  text-transform: uppercase;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-}
-
-.stack-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(30,39,48,0.6);
-  vertical-align: middle;
-  background: var(--bg);
-  transition: background 0.15s;
-}
-
+.stack-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; }
+.stack-table th { text-align: left; font-size: 10px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.stack-table td { padding: 12px 16px; border-bottom: 1px solid rgba(30,39,48,0.6); vertical-align: middle; background: var(--bg); transition: background 0.15s; }
 .stack-table tr:hover td { background: var(--surface); }
-
 .fw-name { color: var(--amber); font-weight: normal; }
 .fw-version { color: var(--muted); }
 .fw-function { color: var(--text); }
-
-.convergence-badge {
-  display: inline-block;
-  font-size: 9px;
-  letter-spacing: 1px;
-  padding: 2px 7px;
-  text-transform: uppercase;
-}
-
+.convergence-badge { display: inline-block; font-size: 9px; letter-spacing: 1px; padding: 2px 7px; text-transform: uppercase; }
 .m-strong  { background: rgba(0,230,118,0.1); color: #00e676; border: 1px solid #00e676; }
-.m-mod     { background: rgba(240,165,0,0.1);  color: var(--amber); border: 1px solid var(--amber-d); }
+.m-mod     { background: rgba(240,165,0,0.1); color: var(--amber); border: 1px solid var(--amber-d); }
 .m-nascent { background: rgba(64,196,255,0.08); color: #40c4ff; border: 1px solid #1a4a5a; }
 
-.certify-strip {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--gold);
-  padding: 32px 36px;
-  display: flex;
-  align-items: center;
-  gap: 36px;
-  flex-wrap: wrap;
-}
-
+.certify-strip { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 32px 36px; display: flex; align-items: center; gap: 36px; flex-wrap: wrap; }
 .certify-strip svg { flex-shrink: 0; }
-
-.certify-text h3 {
-  font-family: var(--sans);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-.certify-text p {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.8;
-  max-width: 560px;
-}
-
-.certify-text a {
-  color: var(--gold);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(212,175,55,0.3);
-}
-
+.certify-text h3 { font-family: var(--sans); font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+.certify-text p { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.8; max-width: 560px; }
+.certify-text a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(212,175,55,0.3); }
 .certify-text a:hover { border-bottom-color: var(--gold); }
 
-footer {
-  position: relative;
-  z-index: 1;
-  border-top: 1px solid var(--border);
-  padding: 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.footer-id {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.8;
-  letter-spacing: 1px;
-}
-
+footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.footer-id { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; letter-spacing: 1px; }
 .footer-id strong { color: var(--amber); }
-
-.footer-links {
-  display: flex;
-  gap: 24px;
-  list-style: none;
-}
-
-.footer-links a {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: var(--muted);
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: color 0.15s;
-}
-
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.15s; }
 .footer-links a:hover { color: var(--amber); }
 
-@keyframes fadeUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
 
 @media (max-width: 640px) {
   nav { padding: 0 20px; }
@@ -706,7 +192,6 @@ footer {
 
 <canvas id="hero-canvas"></canvas>
 
-<!-- NAV — Services now links to /services/ hub -->
 <nav>
   <a href="/" class="nav-logo">AION<span>system</span></a>
   <ul class="nav-links">
@@ -719,58 +204,25 @@ footer {
   </ul>
 </nav>
 
-<!-- HERO -->
 <div class="hero" style="z-index:1; position:relative;">
   <div class="hero-eyebrow">AI Certainty Engineering · New York</div>
-
-  <h1 class="hero-name">
-    Sheldon K.<em>Salmon</em>
-  </h1>
-
+  <h1 class="hero-name">Sheldon K.<em>Salmon</em></h1>
   <p class="hero-title">AI Reliability Architect &nbsp;·&nbsp; AGI Systems Designer &nbsp;·&nbsp; Founder, AionSystem</p>
-
   <div class="hero-divider"></div>
-
   <p class="hero-mission">
     Building the infrastructure that makes AI systems <strong>provably trustworthy</strong> — not just promising. Failure documentation. Epistemic verification. Sovereign record architecture.
   </p>
-
   <div class="hero-ctas">
-    <a href="/simulators/" class="cta-btn primary">
-      <span>See the Work</span>
-      <span class="cta-arrow">→</span>
-    </a>
-    <a href="/services/" class="cta-btn">
-      <span>Engage Services</span>
-      <span class="cta-arrow">→</span>
-    </a>
-    <a href="/certify/" class="cta-btn">
-      <span>Verify a Certification</span>
-      <span class="cta-arrow">→</span>
-    </a>
+    <a href="/simulators/" class="cta-btn primary"><span>See the Work</span><span class="cta-arrow">→</span></a>
+    <a href="/services/" class="cta-btn"><span>Engage Services</span><span class="cta-arrow">→</span></a>
+    <a href="/certify/" class="cta-btn"><span>Verify a Certification</span><span class="cta-arrow">→</span></a>
   </div>
-
   <div class="hero-status">
-    <div class="status-item">
-      <span class="status-val">AION v3.0</span>
-      <span class="status-key">Constitutional Stack</span>
-    </div>
-    <div class="status-item">
-      <span class="status-val">STP v2.0</span>
-      <span class="status-key">Trace Protocol</span>
-    </div>
-    <div class="status-item">
-      <span class="status-val">17+</span>
-      <span class="status-key">Frameworks Deployed</span>
-    </div>
-    <div class="status-item">
-      <span class="status-val">LEDGER-011</span>
-      <span class="status-key">Current Seal</span>
-    </div>
-    <div class="status-item">
-      <span class="status-val">Mar 2026</span>
-      <span class="status-key">Active Build</span>
-    </div>
+    <div class="status-item"><span class="status-val">AION v3.0</span><span class="status-key">Constitutional Stack</span></div>
+    <div class="status-item"><span class="status-val">STP v2.0</span><span class="status-key">Trace Protocol</span></div>
+    <div class="status-item"><span class="status-val">17+</span><span class="status-key">Frameworks Deployed</span></div>
+    <div class="status-item"><span class="status-val">LEDGER-011</span><span class="status-key">Current Seal</span></div>
+    <div class="status-item"><span class="status-val">Mar 2026</span><span class="status-key">Active Build</span></div>
   </div>
 </div>
 
@@ -781,65 +233,36 @@ footer {
     <h2 class="section-title">Services</h2>
     <div class="section-line"></div>
   </div>
-
   <div class="services-grid">
-
-    <!-- CARD 01 — Simulation Creation -->
     <div class="service-card">
       <div class="service-num">01 / Rapid Prototyping</div>
       <span class="service-icon">⚙</span>
       <div class="service-title">Simulation<br>Creation</div>
       <p class="service-desc">Physics simulators, engineering tools, educational systems — built in days, not months. Citation-backed, red-teamed, peer-reviewed. Every deliverable ships with an AION Verified Simulator badge and a full audit trail.</p>
-      <div class="service-tags">
-        <span class="tag">Physics</span>
-        <span class="tag">Engineering</span>
-        <span class="tag">Education</span>
-        <span class="tag">Medical</span>
-        <span class="tag">HTML · No Dependencies</span>
-      </div>
+      <div class="service-tags"><span class="tag">Physics</span><span class="tag">Engineering</span><span class="tag">Education</span><span class="tag">Medical</span><span class="tag">HTML · No Dependencies</span></div>
       <a href="/simulators/" class="service-link">View Simulators →</a>
       <div class="service-link-soon">Service Details Coming Soon</div>
     </div>
-
-    <!-- CARD 02 — AI Output Certification — LIVE at /services/ai-audit/ -->
     <div class="service-card">
       <div class="service-num">02 / AI Reliability Audit</div>
       <span class="service-icon">🔍</span>
       <div class="service-title">AI Output<br>Certification</div>
       <p class="service-desc">Formal verification that your AI deployment captures failures immutably, remediates them transparently, and maintains an honest epistemic record. Four tiers: $2,500 single-event verification to DoD-grade quarterly review.</p>
-      <div class="service-tags">
-        <span class="tag">STP FROZEN-2.0</span>
-        <span class="tag">Epistemic Audit</span>
-        <span class="tag">Failure Logging</span>
-        <span class="tag">NIST AI RMF</span>
-      </div>
+      <div class="service-tags"><span class="tag">STP FROZEN-2.0</span><span class="tag">Epistemic Audit</span><span class="tag">Failure Logging</span><span class="tag">NIST AI RMF</span></div>
       <a href="/services/ai-audit/" class="service-link">Full Service Details →</a>
     </div>
-
-    <!-- CARD 03 — Framework Engineering -->
     <div class="service-card">
       <div class="service-num">03 / Framework Design</div>
       <span class="service-icon">◈</span>
       <div class="service-title">AION Stack<br>Engineering</div>
       <p class="service-desc">Custom certainty frameworks for your AI system's specific failure modes. The AION stack was built through live failure events — not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked.</p>
-      <div class="service-tags">
-        <span class="tag">DUAL-HELIX</span>
-        <span class="tag">TOPOS</span>
-        <span class="tag">FSVE</span>
-        <span class="tag">Custom Frameworks</span>
-      </div>
+      <div class="service-tags"><span class="tag">DUAL-HELIX</span><span class="tag">TOPOS</span><span class="tag">FSVE</span><span class="tag">Custom Frameworks</span></div>
       <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="service-link">GitHub ↗</a>
       <div class="service-link-soon">Service Details Coming Soon</div>
     </div>
-
   </div>
-
-  <!-- All Services CTA -->
   <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
-    <a href="/services/" class="cta-btn" style="display:inline-flex;">
-      <span>All Services</span>
-      <span class="cta-arrow">→</span>
-    </a>
+    <a href="/services/" class="cta-btn" style="display:inline-flex;"><span>All Services</span><span class="cta-arrow">→</span></a>
   </div>
 </section>
 
@@ -852,7 +275,10 @@ footer {
   </div>
 
   <div class="work-strip">
+
+    <!-- LIVE 1 — ROLLER COASTER -->
     <div class="work-card">
+      <span class="work-live-tag">● Live</span>
       <div class="work-card-badge">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
           <defs>
@@ -866,10 +292,10 @@ footer {
           <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw1)" stroke-width="3" stroke-linecap="round"/>
         </svg>
       </div>
-      <div class="work-domain">Physics · AP Curriculum</div>
+      <div class="work-domain" style="margin-top:32px;">Physics · AP Curriculum</div>
       <div class="work-title">Roller Coaster<br>Physics Simulator</div>
       <div class="work-meta">
-        10 modules · 2 red team passes · 10 issues resolved<br>
+        10 modules · 3 red team passes · 15 issues resolved<br>
         Ref: Tony Wayne AP Physics Guide<br>
         Client: Saleem Raja Haja · AI Governance · Kuwait<br>
         March 2026
@@ -877,43 +303,72 @@ footer {
       <a href="/simulators/roller-coaster/" class="work-link">Launch Simulator →</a>
     </div>
 
+    <!-- LIVE 2 — ORION -->
+    <div class="work-card live-field">
+      <span class="work-live-tag">● Live</span>
+      <div class="work-card-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+          <defs>
+            <linearGradient id="mb2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#40e0ff"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#005f80"/></linearGradient>
+            <linearGradient id="mw2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#005f80" stop-opacity="0.3"/><stop offset="50%" stop-color="#40e0ff"/><stop offset="100%" stop-color="#005f80" stop-opacity="0.3"/></linearGradient>
+          </defs>
+          <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080d12" stroke="url(#mb2)" stroke-width="5"/>
+          <circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb2)" stroke-width="3"/>
+          <circle cx="200" cy="200" r="132" fill="#060c10"/>
+          <circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb2)" stroke-width="1.5"/>
+          <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw2)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="work-domain cyan" style="margin-top:32px;">Field Ops · Underwater EOD · UNDP</div>
+      <div class="work-title">Project ORION<br>UXO Detection</div>
+      <div class="work-meta">
+        Tri-axis magnetometer gradiometer · MLS engine<br>
+        1 red team pass · 7 findings · 0 undisclosed<br>
+        Context: UNDP Solomon Islands · CAPEX $4,650<br>
+        March 2026
+      </div>
+      <a href="/simulators/Orion/" class="work-link cyan">Launch Simulator →</a>
+    </div>
+
+    <!-- LIVE 3 — MATH WORKSHEET BUILDER -->
+    <div class="work-card live-edu">
+      <span class="work-live-tag">● Live</span>
+      <div class="work-card-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+          <defs>
+            <linearGradient id="mb3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#86efac"/><stop offset="50%" stop-color="#4ade80"/><stop offset="100%" stop-color="#166534"/></linearGradient>
+            <linearGradient id="mw3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#166534" stop-opacity="0.3"/><stop offset="50%" stop-color="#86efac"/><stop offset="100%" stop-color="#166534" stop-opacity="0.3"/></linearGradient>
+          </defs>
+          <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080f09" stroke="url(#mb3)" stroke-width="5"/>
+          <circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb3)" stroke-width="3"/>
+          <circle cx="200" cy="200" r="132" fill="#060d07"/>
+          <circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb3)" stroke-width="1.5"/>
+          <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw3)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="work-domain edu" style="margin-top:32px;">Education · Grades 3–8 · Salmon EDU</div>
+      <div class="work-title">Math Worksheet<br>Builder</div>
+      <div class="work-meta">
+        9 types · fractions · PEMDAS · interleaved practice<br>
+        4 red team passes · 10 bugs fixed · 0 undisclosed<br>
+        Ref: Taylor &amp; Rohrer (2010)<br>
+        March 2026
+      </div>
+      <a href="/simulators/math-worksheet-builder/" class="work-link edu">Launch Tool →</a>
+    </div>
+
+    <!-- COMING — PROJECTILE -->
     <div class="work-card work-card-coming">
       <div class="work-domain">Physics · Mechanics</div>
       <div class="work-title">Projectile<br>Motion Simulator</div>
-      <div class="work-meta">
-        Cannon, drag coefficient, target practice<br>
-        2D vector calculations<br>
-        Same AION design system
-      </div>
+      <div class="work-meta">Cannon, drag coefficient, target practice<br>2D vector calculations · Same AION design system</div>
       <span class="coming-pill">Coming Soon</span>
     </div>
 
-    <div class="work-card work-card-coming">
-      <div class="work-domain">Engineering · Civil</div>
-      <div class="work-title">Bridge Structural<br>Load Simulator</div>
-      <div class="work-meta">
-        Truss stress · Material cost · Failure prediction<br>
-        For civil engineering education
-      </div>
-      <span class="coming-pill">Coming Soon</span>
-    </div>
-
-    <div class="work-card work-card-coming">
-      <div class="work-domain">Fluid Dynamics · Energy</div>
-      <div class="work-title">Pipeline Flow<br>Simulator</div>
-      <div class="work-meta">
-        Bernoulli · Venturi · Reynolds<br>
-        Relevant to oil &amp; gas sector infrastructure
-      </div>
-      <span class="coming-pill">Coming Soon</span>
-    </div>
   </div>
 
   <div style="margin-top:24px; text-align:center;">
-    <a href="/simulators/" class="cta-btn" style="display:inline-flex;">
-      <span>All Simulators</span>
-      <span class="cta-arrow">→</span>
-    </a>
+    <a href="/simulators/" class="cta-btn" style="display:inline-flex;"><span>All Simulators</span><span class="cta-arrow">→</span></a>
   </div>
 </section>
 
@@ -924,60 +379,22 @@ footer {
     <h2 class="section-title">The AION Stack</h2>
     <div class="section-line"></div>
   </div>
-
   <p style="font-family:var(--sans); font-size:17px; font-weight:300; color:var(--muted); max-width:640px; margin-bottom:36px; line-height:1.7;">
     A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked. M-STRONG means validated. M-NASCENT means honest about what isn't yet.
   </p>
-
   <table class="stack-table">
     <thead>
-      <tr>
-        <th>Framework</th>
-        <th>Version</th>
-        <th>Function</th>
-        <th>Convergence</th>
-      </tr>
+      <tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr>
     </thead>
     <tbody>
-      <tr>
-        <td class="fw-name">FSVE</td>
-        <td class="fw-version">v3.6</td>
-        <td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement</td>
-        <td><span class="convergence-badge m-mod">M-MODERATE</span></td>
-      </tr>
-      <tr>
-        <td class="fw-name">LAV</td>
-        <td class="fw-version">v1.5</td>
-        <td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean</td>
-        <td><span class="convergence-badge m-strong">M-STRONG</span></td>
-      </tr>
-      <tr>
-        <td class="fw-name">TOPOS</td>
-        <td class="fw-version">v0.3</td>
-        <td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, TOPOS-BIN active</td>
-        <td><span class="convergence-badge m-nascent">M-NASCENT</span></td>
-      </tr>
-      <tr>
-        <td class="fw-name">DUAL-HELIX</td>
-        <td class="fw-version">v2.0</td>
-        <td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td>
-        <td><span class="convergence-badge m-nascent">M-NASCENT</span></td>
-      </tr>
-      <tr>
-        <td class="fw-name">NRP</td>
-        <td class="fw-version">v0.1</td>
-        <td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td>
-        <td><span class="convergence-badge m-nascent">M-NASCENT</span></td>
-      </tr>
-      <tr>
-        <td class="fw-name">EIGHT LAWS</td>
-        <td class="fw-version">v1.0</td>
-        <td class="fw-function">Sovereignty Stack — Laws 1-8 active · Law 9 dark by design</td>
-        <td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td>
-      </tr>
+      <tr><td class="fw-name">FSVE</td><td class="fw-version">v3.6</td><td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement</td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
+      <tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean</td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr>
+      <tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.3</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, TOPOS-BIN active</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+      <tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+      <tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+      <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1-8 active · Law 9 dark by design</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr>
     </tbody>
   </table>
-
   <div style="margin-top:16px; font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px;">
     M-STRONG: validated · M-MODERATE: tested · M-NASCENT: specified, building · CONSTITUTIONAL: foundational
   </div>
@@ -990,7 +407,6 @@ footer {
     <h2 class="section-title">Certification</h2>
     <div class="section-line"></div>
   </div>
-
   <div class="certify-strip">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="80" height="80" style="flex-shrink:0;">
       <defs>
@@ -1007,7 +423,6 @@ footer {
       <text font-family="'Times New Roman',serif" font-size="14" font-weight="bold" letter-spacing="4" fill="#D4AF37" text-anchor="middle"><textPath href="#ct1" startOffset="50%">AION · VERIFIED</textPath></text>
       <text font-family="'Times New Roman',serif" font-size="10" letter-spacing="3" fill="#D4AF37" text-anchor="middle"><textPath href="#cb1" startOffset="50%">SHELDON K. SALMON</textPath></text>
     </svg>
-
     <div class="certify-text">
       <h3>Sovereign Trace Protocol</h3>
       <p>
@@ -1021,7 +436,6 @@ footer {
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-id">
     <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
@@ -1038,38 +452,25 @@ footer {
   </ul>
 </footer>
 
-<!-- CANVAS ANIMATION -->
 <script>
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
 let W, H, particles = [], signals = [], t = 0;
 
-function resize() {
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 
 class Signal {
   constructor() { this.reset(); }
   reset() {
-    this.y = Math.random() * H;
-    this.speed = 0.3 + Math.random() * 0.6;
-    this.amp   = 8 + Math.random() * 20;
-    this.freq  = 0.008 + Math.random() * 0.012;
-    this.phase = Math.random() * Math.PI * 2;
-    this.alpha = 0.04 + Math.random() * 0.12;
-    this.width = 0.6 + Math.random() * 0.8;
-    this.life  = 0;
-    this.maxLife = 180 + Math.random() * 240;
+    this.y = Math.random() * H; this.speed = 0.3 + Math.random() * 0.6;
+    this.amp = 8 + Math.random() * 20; this.freq = 0.008 + Math.random() * 0.012;
+    this.phase = Math.random() * Math.PI * 2; this.alpha = 0.04 + Math.random() * 0.12;
+    this.width = 0.6 + Math.random() * 0.8; this.life = 0; this.maxLife = 180 + Math.random() * 240;
   }
   draw() {
-    this.life++;
-    if (this.life > this.maxLife) this.reset();
-    const progress = this.life / this.maxLife;
-    const fade = Math.sin(progress * Math.PI);
-    ctx.beginPath();
-    ctx.strokeStyle = `rgba(240,165,0,${this.alpha * fade})`;
-    ctx.lineWidth = this.width;
+    this.life++; if (this.life > this.maxLife) this.reset();
+    const fade = Math.sin((this.life / this.maxLife) * Math.PI);
+    ctx.beginPath(); ctx.strokeStyle = `rgba(240,165,0,${this.alpha * fade})`; ctx.lineWidth = this.width;
     for (let x = 0; x <= W; x += 2) {
       const y = this.y + Math.sin(x * this.freq + this.phase + t * this.speed) * this.amp;
       x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
@@ -1081,20 +482,15 @@ class Signal {
 class Particle {
   constructor() { this.reset(); }
   reset() {
-    this.x = Math.random() * W;
-    this.y = Math.random() * H;
-    this.r = 0.5 + Math.random() * 1.5;
-    this.vx = (Math.random() - 0.5) * 0.2;
-    this.vy = (Math.random() - 0.5) * 0.2;
-    this.alpha = 0.1 + Math.random() * 0.25;
+    this.x = Math.random() * W; this.y = Math.random() * H;
+    this.r = 0.5 + Math.random() * 1.5; this.vx = (Math.random() - 0.5) * 0.2;
+    this.vy = (Math.random() - 0.5) * 0.2; this.alpha = 0.1 + Math.random() * 0.25;
   }
   draw() {
     this.x += this.vx; this.y += this.vy;
     if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
-    ctx.fillStyle = `rgba(240,165,0,${this.alpha})`;
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(240,165,0,${this.alpha})`; ctx.fill();
   }
 }
 
@@ -1105,16 +501,13 @@ function init() {
 }
 
 function loop() {
-  ctx.clearRect(0, 0, W, H);
-  t += 0.01;
-  signals.forEach(s => s.draw());
-  particles.forEach(p => p.draw());
+  ctx.clearRect(0, 0, W, H); t += 0.01;
+  signals.forEach(s => s.draw()); particles.forEach(p => p.draw());
   requestAnimationFrame(loop);
 }
 
 window.addEventListener('resize', resize);
-init();
-loop();
+init(); loop();
 </script>
 
 </body>
