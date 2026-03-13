@@ -60,21 +60,16 @@ nav {
 .nav-links a:hover { color: var(--amber); }
 
 .hero { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 56px 40px 80px; max-width: 1200px; margin: 0 auto; }
-
 #hero-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.35; pointer-events: none; }
 
 .hero-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; color: var(--amber); text-transform: uppercase; margin-bottom: 20px; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.2s forwards; }
 .hero-eyebrow::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--amber); vertical-align: middle; margin-right: 12px; margin-bottom: 2px; }
-
 .hero-name { font-family: var(--sans); font-size: clamp(48px, 8vw, 96px); font-weight: 900; letter-spacing: -1px; line-height: 0.92; color: var(--text); text-transform: uppercase; opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s var(--ease) 0.35s forwards; }
 .hero-name em { display: block; color: var(--amber); font-style: normal; }
-
 .hero-title { margin-top: 24px; font-family: var(--mono); font-size: clamp(13px, 1.6vw, 17px); color: var(--muted); letter-spacing: 3px; text-transform: uppercase; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.5s forwards; }
 .hero-divider { width: 64px; height: 2px; background: var(--amber); margin: 32px 0; opacity: 0; animation: fadeUp 0.6s var(--ease) 0.65s forwards; }
-
 .hero-mission { font-family: var(--sans); font-size: clamp(18px, 2.5vw, 26px); font-weight: 300; font-style: italic; color: var(--text); max-width: 640px; line-height: 1.5; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.75s forwards; }
 .hero-mission strong { font-style: normal; font-weight: 700; color: var(--amber-l); }
-
 .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 40px; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.9s forwards; }
 
 .cta-btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; padding: 12px 24px; border: 1px solid var(--amber); color: var(--amber); background: transparent; transition: all 0.2s; position: relative; overflow: hidden; }
@@ -88,33 +83,13 @@ nav {
 .cta-arrow { font-size: 14px; transition: transform 0.2s; }
 .cta-btn:hover .cta-arrow { transform: translateX(4px); }
 
-/* ── TRIPLE TIME DISPLAY ── */
-.triple-time {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1px; background: var(--border);
-  border: 1px solid var(--border);
-  margin-top: 60px; padding-top: 0;
-  border-top: none;
-  opacity: 0; animation: fadeIn 0.8s var(--ease) 1.1s forwards;
-  position: relative;
-}
-.triple-time::before {
-  content: ''; position: absolute; top: -32px; left: 0; right: 0;
-  height: 1px; background: var(--border);
-}
-.time-cell {
-  background: var(--bg); padding: 18px 20px; transition: background 0.2s;
-}
+/* ── TRIPLE TIME ── */
+.triple-time { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 60px; opacity: 0; animation: fadeIn 0.8s var(--ease) 1.1s forwards; position: relative; }
+.triple-time::before { content: ''; position: absolute; top: -32px; left: 0; right: 0; height: 1px; background: var(--border); }
+.time-cell { background: var(--bg); padding: 18px 20px; transition: background 0.2s; }
 .time-cell:hover { background: var(--surface); }
-.time-sys {
-  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
-  color: var(--amber-d); text-transform: uppercase; margin-bottom: 6px;
-}
-.time-val {
-  font-family: var(--mono); font-size: 14px; color: var(--amber);
-  letter-spacing: 1px; line-height: 1.3; min-height: 36px;
-  display: flex; align-items: center;
-}
+.time-sys { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--amber-d); text-transform: uppercase; margin-bottom: 6px; }
+.time-val { font-family: var(--mono); font-size: 14px; color: var(--amber); letter-spacing: 1px; line-height: 1.3; min-height: 36px; display: flex; align-items: center; }
 .time-val.loading { color: var(--dim); font-size: 11px; }
 
 section { position: relative; z-index: 1; padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
@@ -130,7 +105,6 @@ section { position: relative; z-index: 1; padding: 80px 40px; max-width: 1200px;
 .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--amber); transform: scaleX(0); transform-origin: left; transition: transform 0.3s var(--ease); }
 .service-card:hover { background: var(--panel); }
 .service-card:hover::before { transform: scaleX(1); }
-
 .service-num { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
 .service-icon { font-size: 28px; margin-bottom: 16px; display: block; }
 .service-title { font-family: var(--sans); font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-bottom: 12px; }
@@ -142,40 +116,33 @@ section { position: relative; z-index: 1; padding: 80px 40px; max-width: 1200px;
 .service-link-soon { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; opacity: 0.55; pointer-events: none; user-select: none; }
 .service-link-soon::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--muted); opacity: 0.5; }
 
-/* WORK STRIP */
 .work-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 @media (max-width: 680px) { .work-strip { grid-template-columns: 1fr; } }
-
 .work-card { background: var(--surface); border: 1px solid var(--border); padding: 28px; position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
 .work-card:hover { border-color: var(--amber); transform: translateY(-2px); }
 .work-card-badge { position: absolute; top: 20px; right: 20px; }
 .work-card-badge svg { width: 44px; height: 44px; opacity: 0.7; transition: opacity 0.2s; }
 .work-card:hover .work-card-badge svg { opacity: 1; }
-
 .work-live-tag { position: absolute; top: 20px; left: 20px; font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; background: rgba(0,230,118,0.1); color: #00e676; border: 1px solid #00e676; }
-
 .work-domain { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber-d); text-transform: uppercase; margin-bottom: 12px; }
 .work-domain.cyan { color: var(--cyan); }
 .work-domain.edu  { color: var(--edu); }
-
 .work-title { font-family: var(--sans); font-size: 24px; font-weight: 700; letter-spacing: 1px; color: var(--text); margin-bottom: 8px; text-transform: uppercase; }
 .work-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
 .work-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-decoration: none; text-transform: uppercase; }
 .work-link.cyan { color: var(--cyan); }
 .work-link.edu  { color: var(--edu); }
 .work-link:hover { text-decoration: underline; }
-
 .work-card-coming { opacity: 0.4; pointer-events: none; }
 .coming-pill { display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--muted); border: 1px solid var(--dim); padding: 2px 8px; text-transform: uppercase; margin-top: 12px; }
-
-.work-card.live-field  { border-left: 2px solid var(--cyan); }
-.work-card.live-edu    { border-left: 2px solid var(--edu); }
+.work-card.live-field { border-left: 2px solid var(--cyan); }
+.work-card.live-edu   { border-left: 2px solid var(--edu); }
 
 .stack-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; }
 .stack-table th { text-align: left; font-size: 10px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--surface); }
 .stack-table td { padding: 12px 16px; border-bottom: 1px solid rgba(30,39,48,0.6); vertical-align: middle; background: var(--bg); transition: background 0.15s; }
 .stack-table tr:hover td { background: var(--surface); }
-.fw-name { color: var(--amber); font-weight: normal; }
+.fw-name { color: var(--amber); }
 .fw-version { color: var(--muted); }
 .fw-function { color: var(--text); }
 .convergence-badge { display: inline-block; font-size: 9px; letter-spacing: 1px; padding: 2px 7px; text-transform: uppercase; }
@@ -183,13 +150,7 @@ section { position: relative; z-index: 1; padding: 80px 40px; max-width: 1200px;
 .m-mod     { background: rgba(240,165,0,0.1); color: var(--amber); border: 1px solid var(--amber-d); }
 .m-nascent { background: rgba(64,196,255,0.08); color: #40c4ff; border: 1px solid #1a4a5a; }
 
-/* Stack path link */
-.stack-path {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: 16px 20px; background: var(--bg);
-  border: 1px solid var(--border); text-decoration: none;
-  transition: border-color 0.2s, background 0.2s; margin-top: 20px;
-}
+.stack-path { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; background: var(--bg); border: 1px solid var(--border); text-decoration: none; transition: border-color 0.2s, background 0.2s; margin-top: 20px; }
 .stack-path:hover { border-color: var(--amber); background: var(--surface); }
 .stack-path-icon { font-size: 18px; flex-shrink: 0; padding-top: 2px; }
 .stack-path-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; margin-bottom: 3px; }
@@ -202,10 +163,92 @@ section { position: relative; z-index: 1; padding: 80px 40px; max-width: 1200px;
 .certify-text a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(212,175,55,0.3); }
 .certify-text a:hover { border-bottom-color: var(--gold); }
 
+/* ── CONNECT SECTION ── */
+.connect-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+@media (max-width: 900px) { .connect-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .connect-grid { grid-template-columns: 1fr; } }
+
+.connect-group {
+  background: var(--surface);
+  padding: 24px 22px;
+}
+.connect-group-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px;
+  color: var(--amber-d); text-transform: uppercase;
+  margin-bottom: 14px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.connect-links { display: flex; flex-direction: column; gap: 8px; }
+.connect-link {
+  display: flex; align-items: center; gap: 9px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+  color: var(--muted); text-decoration: none;
+  transition: color 0.15s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.connect-link:hover { color: var(--amber); }
+.connect-link-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--dim); flex-shrink: 0;
+  transition: background 0.15s;
+}
+.connect-link:hover .connect-link-dot { background: var(--amber); }
+
+/* color variants */
+.connect-link.green .connect-link-dot  { background: rgba(0,230,118,0.4); }
+.connect-link.green:hover { color: #00e676; }
+.connect-link.green:hover .connect-link-dot { background: #00e676; }
+
+.connect-link.blue .connect-link-dot   { background: rgba(0,166,255,0.4); }
+.connect-link.blue:hover { color: #0a9af0; }
+.connect-link.blue:hover .connect-link-dot { background: #0a9af0; }
+
+.connect-link.gold .connect-link-dot   { background: rgba(212,175,55,0.4); }
+.connect-link.gold:hover { color: var(--gold); }
+.connect-link.gold:hover .connect-link-dot { background: var(--gold); }
+
+.connect-link.purple .connect-link-dot { background: rgba(155,89,182,0.5); }
+.connect-link.purple:hover { color: #b57bee; }
+.connect-link.purple:hover .connect-link-dot { background: #b57bee; }
+
+.connect-link.red .connect-link-dot    { background: rgba(233,69,96,0.5); }
+.connect-link.red:hover { color: #e94560; }
+.connect-link.red:hover .connect-link-dot { background: #e94560; }
+
+.connect-link.cyan .connect-link-dot   { background: rgba(0,212,255,0.4); }
+.connect-link.cyan:hover { color: var(--cyan); }
+.connect-link.cyan:hover .connect-link-dot { background: var(--cyan); }
+
+.connect-link.orange .connect-link-dot { background: rgba(255,102,0,0.5); }
+.connect-link.orange:hover { color: #ff6600; }
+.connect-link.orange:hover .connect-link-dot { background: #ff6600; }
+
+.connect-link.coffee .connect-link-dot { background: rgba(255,221,0,0.5); }
+.connect-link.coffee:hover { color: #ffdd00; }
+.connect-link.coffee:hover .connect-link-dot { background: #ffdd00; }
+
+/* repo grid spans 2 cols to fit all the repos */
+.connect-group.wide {
+  grid-column: span 2;
+}
+.connect-group.wide .connect-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+@media (max-width: 900px) { .connect-group.wide { grid-column: span 2; } }
+@media (max-width: 500px) { .connect-group.wide { grid-column: span 1; } .connect-group.wide .connect-links { grid-template-columns: 1fr; } }
+
 footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .footer-id { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; letter-spacing: 1px; }
 .footer-id strong { color: var(--amber); }
-.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links { display: flex; gap: 24px; list-style: none; flex-wrap: wrap; }
 .footer-links a { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.15s; }
 .footer-links a:hover { color: var(--amber); }
 
@@ -232,7 +275,7 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
   <ul class="nav-links">
     <li><a href="/simulators/">Simulators</a></li>
     <li><a href="/services/">Services</a></li>
-    <li><a href="#stack">Stack</a></li>
+    <li><a href="/stack/">Stack</a></li>
     <li><a href="/certify/">Certify</a></li>
     <li><a href="/about/">About</a></li>
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
@@ -252,25 +295,14 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
     <a href="/services/" class="cta-btn"><span>Engage Services</span><span class="cta-arrow">→</span></a>
     <a href="/certify/" class="cta-btn"><span>Verify a Certification</span><span class="cta-arrow">→</span></a>
   </div>
-
-  <!-- TRIPLE TIME DISPLAY -->
   <div class="triple-time" style="margin-top:60px;">
-    <div class="time-cell">
-      <div class="time-sys">Gregorian</div>
-      <div class="time-val" id="tt-gregorian">—</div>
-    </div>
-    <div class="time-cell">
-      <div class="time-sys">13 Moon · Dreamspell</div>
-      <div class="time-val" id="tt-dreamspell">—</div>
-    </div>
-    <div class="time-cell">
-      <div class="time-sys">Hebrew Calendar</div>
-      <div class="time-val" id="tt-hebrew">—</div>
-    </div>
+    <div class="time-cell"><div class="time-sys">Gregorian</div><div class="time-val" id="tt-gregorian">—</div></div>
+    <div class="time-cell"><div class="time-sys">13 Moon · Dreamspell</div><div class="time-val" id="tt-dreamspell">—</div></div>
+    <div class="time-cell"><div class="time-sys">Hebrew Calendar</div><div class="time-val" id="tt-hebrew">—</div></div>
   </div>
 </div>
 
-<!-- SERVICES -->
+<!-- ── 01 SERVICES ── -->
 <section id="services">
   <div class="section-header">
     <span class="section-num">// 01</span>
@@ -284,8 +316,8 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
       <div class="service-title">Simulation<br>Creation</div>
       <p class="service-desc">Physics simulators, engineering tools, educational systems — built in days, not months. Citation-backed, red-teamed, peer-reviewed. Every deliverable ships with an AION Verified Simulator badge and a full audit trail.</p>
       <div class="service-tags"><span class="tag">Physics</span><span class="tag">Engineering</span><span class="tag">Education</span><span class="tag">Medical</span><span class="tag">HTML · No Dependencies</span></div>
-      <a href="/simulators/" class="service-link">View Simulators →</a>
-      <div class="service-link-soon">Service Details Coming Soon</div>
+      <a href="/services/rapid-prototyping/" class="service-link">Service Details →</a>
+      <a href="/simulators/" class="service-link" style="margin-top:8px;">View Simulators →</a>
     </div>
     <div class="service-card">
       <div class="service-num">02 / AI Reliability Audit</div>
@@ -301,107 +333,75 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
       <div class="service-title">AION Stack<br>Engineering</div>
       <p class="service-desc">Custom certainty frameworks for your AI system's specific failure modes. The AION stack was built through live failure events — not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked.</p>
       <div class="service-tags"><span class="tag">DUAL-HELIX</span><span class="tag">TOPOS</span><span class="tag">FSVE</span><span class="tag">Custom Frameworks</span></div>
-      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="service-link">GitHub ↗</a>
-      <div class="service-link-soon">Service Details Coming Soon</div>
+      <a href="/services/framework-design/" class="service-link">Service Details →</a>
+      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="service-link" style="margin-top:8px;">GitHub ↗</a>
     </div>
   </div>
-  <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+  <div style="margin-top:24px; display:flex; justify-content:flex-end;">
     <a href="/services/" class="cta-btn" style="display:inline-flex;"><span>All Services</span><span class="cta-arrow">→</span></a>
   </div>
 </section>
 
-<!-- WORK -->
+<!-- ── 02 SIMULATORS ── -->
 <section id="work">
   <div class="section-header">
     <span class="section-num">// 02</span>
     <h2 class="section-title">Simulators</h2>
     <div class="section-line"></div>
   </div>
-
   <div class="work-strip">
 
-    <!-- LIVE 1 — ROLLER COASTER -->
     <div class="work-card">
       <span class="work-live-tag">● Live</span>
       <div class="work-card-badge">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-          <defs>
-            <linearGradient id="mb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient>
-            <linearGradient id="mw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient>
-          </defs>
+          <defs><linearGradient id="mb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient><linearGradient id="mw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient></defs>
           <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0d09" stroke="url(#mb1)" stroke-width="5"/>
           <circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb1)" stroke-width="3"/>
-          <circle cx="200" cy="200" r="132" fill="#0c0a08"/>
-          <circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb1)" stroke-width="1.5"/>
+          <circle cx="200" cy="200" r="132" fill="#0c0a08"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb1)" stroke-width="1.5"/>
           <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw1)" stroke-width="3" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="work-domain" style="margin-top:32px;">Physics · AP Curriculum</div>
       <div class="work-title">Roller Coaster<br>Physics Simulator</div>
-      <div class="work-meta">
-        10 modules · 3 red team passes · 15 issues resolved<br>
-        Ref: Tony Wayne AP Physics Guide<br>
-        Client: Saleem Raja Haja · AI Governance · Kuwait<br>
-        March 2026
-      </div>
+      <div class="work-meta">10 modules · 3 red team passes · 15 issues resolved<br>Ref: Tony Wayne AP Physics Guide<br>Client: Saleem Raja Haja · AI Governance · Kuwait<br>March 2026</div>
       <a href="/simulators/roller-coaster/" class="work-link">Launch Simulator →</a>
     </div>
 
-    <!-- LIVE 2 — ORION -->
     <div class="work-card live-field">
       <span class="work-live-tag">● Live</span>
       <div class="work-card-badge">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-          <defs>
-            <linearGradient id="mb2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#40e0ff"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#005f80"/></linearGradient>
-            <linearGradient id="mw2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#005f80" stop-opacity="0.3"/><stop offset="50%" stop-color="#40e0ff"/><stop offset="100%" stop-color="#005f80" stop-opacity="0.3"/></linearGradient>
-          </defs>
+          <defs><linearGradient id="mb2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#40e0ff"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#005f80"/></linearGradient><linearGradient id="mw2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#005f80" stop-opacity="0.3"/><stop offset="50%" stop-color="#40e0ff"/><stop offset="100%" stop-color="#005f80" stop-opacity="0.3"/></linearGradient></defs>
           <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080d12" stroke="url(#mb2)" stroke-width="5"/>
           <circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb2)" stroke-width="3"/>
-          <circle cx="200" cy="200" r="132" fill="#060c10"/>
-          <circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb2)" stroke-width="1.5"/>
+          <circle cx="200" cy="200" r="132" fill="#060c10"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb2)" stroke-width="1.5"/>
           <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw2)" stroke-width="3" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="work-domain cyan" style="margin-top:32px;">Field Ops · Underwater EOD · UNDP</div>
       <div class="work-title">Project ORION<br>UXO Detection</div>
-      <div class="work-meta">
-        Tri-axis magnetometer gradiometer · MLS engine<br>
-        1 red team pass · 7 findings · 0 undisclosed<br>
-        Context: UNDP Solomon Islands · CAPEX $4,650<br>
-        March 2026
-      </div>
+      <div class="work-meta">Tri-axis magnetometer gradiometer · MLS engine<br>1 red team pass · 7 findings · 0 undisclosed<br>Context: UNDP Solomon Islands · CAPEX $4,650<br>March 2026</div>
       <a href="/simulators/Orion/" class="work-link cyan">Launch Simulator →</a>
     </div>
 
-    <!-- LIVE 3 — MATH WORKSHEET BUILDER -->
     <div class="work-card live-edu">
       <span class="work-live-tag">● Live</span>
       <div class="work-card-badge">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-          <defs>
-            <linearGradient id="mb3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#86efac"/><stop offset="50%" stop-color="#4ade80"/><stop offset="100%" stop-color="#166534"/></linearGradient>
-            <linearGradient id="mw3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#166534" stop-opacity="0.3"/><stop offset="50%" stop-color="#86efac"/><stop offset="100%" stop-color="#166534" stop-opacity="0.3"/></linearGradient>
-          </defs>
+          <defs><linearGradient id="mb3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#86efac"/><stop offset="50%" stop-color="#4ade80"/><stop offset="100%" stop-color="#166534"/></linearGradient><linearGradient id="mw3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#166534" stop-opacity="0.3"/><stop offset="50%" stop-color="#86efac"/><stop offset="100%" stop-color="#166534" stop-opacity="0.3"/></linearGradient></defs>
           <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080f09" stroke="url(#mb3)" stroke-width="5"/>
           <circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb3)" stroke-width="3"/>
-          <circle cx="200" cy="200" r="132" fill="#060d07"/>
-          <circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb3)" stroke-width="1.5"/>
+          <circle cx="200" cy="200" r="132" fill="#060d07"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb3)" stroke-width="1.5"/>
           <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw3)" stroke-width="3" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="work-domain edu" style="margin-top:32px;">Education · Grades 3–8 · Salmon EDU</div>
       <div class="work-title">Math Worksheet<br>Builder</div>
-      <div class="work-meta">
-        9 types · fractions · PEMDAS · interleaved practice<br>
-        4 red team passes · 10 bugs fixed · 0 undisclosed<br>
-        Ref: Taylor &amp; Rohrer (2010)<br>
-        March 2026
-      </div>
+      <div class="work-meta">9 types · fractions · PEMDAS · interleaved practice<br>4 red team passes · 10 bugs fixed · 0 undisclosed<br>Ref: Taylor &amp; Rohrer (2010)<br>March 2026</div>
       <a href="/simulators/math-worksheet-builder/" class="work-link edu">Launch Tool →</a>
     </div>
 
-    <!-- COMING — PROJECTILE -->
     <div class="work-card work-card-coming">
       <div class="work-domain">Physics · Mechanics</div>
       <div class="work-title">Projectile<br>Motion Simulator</div>
@@ -410,13 +410,12 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
     </div>
 
   </div>
-
   <div style="margin-top:24px; text-align:center;">
     <a href="/simulators/" class="cta-btn" style="display:inline-flex;"><span>All Simulators</span><span class="cta-arrow">→</span></a>
   </div>
 </section>
 
-<!-- STACK -->
+<!-- ── 03 STACK ── -->
 <section id="stack">
   <div class="section-header">
     <span class="section-num">// 03</span>
@@ -427,23 +426,19 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
     A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked. M-STRONG means validated. M-NASCENT means honest about what isn't yet.
   </p>
   <table class="stack-table">
-    <thead>
-      <tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr>
-    </thead>
+    <thead><tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr></thead>
     <tbody>
       <tr><td class="fw-name">FSVE</td><td class="fw-version">v3.6</td><td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement</td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
       <tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean</td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr>
       <tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.3</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, TOPOS-BIN active</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
       <tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
       <tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
-      <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1-8 active · Law 9 dark by design</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr>
+      <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1–8 active · Law 9 dark by design</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr>
     </tbody>
   </table>
   <div style="margin-top:16px; font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; margin-bottom:4px;">
     M-STRONG: validated · M-MODERATE: tested · M-NASCENT: specified, building · CONSTITUTIONAL: foundational
   </div>
-
-  <!-- Stack path -->
   <a href="/stack/" class="stack-path">
     <span class="stack-path-icon">◈</span>
     <div>
@@ -451,9 +446,16 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
       <div class="stack-path-desc">All 17 frameworks. Version history. Convergence records. FCL entries. Protocol I registrations. The complete AION Constitutional Stack in one place.</div>
     </div>
   </a>
+  <a href="/stack/eight-laws/" class="stack-path">
+    <span class="stack-path-icon">⚖️</span>
+    <div>
+      <div class="stack-path-label">The Sovereignty Stack — Nine Constitutional Laws →</div>
+      <div class="stack-path-desc">Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design. A spiral constitutional architecture for civilizational scale.</div>
+    </div>
+  </a>
 </section>
 
-<!-- CERTIFICATION -->
+<!-- ── 04 CERTIFICATION ── -->
 <section id="certify" style="padding-top:0;">
   <div class="section-header">
     <span class="section-num">// 04</span>
@@ -489,6 +491,120 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
   </div>
 </section>
 
+<!-- ── 05 CONNECT ── -->
+<section id="connect">
+  <div class="section-header">
+    <span class="section-num">// 05</span>
+    <h2 class="section-title">Connect</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="connect-grid">
+
+    <!-- Contact + Community -->
+    <div class="connect-group">
+      <div class="connect-group-label">Contact</div>
+      <div class="connect-links">
+        <a href="mailto:aionsystem@outlook.com" class="connect-link amber">
+          <span class="connect-link-dot"></span>Consulting Inquiries
+        </a>
+      </div>
+      <div class="connect-group-label" style="margin-top:20px;">Community</div>
+      <div class="connect-links">
+        <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378/" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>LinkedIn
+        </a>
+        <a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener" class="connect-link">
+          <span class="connect-link-dot"></span>X · @OCEAN_AION
+        </a>
+        <a href="https://news.ycombinator.com/submitted?id=sheldonksalmon" target="_blank" rel="noopener" class="connect-link orange">
+          <span class="connect-link-dot"></span>Hacker News
+        </a>
+      </div>
+      <div class="connect-group-label" style="margin-top:20px;">Support</div>
+      <div class="connect-links">
+        <a href="https://buymeacoffee.com/sheldonksalmon" target="_blank" rel="noopener" class="connect-link coffee">
+          <span class="connect-link-dot"></span>Buy Me a Coffee
+        </a>
+      </div>
+    </div>
+
+    <!-- Sites + Publishing + Bots -->
+    <div class="connect-group">
+      <div class="connect-group-label">Sites</div>
+      <div class="connect-links">
+        <a href="https://sheldonksalmon.carrd.co" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>sheldonksalmon.carrd.co
+        </a>
+        <a href="https://aionsystems.carrd.co" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>aionsystems.carrd.co
+        </a>
+      </div>
+      <div class="connect-group-label" style="margin-top:20px;">Publishing</div>
+      <div class="connect-links">
+        <a href="https://medium.com/sheldonksalmon" target="_blank" rel="noopener" class="connect-link">
+          <span class="connect-link-dot"></span>Medium · Publication
+        </a>
+        <a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener" class="connect-link">
+          <span class="connect-link-dot"></span>Medium · Profile
+        </a>
+      </div>
+      <div class="connect-group-label" style="margin-top:20px;">Bots</div>
+      <div class="connect-links">
+        <a href="https://poe.com/PSA-Grader" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>PSA Grader · Poe
+        </a>
+        <a href="https://poe.com/ANCHOR-Reliability" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>ANCHOR Reliability · Poe
+        </a>
+      </div>
+    </div>
+
+    <!-- Brain Repos — wide -->
+    <div class="connect-group wide">
+      <div class="connect-group-label">Brain Repositories</div>
+      <div class="connect-links">
+        <a href="https://github.com/AionSystem/THALAMUS" target="_blank" rel="noopener" class="connect-link gold">
+          <span class="connect-link-dot"></span>THALAMUS
+        </a>
+        <a href="https://github.com/AionSystem/AGI" target="_blank" rel="noopener" class="connect-link red">
+          <span class="connect-link-dot"></span>AGI
+        </a>
+        <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>AION-BRAIN
+        </a>
+        <a href="https://github.com/AionSystem/OCEAN-BRAIN" target="_blank" rel="noopener" class="connect-link cyan">
+          <span class="connect-link-dot"></span>OCEAN-BRAIN
+        </a>
+        <a href="https://github.com/AionSystem/HIPPOCAMPUS" target="_blank" rel="noopener" class="connect-link green">
+          <span class="connect-link-dot"></span>HIPPOCAMPUS
+        </a>
+        <a href="https://github.com/AionSystem/AMYGDALA" target="_blank" rel="noopener" class="connect-link red">
+          <span class="connect-link-dot"></span>AMYGDALA
+        </a>
+        <a href="https://github.com/AionSystem/SYNARA" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>SYNARA
+        </a>
+        <a href="https://github.com/AionSystem/CEREBELLUM" target="_blank" rel="noopener" class="connect-link">
+          <span class="connect-link-dot"></span>CEREBELLUM
+        </a>
+        <a href="https://github.com/AionSystem/PREFRONTAL" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>PREFRONTAL
+        </a>
+        <a href="https://github.com/AionSystem/SHELDON.K.SALMON" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>SHELDON.K.SALMON
+        </a>
+        <a href="https://github.com/AionSystem/Whitepaper-Blueprint" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>Whitepaper Blueprint
+        </a>
+        <a href="https://github.com/AionSystem/FAILURE-ATLAS" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>FAILURE-ATLAS
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <footer>
   <div class="footer-id">
     <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
@@ -499,6 +615,7 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
     <li><a href="/simulators/">Simulators</a></li>
     <li><a href="/services/">Services</a></li>
     <li><a href="/stack/">Stack</a></li>
+    <li><a href="/stack/eight-laws/">Eight Laws</a></li>
     <li><a href="/certify/">Certify</a></li>
     <li><a href="/about/">About</a></li>
     <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
@@ -507,172 +624,60 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
 </footer>
 
 <script>
-/* ── CANVAS ─────────────────────────────── */
+/* ── CANVAS ── */
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
 let W, H, particles = [], signals = [], t = 0;
-
 function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-
 class Signal {
   constructor() { this.reset(); }
-  reset() {
-    this.y = Math.random() * H; this.speed = 0.3 + Math.random() * 0.6;
-    this.amp = 8 + Math.random() * 20; this.freq = 0.008 + Math.random() * 0.012;
-    this.phase = Math.random() * Math.PI * 2; this.alpha = 0.04 + Math.random() * 0.12;
-    this.width = 0.6 + Math.random() * 0.8; this.life = 0; this.maxLife = 180 + Math.random() * 240;
-  }
-  draw() {
-    this.life++; if (this.life > this.maxLife) this.reset();
-    const fade = Math.sin((this.life / this.maxLife) * Math.PI);
-    ctx.beginPath(); ctx.strokeStyle = `rgba(240,165,0,${this.alpha * fade})`; ctx.lineWidth = this.width;
-    for (let x = 0; x <= W; x += 2) {
-      const y = this.y + Math.sin(x * this.freq + this.phase + t * this.speed) * this.amp;
-      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  }
+  reset() { this.y=Math.random()*H; this.speed=0.3+Math.random()*0.6; this.amp=8+Math.random()*20; this.freq=0.008+Math.random()*0.012; this.phase=Math.random()*Math.PI*2; this.alpha=0.04+Math.random()*0.12; this.width=0.6+Math.random()*0.8; this.life=0; this.maxLife=180+Math.random()*240; }
+  draw() { this.life++; if(this.life>this.maxLife)this.reset(); const fade=Math.sin((this.life/this.maxLife)*Math.PI); ctx.beginPath(); ctx.strokeStyle=`rgba(240,165,0,${this.alpha*fade})`; ctx.lineWidth=this.width; for(let x=0;x<=W;x+=2){const y=this.y+Math.sin(x*this.freq+this.phase+t*this.speed)*this.amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);} ctx.stroke(); }
 }
-
 class Particle {
   constructor() { this.reset(); }
-  reset() {
-    this.x = Math.random() * W; this.y = Math.random() * H;
-    this.r = 0.5 + Math.random() * 1.5; this.vx = (Math.random() - 0.5) * 0.2;
-    this.vy = (Math.random() - 0.5) * 0.2; this.alpha = 0.1 + Math.random() * 0.25;
-  }
-  draw() {
-    this.x += this.vx; this.y += this.vy;
-    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
-    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
-    ctx.fillStyle = `rgba(240,165,0,${this.alpha})`; ctx.fill();
-  }
+  reset() { this.x=Math.random()*W; this.y=Math.random()*H; this.r=0.5+Math.random()*1.5; this.vx=(Math.random()-0.5)*0.2; this.vy=(Math.random()-0.5)*0.2; this.alpha=0.1+Math.random()*0.25; }
+  draw() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset(); ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(240,165,0,${this.alpha})`; ctx.fill(); }
 }
-
-function init() {
-  resize();
-  for (let i = 0; i < 12; i++) signals.push(new Signal());
-  for (let i = 0; i < 60; i++) particles.push(new Particle());
-}
-
-function loop() {
-  ctx.clearRect(0, 0, W, H); t += 0.01;
-  signals.forEach(s => s.draw()); particles.forEach(p => p.draw());
-  requestAnimationFrame(loop);
-}
-
-window.addEventListener('resize', resize);
+function init() { resize(); for(let i=0;i<12;i++)signals.push(new Signal()); for(let i=0;i<60;i++)particles.push(new Particle()); }
+function loop() { ctx.clearRect(0,0,W,H); t+=0.01; signals.forEach(s=>s.draw()); particles.forEach(p=>p.draw()); requestAnimationFrame(loop); }
+window.addEventListener('resize',resize);
 init(); loop();
 
-/* ── TRIPLE TIME DISPLAY ─────────────────── */
+/* ── TRIPLE TIME ── */
 (function() {
-  // 13 Moon anchor dates (month, day) → moon number and name
   const MOONS = [
-    { num:1,  name:'Magnetic',    m:7,  d:26 },
-    { num:2,  name:'Lunar',       m:8,  d:23 },
-    { num:3,  name:'Electric',    m:9,  d:20 },
-    { num:4,  name:'Self-Existing',m:10,d:18 },
-    { num:5,  name:'Overtone',    m:11, d:15 },
-    { num:6,  name:'Rhythmic',    m:12, d:13 },
-    { num:7,  name:'Resonant',    m:1,  d:10 },
-    { num:8,  name:'Galactic',    m:2,  d:7  },
-    { num:9,  name:'Solar',       m:3,  d:7  },
-    { num:10, name:'Planetary',   m:4,  d:4  },
-    { num:11, name:'Spectral',    m:5,  d:2  },
-    { num:12, name:'Crystal',     m:5,  d:30 },
-    { num:13, name:'Cosmic',      m:6,  d:27 }
+    {num:1,name:'Magnetic',m:7,d:26},{num:2,name:'Lunar',m:8,d:23},{num:3,name:'Electric',m:9,d:20},
+    {num:4,name:'Self-Existing',m:10,d:18},{num:5,name:'Overtone',m:11,d:15},{num:6,name:'Rhythmic',m:12,d:13},
+    {num:7,name:'Resonant',m:1,d:10},{num:8,name:'Galactic',m:2,d:7},{num:9,name:'Solar',m:3,d:7},
+    {num:10,name:'Planetary',m:4,d:4},{num:11,name:'Spectral',m:5,d:2},{num:12,name:'Crystal',m:5,d:30},
+    {num:13,name:'Cosmic',m:6,d:27}
   ];
-
   function dreamspell(date) {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-
-    // Build sorted list of moon start dates for this Dreamspell year
-    // The year runs Jul 26 – Jul 24 next year
-    // Determine which Dreamspell year we're in
-    const isAfterJul26 = (month > 7) || (month === 7 && day >= 26);
-    const dsYear = isAfterJul26 ? year : year - 1;
-
-    const anchors = MOONS.map(m => {
-      let y = dsYear;
-      // Moons 7–13 (Jan–Jul) are in the next calendar year
-      if (m.num >= 7) y = dsYear + 1;
-      return { ...m, date: new Date(y, m.m - 1, m.d) };
-    });
-
-    // Day Out of Time: Jul 25
-    const dot = new Date(dsYear + 1, 6, 25);
-    const dotMs = dot.getTime();
-    const dateMs = date.getTime();
-    if (Math.abs(dateMs - dotMs) < 86400000 / 2) {
-      return { moonNum: 0, moonName: 'Day Out of Time', dayOfMoon: 0 };
-    }
-
-    // Find which moon we're in
-    for (let i = anchors.length - 1; i >= 0; i--) {
-      if (dateMs >= anchors[i].date.getTime()) {
-        const dayOfMoon = Math.floor((dateMs - anchors[i].date.getTime()) / 86400000) + 1;
-        if (dayOfMoon <= 28) {
-          return { moonNum: anchors[i].num, moonName: anchors[i].name, dayOfMoon };
-        }
+    const month=date.getMonth()+1, day=date.getDate(), year=date.getFullYear();
+    const isAfterJul26=(month>7)||(month===7&&day>=26);
+    const dsYear=isAfterJul26?year:year-1;
+    const anchors=MOONS.map(m=>{let y=dsYear; if(m.num>=7)y=dsYear+1; return{...m,date:new Date(y,m.m-1,m.d)};});
+    const dot=new Date(dsYear+1,6,25);
+    const dateMs=date.getTime();
+    if(Math.abs(dateMs-dot.getTime())<43200000) return{moonNum:0,moonName:'Day Out of Time',dayOfMoon:0};
+    for(let i=anchors.length-1;i>=0;i--){
+      if(dateMs>=anchors[i].date.getTime()){
+        const d=Math.floor((dateMs-anchors[i].date.getTime())/86400000)+1;
+        if(d<=28) return{moonNum:anchors[i].num,moonName:anchors[i].name,dayOfMoon:d};
       }
     }
     return null;
   }
-
-  function renderGregorian(date) {
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const el = document.getElementById('tt-gregorian');
-    el.classList.remove('loading');
-    el.textContent = `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-  }
-
-  function renderDreamspell(date) {
-    const el = document.getElementById('tt-dreamspell');
-    const ds = dreamspell(date);
-    el.classList.remove('loading');
-    if (!ds) { el.textContent = '—'; return; }
-    if (ds.moonNum === 0) { el.textContent = 'Day Out of Time'; return; }
-    el.textContent = `Day ${ds.dayOfMoon}, ${ds.moonName} Moon ${ds.moonNum}/13`;
-  }
-
-  async function renderHebrew(date) {
-    const el = document.getElementById('tt-hebrew');
-    const d = date.getDate();
-    const m = date.getMonth() + 1;
-    const y = date.getFullYear();
-    try {
-      const res = await fetch(`https://www.hebcal.com/converter?gd=${d}&gm=${m}&gy=${y}&g2h=1`);
-      const text = await res.text();
-      // Parse JSON response
-      const data = JSON.parse(text);
-      if (data && data.hebrew) {
-        el.classList.remove('loading');
-        el.textContent = data.hebrew;
-      } else {
-        el.textContent = 'FETCH FAILED';
-      }
-    } catch(e) {
-      el.classList.remove('loading');
-      el.textContent = 'FETCH FAILED';
-    }
-  }
-
-  // Set loading state
-  ['tt-gregorian','tt-dreamspell','tt-hebrew'].forEach(id => {
-    const el = document.getElementById(id);
-    el.classList.add('loading');
-    el.textContent = '· · ·';
-  });
-
-  const now = new Date();
-  renderGregorian(now);
-  renderDreamspell(now);
-  renderHebrew(now);
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  ['tt-gregorian','tt-dreamspell','tt-hebrew'].forEach(id=>{const el=document.getElementById(id);el.classList.add('loading');el.textContent='· · ·';});
+  const now=new Date();
+  const gel=document.getElementById('tt-gregorian'); gel.classList.remove('loading'); gel.textContent=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  const ds=dreamspell(now); const del=document.getElementById('tt-dreamspell'); del.classList.remove('loading');
+  if(!ds)del.textContent='—'; else if(ds.moonNum===0)del.textContent='Day Out of Time'; else del.textContent=`Day ${ds.dayOfMoon}, ${ds.moonName} Moon ${ds.moonNum}/13`;
+  (async()=>{const hel=document.getElementById('tt-hebrew'); try{const res=await fetch(`https://www.hebcal.com/converter?gd=${now.getDate()}&gm=${now.getMonth()+1}&gy=${now.getFullYear()}&g2h=1`); const data=await res.json(); hel.classList.remove('loading'); hel.textContent=data&&data.hebrew?data.hebrew:'FETCH FAILED';}catch(e){hel.classList.remove('loading');hel.textContent='FETCH FAILED';}})();
 })();
 </script>
-
 </body>
 </html>
