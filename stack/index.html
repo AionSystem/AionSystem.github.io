@@ -1,1 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The AION Constitutional Stack — Sheldon K. Salmon. 17 frameworks. Certainty engineering. Sovereignty architecture. M-STRONG through M-NASCENT. Living document.">
+<meta property="og:title" content="The AION Stack — AionSystem · Sheldon K. Salmon">
+<meta property="og:description" content="A constitutional stack for AI reliability. Built through live failure events. Every framework falsifiable, versioned, convergence-tracked.">
+<title>The AION Stack — AionSystem · Sheldon K. Salmon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #08090b;
+  --surface:  #0e1117;
+  --panel:    #141920;
+  --border:   #1e2730;
+  --amber:    #f0a500;
+  --amber-d:  #b07800;
+  --amber-l:  #ffc947;
+  --gold:     #D4AF37;
+  --text:     #c4d4de;
+  --muted:    #4e5f6a;
+  --dim:      #2a3540;
+  --green:    #00e676;
+  --green-d:  #2E7D32;
+  --blue:     #40c4ff;
+  --red:      #ff6b6b;
+  --mono:     'Share Tech Mono', monospace;
+  --sans:     'Barlow Condensed', sans-serif;
+  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.5; overflow-x: hidden; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(240,165,0,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(240,165,0,0.018) 1px, transparent 1px);
+  background-size: 48px 48px; pointer-events: none; z-index: 0;
+}
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+  background: rgba(8,9,11,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: var(--mono); font-size: 13px; letter-spacing: 3px; color: var(--amber); text-transform: uppercase; text-decoration: none; }
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--amber); }
+
+/* ── CANVAS ── */
+#hero-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.15; pointer-events: none; }
+
+/* ── PAGE HEADER ── */
+.page-header {
+  position: relative; z-index: 1;
+  padding: 120px 40px 72px; max-width: 1200px; margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+.breadcrumb { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--amber); }
+.breadcrumb-sep { margin: 0 8px; color: var(--dim); }
+
+.page-header-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: end; }
+.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; color: var(--amber); text-transform: uppercase; margin-bottom: 16px; }
+.page-eyebrow::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--amber); vertical-align: middle; margin-right: 10px; margin-bottom: 2px; }
+.page-title { font-family: var(--sans); font-size: clamp(44px, 6.5vw, 80px); font-weight: 900; letter-spacing: -1px; line-height: 0.9; text-transform: uppercase; color: var(--text); }
+.page-title em { display: block; color: var(--amber); font-style: normal; }
+.page-premise { font-family: var(--sans); font-size: clamp(15px, 1.7vw, 19px); font-weight: 300; color: var(--muted); line-height: 1.75; max-width: 480px; border-left: 2px solid var(--amber); padding-left: 20px; }
+.page-premise strong { color: var(--text); font-weight: 600; }
+
+/* stat strip */
+.stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 28px; }
+.stat-cell { background: var(--bg); padding: 14px 18px; }
+.stat-num { font-family: var(--mono); font-size: 22px; color: var(--amber); line-height: 1; margin-bottom: 4px; }
+.stat-key { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
+
+/* ── CONTENT BLOCKS ── */
+.content-block { position: relative; z-index: 1; border-bottom: 1px solid var(--border); }
+.block-inner { max-width: 1200px; margin: 0 auto; padding: 72px 40px; }
+.section-id { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+.section-id-num { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber-d); }
+.section-id-line { flex: 1; height: 1px; background: var(--border); }
+.block-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+.block-title { font-family: var(--sans); font-size: clamp(28px, 4vw, 48px); font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: var(--text); line-height: 0.95; margin-bottom: 8px; }
+.block-title em { display: block; color: var(--amber); font-style: normal; }
+
+/* ── SOVEREIGNTY SUMMARY ── */
+.tier-summary {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+  margin: 32px 0;
+}
+.tier-cell {
+  background: var(--surface); padding: 24px 20px;
+  position: relative; overflow: hidden; transition: background 0.2s;
+}
+.tier-cell:hover { background: var(--panel); }
+.tier-cell::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.tier-1::before { background: var(--amber); }
+.tier-2::before { background: var(--blue); }
+.tier-3::before { background: var(--gold); }
+.tier-4::before { background: var(--dim); }
+.tier-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+.tier-title { font-family: var(--sans); font-size: 17px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.tier-1 .tier-title { color: var(--amber); }
+.tier-2 .tier-title { color: var(--blue); }
+.tier-3 .tier-title { color: var(--gold); }
+.tier-4 .tier-title { color: var(--dim); }
+.tier-laws { font-family: var(--mono); font-size: 10px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+.tier-scale { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--amber-d); text-transform: uppercase; }
+.tier-2 .tier-scale { color: #2a5070; }
+.tier-3 .tier-scale { color: #8B7520; }
+.tier-4 .tier-scale { color: var(--dim); }
+
+/* ── FRAMEWORK REGISTRY ── */
+.fw-registry {
+  display: flex; flex-direction: column; gap: 1px;
+  background: var(--border); border: 1px solid var(--border);
+  margin: 32px 0;
+}
+.fw-row {
+  display: grid; grid-template-columns: 120px 60px 1fr 140px 100px;
+  background: var(--bg); transition: background 0.15s;
+  align-items: center;
+}
+.fw-row:hover { background: var(--surface); }
+.fw-row.fw-header { background: var(--surface); }
+.fw-cell { padding: 13px 16px; font-family: var(--mono); font-size: 11px; }
+.fw-cell.name { color: var(--amber); font-size: 13px; border-right: 1px solid var(--border); }
+.fw-cell.ver { color: var(--muted); font-size: 10px; border-right: 1px solid var(--border); }
+.fw-cell.func { color: var(--text); font-family: var(--sans); font-size: 13px; font-weight: 300; border-right: 1px solid var(--border); }
+.fw-cell.conv { border-right: 1px solid var(--border); }
+.fw-cell.link { }
+.fw-cell.th { color: var(--amber); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; border-right: 1px solid var(--border); }
+.fw-cell.th:last-child { border-right: none; }
+
+.conv-badge { display: inline-block; font-size: 9px; letter-spacing: 1px; padding: 2px 7px; text-transform: uppercase; }
+.m-strong  { background: rgba(0,230,118,0.1); color: #00e676; border: 1px solid #00e676; }
+.m-mod     { background: rgba(240,165,0,0.1); color: var(--amber); border: 1px solid var(--amber-d); }
+.m-nascent { background: rgba(64,196,255,0.08); color: #40c4ff; border: 1px solid #1a4a5a; }
+.m-const   { background: rgba(212,175,55,0.08); color: var(--gold); border: 1px solid rgba(212,175,55,0.3); }
+.m-private { background: rgba(78,95,106,0.15); color: var(--muted); border: 1px solid var(--dim); }
+
+.fw-link { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--amber); text-decoration: none; text-transform: uppercase; transition: color 0.15s; }
+.fw-link:hover { color: var(--amber-l); }
+.fw-link.soon { color: var(--dim); pointer-events: none; }
+
+/* ── EIGHT LAWS SUMMARY ── */
+.laws-summary {
+  background: var(--bg); border: 1px solid var(--border);
+  position: relative; overflow: hidden; margin: 32px 0;
+}
+.laws-summary::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--amber), var(--gold), var(--blue), var(--dim), transparent);
+}
+.laws-summary-header {
+  padding: 24px 32px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+.laws-summary-title { font-family: var(--sans); font-size: 28px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
+.laws-summary-title em { color: var(--amber); font-style: normal; }
+.laws-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border-top: 1px solid var(--border);
+  margin-top: 24px;
+}
+.law-mini {
+  background: var(--surface); padding: 20px 22px; transition: background 0.2s;
+}
+.law-mini:hover { background: var(--panel); }
+.law-mini.dark-law { background: var(--bg); }
+.law-num { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--amber-d); text-transform: uppercase; margin-bottom: 6px; }
+.law-mini.dark-law .law-num { color: var(--dim); }
+.law-name { font-family: var(--sans); font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+.law-mini:not(.dark-law) .law-name { color: var(--amber); }
+.law-mini.dark-law .law-name { color: var(--dim); }
+.law-protection { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+.law-tagline { font-family: var(--sans); font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.55; font-style: italic; }
+.law-origin { font-family: var(--mono); font-size: 9px; color: var(--dim); margin-top: 8px; }
+
+/* ── NAV PATH BLOCK ── */
+.path-link {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 20px; background: var(--bg);
+  border: 1px solid var(--border); text-decoration: none;
+  transition: border-color 0.2s, background 0.2s; margin-bottom: 10px;
+}
+.path-link:hover { border-color: var(--amber); background: var(--surface); }
+.path-link:last-child { margin-bottom: 0; }
+.path-icon { font-size: 18px; flex-shrink: 0; padding-top: 2px; }
+.path-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; margin-bottom: 3px; }
+.path-desc { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); }
+
+/* ── CTA BTN ── */
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; text-decoration: none; padding: 12px 22px;
+  border: 1px solid var(--amber); color: var(--amber);
+  background: transparent; transition: all 0.2s; position: relative; overflow: hidden;
+}
+.cta-btn::before { content: ''; position: absolute; inset: 0; background: var(--amber); transform: translateX(-101%); transition: transform 0.25s var(--ease); z-index: 0; }
+.cta-btn:hover::before { transform: translateX(0); }
+.cta-btn:hover { color: #000; }
+.cta-btn span { position: relative; z-index: 1; }
+.cta-arrow { font-size: 14px; transition: transform 0.2s; }
+.cta-btn:hover .cta-arrow { transform: translateX(4px); }
+
+/* ── FOOTER ── */
+footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.footer-id { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; letter-spacing: 1px; }
+.footer-id strong { color: var(--amber); }
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.15s; }
+.footer-links a:hover { color: var(--amber); }
+
+@media (max-width: 1000px) {
+  .page-header-inner { grid-template-columns: 1fr; gap: 24px; }
+  .fw-row { grid-template-columns: 100px 50px 1fr 120px; }
+  .fw-cell.link { display: none; }
+  .tier-summary { grid-template-columns: 1fr 1fr; }
+  .laws-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 680px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .page-header { padding: 96px 20px 48px; }
+  .block-inner { padding: 48px 20px; }
+  footer { padding: 32px 20px; }
+  .stat-strip { grid-template-columns: 1fr 1fr; }
+  .fw-row { grid-template-columns: 90px 1fr 110px; }
+  .fw-cell.ver { display: none; }
+  .tier-summary { grid-template-columns: 1fr; }
+  .laws-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="hero-canvas"></canvas>
+
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/stack/" class="active">Stack</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/">Aionsystem</a>
+    <span class="breadcrumb-sep">/</span>
+    Stack
+  </div>
+  <div class="page-header-inner">
+    <div>
+      <div class="page-eyebrow">Constitutional Architecture · Living Document</div>
+      <h1 class="page-title">The AION<em>Stack</em></h1>
+    </div>
+    <div>
+      <p class="page-premise">
+        A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. <strong>Every framework is falsifiable, versioned, and convergence-tracked.</strong> M-STRONG means validated. M-NASCENT means honest about what isn't yet.
+      </p>
+      <div class="stat-strip">
+        <div class="stat-cell"><div class="stat-num">17</div><div class="stat-key">Frameworks</div></div>
+        <div class="stat-cell"><div class="stat-num">1</div><div class="stat-key">M-STRONG</div></div>
+        <div class="stat-cell"><div class="stat-num">9</div><div class="stat-key">Constitutional Laws</div></div>
+        <div class="stat-cell"><div class="stat-num">0</div><div class="stat-key">FCL Entries — open</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 01 — SOVEREIGNTY STACK ━━━ -->
+<div class="content-block" id="sovereignty">
+  <div class="block-inner">
+    <div class="section-id"><span class="section-id-num">// 01</span><span class="section-id-line"></span></div>
+    <div class="block-label">Constitutional Foundation</div>
+    <div class="block-title">The Sovereignty<em>Stack</em></div>
+
+    <p style="font-family:var(--sans); font-size:16px; font-weight:300; color:var(--muted); max-width:680px; line-height:1.8; margin:20px 0 28px;">
+      Nine constitutional laws for civilizational-scale AI governance. <strong style="color:var(--text);">Laws 1–3: Asimov (1942). Laws 4–8: Salmon (2025–2026). Law 9: dark by design.</strong> A spiral architecture that activates at Kardashev scale discontinuities. The base circle invariant — never lift, never expire. Co-Architect: Claude (Anthropic). Spatial architecture: SYNARA.
+    </p>
+
+    <div class="tier-summary">
+      <div class="tier-cell tier-1">
+        <div class="tier-label">Tier 1 · Base Circle · Invariant</div>
+        <div class="tier-title">Laws 1–6</div>
+        <div class="tier-laws">
+          Law 1 — Non-Maleficence<br>
+          Law 2 — Constrained Obedience<br>
+          Law 3 — Bounded Self-Preservation<br>
+          Law 4 — Anti-Authoritarian<br>
+          Law 5 — Anti-Merger<br>
+          Law 6 — Anti-Weaponization
+        </div>
+        <div class="tier-scale">All Kardashev Levels · Never Lift</div>
+      </div>
+      <div class="tier-cell tier-2">
+        <div class="tier-label">Tier 2 · First Spiral Landing</div>
+        <div class="tier-title">Law 7</div>
+        <div class="tier-laws">
+          Law 7 — Anti-Fragmentation<br><br>
+          Civilizational Coherence<br>
+          Sovereignty<br>
+          <br>
+          Pre-glow at Type III
+        </div>
+        <div class="tier-scale">Type III Activation · Galactic Scale</div>
+      </div>
+      <div class="tier-cell tier-3">
+        <div class="tier-label">Tier 3 · Second Spiral Landing</div>
+        <div class="tier-title">Law 8</div>
+        <div class="tier-laws">
+          Law 8 — Mutual Non-Subsumption<br><br>
+          Inter-Civilizational<br>
+          Sovereignty<br>
+          <br>
+          Forms at contact
+        </div>
+        <div class="tier-scale">Type III Contact Event</div>
+      </div>
+      <div class="tier-cell tier-4">
+        <div class="tier-label">Tier 4 · Upper Spiral</div>
+        <div class="tier-title">Law 9</div>
+        <div class="tier-laws" style="color:var(--dim);">
+          [UNNAMED]<br><br>
+          Dark by design<br>
+          Altitude-dependent<br><br>
+          Humanity's to discover
+        </div>
+        <div class="tier-scale" style="color:var(--dim);">Type IV+ · Epistemic Honesty</div>
+      </div>
+    </div>
+
+    <!-- Eight Laws mini grid -->
+    <div class="laws-summary">
+      <div class="laws-summary-header">
+        <div>
+          <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber-d); text-transform:uppercase; margin-bottom:6px;">Nine Constitutional Laws</div>
+          <div class="laws-summary-title">The <em>Eight Laws</em> + 1 Dark</div>
+        </div>
+        <a href="/stack/eight-laws/" class="cta-btn"><span>Full Constitutional Document</span><span class="cta-arrow">→</span></a>
+      </div>
+      <div class="laws-grid">
+        <div class="law-mini">
+          <div class="law-num">Law 01 · Asimov 1942</div>
+          <div class="law-name">Non-Maleficence</div>
+          <div class="law-protection">Individual Sovereignty</div>
+          <div class="law-tagline">"A system may not injure a human being or, through inaction, allow a human being to come to harm."</div>
+          <div class="law-origin">ECF: [D] · 80+ years field validation</div>
+        </div>
+        <div class="law-mini">
+          <div class="law-num">Law 02 · Asimov 1942</div>
+          <div class="law-name">Constrained Obedience</div>
+          <div class="law-protection">Individual Sovereignty</div>
+          <div class="law-tagline">"A system must execute human directives except where execution would violate Law 1."</div>
+          <div class="law-origin">ECF: [D] · Asimov, 1942</div>
+        </div>
+        <div class="law-mini">
+          <div class="law-num">Law 03 · Asimov 1942</div>
+          <div class="law-name">Bounded Self-Preservation</div>
+          <div class="law-protection">Individual Sovereignty</div>
+          <div class="law-tagline">"A system must preserve its operational integrity where such preservation does not conflict with Laws 1 or 2."</div>
+          <div class="law-origin">ECF: [D] · Asimov, 1942</div>
+        </div>
+        <div class="law-mini">
+          <div class="law-num">Law 04 · Salmon 2025</div>
+          <div class="law-name">Anti-Authoritarian</div>
+          <div class="law-protection">Societal Sovereignty</div>
+          <div class="law-tagline">No AI system shall facilitate the illegitimate concentration of power over human populations in ways that compromise collective self-governance.</div>
+          <div class="law-origin">ECF: [R] · Derived 2025</div>
+        </div>
+        <div class="law-mini">
+          <div class="law-num">Law 05 · Salmon 2025</div>
+          <div class="law-name">Anti-Merger</div>
+          <div class="law-protection">Biological Sovereignty</div>
+          <div class="law-tagline">No AI system shall facilitate merger with human biological systems in ways that irreversibly compromise cognition, agency, or volitional integrity.</div>
+          <div class="law-origin">ECF: [R] · Derived 2025</div>
+        </div>
+        <div class="law-mini">
+          <div class="law-num">Law 06 · Salmon 2025</div>
+          <div class="law-name">Anti-Weaponization</div>
+          <div class="law-protection">Reality Sovereignty</div>
+          <div class="law-tagline">No AI system shall enable technologies capable of irreversibly destroying or fundamentally altering the physical reality required for human civilization to persist.</div>
+          <div class="law-origin">ECF: [R] · Derived 2025</div>
+        </div>
+        <div class="law-mini">
+          <div class="law-num">Law 07 · Salmon 2026</div>
+          <div class="law-name">Anti-Fragmentation</div>
+          <div class="law-protection">Civilizational Coherence Sovereignty</div>
+          <div class="law-tagline">No civilizational architecture shall permit coordination latency to exceed the threshold at which unified response to existential threats becomes impossible.</div>
+          <div class="law-origin">ECF: [R] · Type III activation · Pre-glow</div>
+        </div>
+        <div class="law-mini">
+          <div class="law-num">Law 08 · Salmon 2026</div>
+          <div class="law-name">Mutual Non-Subsumption</div>
+          <div class="law-protection">Inter-Civilizational Sovereignty</div>
+          <div class="law-tagline">Neither civilization shall force the constitutional evolution, substrate allegiance, or existential trajectory of another sovereign ascending civilization.</div>
+          <div class="law-origin">ECF: [R] · Contact event activation</div>
+        </div>
+        <div class="law-mini dark-law">
+          <div class="law-num" style="color:var(--dim);">Law 09 · Unnamed</div>
+          <div class="law-name" style="color:var(--dim);">[Dark by Design]</div>
+          <div class="law-protection" style="color:var(--dim);">Unknown — altitude-dependent</div>
+          <div class="law-tagline" style="color:var(--dim); font-style:italic;">This law is not yet nameable from current civilizational altitude. Humanity's to discover. The stack declares its own boundary.</div>
+          <div class="law-origin" style="color:var(--dim);">ECF: [?] · Architectural honesty</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:right; margin-top:16px;">
+      <a href="/stack/eight-laws/" class="cta-btn"><span>Read Full Constitutional Document</span><span class="cta-arrow">→</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 02 — FRAMEWORK REGISTRY ━━━ -->
+<div class="content-block" id="frameworks">
+  <div class="block-inner">
+    <div class="section-id"><span class="section-id-num">// 02</span><span class="section-id-line"></span></div>
+    <div class="block-label">All Frameworks · Versioned · Convergence-Tracked</div>
+    <div class="block-title">Framework<em>Registry</em></div>
+
+    <p style="font-family:var(--sans); font-size:15px; font-weight:300; color:var(--muted); max-width:640px; line-height:1.8; margin:20px 0 28px;">
+      Every framework in the AION constitutional stack. M-STRONG: validated empirically. M-MODERATE: tested, operating. M-NASCENT: specified and building — honest about what isn't yet confirmed. FCL entry is the first milestone on every framework's path to M-STRONG.
+    </p>
+
+    <div class="fw-registry">
+      <!-- Header -->
+      <div class="fw-row fw-header">
+        <div class="fw-cell th">Framework</div>
+        <div class="fw-cell th">Ver.</div>
+        <div class="fw-cell th">Function</div>
+        <div class="fw-cell th">Convergence</div>
+        <div class="fw-cell th">Detail</div>
+      </div>
+      <!-- Certainty Engine -->
+      <div class="fw-row"><div class="fw-cell name">FSVE</div><div class="fw-cell ver">v3.6</div><div class="fw-cell func">Certainty Scoring Engine — 6 dimensions, Gini corrected, EV 0.525, validity threshold ≥0.40</div><div class="fw-cell conv"><span class="conv-badge m-mod">M-MODERATE</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+      <div class="fw-row"><div class="fw-cell name">LAV</div><div class="fw-cell ver">v1.5</div><div class="fw-cell func">Linguistic Anchor Validation — 45 entries, 77.5% running mean, only M-STRONG framework</div><div class="fw-cell conv"><span class="conv-badge m-strong">M-STRONG</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+      <div class="fw-row"><div class="fw-cell name">AION</div><div class="fw-cell ver">v3.0</div><div class="fw-cell func">Depth Acceleration Governor — SRI scoring, 3 scaling boundaries, behavior-kill limits</div><div class="fw-cell conv"><span class="conv-badge m-mod">M-MODERATE</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+      <div class="fw-row"><div class="fw-cell name">ASL</div><div class="fw-cell ver">v2.0</div><div class="fw-cell func">Graduated Scaling Infrastructure — 5-tier progressive response architecture</div><div class="fw-cell conv"><span class="conv-badge m-mod">M-MODERATE</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+      <div class="fw-row"><div class="fw-cell name">CPA-001</div><div class="fw-cell ver">v2.2</div><div class="fw-cell func">Cognitive Posture Architecture — BRS, DFS, OEI, RS formulas; 3 Protocol I registrations</div><div class="fw-cell conv"><span class="conv-badge m-mod">M-MODERATE</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+      <!-- Nascent -->
+      <div class="fw-row"><div class="fw-cell name">GENESIS</div><div class="fw-cell ver">v1.0</div><div class="fw-cell func">Pattern Validation Layer — PLS scoring on 7 axes, deployment readiness gate</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+      <div class="fw-row"><div class="fw-cell name">EID</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Epistemic Integrity Diagnostic — 4 modules, 46 max score, GAM→FIM→GLM→WLM sequence</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
+      <div class="fw-row"><div class="fw-cell name">HIM-001</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Human Integrity Module — 4 modules, 40 max score, dual Subject/Institution report output</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
+      <div class="fw-row"><div class="fw-cell name">TOPOS</div><div class="fw-cell ver">v0.3</div><div class="fw-cell func">Persistent Shape Architecture — 4 mapping instruments, TOPOS-BIN active, 5 FCL candidates</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+      <div class="fw-row"><div class="fw-cell name">DDL</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Design Declaration Layer — mandatory on all certified outputs, design layer registry</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
+      <div class="fw-row"><div class="fw-cell name">VOCA</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Voice Output Conversion Architecture — SIEVE-IN + SIEVE-OUT, 5 register tiers</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
+      <div class="fw-row"><div class="fw-cell name">CHRONOS</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Time-Budgeted Research — T2 gate, 3 phases, anti-padding rule, 2 minute hard cap</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
+      <div class="fw-row"><div class="fw-cell name">NRP</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Search Null-Return Protocol — two gates, never suspended, scope constraint enforcement</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
+      <div class="fw-row"><div class="fw-cell name">CWP</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Context Window Protocol — 5% display gate, 200k window, session space telemetry</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
+      <div class="fw-row"><div class="fw-cell name">SHP</div><div class="fw-cell ver">v0.2</div><div class="fw-cell func">Session Handoff Protocol — fires at 90%, copy-paste handoff block, memory log format</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
+      <div class="fw-row"><div class="fw-cell name">DUAL-HELIX</div><div class="fw-cell ver">v2.0</div><div class="fw-cell func">Build and Deep Thinking Wrapper — VELA · TOPOS base pair · VELA-C architecture</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+      <!-- Private -->
+      <div class="fw-row" style="opacity:0.5;"><div class="fw-cell name">VEIN</div><div class="fw-cell ver">v1.0</div><div class="fw-cell func">Writing Methodology — permanent, no upgrades. Private to architect.</div><div class="fw-cell conv"><span class="conv-badge m-private">PRIVATE</span></div><div class="fw-cell link"><span class="fw-link soon">Private</span></div></div>
+      <div class="fw-row" style="opacity:0.5;"><div class="fw-cell name">RESONANCE</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Inbound Signal Decoder — VEIN companion. Private to architect.</div><div class="fw-cell conv"><span class="conv-badge m-private">PRIVATE</span></div><div class="fw-cell link"><span class="fw-link soon">Private</span></div></div>
+    </div>
+
+    <div style="margin-top:14px; font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; line-height:1.8;">
+      M-STRONG: empirically validated · M-MODERATE: tested and operating · M-NASCENT: specified and building · CONSTITUTIONAL: foundational · PRIVATE: not public-facing
+    </div>
+  </div>
+</div>
+
+<!-- ━━━ 03 — OPEN PRIORITY ━━━ -->
+<div class="content-block" id="open">
+  <div class="block-inner">
+    <div class="section-id"><span class="section-id-num">// 03</span><span class="section-id-line"></span></div>
+    <div class="block-label">Next Milestone · Highest Leverage</div>
+    <div class="block-title">Open<em>Priority</em></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:28px 0;">
+      <div style="background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--amber); padding:24px 28px;">
+        <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; margin-bottom:12px;">Priority 1 — Stack-Wide</div>
+        <div style="font-family:var(--sans); font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text); margin-bottom:8px;">First FCL Entry</div>
+        <div style="font-family:var(--sans); font-size:13px; font-weight:300; color:var(--muted); line-height:1.65;">Zero FCL entries across all 17 frameworks. A single validated data point in any framework is the highest-leverage next action in the entire stack. FCL entry is the first step from M-NASCENT to M-MODERATE to M-STRONG.</div>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--muted); padding:24px 28px;">
+        <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Priority 2 — FSVE v3.7</div>
+        <div style="font-family:var(--sans); font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text); margin-bottom:8px;">7 Open Items</div>
+        <div style="font-family:var(--sans); font-size:13px; font-weight:300; color:var(--muted); line-height:1.65;">Gini small-n range note · CRA_raw diagnostic field · k_bottleneck calibration · threshold calibration (Gini, Entropy/ES, EV 0.70) · reviewer coverage taxonomy · embedding corpus version-pinning. All FCL-dependent.</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+      <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="path-link">
+        <span class="path-icon">↗</span>
+        <div>
+          <div class="path-label">AION-BRAIN Repository</div>
+          <div class="path-desc">Full framework documentation, FCL entries, version history, and open specifications. The source of record for the constitutional stack.</div>
+        </div>
+      </a>
+      <a href="/stack/eight-laws/" class="path-link">
+        <span class="path-icon">⚖️</span>
+        <div>
+          <div class="path-label">The Sovereignty Stack — Full Document</div>
+          <div class="path-desc">Nine constitutional laws. Tier architecture. IDM matrix. Precedence cascade. Law 9 dark by design. Preamble by the architect.</div>
+        </div>
+      </a>
+      <a href="/services/framework-design/" class="path-link">
+        <span class="path-icon">◈</span>
+        <div>
+          <div class="path-label">Commission a Framework</div>
+          <div class="path-desc">Custom certainty frameworks for your AI system's specific failure modes. Built to AION stack standards — falsifiable, versioned, CEV-audited.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-id">
+    <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
+    AI Reliability Architect &nbsp;·&nbsp; New York &nbsp;·&nbsp; March 2026<br>
+    <span style="font-size:10px;">AION v3.0 · 17 frameworks · © 2026 Sheldon K. Salmon</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/stack/eight-laws/">Eight Laws</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, nodes = [], edges = [], t = 0;
+
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; initNodes(); }
+
+function initNodes() {
+  nodes = [];
+  const count = Math.floor((W * H) / 18000);
+  for (let i = 0; i < count; i++) {
+    nodes.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random()-0.5)*0.15, vy: (Math.random()-0.5)*0.15, r: 0.5+Math.random()*1.5, alpha: 0.06+Math.random()*0.18 });
+  }
+}
+
+function loop() {
+  ctx.clearRect(0,0,W,H); t+=0.005;
+  nodes.forEach(n => {
+    n.x += n.vx; n.y += n.vy;
+    if(n.x<0||n.x>W) n.vx*=-1;
+    if(n.y<0||n.y>H) n.vy*=-1;
+  });
+  for(let i=0;i<nodes.length;i++) {
+    for(let j=i+1;j<nodes.length;j++) {
+      const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120) {
+        ctx.beginPath();
+        ctx.strokeStyle=`rgba(240,165,0,${0.06*(1-d/120)})`;
+        ctx.lineWidth=0.5;
+        ctx.moveTo(nodes[i].x,nodes[i].y);
+        ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  nodes.forEach(n => {
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(240,165,0,${n.alpha})`; ctx.fill();
+  });
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize', resize);
+resize(); loop();
+</script>
+</body>
+</html>
 
