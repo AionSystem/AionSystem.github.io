@@ -1,1 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salmon EDU — Math Worksheet Builder v1.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   THEMES — A1
+═══════════════════════════════════════════════ */
+:root {
+  --bg:#F7F4EF;--bg2:#EDE8DF;--surface:#FFFFFF;--panel:#F0EBE2;
+  --border:#D8CEBD;--border2:#C4B8A4;
+  --primary:#5C7A5C;--primary-d:#3F5A3F;--primary-l:#E8F0E8;
+  --accent:#C4622D;--accent-l:#F5E6DC;--gold:#9B7B3A;
+  --text:#2D2A24;--text2:#5C5449;--muted:#8A8070;
+  --shadow:rgba(92,122,92,0.12);--shadow2:rgba(92,122,92,0.22);
+  --sym-color:rgba(92,122,92,0.06);
+  --mesh1:rgba(92,122,92,0.08);--mesh2:rgba(196,98,45,0.06);--mesh3:rgba(155,123,58,0.06);
+}
+[data-theme="ocean"] {
+  --bg:#F4F7FA;--bg2:#E6EDF5;--surface:#FFFFFF;--panel:#EBF1F8;
+  --border:#C4D4E8;--border2:#A8C0DC;
+  --primary:#2C5F8A;--primary-d:#1A3F62;--primary-l:#E0EBF5;
+  --accent:#C85A3A;--accent-l:#FAEAE4;--gold:#7A8B3A;
+  --text:#1A2535;--text2:#3A5070;--muted:#6A7A90;
+  --shadow:rgba(44,95,138,0.12);--shadow2:rgba(44,95,138,0.22);
+  --sym-color:rgba(44,95,138,0.07);
+  --mesh1:rgba(44,95,138,0.09);--mesh2:rgba(200,90,58,0.06);--mesh3:rgba(64,130,180,0.07);
+}
+[data-theme="lavender"] {
+  --bg:#F8F6FC;--bg2:#EEE8F8;--surface:#FFFFFF;--panel:#F2EEF9;
+  --border:#D4C8EC;--border2:#BEB0E0;
+  --primary:#6A4FA0;--primary-d:#4A3278;--primary-l:#EDE6F8;
+  --accent:#B8944A;--accent-l:#F8F0DC;--gold:#B8944A;
+  --text:#221A35;--text2:#4A3870;--muted:#7A6898;
+  --shadow:rgba(106,79,160,0.12);--shadow2:rgba(106,79,160,0.22);
+  --sym-color:rgba(106,79,160,0.07);
+  --mesh1:rgba(106,79,160,0.09);--mesh2:rgba(184,148,74,0.06);--mesh3:rgba(140,100,200,0.08);
+}
+
+/* ═══════════════════════════════════════════════
+   BASE & LIVING BACKGROUND — A2
+═══════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;
+  min-height:100vh;transition:background 0.4s ease,color 0.3s ease;
+  position:relative;overflow-x:hidden;
+}
+#bg-canvas{
+  position:fixed;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;opacity:1;transition:opacity 0.4s;
+}
+.mesh-layer{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 20%, var(--mesh1) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 55% at 85% 75%, var(--mesh2) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, var(--mesh3) 0%, transparent 70%);
+  animation:meshDrift 18s ease-in-out infinite alternate;
+}
+@keyframes meshDrift{
+  0%  {background-position:0% 0%,100% 100%,50% 50%;}
+  33% {background-position:30% 10%,70% 80%,40% 60%;}
+  66% {background-position:10% 40%,90% 30%,60% 40%;}
+  100%{background-position:5% 20%,95% 60%,45% 55%;}
+}
+.wrapper{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:24px 20px;}
+
+/* ═══════════════════════════════════════════════
+   HEADER — A3
+═══════════════════════════════════════════════ */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;padding:0 0 24px;
+  border-bottom:2px solid var(--border);margin-bottom:20px;
+}
+.brand{display:flex;align-items:center;gap:14px;}
+.brand-mark{
+  width:48px;height:48px;background:var(--primary);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  transition:background 0.4s;
+}
+.brand-mark span{color:#fff;font-family:'Playfair Display',serif;font-size:20px;font-weight:700;}
+.brand-text h1{
+  font-family:'Playfair Display',serif;font-size:26px;font-weight:700;
+  color:var(--primary);line-height:1;letter-spacing:0.5px;transition:color 0.4s;
+}
+.brand-text .tagline{font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;font-weight:500;}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.holding-tag{
+  font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;
+  font-family:'DM Mono',monospace;padding:4px 10px;border:1px solid var(--border);
+}
+.theme-switcher{display:flex;gap:6px;align-items:center;}
+.theme-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-right:4px;}
+.theme-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.2s;}
+.theme-dot:hover{transform:scale(1.15);}
+.theme-dot.active{border-color:var(--text);box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--text);}
+.theme-dot[data-t="sage"]{background:linear-gradient(135deg,#5C7A5C,#C4622D);}
+.theme-dot[data-t="ocean"]{background:linear-gradient(135deg,#2C5F8A,#C85A3A);}
+.theme-dot[data-t="lavender"]{background:linear-gradient(135deg,#6A4FA0,#B8944A);}
+
+/* ═══════════════════════════════════════════════
+   TAB BAR — A4
+═══════════════════════════════════════════════ */
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);}
+.tab-btn{
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:0.8px;text-transform:uppercase;
+  padding:10px 20px;cursor:pointer;background:transparent;
+  border:none;border-bottom:3px solid transparent;
+  color:var(--muted);transition:all 0.18s;margin-bottom:-2px;
+}
+.tab-btn:hover{color:var(--primary);}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--primary-l);}
+.tab-btn.rt-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--accent-l);}
+.tab-btn.howto-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:#FBF6E8;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeIn 0.25s ease both;}
+
+/* ═══════════════════════════════════════════════
+   TOOLBAR — A5
+═══════════════════════════════════════════════ */
+.toolbar{
+  display:flex;gap:8px;flex-wrap:wrap;padding:14px 18px;
+  background:var(--surface);border:1px solid var(--border);
+  box-shadow:0 2px 8px var(--shadow);margin-bottom:24px;align-items:center;
+  backdrop-filter:blur(4px);
+}
+.toolbar-section{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.toolbar-divider{width:1px;height:28px;background:var(--border);margin:0 6px;}
+.toolbar-label{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;white-space:nowrap;}
+
+/* ═══════════════════════════════════════════════
+   BUTTONS — A6 base
+═══════════════════════════════════════════════ */
+.btn{
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  letter-spacing:0.8px;text-transform:uppercase;
+  padding:9px 20px;cursor:pointer;border:none;transition:all 0.18s;white-space:nowrap;
+}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:var(--primary-d);transform:translateY(-1px);box-shadow:0 4px 12px var(--shadow2);}
+.btn-accent{background:var(--accent);color:#fff;}
+.btn-accent:hover{background:#A0501F;transform:translateY(-1px);}
+.btn-ghost{background:transparent;border:1.5px solid var(--border2);color:var(--text2);}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-l);}
+.btn-sm{padding:6px 14px;font-size:11px;}
+
+/* ═══════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════ */
+.layout{display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start;}
+@media(max-width:860px){.layout{grid-template-columns:1fr;}}
+
+/* ═══════════════════════════════════════════════
+   CARDS
+═══════════════════════════════════════════════ */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  box-shadow:0 2px 8px var(--shadow);padding:22px 20px;margin-bottom:16px;
+  transition:box-shadow 0.2s;backdrop-filter:blur(8px);
+}
+.card:hover{box-shadow:0 4px 16px var(--shadow2);}
+.card-title{
+  font-family:'Playfair Display',serif;font-size:15px;font-weight:700;
+  color:var(--primary);margin-bottom:16px;padding-bottom:10px;
+  border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;
+}
+.card-title.accent{color:var(--accent);}
+.card-title.gold{color:var(--gold);}
+.card-sub{font-size:12px;color:var(--muted);margin-top:-10px;margin-bottom:14px;font-style:italic;}
+
+/* ═══════════════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════════════ */
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--text2);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:5px;}
+.field input[type=text],.field input[type=number],.field textarea,.field select{
+  width:100%;background:var(--bg);border:1.5px solid var(--border);
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;
+  padding:9px 12px;outline:none;transition:border-color 0.15s,box-shadow 0.15s;
+  -moz-appearance:textfield;
+}
+.field input::-webkit-outer-spin-button,.field input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-l);}
+.field textarea{resize:vertical;min-height:70px;line-height:1.5;}
+.field .hint{font-size:11px;color:var(--muted);margin-top:4px;font-style:italic;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.grid-2{grid-template-columns:1fr;}}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-info{flex:1;}
+.toggle-name{font-size:13px;font-weight:500;color:var(--text);}
+.toggle-desc{font-size:11px;color:var(--muted);margin-top:1px;}
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0;margin-left:12px;}
+.toggle input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-slider{position:absolute;inset:0;background:var(--border2);cursor:pointer;border-radius:22px;transition:background 0.2s;}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.toggle input:checked + .toggle-slider{background:var(--primary);}
+.toggle input:checked + .toggle-slider::before{transform:translateX(18px);}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.chip{font-size:11px;font-weight:600;letter-spacing:0.5px;padding:5px 12px;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--text2);transition:all 0.15s;border-radius:20px;}
+.chip:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-l);}
+.chip.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+/* STATUS — A5 */
+.status-bar{padding:10px 14px;margin-bottom:12px;font-size:12px;font-family:'DM Mono',monospace;display:none;}
+.status-bar.show{display:block;}
+.status-bar.success{background:var(--primary-l);border:1px solid var(--primary);color:var(--primary);}
+.status-bar.error{background:var(--accent-l);border:1px solid var(--accent);color:var(--accent);}
+.status-bar.info{background:var(--bg2);border:1px solid var(--border2);color:var(--text2);}
+
+/* INTERLEAVED CHECKBOXES */
+.il-checks{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.il-check{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer;padding:4px 10px;border:1.5px solid var(--border);border-radius:16px;transition:all 0.15s;background:var(--bg);}
+.il-check:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-l);}
+.il-check input[type=checkbox]{accent-color:var(--primary);}
+.il-cite{font-size:11px;color:var(--primary);font-style:italic;background:var(--primary-l);padding:8px 12px;border-left:3px solid var(--primary);margin-bottom:12px;line-height:1.6;}
+
+/* ═══════════════════════════════════════════════
+   PREVIEW — A7
+═══════════════════════════════════════════════ */
+.preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.preview-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--primary);}
+.problem-count-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--primary);color:#fff;font-size:10px;font-weight:700;
+  width:20px;height:20px;border-radius:50%;margin-left:6px;vertical-align:middle;
+}
+.preview-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.preview-sheet{
+  background:#fff;border:1px solid var(--border);
+  box-shadow:0 4px 24px var(--shadow2);padding:32px 36px;min-height:500px;
+  font-family:'DM Sans',sans-serif;backdrop-filter:blur(8px);
+}
+.sheet-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:16px;border-bottom:2px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.sheet-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);}
+.sheet-instructions{font-size:12px;color:var(--text2);margin-top:4px;font-style:italic;}
+.sheet-meta-fields{display:flex;flex-direction:column;gap:8px;min-width:220px;}
+.sheet-meta-line{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);}
+.sheet-meta-line .ml{font-weight:600;white-space:nowrap;}
+.sheet-meta-line .mline{flex:1;border-bottom:1px solid var(--border2);height:18px;}
+.sheet-brand{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;text-align:right;font-family:'DM Mono',monospace;margin-top:2px;}
+.problems-grid-1{display:flex;flex-direction:column;}
+.problems-grid-2{display:grid;grid-template-columns:1fr 1fr;}
+.problem-item{padding:10px 8px;border-bottom:1px solid var(--border);animation:fadeIn 0.2s ease both;}
+.problem-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:4px;}
+.problem-text{font-size:15px;font-weight:500;color:var(--text);font-family:'DM Mono',monospace;letter-spacing:0.5px;}
+.explain-lines{margin-top:8px;}
+.explain-line{border-bottom:1px solid #E8E2D8;height:24px;margin-bottom:4px;}
+.explain-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:6px;margin-bottom:2px;}
+.answer-key-section{margin-top:24px;padding-top:20px;border-top:2px dashed var(--border);}
+.ak-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.ak-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.ak-item{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);padding:4px 6px;background:var(--accent-l);border:1px solid var(--border);}
+.ak-num{color:var(--muted);font-size:10px;}
+.ak-ans{color:var(--accent);font-weight:600;}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:0.5;}
+.empty-text{font-size:14px;color:var(--muted);max-width:300px;line-height:1.7;}
+.empty-cta{margin-top:16px;}
+
+/* ═══════════════════════════════════════════════
+   RED TEAM TAB
+═══════════════════════════════════════════════ */
+.rt-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;padding:20px;background:var(--bg2);border:1px solid var(--border);}
+.rt-stat{text-align:center;}
+.rt-stat-val{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--primary);}
+.rt-stat-val.accent{color:var(--accent);}
+.rt-stat-val.gold{color:var(--gold);}
+.rt-stat-key{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.rt-finding{border:1px solid var(--border);margin-bottom:12px;padding:16px 18px;}
+.rt-fixed{border-left:4px solid #5C7A5C;}
+.rt-open{border-left:4px solid var(--accent);}
+.rt-feature{border-left:4px solid var(--gold);}
+.rt-tag{font-family:'DM Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:8px;}
+.rt-tag.fixed{color:var(--primary);}
+.rt-tag.open{color:var(--accent);}
+.rt-tag.feature{color:var(--gold);}
+.rt-body{font-size:12px;color:var(--text2);line-height:1.7;}
+.rt-body code{font-family:'DM Mono',monospace;font-size:11px;background:var(--bg2);padding:1px 5px;border:1px solid var(--border);}
+.rt-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:24px;padding-top:14px;border-top:1px solid var(--border);line-height:1.8;}
+
+/* ═══════════════════════════════════════════════
+   HOW-TO TAB
+═══════════════════════════════════════════════ */
+.howto-section{margin-bottom:28px;}
+.howto-section h3{
+  font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+  color:var(--gold);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.howto-section p,.howto-section li{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:6px;}
+.howto-section ul{padding-left:18px;}
+.howto-section li{list-style:disc;}
+.howto-tip{background:var(--primary-l);border:1px solid var(--primary);border-left:4px solid var(--primary);padding:12px 16px;margin-top:10px;}
+.howto-tip strong{color:var(--primary);font-size:12px;display:block;margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;}
+.howto-tip p{font-size:12px;color:var(--text2);margin:0;}
+.howto-research{background:#FBF6E8;border:1px solid var(--gold);border-left:4px solid var(--gold);padding:12px 16px;margin-top:10px;}
+.howto-research strong{color:var(--gold);font-size:12px;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;}
+.howto-research p{font-size:12px;color:var(--text2);margin:0;line-height:1.7;}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+footer{
+  margin-top:40px;padding:32px 0 20px;border-top:2px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  position:relative;z-index:1;
+}
+.footer-text{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'DM Mono',monospace;text-align:center;line-height:1.8;}
+
+/* ═══════════════════════════════════════════════
+   ANIMATIONS — A15
+═══════════════════════════════════════════════ */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ═══════════════════════════════════════════════
+   PRINT CSS — A14
+═══════════════════════════════════════════════ */
+@media print{
+  #bg-canvas,.mesh-layer,header,footer,.toolbar,.tab-bar,
+  .builder-panel,.preview-header,.preview-actions,.status-bar{display:none!important;}
+  body{background:#fff!important;color:#000;}
+  .wrapper{padding:0;}
+  .layout{display:block;}
+  .preview-sheet{box-shadow:none!important;border:none!important;padding:0!important;}
+  .answer-key-section{page-break-before:always;}
+  .tab-panel{display:block!important;}
+  #tab-redteam,#tab-howto{display:none!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- LIVING BACKGROUND — A2 -->
+<canvas id="bg-canvas"></canvas>
+<div class="mesh-layer"></div>
+
+<div class="wrapper">
+
+<!-- HEADER — A3 -->
+<header>
+  <div class="brand">
+    <div class="brand-mark"><span>S</span></div>
+    <div class="brand-text">
+      <h1>Salmon EDU</h1>
+      <div class="tagline">Worksheet Builder &middot; Math Edition v1.3</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="holding-tag">AionSystem &middot; Educational Division</span>
+    <div class="theme-switcher">
+      <span class="theme-label">Theme</span>
+      <div class="theme-dot active" data-t="sage" onclick="setTheme('sage',this)" title="Sage"></div>
+      <div class="theme-dot" data-t="ocean" onclick="setTheme('ocean',this)" title="Ocean"></div>
+      <div class="theme-dot" data-t="lavender" onclick="setTheme('lavender',this)" title="Lavender"></div>
+    </div>
+  </div>
+</header>
+
+<!-- TAB BAR — A4 -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tabid="builder" onclick="switchTab('builder',this)">&#9998; Builder</button>
+  <button class="tab-btn rt-tab" data-tabid="redteam" onclick="switchTab('redteam',this)">&#9873; Red Team</button>
+  <button class="tab-btn howto-tab" data-tabid="howto" onclick="switchTab('howto',this)">? How To Use</button>
+</div>
+
+<!-- ═══════════ TAB: BUILDER ═══════════ -->
+<div id="tab-builder" class="tab-panel active">
+
+  <!-- TOOLBAR — A5 -->
+  <div class="toolbar">
+    <div class="toolbar-section">
+      <span class="toolbar-label">Template</span>
+      <button class="btn btn-ghost btn-sm" onclick="saveTemplate()">&#8595; Save JSON</button>
+      <label class="btn btn-ghost btn-sm" style="cursor:pointer;display:inline-flex;align-items:center">
+        &#8593; Load JSON
+        <input type="file" accept=".json" onchange="loadTemplate(event)" style="display:none">
+      </label>
+    </div>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-section">
+      <button class="btn btn-primary btn-sm" onclick="generateWorksheet()">&#9654; Generate</button>
+      <button class="btn btn-ghost btn-sm" onclick="generateWorksheet()">&#8635; New Values</button>
+    </div>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-section">
+      <button class="btn btn-accent btn-sm" onclick="exportPDF()">&#128196; PDF Export</button>
+      <button class="btn btn-ghost btn-sm" onclick="window.print()">&#128438; Print</button>
+    </div>
+    <div id="status-bar" class="status-bar" style="margin:0 0 0 auto;padding:6px 12px;"></div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+
+    <!-- LEFT: BUILDER PANEL -->
+    <div class="builder-panel">
+
+      <!-- CARD 1: QUICK TEMPLATES — A6 -->
+      <div class="card">
+        <div class="card-title"><span>&#9733;</span> Quick Templates</div>
+        <div class="card-sub">Click a template to load it instantly</div>
+        <div class="chips" id="template-chips">
+          <div class="chip active" data-tpl="addition" onclick="loadQuickTemplate('addition',this)">Addition</div>
+          <div class="chip" data-tpl="subtraction" onclick="loadQuickTemplate('subtraction',this)">Subtraction</div>
+          <div class="chip" data-tpl="multiplication" onclick="loadQuickTemplate('multiplication',this)">Multiplication</div>
+          <div class="chip" data-tpl="division" onclick="loadQuickTemplate('division',this)">Division</div>
+          <div class="chip" data-tpl="linear" onclick="loadQuickTemplate('linear',this)">Linear Equations</div>
+          <div class="chip" data-tpl="mixed" onclick="loadQuickTemplate('mixed',this)">Mixed Ops</div>
+          <div class="chip" data-tpl="fraction_like" onclick="loadQuickTemplate('fraction_like',this)">Fractions (Like)</div>
+          <div class="chip" data-tpl="fraction_unlike" onclick="loadQuickTemplate('fraction_unlike',this)">Fractions (Unlike)</div>
+          <div class="chip" data-tpl="percentage" onclick="loadQuickTemplate('percentage',this)">Percentages</div>
+          <div class="chip" data-tpl="pemdas" onclick="loadQuickTemplate('pemdas',this)">Order of Operations</div>
+          <div class="chip" data-tpl="exponent" onclick="loadQuickTemplate('exponent',this)">Exponents</div>
+          <div class="chip" data-tpl="interleaved" onclick="loadQuickTemplate('interleaved',this)">Interleaved Practice</div>
+          <div class="chip" data-tpl="custom" onclick="loadQuickTemplate('custom',this)">Custom</div>
+        </div>
+      </div>
+
+      <!-- CARD 2: WORKSHEET INFO -->
+      <div class="card">
+        <div class="card-title"><span>&#128196;</span> Worksheet Info</div>
+        <div class="field">
+          <label>Assignment Title</label>
+          <input type="text" id="ws-title" value="Addition Practice" placeholder="e.g. Two-Step Equations Practice">
+        </div>
+        <div class="field">
+          <label>Instructions to Students</label>
+          <textarea id="ws-instructions" rows="2">Solve each problem. Show your work in the space provided.</textarea>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Number of Problems</label><input type="number" id="ws-count" value="20" min="1" max="50" step="2"></div>
+          <div class="field"><label>Columns</label>
+            <select id="ws-cols"><option value="1">1 Column</option><option value="2" selected>2 Columns</option></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: PROBLEM PATTERN — D1 full dropdown -->
+      <div class="card">
+        <div class="card-title"><span>&#9998;</span> Problem Pattern</div>
+        <div class="field">
+          <label>Pattern Type</label>
+          <select id="pattern-type" onchange="onPatternTypeChange()">
+            <option value="addition">Addition: a + b = ___</option>
+            <option value="subtraction">Subtraction: a − b = ___</option>
+            <option value="multiplication">Multiplication: a × b = ___</option>
+            <option value="division">Division: a ÷ b = ___</option>
+            <option value="linear">Linear Equation: ax + b = c</option>
+            <option value="fraction">Fractions</option>
+            <option value="percentage">Percentages</option>
+            <option value="pemdas">Order of Operations (PEMDAS)</option>
+            <option value="exponent">Exponents (Basic)</option>
+            <option value="mixed">Mixed Operations (random each)</option>
+            <option value="interleaved">Interleaved Practice ★</option>
+            <option value="custom">Custom Pattern</option>
+          </select>
+        </div>
+
+        <!-- Standard range fields -->
+        <div id="range-fields">
+          <div class="grid-2">
+            <div class="field"><label>Value A — Min</label><input type="number" id="a-min" value="1" min="-99" max="999"></div>
+            <div class="field"><label>Value A — Max</label><input type="number" id="a-max" value="12" min="1" max="999"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Value B — Min</label><input type="number" id="b-min" value="1" min="-99" max="999"></div>
+            <div class="field"><label>Value B — Max</label><input type="number" id="b-max" value="12" min="1" max="999"></div>
+          </div>
+        </div>
+
+        <!-- Linear fields -->
+        <div id="linear-fields" style="display:none">
+          <div class="grid-2">
+            <div class="field"><label>Coefficient a (min, ≥2)</label><input type="number" id="la-min" value="2" min="2" max="12"></div>
+            <div class="field"><label>Coefficient a (max)</label><input type="number" id="la-max" value="9" min="2" max="12"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Constant b (min)</label><input type="number" id="lb-min" value="1" min="1" max="50"></div>
+            <div class="field"><label>Constant b (max)</label><input type="number" id="lb-max" value="20" min="1" max="50"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Answer x (min)</label><input type="number" id="lx-min" value="1" min="-20" max="50"></div>
+            <div class="field"><label>Answer x (max)</label><input type="number" id="lx-max" value="10" min="1" max="50"></div>
+          </div>
+        </div>
+
+        <!-- Fraction fields — C2 -->
+        <div id="fraction-fields" style="display:none">
+          <div class="field">
+            <label>Fraction Sub-Type</label>
+            <select id="fraction-subtype">
+              <option value="like-add">Like Denominators — Add</option>
+              <option value="like-sub">Like Denominators — Subtract</option>
+              <option value="unlike-add">Unlike Denominators — Add</option>
+              <option value="unlike-sub">Unlike Denominators — Subtract</option>
+              <option value="multiply">Multiply Fractions</option>
+              <option value="divide">Divide Fractions</option>
+            </select>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Numerator Min</label><input type="number" id="num-min" value="1" min="1" max="20"></div>
+            <div class="field"><label>Numerator Max</label><input type="number" id="num-max" value="9" min="1" max="20"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Denominator Min</label><input type="number" id="den-min" value="2" min="2" max="20"></div>
+            <div class="field"><label>Denominator Max</label><input type="number" id="den-max" value="12" min="2" max="20"></div>
+          </div>
+          <div class="field"><div class="hint">Fractions displayed inline as a/b. Answers auto-simplified.</div></div>
+        </div>
+
+        <!-- Percentage fields — C3 -->
+        <div id="percentage-fields" style="display:none">
+          <div class="field">
+            <label>Percentage Form</label>
+            <select id="pct-form">
+              <option value="1">Form 1: Find X% of N = ___</option>
+              <option value="2">Form 2: A is ___% of B</option>
+              <option value="3">Form 3: A is X% of ___ </option>
+            </select>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Percentage Min</label><input type="number" id="pct-min" value="5" min="1" max="95" step="5"></div>
+            <div class="field"><label>Percentage Max</label><input type="number" id="pct-max" value="75" min="5" max="100" step="5"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Number Min</label><input type="number" id="pct-num-min" value="20" min="10" max="500" step="10"></div>
+            <div class="field"><label>Number Max</label><input type="number" id="pct-num-max" value="200" min="10" max="500" step="10"></div>
+          </div>
+          <div class="field"><div class="hint">Values chosen to produce whole-number answers.</div></div>
+        </div>
+
+        <!-- PEMDAS fields — C4 -->
+        <div id="pemdas-fields" style="display:none">
+          <div class="field">
+            <label>Number of Steps</label>
+            <select id="oo-steps">
+              <option value="2">2 Steps</option>
+              <option value="3" selected>3 Steps</option>
+              <option value="4">4 Steps</option>
+            </select>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Number Min</label><input type="number" id="oo-min" value="1" min="1" max="20"></div>
+            <div class="field"><label>Number Max</label><input type="number" id="oo-max" value="12" min="1" max="30"></div>
+          </div>
+          <div class="field"><div class="hint">Parentheses inserted randomly. Answers are always whole numbers.</div></div>
+        </div>
+
+        <!-- Exponent fields — C5 -->
+        <div id="exponent-fields" style="display:none">
+          <div class="grid-2">
+            <div class="field"><label>Base Min</label><input type="number" id="exp-base-min" value="2" min="2" max="12"></div>
+            <div class="field"><label>Base Max</label><input type="number" id="exp-base-max" value="12" min="2" max="12"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Exponent Min</label><input type="number" id="exp-pow-min" value="2" min="2" max="5"></div>
+            <div class="field"><label>Exponent Max</label><input type="number" id="exp-pow-max" value="4" min="2" max="5"></div>
+          </div>
+          <div class="field"><div class="hint">Exponent hard cap: 5. Prevents worksheets with answers in the millions.</div></div>
+        </div>
+
+        <!-- Interleaved fields — C6 -->
+        <div id="interleaved-fields" style="display:none">
+          <div class="il-cite">
+            Interleaving problem types has been shown to double test scores vs blocked practice (Taylor &amp; Rohrer, 2010).
+          </div>
+          <div class="field">
+            <label>Include Problem Types</label>
+            <div class="hint">Select at least 2 types. Ranges from each type's field panels apply.</div>
+            <div class="il-checks" id="il-type-checks">
+              <label class="il-check"><input type="checkbox" name="il-type" value="addition"> Addition</label>
+              <label class="il-check"><input type="checkbox" name="il-type" value="subtraction"> Subtraction</label>
+              <label class="il-check"><input type="checkbox" name="il-type" value="multiplication"> Multiplication</label>
+              <label class="il-check"><input type="checkbox" name="il-type" value="division"> Division</label>
+              <label class="il-check"><input type="checkbox" name="il-type" value="linear"> Linear Eq.</label>
+              <label class="il-check"><input type="checkbox" name="il-type" value="fraction"> Fractions</label>
+              <label class="il-check"><input type="checkbox" name="il-type" value="percentage"> Percentages</label>
+              <label class="il-check"><input type="checkbox" name="il-type" value="pemdas"> PEMDAS</label>
+              <label class="il-check"><input type="checkbox" name="il-type" value="exponent"> Exponents</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom fields — A13 -->
+        <div id="custom-fields" style="display:none">
+          <div class="field">
+            <label>Custom Pattern</label>
+            <input type="text" id="custom-pattern" placeholder="e.g. {a:1-10} + {b:1-10}">
+            <div class="hint">Use {a:min-max} for number ranges. Answer auto-computed for +, −, ×, ÷.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4: OPTIONS — A6, with C1 negative toggle -->
+      <div class="card">
+        <div class="card-title"><span>&#9881;</span> Options</div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-name">Explanation Lines</div><div class="toggle-desc">2 lines for students to show reasoning</div></div>
+          <label class="toggle"><input type="checkbox" id="opt-explain" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-name">Answer Key</div><div class="toggle-desc">Auto-generated on separate section</div></div>
+          <label class="toggle"><input type="checkbox" id="opt-key" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-name">Student Name &amp; Date Fields</div><div class="toggle-desc">Header lines for student info</div></div>
+          <label class="toggle"><input type="checkbox" id="opt-meta" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info"><div class="toggle-name">Salmon EDU Branding</div><div class="toggle-desc">Small footer credit on printed sheet</div></div>
+          <label class="toggle"><input type="checkbox" id="opt-brand" checked><span class="toggle-slider"></span></label>
+        </div>
+        <!-- C1: Negative Numbers Toggle -->
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <div class="toggle-name">Allow Negative Numbers</div>
+            <div class="toggle-desc">Enables negative operands in arithmetic problems. Grade 6–7.</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="opt-negatives"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+
+    </div><!-- /builder-panel -->
+
+    <!-- RIGHT: PREVIEW — A7 -->
+    <div class="preview-column">
+      <div class="preview-header">
+        <div class="preview-title">
+          Worksheet Preview
+          <span class="problem-count-badge" id="problem-count">0</span>
+        </div>
+        <div class="preview-actions">
+          <button class="btn btn-primary btn-sm" onclick="generateWorksheet()">&#9654; Generate</button>
+          <button class="btn btn-accent btn-sm" onclick="exportPDF()">&#128196; PDF</button>
+        </div>
+      </div>
+      <div id="preview-sheet" class="preview-sheet">
+        <div class="empty-state">
+          <div class="empty-icon">&#128196;</div>
+          <div class="empty-text">Configure your worksheet settings on the left, then click <strong>Generate</strong> to preview.</div>
+          <div class="empty-cta"><button class="btn btn-primary" onclick="generateWorksheet()">Generate Worksheet</button></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /layout -->
+</div><!-- /tab-builder -->
+
+<!-- ═══════════ TAB: RED TEAM ═══════════ — D6 Pass 3 update -->
+<div id="tab-redteam" class="tab-panel">
+  <div class="card">
+    <div class="card-title accent"><span>&#9873;</span> Red Team Report — Full Audit History</div>
+    <div class="card-sub">Every finding, fix, and feature. This log is permanent and public.</div>
+
+    <!-- SUMMARY STATS — D6 -->
+    <div class="rt-summary">
+      <div class="rt-stat"><div class="rt-stat-val">4</div><div class="rt-stat-key">Passes Run</div></div>
+      <div class="rt-stat"><div class="rt-stat-val">10</div><div class="rt-stat-key">Bugs Fixed</div></div>
+      <div class="rt-stat"><div class="rt-stat-val accent">1</div><div class="rt-stat-key">Open Limitations</div></div>
+      <div class="rt-stat"><div class="rt-stat-val gold">9</div><div class="rt-stat-key">Features Added</div></div>
+    </div>
+
+    <!-- PASS 1 -->
+    <div class="card-title" style="font-size:13px;margin-bottom:12px">// Pass 1 — Input Validation Audit &nbsp;&middot;&nbsp; March 2026</div>
+
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS1-FIX1 &mdash; FIXED: Range Inversion Guard</div>
+      <div class="rt-body">When <code>aMin &gt; aMax</code> or <code>bMin &gt; bMax</code>, <code>rnd(min, max)</code> receives a negative range. <code>Math.floor(Math.random() * negative)</code> produces garbage — large negative numbers that become nonsensical problem text. Fixed: explicit guard fires before any problem generates, exits with a named error message explaining which range is inverted.</div>
+    </div>
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS1-FIX2 &mdash; FIXED: Linear Coefficient Floor (a &lt; 2)</div>
+      <div class="rt-body">If <code>laMin</code> was set to 1, the generator produced equations like <code>1x + 5 = 8</code>. This is not a meaningful algebra problem — it's trivially <code>x = c − b</code> with no coefficient to solve through. Fixed: guard requires <code>a ≥ 2</code> with an explanation of why.</div>
+    </div>
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS1-FIX3 &mdash; FIXED: Count = 0 Silent Empty Sheet</div>
+      <div class="rt-body">If the problem count field was cleared or set to 0, the generator looped 0 times producing an empty sheet with no error. Fixed: explicit guard exits with named error before any rendering occurs.</div>
+    </div>
+    <div class="rt-finding rt-feature" style="margin-top:16px">
+      <div class="rt-tag feature">&#9733; RT-PASS1-BADGE &mdash; ADDED: AION Certification Badge</div>
+      <div class="rt-body">AION certification badge added to footer, linking to <code>CERTIFICATION.md</code> in the Sovereign Trace Protocol repository. Gold SVG seal matches the RCS Physics Simulator. This product is certified under the AION Constitutional Stack.</div>
+    </div>
+
+    <!-- PASS 2 -->
+    <div class="card-title" style="font-size:13px;margin-bottom:12px;margin-top:28px">// Pass 2 — Architecture &amp; Visual Standards &nbsp;&middot;&nbsp; March 2026</div>
+
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS2-FIX1 &mdash; FIXED: Red Team Log in Footer (Wrong Location)</div>
+      <div class="rt-body">Pass 1 placed the red team audit log inside the page footer — visible only by scrolling, not a first-class record. Fixed: dedicated Red Team tab added to the main tab bar. The log is now a first-class document — styled, structured, permanent, and reachable in one click.</div>
+    </div>
+    <div class="rt-finding rt-feature">
+      <div class="rt-tag feature">&#9733; RT-PASS2-FEATURE1 &mdash; ADDED: Living Background System</div>
+      <div class="rt-body">Static background replaced with three-layer system: (1) canvas-animated floating math symbols (+, −, ×, ÷, =, x, √, π, ², ∫, ∑, %) drifting upward continuously; (2) CSS-animated mesh gradient using theme variables across 18-second cycles; (3) backdrop-filter glass on all cards. Theme-aware — works across all three themes without JS intervention. Salmon EDU gold standard template for all future HTML builds.</div>
+    </div>
+
+    <!-- PASS 3 — D6 -->
+    <div class="card-title" style="font-size:13px;margin-bottom:12px;margin-top:28px">// Pass 3 — v1.3 Feature Audit &nbsp;&middot;&nbsp; March 2026</div>
+
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS3-FIX1 &mdash; FIXED: LIMITATION-1 — Division b=0 Silent Override Resolved</div>
+      <div class="rt-body">Previously: if <code>bMin</code> and <code>bMax</code> were both 0, <code>Math.max(0,1)=1</code> overrode silently — displayed range said "0–0" but problems generated with divisor=1. Fixed: explicit pre-generate guard detects <code>bMin===0 &amp;&amp; bMax===0</code> and exits with named error: "Divisor range cannot be 0–0. Set B Min to at least 1." No silent override remains.</div>
+    </div>
+    <div class="rt-finding rt-feature">
+      <div class="rt-tag feature">&#9733; RT-PASS3-FEATURE1 &mdash; ADDED: Integers / Negative Numbers Toggle</div>
+      <div class="rt-body">New toggle in Options card: "Allow Negative Numbers." When ON: arithmetic operands may be negative (down to −99), subtraction swap guard is suspended (negative results allowed), negative numbers display in parentheses (−3). When OFF (default): all existing positive-integer behavior preserved. Division divisor always remains &gt;0 regardless of toggle. Grade 6–7 pre-algebra support.</div>
+    </div>
+    <div class="rt-finding rt-feature">
+      <div class="rt-tag feature">&#9733; RT-PASS3-FEATURE2 &mdash; ADDED: Fractions (6 Sub-Types, GCD Simplification)</div>
+      <div class="rt-body">New pattern type: Fractions with 6 sub-types (like-add, like-sub, unlike-add, unlike-sub, multiply, divide). GCD helper (Euclidean algorithm) and <code>simplify(n, d)</code> function reduce all answers to lowest terms. Inline display format (a/b — not stacked, print-safe). Guards: denominator clamp ≥1; subtraction ensures numerator result ≥0. Quick templates: "Fractions (Like)" and "Fractions (Unlike)."</div>
+    </div>
+    <div class="rt-finding rt-feature">
+      <div class="rt-tag feature">&#9733; RT-PASS3-FEATURE3 &mdash; ADDED: Percentages (3 Forms)</div>
+      <div class="rt-body">New pattern type: Percentages. Form 1: "Find X% of N"; Form 2: "A is ___% of B"; Form 3: "A is X% of ___." Values chosen algorithmically to guarantee whole-number answers (Form 1: N is multiple of 20, X is multiple of 5; Form 2: A/B ratio reduces cleanly; Form 3: A divisible by X/100). Guards: percentage range 1–100.</div>
+    </div>
+    <div class="rt-finding rt-feature">
+      <div class="rt-tag feature">&#9733; RT-PASS3-FEATURE4 &mdash; ADDED: Order of Operations / PEMDAS</div>
+      <div class="rt-body">New pattern type: PEMDAS. Configurable step count (2–4). Generator builds expressions with randomly selected ops (+, −, ×), inserts one pair of parentheses around a random sub-expression. Evaluated internally via JS (safe — no user input enters eval). Whole-number results enforced (retry up to 20 times). No division-by-zero in generated expressions. Display: expression with parentheses = ___.</div>
+    </div>
+    <div class="rt-finding rt-feature">
+      <div class="rt-tag feature">&#9733; RT-PASS3-FEATURE5 &mdash; ADDED: Exponents (Basic)</div>
+      <div class="rt-body">New pattern type: Exponents. Configurable base range (2–12) and exponent range (2–4, hard max 5). Display uses HTML <code>&lt;sup&gt;</code> superscript — verified functional in preview and PDF print window. Hard cap at exponent 5 enforced in both UI (max="5") and JS generator. Quick template: "Exponents."</div>
+    </div>
+    <div class="rt-finding rt-feature">
+      <div class="rt-tag feature">&#9733; RT-PASS3-FEATURE6 &mdash; ADDED: Interleaved Practice Mode</div>
+      <div class="rt-body">New pattern type: Interleaved Practice ★. Multi-select checkbox group selects which types to pull from (all types available). Fisher-Yates shuffle distributes type assignments across N problems with no-two-consecutive enforcement (where pool ≥ 2 types). Each problem calls its type's generator with current configured ranges. Research citation displayed in panel: Taylor &amp; Rohrer (2010). Guards: ≥2 types required; all selected type ranges validated before generation. Default: open (no pre-selection). Quick template: "Interleaved Practice."</div>
+    </div>
+    <div class="rt-finding rt-feature">
+      <div class="rt-tag feature">&#9733; RT-PASS3-FEATURE7 &mdash; ADDED: How-To Tab</div>
+      <div class="rt-body">New tab: "? How To Use" — guide-card format covering Quick Templates, Worksheet Info, all pattern types, Integers toggle, Interleaved Practice (with pedagogical rationale), Options (each toggle explained), Toolbar (Save/Load JSON, PDF Export, Print), and Teacher Copy tip. Written for teachers, not engineers. Consistent with existing card design language.</div>
+    </div>
+
+    <!-- PASS 4 -->
+    <div class="card-title" style="font-size:13px;margin-bottom:12px;margin-top:28px">// Pass 4 — Enterprise Math &amp; Logic Audit &nbsp;&middot;&nbsp; March 2026</div>
+
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS4-FIX1 &mdash; FIXED: Unlike-Denominator Subtraction — Wrong Swap (Critical Math Bug)</div>
+      <div class="rt-body">
+        <code>unlike-sub</code> swapped only the numerators when ensuring a/c ≥ b/d, while keeping denominators c and d in their original positions. This is mathematically incorrect — swapping numerators without swapping their paired denominators can produce negative answers (e.g. 2/10 − 1/1 = negative). Fixed: swap the full fraction pairs <code>[n1,d1,n2,d2] = [n2,d2,n1,d1]</code> so the larger fraction always appears first. The cross-product comparison now correctly guards the paired units.
+      </div>
+    </div>
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS4-FIX2 &mdash; FIXED: PEMDAS — ASCII Hyphen-Minus in Display Expressions</div>
+      <div class="rt-body">
+        The PEMDAS generator used <code>ops = ['+', '-', '×']</code> — the ASCII hyphen-minus for subtraction. Every other generator in this tool uses the Unicode minus sign <code>−</code> (U+2212). Result: PEMDAS subtraction displayed as <code>3 - 5</code> while all other types display <code>3 − 5</code>. Fixed: split into separate display and eval arrays. <code>dispOps = ['+', '−', '×']</code> (Unicode) drives the worksheet display; <code>evalOps = ['+', '-', '*']</code> (ASCII) drives the JS evaluator. Both arrays indexed by the same random index per operation.
+      </div>
+    </div>
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS4-FIX3 &mdash; FIXED: Division with Negatives — Dividend Not Formatted</div>
+      <div class="rt-body">
+        When "Allow Negative Numbers" is ON, the arithmetic generators format negative operands as <code>(−3)</code> using <code>fmtNum()</code>. The division generator formatted both operands in the display text using raw <code>${a*b}</code> — bypassing <code>fmtNum()</code> for the dividend. If <code>a=-3, b=4</code>, the worksheet showed <code>-12 ÷ 4</code> instead of <code>(−12) ÷ 4</code>. Fixed: <code>fmtNum(a*b, allowNeg)</code> now applied to the dividend consistently.
+      </div>
+    </div>
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS4-FIX4 &mdash; FIXED: Canvas Background — Particle Density Frozen After Resize</div>
+      <div class="rt-body">
+        The resize handler called <code>resize()</code> to update canvas dimensions W and H, but did not rebuild the particle array. Particles were created at initial viewport density (e.g. laptop window) and stayed at that count regardless of how the window was resized. On a large monitor, the background would be sparse; on a narrow viewport, it would be crowded. Fixed: resize handler now rebuilds <code>particles</code> array at the new density calculation immediately after updating W and H.
+      </div>
+    </div>
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS4-FIX5 &mdash; FIXED: Linear Equation — Displays "ax + 0 = c" When Constant Is Zero</div>
+      <div class="rt-body">
+        <code>genLinear</code> built the constant display as <code>b ≥ 0 ? '+ b' : '− |b|'</code>. When <code>b=0</code> (reachable via JSON template load, bypassing the HTML <code>min="1"</code> constraint), the equation displayed as <code>3x + 0 = 9</code> — not a valid algebra worksheet format. Fixed: three-branch display: <code>b === 0 → '${a}x = ${c}'</code>, <code>b > 0 → '${a}x + ${b} = ${c}'</code>, <code>b < 0 → '${a}x − ${|b|} = ${c}'</code>. The negative-constant branch also corrects a separate display issue: previously b could only be positive (HTML enforced), but JSON loading bypasses that constraint.
+      </div>
+    </div>
+    <div class="rt-finding rt-fixed">
+      <div class="rt-tag fixed">&#10003; RT-PASS4-FIX6 — FIXED: PEMDAS Fallback — Used 2-Step Expression Regardless of Configured Step Count</div>
+      <div class="rt-body">
+        When all 20 generation attempts failed (narrow number range, rare), the fallback hardcoded <code>(a + b) × c</code> — always a 2-step expression — even when the configured step count was 3 or 4. Fixed: fallback now builds a proper addition/subtraction chain matching the configured step count, evaluates it, and confirms a non-negative integer result before returning. A guaranteed-safe last-resort remains if the fallback chain also fails.
+      </div>
+    </div>
+
+    <div class="rt-meta" style="margin-bottom:20px">
+      Red Team Pass 4: March 2026 &nbsp;&middot;&nbsp; 6 bugs fixed &nbsp;&nbsp;|&nbsp;&nbsp;
+      Auditor: ALBEDO &nbsp;&middot;&nbsp; Enterprise math audit — all generators, all branches, all edge cases
+    </div>
+
+    <!-- OPEN LIMITATIONS -->
+    <div class="card-title" style="font-size:13px;margin-bottom:12px;margin-top:28px">// Known Limitations — Open</div>
+    <div class="rt-finding rt-open">
+      <div class="rt-tag open">&#9888; LIMITATION-2 &mdash; OPEN: Custom Pattern eval() Security Surface</div>
+      <div class="rt-body">The custom pattern parser uses <code>eval()</code> to compute answers from user-entered expressions. A character whitelist (<code>/[^0-9+\-*/() .]/g</code>) blocks arbitrary code execution before evaluation. For a local-use, no-backend, zero-network tool this is acceptable. If Salmon EDU ever moves to a hosted platform, this must be replaced with a proper expression parser (e.g. <code>math.js</code>). Logged for architecture awareness. LIMITATION-1 (division b=0) resolved in Pass 3.</div>
+    </div>
+
+    <div class="rt-meta">
+      Red Team Pass 1: March 2026 &nbsp;&middot;&nbsp; 3 bugs fixed &middot; 1 feature &nbsp;&nbsp;|&nbsp;&nbsp;
+      Red Team Pass 2: March 2026 &nbsp;&middot;&nbsp; 1 bug fixed &middot; 1 feature &nbsp;&nbsp;|&nbsp;&nbsp;
+      Red Team Pass 3: March 2026 &nbsp;&middot;&nbsp; 1 bug fixed &middot; 7 features &nbsp;&nbsp;|&nbsp;&nbsp;
+      Red Team Pass 4: March 2026 &nbsp;&middot;&nbsp; 6 bugs fixed (enterprise math audit) &nbsp;&nbsp;|&nbsp;&nbsp;
+      Total: 10 bugs fixed &middot; 9 features &middot; 1 open limitation &nbsp;&middot;&nbsp;
+      Architect: Sheldon K. Salmon &times; ALBEDO &nbsp;&middot;&nbsp; Stack: AION Constitutional Stack
+    </div>
+  </div>
+</div><!-- /tab-redteam -->
+
+<!-- ═══════════ TAB: HOW-TO ═══════════ — C7 -->
+<div id="tab-howto" class="tab-panel">
+  <div class="card">
+    <div class="card-title gold"><span>?</span> How To Use — Salmon EDU Worksheet Builder v1.3</div>
+    <div class="card-sub">A complete guide for teachers. Everything in one place.</div>
+
+    <div class="howto-section">
+      <h3>&#128196; What This Tool Is</h3>
+      <p>The Salmon EDU Worksheet Builder is a single HTML file that runs entirely in your browser — no internet required after the first load, no login, no subscription, no IT approval needed. Download once, open forever. Generate unlimited worksheets, save templates as JSON files, and export to PDF using your browser's print dialog.</p>
+    </div>
+
+    <div class="howto-section">
+      <h3>&#9733; Quick Templates</h3>
+      <p>Click any chip in the Quick Templates card to instantly load a pre-configured worksheet. Templates set the pattern type, number ranges, problem count, and title. You can then adjust any setting before generating. Templates do not overwrite your saved JSON files.</p>
+    </div>
+
+    <div class="howto-section">
+      <h3>&#128196; Worksheet Info</h3>
+      <p>Set your assignment title, student instructions, number of problems (1–50), and column layout (1 or 2 columns). 2 columns fits more problems per page — good for arithmetic. 1 column gives more space per problem — good for multi-step types like PEMDAS or Linear Equations.</p>
+    </div>
+
+    <div class="howto-section">
+      <h3>&#9998; Problem Types</h3>
+      <ul>
+        <li><strong>Addition / Subtraction / Multiplication / Division:</strong> Standard arithmetic with configurable A and B ranges. Division always produces whole-number answers.</li>
+        <li><strong>Linear Equation (ax + b = c):</strong> Coefficient a is always ≥2 (trivial 1x problems excluded). Configure the coefficient, constant, and answer ranges independently.</li>
+        <li><strong>Fractions:</strong> Six sub-types — like denominators (add/subtract), unlike denominators (add/subtract), multiply, divide. Configure numerator and denominator ranges. All answers auto-simplified to lowest terms. Display: inline a/b format (print-safe).</li>
+        <li><strong>Percentages:</strong> Three forms — "Find X% of N," "A is ___% of B," "A is X% of ___." Values are chosen to guarantee whole-number answers every time.</li>
+        <li><strong>Order of Operations (PEMDAS):</strong> Configurable step count (2–4 operations). One pair of parentheses inserted randomly. Always produces a whole-number answer.</li>
+        <li><strong>Exponents (Basic):</strong> Evaluate a<sup>b</sup>. Configurable base (2–12) and exponent (2–5, hard cap). Prevents unreasonably large answers.</li>
+        <li><strong>Mixed Operations:</strong> Randomly selects addition, subtraction, multiplication, or division for each problem. Uses your A/B range settings.</li>
+        <li><strong>Interleaved Practice ★:</strong> See section below.</li>
+        <li><strong>Custom Pattern:</strong> Use {a:min-max} placeholders. Example: <code>{a:1-10} + {b:1-10}</code>. Answers computed automatically for +, −, ×, ÷ expressions.</li>
+      </ul>
+    </div>
+
+    <div class="howto-section">
+      <h3>&#177; Allow Negative Numbers Toggle</h3>
+      <p>In the Options card, turn on "Allow Negative Numbers" to enable negative operands in arithmetic problems (Addition, Subtraction, Multiplication, Division, Mixed). Negative numbers display in parentheses: (−3) + 7 = ___. Appropriate for Grades 6–7 pre-algebra. Division divisors always remain positive regardless of this setting.</p>
+      <div class="howto-tip">
+        <strong>Teacher tip</strong>
+        <p>When negatives are on, subtraction can produce negative results. Prepare students for this before assigning, or pair with a mini-lesson on the number line.</p>
+      </div>
+    </div>
+
+    <div class="howto-section">
+      <h3>&#9733; Interleaved Practice</h3>
+      <p>Select "Interleaved Practice ★" from the pattern dropdown. Choose at least 2 problem types using the checkboxes. The generator distributes problems across types using a shuffled order — no two problems of the same type appear consecutively. Each type uses whatever ranges you've configured in its own field panel.</p>
+      <div class="howto-research">
+        <strong>Why interleaving works</strong>
+        <p>Interleaving problem types — rather than practicing one type at a time — has been shown to double test scores compared to blocked practice (Taylor &amp; Rohrer, 2010; Rohrer, Dedrick &amp; Stershic, 2015). Blocked practice feels easier but produces weaker long-term retention. Interleaving forces students to identify which strategy applies to each problem — the key skill tested on exams.</p>
+      </div>
+    </div>
+
+    <div class="howto-section">
+      <h3>&#9881; Options</h3>
+      <ul>
+        <li><strong>Explanation Lines:</strong> Adds two blank lines under each problem labeled "Show work:" — space for students to write their reasoning. Recommended for graded assignments.</li>
+        <li><strong>Answer Key:</strong> Generates an auto-computed answer key below the problems, separated by a dashed border. Appears on the same page in preview; can be separated by page break in print.</li>
+        <li><strong>Student Name &amp; Date Fields:</strong> Adds Name / Date / Period header lines to the worksheet.</li>
+        <li><strong>Salmon EDU Branding:</strong> Adds a small footer credit on the printed sheet. Toggle off for a clean unbranded copy.</li>
+        <li><strong>Allow Negative Numbers:</strong> See section above.</li>
+      </ul>
+    </div>
+
+    <div class="howto-section">
+      <h3>&#128196; Toolbar — Save, Load, Export, Print</h3>
+      <ul>
+        <li><strong>Save JSON:</strong> Downloads your current settings as a .json file. Use this to save a worksheet configuration and reload it later — or share it with a colleague.</li>
+        <li><strong>Load JSON:</strong> Opens a file picker. Select a previously saved .json file to restore all settings instantly.</li>
+        <li><strong>Generate / New Values:</strong> Generate refreshes the worksheet with the same settings but new random numbers.</li>
+        <li><strong>PDF Export:</strong> Opens a print-ready version in a new window and triggers your browser's print dialog. Choose "Save as PDF" to save, or select your printer to print directly.</li>
+        <li><strong>Print:</strong> Directly triggers print on the current page, hiding all UI elements and showing only the worksheet.</li>
+      </ul>
+      <div class="howto-tip">
+        <strong>Teacher Copy Tip</strong>
+        <p>Generate your worksheet with "Answer Key" turned ON. Print once for yourself — that's your teacher copy. Then turn Answer Key OFF and print the class set. Same problems, no answers. No extra steps.</p>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /tab-howto -->
+
+<!-- FOOTER — A9 -->
+<footer>
+  <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md" target="_blank" rel="noopener"
+     style="display:inline-block;margin-bottom:8px;transition:opacity 0.2s;opacity:0.85"
+     onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="80" height="80" role="img" aria-label="AION Verified">
+      <defs>
+        <linearGradient id="gl2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="35%" stop-color="#D4AF37"/><stop offset="65%" stop-color="#C9A028"/><stop offset="100%" stop-color="#8B7520"/></linearGradient>
+        <linearGradient id="gs2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#FAF0A0"/><stop offset="30%" stop-color="#D4AF37"/><stop offset="70%" stop-color="#B8921E"/><stop offset="100%" stop-color="#7A6418"/></linearGradient>
+        <radialGradient id="gbg2" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#1c1a10"/><stop offset="100%" stop-color="#070705"/></radialGradient>
+        <linearGradient id="gwv2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="20%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#F5E070"/><stop offset="80%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient>
+        <filter id="sh2"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#D4AF37" flood-opacity="0.25"/></filter>
+        <path id="ta2" d="M 78,200 A 122,122 0 0,1 322,200"/>
+        <path id="ba2" d="M 92,200 A 108,108 0 0,0 308,200"/>
+        <path id="tsa2" d="M 98,200 A 102,102 0 0,1 302,200"/>
+      </defs>
+      <polygon points="368.1,269.6 269.6,368.1 130.4,368.1 31.9,269.6 31.9,130.4 130.4,31.9 269.6,31.9 368.1,130.4" fill="url(#gbg2)" stroke="url(#gl2)" stroke-width="3" filter="url(#sh2)"/>
+      <circle cx="200" cy="200" r="150" fill="none" stroke="url(#gl2)" stroke-width="2.5"/>
+      <circle cx="200" cy="200" r="134" fill="#0d0b08"/>
+      <circle cx="200" cy="200" r="134" fill="none" stroke="url(#gl2)" stroke-width="1.5"/>
+      <text font-family="'Times New Roman',serif" font-size="15" font-weight="bold" letter-spacing="5" fill="url(#gs2)" text-anchor="middle"><textPath href="#ta2" startOffset="50%">AION &middot; VERIFIED</textPath></text>
+      <text font-family="'Times New Roman',serif" font-size="11.5" letter-spacing="7" fill="#C9A028" text-anchor="middle" opacity="0.85"><textPath href="#tsa2" startOffset="50%">&middot; EDU TOOL &middot;</textPath></text>
+      <text font-family="'Times New Roman',serif" font-size="11" font-weight="bold" letter-spacing="3" fill="url(#gs2)" text-anchor="middle"><textPath href="#ba2" startOffset="50%">SHELDON K. SALMON</textPath></text>
+      <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#gwv2)" stroke-width="2.8" stroke-linecap="round"/>
+      <text x="200" y="167" font-family="'Courier New',monospace" font-size="9" letter-spacing="3" fill="#D4AF37" text-anchor="middle" opacity="0.9">VERIFIED PRODUCT</text>
+      <text x="200" y="242" font-family="'Courier New',monospace" font-size="8" letter-spacing="2.5" fill="#8B7520" text-anchor="middle" opacity="0.8">v1.3 &middot; 2026 &middot; AION STACK</text>
+    </svg>
+  </a>
+  <div class="footer-text">
+    Math Worksheet Builder v1.3 &nbsp;&middot;&nbsp; Salmon EDU &nbsp;&middot;&nbsp; AionSystem Educational Division<br>
+    Architect: Sheldon K. Salmon &times; ALBEDO &nbsp;&middot;&nbsp; AION Constitutional Stack &nbsp;&middot;&nbsp; 2026
+  </div>
+</footer>
+
+</div><!-- /wrapper -->
+
+<script>
+// ═══════════════════════════════════════════════
+// HELPERS — A10
+// ═══════════════════════════════════════════════
+function rnd(min, max) {
+  min = Math.ceil(min); max = Math.floor(max);
+  if (min > max) return min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function safeInt(id, fallback) {
+  const el = document.getElementById(id); if (!el) return fallback;
+  const v = parseInt(el.value, 10); return isNaN(v) ? fallback : v;
+}
+function safeStr(id, fallback) {
+  const el = document.getElementById(id); if (!el) return fallback;
+  return el.value.trim() || fallback;
+}
+function isChecked(id) {
+  const el = document.getElementById(id); return el ? el.checked : false;
+}
+let statusTimer = null;
+function showStatus(msg, type) {
+  const bar = document.getElementById('status-bar');
+  bar.textContent = msg;
+  bar.className = 'status-bar show ' + (type || 'info');
+  clearTimeout(statusTimer);
+  statusTimer = setTimeout(() => { bar.className = 'status-bar'; }, 3200);
+}
+
+// ═══════════════════════════════════════════════
+// THEME — A11
+// ═══════════════════════════════════════════════
+function setTheme(name, dotEl) {
+  document.documentElement.setAttribute('data-theme', name === 'sage' ? '' : name);
+  document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+  if (dotEl) dotEl.classList.add('active');
+  localStorage.setItem('salmon-edu-theme', name);
+}
+function initTheme() {
+  const saved = localStorage.getItem('salmon-edu-theme') || 'sage';
+  const dot = document.querySelector(`.theme-dot[data-t="${saved}"]`);
+  setTheme(saved, dot);
+}
+
+// ═══════════════════════════════════════════════
+// TAB SWITCHER — A4
+// ═══════════════════════════════════════════════
+function switchTab(tabId, btnEl) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  if (btnEl) btnEl.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// PATTERN TYPE CHANGE — D2
+// ═══════════════════════════════════════════════
+function onPatternTypeChange() {
+  const t = document.getElementById('pattern-type').value;
+  const rangeTypes = ['addition','subtraction','multiplication','division','mixed'];
+  document.getElementById('range-fields').style.display      = rangeTypes.includes(t) ? 'block' : 'none';
+  document.getElementById('linear-fields').style.display     = t === 'linear'       ? 'block' : 'none';
+  document.getElementById('fraction-fields').style.display   = t === 'fraction'     ? 'block' : 'none';
+  document.getElementById('percentage-fields').style.display = t === 'percentage'   ? 'block' : 'none';
+  document.getElementById('pemdas-fields').style.display     = t === 'pemdas'       ? 'block' : 'none';
+  document.getElementById('exponent-fields').style.display   = t === 'exponent'     ? 'block' : 'none';
+  document.getElementById('interleaved-fields').style.display= t === 'interleaved'  ? 'block' : 'none';
+  document.getElementById('custom-fields').style.display     = t === 'custom'       ? 'block' : 'none';
+}
+
+// ═══════════════════════════════════════════════
+// QUICK TEMPLATES — D3
+// ═══════════════════════════════════════════════
+const TEMPLATES = {
+  addition:       { title:'Addition Practice',        type:'addition',    aMin:1, aMax:12, bMin:1, bMax:12, count:20 },
+  subtraction:    { title:'Subtraction Practice',     type:'subtraction', aMin:1, aMax:20, bMin:1, bMax:10, count:20 },
+  multiplication: { title:'Multiplication Practice',  type:'multiplication', aMin:1, aMax:12, bMin:1, bMax:12, count:20 },
+  division:       { title:'Division Practice',        type:'division',    aMin:1, aMax:12, bMin:1, bMax:12, count:20 },
+  linear:         { title:'Linear Equations',         type:'linear',      laMin:2, laMax:9, lbMin:1, lbMax:20, lxMin:1, lxMax:10, count:20 },
+  mixed:          { title:'Mixed Operations',         type:'mixed',       aMin:1, aMax:12, bMin:1, bMax:12, count:20 },
+  fraction_like:  { title:'Fractions — Like Denominators', type:'fraction', fractionSubType:'like-add', numMin:1, numMax:9, denMin:2, denMax:12, count:20 },
+  fraction_unlike:{ title:'Fractions — Unlike Denominators', type:'fraction', fractionSubType:'unlike-add', numMin:1, numMax:8, denMin:2, denMax:10, count:16 },
+  percentage:     { title:'Percentages Practice',     type:'percentage',  percentageForm:'1', pctMin:5, pctMax:75, pctNumMin:20, pctNumMax:200, count:20 },
+  pemdas:         { title:'Order of Operations',      type:'pemdas',      ooSteps:3, ooMin:1, ooMax:12, count:16 },
+  exponent:       { title:'Exponents Practice',       type:'exponent',    expBaseMin:2, expBaseMax:12, expPowMin:2, expPowMax:4, count:20 },
+  interleaved:    { title:'Interleaved Practice',     type:'interleaved', interleavedTypes:[], count:20 },
+  custom:         { title:'Custom Worksheet',         type:'custom',      customPattern:'{a:1-10} + {b:1-10}', count:20 },
+};
+
+function loadQuickTemplate(key, chipEl) {
+  const T = TEMPLATES[key]; if (!T) return;
+  document.getElementById('ws-title').value     = T.title;
+  document.getElementById('ws-count').value     = T.count || 20;
+  document.getElementById('pattern-type').value = T.type;
+  if (T.aMin   !== undefined) document.getElementById('a-min').value    = T.aMin;
+  if (T.aMax   !== undefined) document.getElementById('a-max').value    = T.aMax;
+  if (T.bMin   !== undefined) document.getElementById('b-min').value    = T.bMin;
+  if (T.bMax   !== undefined) document.getElementById('b-max').value    = T.bMax;
+  if (T.laMin  !== undefined) document.getElementById('la-min').value   = T.laMin;
+  if (T.laMax  !== undefined) document.getElementById('la-max').value   = T.laMax;
+  if (T.lbMin  !== undefined) document.getElementById('lb-min').value   = T.lbMin;
+  if (T.lbMax  !== undefined) document.getElementById('lb-max').value   = T.lbMax;
+  if (T.lxMin  !== undefined) document.getElementById('lx-min').value   = T.lxMin;
+  if (T.lxMax  !== undefined) document.getElementById('lx-max').value   = T.lxMax;
+  if (T.fractionSubType) document.getElementById('fraction-subtype').value = T.fractionSubType;
+  if (T.numMin !== undefined) document.getElementById('num-min').value  = T.numMin;
+  if (T.numMax !== undefined) document.getElementById('num-max').value  = T.numMax;
+  if (T.denMin !== undefined) document.getElementById('den-min').value  = T.denMin;
+  if (T.denMax !== undefined) document.getElementById('den-max').value  = T.denMax;
+  if (T.percentageForm) document.getElementById('pct-form').value = T.percentageForm;
+  if (T.pctMin !== undefined) document.getElementById('pct-min').value  = T.pctMin;
+  if (T.pctMax !== undefined) document.getElementById('pct-max').value  = T.pctMax;
+  if (T.pctNumMin !== undefined) document.getElementById('pct-num-min').value = T.pctNumMin;
+  if (T.pctNumMax !== undefined) document.getElementById('pct-num-max').value = T.pctNumMax;
+  if (T.ooSteps !== undefined) document.getElementById('oo-steps').value = T.ooSteps;
+  if (T.ooMin !== undefined) document.getElementById('oo-min').value  = T.ooMin;
+  if (T.ooMax !== undefined) document.getElementById('oo-max').value  = T.ooMax;
+  if (T.expBaseMin !== undefined) document.getElementById('exp-base-min').value = T.expBaseMin;
+  if (T.expBaseMax !== undefined) document.getElementById('exp-base-max').value = T.expBaseMax;
+  if (T.expPowMin !== undefined) document.getElementById('exp-pow-min').value = T.expPowMin;
+  if (T.expPowMax !== undefined) document.getElementById('exp-pow-max').value = T.expPowMax;
+  if (T.customPattern) document.getElementById('custom-pattern').value = T.customPattern;
+  // Interleaved — open empty per architect decision
+  if (T.type === 'interleaved') {
+    document.querySelectorAll('#il-type-checks input[type=checkbox]').forEach(cb => cb.checked = false);
+  }
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  if (chipEl) chipEl.classList.add('active');
+  onPatternTypeChange();
+  generateWorksheet();
+}
+
+// ═══════════════════════════════════════════════
+// MATH HELPERS — C2
+// ═══════════════════════════════════════════════
+function gcd(a, b) { return b === 0 ? Math.abs(a) : gcd(b, a % b); }
+function simplify(n, d) {
+  if (d === 0) return { n: 0, d: 1 };
+  const g = gcd(Math.abs(n), Math.abs(d));
+  let sn = n / g, sd = d / g;
+  if (sd < 0) { sn = -sn; sd = -sd; }
+  return { n: sn, d: sd };
+}
+function fmtFrac(n, d) {
+  const s = simplify(n, d);
+  if (s.d === 1) return String(s.n);
+  return `${s.n}/${s.d}`;
+}
+
+// Format negative numbers with parens — C1
+function fmtNum(n, allowNeg) {
+  if (allowNeg && n < 0) return `(−${Math.abs(n)})`;
+  return String(n);
+}
+
+// Fisher-Yates shuffle — C6
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Fix consecutive duplicates (up to 50 passes) — C6
+function fixConsecutive(arr) {
+  for (let pass = 0; pass < 50; pass++) {
+    let changed = false;
+    for (let i = 0; i < arr.length - 1; i++) {
+      if (arr[i] === arr[i+1]) {
+        // find next different element to swap with
+        for (let j = i + 2; j < arr.length; j++) {
+          if (arr[j] !== arr[i]) {
+            [arr[i+1], arr[j]] = [arr[j], arr[i+1]];
+            changed = true; break;
+          }
+        }
+      }
+    }
+    if (!changed) break;
+  }
+  return arr;
+}
+
+// ═══════════════════════════════════════════════
+// PROBLEM GENERATORS
+// ═══════════════════════════════════════════════
+function genArithmetic(actualType, aMin, aMax, bMin, bMax, allowNeg) {
+  if (actualType === 'addition') {
+    const a = rnd(aMin, aMax), b = rnd(bMin, bMax);
+    return { text:`${fmtNum(a,allowNeg)} + ${fmtNum(b,allowNeg)} = ___`, answer:`${a+b}` };
+  }
+  if (actualType === 'subtraction') {
+    let a = rnd(aMin, aMax), b = rnd(bMin, bMax);
+    if (!allowNeg && b > a) [a, b] = [a+b, b];  // A12 carry-forward
+    return { text:`${fmtNum(a,allowNeg)} − ${fmtNum(b,allowNeg)} = ___`, answer:`${a-b}` };
+  }
+  if (actualType === 'multiplication') {
+    const a = rnd(aMin, aMax), b = rnd(bMin, bMax);
+    return { text:`${fmtNum(a,allowNeg)} × ${fmtNum(b,allowNeg)} = ___`, answer:`${a*b}` };
+  }
+  if (actualType === 'division') {
+    // Division: divisor always > 0 regardless of toggle
+    const b = rnd(Math.max(Math.abs(bMin),1), Math.max(bMax,1));
+    const a = rnd(aMin, aMax);
+    return { text:`${fmtNum(a*b, allowNeg)} ÷ ${b} = ___`, answer:`${a}` };
+  }
+  return null;
+}
+
+function genLinear(laMin, laMax, lbMin, lbMax, lxMin, lxMax) {
+  const a = rnd(laMin, laMax), b = rnd(lbMin, lbMax), x = rnd(lxMin, lxMax);
+  const c = a*x + b;
+  let dispText;
+  if (b === 0)      dispText = `${a}x = ${c}`;
+  else if (b > 0)   dispText = `${a}x + ${b} = ${c}`;
+  else              dispText = `${a}x − ${Math.abs(b)} = ${c}`;
+  return { text: dispText, answer:`x = ${x}` };
+}
+
+function genFraction(subType, numMin, numMax, denMin, denMax) {
+  denMin = Math.max(denMin, 2); denMax = Math.max(denMax, denMin);
+  numMin = Math.max(numMin, 1); numMax = Math.max(numMax, numMin);
+
+  if (subType === 'like-add') {
+    const d = rnd(denMin, denMax);
+    const a = rnd(numMin, numMax), b = rnd(numMin, numMax);
+    return { text:`${a}/${d} + ${b}/${d} = ___`, answer: fmtFrac(a+b, d) };
+  }
+  if (subType === 'like-sub') {
+    const d = rnd(denMin, denMax);
+    let a = rnd(numMin, numMax), b = rnd(numMin, numMax);
+    if (b > a) [a, b] = [b, a];
+    return { text:`${a}/${d} − ${b}/${d} = ___`, answer: fmtFrac(a-b, d) };
+  }
+  if (subType === 'unlike-add') {
+    const c = rnd(denMin, denMax), d = rnd(denMin, denMax);
+    const a = rnd(numMin, numMax), b = rnd(numMin, numMax);
+    return { text:`${a}/${c} + ${b}/${d} = ___`, answer: fmtFrac(a*d + b*c, c*d) };
+  }
+  if (subType === 'unlike-sub') {
+    // Use n1/d1 and n2/d2 naming — swap BOTH pairs to ensure n1/d1 >= n2/d2
+    let n1 = rnd(numMin, numMax), d1 = rnd(denMin, denMax);
+    let n2 = rnd(numMin, numMax), d2 = rnd(denMin, denMax);
+    // Cross-multiply to compare: n1/d1 vs n2/d2 → n1*d2 vs n2*d1
+    if (n1 * d2 < n2 * d1) { [n1, d1, n2, d2] = [n2, d2, n1, d1]; }
+    return { text:`${n1}/${d1} − ${n2}/${d2} = ___`, answer: fmtFrac(n1*d2 - n2*d1, d1*d2) };
+  }
+  if (subType === 'multiply') {
+    const a = rnd(numMin, numMax), b = rnd(denMin, denMax);
+    const c = rnd(numMin, numMax), d = rnd(denMin, denMax);
+    return { text:`${a}/${b} × ${c}/${d} = ___`, answer: fmtFrac(a*c, b*d) };
+  }
+  if (subType === 'divide') {
+    const a = rnd(numMin, numMax), b = rnd(denMin, denMax);
+    const c = rnd(numMin, numMax), d = rnd(denMin, denMax);
+    return { text:`${a}/${b} ÷ ${c}/${d} = ___`, answer: fmtFrac(a*d, b*c) };
+  }
+  return { text:'???', answer:'???' };
+}
+
+function genPercentage(form, pctMin, pctMax, numMin, numMax) {
+  // Clamp percentages to multiples of 5 for clean answers
+  const pctRange = [];
+  for (let p = Math.max(5, Math.ceil(pctMin/5)*5); p <= Math.min(95, pctMax); p += 5) pctRange.push(p);
+  if (!pctRange.length) pctRange.push(25);
+
+  if (form === '1') {
+    const X = pctRange[rnd(0, pctRange.length - 1)];
+    // N must be multiple of 20 to ensure integer answer for most percentages
+    const mult = rnd(Math.max(1, Math.floor(numMin/20)), Math.max(1, Math.floor(numMax/20)));
+    const N = mult * 20;
+    const ans = Math.round((X / 100) * N);
+    return { text:`Find ${X}% of ${N} = ___`, answer:`${ans}` };
+  }
+  if (form === '2') {
+    // Pick A, B where A/B × 100 is whole
+    // Strategy: pick percentage, then A = pct * factor, B = 100 * factor
+    const X = pctRange[rnd(0, pctRange.length - 1)];
+    const factor = rnd(1, 5);
+    const A = X * factor, B = 100 * factor;
+    return { text:`${A} is ___% of ${B}`, answer:`${X}%` };
+  }
+  if (form === '3') {
+    const X = pctRange[rnd(0, pctRange.length - 1)];
+    // A must be divisible by X/100 — pick A = X * k / 100 * 100 = X*k
+    const k = rnd(1, Math.min(5, Math.floor(numMax / X)));
+    const A = X * (k || 1);
+    const ans = Math.round(A / (X / 100));
+    return { text:`${A} is ${X}% of ___ `, answer:`${ans}` };
+  }
+  return { text:'???', answer:'???' };
+}
+
+function genPemdas(steps, numMin, numMax) {
+  // Display ops use Unicode chars; eval ops use JS-safe chars
+  const dispOps = ['+', '−', '×'];
+  const evalOps = ['+', '-', '*'];
+  for (let attempt = 0; attempt < 20; attempt++) {
+    const nums = Array.from({length: steps + 1}, () => rnd(numMin, numMax));
+    const opIdx = Array.from({length: steps}, () => rnd(0, 2));
+    const parenStart = rnd(0, steps - 1);
+
+    let evalExpr = '';
+    let dispExpr = '';
+    for (let i = 0; i <= steps; i++) {
+      if (i === parenStart) { evalExpr += '('; dispExpr += '('; }
+      evalExpr += nums[i];
+      dispExpr += nums[i];
+      if (i === parenStart + 1) { evalExpr += ')'; dispExpr += ')'; }
+      if (i < steps) {
+        evalExpr += ` ${evalOps[opIdx[i]]} `;
+        dispExpr += ` ${dispOps[opIdx[i]]} `;
+      }
+    }
+    try {
+      const result = eval(evalExpr);
+      if (Number.isInteger(result) && result >= 0) {
+        return { text:`${dispExpr} = ___`, answer:`${result}` };
+      }
+    } catch(e) {}
+  }
+  // Fallback: build a safe multi-step expression matching configured step count
+  const fa = [], fi = [];
+  for (let i = 0; i <= steps; i++) fa.push(rnd(1, Math.min(numMax, 10)));
+  for (let i = 0; i < steps; i++) fi.push(rnd(0, 1)); // only + and − for safe fallback
+  let fbEval = String(fa[0]), fbDisp = String(fa[0]);
+  for (let i = 0; i < steps; i++) {
+    fbEval += ` ${evalOps[fi[i]]} ${fa[i+1]}`;
+    fbDisp += ` ${dispOps[fi[i]]} ${fa[i+1]}`;
+  }
+  try {
+    const fbResult = eval(fbEval);
+    if (Number.isInteger(fbResult) && fbResult >= 0) {
+      return { text:`${fbDisp} = ___`, answer:`${fbResult}` };
+    }
+  } catch(e) {}
+  // Last resort: guaranteed safe
+  const lsa = rnd(1,10), lsb = rnd(1,10), lsc = rnd(1,10);
+  return { text:`(${lsa} + ${lsb}) × ${lsc} = ___`, answer:`${(lsa+lsb)*lsc}` };
+}
+
+function genExponent(baseMin, baseMax, powMin, powMax) {
+  const base = rnd(baseMin, baseMax);
+  const pow = Math.min(rnd(powMin, powMax), 5); // hard cap
+  return { text:`${base}<sup>${pow}</sup> = ___`, answer:`${Math.pow(base, pow)}` };
+}
+
+// ═══════════════════════════════════════════════
+// CUSTOM PATTERN — A13
+// ═══════════════════════════════════════════════
+function parseCustomPattern(pattern) {
+  const filled = pattern.replace(/\{(\w+):(\d+)-(\d+)\}/g, (_, nm, min, max) => rnd(parseInt(min), parseInt(max)));
+  let answer = '?';
+  try {
+    const expr = filled.replace(/=\s*___.*/, '').trim();
+    const safe = expr.replace(/[^0-9+\-*/() .]/g, '');
+    answer = String(eval(safe)); // LIMITATION-2: see Red Team
+  } catch(e) {}
+  return { text: filled, answer };
+}
+
+// ═══════════════════════════════════════════════
+// GENERATE ONE PROBLEM — dispatches to correct generator
+// ═══════════════════════════════════════════════
+function generateOneProblem(type, params) {
+  const { aMin,aMax,bMin,bMax,laMin,laMax,lbMin,lbMax,lxMin,lxMax,
+          fractionSubType, numMin,numMax, denMin,denMax,
+          percentageForm, pctMin,pctMax, pctNumMin,pctNumMax,
+          ooSteps, ooMin, ooMax,
+          expBaseMin,expBaseMax, expPowMin,expPowMax,
+          allowNeg } = params;
+
+  const arithTypes = ['addition','subtraction','multiplication','division'];
+  const actualType = type === 'mixed' ? arithTypes[rnd(0,3)] : type;
+
+  if (arithTypes.includes(actualType)) return genArithmetic(actualType, aMin,aMax,bMin,bMax, allowNeg);
+  if (actualType === 'linear')    return genLinear(laMin,laMax,lbMin,lbMax,lxMin,lxMax);
+  if (actualType === 'fraction')  return genFraction(fractionSubType, numMin,numMax, denMin,denMax);
+  if (actualType === 'percentage')return genPercentage(percentageForm, pctMin,pctMax, pctNumMin,pctNumMax);
+  if (actualType === 'pemdas')    return genPemdas(ooSteps, ooMin, ooMax);
+  if (actualType === 'exponent')  return genExponent(expBaseMin,expBaseMax, expPowMin,expPowMax);
+  if (actualType === 'custom')    return parseCustomPattern(document.getElementById('custom-pattern').value || '{a:1-10} + {b:1-10}');
+  return { text:'???', answer:'???' };
+}
+
+// ═══════════════════════════════════════════════
+// GENERATE WORKSHEET — main entry point
+// ═══════════════════════════════════════════════
+let lastProblems = [];
+
+function generateWorksheet() {
+  const count = Math.max(1, Math.min(50, safeInt('ws-count', 20)));
+  const type  = document.getElementById('pattern-type').value;
+  const allowNeg = isChecked('opt-negatives');
+
+  // Collect all params (panels stay in DOM even when hidden)
+  const params = {
+    aMin: safeInt('a-min',1),   aMax: safeInt('a-max',12),
+    bMin: safeInt('b-min',1),   bMax: safeInt('b-max',12),
+    laMin:safeInt('la-min',2),  laMax:safeInt('la-max',9),
+    lbMin:safeInt('lb-min',1),  lbMax:safeInt('lb-max',20),
+    lxMin:safeInt('lx-min',1),  lxMax:safeInt('lx-max',10),
+    fractionSubType: document.getElementById('fraction-subtype').value,
+    numMin:safeInt('num-min',1), numMax:safeInt('num-max',9),
+    denMin:safeInt('den-min',2), denMax:safeInt('den-max',12),
+    percentageForm: document.getElementById('pct-form').value,
+    pctMin:safeInt('pct-min',5), pctMax:safeInt('pct-max',75),
+    pctNumMin:safeInt('pct-num-min',20), pctNumMax:safeInt('pct-num-max',200),
+    ooSteps:safeInt('oo-steps',3),
+    ooMin:safeInt('oo-min',1),   ooMax:safeInt('oo-max',12),
+    expBaseMin:safeInt('exp-base-min',2), expBaseMax:safeInt('exp-base-max',12),
+    expPowMin:safeInt('exp-pow-min',2),   expPowMax:Math.min(safeInt('exp-pow-max',4), 5),
+    allowNeg
+  };
+
+  // ── GUARDS ─────────────────────────────────
+  if (count < 1) { showStatus('Problem count must be at least 1.', 'error'); return; }
+
+  const arithAndMixed = ['addition','subtraction','multiplication','division','mixed'];
+  if (arithAndMixed.includes(type)) {
+    if (!allowNeg) {
+      if (params.aMin < 1) params.aMin = 1;
+      if (params.bMin < 1) params.bMin = 1;
+    }
+    if (params.aMin > params.aMax) { showStatus('Value A: Min must be ≤ Max.', 'error'); return; }
+    if (params.bMin > params.bMax) { showStatus('Value B: Min must be ≤ Max.', 'error'); return; }
+    // B1: Division b=0 explicit guard
+    if ((type === 'division' || type === 'mixed') && params.bMin === 0 && params.bMax === 0) {
+      showStatus('Divisor range cannot be 0–0. Set B Min to at least 1.', 'error'); return;
+    }
+  }
+  if (type === 'linear') {
+    if (params.laMin < 2)     { showStatus('Coefficient a must be ≥ 2. (a=1 is trivial.)', 'error'); return; }
+    if (params.laMin > params.laMax) { showStatus('Coefficient a: Min must be ≤ Max.', 'error'); return; }
+    if (params.lbMin > params.lbMax) { showStatus('Constant b: Min must be ≤ Max.', 'error'); return; }
+    if (params.lxMin > params.lxMax) { showStatus('Answer x: Min must be ≤ Max.', 'error'); return; }
+  }
+  if (type === 'fraction') {
+    params.denMin = Math.max(params.denMin, 2);
+    if (params.numMin > params.numMax) { showStatus('Fraction: Numerator Min must be ≤ Max.', 'error'); return; }
+    if (params.denMin > params.denMax) { showStatus('Fraction: Denominator Min must be ≤ Max.', 'error'); return; }
+  }
+  if (type === 'exponent') {
+    params.expPowMax = Math.min(params.expPowMax, 5);
+    if (params.expBaseMin > params.expBaseMax) { showStatus('Exponent: Base Min must be ≤ Max.', 'error'); return; }
+    if (params.expPowMin  > params.expPowMax)  { showStatus('Exponent: Power Min must be ≤ Max.', 'error'); return; }
+  }
+
+  // ── INTERLEAVED GENERATION — C6 ───────────
+  if (type === 'interleaved') {
+    const selectedTypes = Array.from(document.querySelectorAll('#il-type-checks input[type=checkbox]:checked')).map(cb => cb.value);
+    if (selectedTypes.length < 2) { showStatus('Select at least 2 types for interleaved practice.', 'error'); return; }
+
+    // Distribute count across types
+    const assignments = [];
+    for (let i = 0; i < count; i++) assignments.push(selectedTypes[i % selectedTypes.length]);
+    shuffle(assignments);
+    if (selectedTypes.length >= 2) fixConsecutive(assignments);
+
+    lastProblems = assignments.map(t => generateOneProblem(t, params));
+    renderPreview();
+    document.getElementById('problem-count').textContent = count;
+    showStatus(`${count} interleaved problems generated (${selectedTypes.length} types).`, 'success');
+    return;
+  }
+
+  // ── STANDARD GENERATION ────────────────────
+  lastProblems = [];
+  for (let i = 0; i < count; i++) lastProblems.push(generateOneProblem(type, params));
+  renderPreview();
+  document.getElementById('problem-count').textContent = count;
+  showStatus(`${count} problems generated.`, 'success');
+}
+
+// ═══════════════════════════════════════════════
+// RENDER PREVIEW — A7
+// ═══════════════════════════════════════════════
+function renderPreview() {
+  const title    = safeStr('ws-title', 'Worksheet');
+  const instr    = safeStr('ws-instructions', 'Solve each problem.');
+  const cols     = safeInt('ws-cols', 2);
+  const explain  = isChecked('opt-explain');
+  const showKey  = isChecked('opt-key');
+  const showMeta = isChecked('opt-meta');
+  const showBrand= isChecked('opt-brand');
+
+  const metaHTML = showMeta ? `<div class="sheet-meta-fields">
+    <div class="sheet-meta-line"><span class="ml">Name:</span><span class="mline"></span></div>
+    <div class="sheet-meta-line"><span class="ml">Date:</span><span class="mline"></span></div>
+    <div class="sheet-meta-line"><span class="ml">Period:</span><span class="mline"></span></div>
+  </div>` : '';
+
+  const problemsHTML = lastProblems.map((p,i) => {
+    const exHTML = explain ? `<div class="explain-lines">
+      <div class="explain-label">Show work:</div>
+      <div class="explain-line"></div><div class="explain-line"></div>
+    </div>` : '';
+    return `<div class="problem-item" style="animation-delay:${i*0.02}s">
+      <div class="problem-num">${i+1}.</div>
+      <div class="problem-text">${p.text}</div>
+      ${exHTML}
+    </div>`;
+  }).join('');
+
+  const keyHTML = showKey ? `<div class="answer-key-section">
+    <div class="ak-title">&#10003; Answer Key — Teacher Copy</div>
+    <div class="ak-grid">
+      ${lastProblems.map((p,i) => `<div class="ak-item"><span class="ak-num">${i+1}.</span> <span class="ak-ans">${p.answer}</span></div>`).join('')}
+    </div>
+  </div>` : '';
+
+  const brandHTML = showBrand ? `<div class="sheet-brand">Salmon EDU &middot; AionSystem Educational &middot; 2026</div>` : '';
+
+  document.getElementById('preview-sheet').innerHTML = `
+    <div class="sheet-header">
+      <div><div class="sheet-title">${title}</div><div class="sheet-instructions">${instr}</div></div>
+      ${metaHTML}
+    </div>
+    <div class="problems-grid-${cols}">${problemsHTML}</div>
+    ${keyHTML}${brandHTML}
+  `;
+}
+
+// ═══════════════════════════════════════════════
+// SAVE / LOAD TEMPLATE — D4
+// ═══════════════════════════════════════════════
+function getTemplateData() {
+  return {
+    version: '1.3',
+    title:          safeStr('ws-title','Worksheet'),
+    instructions:   safeStr('ws-instructions',''),
+    count:          safeInt('ws-count',20),
+    cols:           safeInt('ws-cols',2),
+    patternType:    document.getElementById('pattern-type').value,
+    aMin:safeInt('a-min',1),     aMax:safeInt('a-max',12),
+    bMin:safeInt('b-min',1),     bMax:safeInt('b-max',12),
+    laMin:safeInt('la-min',2),   laMax:safeInt('la-max',9),
+    lbMin:safeInt('lb-min',1),   lbMax:safeInt('lb-max',20),
+    lxMin:safeInt('lx-min',1),   lxMax:safeInt('lx-max',10),
+    fractionSubType: document.getElementById('fraction-subtype').value,
+    numMin:safeInt('num-min',1), numMax:safeInt('num-max',9),
+    denMin:safeInt('den-min',2), denMax:safeInt('den-max',12),
+    percentageForm:  document.getElementById('pct-form').value,
+    pctMin:safeInt('pct-min',5), pctMax:safeInt('pct-max',75),
+    pctNumMin:safeInt('pct-num-min',20), pctNumMax:safeInt('pct-num-max',200),
+    ooSteps:safeInt('oo-steps',3),
+    ooMin:safeInt('oo-min',1),   ooMax:safeInt('oo-max',12),
+    expBaseMin:safeInt('exp-base-min',2), expBaseMax:safeInt('exp-base-max',12),
+    expPowMin:safeInt('exp-pow-min',2),   expPowMax:safeInt('exp-pow-max',4),
+    interleavedTypes: Array.from(document.querySelectorAll('#il-type-checks input[type=checkbox]:checked')).map(cb => cb.value),
+    allowNegatives:  isChecked('opt-negatives'),
+    customPattern:   safeStr('custom-pattern',''),
+    optExplain:  isChecked('opt-explain'),
+    optKey:      isChecked('opt-key'),
+    optMeta:     isChecked('opt-meta'),
+    optBrand:    isChecked('opt-brand'),
+  };
+}
+
+function saveTemplate() {
+  const data = getTemplateData();
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${data.title.replace(/\s+/g,'_').toLowerCase()}_template.json`;
+  a.click();
+  showStatus('Template saved as JSON.', 'success');
+}
+
+function loadTemplate(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const T = JSON.parse(e.target.result);
+      const setV = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+      const setC = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.checked = val; };
+      setV('ws-title', T.title); setV('ws-instructions', T.instructions);
+      setV('ws-count', T.count); setV('ws-cols', T.cols);
+      setV('pattern-type', T.patternType);
+      setV('a-min',T.aMin);    setV('a-max',T.aMax);
+      setV('b-min',T.bMin);    setV('b-max',T.bMax);
+      setV('la-min',T.laMin);  setV('la-max',T.laMax);
+      setV('lb-min',T.lbMin);  setV('lb-max',T.lbMax);
+      setV('lx-min',T.lxMin);  setV('lx-max',T.lxMax);
+      setV('fraction-subtype', T.fractionSubType);
+      setV('num-min',T.numMin); setV('num-max',T.numMax);
+      setV('den-min',T.denMin); setV('den-max',T.denMax);
+      setV('pct-form', T.percentageForm);
+      setV('pct-min',T.pctMin); setV('pct-max',T.pctMax);
+      setV('pct-num-min',T.pctNumMin); setV('pct-num-max',T.pctNumMax);
+      setV('oo-steps',T.ooSteps); setV('oo-min',T.ooMin); setV('oo-max',T.ooMax);
+      setV('exp-base-min',T.expBaseMin); setV('exp-base-max',T.expBaseMax);
+      setV('exp-pow-min',T.expPowMin);   setV('exp-pow-max',T.expPowMax);
+      setV('custom-pattern', T.customPattern);
+      setC('opt-explain', T.optExplain); setC('opt-key', T.optKey);
+      setC('opt-meta', T.optMeta);       setC('opt-brand', T.optBrand);
+      setC('opt-negatives', T.allowNegatives);
+      if (T.interleavedTypes && Array.isArray(T.interleavedTypes)) {
+        document.querySelectorAll('#il-type-checks input[type=checkbox]').forEach(cb => {
+          cb.checked = T.interleavedTypes.includes(cb.value);
+        });
+      }
+      onPatternTypeChange();
+      generateWorksheet();
+      showStatus('Template loaded.', 'success');
+    } catch(err) { showStatus('Error loading template — invalid JSON.', 'error'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ═══════════════════════════════════════════════
+// PDF EXPORT — D5
+// ═══════════════════════════════════════════════
+function exportPDF() {
+  if (!lastProblems.length) { showStatus('Generate a worksheet first.', 'error'); return; }
+  const title   = safeStr('ws-title','Worksheet');
+  const instr   = safeStr('ws-instructions','Solve each problem.');
+  const cols    = safeInt('ws-cols',2);
+  const explain = isChecked('opt-explain');
+  const showKey = isChecked('opt-key');
+  const dateStr = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  const exHTML = explain ? `
+    <div style="margin-top:6px;font-size:9px;color:#bbb;letter-spacing:1px;text-transform:uppercase">Show work:</div>
+    <div style="border-bottom:1px solid #ddd;height:20px;margin-top:4px"></div>
+    <div style="border-bottom:1px solid #ddd;height:20px;margin-top:6px"></div>` : '';
+
+  const colStyle = cols===2 ? 'display:grid;grid-template-columns:1fr 1fr' : 'display:flex;flex-direction:column';
+
+  // D5: fraction (a/b inline) and exponent (<sup>) both render correctly in print window HTML
+  const probsHTML = `<div style="${colStyle}">` + lastProblems.map((p,i) => `
+    <div style="padding:10px 8px;border-bottom:1px solid #eee">
+      <div style="font-size:10px;color:#bbb;font-family:monospace">${i+1}.</div>
+      <div style="font-size:14px;font-weight:500;font-family:monospace">${p.text}</div>
+      ${exHTML}
+    </div>`).join('') + '</div>';
+
+  const kHTML = showKey ? `<div style="margin-top:28px;padding-top:20px;border-top:2px dashed #ddd;page-break-before:always">
+    <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#C4622D;margin-bottom:12px">&#10003; Answer Key — Teacher Copy</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+      ${lastProblems.map((p,i) => `<div style="font-family:monospace;font-size:11px;padding:4px 6px;background:#FEF3ED;border:1px solid #eee">
+        <span style="color:#bbb;font-size:10px">${i+1}.</span> <span style="color:#C4622D;font-weight:700">${p.answer}</span>
+      </div>`).join('')}
+    </div>
+  </div>` : '';
+
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <title>${title}</title>
+  <style>body{font-family:'DM Sans',sans-serif;margin:0;padding:32px 40px;color:#1a1a1a}@media print{body{padding:20px}}sup{font-size:0.7em;vertical-align:super;}</style>
+  </head><body>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #5C7A5C;padding-bottom:14px;margin-bottom:20px">
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">${title}</div>
+      <div style="font-size:12px;color:#666;font-style:italic;margin-top:4px">${instr}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;min-width:200px;text-align:right">
+      <div style="font-size:11px;color:#444">Name: <span style="display:inline-block;width:140px;border-bottom:1px solid #aaa">&nbsp;</span></div>
+      <div style="font-size:11px;color:#444">Date: <span style="display:inline-block;width:140px;border-bottom:1px solid #aaa">&nbsp;</span></div>
+      <div style="font-size:11px;color:#444">Period: <span style="display:inline-block;width:128px;border-bottom:1px solid #aaa">&nbsp;</span></div>
+    </div>
+  </div>
+  ${probsHTML}${kHTML}
+  <div style="margin-top:32px;border-top:1px solid #eee;padding-top:10px;text-align:center;font-family:monospace;font-size:9px;color:#aaa">
+    Salmon EDU &middot; Math Worksheet Builder v1.3 &middot; AionSystem Educational &middot; ${dateStr}
+  </div>
+  </body></html>`;
+
+  const w = window.open('','_blank','width=900,height=700');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(() => w.print(), 500);
+  showStatus('PDF opened — use Save as PDF in browser print dialog.', 'success');
+}
+
+// ═══════════════════════════════════════════════
+// BACKGROUND CANVAS — A2
+// ═══════════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  const symbols = ['+', '−', '×', '÷', '=', 'x', '√', 'π', '²', '∫', '∑', '%'];
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function getSymColor() {
+    const s = getComputedStyle(document.documentElement);
+    return s.getPropertyValue('--sym-color').trim() || 'rgba(92,122,92,0.06)';
+  }
+
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * W;
+      this.y = init ? Math.random() * H : H + 20;
+      this.size = 12 + Math.random() * 16;
+      this.speed = 0.2 + Math.random() * 0.5;
+      this.sym = symbols[Math.floor(Math.random() * symbols.length)];
+      this.alpha = 0.04 + Math.random() * 0.1;
+      this.drift = (Math.random() - 0.5) * 0.3;
+    }
+    draw() {
+      this.y -= this.speed;
+      this.x += this.drift;
+      if (this.y < -30) this.reset(false);
+      ctx.font = `${this.size}px 'DM Mono', monospace`;
+      ctx.fillStyle = getSymColor();
+      ctx.globalAlpha = this.alpha;
+      ctx.fillText(this.sym, this.x, this.y);
+    }
+  }
+
+  function init() {
+    resize();
+    const density = Math.floor((W * H) / 18000);
+    particles = Array.from({length: Math.min(density, 60)}, () => new Particle());
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalAlpha = 1;
+    particles.forEach(p => p.draw());
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', () => {
+    resize();
+    // Rebuild particles to match new viewport density
+    const density = Math.floor((W * H) / 18000);
+    particles = Array.from({length: Math.min(density, 60)}, () => new Particle());
+  });
+  init();
+  loop();
+})();
+
+// ═══════════════════════════════════════════════
+// INIT — E
+// ═══════════════════════════════════════════════
+initTheme();
+onPatternTypeChange();
+generateWorksheet();
+</script>
+</body>
+</html>
 
