@@ -1,1 +1,2476 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAV v1.5 — Linguistic Audit Vector | AionSystem</title>
+<meta name="description" content="LAV v1.5 — Linguistic Audit Vector. Five-stage term audit engine. Ten protocols. Active Red Team System. Built by Sheldon K. Salmon, AionSystem.">
+<meta property="og:title" content="LAV v1.5 — Linguistic Audit Vector">
+<meta property="og:description" content="Live linguistic audit engine. Five stages. Ten protocols. Root fidelity first.">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #07070d;
+  --bg2:       #0d0d18;
+  --bg3:       #12121f;
+  --bg4:       #171726;
+  --border:    rgba(212,174,60,0.18);
+  --border2:   rgba(212,174,60,0.08);
+  --border3:   rgba(212,174,60,0.04);
+  --gold:      #d4ae3c;
+  --gold-dim:  rgba(212,174,60,0.55);
+  --gold-glow: rgba(212,174,60,0.10);
+  --gold-l:    #f0cc60;
+  --text:      #e8e4d8;
+  --text-dim:  #8a8678;
+  --text-faint:#4a4840;
+  --confirmed: #3ddc84;
+  --confirmed-bg: rgba(61,220,132,0.08);
+  --defined:   #f0c040;
+  --defined-bg:rgba(240,192,64,0.08);
+  --corrected: #ff8040;
+  --corrected-bg:rgba(255,128,64,0.08);
+  --retired:   #ff4d4d;
+  --retired-bg:rgba(255,77,77,0.08);
+  --mono:      "JetBrains Mono", monospace;
+  --serif:     "Crimson Pro", Georgia, serif;
+  --sans:      "Syne", sans-serif;
+  --ease:      cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;overflow-x:hidden;}
+
+/* CANVAS */
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.25;}
+
+/* STATUS BAR */
+.status-bar{
+  background:linear-gradient(135deg,rgba(61,220,132,0.06),rgba(212,174,60,0.04));
+  border-bottom:1px solid var(--border);
+  padding:8px 24px;display:flex;align-items:center;gap:8px;
+  font-size:0.68rem;color:var(--text-dim);letter-spacing:0.08em;
+  flex-wrap:wrap;position:relative;z-index:2;
+}
+.status-bar .dot{width:6px;height:6px;border-radius:50%;background:var(--confirmed);box-shadow:0 0 6px var(--confirmed);flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.status-bar .sep{color:var(--text-faint);}
+.status-bar strong{color:var(--confirmed);}
+.status-bar .mean-val{color:var(--gold);}
+#sb-mean,#sb-count{color:var(--gold);}
+
+/* HEADER */
+header{padding:44px 0 28px;border-bottom:1px solid var(--border2);position:relative;z-index:1;}
+.page{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 24px 80px;}
+.breadcrumb{font-size:0.68rem;color:var(--text-faint);letter-spacing:0.1em;margin-bottom:18px;}
+.breadcrumb a{color:var(--gold-dim);text-decoration:none;}
+.breadcrumb a:hover{color:var(--gold);}
+.breadcrumb span{margin:0 6px;}
+.header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+h1{font-family:var(--serif);font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:300;letter-spacing:-0.01em;line-height:1.15;color:var(--text);}
+h1 em{color:var(--gold);font-style:italic;}
+.header-badges{display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.badge{font-size:0.62rem;letter-spacing:0.12em;padding:3px 9px;border-radius:2px;border:1px solid var(--border);color:var(--gold-dim);background:var(--gold-glow);white-space:nowrap;}
+.badge.live{border-color:rgba(61,220,132,0.3);color:rgba(61,220,132,0.8);background:rgba(61,220,132,0.05);}
+.header-meta{margin-top:10px;font-size:0.76rem;color:var(--text-dim);font-family:var(--serif);font-style:italic;letter-spacing:0.02em;}
+
+/* THEME BTN */
+.theme-btn{position:fixed;top:46px;right:20px;z-index:100;background:var(--bg3);border:1px solid var(--border);color:var(--text-dim);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;padding:5px 9px;cursor:pointer;border-radius:2px;transition:all 0.2s;}
+.theme-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* TABS — TOP LEVEL */
+.tabs{display:flex;gap:0;margin:28px 0 0;border-bottom:1px solid var(--border);overflow-x:auto;}
+.tab-btn{background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.12em;padding:11px 22px;color:var(--text-faint);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.2s;}
+.tab-btn:hover{color:var(--gold-dim);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.tab-panel{display:none;padding-top:28px;}
+.tab-panel.active{display:block;}
+
+/* STAGE PROGRESS */
+.stage-progress{display:flex;align-items:center;gap:0;margin-bottom:28px;border:1px solid var(--border2);background:var(--bg2);border-radius:3px;overflow:hidden;}
+.stage-step{flex:1;padding:10px 14px;text-align:center;position:relative;cursor:pointer;transition:background 0.15s;}
+.stage-step:not(:last-child)::after{content:"→";position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:0.65rem;color:var(--text-faint);z-index:1;}
+.stage-step.pending{background:var(--bg2);}
+.stage-step.active{background:rgba(212,174,60,0.08);border-top:2px solid var(--gold);}
+.stage-step.complete{background:rgba(61,220,132,0.05);border-top:2px solid var(--confirmed);}
+.stage-step.needs-review{background:rgba(255,128,64,0.05);border-top:2px solid var(--corrected);}
+.stage-num{font-size:0.6rem;color:var(--text-faint);letter-spacing:0.12em;display:block;}
+.stage-name{font-size:0.68rem;color:var(--text-dim);letter-spacing:0.06em;display:block;margin-top:2px;}
+.stage-step.active .stage-name{color:var(--gold);}
+.stage-step.complete .stage-name{color:var(--confirmed);}
+
+/* PANEL */
+.panel{background:var(--bg2);border:1px solid var(--border2);border-radius:3px;padding:22px 24px;margin-bottom:16px;}
+.panel-title{font-size:0.62rem;letter-spacing:0.15em;color:var(--gold-dim);margin-bottom:18px;padding-bottom:9px;border-bottom:1px solid var(--border2);}
+
+/* STAGE PANELS */
+.stage-panel{display:none;}
+.stage-panel.active{display:block;}
+
+/* FORM ELEMENTS */
+.field-group{margin-bottom:18px;}
+.field-label{font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:8px;}
+.field-label .req{color:var(--retired);font-size:0.6rem;}
+.field-label .opt{color:var(--text-faint);font-size:0.6rem;}
+.field-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:0.82rem;padding:9px 12px;border-radius:2px;transition:border-color 0.2s;resize:vertical;}
+.field-input:focus{outline:none;border-color:var(--gold);}
+.field-input::placeholder{color:var(--text-faint);}
+textarea.field-input{min-height:60px;}
+
+/* CHECKBOX ROW */
+.check-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;}
+.check-row input[type=checkbox]{accent-color:var(--gold);width:14px;height:14px;cursor:pointer;}
+.check-row .check-label{font-size:0.78rem;color:var(--text-dim);}
+.check-row .check-label strong{color:var(--text);}
+.check-row .check-sub{font-size:0.65rem;color:var(--text-faint);display:block;margin-top:2px;}
+
+/* ROOT LEVEL ROWS — Stage 2 */
+.root-level-row{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padding:14px 16px;margin-bottom:8px;position:relative;}
+.root-level-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.root-level-label{font-size:0.62rem;letter-spacing:0.12em;color:var(--gold-dim);text-transform:uppercase;}
+.root-level-status{font-size:0.6rem;padding:2px 7px;border-radius:2px;}
+.rls-empty{color:var(--text-faint);border:1px solid var(--border2);}
+.rls-filled{color:var(--confirmed);border:1px solid rgba(61,220,132,0.3);background:rgba(61,220,132,0.05);}
+.rls-unrecoverable{color:var(--retired);border:1px solid rgba(255,77,77,0.3);background:rgba(255,77,77,0.05);}
+.root-level-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.root-level-full{display:grid;grid-template-columns:1fr;gap:10px;}
+.root-field-label{font-size:0.6rem;color:var(--text-faint);letter-spacing:0.08em;margin-bottom:4px;}
+.root-field-input{width:100%;background:var(--bg4);border:1px solid var(--border3);color:var(--text);font-family:var(--mono);font-size:0.76rem;padding:7px 10px;border-radius:2px;transition:border-color 0.2s;}
+.root-field-input:focus{outline:none;border-color:var(--gold);}
+.root-field-input::placeholder{color:var(--text-faint);}
+.unrecov-toggle{font-family:var(--mono);font-size:0.6rem;color:var(--text-faint);background:none;border:1px solid var(--border2);padding:4px 9px;cursor:pointer;border-radius:2px;transition:all 0.15s;}
+.unrecov-toggle:hover{border-color:var(--retired);color:var(--retired);}
+.unrecov-toggle.active{border-color:var(--retired);color:var(--retired);background:rgba(255,77,77,0.05);}
+
+/* CONFIDENCE DISPLAY */
+.confidence-display{background:var(--bg3);border:1px solid var(--border2);border-radius:2px;padding:12px 14px;margin-top:12px;}
+.conf-label{font-size:0.6rem;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:6px;}
+.conf-value{font-size:1.1rem;font-family:var(--sans);font-weight:700;letter-spacing:0.05em;}
+.conf-etym{color:var(--confirmed);}
+.conf-ctx{color:var(--defined);}
+.conf-inf{color:var(--retired);}
+.conf-pending{color:var(--text-faint);}
+.conf-explain{font-size:0.68rem;font-family:var(--serif);font-style:italic;color:var(--text-dim);margin-top:4px;line-height:1.5;}
+.conf-multiplier{font-size:0.65rem;color:var(--gold-dim);margin-top:4px;font-family:var(--mono);}
+
+/* PROTOCOL C NOTICE */
+.proto-c-notice{background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.25);padding:10px 14px;border-radius:2px;margin-top:10px;font-size:0.72rem;color:rgba(255,140,140,0.9);display:none;}
+.proto-c-notice.active{display:block;}
+
+/* DRIFT TYPES — Stage 3 */
+.drift-type-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.drift-type-row{display:grid;grid-template-columns:160px 1fr auto auto auto;gap:10px;align-items:center;background:var(--bg3);border:1px solid var(--border2);padding:10px 14px;border-radius:2px;transition:background 0.15s;}
+.drift-type-row:hover{background:var(--bg4);}
+.dt-name{font-size:0.72rem;color:var(--text);font-family:var(--mono);}
+.dt-desc{font-size:0.68rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;}
+.dt-btn{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;padding:4px 8px;border-radius:2px;border:1px solid var(--border2);background:none;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.dt-btn:hover{border-color:var(--gold-dim);}
+.dt-btn.sel-present{border-color:var(--retired);color:var(--retired);background:rgba(255,77,77,0.08);}
+.dt-btn.sel-absent{border-color:var(--confirmed);color:var(--confirmed);background:rgba(61,220,132,0.06);}
+.dt-btn.sel-uncertain{border-color:var(--defined);color:var(--defined);background:rgba(240,192,64,0.06);}
+.drift-decisions-progress{font-size:0.65rem;color:var(--text-faint);margin-bottom:10px;}
+.drift-decisions-progress strong{color:var(--gold);}
+
+/* PRIMARY DRIFT + DRIVER */
+.primary-drift-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
+.driver-field{margin-top:14px;}
+.select-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:0.78rem;padding:8px 10px;border-radius:2px;cursor:pointer;}
+.select-input:focus{outline:none;border-color:var(--gold);}
+.select-input option{background:var(--bg3);}
+
+/* LDS PANEL — reusable component */
+.lds-panel{background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:18px 20px;margin-bottom:14px;}
+.lds-panel-title{font-size:0.62rem;letter-spacing:0.12em;color:var(--gold-dim);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.lds-axis{margin-bottom:16px;}
+.lds-axis-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.lds-axis-label{font-size:0.7rem;color:var(--text);letter-spacing:0.06em;cursor:help;border-bottom:1px dashed var(--text-faint);position:relative;}
+.lds-tooltip{position:absolute;bottom:calc(100% + 8px);left:0;width:260px;background:var(--bg4);border:1px solid var(--border);padding:8px 12px;border-radius:3px;font-size:0.66rem;color:var(--text-dim);line-height:1.5;opacity:0;pointer-events:none;transition:opacity 0.2s;z-index:50;font-family:var(--serif);font-style:italic;}
+.lds-axis-label:hover .lds-tooltip{opacity:1;}
+.lds-axis-val{font-size:0.85rem;color:var(--gold);font-weight:500;min-width:36px;text-align:right;}
+.lds-axis-direction{font-size:0.58rem;color:var(--text-faint);margin-left:6px;}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;background:linear-gradient(to right,var(--gold) var(--pct,50%),var(--bg4) var(--pct,50%));border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--gold);box-shadow:0 0 5px rgba(212,174,60,0.4);transition:transform 0.15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3);}
+.lds-slider-row{display:flex;align-items:center;gap:8px;}
+.lds-axis-num-input{width:50px;background:var(--bg4);border:1px solid var(--border2);color:var(--gold);font-family:var(--mono);font-size:0.74rem;padding:3px 6px;border-radius:2px;text-align:center;}
+.lds-axis-num-input:focus{outline:none;border-color:var(--gold);}
+
+/* LDS RESULT BAR */
+.lds-result-bar{margin-top:18px;}
+.lds-bar-label{font-size:0.6rem;color:var(--text-faint);letter-spacing:0.1em;margin-bottom:6px;display:flex;justify-content:space-between;}
+.lds-bar-track{height:12px;background:var(--bg4);border-radius:2px;overflow:hidden;border:1px solid var(--border2);display:flex;}
+.lds-bar-rf{background:rgba(61,220,132,0.6);height:100%;transition:width 0.3s;}
+.lds-bar-cl{background:rgba(255,128,64,0.6);height:100%;transition:width 0.3s;}
+.lds-bar-dr{background:rgba(255,77,77,0.6);height:100%;transition:width 0.3s;}
+.lds-bar-legend{display:flex;gap:14px;margin-top:6px;}
+.lds-bar-legend-item{display:flex;align-items:center;gap:5px;font-size:0.6rem;color:var(--text-faint);}
+.lds-bar-legend-dot{width:8px;height:8px;border-radius:1px;}
+
+/* LDS RESULT NUMBERS */
+.lds-result-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.lds-result-cell{background:var(--bg4);border:1px solid var(--border2);padding:8px 12px;border-radius:2px;text-align:center;}
+.lds-result-cell-label{font-size:0.58rem;color:var(--text-faint);letter-spacing:0.1em;margin-bottom:3px;}
+.lds-result-cell-val{font-size:1rem;color:var(--gold);font-weight:500;}
+.lds-raw-adjusted{display:flex;align-items:center;gap:10px;margin-top:10px;padding:8px 12px;background:var(--bg4);border:1px solid var(--border2);border-radius:2px;}
+.lds-raw-val{font-size:0.78rem;color:var(--text-dim);}
+.lds-arrow{color:var(--text-faint);font-size:0.7rem;}
+.lds-adj-val{font-size:1.1rem;color:var(--gold);font-weight:700;}
+.lds-conf-mult{font-size:0.65rem;color:var(--text-faint);margin-left:auto;}
+.lds-boundary-notice{margin-top:8px;padding:6px 10px;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.25);border-radius:2px;font-size:0.68rem;color:var(--defined);display:none;}
+.lds-boundary-notice.active{display:block;}
+
+/* ISSUANCE CARD — Stage 5 */
+.issuance-card{padding:20px 24px;border-radius:3px;border:2px solid;margin-bottom:18px;position:relative;overflow:hidden;transition:all 0.3s;}
+.issuance-card.confirmed{border-color:var(--confirmed);background:var(--confirmed-bg);}
+.issuance-card.defined{border-color:var(--defined);background:var(--defined-bg);}
+.issuance-card.corrected{border-color:var(--corrected);background:var(--corrected-bg);}
+.issuance-card.retired{border-color:var(--retired);background:var(--retired-bg);}
+.issuance-card.pending{border-color:var(--border2);background:var(--bg3);}
+.issuance-label{font-size:1.5rem;font-family:var(--sans);font-weight:700;letter-spacing:0.06em;margin-bottom:4px;}
+.issuance-card.confirmed .issuance-label{color:var(--confirmed);}
+.issuance-card.defined .issuance-label{color:var(--defined);}
+.issuance-card.corrected .issuance-label{color:var(--corrected);}
+.issuance-card.retired .issuance-label{color:var(--retired);}
+.issuance-card.pending .issuance-label{color:var(--text-faint);}
+.issuance-lds{font-size:2rem;font-weight:700;color:var(--text);letter-spacing:-0.02em;line-height:1;}
+.issuance-meaning{font-size:0.78rem;color:var(--text-dim);margin-top:8px;font-family:var(--serif);font-style:italic;line-height:1.5;}
+.issuance-pulse{position:absolute;inset:0;animation:pulse-ring 0.5s ease-out forwards;pointer-events:none;}
+@keyframes pulse-ring{0%{box-shadow:inset 0 0 0 0 rgba(255,255,255,0.2);opacity:1;}100%{box-shadow:inset 0 0 0 40px rgba(255,255,255,0);opacity:0;}}
+
+/* MONITORING TIER */
+.monitoring-tier{background:var(--bg3);border:1px solid var(--border2);padding:10px 14px;border-radius:2px;margin-bottom:12px;display:flex;align-items:center;gap:14px;}
+.mt-label{font-size:0.6rem;color:var(--text-faint);letter-spacing:0.1em;}
+.mt-value{font-size:0.85rem;font-family:var(--sans);font-weight:700;letter-spacing:0.05em;}
+.mt-t1{color:var(--confirmed);}
+.mt-t2{color:var(--defined);}
+.mt-t3{color:var(--corrected);}
+.mt-t4{color:var(--retired);}
+.mt-interval{font-size:0.65rem;color:var(--text-dim);}
+
+/* FOLLOW-UP FIELDS */
+.follow-up{padding:14px;background:var(--bg3);border:1px solid var(--border2);border-radius:2px;margin-bottom:14px;display:none;}
+.follow-up.active{display:block;}
+.follow-up-title{font-size:0.62rem;letter-spacing:0.12em;color:var(--gold-dim);margin-bottom:12px;}
+
+/* STAGE GATE BUTTONS */
+.gate-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px;}
+.gate-btn{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;padding:9px 20px;border:1px solid;cursor:pointer;border-radius:2px;transition:all 0.2s;position:relative;overflow:hidden;}
+.gate-btn.advance{border-color:var(--gold);color:var(--gold);background:transparent;}
+.gate-btn.advance::before{content:"";position:absolute;inset:0;background:var(--gold);transform:translateX(-101%);transition:transform 0.22s var(--ease);z-index:0;}
+.gate-btn.advance:hover::before{transform:translateX(0);}
+.gate-btn.advance:hover{color:#000;}
+.gate-btn.advance span,.gate-btn.back span{position:relative;z-index:1;}
+.gate-btn.back{border-color:var(--border2);color:var(--text-faint);background:transparent;}
+.gate-btn.back:hover{border-color:var(--text-dim);color:var(--text-dim);}
+.gate-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.gate-btn:disabled::before{display:none;}
+.gate-error{font-size:0.65rem;color:var(--retired);font-family:var(--serif);font-style:italic;margin-top:6px;display:none;}
+.gate-error.active{display:block;}
+
+/* ARCHIVE TO SAVE BTN */
+.archive-btn{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;padding:9px 18px;border:1px solid var(--confirmed);color:var(--confirmed);background:transparent;cursor:pointer;border-radius:2px;transition:all 0.18s;margin-top:10px;}
+.archive-btn:hover{background:rgba(61,220,132,0.08);}
+
+/* PROTOCOL SUB-NAV */
+.proto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.proto-card{background:var(--bg2);border:1px solid var(--border2);padding:18px 20px;border-radius:3px;cursor:pointer;transition:all 0.18s;text-decoration:none;display:block;}
+.proto-card:hover{border-color:var(--gold);background:var(--bg3);}
+.proto-card.active{border-color:var(--gold);background:rgba(212,174,60,0.05);}
+.proto-card-id{font-size:0.62rem;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:6px;}
+.proto-card-name{font-family:var(--sans);font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.proto-card-desc{font-size:0.68rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;line-height:1.5;}
+.proto-runner{display:none;}
+.proto-runner.active{display:block;}
+.proto-back-btn{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;color:var(--gold-dim);background:none;border:1px solid var(--border2);padding:6px 12px;cursor:pointer;border-radius:2px;margin-bottom:20px;transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+.proto-back-btn:hover{border-color:var(--gold);color:var(--gold);}
+.proto-runner-title{font-family:var(--sans);font-size:1.4rem;font-weight:700;letter-spacing:0.04em;color:var(--gold);margin-bottom:4px;}
+.proto-runner-sub{font-size:0.72rem;color:var(--text-dim);font-family:var(--serif);font-style:italic;margin-bottom:20px;}
+
+/* PROTOCOL F — DDS DISPLAY */
+.dds-result{padding:16px 20px;border-radius:3px;border:2px solid;margin-top:14px;}
+.dds-result.d-confirmed{border-color:var(--confirmed);background:var(--confirmed-bg);}
+.dds-result.d-defined{border-color:var(--defined);background:var(--defined-bg);}
+.dds-result.d-restructured{border-color:var(--corrected);background:var(--corrected-bg);}
+.dds-result.d-suspended{border-color:var(--retired);background:var(--retired-bg);}
+.dds-label{font-size:1.2rem;font-family:var(--sans);font-weight:700;letter-spacing:0.06em;margin-bottom:4px;}
+.dds-result.d-confirmed .dds-label{color:var(--confirmed);}
+.dds-result.d-defined .dds-label{color:var(--defined);}
+.dds-result.d-restructured .dds-label{color:var(--corrected);}
+.dds-result.d-suspended .dds-label{color:var(--retired);}
+.dds-val{font-size:1.8rem;font-weight:700;color:var(--text);}
+.dds-meaning{font-size:0.75rem;color:var(--text-dim);font-family:var(--serif);font-style:italic;margin-top:6px;}
+
+/* PROTOCOL G — DV DISPLAY */
+.dv-display{background:var(--bg3);border:1px solid var(--border2);padding:14px;border-radius:2px;margin-top:12px;}
+.dv-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:0.72rem;}
+.dv-key{color:var(--text-faint);}
+.dv-val-pos{color:var(--retired);}
+.dv-val-neg{color:var(--confirmed);}
+.dv-val-zero{color:var(--text-dim);}
+.dv-status-badge{display:inline-block;font-size:0.62rem;padding:3px 8px;border-radius:2px;margin-top:8px;}
+.dvs-stable{color:var(--confirmed);border:1px solid rgba(61,220,132,0.3);background:rgba(61,220,132,0.06);}
+.dvs-watch{color:var(--defined);border:1px solid rgba(240,192,64,0.3);background:rgba(240,192,64,0.06);}
+.dvs-alert{color:var(--corrected);border:1px solid rgba(255,128,64,0.3);background:rgba(255,128,64,0.06);}
+.dvs-critical{color:var(--retired);border:1px solid rgba(255,77,77,0.3);background:rgba(255,77,77,0.06);}
+
+/* DRIFT ARCHIVE */
+.archive-empty{padding:40px;text-align:center;color:var(--text-faint);font-family:var(--serif);font-style:italic;font-size:0.9rem;}
+.archive-entry{background:var(--bg2);border:1px solid var(--border2);border-radius:3px;padding:16px 18px;margin-bottom:10px;transition:background 0.15s;}
+.archive-entry:hover{background:var(--bg3);}
+.ae-header{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;}
+.ae-term{font-family:var(--sans);font-size:1.1rem;font-weight:700;color:var(--text);}
+.ae-issuance{font-size:0.62rem;padding:2px 8px;border-radius:2px;border:1px solid;}
+.ae-iss-confirmed{color:var(--confirmed);border-color:rgba(61,220,132,0.4);background:rgba(61,220,132,0.06);}
+.ae-iss-defined{color:var(--defined);border-color:rgba(240,192,64,0.3);background:rgba(240,192,64,0.06);}
+.ae-iss-corrected{color:var(--corrected);border-color:rgba(255,128,64,0.3);background:rgba(255,128,64,0.06);}
+.ae-iss-retired{color:var(--retired);border-color:rgba(255,77,77,0.3);background:rgba(255,77,77,0.06);}
+.ae-lds{font-size:0.85rem;color:var(--gold);font-weight:500;}
+.ae-conf{font-size:0.62rem;color:var(--text-faint);}
+.ae-meta{font-size:0.68rem;color:var(--text-faint);font-family:var(--serif);}
+.ae-drift-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.ae-drift-tag{font-size:0.58rem;padding:2px 6px;background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.2);color:rgba(255,140,140,0.7);border-radius:2px;}
+.ae-flags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
+.ae-flag{font-size:0.58rem;padding:2px 6px;background:rgba(240,192,64,0.06);border:1px solid rgba(240,192,64,0.2);color:var(--gold-dim);border-radius:2px;}
+
+/* ARCHIVE ACTIONS */
+.archive-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.arch-act-btn{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;padding:7px 14px;border:1px solid var(--border2);cursor:pointer;border-radius:2px;background:var(--bg3);color:var(--text-dim);transition:all 0.18s;}
+.arch-act-btn:hover{border-color:var(--gold);color:var(--gold);}
+.arch-act-btn.copied{color:var(--confirmed);border-color:var(--confirmed);}
+
+/* ABOUT SECTIONS */
+.about-section{margin-bottom:36px;}
+.about-title{font-family:var(--sans);font-size:0.8rem;font-weight:600;letter-spacing:0.12em;color:var(--gold);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.principle-card{background:var(--bg2);border:1px solid var(--border2);padding:14px 18px;border-radius:2px;margin-bottom:8px;}
+.principle-num{font-size:0.6rem;color:var(--text-faint);letter-spacing:0.12em;margin-bottom:4px;}
+.principle-name{font-family:var(--sans);font-size:0.82rem;font-weight:600;color:var(--gold-dim);margin-bottom:6px;}
+.principle-body{font-family:var(--serif);font-size:0.88rem;color:var(--text-dim);line-height:1.65;}
+
+/* REFERENCE TABLE */
+.ref-table{width:100%;border-collapse:collapse;font-size:0.68rem;margin-bottom:20px;}
+.ref-table th{text-align:left;font-size:0.6rem;letter-spacing:0.1em;color:var(--text-faint);padding:6px 10px;border-bottom:1px solid var(--border2);}
+.ref-table td{padding:7px 10px;border-bottom:1px solid var(--border2);color:var(--text-dim);vertical-align:top;}
+.ref-table tr:hover td{background:var(--bg3);}
+.ref-table code{font-family:var(--mono);font-size:0.72rem;color:var(--gold-dim);background:rgba(212,174,60,0.06);padding:2px 5px;border-radius:2px;}
+
+/* AUDIT LOG TAB */
+.audit-section{margin-bottom:36px;}
+.audit-title{font-family:var(--sans);font-size:0.8rem;font-weight:600;letter-spacing:0.12em;color:var(--gold);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.audit-prose{font-family:var(--serif);font-size:0.9rem;color:var(--text-dim);line-height:1.7;margin-bottom:12px;}
+.stf-card{background:var(--bg2);border:1px solid var(--border2);padding:14px 18px;border-radius:2px;margin-bottom:8px;border-left:3px solid var(--gold-dim);}
+.stf-id{font-size:0.6rem;letter-spacing:0.12em;color:var(--gold-dim);margin-bottom:5px;}
+.stf-title{font-size:0.82rem;font-family:var(--sans);font-weight:600;color:var(--text);margin-bottom:6px;}
+.stf-body{font-family:var(--serif);font-size:0.85rem;color:var(--text-dim);line-height:1.6;}
+
+/* ABOUT LINKS */
+.about-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.about-link{font-size:0.68rem;letter-spacing:0.1em;color:var(--gold-dim);text-decoration:none;padding:5px 10px;border:1px solid var(--border);border-radius:2px;transition:all 0.18s;}
+.about-link:hover{color:var(--gold);border-color:var(--gold);}
+
+/* RUNNING MEAN INLINE */
+.rm-inline{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);padding:8px 14px;border-radius:2px;margin-bottom:16px;font-size:0.68rem;}
+.rm-label{color:var(--text-faint);letter-spacing:0.08em;}
+.rm-baseline{color:var(--gold);}
+.rm-session{color:var(--confirmed);}
+.rm-combined{color:var(--gold-l);font-weight:500;}
+
+/* ERROR STATES */
+.error-notice{background:rgba(255,77,77,0.05);border:1px solid rgba(255,77,77,0.2);padding:10px 14px;border-radius:2px;font-size:0.7rem;color:rgba(255,140,140,0.85);display:none;margin-top:8px;}
+.error-notice.active{display:block;}
+.info-notice{background:rgba(212,174,60,0.05);border:1px solid rgba(212,174,60,0.15);padding:10px 14px;border-radius:2px;font-size:0.7rem;color:var(--gold-dim);margin-bottom:12px;}
+
+/* LIGHT THEME */
+[data-theme="light"]{
+  --bg:#f4f1e8;--bg2:#ede9dc;--bg3:#e5e0d0;--bg4:#dbd5c4;
+  --border:rgba(140,100,20,0.22);--border2:rgba(140,100,20,0.12);--border3:rgba(140,100,20,0.06);
+  --gold:#8c6414;--gold-dim:rgba(140,100,20,0.65);--gold-glow:rgba(140,100,20,0.07);--gold-l:#6b4c0f;
+  --text:#1a1810;--text-dim:#5a5040;--text-faint:#aaa090;
+}
+
+/* RESPONSIVE */
+@media(max-width:760px){
+  .primary-drift-row{grid-template-columns:1fr;}
+  .proto-grid{grid-template-columns:1fr 1fr;}
+  .drift-type-row{grid-template-columns:120px 1fr;}
+  .dt-desc{display:none;}
+  .root-level-grid{grid-template-columns:1fr;}
+  .lds-result-nums{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:500px){
+  .proto-grid{grid-template-columns:1fr;}
+  .tabs .tab-btn{padding:9px 12px;font-size:0.65rem;}
+  .drift-type-row{grid-template-columns:1fr;}
+  .dt-btn{font-size:0.55rem;padding:3px 6px;}
+}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn">LIGHT</button>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="dot"></div>
+  <strong>ACTIVE RED TEAM: ALWAYS ON</strong>
+  <span class="sep">·</span>
+  <span>RUNNING MEAN: <span class="mean-val" id="sb-mean">77.5%</span></span>
+  <span class="sep">·</span>
+  <span>ANCHOR ENTRIES: <span class="mean-val" id="sb-count">45</span></span>
+  <span class="sep">·</span>
+  <span class="mean-val">M-STRONG</span>
+  <span class="sep">·</span>
+  <span>Session: <span id="sb-session-count">0</span> terms audited</span>
+</div>
+
+<div class="page">
+<header>
+  <div class="breadcrumb">
+    <a href="/">AionSystem</a><span>/</span>
+    <a href="/stack/">Stack</a><span>/</span>
+    <a href="/stack/frameworks/">Frameworks</a><span>/</span>
+    LAV v1.5
+  </div>
+  <div class="header-row">
+    <div>
+      <h1>Linguistic Audit<br><em>Vector</em></h1>
+      <div class="header-meta">Root fidelity first. Drift has a driver. Latency is the work.</div>
+    </div>
+    <div class="header-badges">
+      <div class="badge">LAV v1.5</div>
+      <div class="badge live">M-STRONG · 45 ANCHOR ENTRIES</div>
+      <div class="badge">TEN PROTOCOLS · A through J</div>
+      <div class="badge">77.5% RUNNING MEAN</div>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('engine',this)">[ AUDIT ENGINE ]</button>
+  <button class="tab-btn" onclick="switchTab('protocols',this)">[ PROTOCOLS ]</button>
+  <button class="tab-btn" onclick="switchTab('archive',this)">[ DRIFT ARCHIVE ]</button>
+  <button class="tab-btn" onclick="switchTab('log',this)">[ AUDIT LOG ]</button>
+  <button class="tab-btn" onclick="switchTab('about',this)">[ ABOUT LAV ]</button>
+</div>
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- TAB: AUDIT ENGINE                                      -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="tab-engine" class="tab-panel active">
+
+  <!-- Stage progress bar -->
+  <div class="stage-progress" id="stage-progress">
+    <div class="stage-step active" id="sp-1" onclick="jumpToStage(1)">
+      <span class="stage-num">01</span>
+      <span class="stage-name">ISOLATION</span>
+    </div>
+    <div class="stage-step pending" id="sp-2" onclick="jumpToStage(2)">
+      <span class="stage-num">02</span>
+      <span class="stage-name">ROOT EXCAVATION</span>
+    </div>
+    <div class="stage-step pending" id="sp-3" onclick="jumpToStage(3)">
+      <span class="stage-num">03</span>
+      <span class="stage-name">DRIFT MAPPING</span>
+    </div>
+    <div class="stage-step pending" id="sp-4" onclick="jumpToStage(4)">
+      <span class="stage-num">04</span>
+      <span class="stage-name">LDS SCORING</span>
+    </div>
+    <div class="stage-step pending" id="sp-5" onclick="jumpToStage(5)">
+      <span class="stage-num">05</span>
+      <span class="stage-name">ISSUANCE</span>
+    </div>
+  </div>
+
+  <!-- ── STAGE 1: ISOLATION ── -->
+  <div class="stage-panel active" id="stage-1">
+    <div class="panel">
+      <div class="panel-title">STAGE 1 — ISOLATION · Extract the term from context</div>
+
+      <div class="field-group">
+        <div class="field-label">Term Under Audit <span class="req">* required</span></div>
+        <input type="text" class="field-input" id="s1-term" placeholder="Enter the term exactly as deployed…" oninput="updateTerm()">
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Deployment Context <span class="opt">optional but recommended</span></div>
+        <input type="text" class="field-input" id="s1-context" placeholder="The framework, document, or discourse where this term is load-bearing…">
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Term Properties — check all that apply</div>
+        <label class="check-row">
+          <input type="checkbox" id="s1-compound" onchange="updateCompound()">
+          <div class="check-label">
+            <strong>Compound term</strong> — built from two or more etymological roots
+            <span class="check-sub">Triggers Protocol A. Both constituents will be excavated independently.</span>
+          </div>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" id="s1-nonie" onchange="updateNonIE()">
+          <div class="check-label">
+            <strong>Non-Indo-European origin</strong> — term originates in a non-IE language family
+            <span class="check-sub">Protocol E applies. IE-based auditing methods may not fully capture the original encoding.</span>
+          </div>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" id="s1-metric" onchange="updateMetric()">
+          <div class="check-label">
+            <strong>Quantitative metric field</strong> — term will be deployed with a numerical domain
+            <span class="check-sub">Protocol I required after Stage 5. No DEFINED-status metric field is fully registered without a formula.</span>
+          </div>
+        </label>
+      </div>
+
+      <!-- Non-IE notice -->
+      <div class="info-notice" id="nonie-notice" style="display:none;">
+        ⚑ Protocol E applies. Root excavation in Stage 2 must account for non-IE ontological assumptions. IE-family auditing cannot be treated as the primary frame. Document what the source language family encodes that IE methods would miss.
+      </div>
+
+      <div class="gate-row">
+        <button class="gate-btn advance" onclick="advanceStage(1)" id="gate-1-btn"><span>Advance to Root Excavation →</span></button>
+        <div class="gate-error" id="gate-1-error">Enter the term before advancing.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STAGE 2: ROOT EXCAVATION ── -->
+  <div class="stage-panel" id="stage-2">
+    <div class="panel">
+      <div class="panel-title">STAGE 2 — ROOT EXCAVATION (ROOT LISTENING) · Trace the etymological lineage</div>
+
+      <div class="info-notice">
+        Excavate each level in sequence. What physical, relational, or phenomenological reality was the term encoding at each level? Document the original intuition — the thing a person was pointing at when this sound first became a word. Mark levels as UNRECOVERABLE where evidence is absent.
+      </div>
+
+      <div id="root-levels-container"></div>
+
+      <!-- Confidence auto-display -->
+      <div class="confidence-display">
+        <div class="conf-label">CONFIDENCE DESIGNATION — AUTO-DERIVED FROM EVIDENCE</div>
+        <div class="conf-value conf-pending" id="conf-value">— PENDING</div>
+        <div class="conf-explain" id="conf-explain">Complete the root excavation above to determine confidence designation.</div>
+        <div class="conf-multiplier" id="conf-multiplier"></div>
+      </div>
+
+      <!-- Protocol C notice -->
+      <div class="proto-c-notice" id="proto-c-notice">
+        ⚠ PROTOCOL C ACTIVATED — Root marked unrecoverable. Confidence forced to [INFERRED] (LDS × 1.25). First-usage context has been designated as substitute ground. Entry will carry ROOT_UNRECOVERABLE flag in the Drift Archive.
+      </div>
+
+    </div>
+    <div class="gate-row">
+      <button class="gate-btn back" onclick="retreatStage(2)"><span>← Back to Isolation</span></button>
+      <button class="gate-btn advance" onclick="advanceStage(2)" id="gate-2-btn"><span>Advance to Drift Mapping →</span></button>
+    </div>
+    <div class="gate-error" id="gate-2-error">Complete at least one root level with a root form and encoding before advancing.</div>
+  </div>
+
+  <!-- ── STAGE 3: DRIFT MAPPING ── -->
+  <div class="stage-panel" id="stage-3">
+    <div class="panel">
+      <div class="panel-title">STAGE 3 — DRIFT MAPPING · Classify every departure from root encoding</div>
+
+      <div class="info-notice">
+        Every drift type requires a decision: PRESENT, ABSENT, or UNCERTAIN. All seven must be addressed before the primary drift type can be selected. Drift is never passive — the driver must be named.
+      </div>
+
+      <div class="drift-decisions-progress" id="drift-progress">Decisions: <strong>0 / 7</strong> made · Primary type: not yet selected</div>
+
+      <div class="drift-type-grid" id="drift-type-grid"></div>
+
+      <div class="primary-drift-row" id="primary-drift-row" style="display:none;">
+        <div class="field-group">
+          <div class="field-label">Primary Drift Type <span class="req">*</span></div>
+          <select class="select-input" id="s3-primary-drift" onchange="updatePrimaryDrift()">
+            <option value="">— select primary type —</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Departure Point in Lineage</div>
+          <input type="text" class="field-input" id="s3-departure" placeholder="Where in the etymological lineage did drift begin?">
+        </div>
+      </div>
+
+      <div class="driver-field" id="driver-field" style="display:none;">
+        <div class="field-label">Drift Driver <span class="req">* required</span></div>
+        <input type="text" class="field-input" id="s3-driver" placeholder="Name the institution, discipline, commercial interest, power structure, or epistemic fashion that applied pressure…">
+        <div class="gate-error" id="driver-error" style="margin-top:4px;">Drift driver is required. Drift is never passive — name the force.</div>
+      </div>
+
+    </div>
+    <div class="gate-row">
+      <button class="gate-btn back" onclick="retreatStage(3)"><span>← Back to Root Excavation</span></button>
+      <button class="gate-btn advance" onclick="advanceStage(3)" id="gate-3-btn"><span>Advance to LDS Scoring →</span></button>
+    </div>
+    <div class="gate-error" id="gate-3-error">All 7 drift types must have a decision, a primary type must be selected, and the drift driver must be named.</div>
+  </div>
+
+  <!-- ── STAGE 4: LDS SCORING ── -->
+  <div class="stage-panel" id="stage-4">
+    <div class="panel">
+      <div class="panel-title">STAGE 4 — LDS SCORING · Linguistic Drift Score across three dimensions</div>
+
+      <div id="main-lds-panel"></div>
+
+      <!-- LDS formula display -->
+      <div class="lds-panel" style="background:var(--bg4);border-color:var(--border3);">
+        <div class="panel-title" style="margin-bottom:10px;">FORMULA · Standard LDS</div>
+        <div style="font-size:0.72rem;color:var(--text-dim);margin-bottom:8px;font-family:var(--mono);">
+          LDS = ((1 − RF) + CL + DR) / 3<br>
+          <span style="color:var(--text-faint);font-size:0.65rem;">Confidence multiplier applied after: [ETYMOLOGICAL] × 1.00 · [CONTEXTUAL] × 1.10 · [INFERRED] × 1.25</span>
+        </div>
+        <div style="font-size:0.65rem;color:var(--text-faint);">v1.5 Boundary Rule: LDS exactly at threshold → assigned to more cautious category</div>
+      </div>
+
+      <!-- Compound Protocol A notice -->
+      <div id="proto-a-inline-notice" style="display:none;">
+        <div class="info-notice" style="margin-top:0;border-color:rgba(240,192,64,0.25);">
+          ◈ COMPOUND TERM DETECTED — Protocol A applies. Run the full Protocol A in the Protocols tab to score each constituent independently and calculate Fusion Integrity. The LDS here scores the compound as a whole; Protocol A provides the constituent-level audit.
+          <div style="margin-top:8px;">
+            <button class="gate-btn advance" style="font-size:0.62rem;padding:5px 12px;" onclick="switchTab(\'protocols\',document.querySelectorAll(\'.tab-btn\')[1]);openProtocol(\'A\')"><span>Open Protocol A →</span></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="gate-row">
+      <button class="gate-btn back" onclick="retreatStage(4)"><span>← Back to Drift Mapping</span></button>
+      <button class="gate-btn advance" onclick="advanceStage(4)" id="gate-4-btn"><span>Advance to Issuance →</span></button>
+    </div>
+    <div class="gate-error" id="gate-4-error">Adjust the scoring sliders to reflect evidence before advancing. Default 0.5/0.5/0.5 requires explicit confirmation.</div>
+  </div>
+
+  <!-- ── STAGE 5: ISSUANCE ── -->
+  <div class="stage-panel" id="stage-5">
+    <div class="panel">
+      <div class="panel-title">STAGE 5 — ISSUANCE · Formal issuance and follow-up requirements</div>
+
+      <!-- Issuance card -->
+      <div class="issuance-card pending" id="main-issuance-card">
+        <div class="issuance-label" id="main-issuance-label">—</div>
+        <div class="issuance-lds" id="main-issuance-lds">LDS —</div>
+        <div class="issuance-meaning" id="main-issuance-meaning">Complete LDS scoring in Stage 4 to receive issuance.</div>
+      </div>
+
+      <!-- Monitoring tier -->
+      <div class="monitoring-tier" id="monitoring-tier-display">
+        <span class="mt-label">MONITORING TIER:</span>
+        <span class="mt-value" id="mt-val">—</span>
+        <span class="mt-interval" id="mt-interval"></span>
+        <span style="margin-left:auto;font-size:0.6rem;color:var(--text-faint);">Deployment exposure:</span>
+        <select class="select-input" style="width:auto;font-size:0.65rem;padding:4px 8px;" id="deploy-exposure" onchange="updateMonitorTier()">
+          <option value="low">Low</option>
+          <option value="moderate">Moderate</option>
+          <option value="high">High</option>
+          <option value="cross">Cross-Framework</option>
+        </select>
+      </div>
+
+      <!-- Protocol I flag -->
+      <div class="error-notice" id="proto-i-notice" style="background:rgba(212,174,60,0.05);border-color:rgba(212,174,60,0.2);color:var(--gold-dim);">
+        ◈ PROTOCOL I REQUIRED — This term was flagged as a quantitative metric field. After issuance, register the formula in Protocol I (Protocols tab). Until formula registration is complete, this field carries PROVISIONAL status.
+      </div>
+
+      <!-- Follow-up: DEFINED -->
+      <div class="follow-up" id="followup-defined">
+        <div class="follow-up-title">DEFINED ISSUANCE — Operational definition required for every deployment</div>
+        <div class="field-group">
+          <div class="field-label">Which root dimension is operative in this context? <span class="req">*</span></div>
+          <textarea class="field-input" id="s5-op-dim" placeholder="Name which part of the original root encoding applies in this deployment context…"></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Which root dimensions are explicitly excluded?</div>
+          <textarea class="field-input" id="s5-op-excl" placeholder="Name which dimensions of the root encoding do NOT apply here…"></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Conditions under which this definition would need revision</div>
+          <input type="text" class="field-input" id="s5-op-cond" placeholder="e.g. if deployed outside the current domain, if the term enters popular usage…">
+        </div>
+      </div>
+
+      <!-- Follow-up: CORRECTED -->
+      <div class="follow-up" id="followup-corrected">
+        <div class="follow-up-title">CORRECTED ISSUANCE — Root-restored replacement required</div>
+        <div class="field-group">
+          <div class="field-label">Replacement Term <span class="req">*</span></div>
+          <input type="text" class="field-input" id="s5-replacement" placeholder="The root-restored replacement term…">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Root justification for replacement</div>
+          <textarea class="field-input" id="s5-rep-justification" placeholder="Why does this replacement term carry a defensible root encoding for this concept?"></textarea>
+        </div>
+      </div>
+
+      <!-- Follow-up: RETIRED -->
+      <div class="follow-up" id="followup-retired">
+        <div class="follow-up-title">RETIRED ISSUANCE — Causing active conceptual damage · Full replacement required</div>
+        <div class="field-group">
+          <div class="field-label">Replacement Term (via Protocol D) <span class="req">*</span></div>
+          <input type="text" class="field-input" id="s5-ret-replacement" placeholder="Coined replacement term — run Protocol D for full coinage record…">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Primary damage mechanism</div>
+          <textarea class="field-input" id="s5-ret-damage" placeholder="How is the original term causing active conceptual damage? What is the most harmful failure mode?"></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="gate-row">
+      <button class="gate-btn back" onclick="retreatStage(5)"><span>← Back to LDS Scoring</span></button>
+      <button class="archive-btn" onclick="saveToArchive()" id="archive-save-btn">Save to Drift Archive ✓</button>
+    </div>
+    <div class="gate-error" id="gate-5-error">Complete required follow-up fields before saving to archive.</div>
+    <div class="info-notice" id="archive-success" style="display:none;color:var(--confirmed);border-color:rgba(61,220,132,0.3);background:rgba(61,220,132,0.05);margin-top:8px;">
+      ✓ Saved to Drift Archive.
+      <button style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-family:var(--mono);font-size:0.65rem;margin-left:12px;" onclick="startNewAudit()">Begin new audit →</button>
+    </div>
+  </div>
+
+</div><!-- /tab-engine -->
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- TAB: PROTOCOLS                                         -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="tab-protocols" class="tab-panel">
+
+  <!-- Protocol selection grid -->
+  <div id="proto-selection">
+    <div class="proto-grid">
+      <div class="proto-card" onclick="openProtocol('A')">
+        <div class="proto-card-id">Protocol A</div>
+        <div class="proto-card-name">Compound Term</div>
+        <div class="proto-card-desc">Resolve terms built from two or more etymological roots. Constituent excavation, Fusion Integrity scoring, DEFINED×DEFINED detection.</div>
+      </div>
+      <div class="proto-card" onclick="openProtocol('B')">
+        <div class="proto-card-id">Protocol B</div>
+        <div class="proto-card-name">Cross-Language Conflict</div>
+        <div class="proto-card-desc">Audit terms fusing roots from different language families. Ontological Alignment scoring. Cross-language LDS formula.</div>
+      </div>
+      <div class="proto-card" onclick="openProtocol('D')">
+        <div class="proto-card-id">Protocol D</div>
+        <div class="proto-card-name">Neologism Coining</div>
+        <div class="proto-card-desc">Coin new terms for conceptual territory with no defensible name. Inaugural LDS. Root selection. Pressure point mapping.</div>
+      </div>
+      <div class="proto-card" onclick="openProtocol('F')">
+        <div class="proto-card-id">Protocol F</div>
+        <div class="proto-card-name">Discourse-Level Drift</div>
+        <div class="proto-card-desc">Detect drift at the argument level — not just individual terms. DDS calculation. Interaction Premium. False Consensus Amplification.</div>
+      </div>
+      <div class="proto-card" onclick="openProtocol('G')">
+        <div class="proto-card-id">Protocol G</div>
+        <div class="proto-card-name">Temporal Drift Monitoring</div>
+        <div class="proto-card-desc">Measure how fast a term is moving from its root. Drift Velocity per dimension. Monitoring tier escalation triggers.</div>
+      </div>
+      <div class="proto-card" onclick="openProtocol('H')">
+        <div class="proto-card-id">Protocol H</div>
+        <div class="proto-card-name">Cross-Framework Interference</div>
+        <div class="proto-card-desc">Detect when drift in one framework propagates into others. CFIS scoring. Cross-document Definition Divergence (Step H6).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Protocol A Runner -->
+  <div class="proto-runner" id="proto-A">
+    <button class="proto-back-btn" onclick="closeProtocol()">← All Protocols</button>
+    <div class="proto-runner-title">Protocol A — Compound Term Resolution</div>
+    <div class="proto-runner-sub">Decompose the compound. Excavate each constituent independently. Score Fusion Integrity.</div>
+
+    <div class="panel">
+      <div class="panel-title">STEP A1 — DECOMPOSITION</div>
+      <div class="field-group">
+        <div class="field-label">Compound Term</div>
+        <input type="text" class="field-input" id="pa-compound" placeholder="The compound term under audit…">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field-group">
+          <div class="field-label">Constituent Root 1</div>
+          <input type="text" class="field-input" id="pa-c1" placeholder="First constituent…">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Constituent Root 2</div>
+          <input type="text" class="field-input" id="pa-c2" placeholder="Second constituent…">
+        </div>
+      </div>
+    </div>
+
+    <!-- DEFINED×DEFINED Detection -->
+    <div class="panel">
+      <div class="panel-title">STEP A2b — DEFINED × DEFINED DETECTION (v1.5 STF-002)</div>
+      <div class="info-notice">If both constituents have previously been issued DEFINED status under LAV, the DR interaction multiplier 1.15 applies before compound LDS calculation. Check the Drift Archive for prior audits of each constituent.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field-group">
+          <div class="field-label">Prior issuance status — Constituent 1</div>
+          <select class="select-input" id="pa-c1-status" onchange="checkDefinedDefined()">
+            <option value="unknown">Unknown / not previously audited</option>
+            <option value="confirmed">CONFIRMED</option>
+            <option value="defined">DEFINED</option>
+            <option value="corrected">CORRECTED</option>
+            <option value="retired">RETIRED</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Prior issuance status — Constituent 2</div>
+          <select class="select-input" id="pa-c2-status" onchange="checkDefinedDefined()">
+            <option value="unknown">Unknown / not previously audited</option>
+            <option value="confirmed">CONFIRMED</option>
+            <option value="defined">DEFINED</option>
+            <option value="corrected">CORRECTED</option>
+            <option value="retired">RETIRED</option>
+          </select>
+        </div>
+      </div>
+      <div class="error-notice" id="pa-dd-notice" style="background:rgba(240,192,64,0.06);border-color:rgba(240,192,64,0.25);color:var(--gold-dim);">
+        ◈ DEFINED × DEFINED DETECTED — DR interaction multiplier 1.15 will be applied to the DR component before compound LDS calculation.
+      </div>
+    </div>
+
+    <!-- Constituent LDS panels -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div>
+        <div id="pa-lds1-container"></div>
+      </div>
+      <div>
+        <div id="pa-lds2-container"></div>
+      </div>
+    </div>
+
+    <!-- Fusion Integrity -->
+    <div class="panel">
+      <div class="panel-title">STEP A4 — FUSION INTEGRITY [FI]</div>
+      <div class="field-group">
+        <div class="field-label">Fusion Integrity — how well the two roots integrate conceptually
+          <span style="font-size:0.6rem;color:var(--text-faint);margin-left:6px;">0.0 = contradicts itself / 1.0 = perfect semantic fusion</span>
+        </div>
+        <div class="lds-slider-row" style="margin-top:6px;">
+          <input type="range" id="pa-fi" min="0" max="1" step="0.01" value="0.5" style="--pct:50%;" oninput="calcCompound()">
+          <span class="lds-axis-val" id="pa-fi-val">0.50</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Notes on fusion — why do/don't these roots integrate cleanly?</div>
+        <textarea class="field-input" id="pa-fusion-notes" placeholder="Describe the semantic relationship between the constituents…"></textarea>
+      </div>
+    </div>
+
+    <!-- Compound result -->
+    <div class="panel">
+      <div class="panel-title">STEP A5 — COMPOUND ISSUANCE</div>
+      <div id="pa-result"></div>
+    </div>
+  </div>
+
+  <!-- Protocol B Runner -->
+  <div class="proto-runner" id="proto-B">
+    <button class="proto-back-btn" onclick="closeProtocol()">← All Protocols</button>
+    <div class="proto-runner-title">Protocol B — Cross-Language Root Conflict</div>
+    <div class="proto-runner-sub">Audit terms fusing roots from different language families. Ontological Alignment scoring.</div>
+
+    <div class="panel">
+      <div class="panel-title">STEP B1 — LINEAGE IDENTIFICATION</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div>
+          <div class="field-group">
+            <div class="field-label">Root 1</div>
+            <input type="text" class="field-input" id="pb-r1" placeholder="First root…">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Language Family</div>
+            <select class="select-input" id="pb-fam1">
+              <option value="">— select —</option>
+              <option value="greek">Greek (relational / processual)</option>
+              <option value="latin">Latin (structured / positional)</option>
+              <option value="germanic">Germanic (force / motion)</option>
+              <option value="nonie">Non-IE (Protocol E applies)</option>
+              <option value="other">Other IE family</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <div class="field-group">
+            <div class="field-label">Root 2</div>
+            <input type="text" class="field-input" id="pb-r2" placeholder="Second root…">
+          </div>
+          <div class="field-group">
+            <div class="field-label">Language Family</div>
+            <select class="select-input" id="pb-fam2">
+              <option value="">— select —</option>
+              <option value="greek">Greek (relational / processual)</option>
+              <option value="latin">Latin (structured / positional)</option>
+              <option value="germanic">Germanic (force / motion)</option>
+              <option value="nonie">Non-IE (Protocol E applies)</option>
+              <option value="other">Other IE family</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">STEP B3 — ONTOLOGICAL ALIGNMENT SCORING [OA]</div>
+      <div class="field-group">
+        <div class="field-label">What does Root 1 assume about the nature of what it encodes?</div>
+        <textarea class="field-input" id="pb-oa1" placeholder="The ontological assumption Root 1 carries…"></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field-label">What does Root 2 assume about the nature of what it encodes?</div>
+        <textarea class="field-input" id="pb-oa2" placeholder="The ontological assumption Root 2 carries…"></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Ontological Alignment [OA] — how well these assumptions agree
+          <span style="font-size:0.6rem;color:var(--text-faint);margin-left:6px;">1.0 = fully aligned · 0.5 = one dimension compatible · 0.0 = directly contradictory</span>
+        </div>
+        <div class="lds-slider-row" style="margin-top:6px;">
+          <input type="range" id="pb-oa" min="0" max="1" step="0.01" value="0.5" style="--pct:50%;" oninput="calcCrossLang()">
+          <span class="lds-axis-val" id="pb-oa-val">0.50</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="pb-lds-container"></div>
+
+    <div class="panel">
+      <div class="panel-title">CROSS-LANGUAGE LDS RESULT</div>
+      <div id="pb-result">
+        <div style="font-size:0.72rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;">
+          Formula: LDS = ((1−RF₁) + (1−RF₂) + CL + DR + (1−OA)) / 5
+        </div>
+        <div id="pb-result-display" style="margin-top:12px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Protocol D Runner -->
+  <div class="proto-runner" id="proto-D">
+    <button class="proto-back-btn" onclick="closeProtocol()">← All Protocols</button>
+    <div class="proto-runner-title">Protocol D — Neologism Coining</div>
+    <div class="proto-runner-sub">Coin new terms with full root justification and inaugural LDS scoring.</div>
+
+    <div class="panel">
+      <div class="panel-title">STEP D1 — NEED CONFIRMATION</div>
+      <div class="field-group">
+        <div class="field-label">Conceptual territory to be named</div>
+        <textarea class="field-input" id="pd-need" placeholder="Describe the concept that requires a new term. What does it encode? What gap does it fill?"></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Why no existing CONFIRMED or DEFINED term serves this territory</div>
+        <textarea class="field-input" id="pd-gap" placeholder="Document why existing vocabulary fails — what the available terms get wrong or miss entirely."></textarea>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">STEP D2 — ROOT SELECTION</div>
+      <div class="field-group">
+        <div class="field-label">Coined term</div>
+        <input type="text" class="field-input" id="pd-coined" placeholder="The new term…">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Constituent roots and their justification</div>
+        <textarea class="field-input" id="pd-roots" placeholder="Which roots were selected? Why do they encode the target concept? Are they from compatible language families?"></textarea>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">STEP D3 — INAUGURAL LDS SCORING</div>
+      <div class="info-notice">Coined terms do not receive an RF score — their root is their current usage. Inaugural LDS = (CL + DR) / 2. Scores CL and DR only.</div>
+
+      <div class="lds-panel">
+        <div class="panel-title" style="margin-bottom:14px;">CONCEPTUAL LOAD [CL]</div>
+        <div style="font-size:0.68rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;margin-bottom:10px;">How much ontological weight will the coined term carry beyond what its root encodes? 0.0 = exactly what the root was built for · 1.0 = critically overloaded</div>
+        <div class="lds-slider-row">
+          <input type="range" id="pd-cl" min="0" max="1" step="0.01" value="0.25" style="--pct:25%;" oninput="calcInaugural()">
+          <span class="lds-axis-val" id="pd-cl-val">0.25</span>
+        </div>
+      </div>
+      <div class="lds-panel">
+        <div class="panel-title" style="margin-bottom:14px;">DISAMBIGUATION RISK [DR]</div>
+        <div style="font-size:0.68rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;margin-bottom:10px;">Projected risk of false consensus given adjacent terms and existing usage of constituent words. 0.0 = no false consensus risk · 1.0 = near-certain false consensus</div>
+        <div class="lds-slider-row">
+          <input type="range" id="pd-dr" min="0" max="1" step="0.01" value="0.15" style="--pct:15%;" oninput="calcInaugural()">
+          <span class="lds-axis-val" id="pd-dr-val">0.15</span>
+        </div>
+      </div>
+      <div id="pd-result" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">STEP D4 — PRESSURE POINT MAPPING</div>
+      <div class="field-group">
+        <div class="field-label">Projected pressure points — forces most likely to drive this term toward drift</div>
+        <textarea class="field-input" id="pd-pressure" placeholder="e.g. deployment in contexts beyond the intended domain; abbreviation or acronym reduction; institutional adoption that colonizes the term…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Protocol F Runner -->
+  <div class="proto-runner" id="proto-F">
+    <button class="proto-back-btn" onclick="closeProtocol()">← All Protocols</button>
+    <div class="proto-runner-title">Protocol F — Discourse-Level Drift Detection</div>
+    <div class="proto-runner-sub">Score an argument or passage for accumulated drift across all load-bearing terms.</div>
+
+    <div class="panel">
+      <div class="panel-title">LOAD-BEARING TERMS — Enter each term with its LDS score</div>
+      <div class="info-notice">Minimum 2 terms required. Add all load-bearing terms in the discourse — terms that carry ontological commitment, not incidental vocabulary.</div>
+
+      <div id="pf-terms-container"></div>
+      <button class="gate-btn back" style="margin-top:8px;" onclick="addFTerm()"><span>+ Add Term</span></button>
+
+      <div class="error-notice" id="pf-min-error">Minimum 2 terms required for discourse-level scoring.</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">DDS CALCULATION</div>
+      <div style="font-size:0.68rem;color:var(--text-faint);margin-bottom:14px;font-family:var(--mono);">
+        Base DDS = avg(all LDS scores) · Interaction Premium = (HIGH pairs × 0.08) + (MOD pairs × 0.04) + (LOW pairs × 0.01)<br>
+        Final DDS = (Base DDS + Interaction Premium) × (1 + (N_high_DR × 0.05))
+      </div>
+      <div id="pf-interaction-map" style="margin-bottom:14px;"></div>
+      <button class="gate-btn advance" onclick="calcDDS()"><span>Calculate DDS →</span></button>
+      <div id="pf-result" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- Protocol G Runner -->
+  <div class="proto-runner" id="proto-G">
+    <button class="proto-back-btn" onclick="closeProtocol()">← All Protocols</button>
+    <div class="proto-runner-title">Protocol G — Temporal Drift Monitoring</div>
+    <div class="proto-runner-sub">Measure drift velocity. Compare current LDS to previous. Calculate escalation triggers.</div>
+
+    <div class="panel">
+      <div class="panel-title">PREVIOUS AUDIT RECORD</div>
+      <div class="info-notice">Enter the RF, CL, DR scores from the most recent prior audit of this term. If no prior audit exists in this session, enter values manually.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
+        <div class="field-group">
+          <div class="field-label">Term</div>
+          <input type="text" class="field-input" id="pg-term" placeholder="Term name…">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Previous RF</div>
+          <input type="number" class="field-input lds-axis-num-input" style="width:100%;" id="pg-rf-prev" min="0" max="1" step="0.01" value="0.50">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Previous CL</div>
+          <input type="number" class="field-input lds-axis-num-input" style="width:100%;" id="pg-cl-prev" min="0" max="1" step="0.01" value="0.50">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Previous DR</div>
+          <input type="number" class="field-input lds-axis-num-input" style="width:100%;" id="pg-dr-prev" min="0" max="1" step="0.01" value="0.50">
+        </div>
+      </div>
+    </div>
+
+    <div id="pg-current-container"></div>
+
+    <div class="panel">
+      <div class="panel-title">INTERVAL</div>
+      <div class="field-group">
+        <div class="field-label">Months since previous audit</div>
+        <input type="number" class="field-input lds-axis-num-input" style="width:120px;" id="pg-interval" min="0.5" step="0.5" value="6" oninput="calcDriftVelocity()">
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">DRIFT VELOCITY RESULTS</div>
+      <div id="pg-result"></div>
+    </div>
+  </div>
+
+  <!-- Protocol H Runner -->
+  <div class="proto-runner" id="proto-H">
+    <button class="proto-back-btn" onclick="closeProtocol()">← All Protocols</button>
+    <div class="proto-runner-title">Protocol H — Cross-Framework Interference Detection</div>
+    <div class="proto-runner-sub">Detect when a term drifts differently across frameworks. CFIS scoring. H6 definition divergence.</div>
+
+    <div class="panel">
+      <div class="panel-title">TERM AND FRAMEWORKS</div>
+      <div class="field-group">
+        <div class="field-label">Shared term under analysis</div>
+        <input type="text" class="field-input" id="ph-term" placeholder="The term that is load-bearing across multiple frameworks…">
+      </div>
+      <div class="info-notice">Enter each framework and the LDS score this term carries within that framework. Minimum 2 frameworks.</div>
+      <div id="ph-frameworks-container"></div>
+      <button class="gate-btn back" style="margin-top:8px;" onclick="addHFramework()"><span>+ Add Framework</span></button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">STEP H3 — CFIS CALCULATION</div>
+      <div style="font-size:0.68rem;color:var(--text-faint);margin-bottom:12px;font-family:var(--mono);">
+        CFIS = (LDS_max − LDS_min) × N_frameworks
+      </div>
+      <button class="gate-btn advance" onclick="calcCFIS()"><span>Calculate CFIS →</span></button>
+      <div id="ph-cfis-result" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">STEP H6 — CROSS-DOCUMENT DEFINITION COHERENCE (v1.5 STF-005)</div>
+      <div class="info-notice">When the same DEFINED-status term has operational definitions in two or more documents, calculate Definition Divergence [DD]. DD ≥ 0.50 = DEFINITION_CONFLICT requiring immediate resolution.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field-group">
+          <div class="field-label">Operative dimension — Document A definition</div>
+          <textarea class="field-input" id="ph-def-a" placeholder="Which dimension of the root is operative in Document A's definition?"></textarea>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Operative dimension — Document B definition</div>
+          <textarea class="field-input" id="ph-def-b" placeholder="Which dimension of the root is operative in Document B's definition?"></textarea>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Definition Divergence [DD] — how different are the operative dimensions?
+          <span style="font-size:0.6rem;color:var(--text-faint);margin-left:6px;">0.0 = identical · 0.5+ = DEFINITION_CONFLICT</span>
+        </div>
+        <div class="lds-slider-row" style="margin-top:6px;">
+          <input type="range" id="ph-dd" min="0" max="1" step="0.01" value="0.2" style="--pct:20%;" oninput="calcDD()">
+          <span class="lds-axis-val" id="ph-dd-val">0.20</span>
+        </div>
+        <div id="ph-dd-result" style="margin-top:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-protocols -->
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- TAB: DRIFT ARCHIVE                                     -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="tab-archive" class="tab-panel">
+
+  <div class="rm-inline">
+    <span class="rm-label">RUNNING MEAN</span>
+    <span class="rm-baseline">Baseline: 77.5% (45)</span>
+    <span style="color:var(--text-faint);">·</span>
+    <span class="rm-session">Session: <span id="rm-session-pct">—</span> (<span id="rm-session-n">0</span>)</span>
+    <span style="color:var(--text-faint);">·</span>
+    <span class="rm-combined">Combined: <span id="rm-combined-pct">77.5%</span> (<span id="rm-combined-n">45</span>)</span>
+  </div>
+
+  <div class="archive-actions">
+    <button class="arch-act-btn" onclick="copyArchiveSummary()" id="arch-copy-summary">Copy Summary</button>
+    <button class="arch-act-btn" onclick="copyArchiveFull()" id="arch-copy-full">Copy Full Records</button>
+    <button class="arch-act-btn" onclick="clearSessionArchive()" style="color:var(--retired);border-color:rgba(255,77,77,0.2);">Clear Session</button>
+  </div>
+
+  <div id="archive-entries">
+    <div class="archive-empty">No terms audited this session. The Drift Archive grows only — it never deletes.<br><br>Complete an audit in the Audit Engine tab to add entries.</div>
+  </div>
+
+</div><!-- /tab-archive -->
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- TAB: AUDIT LOG — CEV Record                           -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="tab-log" class="tab-panel">
+
+  <div class="audit-section">
+    <div class="audit-title">LAV v1.5 — VERSION RECORD · Five Structural Findings</div>
+    <p class="audit-prose">
+      LAV v1.5 builds on v1.4 by incorporating <strong>five structural findings (STF-001 through STF-005)</strong> surfaced when LAV v1.4 was stress-tested against a real audit of the FCL Master v2.6 document. The findings revealed gaps in v1.4's handling of: threshold boundary cases, compound terms built from DEFINED-status constituents, metric-field formula requirements, professional title vocabulary, and cross-document definition coherence. All five gaps are closed in this version.
+    </p>
+  </div>
+
+  <div class="audit-section">
+    <div class="audit-title">STRUCTURAL FINDINGS — STF-001 through STF-005</div>
+
+    <div class="stf-card">
+      <div class="stf-id">STF-001 · Stage 4 Boundary Rule</div>
+      <div class="stf-title">Threshold Caution — Boundary Tiebreaker Rule</div>
+      <div class="stf-body">v1.4 had no specified behavior when a term's LDS fell exactly at a threshold boundary (e.g., exactly 0.40). This created ambiguity about whether the term required an operational definition. v1.5 formalizes: when LDS falls exactly at a boundary, it is assigned to the more cautious (higher) issuance category. LDS ≤ 0.399 = CONFIRMED. LDS exactly 0.400 = DEFINED. LDS exactly 0.600 = CORRECTED. Eliminates all boundary ambiguity. Added to Foundational Principles as "Threshold Caution."</div>
+    </div>
+
+    <div class="stf-card">
+      <div class="stf-id">STF-002 · Protocol A Step A2b</div>
+      <div class="stf-title">DEFINED × DEFINED Compound Detection</div>
+      <div class="stf-body">v1.4 Protocol A had no mechanism for detecting when both constituents of a compound term already carried DEFINED status. When two DEFINED-status terms are fused, the disambiguation risk compounds non-linearly — the false consensus risk of each term interacts with the other's. v1.5 adds Step A2b: when both constituents carry DEFINED status, apply DR interaction multiplier 1.15 before compound LDS calculation. The premium reflects the compounded false consensus risk of fusing two terms each of which already requires an operational definition.</div>
+    </div>
+
+    <div class="stf-card">
+      <div class="stf-id">STF-003 · Protocol I — New in v1.5</div>
+      <div class="stf-title">Metric Field Formula Registration</div>
+      <div class="stf-body">v1.4 had no protocol for handling DEFINED-status terms deployed as quantitative metric fields (fields with numerical domains such as [0-1]). A term like "Validity" or "Confidence" can receive a DEFINED issuance, but if it is deployed as a scored metric without a registered formula, the issuance tells you nothing about what the number means. Protocol I requires: when a DEFINED-status term is deployed as a metric field, register a formula specifying (1) the mathematical expression, (2) what the formula measures in one sentence, (3) domain specification, (4) relationship to adjacent metrics. Until registration is complete, entries using that field carry PROVISIONAL status.</div>
+    </div>
+
+    <div class="stf-card">
+      <div class="stf-id">STF-004 · Protocol J — New in v1.5</div>
+      <div class="stf-title">Professional Title Audit Registry</div>
+      <div class="stf-body">Professional titles in technical fields carry significant Colonization drift — they have been appropriated by credentialing systems and now import credential-expectation as their dominant meaning. v1.4 had no formal protocol for auditing professional titles. v1.5 adds Protocol J: full five-stage audit applied to professional titles used in LAV-governed documents, with two additional assessments — Credential Import Risk [CIR] and Title Accuracy [TA]. Results logged in a dedicated Professional Title Sub-Registry. Application: "AI Certainty Architect" → CONFIRMED. "AI Certainty Engineer" → CORRECTED (retired — credential-expectation import without credential).</div>
+    </div>
+
+    <div class="stf-card">
+      <div class="stf-id">STF-005 · Protocol H Step H6</div>
+      <div class="stf-title">Cross-Document Definition Coherence Check</div>
+      <div class="stf-body">v1.4 Protocol H detected cross-framework interference at the LDS score level but had no mechanism for checking whether the same DEFINED-status term received different operational definitions in different documents within the same ecosystem. This is a distinct failure mode: two documents might both treat a term at the same LDS, but define it differently — creating silent incoherence that Protocol H's CFIS score would not detect. v1.5 adds Step H6: when the same DEFINED-status term has operational definitions in two or more documents, calculate Definition Divergence [DD]. DD ≥ 0.50 = DEFINITION_CONFLICT requiring immediate resolution and canonical definition designation.</div>
+    </div>
+  </div>
+
+  <div class="audit-section">
+    <div class="audit-title">VERSION HISTORY</div>
+    <table class="ref-table">
+      <thead><tr><th>VERSION</th><th>CORE ADDITION</th><th>SOURCE</th></tr></thead>
+      <tbody>
+        <tr><td>v1.0</td><td>Five-stage core process. LDS formula. Three issuance categories. Self-audit revealing formula error.</td><td>Initial build</td></tr>
+        <tr><td>v1.1</td><td>Formula corrected. Core terms audited. "Framework" → "Vector." "Audit" → "Root Listening."</td><td>Self-application</td></tr>
+        <tr><td>v1.2</td><td>Protocol A: Compound Term. Protocol B: Cross-Language. Protocol C: Unrecoverable Root. RETIRED category added.</td><td>Expansion</td></tr>
+        <tr><td>v1.3</td><td>Protocol D: Neologism Coining. Protocol E: Non-IE. Protocol F: Discourse-Level Drift. Drift Archive formalized.</td><td>Expansion</td></tr>
+        <tr><td>v1.4</td><td>Protocol G: Temporal Drift. Protocol H: Cross-Framework Interference. Active Red Team System (five layers).</td><td>Expansion</td></tr>
+        <tr><td style="color:var(--gold);">v1.5</td><td style="color:var(--text);">STF-001 through STF-005. Boundary Tiebreaker. DEFINED×DEFINED detection. Protocol I. Protocol J. Step H6.</td><td style="color:var(--gold);">Stress-test FCL v2.6</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="audit-section">
+    <div class="audit-title">WHAT v1.5 DOES NOT YET CLAIM</div>
+    <p class="audit-prose"><strong>Full Non-IE Auditing Capability</strong> — Protocol E provides principled engagement with non-IE language families but does not claim full auditing precision. Specialist collaboration is ongoing.</p>
+    <p class="audit-prose"><strong>Predictive Drift Modeling</strong> — Protocol G measures velocity but does not forecast LDS trajectories. A predictive model is a future boundary.</p>
+    <p class="audit-prose"><strong>Automated Ecosystem Mapping</strong> — Protocol H Step H1 requires manual ecosystem mapping. Automated detection is a future capability.</p>
+    <p class="audit-prose"><strong>Red Team Performance Metrics</strong> — the Active Red Team System has no self-measurement. Tracking RT accuracy (true flags vs false positives vs missed drift) is the most significant gap remaining in v1.5.</p>
+    <p class="audit-prose"><strong>Protocol I Historical Retroactivity</strong> — Protocol I resolves the formula gap going forward. Prior FCL entries using DEFINED-status metric fields without registered formulas carry PROVISIONAL status until retroactive registration.</p>
+  </div>
+
+  <div class="audit-section">
+    <div class="audit-title">CEV AUDIT ATTRIBUTION</div>
+    <p class="audit-prose">LAV v1.5 · Linguistic Audit Vector · Complete Production Specification<br>
+    Author: <strong>Sheldon K. Salmon</strong> (AI Certainty Architect) · Co-Architect: <strong>Claude (Anthropic)</strong><br>
+    Issued: February 2026 · Supersedes: LAV v1.4<br>
+    Ten Protocols (A through J). Five Core Stages. Active Red Team System (five layers). Full self-audit record.
+    </p>
+  </div>
+
+</div><!-- /tab-log -->
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- TAB: ABOUT LAV                                         -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="tab-about" class="tab-panel">
+
+  <div class="about-section">
+    <div class="about-title">TEN FOUNDATIONAL PRINCIPLES</div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 1</div><div class="principle-name">Root Fidelity First</div><div class="principle-body">What the root originally encoded is ground truth. Current usage is always the witness under examination, never the authority. When the root and current usage conflict, the root wins the ontological argument even if current usage wins the practical one. Both outcomes are documented.</div></div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 2</div><div class="principle-name">Drift Has a Driver</div><div class="principle-body">Semantic departure is never passive. Words do not wander. They are driven by institutions, disciplines, commercial interests, power structures, and epistemic fashions. Every audit names the force that applied pressure. Identifying the driver is not optional — it is a required field.</div></div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 3</div><div class="principle-name">Root Listening Over Interrogation</div><div class="principle-body">The audit posture is receptive, not adversarial. The term is a witness to be heard carefully. Deep attention to what a term is actually encoding produces more precision than aggressive examination. The original Latin of "audit" — audire, to hear — is restored here as a design principle.</div></div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 4</div><div class="principle-name">Correction is Collaborative</div><div class="principle-body">The com- in corrigere is structural. No correction is issued unilaterally. Human pattern recognition and AI excavation together produce issuances. Neither operates alone.</div></div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 5</div><div class="principle-name">Embodiment Anchor</div><div class="principle-body">Language begins in the body before it becomes system. The roots we trace were encoded by people pointing at physical realities. Every audit remembers this. Abstraction is always a departure from embodied encoding — that departure must always be named.</div></div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 6</div><div class="principle-name">Silence is a Flag</div><div class="principle-body">If a root cannot be recovered, that is data, not a gap to skip. Unrecoverable roots tell us when and under what conditions a term entered the conceptual record.</div></div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 7</div><div class="principle-name">Construction Carries Responsibility</div><div class="principle-body">Every term coined under this vector enters the conceptual record with full documentation of its intended encoding. Opacity at the coining stage is the origin of drift. This vector makes opacity structurally impossible.</div></div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 8</div><div class="principle-name">Never Erase the Archive</div><div class="principle-body">Retired terms, corrected terms, and suspended discourse are never deleted. The history of how terms damaged thinking is itself data.</div></div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 9</div><div class="principle-name">Think Before Delivering</div><div class="principle-body">No output is delivered without Red Team screening. Speed is never a reason to bypass the screening sequence. An output that takes longer and arrives correct serves the mission.</div></div>
+    <div class="principle-card"><div class="principle-num">PRINCIPLE 10 (v1.5)</div><div class="principle-name">Threshold Caution</div><div class="principle-body">When a term scores exactly at a boundary between issuance categories, it is assigned to the more cautious category. Precision at boundaries requires additional definitional work, not permission to skip it.</div></div>
+  </div>
+
+  <div class="about-section">
+    <div class="about-title">UNIFIED SCORING ARCHITECTURE</div>
+    <table class="ref-table">
+      <thead><tr><th>COMPONENT</th><th>SYMBOL</th><th>RANGE</th><th>DIRECTION</th><th>FORMULA</th></tr></thead>
+      <tbody>
+        <tr><td>Root Fidelity</td><td>RF</td><td>[0–1]</td><td>High = good</td><td>Assessed against root evidence</td></tr>
+        <tr><td>Conceptual Load</td><td>CL</td><td>[0–1]</td><td>High = bad</td><td>Assessed against root capacity</td></tr>
+        <tr><td>Disambiguation Risk</td><td>DR</td><td>[0–1]</td><td>High = bad</td><td>Assessed against false consensus probability</td></tr>
+        <tr><td colspan="5" style="color:var(--gold-dim);padding-top:10px;"><code>Standard LDS = ((1 − RF) + CL + DR) / 3</code></td></tr>
+        <tr><td>Fusion Integrity (Protocol A)</td><td>FI</td><td>[0–1]</td><td>High = good</td><td><code>((1−RF) + CL + DR×1.15[if D×D] + (1−FI)) / 4</code></td></tr>
+        <tr><td>Ontological Alignment (Protocol B)</td><td>OA</td><td>[0–1]</td><td>High = good</td><td><code>((1−RF₁) + (1−RF₂) + CL + DR + (1−OA)) / 5</code></td></tr>
+        <tr><td>Drift Velocity (Protocol G)</td><td>DV</td><td>Per month</td><td>Positive = drifting</td><td><code>(DV_RF + DV_CL + DV_DR) / interval_months</code></td></tr>
+        <tr><td>Cross-Framework Interference (Protocol H)</td><td>CFIS</td><td>Unbounded</td><td>High = bad</td><td><code>(LDS_max − LDS_min) × N_frameworks</code></td></tr>
+        <tr><td>Definition Divergence (Protocol H Step H6)</td><td>DD</td><td>[0–1]</td><td>High = bad</td><td>Assessed against operative dimension agreement</td></tr>
+        <tr><td>Inaugural Coinage (Protocol D)</td><td>—</td><td>[0–1]</td><td>—</td><td><code>(CL + DR) / 2</code> (RF not scored)</td></tr>
+        <tr><td>Credential Import Risk (Protocol J)</td><td>CIR</td><td>[0–1]</td><td>High = bad</td><td>Disclosed alongside LDS — not added to formula</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="about-section">
+    <div class="about-title">ISSUANCE THRESHOLDS</div>
+    <table class="ref-table">
+      <thead><tr><th>LDS SCORE</th><th>STATUS</th><th>REQUIRED ACTION</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--confirmed);">≤ 0.399</td><td style="color:var(--confirmed);">CONFIRMED</td><td>Root-defensible. Cleared for deployment. Document root encoding.</td></tr>
+        <tr><td style="color:var(--defined);">0.400–0.599</td><td style="color:var(--defined);">DEFINED</td><td>Mandatory operational definition specifying operative root dimension, excluded dimensions, conditions for revision.</td></tr>
+        <tr><td style="color:var(--corrected);">0.600–0.799</td><td style="color:var(--corrected);">CORRECTED</td><td>Root-restored replacement required. Retire original. Archive drift record.</td></tr>
+        <tr><td style="color:var(--retired);">≥ 0.800</td><td style="color:var(--retired);">RETIRED</td><td>Active conceptual damage. Remove from operational vocabulary. Replacement mandatory via Protocol D.</td></tr>
+        <tr><td colspan="3" style="color:var(--defined);font-size:0.62rem;padding-top:8px;">v1.5 Boundary Rule: LDS exactly at a threshold boundary → assigned to the more cautious (higher) category.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="about-section">
+    <div class="about-title">DRIFT TYPE TAXONOMY</div>
+    <table class="ref-table">
+      <thead><tr><th>TYPE</th><th>DEFINITION</th><th>DETECTION SIGNAL</th></tr></thead>
+      <tbody>
+        <tr><td>Narrowing</td><td>Root encoded broader reality; scope was restricted</td><td>Older texts use the term in contexts where current usage would substitute a different term</td></tr>
+        <tr><td>Expansion</td><td>Root encoded specific reality; scope extended beyond what root can support</td><td>Current usage covers more ground than the root's encoding allows</td></tr>
+        <tr><td style="color:var(--retired);">Inversion</td><td>Current usage implies something the root directly contradicts. Most dangerous.</td><td>Literal reading of root would produce opposite meaning to current usage</td></tr>
+        <tr><td>Pejorative Shift</td><td>Root was neutral; current usage carries negative valence</td><td>Value-laden connotation absent from root or early usage</td></tr>
+        <tr><td>Ameliorative Shift</td><td>Root encoded something charged; current usage has softened it</td><td>Comparison reveals lost intensity or difficulty in current usage</td></tr>
+        <tr><td style="color:var(--defined);">Reification</td><td>Root encoded a process; current usage treats it as a property. Most common in AI vocabulary.</td><td>Can the term precede "is absent" or "is present"? If yes, may be reified.</td></tr>
+        <tr><td>Colonization</td><td>Root appropriated by a discipline, narrowed to serve its needs</td><td>Usage outside the colonizing discipline feels "wrong" to specialists</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="about-section">
+    <div class="about-title">DOCUMENTATION & ATTRIBUTION</div>
+    <div class="about-links">
+      <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" class="about-link">FULL SPEC — AION-BRAIN</a>
+      <a href="/stack/" class="about-link">STACK OVERVIEW</a>
+      <a href="/stack/frameworks/" class="about-link">FRAMEWORK HUB</a>
+      <a href="/stack/eight-laws/" class="about-link">EIGHT LAWS</a>
+    </div>
+    <div style="margin-top:14px;font-size:0.7rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;">
+      LAV v1.5 · Linguistic Audit Vector · Author: Sheldon K. Salmon (AI Certainty Architect) · Co-Architect: Claude (Anthropic) · February 2026 · Supersedes LAV v1.4
+    </div>
+  </div>
+
+</div><!-- /tab-about -->
+</div><!-- /page -->
+<script>
+// ═══════════════════════════════════════════════════════════
+// STATE SCHEMA — defined before any UI code (RT-H-001)
+// ═══════════════════════════════════════════════════════════
+const STATE = {
+  archive: [],
+  sessionId: Date.now().toString(36),
+  runningMean: { baselinePct: 77.5, baselineCount: 45, sessionCorrect: 0, sessionTotal: 0 },
+  currentAudit: {
+    term:'', context:'', isCompound:false, isNonIE:false, isMetricField:false,
+    currentStage:1, stageStatus:{1:'active',2:'pending',3:'pending',4:'pending',5:'pending'},
+    roots:[], confidence:null,
+    driftDecisions:{Narrowing:null,Expansion:null,Inversion:null,'Pejorative Shift':null,'Ameliorative Shift':null,Reification:null,Colonization:null},
+    primaryDrift:'', driftDriver:'', departurePoint:'',
+    rf:0.5, cl:0.5, dr:0.5,
+    rawLDS:null, adjustedLDS:null,
+    issuance:null, opDef:{dimension:'',excluded:'',conditions:''},
+    replacement:'', repJustification:'',
+    retReplacement:'', retDamage:'',
+    deploymentExposure:'low', monitorTier:null,
+    confirmedDefaultSliders: false
+  }
+};
+
+// DRIFT TYPE DEFINITIONS
+const DRIFT_TYPES = [
+  {id:'Narrowing', desc:'Root encoded broader reality; scope was restricted. Older texts use the term more broadly.'},
+  {id:'Expansion', desc:'Root encoded specific reality; scope extended beyond what the root can support.'},
+  {id:'Inversion', desc:'Current usage implies the opposite of what the root encodes. MOST DANGEROUS drift type.'},
+  {id:'Pejorative Shift', desc:'Root was ontologically neutral; current usage carries negative valence.'},
+  {id:'Ameliorative Shift', desc:'Root encoded something charged or difficult; current usage has softened it.'},
+  {id:'Reification', desc:'Root encoded a process; current usage treats it as a property. MOST COMMON in AI vocabulary.'},
+  {id:'Colonization', desc:'Root appropriated by a discipline and narrowed. Usage outside feels "wrong" to specialists.'}
+];
+
+// ROOT LEVELS
+const ROOT_LEVELS = [
+  {id:'current', label:'Current Usage'},
+  {id:'historical', label:'Most Recent Historical Usage'},
+  {id:'medieval', label:'Medieval Latin / Greek'},
+  {id:'classical', label:'Classical Latin / Greek'},
+  {id:'pie', label:'Proto-Indo-European (PIE)'}
+];
+
+// ═══════════════════════════════════════════════════════════
+// PERSISTENCE (RT-A-004 — window.storage)
+// ═══════════════════════════════════════════════════════════
+async function loadArchive() {
+  try {
+    const result = await window.storage.get('lav-drift-archive');
+    if (result && result.value) {
+      const data = JSON.parse(result.value);
+      STATE.archive = data;
+      renderArchive();
+      updateRunningMean();
+    }
+  } catch(e) { /* no prior archive */ }
+}
+async function persistArchive() {
+  try {
+    await window.storage.set('lav-drift-archive', JSON.stringify(STATE.archive));
+  } catch(e) { console.warn('Storage unavailable, archive is session-only'); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// LDS PANEL COMPONENT — reusable (RT-A-003)
+// buildLDSPanel(containerId, panelId, config)
+// config: { title, showRF, showCL, showDR, confidenceMultiplier, drMultiplier }
+// ═══════════════════════════════════════════════════════════
+function buildLDSPanel(containerId, panelId, config={}) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const title = config.title || 'LDS SCORING — THREE DIMENSIONS';
+  const showRF = config.showRF !== false;
+  const showCL = config.showCL !== false;
+  const showDR = config.showDR !== false;
+
+  container.innerHTML = `
+    <div class="lds-panel" id="${panelId}">
+      <div class="lds-panel-title">${title} <span id="${panelId}-conf-badge" style="font-size:0.58rem;"></span></div>
+      ${showRF ? `
+      <div class="lds-axis" id="${panelId}-rf-axis">
+        <div class="lds-axis-header">
+          <span class="lds-axis-label">ROOT FIDELITY [RF] <span class="lds-tooltip">How much of the original root encoding survives in current usage. HIGH is good — it means the term still encodes what its root was built to encode.</span><span class="lds-axis-direction">(high = good)</span></span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="number" class="lds-axis-num-input" id="${panelId}-rf-num" min="0" max="1" step="0.01" value="0.50" oninput="syncLDSNum('${panelId}','rf',this.value)">
+            <span class="lds-axis-val" id="${panelId}-rf-val">0.50</span>
+          </div>
+        </div>
+        <div class="lds-slider-row">
+          <input type="range" id="${panelId}-rf" min="0" max="1" step="0.01" value="0.5" style="--pct:50%;" oninput="syncLDSSlider('${panelId}','rf',this.value)">
+        </div>
+      </div>` : ''}
+      ${showCL ? `
+      <div class="lds-axis">
+        <div class="lds-axis-header">
+          <span class="lds-axis-label">CONCEPTUAL LOAD [CL] <span class="lds-tooltip">How much ontological weight the term carries beyond what its root can structurally support. HIGH is bad — the term is overloaded with claims its root cannot justify.</span><span class="lds-axis-direction">(high = bad)</span></span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="number" class="lds-axis-num-input" id="${panelId}-cl-num" min="0" max="1" step="0.01" value="0.50" oninput="syncLDSNum('${panelId}','cl',this.value)">
+            <span class="lds-axis-val" id="${panelId}-cl-val">0.50</span>
+          </div>
+        </div>
+        <div class="lds-slider-row">
+          <input type="range" id="${panelId}-cl" min="0" max="1" step="0.01" value="0.5" style="--pct:50%;" oninput="syncLDSSlider('${panelId}','cl',this.value)">
+        </div>
+      </div>` : ''}
+      ${showDR ? `
+      <div class="lds-axis">
+        <div class="lds-axis-header">
+          <span class="lds-axis-label">DISAMBIGUATION RISK [DR] <span class="lds-tooltip">Probability the term generates false consensus — two users believing they share a definition when drift means they do not. HIGH is bad.</span><span class="lds-axis-direction">(high = bad)</span></span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="number" class="lds-axis-num-input" id="${panelId}-dr-num" min="0" max="1" step="0.01" value="0.50" oninput="syncLDSNum('${panelId}','dr',this.value)">
+            <span class="lds-axis-val" id="${panelId}-dr-val">0.50</span>
+          </div>
+        </div>
+        <div class="lds-slider-row">
+          <input type="range" id="${panelId}-dr" min="0" max="1" step="0.01" value="0.5" style="--pct:50%;" oninput="syncLDSSlider('${panelId}','dr',this.value)">
+        </div>
+      </div>` : ''}
+
+      <div class="lds-result-bar">
+        <div class="lds-bar-label">
+          <span>LDS COMPOSITION</span>
+          <span id="${panelId}-bar-pct">—</span>
+        </div>
+        <div class="lds-bar-track">
+          <div class="lds-bar-rf" id="${panelId}-bar-rf" style="width:33.3%"></div>
+          <div class="lds-bar-cl" id="${panelId}-bar-cl" style="width:33.3%"></div>
+          <div class="lds-bar-dr" id="${panelId}-bar-dr" style="width:33.3%"></div>
+        </div>
+        <div class="lds-bar-legend">
+          <div class="lds-bar-legend-item"><div class="lds-bar-legend-dot" style="background:rgba(61,220,132,0.6)"></div>RF (inverted)</div>
+          <div class="lds-bar-legend-item"><div class="lds-bar-legend-dot" style="background:rgba(255,128,64,0.6)"></div>CL</div>
+          <div class="lds-bar-legend-item"><div class="lds-bar-legend-dot" style="background:rgba(255,77,77,0.6)"></div>DR</div>
+        </div>
+      </div>
+
+      <div class="lds-raw-adjusted" id="${panelId}-result-row">
+        <span class="lds-raw-val">Raw LDS: <span id="${panelId}-raw">—</span></span>
+        <span class="lds-arrow">→</span>
+        <span class="lds-adj-val" id="${panelId}-adj">—</span>
+        <span class="lds-conf-mult" id="${panelId}-mult"></span>
+      </div>
+      <div class="lds-boundary-notice" id="${panelId}-boundary">⚑ LDS falls exactly at a threshold boundary. Assigned to the more cautious category (v1.5 STF-001).</div>
+    </div>`;
+  calcLDSPanel(panelId, config);
+}
+
+function syncLDSSlider(panelId, dim, val) {
+  const v = parseFloat(val);
+  const num = document.getElementById(`${panelId}-${dim}-num`);
+  const sl = document.getElementById(`${panelId}-${dim}`);
+  if (num) num.value = v.toFixed(2);
+  if (sl) sl.style.setProperty('--pct', (v*100)+'%');
+  document.getElementById(`${panelId}-${dim}-val`).textContent = v.toFixed(2);
+  calcLDSPanel(panelId);
+  if (panelId === 'main-lds') {
+    STATE.currentAudit[dim] = v;
+    STATE.currentAudit.confirmedDefaultSliders = true;
+  }
+}
+
+function syncLDSNum(panelId, dim, val) {
+  let v = Math.max(0, Math.min(1, parseFloat(val)||0));
+  const sl = document.getElementById(`${panelId}-${dim}`);
+  const dispVal = document.getElementById(`${panelId}-${dim}-val`);
+  if (sl) { sl.value = v; sl.style.setProperty('--pct', (v*100)+'%'); }
+  if (dispVal) dispVal.textContent = v.toFixed(2);
+  calcLDSPanel(panelId);
+  if (panelId === 'main-lds') {
+    STATE.currentAudit[dim] = v;
+    STATE.currentAudit.confirmedDefaultSliders = true;
+  }
+}
+
+function getLDSPanelValues(panelId) {
+  const rf = parseFloat(document.getElementById(`${panelId}-rf`)?.value ?? 0.5);
+  const cl = parseFloat(document.getElementById(`${panelId}-cl`)?.value ?? 0.5);
+  const dr = parseFloat(document.getElementById(`${panelId}-dr`)?.value ?? 0.5);
+  return {rf, cl, dr};
+}
+
+function calcLDSPanel(panelId, config={}) {
+  const vals = getLDSPanelValues(panelId);
+  const {rf, cl, dr} = vals;
+  const drMult = config.drMultiplier || 1.0;
+  const drAdj = Math.min(1, dr * drMult);
+  const raw = ((1 - rf) + cl + drAdj) / 3;
+  let mult = config.confidenceMultiplier || 1.0;
+  // For main panel, use current audit confidence
+  if (panelId === 'main-lds') {
+    const conf = STATE.currentAudit.confidence;
+    if (conf === 'CONTEXTUAL') mult = 1.10;
+    else if (conf === 'INFERRED') mult = 1.25;
+    else mult = 1.0;
+  }
+  const adj = Math.min(1, raw * mult);
+
+  // Update display
+  const rawEl = document.getElementById(`${panelId}-raw`);
+  const adjEl = document.getElementById(`${panelId}-adj`);
+  const multEl = document.getElementById(`${panelId}-mult`);
+  const barPct = document.getElementById(`${panelId}-bar-pct`);
+  const boundary = document.getElementById(`${panelId}-boundary`);
+
+  if (rawEl) rawEl.textContent = raw.toFixed(4);
+  if (adjEl) { adjEl.textContent = `LDS ${adj.toFixed(4)}`; adjEl.style.color = ldsColor(adj); }
+  if (multEl) multEl.textContent = mult !== 1.0 ? `× ${mult.toFixed(2)} (confidence penalty)` : '';
+  if (barPct) barPct.textContent = (adj * 100).toFixed(1) + '%';
+
+  // Bar segments
+  const rfBar = document.getElementById(`${panelId}-bar-rf`);
+  const clBar = document.getElementById(`${panelId}-bar-cl`);
+  const drBar = document.getElementById(`${panelId}-bar-dr`);
+  const total = (1-rf) + cl + drAdj || 0.001;
+  if (rfBar) rfBar.style.width = ((1-rf)/total*100).toFixed(1)+'%';
+  if (clBar) clBar.style.width = (cl/total*100).toFixed(1)+'%';
+  if (drBar) drBar.style.width = (drAdj/total*100).toFixed(1)+'%';
+
+  // Boundary rule
+  const isBoundary = (adj === 0.4 || adj === 0.6 || adj === 0.8);
+  if (boundary) boundary.classList.toggle('active', isBoundary);
+
+  if (panelId === 'main-lds') {
+    STATE.currentAudit.rawLDS = raw;
+    STATE.currentAudit.adjustedLDS = adj;
+    updateIssuanceCard(adj);
+  }
+  return {raw, adj, rf, cl, dr};
+}
+
+function ldsColor(v) {
+  if (v < 0.4) return 'var(--confirmed)';
+  if (v < 0.6) return 'var(--defined)';
+  if (v < 0.8) return 'var(--corrected)';
+  return 'var(--retired)';
+}
+
+function ldsIssuance(v) {
+  if (v <= 0.399) return 'CONFIRMED';
+  if (v <= 0.599) return 'DEFINED';
+  if (v <= 0.799) return 'CORRECTED';
+  return 'RETIRED';
+}
+
+function ldsMeaning(status) {
+  switch(status) {
+    case 'CONFIRMED': return 'Root-defensible. Cleared for deployment as-is. Document the root encoding.';
+    case 'DEFINED': return 'Usable with mandatory operational definition attached to every deployment.';
+    case 'CORRECTED': return 'Requires root-restored replacement. Original retired to Drift Archive. Apply Protocol D.';
+    case 'RETIRED': return 'Causing active conceptual damage. Removed from operational vocabulary. Replacement required via Protocol D.';
+    default: return 'Complete LDS scoring in Stage 4.';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// STAGE 1
+// ═══════════════════════════════════════════════════════════
+function updateTerm() {
+  STATE.currentAudit.term = document.getElementById('s1-term').value.trim();
+}
+function updateCompound() {
+  STATE.currentAudit.isCompound = document.getElementById('s1-compound').checked;
+}
+function updateNonIE() {
+  STATE.currentAudit.isNonIE = document.getElementById('s1-nonie').checked;
+  document.getElementById('nonie-notice').style.display = STATE.currentAudit.isNonIE ? 'block' : 'none';
+}
+function updateMetric() {
+  STATE.currentAudit.isMetricField = document.getElementById('s1-metric').checked;
+}
+
+// ═══════════════════════════════════════════════════════════
+// STAGE 2 — ROOT LEVELS BUILD
+// ═══════════════════════════════════════════════════════════
+function buildRootLevels() {
+  const container = document.getElementById('root-levels-container');
+  container.innerHTML = '';
+  ROOT_LEVELS.forEach(level => {
+    const saved = STATE.currentAudit.roots.find(r => r.id === level.id) || {};
+    const div = document.createElement('div');
+    div.className = 'root-level-row';
+    div.id = `rl-${level.id}`;
+    div.innerHTML = `
+      <div class="root-level-header">
+        <span class="root-level-label">${level.label}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="root-level-status rls-empty" id="rls-${level.id}">EMPTY</span>
+          <button class="unrecov-toggle ${saved.unrecoverable ? 'active' : ''}" id="unrecov-${level.id}" onclick="toggleUnrecoverable('${level.id}')">
+            ${saved.unrecoverable ? '✗ UNRECOVERABLE' : 'Mark Unrecoverable'}
+          </button>
+        </div>
+      </div>
+      <div id="rl-fields-${level.id}" ${saved.unrecoverable ? 'style="display:none"' : ''}>
+        <div class="root-level-grid">
+          <div>
+            <div class="root-field-label">Root form (the word/root at this level)</div>
+            <input type="text" class="root-field-input" id="rf-form-${level.id}" value="${saved.form||''}" placeholder="e.g. computare, κρίνειν, *ǵneh₃-" oninput="updateRootLevel('${level.id}')">
+          </div>
+          <div>
+            <div class="root-field-label">Language family at this level</div>
+            <input type="text" class="root-field-input" id="rf-fam-${level.id}" value="${saved.family||''}" placeholder="e.g. Classical Latin, Ancient Greek, PIE..." oninput="updateRootLevel('${level.id}')">
+          </div>
+        </div>
+        <div class="root-level-full" style="margin-top:8px;">
+          <div>
+            <div class="root-field-label">Physical / relational / phenomenological reality being encoded at this level</div>
+            <textarea class="root-field-input" id="rf-enc-${level.id}" style="min-height:52px;resize:vertical;" placeholder="What was a person pointing at when this sound became a word? What physical or relational reality did it encode?" oninput="updateRootLevel('${level.id}')">${saved.encoding||''}</textarea>
+          </div>
+        </div>
+      </div>`;
+    container.appendChild(div);
+    updateRootLevelStatus(level.id);
+  });
+}
+
+function toggleUnrecoverable(levelId) {
+  const btn = document.getElementById(`unrecov-${levelId}`);
+  const fields = document.getElementById(`rl-fields-${levelId}`);
+  const saved = STATE.currentAudit.roots.find(r => r.id === levelId);
+  const isNow = !btn.classList.contains('active');
+  btn.classList.toggle('active', isNow);
+  btn.textContent = isNow ? '✗ UNRECOVERABLE' : 'Mark Unrecoverable';
+  fields.style.display = isNow ? 'none' : '';
+  if (saved) saved.unrecoverable = isNow;
+  else STATE.currentAudit.roots.push({id:levelId, unrecoverable:isNow, form:'', family:'', encoding:''});
+  updateRootLevelStatus(levelId);
+  deriveConfidence();
+}
+
+function updateRootLevel(levelId) {
+  const form = document.getElementById(`rf-form-${levelId}`)?.value || '';
+  const family = document.getElementById(`rf-fam-${levelId}`)?.value || '';
+  const encoding = document.getElementById(`rf-enc-${levelId}`)?.value || '';
+  const idx = STATE.currentAudit.roots.findIndex(r => r.id === levelId);
+  if (idx >= 0) Object.assign(STATE.currentAudit.roots[idx], {form, family, encoding});
+  else STATE.currentAudit.roots.push({id:levelId, form, family, encoding, unrecoverable:false});
+  updateRootLevelStatus(levelId);
+  deriveConfidence();
+}
+
+function updateRootLevelStatus(levelId) {
+  const statusEl = document.getElementById(`rls-${levelId}`);
+  if (!statusEl) return;
+  const saved = STATE.currentAudit.roots.find(r => r.id === levelId);
+  if (saved?.unrecoverable) {
+    statusEl.className = 'root-level-status rls-unrecoverable'; statusEl.textContent = 'UNRECOVERABLE';
+  } else if (saved?.form || saved?.encoding) {
+    statusEl.className = 'root-level-status rls-filled'; statusEl.textContent = 'FILLED';
+  } else {
+    statusEl.className = 'root-level-status rls-empty'; statusEl.textContent = 'EMPTY';
+  }
+}
+
+// RT-L-003 — confidence auto-derives from evidence
+function deriveConfidence() {
+  const roots = STATE.currentAudit.roots;
+  const pie = roots.find(r => r.id === 'pie');
+  const historical = roots.find(r => r.id === 'historical');
+  const classical = roots.find(r => r.id === 'classical');
+
+  let conf, explain, mult;
+
+  const anyUnrecov = roots.some(r => r.unrecoverable);
+  const pieUnrecov = pie?.unrecoverable;
+  const pieFilled = pie?.form || pie?.encoding;
+  const classicalFilled = classical?.form || classical?.encoding;
+  const historicalFilled = historical?.form || historical?.encoding;
+
+  if (anyUnrecov) {
+    conf = 'INFERRED'; explain = 'Root marked unrecoverable at one or more levels. Structural analysis is the basis — not documented etymological lineage.'; mult = '× 1.25';
+    document.getElementById('proto-c-notice').classList.toggle('active', !!pieUnrecov);
+  } else if (pieFilled && classicalFilled) {
+    conf = 'ETYMOLOGICAL'; explain = 'Root fully recoverable through documented etymological lineage. PIE substrate identified. No confidence penalty.'; mult = '× 1.00';
+    document.getElementById('proto-c-notice').classList.remove('active');
+  } else if (historicalFilled || classicalFilled) {
+    conf = 'CONTEXTUAL'; explain = 'Root recovered from first-usage context or partial lineage — not full PIE trace. 10% confidence premium applied.'; mult = '× 1.10';
+    document.getElementById('proto-c-notice').classList.remove('active');
+  } else {
+    conf = null; explain = 'Complete the root excavation to determine confidence designation.'; mult = '';
+  }
+
+  STATE.currentAudit.confidence = conf;
+  const confVal = document.getElementById('conf-value');
+  const confExpl = document.getElementById('conf-explain');
+  const confMult = document.getElementById('conf-multiplier');
+  if (confVal) {
+    confVal.textContent = conf ? `[${conf}]` : '— PENDING';
+    confVal.className = `conf-value ${conf === 'ETYMOLOGICAL' ? 'conf-etym' : conf === 'CONTEXTUAL' ? 'conf-ctx' : conf === 'INFERRED' ? 'conf-inf' : 'conf-pending'}`;
+  }
+  if (confExpl) confExpl.textContent = explain;
+  if (confMult) confMult.textContent = conf ? `Multiplier: ${mult}` : '';
+
+  // Recalculate main LDS with updated multiplier
+  if (document.getElementById('main-lds')) calcLDSPanel('main-lds');
+}
+
+// ═══════════════════════════════════════════════════════════
+// STAGE 3 — DRIFT TYPES
+// ═══════════════════════════════════════════════════════════
+function buildDriftTypes() {
+  const grid = document.getElementById('drift-type-grid');
+  grid.innerHTML = '';
+  DRIFT_TYPES.forEach(dt => {
+    const div = document.createElement('div');
+    div.className = 'drift-type-row';
+    div.id = `dtr-${dt.id.replace(/ /g,'_')}`;
+    div.innerHTML = `
+      <span class="dt-name">${dt.id}</span>
+      <span class="dt-desc">${dt.desc}</span>
+      <button class="dt-btn" id="dtb-${dt.id.replace(/ /g,'_')}-present" onclick="setDrift('${dt.id}','PRESENT')">PRESENT</button>
+      <button class="dt-btn" id="dtb-${dt.id.replace(/ /g,'_')}-absent" onclick="setDrift('${dt.id}','ABSENT')">ABSENT</button>
+      <button class="dt-btn" id="dtb-${dt.id.replace(/ /g,'_')}-uncertain" onclick="setDrift('${dt.id}','UNCERTAIN')">UNCERTAIN</button>`;
+    grid.appendChild(div);
+    // Restore saved decisions
+    const saved = STATE.currentAudit.driftDecisions[dt.id];
+    if (saved) applyDriftSelection(dt.id, saved);
+  });
+  updateDriftProgress();
+}
+
+function setDrift(typeId, decision) {
+  STATE.currentAudit.driftDecisions[typeId] = decision;
+  applyDriftSelection(typeId, decision);
+  updateDriftProgress();
+}
+
+function applyDriftSelection(typeId, decision) {
+  const key = typeId.replace(/ /g,'_');
+  ['present','absent','uncertain'].forEach(d => {
+    const btn = document.getElementById(`dtb-${key}-${d}`);
+    if (btn) { btn.classList.remove('sel-present','sel-absent','sel-uncertain'); }
+  });
+  const sel = document.getElementById(`dtb-${key}-${decision.toLowerCase()}`);
+  if (sel) sel.classList.add(`sel-${decision.toLowerCase()}`);
+}
+
+function updateDriftProgress() {
+  const decisions = STATE.currentAudit.driftDecisions;
+  const made = Object.values(decisions).filter(v => v !== null).length;
+  const primary = STATE.currentAudit.primaryDrift;
+  document.getElementById('drift-progress').innerHTML = `Decisions: <strong>${made} / 7</strong> made · Primary type: ${primary || 'not yet selected'}`;
+
+  if (made >= 7) {
+    // Unlock primary drift row
+    const primaryRow = document.getElementById('primary-drift-row');
+    const driverField = document.getElementById('driver-field');
+    if (primaryRow) primaryRow.style.display = 'grid';
+    if (driverField) driverField.style.display = 'block';
+    // Populate primary drift selector with PRESENT types
+    const sel = document.getElementById('s3-primary-drift');
+    if (sel) {
+      const presentTypes = Object.entries(decisions).filter(([k,v]) => v === 'PRESENT').map(([k]) => k);
+      sel.innerHTML = '<option value="">— select primary type —</option>';
+      presentTypes.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t; opt.textContent = t;
+        if (t === STATE.currentAudit.primaryDrift) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      if (presentTypes.length === 0) {
+        const opt = document.createElement('option');
+        opt.value='none'; opt.textContent='No drift present (all ABSENT/UNCERTAIN)';
+        sel.appendChild(opt);
+      }
+    }
+  }
+}
+
+function updatePrimaryDrift() {
+  STATE.currentAudit.primaryDrift = document.getElementById('s3-primary-drift').value;
+}
+
+// ═══════════════════════════════════════════════════════════
+// STAGE 5 — ISSUANCE
+// ═══════════════════════════════════════════════════════════
+function updateIssuanceCard(adj) {
+  if (adj === null || isNaN(adj)) return;
+  const status = ldsIssuance(adj);
+  const card = document.getElementById('main-issuance-card');
+  const label = document.getElementById('main-issuance-label');
+  const ldsEl = document.getElementById('main-issuance-lds');
+  const meaning = document.getElementById('main-issuance-meaning');
+
+  if (card) card.className = `issuance-card ${status.toLowerCase()}`;
+  if (label) label.textContent = status;
+  if (ldsEl) ldsEl.textContent = `LDS ${adj.toFixed(4)}`;
+  if (meaning) meaning.textContent = ldsMeaning(status);
+
+  STATE.currentAudit.issuance = status;
+
+  // Pulse animation
+  const existingPulse = card?.querySelector('.issuance-pulse');
+  if (existingPulse) existingPulse.remove();
+  const pulse = document.createElement('div');
+  pulse.className = 'issuance-pulse';
+  card?.appendChild(pulse);
+  setTimeout(() => { if (pulse.parentNode) pulse.parentNode.removeChild(pulse); }, 600);
+
+  // Follow-up fields
+  document.getElementById('followup-defined').classList.toggle('active', status === 'DEFINED');
+  document.getElementById('followup-corrected').classList.toggle('active', status === 'CORRECTED');
+  document.getElementById('followup-retired').classList.toggle('active', status === 'RETIRED');
+
+  // Protocol I notice
+  const protoI = document.getElementById('proto-i-notice');
+  if (protoI) protoI.classList.toggle('active', STATE.currentAudit.isMetricField && status === 'DEFINED');
+
+  updateMonitorTier();
+}
+
+function updateMonitorTier() {
+  const adj = STATE.currentAudit.adjustedLDS;
+  if (adj === null) return;
+  const exposure = document.getElementById('deploy-exposure')?.value || 'low';
+  STATE.currentAudit.deploymentExposure = exposure;
+
+  let tier, interval;
+  if (adj <= 0.199 && exposure === 'low') { tier = 1; interval = 'Annual re-audit'; }
+  else if (adj <= 0.399 || exposure === 'moderate') { tier = 2; interval = 'Six-month re-audit'; }
+  else if (adj <= 0.599 || exposure === 'high') { tier = 3; interval = 'Quarterly re-audit'; }
+  else { tier = 4; interval = 'Monthly re-audit'; }
+  if (exposure === 'cross') { tier = 4; interval = 'Monthly re-audit'; }
+
+  STATE.currentAudit.monitorTier = tier;
+
+  const mtVal = document.getElementById('mt-val');
+  const mtInterval = document.getElementById('mt-interval');
+  const tierLabels = ['','TIER 1 — STABLE','TIER 2 — WATCH','TIER 3 — ACTIVE','TIER 4 — CRITICAL'];
+  const tierClasses = ['','mt-t1','mt-t2','mt-t3','mt-t4'];
+  if (mtVal) { mtVal.textContent = tierLabels[tier]; mtVal.className = `mt-value ${tierClasses[tier]}`; }
+  if (mtInterval) mtInterval.textContent = interval;
+}
+
+// ═══════════════════════════════════════════════════════════
+// STAGE NAVIGATION — gate logic (RT-H-002, RT-A-002)
+// ═══════════════════════════════════════════════════════════
+function advanceStage(from) {
+  const errEl = document.getElementById(`gate-${from}-error`);
+  if (errEl) errEl.classList.remove('active');
+
+  if (from === 1) {
+    if (!STATE.currentAudit.term) { if (errEl) errEl.classList.add('active'); return; }
+    if (STATE.currentAudit.isCompound) document.getElementById('proto-a-inline-notice').style.display = 'block';
+    buildRootLevels();
+  }
+  if (from === 2) {
+    const roots = STATE.currentAudit.roots;
+    const hasSomething = roots.some(r => (r.form || r.encoding) && !r.unrecoverable) || roots.some(r => r.unrecoverable);
+    if (!hasSomething || !STATE.currentAudit.confidence) { if (errEl) errEl.classList.add('active'); return; }
+    buildDriftTypes();
+  }
+  if (from === 3) {
+    const decisions = STATE.currentAudit.driftDecisions;
+    const allDecided = Object.values(decisions).every(v => v !== null);
+    const hasDriver = document.getElementById('s3-driver')?.value?.trim();
+    const hasPrimary = STATE.currentAudit.primaryDrift;
+    if (!allDecided || !hasPrimary || !hasDriver) {
+      document.getElementById('driver-error').classList.toggle('active', !hasDriver);
+      if (errEl) errEl.classList.add('active'); return;
+    }
+    STATE.currentAudit.driftDriver = document.getElementById('s3-driver').value.trim();
+    STATE.currentAudit.departurePoint = document.getElementById('s3-departure')?.value || '';
+    buildLDSPanel('main-lds-panel', 'main-lds', {title:'LDS SCORING — RF · CL · DR'});
+  }
+  if (from === 4) {
+    if (!STATE.currentAudit.confirmedDefaultSliders && STATE.currentAudit.rf === 0.5 && STATE.currentAudit.cl === 0.5 && STATE.currentAudit.dr === 0.5) {
+      if (confirm('All sliders are at default 0.50. Is this intentional? Press OK to confirm and advance.')) {
+        STATE.currentAudit.confirmedDefaultSliders = true;
+      } else { return; }
+    }
+    updateIssuanceCard(STATE.currentAudit.adjustedLDS || calcLDSPanel('main-lds').adj);
+  }
+
+  setStage(from + 1);
+}
+
+function retreatStage(from) {
+  // Mark current stage as needs-review before retreating
+  setStageStatus(from, 'needs-review');
+  setStage(from - 1);
+}
+
+function setStage(n) {
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`stage-${i}`).classList.toggle('active', i === n);
+    if (i === n) setStageStatus(i, 'active');
+    else if (STATE.currentAudit.stageStatus[i] === 'active') setStageStatus(i, 'complete');
+  }
+  STATE.currentAudit.currentStage = n;
+  window.scrollTo({top: 200, behavior:'smooth'});
+}
+
+function setStageStatus(n, status) {
+  STATE.currentAudit.stageStatus[n] = status;
+  const el = document.getElementById(`sp-${n}`);
+  if (el) el.className = `stage-step ${status}`;
+}
+
+function jumpToStage(n) {
+  if (n > STATE.currentAudit.currentStage) return; // can't jump forward
+  setStage(n);
+}
+
+// ═══════════════════════════════════════════════════════════
+// ARCHIVE FUNCTIONS
+// ═══════════════════════════════════════════════════════════
+function saveToArchive() {
+  const errEl = document.getElementById('gate-5-error');
+  const status = STATE.currentAudit.issuance;
+  errEl.classList.remove('active');
+
+  // Validate required follow-up fields
+  if (status === 'DEFINED' && !document.getElementById('s5-op-dim')?.value?.trim()) {
+    errEl.classList.add('active'); return;
+  }
+  if (status === 'CORRECTED' && !document.getElementById('s5-replacement')?.value?.trim()) {
+    errEl.classList.add('active'); return;
+  }
+  if (status === 'RETIRED' && !document.getElementById('s5-ret-replacement')?.value?.trim()) {
+    errEl.classList.add('active'); return;
+  }
+
+  const entry = {
+    id: Date.now().toString(36),
+    term: STATE.currentAudit.term,
+    context: STATE.currentAudit.context,
+    issuance: status,
+    rawLDS: STATE.currentAudit.rawLDS,
+    adjustedLDS: STATE.currentAudit.adjustedLDS,
+    confidence: STATE.currentAudit.confidence,
+    rf: STATE.currentAudit.rf,
+    cl: STATE.currentAudit.cl,
+    dr: STATE.currentAudit.dr,
+    driftTypes: Object.entries(STATE.currentAudit.driftDecisions).filter(([k,v]) => v === 'PRESENT').map(([k]) => k),
+    primaryDrift: STATE.currentAudit.primaryDrift,
+    driftDriver: STATE.currentAudit.driftDriver,
+    monitorTier: STATE.currentAudit.monitorTier,
+    deploymentExposure: STATE.currentAudit.deploymentExposure,
+    flags: buildFlags(),
+    timestamp: new Date().toISOString(),
+    lavVersion: 'v1.5'
+  };
+
+  if (status === 'DEFINED') entry.opDef = document.getElementById('s5-op-dim')?.value;
+  if (status === 'CORRECTED') entry.replacement = document.getElementById('s5-replacement')?.value;
+  if (status === 'RETIRED') entry.retReplacement = document.getElementById('s5-ret-replacement')?.value;
+
+  STATE.archive.push(entry);
+  persistArchive();
+  updateRunningMean();
+  renderArchive();
+  updateStatusBar();
+
+  document.getElementById('archive-success').style.display = 'block';
+  document.getElementById('gate-5-error').classList.remove('active');
+}
+
+function buildFlags() {
+  const flags = [];
+  if (STATE.currentAudit.roots.some(r => r.unrecoverable)) flags.push('ROOT_UNRECOVERABLE');
+  if (STATE.currentAudit.isMetricField && STATE.currentAudit.issuance === 'DEFINED') flags.push('METRIC_PROVISIONAL');
+  return flags;
+}
+
+function startNewAudit() {
+  document.getElementById('archive-success').style.display = 'none';
+  // Reset current audit state
+  STATE.currentAudit = {
+    term:'', context:'', isCompound:false, isNonIE:false, isMetricField:false,
+    currentStage:1, stageStatus:{1:'active',2:'pending',3:'pending',4:'pending',5:'pending'},
+    roots:[], confidence:null,
+    driftDecisions:{Narrowing:null,Expansion:null,Inversion:null,'Pejorative Shift':null,'Ameliorative Shift':null,Reification:null,Colonization:null},
+    primaryDrift:'', driftDriver:'', departurePoint:'',
+    rf:0.5, cl:0.5, dr:0.5, rawLDS:null, adjustedLDS:null,
+    issuance:null, opDef:{dimension:'',excluded:'',conditions:''},
+    replacement:'', repJustification:'', retReplacement:'', retDamage:'',
+    deploymentExposure:'low', monitorTier:null, confirmedDefaultSliders: false
+  };
+  // Reset UI
+  document.getElementById('s1-term').value = '';
+  document.getElementById('s1-context').value = '';
+  ['s1-compound','s1-nonie','s1-metric'].forEach(id => document.getElementById(id).checked = false);
+  document.getElementById('nonie-notice').style.display = 'none';
+  document.getElementById('proto-a-inline-notice').style.display = 'none';
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`stage-${i}`).classList.toggle('active', i === 1);
+    document.getElementById(`sp-${i}`).className = `stage-step ${i === 1 ? 'active' : 'pending'}`;
+  }
+}
+
+function updateRunningMean() {
+  const sessionTotal = STATE.archive.length;
+  const sessionCorrect = STATE.archive.filter(e => e.issuance === 'CONFIRMED' || e.issuance === 'DEFINED').length;
+  STATE.runningMean.sessionTotal = sessionTotal;
+  STATE.runningMean.sessionCorrect = sessionCorrect;
+
+  const sessEl = document.getElementById('rm-session-pct');
+  const sessN = document.getElementById('rm-session-n');
+  const combEl = document.getElementById('rm-combined-pct');
+  const combN = document.getElementById('rm-combined-n');
+
+  if (sessionTotal > 0) {
+    const sessPct = (sessionCorrect / sessionTotal * 100).toFixed(1);
+    if (sessEl) sessEl.textContent = sessPct + '%';
+  } else {
+    if (sessEl) sessEl.textContent = '—';
+  }
+  if (sessN) sessN.textContent = sessionTotal;
+
+  const combined = STATE.runningMean.baselineCount + sessionTotal;
+  const combCorrect = Math.round(STATE.runningMean.baselinePct / 100 * STATE.runningMean.baselineCount) + sessionCorrect;
+  const combPct = combined > 0 ? (combCorrect / combined * 100).toFixed(1) : STATE.runningMean.baselinePct.toFixed(1);
+  if (combEl) combEl.textContent = combPct + '%';
+  if (combN) combN.textContent = combined;
+}
+
+function renderArchive() {
+  const container = document.getElementById('archive-entries');
+  if (STATE.archive.length === 0) {
+    container.innerHTML = '<div class="archive-empty">No terms audited this session. The Drift Archive grows only — it never deletes.<br><br>Complete an audit in the Audit Engine tab to add entries.</div>';
+    return;
+  }
+  container.innerHTML = '';
+  [...STATE.archive].reverse().forEach(e => {
+    const issClass = `ae-iss-${e.issuance.toLowerCase()}`;
+    const driftTags = (e.driftTypes||[]).map(t => `<span class="ae-drift-tag">${t}</span>`).join('');
+    const flags = (e.flags||[]).map(f => `<span class="ae-flag">${f}</span>`).join('');
+    const div = document.createElement('div');
+    div.className = 'archive-entry';
+    div.innerHTML = `
+      <div class="ae-header">
+        <span class="ae-term">${e.term}</span>
+        <span class="ae-issuance ${issClass}">${e.issuance}</span>
+        <span class="ae-lds">LDS ${e.adjustedLDS?.toFixed(4) || '—'}</span>
+        <span class="ae-conf">[${e.confidence || '—'}]</span>
+      </div>
+      <div class="ae-meta">RF ${e.rf?.toFixed(2)} · CL ${e.cl?.toFixed(2)} · DR ${e.dr?.toFixed(2)} · Tier ${e.monitorTier || '—'} · ${new Date(e.timestamp).toLocaleString()}</div>
+      ${driftTags ? `<div class="ae-drift-tags">${driftTags}</div>` : ''}
+      ${e.driftDriver ? `<div class="ae-meta" style="margin-top:4px;">Driver: ${e.driftDriver}</div>` : ''}
+      ${flags ? `<div class="ae-flags">${flags}</div>` : ''}`;
+    container.appendChild(div);
+  });
+}
+
+function updateStatusBar() {
+  document.getElementById('sb-session-count').textContent = STATE.archive.length;
+  const sessionTotal = STATE.archive.length;
+  if (sessionTotal > 0) {
+    const sessionCorrect = STATE.archive.filter(e => e.issuance === 'CONFIRMED' || e.issuance === 'DEFINED').length;
+    const pct = (sessionCorrect / sessionTotal * 100).toFixed(1);
+    const combined = STATE.runningMean.baselineCount + sessionTotal;
+    const combCorrect = Math.round(STATE.runningMean.baselinePct / 100 * STATE.runningMean.baselineCount) + sessionCorrect;
+    const combPct = (combCorrect / combined * 100).toFixed(1);
+    document.getElementById('sb-mean').textContent = combPct + '%';
+    document.getElementById('sb-count').textContent = combined;
+  }
+}
+
+function copyArchiveSummary() {
+  const lines = STATE.archive.map(e =>
+    `${e.term} | ${e.issuance} | LDS ${e.adjustedLDS?.toFixed(4)} | [${e.confidence}] | Drift: ${(e.driftTypes||[]).join(', ')||'none'} | Driver: ${e.driftDriver||'—'}`
+  );
+  const text = `LAV v1.5 AUDIT SUMMARY — Session ${STATE.sessionId}\n${new Date().toISOString()}\nRunning Mean: combined\n${'─'.repeat(60)}\n${lines.join('\n')}`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('arch-copy-summary');
+    btn.textContent = '✓ Copied'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Summary'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyArchiveFull() {
+  const lines = STATE.archive.map(e => {
+    const drifts = Object.entries(e.driftDecisions||{}).map(([k,v]) => `  ${k}: ${v||'—'}`).join('\n') || `  Primary: ${(e.driftTypes||[]).join(', ')}`;
+    return `TERM: ${e.term}\nISsUANCE: ${e.issuance} | LDS_adj: ${e.adjustedLDS?.toFixed(4)} | LDS_raw: ${e.rawLDS?.toFixed(4)}\nCONFIDENCE: [${e.confidence}]\nRF: ${e.rf?.toFixed(3)} | CL: ${e.cl?.toFixed(3)} | DR: ${e.dr?.toFixed(3)}\nDRIFT DRIVER: ${e.driftDriver||'—'}\nDRIFT TYPES: ${(e.driftTypes||[]).join(', ')||'none'}\nMONITOR TIER: ${e.monitorTier}\nFLAGS: ${(e.flags||[]).join(', ')||'none'}\nTIMESTAMP: ${e.timestamp}\nLAV: ${e.lavVersion}\n`;
+  });
+  navigator.clipboard.writeText(lines.join('\n' + '─'.repeat(50) + '\n'));
+  const btn = document.getElementById('arch-copy-full');
+  btn.textContent = '✓ Copied'; btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = 'Copy Full Records'; btn.classList.remove('copied'); }, 2000);
+}
+
+function clearSessionArchive() {
+  if (!confirm('Clear all session archive entries? This cannot be undone for the current session.')) return;
+  STATE.archive = [];
+  persistArchive();
+  renderArchive();
+  updateRunningMean();
+  updateStatusBar();
+}
+
+// ═══════════════════════════════════════════════════════════
+// PROTOCOL RUNNERS
+// ═══════════════════════════════════════════════════════════
+function openProtocol(id) {
+  document.getElementById('proto-selection').style.display = 'none';
+  document.querySelectorAll('.proto-runner').forEach(r => r.classList.remove('active'));
+  const runner = document.getElementById(`proto-${id}`);
+  if (runner) runner.classList.add('active');
+
+  // Initialize protocol-specific panels
+  if (id === 'A') {
+    if (!document.getElementById('pa-lds1')) buildLDSPanel('pa-lds1-container', 'pa-lds1', {title:'CONSTITUENT 1 — LDS'});
+    if (!document.getElementById('pa-lds2')) buildLDSPanel('pa-lds2-container', 'pa-lds2', {title:'CONSTITUENT 2 — LDS'});
+    ['pa-lds1','pa-lds2'].forEach(pid => {
+      ['rf','cl','dr'].forEach(dim => {
+        const sl = document.getElementById(`${pid}-${dim}`);
+        if (sl) sl.addEventListener('input', () => { calcLDSPanel(pid); calcCompound(); });
+      });
+    });
+  }
+  if (id === 'B') {
+    if (!document.getElementById('pb-lds')) buildLDSPanel('pb-lds-container', 'pb-lds', {title:'CROSS-LANGUAGE LDS'});
+    ['rf','cl','dr'].forEach(dim => {
+      const sl = document.getElementById(`pb-lds-${dim}`);
+      if (sl) sl.addEventListener('input', () => calcCrossLang());
+    });
+  }
+  if (id === 'G') {
+    if (!document.getElementById('pg-lds')) buildLDSPanel('pg-current-container', 'pg-lds', {title:'CURRENT AUDIT SCORES'});
+    ['rf','cl','dr'].forEach(dim => {
+      const sl = document.getElementById(`pg-lds-${dim}`);
+      if (sl) sl.addEventListener('input', () => calcDriftVelocity());
+    });
+  }
+}
+
+function closeProtocol() {
+  document.getElementById('proto-selection').style.display = '';
+  document.querySelectorAll('.proto-runner').forEach(r => r.classList.remove('active'));
+}
+
+// Protocol A — Compound
+function checkDefinedDefined() {
+  const c1 = document.getElementById('pa-c1-status').value;
+  const c2 = document.getElementById('pa-c2-status').value;
+  const notice = document.getElementById('pa-dd-notice');
+  notice.classList.toggle('active', c1 === 'defined' && c2 === 'defined');
+  calcCompound();
+}
+
+function calcCompound() {
+  const v1 = getLDSPanelValues('pa-lds1');
+  const v2 = getLDSPanelValues('pa-lds2');
+  const fi = parseFloat(document.getElementById('pa-fi')?.value || 0.5);
+  document.getElementById('pa-fi-val').textContent = fi.toFixed(2);
+  document.getElementById('pa-fi')?.style.setProperty('--pct', (fi*100)+'%');
+
+  const c1 = document.getElementById('pa-c1-status')?.value;
+  const c2 = document.getElementById('pa-c2-status')?.value;
+  const drMult = (c1 === 'defined' && c2 === 'defined') ? 1.15 : 1.0;
+
+  // Compound LDS = ((1-RF_avg) + CL_avg + DR_avg*drMult + (1-FI)) / 4
+  const rfAvg = (v1.rf + v2.rf) / 2;
+  const clAvg = (v1.cl + v2.cl) / 2;
+  const drAvg = Math.min(1, ((v1.dr + v2.dr) / 2) * drMult);
+  const compLDS = ((1-rfAvg) + clAvg + drAvg + (1-fi)) / 4;
+
+  let status, statusClass, action;
+  if (compLDS <= 0.399 && fi >= 0.70) { status='CONFIRMED COHERENT'; statusClass='confirmed'; action='Cleared for deployment.'; }
+  else if (compLDS <= 0.399 && fi >= 0.40) { status='CONFIRMED TENSIONED'; statusClass='defined'; action='Usable — tension must be named explicitly in every deployment.'; }
+  else if (compLDS <= 0.599) { status='DEFINED'; statusClass='defined'; action='Mandatory operational definition specifying which root is load-bearing.'; }
+  else { status='DECOMPOSED'; statusClass='retired'; action='Fusion is doing damage. Must be separated in all usage. Coin replacement via Protocol D.'; }
+
+  const container = document.getElementById('pa-result');
+  container.innerHTML = `
+    <div class="issuance-card ${statusClass}" style="margin-bottom:0;">
+      <div class="issuance-label">${status}</div>
+      <div class="issuance-lds">LDS ${compLDS.toFixed(4)}</div>
+      <div class="issuance-meaning">${action}${drMult > 1 ? ' · DR × 1.15 applied (DEFINED × DEFINED).' : ''}</div>
+    </div>`;
+}
+
+// Protocol B — Cross-Language
+function calcCrossLang() {
+  const v = getLDSPanelValues('pb-lds');
+  const oa = parseFloat(document.getElementById('pb-oa')?.value || 0.5);
+  document.getElementById('pb-oa-val').textContent = oa.toFixed(2);
+  document.getElementById('pb-oa')?.style.setProperty('--pct', (oa*100)+'%');
+  const rf1 = v.rf, rf2 = v.rf; // Simplified: user scores single RF representing both
+  const crossLDS = ((1-rf1) + (1-rf2)/2 + v.cl + v.dr + (1-oa)) / 5;
+  const status = ldsIssuance(Math.min(1, crossLDS));
+  document.getElementById('pb-result-display').innerHTML = `
+    <div class="lds-raw-adjusted" style="margin-bottom:8px;">
+      <span class="lds-raw-val">OA: ${oa.toFixed(3)} · OA penalty: ${(1-oa).toFixed(3)}</span>
+    </div>
+    <div class="issuance-card ${status.toLowerCase()}" style="margin-bottom:0;">
+      <div class="issuance-label">${status}</div>
+      <div class="issuance-lds">Cross-LDS ${crossLDS.toFixed(4)}</div>
+      <div class="issuance-meaning">${oa < 0.70 ? 'OA < 0.70 — tension from ontological misalignment must be named in all DEFINED issuances.' : 'Ontological alignment sufficient.'}</div>
+    </div>`;
+}
+
+// Protocol D — Inaugural LDS
+function calcInaugural() {
+  const cl = parseFloat(document.getElementById('pd-cl')?.value || 0.25);
+  const dr = parseFloat(document.getElementById('pd-dr')?.value || 0.15);
+  document.getElementById('pd-cl-val').textContent = cl.toFixed(2);
+  document.getElementById('pd-dr-val').textContent = dr.toFixed(2);
+  document.getElementById('pd-cl')?.style.setProperty('--pct', (cl*100)+'%');
+  document.getElementById('pd-dr')?.style.setProperty('--pct', (dr*100)+'%');
+  const inaugural = (cl + dr) / 2;
+  const status = ldsIssuance(inaugural);
+  const container = document.getElementById('pd-result');
+  if (container) container.innerHTML = `
+    <div class="lds-raw-adjusted">
+      <span class="lds-raw-val">Inaugural LDS = (CL + DR) / 2 = (${cl.toFixed(3)} + ${dr.toFixed(3)}) / 2</span>
+      <span class="lds-arrow">→</span>
+      <span class="lds-adj-val" style="color:${ldsColor(inaugural)}">LDS ${inaugural.toFixed(4)}</span>
+    </div>
+    <div style="margin-top:8px;font-size:0.72rem;color:${ldsColor(inaugural)};">Target status: <strong>${status}</strong> — ${status === 'CONFIRMED' ? 'Inaugural LDS meets COINED-STABLE target (≤ 0.399).' : 'Inaugural LDS exceeds COINED-STABLE target. Revise root selection to reduce CL or DR.'}</div>`;
+}
+
+// Protocol F — DDS
+const PF_TERMS = [];
+
+function addFTerm() {
+  const idx = PF_TERMS.length;
+  PF_TERMS.push({name:'', lds:0.3, dr:0.3});
+  const container = document.getElementById('pf-terms-container');
+  const div = document.createElement('div');
+  div.className = 'panel';
+  div.id = `pf-term-${idx}`;
+  div.style.padding = '14px 16px';
+  div.style.marginBottom = '8px';
+  div.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 90px 90px auto;gap:10px;align-items:end;">
+      <div>
+        <div class="root-field-label">Term</div>
+        <input type="text" class="root-field-input" placeholder="Load-bearing term…" oninput="PF_TERMS[${idx}].name=this.value">
+      </div>
+      <div>
+        <div class="root-field-label">LDS score</div>
+        <input type="number" class="lds-axis-num-input" style="width:100%;" min="0" max="1" step="0.01" value="0.30" oninput="PF_TERMS[${idx}].lds=parseFloat(this.value)||0">
+      </div>
+      <div>
+        <div class="root-field-label">DR score</div>
+        <input type="number" class="lds-axis-num-input" style="width:100%;" min="0" max="1" step="0.01" value="0.30" oninput="PF_TERMS[${idx}].dr=parseFloat(this.value)||0">
+      </div>
+      <button onclick="this.closest('.panel').remove();PF_TERMS.splice(${idx},1);" style="background:none;border:1px solid rgba(255,77,77,0.3);color:var(--retired);font-family:var(--mono);font-size:0.65rem;padding:6px 10px;cursor:pointer;border-radius:2px;align-self:flex-end;">✕</button>
+    </div>`;
+  container.appendChild(div);
+}
+
+function calcDDS() {
+  const terms = PF_TERMS.filter(t => t.name);
+  const errEl = document.getElementById('pf-min-error');
+  if (terms.length < 2) { errEl.classList.add('active'); return; }
+  errEl.classList.remove('active');
+
+  const baseDDS = terms.reduce((s,t) => s + (t.lds||0), 0) / terms.length;
+  // Interaction pairs — simplified: classify pairs by max LDS
+  let highPairs=0, modPairs=0, lowPairs=0;
+  for (let i=0;i<terms.length;i++) for (let j=i+1;j<terms.length;j++) {
+    const maxLDS = Math.max(terms[i].lds, terms[j].lds);
+    if (maxLDS >= 0.6) highPairs++;
+    else if (maxLDS >= 0.4) modPairs++;
+    else lowPairs++;
+  }
+  const interactionPremium = highPairs*0.08 + modPairs*0.04 + lowPairs*0.01;
+  const nHighDR = terms.filter(t => t.dr > 0.5).length;
+  const finalDDS = (baseDDS + interactionPremium) * (1 + nHighDR * 0.05);
+
+  let status, cls;
+  if (finalDDS <= 0.399) { status='DISCOURSE CONFIRMED'; cls='d-confirmed'; }
+  else if (finalDDS <= 0.599) { status='DISCOURSE DEFINED'; cls='d-defined'; }
+  else if (finalDDS <= 0.799) { status='DISCOURSE RESTRUCTURED'; cls='d-restructured'; }
+  else { status='DISCOURSE SUSPENDED'; cls='d-suspended'; }
+
+  const meaning = {
+    'DISCOURSE CONFIRMED': 'Argument is conceptually defensible. Individual term definitions still recommended.',
+    'DISCOURSE DEFINED': 'Requires explicit operational definitions for all load-bearing terms before deployment.',
+    'DISCOURSE RESTRUCTURED': 'Must be rebuilt using corrected terms before deployment.',
+    'DISCOURSE SUSPENDED': 'Generating active conceptual damage. Suspended pending complete term replacement and reconstruction.'
+  };
+
+  document.getElementById('pf-result').innerHTML = `
+    <div class="dds-result ${cls}">
+      <div class="dds-label">${status}</div>
+      <div class="dds-val">DDS ${finalDDS.toFixed(4)}</div>
+      <div class="dds-meaning">${meaning[status]}</div>
+    </div>
+    <div style="margin-top:10px;font-size:0.68rem;color:var(--text-faint);font-family:var(--mono);">
+      Base DDS: ${baseDDS.toFixed(4)} · Interaction Premium: ${interactionPremium.toFixed(4)} · N_high_DR: ${nHighDR} · Amplification: ×${(1+nHighDR*0.05).toFixed(3)}
+    </div>`;
+}
+
+// Protocol G — Drift Velocity
+function calcDriftVelocity() {
+  const rfPrev = parseFloat(document.getElementById('pg-rf-prev')?.value || 0.5);
+  const clPrev = parseFloat(document.getElementById('pg-cl-prev')?.value || 0.5);
+  const drPrev = parseFloat(document.getElementById('pg-dr-prev')?.value || 0.5);
+  const curr = getLDSPanelValues('pg-lds');
+  const interval = parseFloat(document.getElementById('pg-interval')?.value || 6);
+
+  const dvRF = rfPrev - curr.rf;
+  const dvCL = curr.cl - clPrev;
+  const dvDR = curr.dr - drPrev;
+  const dvComp = interval > 0 ? (dvRF + dvCL + dvDR) / interval : 0;
+
+  let status, cls;
+  const absDV = Math.abs(dvComp);
+  if (absDV <= 0.010) { status='STABLE'; cls='dvs-stable'; }
+  else if (absDV <= 0.025) { status='WATCH'; cls='dvs-watch'; }
+  else if (absDV <= 0.050) { status='ALERT'; cls='dvs-alert'; }
+  else { status='CRITICAL'; cls='dvs-critical'; }
+
+  document.getElementById('pg-result').innerHTML = `
+    <div class="dv-display">
+      <div class="dv-row"><span class="dv-key">DV_RF (fidelity loss)</span><span class="${dvRF>0?'dv-val-pos':'dv-val-neg'}">${dvRF >= 0 ? '+' : ''}${dvRF.toFixed(4)}</span></div>
+      <div class="dv-row"><span class="dv-key">DV_CL (load increase)</span><span class="${dvCL>0?'dv-val-pos':'dv-val-neg'}">${dvCL >= 0 ? '+' : ''}${dvCL.toFixed(4)}</span></div>
+      <div class="dv-row"><span class="dv-key">DV_DR (consensus risk)</span><span class="${dvDR>0?'dv-val-pos':'dv-val-neg'}">${dvDR >= 0 ? '+' : ''}${dvDR.toFixed(4)}</span></div>
+      <div class="dv-row" style="margin-top:8px;border-top:1px solid var(--border2);padding-top:8px;"><span class="dv-key">DV_composite per month</span><span class="${dvComp>0?'dv-val-pos':dvComp<0?'dv-val-neg':'dv-val-zero'}">${dvComp >= 0 ? '+' : ''}${dvComp.toFixed(5)}</span></div>
+    </div>
+    <div><span class="dv-status-badge ${cls}">${status}</span>
+    <span style="font-size:0.65rem;color:var(--text-faint);margin-left:10px;">${status==='STABLE'?'No escalation required.':status==='WATCH'?'Flag for attention. Consider tier escalation.':status==='ALERT'?'Escalate one tier immediately. Identify new pressure driver.':'Escalate to TIER 4. Issue interim notice. Full re-audit within 30 days.'}</span></div>`;
+}
+
+// Protocol H — CFIS
+const PH_FRAMEWORKS = [];
+
+function addHFramework() {
+  const idx = PH_FRAMEWORKS.length;
+  PH_FRAMEWORKS.push({name:'', lds:0.3});
+  const container = document.getElementById('ph-frameworks-container');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:1fr 100px auto;gap:10px;align-items:end;margin-bottom:8px;';
+  div.innerHTML = `
+    <div>
+      <div class="root-field-label">Framework name</div>
+      <input type="text" class="root-field-input" placeholder="Framework name…" oninput="PH_FRAMEWORKS[${idx}].name=this.value">
+    </div>
+    <div>
+      <div class="root-field-label">LDS in this framework</div>
+      <input type="number" class="lds-axis-num-input" style="width:100%;" min="0" max="1" step="0.01" value="0.30" oninput="PH_FRAMEWORKS[${idx}].lds=parseFloat(this.value)||0">
+    </div>
+    <button onclick="this.parentElement.remove();PH_FRAMEWORKS.splice(${idx},1);" style="background:none;border:1px solid rgba(255,77,77,0.3);color:var(--retired);font-family:var(--mono);font-size:0.65rem;padding:6px 10px;cursor:pointer;border-radius:2px;align-self:flex-end;">✕</button>`;
+  container.appendChild(div);
+}
+
+function calcCFIS() {
+  const frameworks = PH_FRAMEWORKS.filter(f => f.name);
+  if (frameworks.length < 2) {
+    document.getElementById('ph-cfis-result').innerHTML = '<div class="error-notice active">Minimum 2 frameworks required.</div>';
+    return;
+  }
+  const ldss = frameworks.map(f => f.lds);
+  const ldsMax = Math.max(...ldss);
+  const ldsMin = Math.min(...ldss);
+  const cfis = (ldsMax - ldsMin) * frameworks.length;
+
+  let status, cls, action;
+  if (cfis < 0.30) { status='COHERENT'; cls='confirmed'; action='Term functioning consistently across the ecosystem. Continue monitoring.'; }
+  else if (cfis < 0.50) { status='VARIANT'; cls='defined'; action='Minor variance. Monitor for escalation.'; }
+  else if (cfis < 0.70) { status='INTERFERING'; cls='corrected'; action='Significant variance. Issue cross-framework operational definition.'; }
+  else { status='RESONANT'; cls='retired'; action='Term amplifying drift across ecosystem. Ecosystem-level intervention required.'; }
+
+  document.getElementById('ph-cfis-result').innerHTML = `
+    <div class="issuance-card ${cls}" style="margin-bottom:10px;">
+      <div class="issuance-label">${status}</div>
+      <div class="issuance-lds">CFIS ${cfis.toFixed(4)}</div>
+      <div class="issuance-meaning">${action}</div>
+    </div>
+    <div style="font-size:0.68rem;color:var(--text-faint);font-family:var(--mono);">
+      LDS_max: ${ldsMax.toFixed(3)} (${frameworks.find(f => f.lds === ldsMax)?.name}) · LDS_min: ${ldsMin.toFixed(3)} (${frameworks.find(f => f.lds === ldsMin)?.name}) · N_frameworks: ${frameworks.length}
+    </div>`;
+}
+
+function calcDD() {
+  const dd = parseFloat(document.getElementById('ph-dd')?.value || 0.2);
+  document.getElementById('ph-dd-val').textContent = dd.toFixed(2);
+  document.getElementById('ph-dd')?.style.setProperty('--pct', (dd*100)+'%');
+
+  let status, cls, action;
+  if (dd === 0) { status='COHERENT'; cls='confirmed'; action='Definitions identical. Cross-reference documented.'; }
+  else if (dd < 0.5) { status='DIVERGENT'; cls='defined'; action='Designate canonical definition within 30 days.'; }
+  else { status='DEFINITION_CONFLICT'; cls='retired'; action='Immediate resolution required. Suspend non-canonical definition until canonical is designated.'; }
+
+  document.getElementById('ph-dd-result').innerHTML = `
+    <div class="issuance-card ${cls}" style="margin-bottom:0;padding:12px 16px;">
+      <div class="issuance-label" style="font-size:1rem;">${status}</div>
+      <div class="issuance-meaning">${action}</div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+  if (btn) btn.classList.add('active');
+  else { const idx = {engine:0,protocols:1,archive:2,log:3,about:4}[id]; document.querySelectorAll('.tab-btn')[idx]?.classList.add('active'); }
+  if (id === 'archive') { renderArchive(); updateRunningMean(); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════════════════
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  document.documentElement.setAttribute('data-theme', isLight ? '' : 'light');
+  document.getElementById('theme-btn').textContent = isLight ? 'LIGHT' : 'DARK';
+}
+
+// ═══════════════════════════════════════════════════════════
+// BACKGROUND PARTICLES
+// ═══════════════════════════════════════════════════════════
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, pts = [];
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; init(); }
+  function init() {
+    pts = [];
+    const n = Math.floor((W*H)/22000);
+    for (let i=0;i<n;i++) pts.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.2, vy:(Math.random()-.5)*.2, r:Math.random()*1.2+.3});
+  }
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p => {
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(212,174,60,0.5)'; ctx.fill();
+    });
+    for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++) {
+      const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<100){ctx.beginPath();ctx.strokeStyle=`rgba(212,174,60,${0.08*(1-d/100)})`;ctx.lineWidth=.5;ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();}
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize', resize);
+  resize(); draw();
+})();
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  loadArchive();
+  // Initialize Protocol F with 2 terms
+  addFTerm(); addFTerm();
+  // Initialize Protocol H with 2 frameworks
+  addHFramework(); addHFramework();
+  // Initialize Protocol G current panel
+  // Build main stage 1 ready
+  updateRunningMean();
+});
+</script>
+</body>
+</html>
