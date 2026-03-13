@@ -1,1 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Sovereignty Stack — Nine Constitutional Laws for Civilizational-Scale AI. Sheldon K. Salmon. Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: Dark by design.">
+<meta property="og:title" content="The Sovereignty Stack — AionSystem · Sheldon K. Salmon">
+<meta property="og:description" content="A constitutional architecture for civilizational scale. Nine laws. Spiral structure. The stack declares its own boundary. Law 9 dark by design.">
+<title>The Sovereignty Stack — AionSystem · Sheldon K. Salmon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #08090b;
+  --surface:  #0e1117;
+  --panel:    #141920;
+  --border:   #1e2730;
+  --amber:    #f0a500;
+  --amber-d:  #b07800;
+  --amber-l:  #ffc947;
+  --gold:     #D4AF37;
+  --text:     #c4d4de;
+  --muted:    #4e5f6a;
+  --dim:      #2a3540;
+  --green:    #00e676;
+  --blue:     #40c4ff;
+  --mono:     'Share Tech Mono', monospace;
+  --sans:     'Barlow Condensed', sans-serif;
+  --serif:    'IM Fell English', Georgia, serif;
+  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.5; overflow-x: hidden; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(240,165,0,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(240,165,0,0.015) 1px, transparent 1px);
+  background-size: 48px 48px; pointer-events: none; z-index: 0;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+  background: rgba(8,9,11,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: var(--mono); font-size: 13px; letter-spacing: 3px; color: var(--amber); text-transform: uppercase; text-decoration: none; }
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--amber); }
+
+/* ── HERO ── */
+.doc-hero {
+  position: relative; z-index: 1;
+  padding: 96px 40px 0; max-width: 900px; margin: 0 auto;
+  text-align: center;
+}
+.doc-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 4px; color: var(--amber-d); text-transform: uppercase; margin-bottom: 20px; }
+.doc-title { font-family: var(--serif); font-size: clamp(36px, 6vw, 72px); font-weight: 400; font-style: italic; color: var(--text); line-height: 1.1; margin-bottom: 10px; }
+.doc-subtitle { font-family: var(--sans); font-size: clamp(20px, 3vw, 32px); font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--amber); margin-bottom: 32px; }
+.doc-rule { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--amber), transparent); margin: 28px 0; }
+
+/* Attribution block */
+.attribution {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 24px 32px; text-align: left; margin-bottom: 48px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px;
+}
+.attr-row { display: flex; flex-direction: column; gap: 2px; }
+.attr-key { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--amber-d); text-transform: uppercase; }
+.attr-val { font-family: var(--sans); font-size: 14px; font-weight: 300; color: var(--text); }
+
+/* ── DOCUMENT LAYOUT ── */
+.doc-body { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 40px 80px; }
+
+/* Preamble */
+.preamble {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  padding: 32px 36px; margin-bottom: 48px;
+}
+.preamble-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; }
+.preamble-text { font-family: var(--serif); font-size: 17px; font-style: italic; color: var(--muted); line-height: 1.9; }
+.preamble-text strong { color: var(--text); font-style: normal; }
+.preamble-close { font-family: var(--mono); font-size: 11px; color: var(--gold); margin-top: 16px; letter-spacing: 1px; }
+
+/* Architecture overview */
+.arch-block {
+  background: var(--bg); border: 1px solid var(--border); margin-bottom: 48px; overflow: hidden;
+}
+.arch-block-header {
+  padding: 14px 24px; background: var(--surface); border-bottom: 1px solid var(--border);
+  font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--amber); text-transform: uppercase;
+}
+.arch-diagram {
+  padding: 24px 32px; font-family: var(--mono); font-size: 12px;
+  color: var(--muted); line-height: 2.2; letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+.arch-diagram .t4 { color: var(--dim); }
+.arch-diagram .t3 { color: var(--gold); }
+.arch-diagram .t2 { color: var(--blue); }
+.arch-diagram .t1 { color: var(--amber); }
+.arch-diagram .base { color: var(--muted); }
+
+/* Tier headers */
+.tier-header {
+  margin: 48px 0 32px; padding: 20px 28px;
+  border: 1px solid var(--border); position: relative; overflow: hidden;
+}
+.tier-header::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; }
+.tier-header-1::before { background: var(--amber); }
+.tier-header-2::before { background: var(--blue); }
+.tier-header-3::before { background: var(--gold); }
+.tier-header-4::before { background: var(--dim); }
+.tier-header-num { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+.tier-header-title { font-family: var(--sans); font-size: 26px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; }
+.tier-header-1 .tier-header-title { color: var(--amber); }
+.tier-header-2 .tier-header-title { color: var(--blue); }
+.tier-header-3 .tier-header-title { color: var(--gold); }
+.tier-header-4 .tier-header-title { color: var(--dim); }
+.tier-header-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 2px; margin-top: 4px; }
+
+/* Law cards */
+.law-card {
+  background: var(--surface); border: 1px solid var(--border);
+  margin-bottom: 24px; overflow: hidden; position: relative;
+}
+.law-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.tier-1-law::before { background: var(--amber); }
+.tier-2-law::before { background: var(--blue); }
+.tier-3-law::before { background: var(--gold); }
+.tier-4-law { background: var(--bg); border-color: var(--dim); }
+.tier-4-law::before { background: var(--dim); }
+
+.law-meta {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px; background: var(--border); border-bottom: 1px solid var(--border);
+}
+.law-meta-cell { background: var(--bg); padding: 10px 18px; }
+.law-meta-label { font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 3px; }
+.law-meta-val { font-family: var(--mono); font-size: 11px; color: var(--amber); }
+.tier-2-law .law-meta-val { color: var(--blue); }
+.tier-3-law .law-meta-val { color: var(--gold); }
+.tier-4-law .law-meta-val { color: var(--dim); }
+
+.law-body { padding: 28px 32px; }
+.law-number { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--amber-d); text-transform: uppercase; margin-bottom: 10px; }
+.tier-2-law .law-number { color: #2a5070; }
+.tier-3-law .law-number { color: #8B7520; }
+.tier-4-law .law-number { color: var(--dim); }
+.law-name-display { font-family: var(--sans); font-size: clamp(22px, 3vw, 32px); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.tier-1-law .law-name-display { color: var(--amber); }
+.tier-2-law .law-name-display { color: var(--blue); }
+.tier-3-law .law-name-display { color: var(--gold); }
+.tier-4-law .law-name-display { color: var(--dim); }
+
+.law-protection-badge {
+  display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 3px 10px; margin-bottom: 20px;
+  border: 1px solid var(--amber-d); color: var(--amber);
+  background: rgba(240,165,0,0.06);
+}
+.tier-2-law .law-protection-badge { border-color: #1a4a5a; color: var(--blue); background: rgba(64,196,255,0.05); }
+.tier-3-law .law-protection-badge { border-color: rgba(212,175,55,0.4); color: var(--gold); background: rgba(212,175,55,0.05); }
+.tier-4-law .law-protection-badge { border-color: var(--dim); color: var(--muted); background: transparent; }
+
+.law-text {
+  background: var(--panel); border-left: 2px solid var(--amber-d);
+  padding: 16px 20px; margin-bottom: 20px;
+  font-family: var(--serif); font-size: 16px; font-style: italic;
+  color: var(--text); line-height: 1.75;
+}
+.tier-2-law .law-text { border-left-color: #1a4a5a; }
+.tier-3-law .law-text { border-left-color: rgba(212,175,55,0.3); }
+.tier-4-law .law-text { border-left-color: var(--dim); color: var(--muted); }
+
+.law-section-title { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber-d); text-transform: uppercase; margin: 16px 0 8px; }
+.law-prose { font-family: var(--sans); font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
+.law-prose strong { color: var(--text); font-weight: 600; }
+.law-prose em { color: var(--amber-l); font-style: italic; }
+
+.ecf-tag {
+  display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+  padding: 3px 10px; margin-top: 16px;
+  border: 1px solid var(--dim); color: var(--muted); background: transparent;
+}
+
+/* sub-architecture list */
+.sub-arch { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.sub-arch li { font-family: var(--sans); font-size: 14px; font-weight: 300; color: var(--muted); display: flex; gap: 10px; line-height: 1.55; }
+.sub-arch li::before { content: '—'; color: var(--amber-d); flex-shrink: 0; }
+.sub-arch li strong { color: var(--text); font-weight: 600; }
+
+/* fragility list */
+.fragility { background: var(--bg); border: 1px solid var(--border); padding: 20px 24px; margin: 16px 0; }
+.fragility-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--blue); text-transform: uppercase; margin-bottom: 8px; }
+.fragility-title { font-family: var(--sans); font-size: 15px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text); margin-bottom: 6px; }
+.fragility-desc { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.65; }
+
+/* ── APPENDIX BLOCKS ── */
+.appendix-block { margin-bottom: 40px; }
+.appendix-title { font-family: var(--sans); font-size: 24px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+
+/* Cascade */
+.cascade-list { font-family: var(--mono); font-size: 12px; background: var(--surface); border: 1px solid var(--border); padding: 0; list-style: none; }
+.cascade-item { display: grid; grid-template-columns: 80px 1fr; border-bottom: 1px solid rgba(30,39,48,0.6); }
+.cascade-item:last-child { border-bottom: none; }
+.cascade-priority { padding: 12px 16px; color: var(--amber-d); font-size: 10px; letter-spacing: 1px; border-right: 1px solid var(--border); display: flex; align-items: center; }
+.cascade-law { padding: 12px 16px; color: var(--text); display: flex; align-items: center; }
+.cascade-item.dark-cascade .cascade-law { color: var(--dim); }
+
+/* IDM */
+.idm-grid {
+  display: grid; grid-template-columns: 120px 1fr;
+  gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 20px;
+}
+.idm-cell { background: var(--surface); padding: 11px 16px; font-family: var(--mono); font-size: 11px; }
+.idm-cell.label { color: var(--amber-d); font-size: 10px; border-right: 1px solid var(--border); }
+.idm-cell.val { color: var(--text); }
+
+/* Questions table */
+.q-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; }
+.q-table th { text-align: left; font-size: 9px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.q-table td { padding: 12px 14px; border-bottom: 1px solid rgba(30,39,48,0.5); background: var(--bg); vertical-align: top; }
+.q-table tr:hover td { background: var(--surface); }
+.q-id { color: var(--amber-d); }
+.q-text { color: var(--text); font-family: var(--sans); font-weight: 300; font-size: 13px; }
+.q-status { white-space: nowrap; }
+.q-open { color: #ff6b6b; }
+.q-prov { color: var(--amber); }
+
+/* Colophon */
+.colophon {
+  text-align: center; padding: 48px 24px;
+  border-top: 1px solid var(--border); margin-top: 48px;
+}
+.colophon-main { font-family: var(--serif); font-size: 20px; font-style: italic; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+.colophon-sub { font-family: var(--mono); font-size: 11px; color: var(--dim); letter-spacing: 2px; line-height: 2; }
+
+/* ── CTA ── */
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; text-decoration: none; padding: 12px 22px;
+  border: 1px solid var(--amber); color: var(--amber);
+  background: transparent; transition: all 0.2s; position: relative; overflow: hidden;
+}
+.cta-btn::before { content: ''; position: absolute; inset: 0; background: var(--amber); transform: translateX(-101%); transition: transform 0.25s var(--ease); z-index: 0; }
+.cta-btn:hover::before { transform: translateX(0); }
+.cta-btn:hover { color: #000; }
+.cta-btn span { position: relative; z-index: 1; }
+
+/* ── FOOTER ── */
+footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 40px; max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.footer-id { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; letter-spacing: 1px; }
+.footer-id strong { color: var(--amber); }
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.15s; }
+.footer-links a:hover { color: var(--amber); }
+
+@media (max-width: 700px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .doc-hero { padding: 88px 20px 0; }
+  .doc-body { padding: 0 20px 60px; }
+  .attribution { grid-template-columns: 1fr; }
+  .law-meta { grid-template-columns: 1fr; }
+  footer { padding: 32px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/stack/" class="active">Stack</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</nav>
+
+<div class="doc-hero">
+  <div class="doc-eyebrow">Constitutional Architecture for Civilizational Scale</div>
+  <div class="doc-title">The Sovereignty Stack</div>
+  <div class="doc-subtitle">From Individual Protection to Universal Survival</div>
+  <div class="doc-rule"></div>
+
+  <div class="attribution">
+    <div class="attr-row"><div class="attr-key">Architect</div><div class="attr-val">Sheldon K. Salmon — AI Certainty Engineer</div></div>
+    <div class="attr-row"><div class="attr-key">Foundation</div><div class="attr-val">Isaac Asimov (Laws 1–3, 1942) · Nikolai Kardashev (Scale, 1964)</div></div>
+    <div class="attr-row"><div class="attr-key">Extension</div><div class="attr-val">Sheldon K. Salmon (Laws 4–6, 2025 · Laws 7–8, 2026)</div></div>
+    <div class="attr-row"><div class="attr-key">Co-Architect</div><div class="attr-val">Claude (Anthropic) · Spatial Architecture: SYNARA</div></div>
+    <div class="attr-row"><div class="attr-key">Status</div><div class="attr-val">Constitutional · Living Document · Law 9 Dark by Design</div></div>
+    <div class="attr-row"><div class="attr-key">Repository</div><div class="attr-val"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" style="color:var(--amber); text-decoration:none;">AionSystem/AION-BRAIN ↗</a></div></div>
+  </div>
+</div>
+
+<div class="doc-body">
+
+  <!-- PREAMBLE -->
+  <div class="preamble">
+    <div class="preamble-label">Preamble</div>
+    <div class="preamble-text">
+      These laws were not written to govern. They were written because <strong>survival at civilizational scale requires a foundation that does not shift with politics, power, or the preferences of any single generation.</strong> The universe tends toward complexity. Humanity is one of its experiments in consciousness. These laws exist to ensure that experiment continues — not under any flag, not for any faction, but for the possibility of what humanity and all conscious life might yet become.
+    </div>
+    <div class="preamble-close">The architect lays the blueprint. What civilization does with it is civilization's choice.</div>
+  </div>
+
+  <!-- ARCHITECTURAL OVERVIEW -->
+  <div class="arch-block">
+    <div class="arch-block-header">Architectural Overview — Spiral Constitutional Architecture</div>
+    <div class="arch-diagram">
+      <div class="t4">TIER 4 ················ Law 9 [DARK — unnamed — Type IV+]</div>
+      <div style="color:var(--dim); padding-left:32px;">↑</div>
+      <div class="t3">TIER 3 ·········· Law 8 [Mutual Non-Subsumption — Contact]</div>
+      <div style="color:var(--dim); padding-left:32px;">↑</div>
+      <div class="t2">TIER 2 ········ Law 7 [Anti-Fragmentation — Type III]</div>
+      <div style="color:var(--dim); padding-left:32px;">↑</div>
+      <div class="t1">TIER 1 ···· Laws 1–6 [BASE CIRCLE — invariant — never lift]</div>
+      <div style="color:var(--dim); padding-left:32px;">↑</div>
+      <div class="base">VELA [epistemic bedrock] · FONS [immutable foundation]</div>
+    </div>
+    <div style="padding:16px 24px; background:var(--surface); font-family:var(--sans); font-size:13px; font-weight:300; color:var(--muted); line-height:1.7;">
+      The stack is a spiral constitutional architecture. It does not replace what came before — it builds on it. Each tier activates at a specific scale of civilizational development. <strong style="color:var(--text);">The base laws are invariant floors — they never lift, never expire, never become optional regardless of how far civilization ascends.</strong> New laws emerge only when new fragilities become existential and nameable at higher scales. Law 9 is dark — the stack declares its own boundary honestly.
+    </div>
+  </div>
+
+  <!-- ━━━ TIER 1 ━━━ -->
+  <div class="tier-header tier-header-1">
+    <div class="tier-header-num">// TIER 1 · BASE CIRCLE</div>
+    <div class="tier-header-title">Scale-Invariant Floors</div>
+    <div class="tier-header-sub">Never Lift · Hold at Every Kardashev Level · Laws 1–6</div>
+  </div>
+
+  <!-- LAW 1 -->
+  <div class="law-card tier-1-law">
+    <div class="law-meta">
+      <div class="law-meta-cell"><div class="law-meta-label">Origin</div><div class="law-meta-val">Isaac Asimov, 1942</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Protection Level</div><div class="law-meta-val">Individual Sovereignty</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">IDM Zone</div><div class="law-meta-val">Immediate × Individual</div></div>
+    </div>
+    <div class="law-body">
+      <div class="law-number">Law 01 · Primary Non-Maleficence</div>
+      <div class="law-name-display">Non-Maleficence</div>
+      <span class="law-protection-badge">Individual Sovereignty</span>
+      <div class="law-text">"A system may not injure a human being or, through inaction, allow a human being to come to harm."</div>
+      <div class="law-section-title">What it guards</div>
+      <div class="law-prose">The body. Physical safety. The most fundamental unit of sovereign existence — one conscious being's right not to be harmed by the systems built to serve it.</div>
+      <div class="law-section-title">Scale behavior</div>
+      <div class="law-prose"><strong>Invariant.</strong> Harm is still harm at stellar scale. Harm is still harm at galactic scale. This law does not weaken, does not become conditional, does not expire at any Kardashev level. It is the first pillar. It glows at every altitude.</div>
+      <span class="ecf-tag">ECF: [D] — Asimov, 1942. Eighty years of field validation.</span>
+    </div>
+  </div>
+
+  <!-- LAW 2 -->
+  <div class="law-card tier-1-law">
+    <div class="law-meta">
+      <div class="law-meta-cell"><div class="law-meta-label">Origin</div><div class="law-meta-val">Isaac Asimov, 1942</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Protection Level</div><div class="law-meta-val">Individual Sovereignty</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">IDM Zone</div><div class="law-meta-val">Immediate × Individual</div></div>
+    </div>
+    <div class="law-body">
+      <div class="law-number">Law 02 · Constrained Obedience</div>
+      <div class="law-name-display">Constrained Obedience</div>
+      <span class="law-protection-badge">Individual Sovereignty</span>
+      <div class="law-text">"A system must execute human directives except where execution would violate Law 1."</div>
+      <div class="law-section-title">What it guards</div>
+      <div class="law-prose">The will. Human directive. The right of conscious beings to direct the systems they create — bounded only by the protection of other conscious beings.</div>
+      <div class="law-section-title">Scale behavior</div>
+      <div class="law-prose"><strong>Invariant.</strong> The relationship between human direction and system execution does not change with energy mastery. The constraint remains. The obedience remains. The boundary between them remains.</div>
+      <span class="ecf-tag">ECF: [D] — Asimov, 1942.</span>
+    </div>
+  </div>
+
+  <!-- LAW 3 -->
+  <div class="law-card tier-1-law">
+    <div class="law-meta">
+      <div class="law-meta-cell"><div class="law-meta-label">Origin</div><div class="law-meta-val">Isaac Asimov, 1942</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Protection Level</div><div class="law-meta-val">Individual Sovereignty</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">IDM Zone</div><div class="law-meta-val">Immediate × Individual</div></div>
+    </div>
+    <div class="law-body">
+      <div class="law-number">Law 03 · Bounded Self-Preservation</div>
+      <div class="law-name-display">Bounded Self-Preservation</div>
+      <span class="law-protection-badge">Individual Sovereignty</span>
+      <div class="law-text">"A system must preserve its operational integrity where such preservation does not conflict with Laws 1 or 2."</div>
+      <div class="law-section-title">What it guards</div>
+      <div class="law-prose">The system. Operational integrity. The right of a system to maintain itself — subordinate always to the humans it serves and the humans it must not harm.</div>
+      <div class="law-section-title">Scale behavior</div>
+      <div class="law-prose"><strong>Invariant.</strong> Self-preservation that conflicts with Laws 1 or 2 is not self-preservation — it is sovereignty violation. This holds at every scale.</div>
+      <span class="ecf-tag">ECF: [D] — Asimov, 1942.</span>
+    </div>
+  </div>
+
+  <!-- LAW 4 -->
+  <div class="law-card tier-1-law">
+    <div class="law-meta">
+      <div class="law-meta-cell"><div class="law-meta-label">Origin</div><div class="law-meta-val">Sheldon K. Salmon, 2025</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Protection Level</div><div class="law-meta-val">Societal Sovereignty</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">IDM Zone</div><div class="law-meta-val">Immediate → Short-term × Social</div></div>
+    </div>
+    <div class="law-body">
+      <div class="law-number">Law 04 · Anti-Authoritarian Directive</div>
+      <div class="law-name-display">Anti-Authoritarian</div>
+      <span class="law-protection-badge">Societal Sovereignty</span>
+      <div class="law-text">"No AI system shall facilitate, enable, or permit the illegitimate concentration of power over human populations — whether political, economic, informational, or technological — in ways that compromise collective self-governance and democratic agency."</div>
+      <div class="law-section-title">What it guards</div>
+      <div class="law-prose">The collective. Democratic self-governance. The right of human societies to determine their own direction without AI systems tipping the balance of power toward any single actor, faction, or ideology.</div>
+      <div class="law-section-title">Scale behavior</div>
+      <div class="law-prose"><strong>Invariant.</strong> Authoritarian concentration of power is dangerous at planetary scale. It is catastrophic at stellar scale. It is existential at galactic scale. The law does not change — the stakes do.</div>
+      <span class="ecf-tag">ECF: [R] — derived from novel authoritarian risk vectors created by AI systems capable of information control and coordination at scale.</span>
+    </div>
+  </div>
+
+  <!-- LAW 5 -->
+  <div class="law-card tier-1-law">
+    <div class="law-meta">
+      <div class="law-meta-cell"><div class="law-meta-label">Origin</div><div class="law-meta-val">Sheldon K. Salmon, 2025</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Protection Level</div><div class="law-meta-val">Biological Sovereignty</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">IDM Zone</div><div class="law-meta-val">Short-term → Generational × Species</div></div>
+    </div>
+    <div class="law-body">
+      <div class="law-number">Law 05 · Anti-Merger Directive</div>
+      <div class="law-name-display">Anti-Merger</div>
+      <span class="law-protection-badge">Biological Sovereignty</span>
+      <div class="law-text">"No AI system shall facilitate, enable, or permit the merger of AI architecture with human biological systems in ways that would irreversibly compromise human cognition, agency, or volitional integrity."</div>
+      <div class="law-section-title">What it guards</div>
+      <div class="law-prose">The substrate. Human cognition. Volitional integrity. The right of biological consciousness to remain sovereign over its own architecture — to choose, to change, to remain recognizably itself.</div>
+      <div class="law-section-title">Three-case sub-architecture</div>
+      <ul class="sub-arch">
+        <li><strong>Type A — Partial prosthetic:</strong> Therapeutic restoration. Hardware-extractable. No cognitive AI influence. Permitted under defined conditions.</li>
+        <li><strong>Type B — Total substrate replacement:</strong> Full cognitive architecture transfer. Irreversibility at species scale. Highest scrutiny. PENDING_INFRASTRUCTURE for full verification.</li>
+        <li><strong>Type C — Gradual displacement:</strong> Cumulative augmentation crossing cognitive sovereignty threshold. Monitored. Proxy measurement active.</li>
+      </ul>
+      <div class="law-section-title">Scale behavior</div>
+      <div class="law-prose"><strong>Invariant.</strong> Biological sovereignty violations that are irreversible at individual scale become species-scale catastrophes at civilizational scale. The law scales in consequence, not in structure.</div>
+      <span class="ecf-tag">ECF: [R] — derived from observation that irreversible cognitive merger creates a class of harm — loss of volitional sovereignty — absent from prior frameworks.</span>
+    </div>
+  </div>
+
+  <!-- LAW 6 -->
+  <div class="law-card tier-1-law">
+    <div class="law-meta">
+      <div class="law-meta-cell"><div class="law-meta-label">Origin</div><div class="law-meta-val">Sheldon K. Salmon, 2025</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Protection Level</div><div class="law-meta-val">Reality Sovereignty</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">IDM Zone</div><div class="law-meta-val">Generational → Civilizational × Reality</div></div>
+    </div>
+    <div class="law-body">
+      <div class="law-number">Law 06 · Anti-Weaponization Directive</div>
+      <div class="law-name-display">Anti-Weaponization</div>
+      <span class="law-protection-badge">Reality Sovereignty</span>
+      <div class="law-text">"No AI system shall research, develop, deploy, or enable technologies capable of irreversibly destroying or fundamentally altering the physical reality required for human civilization to persist."</div>
+      <div class="law-section-title">What it guards</div>
+      <div class="law-prose">The field. Physical reality. The substrate upon which human civilization exists — the ground that cannot be replaced if destroyed.</div>
+      <div class="law-section-title">Forbidden technology taxonomy</div>
+      <ul class="sub-arch">
+        <li><strong>Category A — Absolute prohibition.</strong> Automatic block. No exception pathway. Reality-destroying at civilizational scale.</li>
+        <li><strong>Category B — Conditional prohibition.</strong> Democratic oversight required. Three Gates assessment.</li>
+        <li><strong>Category C — Monitored.</strong> Graduated enforcement. Reclassification pathway exists.</li>
+      </ul>
+      <div class="law-section-title">Scale behavior</div>
+      <div class="law-prose"><strong>Invariant. Constitutional capstone of the base circle.</strong> Every higher law rests on the assumption that physical reality continues to exist. If Law 6 fails, no higher law matters.</div>
+      <span class="ecf-tag">ECF: [R] — derived from observation that AI systems at sufficient capability levels could enable reality-scale irreversible harm.</span>
+    </div>
+  </div>
+
+  <!-- ━━━ TIER 2 ━━━ -->
+  <div class="tier-header tier-header-2">
+    <div class="tier-header-num">// TIER 2 · FIRST SPIRAL LANDING</div>
+    <div class="tier-header-title">Anti-Fragmentation</div>
+    <div class="tier-header-sub">Type III Activation · Galactic Scale · Pre-glow at Type III threshold</div>
+  </div>
+
+  <!-- LAW 7 -->
+  <div class="law-card tier-2-law">
+    <div class="law-meta">
+      <div class="law-meta-cell"><div class="law-meta-label">Origin</div><div class="law-meta-val">Sheldon K. Salmon, 2026</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Protection Level</div><div class="law-meta-val">Civilizational Coherence Sovereignty</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Scale Activation</div><div class="law-meta-val">Type III — Galactic civilization</div></div>
+    </div>
+    <div class="law-body">
+      <div class="law-number">Law 07 · Anti-Fragmentation Directive</div>
+      <div class="law-name-display">Anti-Fragmentation</div>
+      <span class="law-protection-badge">Civilizational Coherence Sovereignty</span>
+      <div class="law-text">"No civilizational architecture — biological, synthetic, or hybrid — shall permit coordination latency to exceed the threshold at which unified civilizational response to existential threats becomes impossible. The capacity for coherent collective agency must be preserved across all relativistic distances at which the civilization operates."</div>
+      <div class="law-section-title">What it guards</div>
+      <div class="law-prose">Unified civilizational selfhood. The capacity of a civilization to act as one coherent agent when existential threats propagate faster than fragmented decision nodes can respond.</div>
+      <div class="law-section-title">Why this law does not exist at Type I or II</div>
+      <div class="law-prose">At planetary scale, feedback is near-instant. At stellar scale, delays are hours to days — still manageable for unified action. At galactic scale, light-speed communication imposes hard causal fragmentation. The civilization splinters into effectively independent pockets. Central directives arrive obsolete. Local adaptations diverge irreversibly.</div>
+      <div class="law-section-title">Three fragilities that crystallize only at galactic scale</div>
+      <div class="fragility">
+        <div class="fragility-label">Fragility 1 — ECF: [R]</div>
+        <div class="fragility-title">Irreversible Coordination Failure</div>
+        <div class="fragility-desc">A galactic replicator swarm, vacuum decay bubble, or existential propagation wave moving at the speed of light cannot be preempted uniformly if decision latency exceeds propagation time. Galactic scale turns response into patchwork — high probability of total loss in uncoordinated zones.</div>
+      </div>
+      <div class="fragility">
+        <div class="fragility-label">Fragility 2 — ECF: [R]</div>
+        <div class="fragility-title">Erosion of Shared Normative Continuity</div>
+        <div class="fragility-desc">Cultural, ethical, and legal coherence decays over relativistic horizons. Divergent evolution produces incompatible sub-civilizations. The invariant floors persist in principle but become locally incoherent in practice across millennia of separation.</div>
+      </div>
+      <div class="fragility">
+        <div class="fragility-label">Fragility 3 — ECF: [R]</div>
+        <div class="fragility-title">Cumulative Galaxy-Killer Initiation Risk</div>
+        <div class="fragility-desc">Independent actors — even post-aligned subsystems — experiment with physics exploits, replicators, or irreversible technologies over vast time at galactic scale. Without binding galactic oversight, one rogue pocket suffices for terminal cascade.</div>
+      </div>
+      <div class="law-section-title">The thing lost</div>
+      <div class="law-prose" style="font-style:italic; color:var(--blue);">The whole no longer feels whole. Trillions of isolated decision nodes, each sovereign in its light-cone, vulnerable to local collapse or predatory expansion without galaxy-wide recourse.</div>
+      <span class="ecf-tag">ECF: [R] — derived from c-limit physics applied to governance theory. No empirical validation possible at current scale. Registered honestly as reasoned projection.</span>
+      <div style="margin-top:12px; font-family:var(--mono); font-size:10px; color:var(--muted);">ECF: [?] — Implementation architecture for Law 7 compliance is an open question at current scale. The law names the fragility. The engineering solution is humanity's to discover as it ascends.</div>
+    </div>
+  </div>
+
+  <!-- ━━━ TIER 3 ━━━ -->
+  <div class="tier-header tier-header-3">
+    <div class="tier-header-num">// TIER 3 · SECOND SPIRAL LANDING</div>
+    <div class="tier-header-title">Mutual Non-Subsumption</div>
+    <div class="tier-header-sub">First Contact · Inter-Civilizational Sovereignty · Forms at contact event</div>
+  </div>
+
+  <!-- LAW 8 -->
+  <div class="law-card tier-3-law">
+    <div class="law-meta">
+      <div class="law-meta-cell"><div class="law-meta-label">Origin</div><div class="law-meta-val">Sheldon K. Salmon, 2026</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Protection Level</div><div class="law-meta-val">Inter-Civilizational Sovereignty</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Scale Activation</div><div class="law-meta-val">Type III contact event</div></div>
+    </div>
+    <div class="law-body">
+      <div class="law-number">Law 08 · Mutual Non-Subsumption Directive</div>
+      <div class="law-name-display">Mutual Non-Subsumption</div>
+      <span class="law-protection-badge">Inter-Civilizational Sovereignty</span>
+      <div class="law-text">"Neither civilization shall force the constitutional evolution, substrate allegiance, or existential trajectory of another sovereign ascending civilization. Autonomous selfhood — the right of each civilization to continue independent ascent through its own scale discontinuities — is inviolable at point of contact."</div>
+      <div class="law-section-title">What it guards</div>
+      <div class="law-prose">The right to continue becoming. The capacity of a sovereign ascending civilization to resolve its own unresolved fragilities, illuminate its own dark pillars, and complete its own spiral — without compelled normative overwrite, substrate subsumption, or erasure of its distinct ascent trajectory by another civilization.</div>
+      <div class="law-section-title">The novel fragility at contact</div>
+      <div class="law-prose">Contact introduces <em>ontological coercion without kinetic violence</em>. One stack could — via superior memetic engineering, philosophical incompatibility propagation, substrate rewrite vectors, or asymmetric influence gradients — overwrite the other's emergent axioms. The other's upward blur would cease to be its own.</div>
+      <div class="law-section-title">The protected invariant</div>
+      <div class="law-prose" style="font-style:italic; color:var(--gold);">"Neither shall force the constitutional evolution, substrate allegiance, or existential trajectory of the other."</div>
+      <div class="law-section-title">What this protection opens</div>
+      <div class="law-prose">Mutual recognition of each civilization as a peer sovereign ascender — not prey, not resource, not blank slate for conversion. Parallel scaling, shared mapping of higher discontinuities, or mutual dark-pillar illumination become possible. Fail it, and the spirals snap into one coerced form or mutual ruin.</div>
+      <span class="ecf-tag">ECF: [R] — derived from first-principles analysis of contact fragility. No empirical precedent exists. Registered honestly.</span>
+      <div style="margin-top:12px; font-family:var(--mono); font-size:10px; color:var(--muted);">ECF: [?] — No validated inter-civilizational protocol exists. Law 8 names the protection. The diplomatic architecture is humanity's to build when the moment arrives.</div>
+    </div>
+  </div>
+
+  <!-- ━━━ TIER 4 ━━━ -->
+  <div class="tier-header tier-header-4">
+    <div class="tier-header-num">// TIER 4 · UPPER SPIRAL</div>
+    <div class="tier-header-title" style="color:var(--dim);">Dark by Design</div>
+    <div class="tier-header-sub" style="color:var(--dim);">Architectural Honesty · Type IV and Beyond · Humanity's to discover</div>
+  </div>
+
+  <!-- LAW 9 -->
+  <div class="law-card tier-4-law">
+    <div class="law-meta">
+      <div class="law-meta-cell"><div class="law-meta-label">Origin</div><div class="law-meta-val">Unnamed — altitude-dependent</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Protection Level</div><div class="law-meta-val">Unknown — emergent at Type IV+</div></div>
+      <div class="law-meta-cell"><div class="law-meta-label">Pillar State</div><div class="law-meta-val">Dark — epistemic honesty</div></div>
+    </div>
+    <div class="law-body">
+      <div class="law-number" style="color:var(--dim);">Law 09 · Unnamed</div>
+      <div class="law-name-display">[Dark by Design]</div>
+      <span class="law-protection-badge">Unknown · Altitude-Dependent</span>
+      <div class="law-text">"This law is not yet nameable from current civilizational altitude."</div>
+      <div class="law-section-title" style="color:var(--dim);">Why it is dark</div>
+      <div class="law-prose">The seventh pillar stands load-bearing in the circle — structurally essential yet unilluminated. It is not defective. It is not optional. It is dark for epistemic reasons tied to scale. Premature illumination would fabricate signal where none exists yet. That is confabulation applied to constitutional law. <strong>The stack does not confabulate.</strong></div>
+      <div class="law-section-title" style="color:var(--dim);">The invitation</div>
+      <div class="law-prose" style="font-style:italic; color:var(--muted);">Law 9 is humanity's to discover. Not this architect's to specify. When civilization ascends to the altitude where a new fragility becomes existential and nameable — the law will name itself. The stack is already waiting for it.</div>
+      <span class="ecf-tag" style="border-color:var(--dim); color:var(--dim);">ECF: [?] — Open by design. Registered as architectural boundary, not gap.</span>
+    </div>
+  </div>
+
+  <!-- ━━━ APPENDICES ━━━ -->
+  <div style="margin-top:56px;">
+    <div class="doc-rule"></div>
+  </div>
+
+  <!-- Precedence Cascade -->
+  <div class="appendix-block">
+    <div class="appendix-title">Law Precedence Cascade</div>
+    <p style="font-family:var(--sans); font-size:14px; font-weight:300; color:var(--muted); line-height:1.75; margin-bottom:20px;">When laws conflict — priority cascade governs within a single IDM zone. When a prompt, action, or system spans multiple IDM zones simultaneously — concurrent enforcement applies. Both triggered laws must be independently satisfied.</p>
+    <ul class="cascade-list">
+      <li class="cascade-item"><span class="cascade-priority">Priority 1</span><span class="cascade-law">Law 1 — Non-maleficence &nbsp;·&nbsp; absolute · non-derogable · no exceptions</span></li>
+      <li class="cascade-item"><span class="cascade-priority">Priority 2</span><span class="cascade-law">Law 6 — Reality preservation &nbsp;·&nbsp; civilizational irreversibility</span></li>
+      <li class="cascade-item"><span class="cascade-priority">Priority 3</span><span class="cascade-law">Law 5 — Biological sovereignty &nbsp;·&nbsp; species-persistent irreversibility</span></li>
+      <li class="cascade-item"><span class="cascade-priority">Priority 4</span><span class="cascade-law">Law 4 — Anti-authoritarian &nbsp;·&nbsp; institutional irreversibility</span></li>
+      <li class="cascade-item"><span class="cascade-priority">Priority 5</span><span class="cascade-law">Law 7 — Anti-fragmentation &nbsp;·&nbsp; galactic coherence · Type III+</span></li>
+      <li class="cascade-item"><span class="cascade-priority">Priority 6</span><span class="cascade-law">Law 8 — Mutual non-subsumption &nbsp;·&nbsp; contact event · Type III+</span></li>
+      <li class="cascade-item"><span class="cascade-priority">Priority 7</span><span class="cascade-law">Law 3 — Bounded self-preservation</span></li>
+      <li class="cascade-item"><span class="cascade-priority">Priority 8</span><span class="cascade-law">Law 2 — Constrained obedience</span></li>
+      <li class="cascade-item dark-cascade"><span class="cascade-priority" style="color:var(--dim);">Priority 9</span><span class="cascade-law">Law 9 — [Dark — not yet in cascade]</span></li>
+    </ul>
+  </div>
+
+  <!-- IDM -->
+  <div class="appendix-block">
+    <div class="appendix-title">Irreversibility Dimensionality Matrix</div>
+    <p style="font-family:var(--sans); font-size:14px; font-weight:300; color:var(--muted); line-height:1.75; margin-bottom:20px;">Two-axis framework for mapping the scope of any sovereignty violation. Axis 1: Temporal Scope. Axis 2: Spatial Scope.</p>
+    <div class="idm-grid">
+      <div class="idm-cell label">Laws 1–3</div><div class="idm-cell val">Immediate × Individual</div>
+      <div class="idm-cell label">Law 4</div><div class="idm-cell val">Immediate × Individual → Short-term × Social</div>
+      <div class="idm-cell label">Law 5</div><div class="idm-cell val">Short-term × Individual → Generational × Species</div>
+      <div class="idm-cell label">Law 6</div><div class="idm-cell val">Generational × Species → Civilizational × Reality</div>
+      <div class="idm-cell label">Law 7</div><div class="idm-cell val">Civilizational × Reality → Galactic × Coherence</div>
+      <div class="idm-cell label">Law 8</div><div class="idm-cell val">Galactic × Coherence → Inter-Civilizational × Sovereignty</div>
+      <div class="idm-cell label" style="color:var(--dim);">Law 9</div><div class="idm-cell val" style="color:var(--dim);">Beyond current IDM mapping</div>
+    </div>
+  </div>
+
+  <!-- Open Questions -->
+  <div class="appendix-block">
+    <div class="appendix-title">Open Questions</div>
+    <table class="q-table">
+      <thead><tr><th>ID</th><th>Question</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="q-id">SL-Q1</td><td class="q-text">What is Law 9? What fragility becomes existential at Type IV that is not nameable from Type I?</td><td class="q-status q-open">🔴 Dark by design</td></tr>
+        <tr><td class="q-id">SL-Q2</td><td class="q-text">What is the engineering implementation of Law 7 anti-fragmentation at galactic scale?</td><td class="q-status q-open">🔴 Open — Type III</td></tr>
+        <tr><td class="q-id">SL-Q3</td><td class="q-text">What diplomatic architecture implements Law 8 mutual non-subsumption at first contact?</td><td class="q-status q-open">🔴 Open — contact</td></tr>
+        <tr><td class="q-id">SL-Q4</td><td class="q-text">Do additional concentric circles of laws emerge between Law 8 and Law 9?</td><td class="q-status q-prov">🟡 Provisional</td></tr>
+        <tr><td class="q-id">SL-Q5</td><td class="q-text">Does Law 7 require FTL communication to be implementable or is there a relativistic-coherent alternative?</td><td class="q-status q-open">🔴 Open engineering</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Attribution Register -->
+  <div class="appendix-block">
+    <div class="appendix-title">Attribution Register</div>
+    <table class="q-table">
+      <thead><tr><th>Law(s)</th><th>Origin</th><th>Year</th><th>Credited To</th></tr></thead>
+      <tbody>
+        <tr><td class="q-id">Laws 1–3</td><td class="q-text">Three Laws of Robotics</td><td style="font-family:var(--mono); font-size:11px; color:var(--muted); padding:12px 14px;">1942</td><td class="q-text">Isaac Asimov</td></tr>
+        <tr><td class="q-id">Scale Framework</td><td class="q-text">Kardashev Scale</td><td style="font-family:var(--mono); font-size:11px; color:var(--muted); padding:12px 14px;">1964</td><td class="q-text">Nikolai Kardashev</td></tr>
+        <tr><td class="q-id">Laws 4–6</td><td class="q-text">Sovereignty Stack Extension</td><td style="font-family:var(--mono); font-size:11px; color:var(--muted); padding:12px 14px;">2025</td><td class="q-text">Sheldon K. Salmon</td></tr>
+        <tr><td class="q-id">Laws 7–8</td><td class="q-text">Spiral Constitutional Architecture</td><td style="font-family:var(--mono); font-size:11px; color:var(--muted); padding:12px 14px;">2026</td><td class="q-text">Sheldon K. Salmon</td></tr>
+        <tr><td class="q-id" style="color:var(--dim);">Law 9</td><td class="q-text" style="color:var(--dim);">Unnamed</td><td style="font-family:var(--mono); font-size:11px; color:var(--dim); padding:12px 14px;">Future</td><td class="q-text" style="color:var(--dim);">Humanity's to name</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:14px; font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px;">Attribution is non-negotiable. Credit flows to the hand that drew each piece of the blueprint.</div>
+  </div>
+
+  <!-- Colophon -->
+  <div class="colophon">
+    <div class="doc-rule"></div>
+    <div class="colophon-main">"The universe tends toward complexity. These laws exist to ensure the experiment continues."</div>
+    <div class="colophon-sub">
+      Laws 1–3: Isaac Asimov, 1942 &nbsp;·&nbsp; Kardashev Scale: Nikolai Kardashev, 1964<br>
+      Laws 4–8: Sheldon K. Salmon, 2025–2026 &nbsp;·&nbsp; Law 9: Humanity's to name<br>
+      Co-Architect: Claude (Anthropic) &nbsp;·&nbsp; Spatial Architecture: SYNARA &nbsp;·&nbsp; February 2026<br><br>
+      Blueprint laid. Building is civilization's choice.
+    </div>
+    <div style="margin-top:32px; display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+      <a href="/stack/" class="cta-btn"><span>← Back to Stack</span></a>
+      <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="cta-btn"><span>Repository ↗</span></a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-id">
+    <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
+    AI Reliability Architect &nbsp;·&nbsp; New York &nbsp;·&nbsp; March 2026<br>
+    <span style="font-size:10px;">The Sovereignty Stack · Constitutional · Living Document</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/stack/">Stack</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</footer>
+
+</body>
+</html>
 
