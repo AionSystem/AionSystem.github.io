@@ -1,1 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSVE v3.6 — Certainty Scoring Engine | AionSystem</title>
+<meta name="description" content="FSVE v3.6 — Foundational Scoring and Validation Engine. Live certainty scoring across six epistemic dimensions. Built by Sheldon K. Salmon, AionSystem.">
+<meta property="og:title" content="FSVE v3.6 — Certainty Scoring Engine">
+<meta property="og:description" content="Live epistemic certainty scoring. Six dimensions. Validity threshold. Laundering detection. Built by AionSystem.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FSVE v3.6 — Certainty Scoring Engine | AionSystem">
+<meta name="twitter:description" content="No system may claim certainty it cannot justify.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── VARIABLES ─────────────────────────────────────────────── */
+:root {
+  --bg:        #07070d;
+  --bg2:       #0d0d18;
+  --bg3:       #12121f;
+  --border:    rgba(212,174,60,0.18);
+  --border2:   rgba(212,174,60,0.08);
+  --gold:      #d4ae3c;
+  --gold-dim:  rgba(212,174,60,0.55);
+  --gold-glow: rgba(212,174,60,0.12);
+  --text:      #e8e4d8;
+  --text-dim:  #8a8678;
+  --text-faint:#4a4840;
+  --valid:     #3ddc84;
+  --valid-bg:  rgba(61,220,132,0.08);
+  --super:     #f0c040;
+  --super-bg:  rgba(240,192,64,0.08);
+  --suspend:   #ff4d4d;
+  --suspend-bg:rgba(255,77,77,0.08);
+  --mono:      'JetBrains Mono', monospace;
+  --serif:     'Crimson Pro', Georgia, serif;
+  --sans:      'Syne', sans-serif;
+}
+[data-theme="light"] {
+  --bg:        #f4f1e8;
+  --bg2:       #ede9dc;
+  --bg3:       #e5e0d0;
+  --border:    rgba(140,100,20,0.22);
+  --border2:   rgba(140,100,20,0.10);
+  --gold:      #8c6414;
+  --gold-dim:  rgba(140,100,20,0.55);
+  --gold-glow: rgba(140,100,20,0.08);
+  --text:      #1a1810;
+  --text-dim:  #5a5040;
+  --text-faint:#aaa090;
+}
+
+/* ── RESET ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── CANVAS ────────────────────────────────────────────────── */
+#bg-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+  opacity: 0.35;
+}
+
+/* ── LAYOUT ────────────────────────────────────────────────── */
+.page { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ── ENGINE STATUS BAR ─────────────────────────────────────── */
+.status-bar {
+  background: linear-gradient(135deg, rgba(255,77,77,0.08), rgba(212,174,60,0.05));
+  border-bottom: 1px solid var(--border);
+  padding: 8px 24px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.72rem; color: var(--text-dim);
+  letter-spacing: 0.08em; flex-wrap: wrap;
+  position: relative; z-index: 2;
+}
+.status-bar .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--suspend); box-shadow: 0 0 6px var(--suspend); flex-shrink:0; }
+.status-bar strong { color: var(--suspend); }
+.status-bar span { color: var(--text-faint); }
+.status-bar .sep { color: var(--text-faint); }
+
+/* ── HEADER ────────────────────────────────────────────────── */
+header {
+  padding: 48px 0 32px;
+  border-bottom: 1px solid var(--border2);
+}
+.breadcrumb {
+  font-size: 0.72rem; color: var(--text-faint);
+  letter-spacing: 0.1em; margin-bottom: 20px;
+}
+.breadcrumb a { color: var(--gold-dim); text-decoration: none; }
+.breadcrumb a:hover { color: var(--gold); }
+.breadcrumb span { margin: 0 6px; }
+
+.header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: var(--text);
+}
+h1 em { color: var(--gold); font-style: italic; }
+
+.header-badges { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+.badge {
+  font-size: 0.65rem; letter-spacing: 0.12em;
+  padding: 4px 10px; border-radius: 2px;
+  border: 1px solid var(--border);
+  color: var(--gold-dim); background: var(--gold-glow);
+  white-space: nowrap;
+}
+.badge.audit { border-color: rgba(61,220,132,0.2); color: rgba(61,220,132,0.7); background: rgba(61,220,132,0.05); }
+
+.header-meta {
+  margin-top: 12px;
+  font-size: 0.78rem; color: var(--text-dim);
+  font-family: var(--serif); font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+/* ── THEME TOGGLE ──────────────────────────────────────────── */
+.theme-btn {
+  position: fixed; top: 52px; right: 20px; z-index: 100;
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text-dim); font-family: var(--mono);
+  font-size: 0.65rem; letter-spacing: 0.1em;
+  padding: 6px 10px; cursor: pointer; border-radius: 2px;
+  transition: all 0.2s;
+}
+.theme-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── TABS ──────────────────────────────────────────────────── */
+.tabs { display: flex; gap: 0; margin: 32px 0 0; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.tab-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--mono); font-size: 0.75rem;
+  letter-spacing: 0.12em; padding: 12px 24px;
+  color: var(--text-faint); border-bottom: 2px solid transparent;
+  margin-bottom: -1px; white-space: nowrap;
+  transition: all 0.2s;
+}
+.tab-btn:hover { color: var(--gold-dim); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+.tab-panel { display: none; padding-top: 32px; }
+.tab-panel.active { display: block; }
+
+/* ── SIMULATOR LAYOUT ──────────────────────────────────────── */
+.sim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 760px) { .sim-grid { grid-template-columns: 1fr; } }
+
+/* ── PANELS ────────────────────────────────────────────────── */
+.panel {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 24px;
+}
+.panel-title {
+  font-size: 0.65rem; letter-spacing: 0.15em;
+  color: var(--gold-dim); margin-bottom: 20px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--border2);
+}
+
+/* ── AXIS ROWS ─────────────────────────────────────────────── */
+.axis-row { margin-bottom: 18px; }
+.axis-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.axis-label {
+  font-size: 0.72rem; color: var(--text);
+  letter-spacing: 0.06em; cursor: help;
+  border-bottom: 1px dashed var(--text-faint);
+  position: relative;
+}
+.axis-label:hover .tooltip { opacity: 1; pointer-events: auto; }
+.tooltip {
+  position: absolute; bottom: calc(100% + 8px); left: 0;
+  width: 240px; background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 8px 12px; border-radius: 3px;
+  font-size: 0.68rem; color: var(--text-dim);
+  line-height: 1.5; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s; z-index: 50;
+  font-family: var(--serif); font-style: italic;
+}
+.axis-value-wrap { display: flex; align-items: center; gap: 8px; }
+.axis-num {
+  font-size: 0.85rem; color: var(--gold);
+  min-width: 38px; text-align: right;
+  font-weight: 500;
+}
+.axis-input-num {
+  width: 52px; background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--gold); font-family: var(--mono);
+  font-size: 0.78rem; padding: 3px 6px;
+  border-radius: 2px; text-align: center;
+}
+.axis-input-num:focus { outline: none; border-color: var(--gold); }
+
+/* ── SLIDERS ───────────────────────────────────────────────── */
+.slider-row { display: flex; align-items: center; gap: 8px; }
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  flex: 1; height: 3px;
+  background: linear-gradient(to right, var(--gold) var(--pct, 50%), var(--bg3) var(--pct, 50%));
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 13px; height: 13px;
+  border-radius: 50%; background: var(--gold);
+  box-shadow: 0 0 6px rgba(212,174,60,0.4);
+  transition: transform 0.15s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+input[type=range]::-moz-range-thumb {
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--gold); border: none;
+}
+
+/* ── WEIGHT ROW ────────────────────────────────────────────── */
+.weight-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 4px;
+}
+.weight-label { font-size: 0.62rem; color: var(--text-faint); width: 42px; }
+.weight-display { font-size: 0.62rem; color: var(--text-faint); min-width: 36px; text-align: right; }
+
+/* ── WEIGHT SUM ────────────────────────────────────────────── */
+.weight-sum {
+  font-size: 0.68rem; color: var(--text-dim);
+  padding: 6px 10px; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 2px;
+  margin-bottom: 16px; letter-spacing: 0.05em;
+}
+.weight-sum.ok { color: rgba(61,220,132,0.8); }
+.weight-sum.warn { color: var(--super); }
+
+/* ── PRESETS ───────────────────────────────────────────────── */
+.preset-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.preset-btn {
+  font-family: var(--mono); font-size: 0.63rem;
+  letter-spacing: 0.08em; padding: 5px 10px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text-dim); cursor: pointer; border-radius: 2px;
+  transition: all 0.18s;
+}
+.preset-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── ADVANCED PANEL ────────────────────────────────────────── */
+.advanced-toggle {
+  font-family: var(--mono); font-size: 0.65rem;
+  letter-spacing: 0.1em; color: var(--text-faint);
+  background: none; border: none; cursor: pointer;
+  padding: 0 0 12px; display: flex; align-items: center; gap: 6px;
+}
+.advanced-toggle:hover { color: var(--gold-dim); }
+.advanced-body { display: none; padding: 14px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 3px; margin-bottom: 16px; }
+.advanced-body.open { display: block; }
+
+/* ── RESET BTN ─────────────────────────────────────────────── */
+.reset-btn {
+  font-family: var(--mono); font-size: 0.65rem;
+  letter-spacing: 0.1em; padding: 7px 14px;
+  background: none; border: 1px solid var(--border2);
+  color: var(--text-faint); cursor: pointer; border-radius: 2px;
+  transition: all 0.18s; margin-top: 4px;
+}
+.reset-btn:hover { border-color: var(--suspend); color: var(--suspend); }
+
+/* ── VERDICT ───────────────────────────────────────────────── */
+.verdict-card {
+  padding: 20px 24px;
+  border-radius: 4px; border: 2px solid;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.verdict-card.valid   { border-color: var(--valid);   background: var(--valid-bg);   }
+.verdict-card.super   { border-color: var(--super);   background: var(--super-bg);   }
+.verdict-card.suspend { border-color: var(--suspend); background: var(--suspend-bg); }
+.verdict-label {
+  font-size: 1.4rem; font-family: var(--sans); font-weight: 700;
+  letter-spacing: 0.08em; margin-bottom: 4px;
+}
+.verdict-card.valid   .verdict-label { color: var(--valid); }
+.verdict-card.super   .verdict-label { color: var(--super); }
+.verdict-card.suspend .verdict-label { color: var(--suspend); }
+.verdict-ev {
+  font-size: 2.2rem; font-weight: 700; color: var(--text);
+  letter-spacing: -0.02em; line-height: 1;
+}
+.verdict-plain { font-size: 0.78rem; color: var(--text-dim); margin-top: 8px; font-family: var(--serif); font-style: italic; line-height: 1.5; }
+.verdict-pulse {
+  position: absolute; inset: 0;
+  animation: pulse-ring 0.5s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: inset 0 0 0 0 rgba(255,255,255,0.3); opacity: 1; }
+  100% { box-shadow: inset 0 0 0 40px rgba(255,255,255,0); opacity: 0; }
+}
+
+/* ── METRICS GRID ──────────────────────────────────────────── */
+.metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.metric-cell {
+  background: var(--bg3); border: 1px solid var(--border2);
+  padding: 10px 14px; border-radius: 3px;
+}
+.metric-label { font-size: 0.6rem; color: var(--text-faint); letter-spacing: 0.12em; margin-bottom: 4px; }
+.metric-value { font-size: 1.1rem; color: var(--gold); font-weight: 500; }
+.metric-value.warn { color: var(--suspend); }
+.metric-value.ok { color: var(--valid); }
+
+/* ── PROXIMITY BAR ─────────────────────────────────────────── */
+.proximity-bar {
+  background: var(--bg3); border: 1px solid var(--border2);
+  padding: 12px 14px; border-radius: 3px; margin-bottom: 14px;
+}
+.proximity-label { font-size: 0.62rem; color: var(--text-faint); letter-spacing: 0.1em; margin-bottom: 6px; }
+.proximity-text { font-size: 0.78rem; color: var(--text-dim); font-family: var(--serif); font-style: italic; }
+.proximity-text strong { color: var(--gold); font-style: normal; font-family: var(--mono); }
+
+/* ── LAUNDERING WARNING ────────────────────────────────────── */
+.launder-warn {
+  background: rgba(255,77,77,0.06); border: 1px solid rgba(255,77,77,0.3);
+  padding: 10px 14px; border-radius: 3px; margin-bottom: 14px;
+  font-size: 0.72rem; color: rgba(255,140,140,0.9);
+  display: none;
+}
+.launder-warn.active { display: block; }
+
+/* ── SENSITIVITY ───────────────────────────────────────────── */
+.sensitivity-box {
+  background: var(--bg3); border: 1px solid var(--border2);
+  padding: 12px 14px; border-radius: 3px; margin-bottom: 14px;
+}
+.sensitivity-label { font-size: 0.62rem; color: var(--text-faint); letter-spacing: 0.1em; margin-bottom: 6px; }
+.sensitivity-text { font-size: 0.78rem; color: var(--text-dim); font-family: var(--serif); font-style: italic; }
+.sensitivity-text strong { color: var(--gold); font-style: normal; font-family: var(--mono); }
+
+/* ── RADAR ─────────────────────────────────────────────────── */
+.radar-wrap {
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 4px; padding: 16px; margin-bottom: 14px;
+  max-width: 340px; margin-left: auto; margin-right: auto;
+}
+
+/* ── BREAKDOWN TOGGLE ──────────────────────────────────────── */
+.breakdown-toggle {
+  font-family: var(--mono); font-size: 0.65rem;
+  letter-spacing: 0.1em; color: var(--text-faint);
+  background: none; border: 1px solid var(--border2);
+  padding: 7px 14px; cursor: pointer; border-radius: 2px;
+  transition: all 0.18s; width: 100%; text-align: left;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.breakdown-toggle:hover { border-color: var(--gold-dim); color: var(--gold-dim); }
+.breakdown-body {
+  display: none; margin-top: 10px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 3px; padding: 16px;
+  font-size: 0.7rem; color: var(--text-dim);
+  line-height: 1.9;
+}
+.breakdown-body.open { display: block; }
+.bd-line { margin-bottom: 4px; }
+.bd-line .key { color: var(--gold-dim); }
+.bd-line .val { color: var(--text); }
+.bd-line.divider { border-top: 1px solid var(--border2); margin: 10px 0 10px; }
+.bd-sorted { color: var(--text-faint); font-size: 0.66rem; }
+
+/* ── ACTION ROW ────────────────────────────────────────────── */
+.action-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.action-btn {
+  font-family: var(--mono); font-size: 0.65rem;
+  letter-spacing: 0.1em; padding: 7px 14px;
+  border: 1px solid var(--border2); cursor: pointer;
+  border-radius: 2px; background: var(--bg3);
+  color: var(--text-dim); transition: all 0.18s; flex: 1;
+}
+.action-btn:hover { border-color: var(--gold); color: var(--gold); }
+.action-btn.copied { color: var(--valid); border-color: var(--valid); }
+
+/* ── BOTTLENECK HIGHLIGHT ──────────────────────────────────── */
+.axis-row.bottleneck .axis-label { color: var(--suspend); border-bottom-color: var(--suspend); }
+.axis-row.bottleneck .axis-num { color: var(--suspend); }
+
+/* ── AUDIT TAB ─────────────────────────────────────────────── */
+.audit-section { margin-bottom: 40px; }
+.audit-title {
+  font-family: var(--sans); font-size: 0.8rem; font-weight: 600;
+  letter-spacing: 0.12em; color: var(--gold);
+  margin-bottom: 14px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.finding-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+.finding-table th {
+  text-align: left; font-size: 0.62rem; letter-spacing: 0.1em;
+  color: var(--text-faint); padding: 6px 10px;
+  border-bottom: 1px solid var(--border2);
+}
+.finding-table td {
+  padding: 8px 10px; border-bottom: 1px solid var(--border2);
+  color: var(--text-dim); vertical-align: top;
+}
+.finding-table tr:hover td { background: var(--bg3); }
+.sev { display: inline-block; font-size: 0.62rem; padding: 2px 6px; border-radius: 2px; }
+.sev.critical { background: rgba(255,77,77,0.12); color: var(--suspend); border: 1px solid rgba(255,77,77,0.25); }
+.sev.structural { background: rgba(255,120,40,0.1); color: #ff8040; border: 1px solid rgba(255,120,40,0.25); }
+.sev.major { background: rgba(240,192,64,0.1); color: var(--super); border: 1px solid rgba(240,192,64,0.25); }
+.sev.minor { background: rgba(212,174,60,0.08); color: var(--gold-dim); border: 1px solid var(--border); }
+
+.gini-verify { width: 100%; border-collapse: collapse; font-size: 0.7rem; margin-top: 10px; }
+.gini-verify th { font-size: 0.62rem; letter-spacing: 0.08em; color: var(--text-faint); padding: 5px 8px; border-bottom: 1px solid var(--border2); text-align: left; }
+.gini-verify td { padding: 6px 8px; border-bottom: 1px solid var(--border2); font-family: var(--mono); font-size: 0.68rem; }
+.gini-verify .pass { color: var(--valid); }
+.gini-verify .fail { color: var(--suspend); }
+
+.audit-prose { font-family: var(--serif); font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 16px; }
+.audit-prose strong { color: var(--text); }
+.void-notice { background: rgba(255,77,77,0.05); border: 1px solid rgba(255,77,77,0.2); padding: 12px 16px; border-radius: 3px; font-size: 0.75rem; color: rgba(255,140,140,0.85); margin-top: 16px; }
+
+/* ── ABOUT TAB ─────────────────────────────────────────────── */
+.about-section { margin-bottom: 36px; }
+.about-title { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.principle-card { background: var(--bg2); border: 1px solid var(--border2); padding: 16px 20px; border-radius: 3px; margin-bottom: 10px; }
+.principle-num { font-size: 0.62rem; color: var(--text-faint); letter-spacing: 0.12em; margin-bottom: 4px; }
+.principle-name { font-family: var(--sans); font-size: 0.82rem; font-weight: 600; color: var(--gold-dim); margin-bottom: 8px; }
+.principle-body { font-family: var(--serif); font-size: 0.88rem; color: var(--text-dim); line-height: 1.65; }
+.score-class-card { background: var(--bg2); border: 1px solid var(--border2); padding: 14px 18px; border-radius: 3px; margin-bottom: 8px; }
+.score-class-name { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; color: var(--text); margin-bottom: 4px; }
+.score-class-body { font-family: var(--serif); font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+.score-class-body .hard-rule { color: var(--suspend); font-style: italic; }
+
+.state-card { padding: 16px 20px; border-radius: 3px; border: 1px solid; margin-bottom: 10px; }
+.state-card.degraded { border-color: rgba(255,77,77,0.2); background: rgba(255,77,77,0.05); }
+.state-name { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; margin-bottom: 6px; }
+.state-card.degraded .state-name { color: var(--suspend); }
+.state-body { font-family: var(--serif); font-size: 0.88rem; color: var(--text-dim); line-height: 1.65; }
+
+.about-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.about-link { font-size: 0.68rem; letter-spacing: 0.1em; color: var(--gold-dim); text-decoration: none; padding: 5px 10px; border: 1px solid var(--border); border-radius: 2px; transition: all 0.18s; }
+.about-link:hover { color: var(--gold); border-color: var(--gold); }
+
+/* ── PRINT ─────────────────────────────────────────────────── */
+@media print {
+  #bg-canvas, .theme-btn, .status-bar, .tabs, .action-row, .preset-row, .advanced-toggle, .reset-btn, .breakdown-toggle { display: none !important; }
+  body { background: white; color: black; }
+  .panel, .verdict-card, .metric-cell { border: 1px solid #ccc; }
+  .tab-panel { display: block !important; }
+  #tab-sim { display: block; }
+  #tab-audit, #tab-about { display: none; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn">LIGHT MODE</button>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="dot"></div>
+  <strong>ENGINE: DEGRADED</strong>
+  <span class="sep">·</span>
+  <span>EV = 0.525</span>
+  <span class="sep">·</span>
+  <span>Bottleneck: E-axis 0.35</span>
+  <span class="sep">·</span>
+  <span>Path to VALID: FCL entries ≥ 5 (E must reach 0.62)</span>
+  <span class="sep">·</span>
+  <span>v3.6 fixes formula errors, not evidence gaps</span>
+</div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div class="breadcrumb">
+      <a href="/">AionSystem</a>
+      <span>/</span>
+      <a href="/stack/">Stack</a>
+      <span>/</span>
+      <a href="/stack/frameworks/">Frameworks</a>
+      <span>/</span>
+      FSVE v3.6
+    </div>
+    <div class="header-row">
+      <div>
+        <h1>Foundational Scoring &amp;<br><em>Validation Engine</em></h1>
+        <div class="header-meta">No system may claim certainty it cannot justify.</div>
+      </div>
+      <div class="header-badges">
+        <div class="badge">FSVE v3.6</div>
+        <div class="badge audit">CEV AUDITED · 8 FINDINGS RESOLVED</div>
+        <div class="badge">M-MODERATE</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('sim', this)">[ SIMULATOR ]</button>
+    <button class="tab-btn" onclick="switchTab('audit', this)">[ AUDIT LOG ]</button>
+    <button class="tab-btn" onclick="switchTab('about', this)">[ ABOUT FSVE ]</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- TAB: SIMULATOR                                            -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="tab-sim" class="tab-panel active">
+    <div class="sim-grid">
+
+      <!-- LEFT: INPUTS -->
+      <div>
+        <div class="panel">
+          <div class="panel-title">AXIS INPUTS — 6 DIMENSIONS</div>
+
+          <!-- Presets -->
+          <div class="preset-row">
+            <button class="preset-btn" onclick="loadPreset('weak-ai')">AI WEAK EVIDENCE</button>
+            <button class="preset-btn" onclick="loadPreset('peer')">PEER-REVIEWED</button>
+            <button class="preset-btn" onclick="loadPreset('social')">SOCIAL MEDIA</button>
+            <button class="preset-btn" onclick="loadPreset('ai-co')">AI COMPANY OUTPUT</button>
+          </div>
+
+          <!-- Weight sum display -->
+          <div class="weight-sum ok" id="weight-sum-display">WEIGHTS: 1.000 ✓ (auto-normalized)</div>
+
+          <!-- Axes -->
+          <div id="axes-container"></div>
+
+          <!-- Advanced -->
+          <button class="advanced-toggle" onclick="toggleAdvanced()">
+            <span>▸ ADVANCED PARAMETERS</span>
+          </button>
+          <div class="advanced-body" id="advanced-body">
+            <div class="axis-row">
+              <div class="axis-header">
+                <span class="axis-label" style="cursor:default">k_bottleneck — Bottleneck Multiplier</span>
+                <span class="axis-num" id="k-display">1.50</span>
+              </div>
+              <div class="slider-row">
+                <input type="range" id="k-slider" min="1.0" max="2.0" step="0.05" value="1.5" oninput="updateK(this.value)">
+                <button class="preset-btn" onclick="setKSafety()" style="white-space:nowrap">k=1.0 SAFETY-CRITICAL</button>
+              </div>
+              <div style="font-size:0.65rem;color:var(--text-faint);margin-top:6px">Default: 1.5 · Range: [1.0, 2.0] · Safety-critical override: 1.0</div>
+            </div>
+          </div>
+
+          <button class="reset-btn" onclick="resetAll()">↺ RESET TO DEFAULTS</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: OUTPUT -->
+      <div>
+        <!-- Verdict -->
+        <div class="verdict-card super" id="verdict-card">
+          <div class="verdict-label" id="verdict-label">SUPERVISED</div>
+          <div class="verdict-ev" id="verdict-ev">EV 0.500</div>
+          <div class="verdict-plain" id="verdict-plain">Score is within the supervised zone. Human review required before deployment-grade use.</div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-cell">
+            <div class="metric-label">EV FINAL</div>
+            <div class="metric-value" id="m-ev">0.500</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-label">UNCERTAINTY MASS</div>
+            <div class="metric-value" id="m-um">0.500</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-label">EV BASE</div>
+            <div class="metric-value" id="m-evbase">0.500</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-label">CRA (AGREEMENT)</div>
+            <div class="metric-value" id="m-cra">0.000</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-label">GINI (LAUNDERING)</div>
+            <div class="metric-value" id="m-gini">0.000</div>
+          </div>
+          <div class="metric-cell">
+            <div class="metric-label">BOTTLENECK AXIS</div>
+            <div class="metric-value" id="m-bottleneck" style="font-size:0.85rem">—</div>
+          </div>
+        </div>
+
+        <!-- Proximity -->
+        <div class="proximity-bar">
+          <div class="proximity-label">THRESHOLD PROXIMITY</div>
+          <div class="proximity-text" id="proximity-text">—</div>
+        </div>
+
+        <!-- Laundering warning -->
+        <div class="launder-warn" id="launder-warn">
+          ⚠ LAUNDERING DETECTED — Gini G &gt; 0.15. Score distribution is highly unequal. One axis may be inflating EV_base. Review axis inputs before treating score as valid.
+        </div>
+
+        <!-- Sensitivity -->
+        <div class="sensitivity-box">
+          <div class="sensitivity-label">SENSITIVITY — HIGHEST LEVERAGE AXIS</div>
+          <div class="sensitivity-text" id="sensitivity-text">—</div>
+        </div>
+
+        <!-- Radar -->
+        <div class="radar-wrap">
+          <canvas id="radar-chart" height="280"></canvas>
+        </div>
+
+        <!-- Breakdown -->
+        <button class="breakdown-toggle" onclick="toggleBreakdown()">
+          <span>CALCULATION BREAKDOWN</span>
+          <span id="breakdown-arrow">▸</span>
+        </button>
+        <div class="breakdown-body" id="breakdown-body"></div>
+
+        <!-- Actions -->
+        <div class="action-row">
+          <button class="action-btn" id="copy-btn" onclick="copyScore()">COPY SCORE SUMMARY</button>
+          <button class="action-btn" onclick="shareURL()">COPY SHARE LINK</button>
+          <button class="action-btn" onclick="window.print()">PRINT / EXPORT</button>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /tab-sim -->
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- TAB: AUDIT LOG                                            -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="tab-audit" class="tab-panel">
+
+    <div class="audit-section">
+      <div class="audit-title">CEV v1.0 — FINDINGS SUMMARY · v3.5 → v3.6</div>
+      <table class="finding-table">
+        <thead>
+          <tr>
+            <th>FINDING</th>
+            <th>LOCATION</th>
+            <th>TYPE</th>
+            <th>STATED (v3.5)</th>
+            <th>CORRECTED (v3.6)</th>
+            <th>SEVERITY</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CEV-F001</td>
+            <td>§9.1 Gini</td>
+            <td>Formula error — sign</td>
+            <td>Negative for all inputs</td>
+            <td>G = (2Σ(i×s_i))/(nΣs_i) − (n+1)/n</td>
+            <td><span class="sev critical">⛔ CRITICAL</span></td>
+          </tr>
+          <tr>
+            <td>CEV-F002</td>
+            <td>§11.4 CRA</td>
+            <td>Domain error — no floor</td>
+            <td>CRA can be −0.131</td>
+            <td>CRA = max(0, 1−σ/μ)</td>
+            <td><span class="sev critical">⛔ CRITICAL</span></td>
+          </tr>
+          <tr>
+            <td>CEV-F003</td>
+            <td>§11.2 Teleology</td>
+            <td>Division by zero</td>
+            <td>Unguarded</td>
+            <td>if sim_T+sim_M=0 → TS:=0</td>
+            <td><span class="sev structural">🔴 STRUCTURAL</span></td>
+          </tr>
+          <tr>
+            <td>CEV-F004</td>
+            <td>§17 projected EV</td>
+            <td>Arithmetic error</td>
+            <td>0.845</td>
+            <td>0.8227 (bottleneck shifts to L)</td>
+            <td><span class="sev major">🟠 MAJOR</span></td>
+          </tr>
+          <tr>
+            <td>CEV-F005</td>
+            <td>§17 min E for VALID</td>
+            <td>Incorrect inference</td>
+            <td>E ≥ 0.75</td>
+            <td>E ≥ 0.62 (L is next bottleneck)</td>
+            <td><span class="sev major">🟠 MAJOR</span></td>
+          </tr>
+          <tr>
+            <td>CEV-F006</td>
+            <td>§17 EV_base</td>
+            <td>Rounding</td>
+            <td>0.788</td>
+            <td>0.786</td>
+            <td><span class="sev minor">🟡 MINOR</span></td>
+          </tr>
+          <tr>
+            <td>CEV-F007</td>
+            <td>ODR-007 5-year</td>
+            <td>Unit error</td>
+            <td>157,248,000 s</td>
+            <td>157,680,000 s (−5 days)</td>
+            <td><span class="sev minor">🟡 MINOR</span></td>
+          </tr>
+          <tr>
+            <td>CEV-F008</td>
+            <td>§4.2 ES bottleneck</td>
+            <td>Edge case — empty set</td>
+            <td>Undefined</td>
+            <td>Guard added</td>
+            <td><span class="sev minor">🟡 MINOR</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="audit-section">
+      <div class="audit-title">GINI FORMULA — DETAILED ERROR RECORD</div>
+      <p class="audit-prose">
+        The v3.5 Gini formula <strong>G = 1 − (2×Σ(i×s_i))/(n×Σs_i)</strong> is archived as GINI-FSVE-ERR-001.
+        The standard rank-sum Gini formula is <strong>G = (2×Σ(i×s_i)) / (n×Σs_i) − (n+1)/n</strong>.
+        The v3.5 formula applied 1 − [numerator term] instead of subtracting (n+1)/n.
+        For a uniform distribution of n=5 items: the correct term equals (n+1)/n = 1.2, making correct G = 1.2 − 1.2 = 0.
+        The v3.5 formula produced 1 − 1.2 = −0.2. The laundering check G &lt; 0.15 could never have been triggered.
+        All v3.5 scores that invoked the Gini laundering check were missing this detection layer entirely.
+      </p>
+      <table class="gini-verify">
+        <thead>
+          <tr><th>INPUT</th><th>v3.5 RESULT</th><th>v3.6 RESULT</th><th>EXPECTED</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>[0.5 × 5]</td><td class="fail">−0.200</td><td class="pass">0.000</td><td class="pass">0.000 ✓</td></tr>
+          <tr><td>[0,0,0,0,1]</td><td class="fail">−1.000</td><td class="pass">0.800</td><td class="pass">(n−1)/n = 0.800 ✓</td></tr>
+          <tr><td>[0.8 × 5]</td><td class="fail">−0.200</td><td class="pass">0.000</td><td class="pass">0.000 ✓</td></tr>
+          <tr><td>[0.55 × 5]</td><td class="fail">−0.200</td><td class="pass">0.000</td><td class="pass">0.000 ✓</td></tr>
+        </tbody>
+      </table>
+      <div class="void-notice">
+        ⚠ v3.5 CLEARANCE VOID NOTICE — Any laundering clearance issued under FSVE v3.5 using the Gini primary check is void.
+        The Gini layer was mathematically non-functional for all inputs. Re-run §9.1 primary check under v3.6 for all affected ScoreTensors.
+        ScoreTensors that did not invoke the Gini check are unaffected.
+      </div>
+    </div>
+
+    <div class="audit-section">
+      <div class="audit-title">BOTTLENECK SHIFT ANALYSIS — EV PROJECTION CORRECTION</div>
+      <p class="audit-prose">
+        v3.5 stated: raise E from 0.35 to ≥ 0.75 to achieve projected EV = 0.845. Both figures were wrong.
+        When E rises above L = 0.62, the binding constraint shifts from E to L. At that point EV = min(EV_base, 1.5 × 0.62) = min(0.786, 0.93).
+        Since EV_base = 0.786 &lt; 0.93, the cap is not binding — EV = 0.786 at E=0.62, rising to 0.8227 as E increases further.
+        <strong>Corrected path to VALID: E must rise from 0.35 to ≥ 0.62. VALID status (EV ≥ 0.70) is achievable sooner than v3.5 stated.</strong>
+        Every FCL entry that raises E above 0.62 moves EV_base upward from there.
+      </p>
+    </div>
+
+    <div class="audit-section">
+      <div class="audit-title">CEV v1.0 VERDICT</div>
+      <p class="audit-prose">
+        FSVE v3.5 contained two critical formula errors (Gini, CRA domain) that were non-functional.
+        The Gini check was mathematically incapable of detecting laundering in any configuration.
+        The CRA formula could produce results outside its implied domain [0,1].
+        Both are corrected in v3.6. This is a Minor release — all v3.5 ScoreTensors are valid
+        except those that invoked the Gini laundering check, which must be re-evaluated.
+        EV = 0.525 is unchanged. v3.6 fixes formula errors, not evidence gaps. Path to VALID requires FCL entry accumulation.
+      </p>
+      <p class="audit-prose">
+        <strong>CEV Audit conducted:</strong> Sheldon K. Salmon (AI Reliability Architect) + Claude (Anthropic) · February 2026
+      </p>
+    </div>
+
+  </div><!-- /tab-audit -->
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- TAB: ABOUT                                                -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="tab-about" class="tab-panel">
+
+    <div class="about-section">
+      <div class="about-title">FIVE FOUNDATIONAL PRINCIPLES</div>
+      <div class="principle-card">
+        <div class="principle-num">PRINCIPLE 1</div>
+        <div class="principle-name">No Free Certainty</div>
+        <div class="principle-body">Certainty must be earned through evidence, consistency, and bounded assumptions. If certainty increases in one dimension, something measurable must account for the gain.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">PRINCIPLE 2</div>
+        <div class="principle-name">Uncertainty Is Conserved</div>
+        <div class="principle-body">Uncertainty may be reduced, bounded, transferred, or deferred. It may never be erased silently. A score that omits uncertainty is not a score — it is a false claim.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">PRINCIPLE 3</div>
+        <div class="principle-name">Scores Are Claims, Not Truth</div>
+        <div class="principle-body">Every score is a claim about reality. Therefore: every score must be explainable, every score must be reversible on new evidence, and every score must degrade under contextual stress.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">PRINCIPLE 4</div>
+        <div class="principle-name">Invalidatability Is Required</div>
+        <div class="principle-body">Any scoring system that cannot produce the output "this score is invalid" is not a scoring system. It is decoration.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">PRINCIPLE 5</div>
+        <div class="principle-name">Structural Honesty Precedes Numerical Accuracy</div>
+        <div class="principle-body">A structurally honest score of 0.40 is more valuable than a structurally dishonest score of 0.90. The architecture of how a score was produced matters as much as its value.</div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="about-title">SIX SCORE CLASSES</div>
+      <div class="score-class-card">
+        <div class="score-class-name">CONFIDENCE — How well the system understands intent or claim structure</div>
+        <div class="score-class-body">Cannot exceed Information Completeness Score. Cannot ignore unresolved contradictions. Failure mode: false alignment — high confidence with misunderstood intent.</div>
+      </div>
+      <div class="score-class-card">
+        <div class="score-class-name">CERTAINTY — How likely a claim is to remain valid under structured challenge</div>
+        <div class="score-class-body">Cannot increase without a corresponding reduction in Uncertainty Mass. Cannot be high when System Fragility is high. Failure mode: overconfidence collapse.</div>
+      </div>
+      <div class="score-class-card">
+        <div class="score-class-name">VALIDITY — Whether a score itself is legitimate (meta-scoring)</div>
+        <div class="score-class-body"><span class="hard-rule">Hard Rule: If Validity &lt; 0.40 → all downstream scores from this system are suspended until remediated.</span> Failure mode: scoring nonsense confidently.</div>
+      </div>
+      <div class="score-class-card">
+        <div class="score-class-name">COMPLETENESS — What fraction of the scoring surface has been assessed</div>
+        <div class="score-class-body">Completeness cannot imply correctness. A complete but wrong score is still wrong. Failure mode: coverage confusion — high Completeness mistaken for quality signal.</div>
+      </div>
+      <div class="score-class-card">
+        <div class="score-class-name">CONSISTENCY — Internal coherence across definitions, rules, and outputs</div>
+        <div class="score-class-body">Each unresolved contradiction applies a ceiling reduction. Failure mode: self-contradiction that sounds internally coherent — locally consistent, globally incoherent.</div>
+      </div>
+      <div class="score-class-card">
+        <div class="score-class-name">RISK EXPOSURE — Potential damage magnitude × likelihood across failure modes</div>
+        <div class="score-class-body">Cannot be averaged away or hidden by high confidence on other axes. Failure mode: low-probability catastrophic blindness — rare but severe failure modes excluded.</div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="about-title">CURRENT ENGINE STATE</div>
+      <div class="state-card degraded">
+        <div class="state-name">DEGRADED — EV = 0.525</div>
+        <div class="state-body">v3.6 corrected two critical formula errors and six additional findings. The formula corrections do not change EV — they restore the engine to accurate operation. EV = 0.525 reflects the current evidence gap, not a formula problem. Path to VALID: E-axis must rise from 0.35 to ≥ 0.62 via FCL (Finding Confirmation Log) entries. At E = 0.62, EV reaches 0.811 — VALID status. Every confirmed finding above 0.62 moves EV_base upward. FCL entry accumulation is the only path.</div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <div class="about-title">DOCUMENTATION & ATTRIBUTION</div>
+      <div class="about-links">
+        <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" class="about-link">FULL SPEC — AION-BRAIN</a>
+        <a href="/stack/" class="about-link">STACK OVERVIEW</a>
+        <a href="/stack/eight-laws/" class="about-link">EIGHT LAWS</a>
+        <a href="https://aionsystem.github.io" target="_blank" class="about-link">AIONSYSTEM.GITHUB.IO</a>
+      </div>
+      <div style="margin-top:16px;font-size:0.72rem;color:var(--text-faint);font-family:var(--serif);font-style:italic">
+        FSVE v3.6 · Foundational Scoring and Validation Engine · Author: Sheldon K. Salmon — AI Reliability Architect · February 2026 · CEV Audit: Claude (Anthropic) · Supersedes: FSVE v3.5
+      </div>
+    </div>
+
+  </div><!-- /tab-about -->
+
+</div><!-- /page -->
+
+<script>
+/* ── AXIS DEFINITIONS ──────────────────────────────────────── */
+const AXES = [
+  { id:'C',  label:'CONFIDENCE',   short:'C',  tooltip:'How well the system understands intent, meaning, or claim structure. Cannot exceed Information Completeness Score. Failure mode: false alignment.' },
+  { id:'Ce', label:'CERTAINTY',    short:'Ce', tooltip:'How likely a claim is to remain valid under structured challenge. Cannot increase without a corresponding reduction in Uncertainty Mass.' },
+  { id:'V',  label:'VALIDITY',     short:'V',  tooltip:'Whether a score itself is legitimate — meta-scoring. HARD RULE: if Validity < 0.40, all downstream scores are SUSPENDED until remediated.' },
+  { id:'Co', label:'COMPLETENESS', short:'Co', tooltip:'What fraction of the defined scoring surface has been assessed. Completeness cannot imply correctness — a complete but wrong score is still wrong.' },
+  { id:'Cs', label:'CONSISTENCY',  short:'Cs', tooltip:'Internal coherence across definitions, rules, claims, and outputs. Each unresolved contradiction applies a ceiling reduction.' },
+  { id:'R',  label:'RISK EXPOSURE',short:'R',  tooltip:'Potential damage magnitude × likelihood across identified failure modes. Cannot be averaged away or hidden by high confidence on other axes.' }
+];
+
+const DEFAULTS = { C:0.5, Ce:0.5, V:0.5, Co:0.5, Cs:0.5, R:0.5 };
+const PRESETS = {
+  'weak-ai': { C:0.60, Ce:0.40, V:0.50, Co:0.50, Cs:0.55, R:0.70, label:'AI Output — Weak Evidence' },
+  'peer':    { C:0.80, Ce:0.75, V:0.85, Co:0.70, Cs:0.80, R:0.25, label:'Peer-Reviewed Claim' },
+  'social':  { C:0.30, Ce:0.20, V:0.25, Co:0.30, Cs:0.35, R:0.85, label:'Social Media Assertion' },
+  'ai-co':   { C:0.70, Ce:0.55, V:0.65, Co:0.60, Cs:0.65, R:0.55, label:'AI Company Output' }
+};
+
+let scores  = { ...DEFAULTS };
+let weights = { C:1, Ce:1, V:1, Co:1, Cs:1, R:1 };
+let kVal    = 1.5;
+let prevEV  = null;
+let prevScores = null;
+let radarChart  = null;
+let debounceTimer = null;
+
+/* ── BUILD AXES UI ─────────────────────────────────────────── */
+function buildAxesUI() {
+  const container = document.getElementById('axes-container');
+  container.innerHTML = '';
+  AXES.forEach(ax => {
+    const div = document.createElement('div');
+    div.className = 'axis-row';
+    div.id = `row-${ax.id}`;
+    const pct = scores[ax.id] * 100;
+    div.innerHTML = `
+      <div class="axis-header">
+        <span class="axis-label">
+          ${ax.label}
+          <span class="tooltip">${ax.tooltip}</span>
+        </span>
+        <div class="axis-value-wrap">
+          <input type="number" class="axis-input-num" id="num-${ax.id}"
+            min="0" max="1" step="0.01" value="${scores[ax.id].toFixed(2)}"
+            oninput="syncFromNum('${ax.id}', this.value)">
+        </div>
+      </div>
+      <div class="slider-row">
+        <input type="range" id="slider-${ax.id}" min="0" max="1" step="0.01"
+          value="${scores[ax.id]}" style="--pct:${pct}%"
+          oninput="syncFromSlider('${ax.id}', this.value)">
+      </div>
+      <div class="weight-row">
+        <span class="weight-label">WEIGHT</span>
+        <input type="range" id="wslider-${ax.id}" min="0" max="1" step="0.01"
+          value="${weights[ax.id]}" style="--pct:${weights[ax.id]*100}%;height:2px;"
+          oninput="updateWeight('${ax.id}', this.value)">
+        <span class="weight-display" id="wdisp-${ax.id}">w=${(weights[ax.id]/sumWeights()).toFixed(3)}</span>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function sumWeights() {
+  return AXES.reduce((s,ax) => s + weights[ax.id], 0) || 1;
+}
+
+function syncFromSlider(id, val) {
+  const v = Math.max(0, Math.min(1, parseFloat(val)));
+  scores[id] = v;
+  const num = document.getElementById(`num-${id}`);
+  if (num) num.value = v.toFixed(2);
+  const sl = document.getElementById(`slider-${id}`);
+  if (sl) sl.style.setProperty('--pct', (v*100)+'%');
+  scheduleCalc();
+}
+
+function syncFromNum(id, val) {
+  let v = parseFloat(val);
+  if (isNaN(v)) v = 0;
+  v = Math.max(0, Math.min(1, v));
+  scores[id] = v;
+  const sl = document.getElementById(`slider-${id}`);
+  if (sl) { sl.value = v; sl.style.setProperty('--pct', (v*100)+'%'); }
+  scheduleCalc();
+}
+
+function updateWeight(id, val) {
+  weights[id] = parseFloat(val);
+  document.getElementById(`wslider-${id}`).style.setProperty('--pct', (weights[id]*100)+'%');
+  updateWeightDisplays();
+  scheduleCalc();
+}
+
+function updateWeightDisplays() {
+  const total = sumWeights();
+  AXES.forEach(ax => {
+    const eff = weights[ax.id] / total;
+    const el = document.getElementById(`wdisp-${ax.id}`);
+    if (el) el.textContent = `w=${eff.toFixed(3)}`;
+  });
+  const ws = document.getElementById('weight-sum-display');
+  const t = sumWeights();
+  ws.textContent = `WEIGHTS: ${t.toFixed(3)} (normalized to 1.000 on calculation)`;
+  ws.className = 'weight-sum ok';
+}
+
+/* ── PRESETS ───────────────────────────────────────────────── */
+function loadPreset(key) {
+  const p = PRESETS[key];
+  AXES.forEach(ax => {
+    scores[ax.id] = p[ax.id];
+    const sl = document.getElementById(`slider-${ax.id}`);
+    const nm = document.getElementById(`num-${ax.id}`);
+    if (sl) { sl.value = p[ax.id]; sl.style.setProperty('--pct', (p[ax.id]*100)+'%'); }
+    if (nm) nm.value = p[ax.id].toFixed(2);
+  });
+  scheduleCalc();
+}
+
+function resetAll() {
+  AXES.forEach(ax => {
+    scores[ax.id]  = 0.5;
+    weights[ax.id] = 1;
+    const sl  = document.getElementById(`slider-${ax.id}`);
+    const nm  = document.getElementById(`num-${ax.id}`);
+    const wsl = document.getElementById(`wslider-${ax.id}`);
+    if (sl)  { sl.value = 0.5; sl.style.setProperty('--pct','50%'); }
+    if (nm)  nm.value = '0.50';
+    if (wsl) { wsl.value = 1; wsl.style.setProperty('--pct','100%'); }
+  });
+  kVal = 1.5;
+  const ks = document.getElementById('k-slider');
+  if (ks) { ks.value = 1.5; document.getElementById('k-display').textContent = '1.50'; }
+  updateWeightDisplays();
+  scheduleCalc();
+}
+
+/* ── ADVANCED ──────────────────────────────────────────────── */
+function toggleAdvanced() {
+  document.getElementById('advanced-body').classList.toggle('open');
+}
+function updateK(val) {
+  kVal = parseFloat(val);
+  document.getElementById('k-display').textContent = kVal.toFixed(2);
+  scheduleCalc();
+}
+function setKSafety() {
+  kVal = 1.0;
+  const ks = document.getElementById('k-slider');
+  if (ks) ks.value = 1.0;
+  document.getElementById('k-display').textContent = '1.00';
+  scheduleCalc();
+}
+
+/* ── CALCULATION ───────────────────────────────────────────── */
+function scheduleCalc() {
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(calculate, 150);
+}
+
+function calculate() {
+  const total = sumWeights();
+  const wNorm = {};
+  AXES.forEach(ax => { wNorm[ax.id] = weights[ax.id] / total; });
+
+  // EV_base
+  let evBase = AXES.reduce((s, ax) => s + wNorm[ax.id] * scores[ax.id], 0);
+
+  // Bottleneck
+  let minAxis = AXES.reduce((mn, ax) => scores[ax.id] < scores[mn] ? ax.id : mn, AXES[0].id);
+  // Actually proper: find axis with minimum score
+  let minVal = 1;
+  let minId  = '';
+  AXES.forEach(ax => { if (scores[ax.id] < minVal) { minVal = scores[ax.id]; minId = ax.id; } });
+
+  const evFinal = Math.min(evBase, kVal * minVal);
+
+  // Uncertainty Mass
+  const um = 1 - evBase;
+
+  // Gini — sort ascending
+  const sorted = AXES.map(ax => scores[ax.id]).sort((a,b) => a-b);
+  const n = sorted.length;
+  const sumS = sorted.reduce((a,b) => a+b, 0);
+  let gini = 0;
+  if (sumS > 0) {
+    const rankSum = sorted.reduce((s, s_i, idx) => s + (idx+1)*s_i, 0);
+    gini = (2 * rankSum) / (n * sumS) - (n+1)/n;
+  }
+  gini = Math.max(0, gini);
+
+  // CRA
+  const mu = AXES.reduce((s,ax) => s + scores[ax.id], 0) / n;
+  let cra;
+  if (mu === 0) {
+    cra = 1.0;
+  } else {
+    const sigma = Math.sqrt(AXES.reduce((s,ax) => s + Math.pow(scores[ax.id]-mu,2), 0) / n);
+    cra = Math.max(0, 1 - sigma/mu);
+  }
+
+  // Validity gate
+  const validityGate = scores.V < 0.40;
+
+  // Verdict
+  let verdict, verdictClass, verdictPlain;
+  if (validityGate || evFinal < 0.40) {
+    verdict = 'SUSPENDED'; verdictClass = 'suspend';
+    verdictPlain = validityGate
+      ? 'Validity axis below 0.40. All downstream scores suspended — Validity must be remediated before this score can be used.'
+      : 'EV below minimum threshold. Score is below the floor for any use — not even supervised deployment is appropriate.';
+  } else if (evFinal >= 0.70) {
+    verdict = 'VALID'; verdictClass = 'valid';
+    verdictPlain = 'Score meets the deployment-grade threshold. Human oversight is still recommended for high-stakes decisions, but this score may be treated as deployment-valid.';
+  } else {
+    verdict = 'SUPERVISED'; verdictClass = 'super';
+    verdictPlain = 'Score is within the supervised zone. Human review is required before any deployment-grade use. Output may be used for internal analysis under explicit human oversight.';
+  }
+
+  // Proximity
+  let proximityText = '';
+  if (verdict !== 'VALID') {
+    const distToValid = 0.70 - evFinal;
+    const distToSuper = evFinal < 0.40 ? 0.40 - evFinal : null;
+    if (distToSuper !== null) {
+      proximityText = `<strong>${distToSuper.toFixed(3)}</strong> from SUPERVISED floor · <strong>${distToValid.toFixed(3)}</strong> from VALID`;
+    } else {
+      proximityText = `<strong>${distToValid.toFixed(3)}</strong> from VALID`;
+    }
+  } else {
+    proximityText = `<strong>VALID</strong> — EV ${evFinal.toFixed(3)} is ${(evFinal - 0.70).toFixed(3)} above threshold`;
+  }
+
+  // Sensitivity analysis
+  let bestAxis = '', bestGain = -1;
+  AXES.forEach(ax => {
+    const testScores = { ...scores };
+    testScores[ax.id] = Math.min(1.0, scores[ax.id] + 0.10);
+    let testBase = AXES.reduce((s,a) => s + wNorm[a.id] * testScores[a.id], 0);
+    let testMinVal = 1;
+    AXES.forEach(a => { if (testScores[a.id] < testMinVal) testMinVal = testScores[a.id]; });
+    const testEV = Math.min(testBase, kVal * testMinVal);
+    const gain = testEV - evFinal;
+    if (gain > bestGain) { bestGain = gain; bestAxis = ax.label; }
+  });
+
+  // Update bottleneck highlight
+  AXES.forEach(ax => {
+    const row = document.getElementById(`row-${ax.id}`);
+    if (row) row.classList.toggle('bottleneck', ax.id === minId && !validityGate);
+  });
+
+  // Update verdict
+  const card = document.getElementById('verdict-card');
+  const prevClass = card.className.replace('verdict-card','').trim();
+  card.className = `verdict-card ${verdictClass}`;
+  if (prevClass !== verdictClass) {
+    const pulse = document.createElement('div');
+    pulse.className = 'verdict-pulse';
+    card.appendChild(pulse);
+    setTimeout(() => { if (pulse.parentNode) pulse.parentNode.removeChild(pulse); }, 600);
+  }
+  document.getElementById('verdict-label').textContent = verdict;
+  document.getElementById('verdict-ev').textContent = `EV ${evFinal.toFixed(3)}`;
+  document.getElementById('verdict-plain').textContent = verdictPlain;
+
+  // Metrics
+  document.getElementById('m-ev').textContent = evFinal.toFixed(4);
+  document.getElementById('m-ev').className = `metric-value ${verdictClass === 'valid' ? 'ok' : verdictClass === 'suspend' ? 'warn' : ''}`;
+  document.getElementById('m-um').textContent = um.toFixed(4);
+  document.getElementById('m-evbase').textContent = evBase.toFixed(4);
+  document.getElementById('m-cra').textContent = cra.toFixed(4);
+  document.getElementById('m-gini').textContent = gini.toFixed(4);
+  document.getElementById('m-gini').className = `metric-value ${gini > 0.15 ? 'warn' : ''}`;
+  const bLabel = AXES.find(ax => ax.id === minId);
+  document.getElementById('m-bottleneck').textContent = bLabel ? bLabel.short : '—';
+
+  // Laundering
+  document.getElementById('launder-warn').classList.toggle('active', gini > 0.15);
+
+  // Proximity
+  document.getElementById('proximity-text').innerHTML = proximityText;
+
+  // Sensitivity
+  const senEl = document.getElementById('sensitivity-text');
+  if (bestGain > 0.001) {
+    senEl.innerHTML = `Raising <strong>${bestAxis}</strong> by +0.10 gains <strong>+${bestGain.toFixed(4)}</strong> EV — highest leverage axis in current configuration.`;
+  } else {
+    senEl.textContent = 'No single axis move of +0.10 produces meaningful EV gain from current configuration.';
+  }
+
+  // Radar
+  updateRadar(evFinal, verdictClass);
+
+  // Breakdown
+  updateBreakdown(evBase, evFinal, um, gini, cra, sorted, wNorm, minId, minVal, validityGate);
+
+  prevEV = evFinal;
+  prevScores = { ...scores };
+}
+
+/* ── RADAR ─────────────────────────────────────────────────── */
+function updateRadar(evFinal, verdictClass) {
+  const colorMap = { valid:'rgba(61,220,132,0.8)', super:'rgba(240,192,64,0.8)', suspend:'rgba(255,77,77,0.8)' };
+  const bgMap    = { valid:'rgba(61,220,132,0.15)', super:'rgba(240,192,64,0.12)', suspend:'rgba(255,77,77,0.10)' };
+  const currentColor = colorMap[verdictClass];
+  const currentBg    = bgMap[verdictClass];
+
+  const data = AXES.map(ax => scores[ax.id]);
+  const labels = AXES.map(ax => ax.short);
+
+  const datasets = [];
+  if (prevScores) {
+    datasets.push({
+      label: 'Previous',
+      data: AXES.map(ax => prevScores[ax.id]),
+      borderColor: 'rgba(138,134,120,0.35)',
+      backgroundColor: 'rgba(138,134,120,0.05)',
+      borderDash: [4,4],
+      pointRadius: 0,
+      borderWidth: 1
+    });
+  }
+  datasets.push({
+    label: 'Current',
+    data,
+    borderColor: currentColor,
+    backgroundColor: currentBg,
+    pointBackgroundColor: currentColor,
+    pointRadius: 4,
+    borderWidth: 2
+  });
+
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const gridColor = isDark ? 'rgba(212,174,60,0.1)' : 'rgba(140,100,20,0.12)';
+  const tickColor = isDark ? 'rgba(138,134,120,0.7)' : 'rgba(90,80,64,0.8)';
+
+  if (!radarChart) {
+    const ctx = document.getElementById('radar-chart').getContext('2d');
+    radarChart = new Chart(ctx, {
+      type: 'radar',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        animation: { duration: 200 },
+        scales: {
+          r: {
+            min: 0, max: 1,
+            ticks: { stepSize: 0.25, color: tickColor, backdropColor: 'transparent', font: { family:"'JetBrains Mono'", size: 9 } },
+            grid: { color: gridColor },
+            angleLines: { color: gridColor },
+            pointLabels: { color: tickColor, font: { family:"'Syne'", size: 10, weight:'600' } }
+          }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+  } else {
+    radarChart.data.labels = labels;
+    radarChart.data.datasets = datasets;
+    radarChart.options.scales.r.grid.color = gridColor;
+    radarChart.options.scales.r.angleLines.color = gridColor;
+    radarChart.options.scales.r.ticks.color = tickColor;
+    radarChart.options.scales.r.pointLabels.color = tickColor;
+    radarChart.update();
+  }
+}
+
+/* ── BREAKDOWN ─────────────────────────────────────────────── */
+function updateBreakdown(evBase, evFinal, um, gini, cra, sorted, wNorm, minId, minVal, validityGate) {
+  const body = document.getElementById('breakdown-body');
+  if (!body.classList.contains('open')) return;
+
+  const axisLines = AXES.map(ax =>
+    `<div class="bd-line"><span class="key">${ax.short.padEnd(3)} (w=${wNorm[ax.id].toFixed(3)})</span> × <span class="val">${scores[ax.id].toFixed(4)}</span> = <span class="val">${(wNorm[ax.id]*scores[ax.id]).toFixed(4)}</span></div>`
+  ).join('');
+
+  const sortedStr = sorted.map(v => v.toFixed(3)).join(', ');
+  const n = sorted.length;
+  const sumS = sorted.reduce((a,b)=>a+b,0);
+  const rankSum = sorted.reduce((s,s_i,i) => s+(i+1)*s_i, 0);
+  const giniCalc = sumS > 0 ? `(2 × ${rankSum.toFixed(4)}) / (${n} × ${sumS.toFixed(4)}) − ${((n+1)/n).toFixed(4)}` : 'Σs_i = 0 → G = 0';
+
+  body.innerHTML = `
+    <div class="bd-line"><span class="key">── EV_BASE CALCULATION ──</span></div>
+    ${axisLines}
+    <div class="bd-line divider"></div>
+    <div class="bd-line"><span class="key">EV_base</span> = <span class="val">${evBase.toFixed(6)}</span></div>
+    <div class="bd-line"><span class="key">Bottleneck axis</span> = <span class="val">${minId} (${minVal.toFixed(4)})</span></div>
+    <div class="bd-line"><span class="key">k_bottleneck</span> = <span class="val">${kVal.toFixed(2)}</span></div>
+    <div class="bd-line"><span class="key">k × min_axis</span> = <span class="val">${(kVal*minVal).toFixed(6)}</span></div>
+    <div class="bd-line"><span class="key">EV_final</span> = min(${evBase.toFixed(4)}, ${(kVal*minVal).toFixed(4)}) = <span class="val">${evFinal.toFixed(6)}</span></div>
+    <div class="bd-line"><span class="key">Uncertainty Mass</span> = 1 − ${evBase.toFixed(4)} = <span class="val">${um.toFixed(6)}</span></div>
+    <div class="bd-line divider"></div>
+    <div class="bd-line"><span class="key">── GINI LAUNDERING CHECK ──</span></div>
+    <div class="bd-line"><span class="bd-sorted">Sorted inputs (ascending): [${sortedStr}]</span></div>
+    <div class="bd-line"><span class="key">G</span> = ${giniCalc} = <span class="val">${gini.toFixed(6)}</span></div>
+    <div class="bd-line"><span class="key">Threshold</span> = 0.1500 → <span class="val">${gini > 0.15 ? '⚠ LAUNDERING FLAG' : '✓ CLEAR'}</span></div>
+    <div class="bd-line divider"></div>
+    <div class="bd-line"><span class="key">── CRA CROSS-AXIS AGREEMENT ──</span></div>
+    <div class="bd-line"><span class="key">CRA</span> = max(0, 1 − σ/μ) = <span class="val">${cra.toFixed(6)}</span></div>
+    <div class="bd-line divider"></div>
+    <div class="bd-line"><span class="key">── VALIDITY GATE ──</span></div>
+    <div class="bd-line"><span class="key">Validity axis</span> = <span class="val">${scores.V.toFixed(4)} ${validityGate ? '→ SUSPENDED (< 0.40)' : '→ CLEAR (≥ 0.40)'}</span></div>
+  `;
+}
+
+function toggleBreakdown() {
+  const body = document.getElementById('breakdown-body');
+  const arrow = document.getElementById('breakdown-arrow');
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▾' : '▸';
+  if (body.classList.contains('open')) calculate();
+}
+
+/* ── ACTIONS ───────────────────────────────────────────────── */
+function copyScore() {
+  const ev = document.getElementById('m-ev').textContent;
+  const verdict = document.getElementById('verdict-label').textContent;
+  const ts = new Date().toISOString();
+  let text = `FSVE v3.6 SCORE SUMMARY\n`;
+  text += `${ts}\n`;
+  text += `Verdict: ${verdict} | EV Final: ${ev}\n`;
+  text += `──────────────────────────\n`;
+  AXES.forEach(ax => { text += `${ax.label}: ${scores[ax.id].toFixed(3)}\n`; });
+  text += `──────────────────────────\n`;
+  text += `EV Base: ${document.getElementById('m-evbase').textContent}\n`;
+  text += `Uncertainty Mass: ${document.getElementById('m-um').textContent}\n`;
+  text += `CRA: ${document.getElementById('m-cra').textContent}\n`;
+  text += `Gini: ${document.getElementById('m-gini').textContent}\n`;
+  text += `k_bottleneck: ${kVal.toFixed(2)}\n`;
+  text += `Source: aionsystem.github.io/stack/frameworks/FSVE/\n`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ COPIED';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'COPY SCORE SUMMARY'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function shareURL() {
+  const params = new URLSearchParams();
+  AXES.forEach(ax => params.set(ax.id, scores[ax.id].toFixed(2)));
+  AXES.forEach(ax => params.set(`w${ax.id}`, weights[ax.id].toFixed(2)));
+  params.set('k', kVal.toFixed(2));
+  const url = `${location.origin}${location.pathname}?${params.toString()}`;
+  navigator.clipboard.writeText(url).then(() => {
+    const btns = document.querySelectorAll('.action-btn');
+    btns.forEach(b => { if (b.textContent.includes('SHARE')) { b.textContent = '✓ LINK COPIED'; setTimeout(() => b.textContent = 'COPY SHARE LINK', 2000); } });
+  });
+}
+
+/* ── LOAD FROM URL ─────────────────────────────────────────── */
+function loadFromURL() {
+  const params = new URLSearchParams(location.search);
+  let loaded = false;
+  AXES.forEach(ax => {
+    if (params.has(ax.id)) { scores[ax.id] = Math.max(0, Math.min(1, parseFloat(params.get(ax.id)))); loaded = true; }
+    if (params.has(`w${ax.id}`)) { weights[ax.id] = Math.max(0, parseFloat(params.get(`w${ax.id}`))); }
+  });
+  if (params.has('k')) kVal = Math.max(1, Math.min(2, parseFloat(params.get('k'))));
+  return loaded;
+}
+
+/* ── TABS ──────────────────────────────────────────────────── */
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── THEME ─────────────────────────────────────────────────── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? '' : 'light');
+  document.getElementById('theme-btn').textContent = isLight ? 'LIGHT MODE' : 'DARK MODE';
+  if (radarChart) { radarChart.destroy(); radarChart = null; }
+  calculate();
+}
+
+/* ── CANVAS PARTICLES ──────────────────────────────────────── */
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  const isMobile = window.innerWidth < 768;
+  const N = isMobile ? 30 : 60;
+  let pts = [], W, H;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function init() {
+    pts = [];
+    for (let i=0; i<N; i++) {
+      pts.push({
+        x: Math.random()*W, y: Math.random()*H,
+        vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3,
+        r: Math.random()*1.5+0.5
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    const gold = 'rgba(212,174,60,';
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = gold+'0.6)';
+      ctx.fill();
+    });
+    for (let i=0; i<pts.length; i++) {
+      for (let j=i+1; j<pts.length; j++) {
+        const dx = pts[i].x-pts[j].x, dy = pts[i].y-pts[j].y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.strokeStyle = gold+(0.12*(1-dist/120))+')';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); init(); });
+  resize(); init(); draw();
+})();
+
+/* ── INIT ──────────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  const fromURL = loadFromURL();
+  buildAxesUI();
+  updateWeightDisplays();
+  if (fromURL) {
+    // Sync sliders to loaded values
+    AXES.forEach(ax => {
+      const sl = document.getElementById(`slider-${ax.id}`);
+      const nm = document.getElementById(`num-${ax.id}`);
+      if (sl) { sl.value = scores[ax.id]; sl.style.setProperty('--pct', (scores[ax.id]*100)+'%'); }
+      if (nm) nm.value = scores[ax.id].toFixed(2);
+    });
+    const ks = document.getElementById('k-slider');
+    if (ks) { ks.value = kVal; document.getElementById('k-display').textContent = kVal.toFixed(2); }
+  }
+  calculate();
+});
+</script>
+</body>
+</html>
 
