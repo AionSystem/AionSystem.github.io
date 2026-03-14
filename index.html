@@ -3,983 +3,684 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AionSystem — Sovereign Entry</title>
+<meta name="description" content="Sheldon K. Salmon — AI Reliability Architect. AION Constitutional Stack. Sovereign Trace Protocol. AI Audit, Simulation, Framework Design.">
+<meta property="og:title" content="AionSystem — Sheldon K. Salmon · AI Reliability Architect">
+<meta property="og:description" content="AI Certainty Engineering. Sovereign Trace Protocol. Verified Simulators. Built for operators who cannot afford to guess.">
+<meta property="og:type" content="website">
+<title>AionSystem — Sheldon K. Salmon · AI Reliability Architect</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><!-- FIX-5: gstatic preconnect -->
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════════════════════
-   AION GATEWAY v1.1
-   Sovereign Entry Protocol — Sheldon K. Salmon
-   Red Team Pass: March 2026 · 17 findings resolved
-   ══════════════════════════════════════════════════════ */
-
 :root {
-  --bg:      #08090b;
-  --surface: #0e1117;
-  --border:  #1e2730;
-  --amber:   #f0a500;
-  --amber-d: #b07800;
-  --amber-l: #ffc947;
-  --gold:    #D4AF37;
-  --gold-l:  #F5E070;
-  --text:    #c4d4de;
-  --muted:   #4e5f6a;
-  --dim:     #1a2530;
-  --mono:    'Share Tech Mono', monospace;
-  --sans:    'Barlow Condensed', sans-serif;
-  --ease:    cubic-bezier(0.16, 1, 0.3, 1);
-  --snap:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --bg:       #08090b;
+  --surface:  #0e1117;
+  --panel:    #141920;
+  --border:   #1e2730;
+  --amber:    #f0a500;
+  --amber-d:  #b07800;
+  --amber-l:  #ffc947;
+  --gold:     #D4AF37;
+  --text:     #c4d4de;
+  --muted:    #4e5f6a;
+  --dim:      #2a3540;
+  --cyan:     #00d4ff;
+  --teal:     #00b894;
+  --edu:      #4ade80;
+  --mono:     'Share Tech Mono', monospace;
+  --sans:     'Barlow Condensed', sans-serif;
+  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.5; overflow-x: hidden; }
 
-/* ── BEHIND-GATEWAY LAYER ── */
-#site-bg {
-  position: fixed; inset: 0; z-index: 0;
-  opacity: 0;
-  transition: opacity 1.6s var(--ease);
-  background: var(--bg);
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(240,165,0,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(240,165,0,0.025) 1px, transparent 1px);
+  background-size: 48px 48px; pointer-events: none; z-index: 0;
 }
-#site-bg.show { opacity: 1; }
-
-/* ══════════════════════════════════════════════════════
-   GATEWAY OVERLAY
-   ══════════════════════════════════════════════════════ */
-#gw {
-  position: fixed; inset: 0; z-index: 9999;
-  background: var(--bg);
-  overflow: hidden;
-  transition: opacity 1.6s var(--ease);
-}
-#gw.dissolving { opacity: 0; pointer-events: none; }
-
-/* ambient grid */
-#gw::before {
-  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  background-image:
-    linear-gradient(rgba(240,165,0,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(240,165,0,0.025) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-/* scanlines */
-#gw::after {
-  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
-  );
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+  pointer-events: none; z-index: 0;
 }
 
-/* radial vignette */
-#gw-vignette {
-  position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: radial-gradient(ellipse at 50% 42%, transparent 35%, rgba(0,0,0,0.72) 100%);
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 56px;
+  background: rgba(8,9,11,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
+.nav-logo { font-family: var(--mono); font-size: 13px; letter-spacing: 3px; color: var(--amber); text-transform: uppercase; text-decoration: none; }
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover { color: var(--amber); }
 
-/* ── CANVAS ── */
-#gw-canvas {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  opacity: 0.32; pointer-events: none; z-index: 0;
+.hero { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 56px 40px 80px; max-width: 1200px; margin: 0 auto; }
+#hero-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.35; pointer-events: none; }
+
+.hero-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; color: var(--amber); text-transform: uppercase; margin-bottom: 20px; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.2s forwards; }
+.hero-eyebrow::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--amber); vertical-align: middle; margin-right: 12px; margin-bottom: 2px; }
+.hero-name { font-family: var(--sans); font-size: clamp(48px, 8vw, 96px); font-weight: 900; letter-spacing: -1px; line-height: 0.92; color: var(--text); text-transform: uppercase; opacity: 0; transform: translateY(16px); animation: fadeUp 0.8s var(--ease) 0.35s forwards; }
+.hero-name em { display: block; color: var(--amber); font-style: normal; }
+.hero-title { margin-top: 24px; font-family: var(--mono); font-size: clamp(13px, 1.6vw, 17px); color: var(--muted); letter-spacing: 3px; text-transform: uppercase; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.5s forwards; }
+.hero-divider { width: 64px; height: 2px; background: var(--amber); margin: 32px 0; opacity: 0; animation: fadeUp 0.6s var(--ease) 0.65s forwards; }
+.hero-mission { font-family: var(--sans); font-size: clamp(18px, 2.5vw, 26px); font-weight: 300; font-style: italic; color: var(--text); max-width: 640px; line-height: 1.5; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.75s forwards; }
+.hero-mission strong { font-style: normal; font-weight: 700; color: var(--amber-l); }
+.hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 40px; opacity: 0; transform: translateY(12px); animation: fadeUp 0.7s var(--ease) 0.9s forwards; }
+
+.cta-btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; padding: 12px 24px; border: 1px solid var(--amber); color: var(--amber); background: transparent; transition: all 0.2s; position: relative; overflow: hidden; }
+.cta-btn::before { content: ''; position: absolute; inset: 0; background: var(--amber); transform: translateX(-101%); transition: transform 0.25s var(--ease); z-index: 0; }
+.cta-btn:hover::before { transform: translateX(0); }
+.cta-btn:hover { color: #000; }
+.cta-btn span { position: relative; z-index: 1; }
+.cta-btn.primary { background: var(--amber); color: #000; }
+.cta-btn.primary::before { background: var(--amber-l); }
+.cta-btn.primary:hover { color: #000; }
+.cta-arrow { font-size: 14px; transition: transform 0.2s; }
+.cta-btn:hover .cta-arrow { transform: translateX(4px); }
+
+/* ── TRIPLE TIME ── */
+.triple-time { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 60px; opacity: 0; animation: fadeIn 0.8s var(--ease) 1.1s forwards; position: relative; }
+.triple-time::before { content: ''; position: absolute; top: -32px; left: 0; right: 0; height: 1px; background: var(--border); }
+.time-cell { background: var(--bg); padding: 18px 20px; transition: background 0.2s; }
+.time-cell:hover { background: var(--surface); }
+.time-sys { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--amber-d); text-transform: uppercase; margin-bottom: 6px; }
+.time-val { font-family: var(--mono); font-size: 14px; color: var(--amber); letter-spacing: 1px; line-height: 1.3; min-height: 36px; display: flex; align-items: center; }
+.time-val.loading { color: var(--dim); font-size: 11px; }
+
+section { position: relative; z-index: 1; padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+.section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
+.section-num { font-family: var(--mono); font-size: 11px; color: var(--amber); letter-spacing: 2px; }
+.section-title { font-family: var(--sans); font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
+.section-line { flex: 1; height: 1px; background: var(--border); }
+
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+@media (max-width: 800px) { .services-grid { grid-template-columns: 1fr; } }
+
+.service-card { background: var(--surface); padding: 36px 32px; position: relative; overflow: hidden; transition: background 0.2s; }
+.service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--amber); transform: scaleX(0); transform-origin: left; transition: transform 0.3s var(--ease); }
+.service-card:hover { background: var(--panel); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-num { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
+.service-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+.service-title { font-family: var(--sans); font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin-bottom: 12px; }
+.service-desc { font-family: var(--sans); font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+.service-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--amber-d); border: 1px solid var(--dim); padding: 3px 8px; text-transform: uppercase; }
+.service-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-decoration: none; text-transform: uppercase; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+.service-link:hover { border-bottom-color: var(--amber); }
+.service-link-soon { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; opacity: 0.55; pointer-events: none; user-select: none; }
+.service-link-soon::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--muted); opacity: 0.5; }
+
+.work-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 680px) { .work-strip { grid-template-columns: 1fr; } }
+.work-card { background: var(--surface); border: 1px solid var(--border); padding: 28px; position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+.work-card:hover { border-color: var(--amber); transform: translateY(-2px); }
+.work-card-badge { position: absolute; top: 20px; right: 20px; }
+.work-card-badge svg { width: 44px; height: 44px; opacity: 0.7; transition: opacity 0.2s; }
+.work-card:hover .work-card-badge svg { opacity: 1; }
+.work-live-tag { position: absolute; top: 20px; left: 20px; font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; background: rgba(0,230,118,0.1); color: #00e676; border: 1px solid #00e676; }
+.work-domain { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber-d); text-transform: uppercase; margin-bottom: 12px; }
+.work-domain.cyan { color: var(--cyan); }
+.work-domain.edu  { color: var(--edu); }
+.work-title { font-family: var(--sans); font-size: 24px; font-weight: 700; letter-spacing: 1px; color: var(--text); margin-bottom: 8px; text-transform: uppercase; }
+.work-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+.work-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-decoration: none; text-transform: uppercase; }
+.work-link.cyan { color: var(--cyan); }
+.work-link.edu  { color: var(--edu); }
+.work-link:hover { text-decoration: underline; }
+.work-card-coming { opacity: 0.4; pointer-events: none; }
+.coming-pill { display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--muted); border: 1px solid var(--dim); padding: 2px 8px; text-transform: uppercase; margin-top: 12px; }
+.work-card.live-field { border-left: 2px solid var(--cyan); }
+.work-card.live-edu   { border-left: 2px solid var(--edu); }
+
+.stack-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; }
+.stack-table th { text-align: left; font-size: 10px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.stack-table td { padding: 12px 16px; border-bottom: 1px solid rgba(30,39,48,0.6); vertical-align: middle; background: var(--bg); transition: background 0.15s; }
+.stack-table tr:hover td { background: var(--surface); }
+.fw-name { color: var(--amber); }
+.fw-version { color: var(--muted); }
+.fw-function { color: var(--text); }
+.convergence-badge { display: inline-block; font-size: 9px; letter-spacing: 1px; padding: 2px 7px; text-transform: uppercase; }
+.m-strong  { background: rgba(0,230,118,0.1); color: #00e676; border: 1px solid #00e676; }
+.m-mod     { background: rgba(240,165,0,0.1); color: var(--amber); border: 1px solid var(--amber-d); }
+.m-nascent { background: rgba(64,196,255,0.08); color: #40c4ff; border: 1px solid #1a4a5a; }
+
+/* inline table link */
+.fw-inline-link { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--amber-d); text-decoration: none; text-transform: uppercase; border-bottom: 1px solid transparent; transition: color 0.15s, border-color 0.15s; margin-left: 10px; white-space: nowrap; }
+.fw-inline-link:hover { color: var(--amber); border-bottom-color: var(--amber); }
+
+.stack-path { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; background: var(--bg); border: 1px solid var(--border); text-decoration: none; transition: border-color 0.2s, background 0.2s; margin-top: 20px; }
+.stack-path:hover { border-color: var(--amber); background: var(--surface); }
+.stack-path-icon { font-size: 18px; flex-shrink: 0; padding-top: 2px; }
+.stack-path-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; margin-bottom: 3px; }
+.stack-path-desc { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); }
+
+.certify-strip { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 32px 36px; display: flex; align-items: center; gap: 36px; flex-wrap: wrap; }
+.certify-strip svg { flex-shrink: 0; }
+.certify-text h3 { font-family: var(--sans); font-size: 22px; font-weight: 700; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+.certify-text p { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.8; max-width: 560px; }
+.certify-text a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(212,175,55,0.3); }
+.certify-text a:hover { border-bottom-color: var(--gold); }
+
+/* ── CONNECT SECTION ── */
+.connect-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
 }
+@media (max-width: 900px) { .connect-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .connect-grid { grid-template-columns: 1fr; } }
 
-/* ── SKIP ── FIX-10: delay from 2.2s to 10s ── */
-#gw-skip {
-  position: absolute; top: 20px; right: 24px; z-index: 20;
+.connect-group {
+  background: var(--surface);
+  padding: 24px 22px;
+}
+.connect-group-label {
   font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px;
-  color: var(--muted); background: transparent; border: none;
-  cursor: pointer; text-transform: uppercase; padding: 6px 2px;
-  transition: color 0.2s;
-  opacity: 0; animation: gw-in 0.5s var(--ease) 10s forwards;
+  color: var(--amber-d); text-transform: uppercase;
+  margin-bottom: 14px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
 }
-#gw-skip:hover { color: var(--amber); }
+.connect-links { display: flex; flex-direction: column; gap: 8px; }
+.connect-link {
+  display: flex; align-items: center; gap: 9px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+  color: var(--muted); text-decoration: none;
+  transition: color 0.15s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.connect-link:hover { color: var(--amber); }
+.connect-link-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--dim); flex-shrink: 0;
+  transition: background 0.15s;
+}
+.connect-link:hover .connect-link-dot { background: var(--amber); }
 
-/* ── HEADER ── */
-#gw-header {
-  position: absolute; top: 0; left: 0; right: 0; z-index: 10;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 36px 24px 0;
-  opacity: 0; animation: gw-in 0.9s var(--ease) 0.4s forwards;
-}
-.gw-eyebrow {
-  font-family: var(--mono); font-size: 9px; letter-spacing: 4px;
-  color: var(--amber); text-transform: uppercase; margin-bottom: 10px;
-  display: flex; align-items: center; gap: 12px;
-}
-.gw-eyebrow::before,
-.gw-eyebrow::after { content: '—'; color: var(--amber-d); opacity: 0.6; }
-.gw-title {
-  font-family: var(--sans); font-size: clamp(28px, 5vw, 56px); font-weight: 900;
-  letter-spacing: 6px; text-transform: uppercase; color: var(--text);
-  line-height: 1;
-}
-.gw-title em { color: var(--amber); font-style: normal; }
-.gw-sub {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
-  color: var(--muted); text-transform: uppercase; margin-top: 12px;
-}
+.connect-link.green .connect-link-dot  { background: rgba(0,230,118,0.4); }
+.connect-link.green:hover { color: #00e676; }
+.connect-link.green:hover .connect-link-dot { background: #00e676; }
+.connect-link.blue .connect-link-dot   { background: rgba(0,166,255,0.4); }
+.connect-link.blue:hover { color: #0a9af0; }
+.connect-link.blue:hover .connect-link-dot { background: #0a9af0; }
+.connect-link.gold .connect-link-dot   { background: rgba(212,175,55,0.4); }
+.connect-link.gold:hover { color: var(--gold); }
+.connect-link.gold:hover .connect-link-dot { background: var(--gold); }
+.connect-link.purple .connect-link-dot { background: rgba(155,89,182,0.5); }
+.connect-link.purple:hover { color: #b57bee; }
+.connect-link.purple:hover .connect-link-dot { background: #b57bee; }
+.connect-link.red .connect-link-dot    { background: rgba(233,69,96,0.5); }
+.connect-link.red:hover { color: #e94560; }
+.connect-link.red:hover .connect-link-dot { background: #e94560; }
+.connect-link.cyan .connect-link-dot   { background: rgba(0,212,255,0.4); }
+.connect-link.cyan:hover { color: var(--cyan); }
+.connect-link.cyan:hover .connect-link-dot { background: var(--cyan); }
+.connect-link.orange .connect-link-dot { background: rgba(255,102,0,0.5); }
+.connect-link.orange:hover { color: #ff6600; }
+.connect-link.orange:hover .connect-link-dot { background: #ff6600; }
+.connect-link.coffee .connect-link-dot { background: rgba(255,221,0,0.5); }
+.connect-link.coffee:hover { color: #ffdd00; }
+.connect-link.coffee:hover .connect-link-dot { background: #ffdd00; }
 
-/* ── BRAIN STAGE ── FIX-7: min() guards viewport width ── */
-#gw-stage {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(580px, 94vw); height: min(420px, 68vw);
-  z-index: 5;
-}
+.connect-group.wide { grid-column: span 2; }
+.connect-group.wide .connect-links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+@media (max-width: 900px) { .connect-group.wide { grid-column: span 2; } }
+@media (max-width: 500px) { .connect-group.wide { grid-column: span 1; } .connect-group.wide .connect-links { grid-template-columns: 1fr; } }
 
-#brain-svg {
-  width: 100%; height: 100%;
-  overflow: visible;
-}
+footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.footer-id { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; letter-spacing: 1px; }
+.footer-id strong { color: var(--amber); }
+.footer-links { display: flex; gap: 24px; list-style: none; flex-wrap: wrap; }
+.footer-links a { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.15s; }
+.footer-links a:hover { color: var(--amber); }
 
-/* ── BRAIN VISUAL ELEMENTS ── */
-.b-silhouette {
-  fill: none; stroke: var(--amber); stroke-width: 1.2;
-  opacity: 0; transition: opacity 1.2s ease, stroke 1.2s ease;
-}
-.b-silhouette.reveal { opacity: 0.14; }
-.b-silhouette.gold   { stroke: var(--gold); opacity: 0.24; }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
 
-.b-node {
-  fill: var(--amber); opacity: 0.82;
-  transition: fill 0.5s, opacity 0.5s;
-}
-.b-node.gold { fill: var(--gold-l); opacity: 1; }
-
-.b-edge {
-  stroke: var(--amber); stroke-width: 0.75; fill: none; opacity: 0.38;
-  transition: stroke 0.6s, opacity 0.6s, stroke-width 0.6s;
-}
-.b-edge.gold { stroke: var(--gold); opacity: 0.72; stroke-width: 1.1; }
-
-.b-cross {
-  fill: none;
-  stroke: rgba(240,165,0,0); stroke-width: 0.8; opacity: 0;
-  stroke-dasharray: 5 9;
-  transition: stroke 0.7s, opacity 0.7s;
-}
-.b-cross.show { stroke: rgba(240,165,0,0.26); opacity: 1; }
-.b-cross.gold { stroke: var(--gold); opacity: 0.55; stroke-dasharray: none; stroke-width: 1.2; }
-
-/* ── PIECE GROUPS ── */
-.b-piece { cursor: pointer; }
-.b-piece:not(.placed):hover {
-  filter: drop-shadow(0 0 16px rgba(240,165,0,0.6));
-}
-.b-piece.placed { cursor: default; }
-
-/* FIX-11: intro pulse on all pieces — signals interactivity on first load */
-@keyframes intro-pulse {
-  0%   { opacity: 1; }
-  50%  { opacity: 0.55; }
-  100% { opacity: 1; }
-}
-#piece-1:not(.placed) { animation: float-1 5.4s ease-in-out infinite, intro-pulse 1.8s ease-in-out 1.0s 2; }
-#piece-2:not(.placed) { animation: float-2 7.1s ease-in-out infinite, intro-pulse 1.8s ease-in-out 1.3s 2; }
-#piece-3:not(.placed) { animation: float-3 6.2s ease-in-out infinite, intro-pulse 1.8s ease-in-out 1.6s 2; }
-#piece-4:not(.placed) { animation: float-4 7.8s ease-in-out infinite, intro-pulse 1.8s ease-in-out 1.9s 2; }
-/* FIX-13: piece-5 core-breathe removed from group filter — moved to child element */
-#piece-5:not(.placed) { animation: float-5 6.6s ease-in-out infinite, intro-pulse 1.8s ease-in-out 2.2s 2; }
-
-/* ── FLOAT ANIMATIONS — DESKTOP ── */
-@keyframes float-1 {
-  0%,100% { transform: translate(-118px, -88px) rotate(-17deg); }
-  50%     { transform: translate(-112px, -96px) rotate(-20deg); }
-}
-@keyframes float-2 {
-  0%,100% { transform: translate(-162px, 48px) rotate(21deg); }
-  50%     { transform: translate(-156px, 56px) rotate(24deg); }
-}
-@keyframes float-3 {
-  0%,100% { transform: translate(162px, 48px) rotate(-21deg); }
-  50%     { transform: translate(156px, 40px) rotate(-24deg); }
-}
-@keyframes float-4 {
-  0%,100% { transform: translate(0px, 132px) rotate(11deg); }
-  50%     { transform: translate(6px, 140px) rotate(14deg); }
-}
-@keyframes float-5 {
-  0%,100% { transform: translate(148px, -98px) rotate(27deg); }
-  50%     { transform: translate(141px, -106px) rotate(31deg); }
-}
-
-/* FIX-13: Core pulse uses child element opacity — frees group filter for hover */
-@keyframes core-pulse-anim {
-  0%,100% { opacity: 0.1; }
-  50%     { opacity: 0.45; }
-}
-.core-pulse {
-  animation: core-pulse-anim 3.2s ease-in-out infinite;
-  pointer-events: none;
-}
-#piece-5.placed .core-pulse { opacity: 0; animation: none; }
-
-/* Piece label */
-.b-lbl {
-  font-family: var(--mono); font-size: 7.5px; letter-spacing: 2px;
-  fill: var(--muted); text-transform: uppercase; pointer-events: none;
-  transition: fill 0.5s;
-}
-.b-piece.placed .b-lbl { fill: var(--amber-d); }
-
-/* Snap flash */
-@keyframes snap-flash {
-  0%   { filter: drop-shadow(0 0 0px rgba(240,165,0,0)); }
-  30%  { filter: drop-shadow(0 0 28px rgba(240,165,0,0.95)); }
-  100% { filter: drop-shadow(0 0 5px rgba(240,165,0,0.2)); }
-}
-.b-piece.snapping { animation: snap-flash 0.9s var(--ease) forwards !important; }
-
-/* Gold bloom */
-@keyframes gold-bloom {
-  0%   { filter: drop-shadow(0 0 0 rgba(212,175,55,0)); }
-  20%  { filter: drop-shadow(0 0 50px rgba(212,175,55,1)); }
-  55%  { filter: drop-shadow(0 0 24px rgba(212,175,55,0.8)); }
-  100% { filter: drop-shadow(0 0 14px rgba(212,175,55,0.45)); }
-}
-.brain-bloom { animation: gold-bloom 2s var(--ease) forwards; }
-
-/* ── PROGRESS PIPS ── FIX-15: bottom raised to 220px for declaration clearance ── */
-#gw-pips {
-  position: absolute; bottom: 220px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 14px; align-items: center; z-index: 10;
-  opacity: 0; animation: gw-in 0.6s var(--ease) 1.3s forwards;
-}
-.pip {
-  width: 38px; height: 2px; background: var(--dim);
-  transition: background 0.4s, box-shadow 0.5s;
-}
-.pip.active { background: var(--amber); box-shadow: 0 0 8px rgba(240,165,0,0.55); }
-.pip.done   { background: var(--gold);  box-shadow: 0 0 12px rgba(212,175,55,0.7); }
-
-/* ── DECLARATIONS STRIP ── */
-#gw-decls {
-  position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
-  padding: 0 clamp(20px, 6vw, 100px) 30px;
-  display: flex; flex-direction: column; gap: 2px;
-  opacity: 0; animation: gw-in 0.6s var(--ease) 1.5s forwards;
-}
-.gw-d {
-  display: flex; align-items: baseline; gap: 16px;
-  padding: 7px 14px;
-  border-left: 1px solid transparent;
-  opacity: 0; transform: translateX(-8px);
-  transition: opacity 0.55s var(--ease), transform 0.55s var(--ease),
-              border-color 0.4s, background 0.4s;
-}
-.gw-d.show {
-  opacity: 1; transform: translateX(0);
-  border-left-color: rgba(240,165,0,0.45);
-  background: rgba(240,165,0,0.022);
-}
-.gw-d.last-d.show {
-  border-left-color: var(--gold);
-  background: rgba(212,175,55,0.04);
-}
-.gw-d-n {
-  font-family: var(--mono); font-size: 9px; color: var(--amber-d);
-  letter-spacing: 1px; flex-shrink: 0; min-width: 18px;
-  transition: color 0.4s;
-}
-.gw-d.last-d .gw-d-n { color: var(--gold); }
-.gw-d-t {
-  font-family: var(--mono); font-size: 10px; color: var(--text);
-  letter-spacing: 1.5px; line-height: 1.55; text-transform: uppercase;
-}
-
-/* ── COMPLETION SCREEN ── FIX-9: overflow-y: auto guard ── */
-#gw-done {
-  position: absolute; inset: 0; z-index: 20;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 20px; padding: 40px 24px;
-  background: var(--bg);
-  opacity: 0; pointer-events: none;
-  transition: opacity 1s var(--ease);
-  overflow-y: auto;   /* FIX-9 */
-  -webkit-overflow-scrolling: touch;
-}
-#gw-done.show { opacity: 1; pointer-events: all; }
-#gw-done::before {
-  content: ''; position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(240,165,0,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(240,165,0,0.025) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none; z-index: 0; flex-shrink: 0;
-}
-
-/* Ensure all done children stack above the grid pseudo-element */
-#gw-done > * { position: relative; z-index: 1; flex-shrink: 0; }
-
-.gw-done-badge { width: 64px; height: 64px; }
-
-.gw-done-title {
-  font-family: var(--sans); font-size: clamp(36px, 7vw, 72px); font-weight: 900;
-  letter-spacing: 8px; text-transform: uppercase;
-  color: var(--gold);
-  text-shadow: 0 0 80px rgba(212,175,55,0.3);
-}
-.gw-done-sub {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
-  color: var(--amber); text-transform: uppercase; text-align: center;
-}
-.gw-done-line { width: 80px; height: 1px; background: var(--gold); opacity: 0.3; }
-
-/* FIX-1 / FIX-4: notice copy rewritten — describes actual seal contents accurately */
-.gw-done-notice {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
-  color: var(--muted); text-align: center; max-width: 520px; line-height: 2;
-  border: 1px solid var(--border); padding: 16px 24px;
-}
-.gw-done-notice strong {
-  color: var(--text); display: block; margin-top: 4px; letter-spacing: 1.5px;
-}
-
-.gw-name-wrap {
-  display: flex; flex-direction: column; gap: 7px; align-items: center;
-}
-.gw-name-label {
-  font-family: var(--mono); font-size: 8px; letter-spacing: 3px;
-  color: var(--muted); text-transform: uppercase;
-}
-.gw-name-input {
-  background: transparent;
-  border: 1px solid var(--dim);
-  border-bottom-color: rgba(240,165,0,0.3);
-  color: var(--text); font-family: var(--mono); font-size: 13px;
-  letter-spacing: 2px; padding: 10px 18px;
-  width: min(290px, 80vw); text-align: center; outline: none;
-  transition: border-color 0.2s, background 0.2s;
-}
-.gw-name-input:focus {
-  border-color: var(--amber);
-  background: rgba(240,165,0,0.02);
-}
-.gw-name-input::placeholder { color: var(--muted); opacity: 0.7; }
-
-.gw-done-actions {
-  display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
-}
-
-.gw-btn {
-  font-family: var(--mono); font-size: 10px; letter-spacing: 2.5px;
-  text-transform: uppercase; padding: 12px 28px;
-  background: transparent; cursor: pointer;
-  border: 1px solid var(--amber); color: var(--amber);
-  position: relative; overflow: hidden; transition: color 0.2s;
-}
-.gw-btn::before {
-  content: ''; position: absolute; inset: 0;
-  background: var(--amber); transform: translateX(-101%);
-  transition: transform 0.25s var(--ease);
-}
-.gw-btn:hover::before { transform: translateX(0); }
-.gw-btn:hover { color: #000; }
-.gw-btn span { position: relative; z-index: 1; }
-
-.gw-btn-enter {
-  border-color: var(--gold); color: var(--gold);
-}
-.gw-btn-enter::before { background: var(--gold); }
-
-/* ── SHARED ANIMATIONS ── */
-@keyframes gw-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ══════════════════════════════════════════════════════
-   RESPONSIVE
-   ══════════════════════════════════════════════════════ */
-
-/* FIX-6 / FIX-7: Mobile — scaled float offsets + stage sizing */
 @media (max-width: 640px) {
-  #gw-stage {
-    width: min(360px, 92vw);
-    height: min(270px, 69vw);
-    top: 44%;
-  }
-  .gw-title { font-size: 28px; letter-spacing: 3px; }
-  .gw-d-t { font-size: 9px; letter-spacing: 1px; }
-  #gw-pips { bottom: 192px; }    /* FIX-15: recalculated for mobile decl height */
-  #gw-decls { padding: 0 16px 24px; }
-
-  /* FIX-6: Scaled float offsets — max ~55px displacement on mobile */
-  @keyframes float-1 {
-    0%,100% { transform: translate(-55px, -42px) rotate(-14deg); }
-    50%     { transform: translate(-52px, -48px) rotate(-17deg); }
-  }
-  @keyframes float-2 {
-    0%,100% { transform: translate(-58px, 24px) rotate(18deg); }
-    50%     { transform: translate(-54px, 30px) rotate(21deg); }
-  }
-  @keyframes float-3 {
-    0%,100% { transform: translate(58px, 24px) rotate(-18deg); }
-    50%     { transform: translate(54px, 18px) rotate(-21deg); }
-  }
-  @keyframes float-4 {
-    0%,100% { transform: translate(0px, 65px) rotate(9deg); }
-    50%     { transform: translate(4px, 71px) rotate(12deg); }
-  }
-  @keyframes float-5 {
-    0%,100% { transform: translate(66px, -48px) rotate(24deg); }
-    50%     { transform: translate(62px, -54px) rotate(28deg); }
-  }
-}
-
-/* Low height screens (compact laptops, landscape phones) */
-@media (max-height: 760px) {
-  #gw-header { padding-top: 22px; }
-  .gw-title { font-size: clamp(22px, 4vw, 36px); }
-  #gw-stage { width: min(480px, 90vw); height: min(350px, 65vw); }
-  #gw-pips { bottom: 192px; }
-  .gw-d { padding: 5px 12px; }
-  .gw-d-t { font-size: 9px; }
-}
-
-/* FIX-14: Landscape mobile (wide and short) */
-@media (max-height: 500px) {
-  #gw-header { padding-top: 14px; }
-  .gw-title { font-size: clamp(18px, 4vw, 28px); letter-spacing: 2px; }
-  .gw-sub { display: none; }
-  #gw-stage {
-    width: min(340px, 60vw);
-    height: min(250px, 44vw);
-    top: 48%;
-  }
-  #gw-pips { bottom: 162px; }
-  .gw-d { padding: 3px 10px; }
-  .gw-d-t { font-size: 8px; letter-spacing: 0.8px; }
-  #gw-decls { padding: 0 12px 18px; gap: 0; }
-}
-
-/* FIX-9: Completion screen — small screen height guard */
-@media (max-height: 680px) {
-  #gw-done { gap: 13px; padding: 20px 20px; justify-content: flex-start; }
-  .gw-done-badge { width: 44px; height: 44px; }
-  .gw-done-title { font-size: clamp(26px, 6vw, 44px); letter-spacing: 4px; }
-  .gw-done-notice { padding: 10px 14px; font-size: 9px; line-height: 1.8; }
-  .gw-btn { padding: 10px 20px; }
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero { padding: 80px 20px 60px; }
+  section { padding: 60px 20px; }
+  footer { padding: 32px 20px; }
+  .triple-time { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- ── BEHIND GATEWAY: index.html body IS the background when integrated ── -->
-<div id="site-bg"></div>
+<canvas id="hero-canvas"></canvas>
 
-<!-- ════════════════════════════════════════════════════════
-     GATEWAY OVERLAY
-     ════════════════════════════════════════════════════════ -->
-<div id="gw">
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/stack/">Stack</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</nav>
 
-  <canvas id="gw-canvas"></canvas>
-  <div id="gw-vignette"></div>
-
-  <button id="gw-skip" onclick="dissolve()">SKIP →</button>
-
-  <!-- HEADER -->
-  <div id="gw-header">
-    <div class="gw-eyebrow">AION Constitutional Stack</div>
-    <div class="gw-title">Sheldon K. <em>Salmon</em></div>
-    <!-- FIX-8: device-appropriate verb injected by JS below -->
-    <div class="gw-sub" id="gw-sub-text">Place each fragment &nbsp;·&nbsp; Five axioms to enter</div>
+<div class="hero" style="z-index:1; position:relative;">
+  <div class="hero-eyebrow">AI Certainty Engineering · New York</div>
+  <h1 class="hero-name">Sheldon K.<em>Salmon</em></h1>
+  <p class="hero-title">AI Reliability Architect &nbsp;·&nbsp; AGI Systems Designer &nbsp;·&nbsp; Founder, AionSystem</p>
+  <div class="hero-divider"></div>
+  <p class="hero-mission">
+    Building the infrastructure that makes AI systems <strong>provably trustworthy</strong> — not just promising. Failure documentation. Epistemic verification. Sovereign record architecture.
+  </p>
+  <div class="hero-ctas">
+    <a href="/simulators/" class="cta-btn primary"><span>See the Work</span><span class="cta-arrow">→</span></a>
+    <a href="/services/" class="cta-btn"><span>Engage Services</span><span class="cta-arrow">→</span></a>
+    <a href="/certify/" class="cta-btn"><span>Verify a Certification</span><span class="cta-arrow">→</span></a>
   </div>
+  <div class="triple-time" style="margin-top:60px;">
+    <div class="time-cell"><div class="time-sys">Gregorian</div><div class="time-val" id="tt-gregorian">—</div></div>
+    <div class="time-cell"><div class="time-sys">13 Moon · Dreamspell</div><div class="time-val" id="tt-dreamspell">—</div></div>
+    <div class="time-cell"><div class="time-sys">Hebrew Calendar</div><div class="time-val" id="tt-hebrew">—</div></div>
+  </div>
+</div>
 
-  <!-- BRAIN ASSEMBLY STAGE -->
-  <div id="gw-stage">
-    <svg id="brain-svg" viewBox="0 0 580 420" xmlns="http://www.w3.org/2000/svg">
+<!-- ── 01 SERVICES ── -->
+<section id="services">
+  <div class="section-header">
+    <span class="section-num">// 01</span>
+    <h2 class="section-title">Services</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01 / Rapid Prototyping</div>
+      <span class="service-icon">⚙</span>
+      <div class="service-title">Simulation<br>Creation</div>
+      <p class="service-desc">Physics simulators, engineering tools, educational systems — built in days, not months. Citation-backed, red-teamed, peer-reviewed. Every deliverable ships with an AION Verified Simulator badge and a full audit trail.</p>
+      <div class="service-tags"><span class="tag">Physics</span><span class="tag">Engineering</span><span class="tag">Education</span><span class="tag">Medical</span><span class="tag">HTML · No Dependencies</span></div>
+      <a href="/services/rapid-prototyping/" class="service-link">Service Details →</a>
+      <a href="/simulators/" class="service-link" style="margin-top:8px;">View Simulators →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02 / AI Reliability Audit</div>
+      <span class="service-icon">🔍</span>
+      <div class="service-title">AI Output<br>Certification</div>
+      <p class="service-desc">Formal verification that your AI deployment captures failures immutably, remediates them transparently, and maintains an honest epistemic record. Four tiers: $2,500 single-event verification to DoD-grade quarterly review.</p>
+      <div class="service-tags"><span class="tag">STP FROZEN-2.0</span><span class="tag">Epistemic Audit</span><span class="tag">Failure Logging</span><span class="tag">NIST AI RMF</span></div>
+      <a href="/services/ai-audit/" class="service-link">Full Service Details →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03 / Framework Design</div>
+      <span class="service-icon">◈</span>
+      <div class="service-title">AION Stack<br>Engineering</div>
+      <p class="service-desc">Custom certainty frameworks for your AI system's specific failure modes. The AION stack was built through live failure events — not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked.</p>
+      <div class="service-tags"><span class="tag">DUAL-HELIX</span><span class="tag">TOPOS</span><span class="tag">FSVE</span><span class="tag">Custom Frameworks</span></div>
+      <a href="/services/framework-design/" class="service-link">Service Details →</a>
+      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="service-link" style="margin-top:8px;">GitHub ↗</a>
+    </div>
+  </div>
+  <div style="margin-top:24px; display:flex; justify-content:flex-end;">
+    <a href="/services/" class="cta-btn" style="display:inline-flex;"><span>All Services</span><span class="cta-arrow">→</span></a>
+  </div>
+</section>
 
-      <!-- Brain silhouette — hidden until gold bloom -->
-      <path id="b-outline" class="b-silhouette"
-        d="M 290,58
-           C 248,43 178,65 148,103
-           C 122,135 120,172 130,208
-           C 140,244 158,268 160,294
-           C 170,326 202,344 290,346
-           C 378,344 410,326 420,294
-           C 422,268 440,244 450,208
-           C 460,172 458,135 432,103
-           C 402,65 332,43 290,58 Z
-           M 290,58 L 290,346"/>
+<!-- ── 02 SIMULATORS ── -->
+<section id="work">
+  <div class="section-header">
+    <span class="section-num">// 02</span>
+    <h2 class="section-title">Simulators</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="work-strip">
 
-      <!-- CROSS EDGES -->
-      <line id="ce-12" class="b-cross" x1="264" y1="116" x2="148" y2="186"/>
-      <line id="ce-13" class="b-cross" x1="316" y1="116" x2="432" y2="186"/>
-      <line id="ce-15" class="b-cross" x1="290" y1="102" x2="290" y2="170"/>
-      <line id="ce-25" class="b-cross" x1="144" y1="228" x2="264" y2="222"/>
-      <line id="ce-35" class="b-cross" x1="436" y1="228" x2="316" y2="222"/>
-      <line id="ce-24" class="b-cross" x1="116" y1="248" x2="204" y2="326"/>
-      <line id="ce-34" class="b-cross" x1="464" y1="248" x2="376" y2="326"/>
-      <line id="ce-45" class="b-cross" x1="290" y1="354" x2="290" y2="238"/>
+    <div class="work-card">
+      <span class="work-live-tag">● Live</span>
+      <div class="work-card-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+          <defs><linearGradient id="mb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient><linearGradient id="mw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient></defs>
+          <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0d09" stroke="url(#mb1)" stroke-width="5"/>
+          <circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb1)" stroke-width="3"/>
+          <circle cx="200" cy="200" r="132" fill="#0c0a08"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb1)" stroke-width="1.5"/>
+          <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw1)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="work-domain" style="margin-top:32px;">Physics · AP Curriculum</div>
+      <div class="work-title">Roller Coaster<br>Physics Simulator</div>
+      <div class="work-meta">10 modules · 3 red team passes · 15 issues resolved<br>Ref: Tony Wayne AP Physics Guide<br>Client: Saleem Raja Haja · AI Governance · Kuwait<br>March 2026</div>
+      <a href="/simulators/roller-coaster/" class="work-link">Launch Simulator →</a>
+    </div>
 
-      <!-- ════════════════════════════════════════════
-           PIECE 1: FRONTAL CROWN — AXIOM I
-           ════════════════════════════════════════════ -->
-      <g id="piece-1" class="b-piece" data-piece="1">
-        <!-- FIX-12: transparent hit area covering full bounding box -->
-        <rect x="240" y="40" width="104" height="82" fill="transparent" stroke="none"/>
-        <circle class="b-node" cx="252" cy="80"  r="3.5"/>
-        <circle class="b-node" cx="290" cy="60"  r="4.2"/>
-        <circle class="b-node" cx="328" cy="80"  r="3.5"/>
-        <circle class="b-node" cx="268" cy="110" r="3.0"/>
-        <circle class="b-node" cx="290" cy="98"  r="3.8"/>
-        <circle class="b-node" cx="312" cy="110" r="3.0"/>
-        <line class="b-edge" x1="252" y1="80"  x2="290" y2="60"/>
-        <line class="b-edge" x1="290" y1="60"  x2="328" y2="80"/>
-        <line class="b-edge" x1="252" y1="80"  x2="268" y2="110"/>
-        <line class="b-edge" x1="328" y1="80"  x2="312" y2="110"/>
-        <line class="b-edge" x1="268" y1="110" x2="290" y2="98"/>
-        <line class="b-edge" x1="290" y1="98"  x2="312" y2="110"/>
-        <line class="b-edge" x1="290" y1="60"  x2="290" y2="98"/>
-        <line class="b-edge" x1="252" y1="80"  x2="312" y2="110" stroke-opacity="0.2"/>
-        <text class="b-lbl" x="290" y="47" text-anchor="middle">FRONTAL</text>
-      </g>
+    <div class="work-card live-field">
+      <span class="work-live-tag">● Live</span>
+      <div class="work-card-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+          <defs><linearGradient id="mb2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#40e0ff"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#005f80"/></linearGradient><linearGradient id="mw2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#005f80" stop-opacity="0.3"/><stop offset="50%" stop-color="#40e0ff"/><stop offset="100%" stop-color="#005f80" stop-opacity="0.3"/></linearGradient></defs>
+          <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080d12" stroke="url(#mb2)" stroke-width="5"/>
+          <circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb2)" stroke-width="3"/>
+          <circle cx="200" cy="200" r="132" fill="#060c10"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb2)" stroke-width="1.5"/>
+          <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw2)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="work-domain cyan" style="margin-top:32px;">Field Ops · Underwater EOD · UNDP</div>
+      <div class="work-title">Project ORION<br>UXO Detection</div>
+      <div class="work-meta">Tri-axis magnetometer gradiometer · MLS engine<br>1 red team pass · 7 findings · 0 undisclosed<br>Context: UNDP Solomon Islands · CAPEX $4,650<br>March 2026</div>
+      <a href="/simulators/Orion/" class="work-link cyan">Launch Simulator →</a>
+    </div>
 
-      <!-- ════════════════════════════════════════════
-           PIECE 2: LEFT HEMISPHERE — AXIOM II
-           ════════════════════════════════════════════ -->
-      <g id="piece-2" class="b-piece" data-piece="2">
-        <!-- FIX-12: hit area -->
-        <rect x="68" y="140" width="90" height="118" fill="transparent" stroke="none"/>
-        <circle class="b-node" cx="108" cy="150" r="3.5"/>
-        <circle class="b-node" cx="78"  cy="184" r="3.5"/>
-        <circle class="b-node" cx="90"  cy="220" r="3.0"/>
-        <circle class="b-node" cx="118" cy="246" r="3.5"/>
-        <circle class="b-node" cx="148" cy="186" r="3.5"/>
-        <circle class="b-node" cx="134" cy="228" r="3.0"/>
-        <line class="b-edge" x1="108" y1="150" x2="78"  y2="184"/>
-        <line class="b-edge" x1="78"  y1="184" x2="90"  y2="220"/>
-        <line class="b-edge" x1="90"  y1="220" x2="118" y2="246"/>
-        <line class="b-edge" x1="108" y1="150" x2="148" y2="186"/>
-        <line class="b-edge" x1="148" y1="186" x2="134" y2="228"/>
-        <line class="b-edge" x1="118" y1="246" x2="134" y2="228"/>
-        <line class="b-edge" x1="78"  y1="184" x2="148" y2="186"/>
-        <line class="b-edge" x1="90"  y1="220" x2="134" y2="228" stroke-opacity="0.2"/>
-        <text class="b-lbl" x="72" y="139" text-anchor="middle">LEFT</text>
-      </g>
+    <div class="work-card live-edu">
+      <span class="work-live-tag">● Live</span>
+      <div class="work-card-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+          <defs><linearGradient id="mb3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#86efac"/><stop offset="50%" stop-color="#4ade80"/><stop offset="100%" stop-color="#166534"/></linearGradient><linearGradient id="mw3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#166534" stop-opacity="0.3"/><stop offset="50%" stop-color="#86efac"/><stop offset="100%" stop-color="#166534" stop-opacity="0.3"/></linearGradient></defs>
+          <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080f09" stroke="url(#mb3)" stroke-width="5"/>
+          <circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb3)" stroke-width="3"/>
+          <circle cx="200" cy="200" r="132" fill="#060d07"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb3)" stroke-width="1.5"/>
+          <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw3)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="work-domain edu" style="margin-top:32px;">Education · Grades 3–8 · Salmon EDU</div>
+      <div class="work-title">Math Worksheet<br>Builder</div>
+      <div class="work-meta">9 types · fractions · PEMDAS · interleaved practice<br>4 red team passes · 10 bugs fixed · 0 undisclosed<br>Ref: Taylor &amp; Rohrer (2010)<br>March 2026</div>
+      <a href="/simulators/math-worksheet-builder/" class="work-link edu">Launch Tool →</a>
+    </div>
 
-      <!-- ════════════════════════════════════════════
-           PIECE 3: RIGHT HEMISPHERE — AXIOM III
-           ════════════════════════════════════════════ -->
-      <g id="piece-3" class="b-piece" data-piece="3">
-        <!-- FIX-12: hit area -->
-        <rect x="422" y="140" width="90" height="118" fill="transparent" stroke="none"/>
-        <circle class="b-node" cx="472" cy="150" r="3.5"/>
-        <circle class="b-node" cx="502" cy="184" r="3.5"/>
-        <circle class="b-node" cx="490" cy="220" r="3.0"/>
-        <circle class="b-node" cx="462" cy="246" r="3.5"/>
-        <circle class="b-node" cx="432" cy="186" r="3.5"/>
-        <circle class="b-node" cx="446" cy="228" r="3.0"/>
-        <line class="b-edge" x1="472" y1="150" x2="502" y2="184"/>
-        <line class="b-edge" x1="502" y1="184" x2="490" y2="220"/>
-        <line class="b-edge" x1="490" y1="220" x2="462" y2="246"/>
-        <line class="b-edge" x1="472" y1="150" x2="432" y2="186"/>
-        <line class="b-edge" x1="432" y1="186" x2="446" y2="228"/>
-        <line class="b-edge" x1="462" y1="246" x2="446" y2="228"/>
-        <line class="b-edge" x1="502" y1="184" x2="432" y2="186"/>
-        <line class="b-edge" x1="490" y1="220" x2="446" y2="228" stroke-opacity="0.2"/>
-        <text class="b-lbl" x="508" y="139" text-anchor="middle">RIGHT</text>
-      </g>
+    <div class="work-card work-card-coming">
+      <div class="work-domain">Physics · Mechanics</div>
+      <div class="work-title">Projectile<br>Motion Simulator</div>
+      <div class="work-meta">Cannon, drag coefficient, target practice<br>2D vector calculations · Same AION design system</div>
+      <span class="coming-pill">Coming Soon</span>
+    </div>
 
-      <!-- ════════════════════════════════════════════
-           PIECE 4: OCCIPITAL BASE — AXIOM IV
-           ════════════════════════════════════════════ -->
-      <g id="piece-4" class="b-piece" data-piece="4">
-        <!-- FIX-12: hit area -->
-        <rect x="194" y="316" width="196" height="72" fill="transparent" stroke="none"/>
-        <circle class="b-node" cx="204" cy="326" r="3.5"/>
-        <circle class="b-node" cx="248" cy="350" r="3.0"/>
-        <circle class="b-node" cx="290" cy="360" r="4.2"/>
-        <circle class="b-node" cx="332" cy="350" r="3.0"/>
-        <circle class="b-node" cx="376" cy="326" r="3.5"/>
-        <circle class="b-node" cx="290" cy="336" r="3.2"/>
-        <line class="b-edge" x1="204" y1="326" x2="248" y2="350"/>
-        <line class="b-edge" x1="248" y1="350" x2="290" y2="360"/>
-        <line class="b-edge" x1="290" y1="360" x2="332" y2="350"/>
-        <line class="b-edge" x1="332" y1="350" x2="376" y2="326"/>
-        <line class="b-edge" x1="204" y1="326" x2="290" y2="336"/>
-        <line class="b-edge" x1="376" y1="326" x2="290" y2="336"/>
-        <line class="b-edge" x1="248" y1="350" x2="290" y2="336"/>
-        <line class="b-edge" x1="332" y1="350" x2="290" y2="336"/>
-        <text class="b-lbl" x="290" y="378" text-anchor="middle">OCCIPITAL</text>
-      </g>
+  </div>
+  <div style="margin-top:24px; text-align:center;">
+    <a href="/simulators/" class="cta-btn" style="display:inline-flex;"><span>All Simulators</span><span class="cta-arrow">→</span></a>
+  </div>
+</section>
 
-      <!-- ════════════════════════════════════════════
-           PIECE 5: CORE — AXIOM V (the key)
-           ════════════════════════════════════════════ -->
-      <g id="piece-5" class="b-piece" data-piece="5">
-        <!-- FIX-12: hit area -->
-        <rect x="248" y="148" width="84" height="112" fill="transparent" stroke="none"/>
-        <!-- FIX-13: pulse ring as dedicated child element — uses opacity not filter -->
-        <ellipse class="core-pulse" cx="290" cy="198" rx="42" ry="42"
-          fill="none" stroke="rgba(240,165,0,0.55)" stroke-width="1.2"/>
-        <polygon
-          points="290,156 314,166 322,190 314,214 266,214 258,190 266,166"
-          fill="rgba(240,165,0,0.04)"
-          stroke="rgba(240,165,0,0.14)" stroke-width="0.8"/>
-        <circle class="b-node" cx="262" cy="178" r="3.5"/>
-        <circle class="b-node" cx="290" cy="166" r="4.2"/>
-        <circle class="b-node" cx="318" cy="178" r="3.5"/>
-        <circle class="b-node" cx="270" cy="218" r="3.0"/>
-        <circle class="b-node" cx="290" cy="198" r="4.8"/>
-        <circle class="b-node" cx="290" cy="232" r="3.8"/>
-        <circle class="b-node" cx="310" cy="218" r="3.0"/>
-        <line class="b-edge" x1="262" y1="178" x2="290" y2="166"/>
-        <line class="b-edge" x1="290" y1="166" x2="318" y2="178"/>
-        <line class="b-edge" x1="262" y1="178" x2="270" y2="218"/>
-        <line class="b-edge" x1="318" y1="178" x2="310" y2="218"/>
-        <line class="b-edge" x1="270" y1="218" x2="290" y2="232"/>
-        <line class="b-edge" x1="290" y1="232" x2="310" y2="218"/>
-        <line class="b-edge" x1="262" y1="178" x2="290" y2="198"/>
-        <line class="b-edge" x1="290" y1="166" x2="290" y2="198"/>
-        <line class="b-edge" x1="318" y1="178" x2="290" y2="198"/>
-        <line class="b-edge" x1="270" y1="218" x2="290" y2="198"/>
-        <line class="b-edge" x1="310" y1="218" x2="290" y2="198"/>
-        <line class="b-edge" x1="290" y1="232" x2="290" y2="198"/>
-        <text class="b-lbl" x="290" y="253" text-anchor="middle">CORE</text>
-      </g>
+<!-- ── 03 STACK ── -->
+<section id="stack">
+  <div class="section-header">
+    <span class="section-num">// 03</span>
+    <h2 class="section-title">The AION Stack</h2>
+    <div class="section-line"></div>
+  </div>
+  <p style="font-family:var(--sans); font-size:17px; font-weight:300; color:var(--muted); max-width:640px; margin-bottom:36px; line-height:1.7;">
+    A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked. M-STRONG means validated. M-NASCENT means honest about what isn't yet.
+  </p>
+  <table class="stack-table">
+    <thead><tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr></thead>
+    <tbody>
+      <!-- FSVE row — inline simulator link added -->
+      <tr>
+        <td class="fw-name">FSVE</td>
+        <td class="fw-version">v3.6</td>
+        <td class="fw-function">
+          Certainty Scoring Engine — 6 dimensions, validity threshold enforcement
+          <a href="/stack/frameworks/FSVE/" class="fw-inline-link">→ Simulator</a>
+        </td>
+        <td><span class="convergence-badge m-mod">M-MODERATE</span></td>
+      </tr>
+      <tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean</td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr>
+      <tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.3</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, TOPOS-BIN active</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+      <tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+      <tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+      <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1–8 active · Law 9 dark by design</td><td><span class="convergence-badge mod">CONSTITUTIONAL</span></td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:16px; font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; margin-bottom:4px;">
+    M-STRONG: validated · M-MODERATE: tested · M-NASCENT: specified, building · CONSTITUTIONAL: foundational
+  </div>
+  <a href="/stack/" class="stack-path">
+    <span class="stack-path-icon">◈</span>
+    <div>
+      <div class="stack-path-label">Full Stack Documentation →</div>
+      <div class="stack-path-desc">All 17 frameworks. Version history. Convergence records. FCL entries. Protocol I registrations. The complete AION Constitutional Stack in one place.</div>
+    </div>
+  </a>
+  <a href="/stack/eight-laws/" class="stack-path">
+    <span class="stack-path-icon">⚖️</span>
+    <div>
+      <div class="stack-path-label">The Sovereignty Stack — Nine Constitutional Laws →</div>
+      <div class="stack-path-desc">Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design. A spiral constitutional architecture for civilizational scale.</div>
+    </div>
+  </a>
+  <!-- FSVE simulator path card — new -->
+  <a href="/stack/frameworks/FSVE/" class="stack-path">
+    <span class="stack-path-icon">⚖</span>
+    <div>
+      <div class="stack-path-label">FSVE v3.6 — Live Certainty Scoring Engine →</div>
+      <div class="stack-path-desc">Score any claim across six epistemic dimensions. Gini laundering detection. Validity threshold gate. Sensitivity analysis. CEV audit log. Shareable results.</div>
+    </div>
+  </a>
+</section>
 
+<!-- ── 04 CERTIFICATION ── -->
+<section id="certify" style="padding-top:0;">
+  <div class="section-header">
+    <span class="section-num">// 04</span>
+    <h2 class="section-title">Certification</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="certify-strip">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="80" height="80" style="flex-shrink:0;">
+      <defs>
+        <linearGradient id="cs1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient>
+        <linearGradient id="cw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient>
+        <path id="ct1" d="M 78,200 A 122,122 0 0,1 322,200"/>
+        <path id="cb1" d="M 92,200 A 108,108 0 0,0 308,200"/>
+      </defs>
+      <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0d09" stroke="url(#cs1)" stroke-width="4"/>
+      <circle cx="200" cy="200" r="150" fill="none" stroke="url(#cs1)" stroke-width="3"/>
+      <circle cx="200" cy="200" r="134" fill="#0c0a08"/>
+      <circle cx="200" cy="200" r="134" fill="none" stroke="url(#cs1)" stroke-width="2"/>
+      <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#cw1)" stroke-width="3" stroke-linecap="round"/>
+      <text font-family="'Times New Roman',serif" font-size="14" font-weight="bold" letter-spacing="4" fill="#D4AF37" text-anchor="middle"><textPath href="#ct1" startOffset="50%">AION · VERIFIED</textPath></text>
+      <text font-family="'Times New Roman',serif" font-size="10" letter-spacing="3" fill="#D4AF37" text-anchor="middle"><textPath href="#cb1" startOffset="50%">SHELDON K. SALMON</textPath></text>
     </svg>
-  </div><!-- #gw-stage -->
-
-  <!-- PROGRESS PIPS -->
-  <div id="gw-pips">
-    <div class="pip" id="pip-1"></div>
-    <div class="pip" id="pip-2"></div>
-    <div class="pip" id="pip-3"></div>
-    <div class="pip" id="pip-4"></div>
-    <div class="pip" id="pip-5"></div>
-  </div>
-
-  <!-- DECLARATIONS -->
-  <div id="gw-decls">
-    <div class="gw-d" id="gd-1">
-      <span class="gw-d-n">Ⅰ</span>
-      <span class="gw-d-t">CERTAINTY MUST BE ENGINEERED — NOT ASSUMED, INHERITED, OR BORROWED FROM PRIOR OUTPUT</span>
-    </div>
-    <div class="gw-d" id="gd-2">
-      <span class="gw-d-n">Ⅱ</span>
-      <span class="gw-d-t">FAILURE DOCUMENTATION IS ARCHITECTURE — NOT ADMISSION OF FAULT</span>
-    </div>
-    <div class="gw-d" id="gd-3">
-      <span class="gw-d-n">Ⅲ</span>
-      <span class="gw-d-t">SOVEREIGN RECORDS OUTLAST THE SYSTEMS THAT PRODUCED THEM</span>
-    </div>
-    <div class="gw-d" id="gd-4">
-      <span class="gw-d-n">Ⅳ</span>
-      <span class="gw-d-t">EPISTEMIC HONESTY IS A TECHNICAL REQUIREMENT — NOT A PREFERENCE</span>
-    </div>
-    <div class="gw-d last-d" id="gd-5">
-      <span class="gw-d-n">Ⅴ</span>
-      <span class="gw-d-t">WHAT IS PROVABLY TRUE CARRIES MORE WEIGHT THAN WHAT SOUNDS PLAUSIBLE</span>
+    <div class="certify-text">
+      <h3>Sovereign Trace Protocol</h3>
+      <p>
+        Certification is not installation. It is formal verification that a deployment meets the FROZEN-2.0 standard — immutable failure capture, transparent remediation, honest epistemic record. Four tiers. No negotiation on scope.<br><br>
+        Simulator tools carry the <strong style="color:#D4AF37;">AION Verified Simulator</strong> badge — citation-backed, red-teamed, peer-reviewed.<br><br>
+        <a href="/certify/">Verify a badge</a> &nbsp;·&nbsp;
+        <a href="/services/ai-audit/">Certification tiers</a> &nbsp;·&nbsp;
+        <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md" target="_blank" rel="noopener">Full methodology ↗</a>
+      </p>
     </div>
   </div>
+</section>
 
-  <!-- COMPLETION SCREEN -->
-  <div id="gw-done">
+<!-- ── 05 CONNECT ── -->
+<section id="connect">
+  <div class="section-header">
+    <span class="section-num">// 05</span>
+    <h2 class="section-title">Connect</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="connect-grid">
 
-    <svg class="gw-done-badge" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="74,54 54,74 26,74 6,54 6,26 26,6 54,6 74,26"
-        stroke="#D4AF37" stroke-width="1.5" fill="none"/>
-      <circle cx="40" cy="40" r="26" stroke="#D4AF37" stroke-width="1" fill="none"/>
-      <circle cx="40" cy="40" r="3" fill="#D4AF37"/>
-      <line x1="40" y1="14" x2="40" y2="66" stroke="#D4AF37" stroke-width="0.6" stroke-opacity="0.4"/>
-      <line x1="14" y1="40" x2="66" y2="40" stroke="#D4AF37" stroke-width="0.6" stroke-opacity="0.4"/>
-    </svg>
-
-    <div class="gw-done-title">SEAL COMPLETE</div>
-    <div class="gw-done-sub">AION Constitutional Stack &nbsp;·&nbsp; Five Axioms Acknowledged &nbsp;·&nbsp; Entry Verified</div>
-    <div class="gw-done-line"></div>
-
-    <!-- FIX-1: copy rewritten to describe exactly what is sealed — no false claims -->
-    <div class="gw-done-notice">
-      Your entry timestamp, assembly sequence, and optional name are sealed into a local JSON record.
-      <strong>This is a sovereign timestamp — not analytics. Nothing is transmitted to any server.</strong>
+    <div class="connect-group">
+      <div class="connect-group-label">Contact</div>
+      <div class="connect-links">
+        <a href="mailto:aionsystem@outlook.com" class="connect-link amber">
+          <span class="connect-link-dot"></span>Consulting Inquiries
+        </a>
+      </div>
+      <div class="connect-group-label" style="margin-top:20px;">Community</div>
+      <div class="connect-links">
+        <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378/" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>LinkedIn
+        </a>
+        <a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener" class="connect-link">
+          <span class="connect-link-dot"></span>X · @OCEAN_AION
+        </a>
+        <a href="https://news.ycombinator.com/submitted?id=sheldonksalmon" target="_blank" rel="noopener" class="connect-link orange">
+          <span class="connect-link-dot"></span>Hacker News
+        </a>
+      </div>
+      <div class="connect-group-label" style="margin-top:20px;">Support</div>
+      <div class="connect-links">
+        <a href="https://buymeacoffee.com/sheldonksalmon" target="_blank" rel="noopener" class="connect-link coffee">
+          <span class="connect-link-dot"></span>Buy Me a Coffee
+        </a>
+      </div>
     </div>
 
-    <div class="gw-name-wrap">
-      <div class="gw-name-label">Name — optional · included in seal if provided</div>
-      <input type="text" id="gw-name" class="gw-name-input"
-             placeholder="YOUR NAME" autocomplete="off" spellcheck="false"/>
+    <div class="connect-group">
+      <div class="connect-group-label">Sites</div>
+      <div class="connect-links">
+        <a href="https://sheldonksalmon.carrd.co" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>sheldonksalmon.carrd.co
+        </a>
+        <a href="https://aionsystems.carrd.co" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>aionsystems.carrd.co
+        </a>
+      </div>
+      <div class="connect-group-label" style="margin-top:20px;">Publishing</div>
+      <div class="connect-links">
+        <a href="https://medium.com/sheldonksalmon" target="_blank" rel="noopener" class="connect-link">
+          <span class="connect-link-dot"></span>Medium · Publication
+        </a>
+        <a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener" class="connect-link">
+          <span class="connect-link-dot"></span>Medium · Profile
+        </a>
+      </div>
+      <div class="connect-group-label" style="margin-top:20px;">Bots</div>
+      <div class="connect-links">
+        <a href="https://poe.com/PSA-Grader" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>PSA Grader · Poe
+        </a>
+        <a href="https://poe.com/ANCHOR-Reliability" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>ANCHOR Reliability · Poe
+        </a>
+      </div>
     </div>
 
-    <div class="gw-done-actions">
-      <button class="gw-btn" onclick="downloadSeal()">
-        <span>↓ &nbsp;Download Seal</span>
-      </button>
-      <button class="gw-btn gw-btn-enter" onclick="dissolve()">
-        <span>Enter the Stack &nbsp;→</span>
-      </button>
+    <div class="connect-group wide">
+      <div class="connect-group-label">Brain Repositories</div>
+      <div class="connect-links">
+        <a href="https://github.com/AionSystem/THALAMUS" target="_blank" rel="noopener" class="connect-link gold">
+          <span class="connect-link-dot"></span>THALAMUS
+        </a>
+        <a href="https://github.com/AionSystem/AGI" target="_blank" rel="noopener" class="connect-link red">
+          <span class="connect-link-dot"></span>AGI
+        </a>
+        <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>AION-BRAIN
+        </a>
+        <a href="https://github.com/AionSystem/OCEAN-BRAIN" target="_blank" rel="noopener" class="connect-link cyan">
+          <span class="connect-link-dot"></span>OCEAN-BRAIN
+        </a>
+        <a href="https://github.com/AionSystem/HIPPOCAMPUS" target="_blank" rel="noopener" class="connect-link green">
+          <span class="connect-link-dot"></span>HIPPOCAMPUS
+        </a>
+        <a href="https://github.com/AionSystem/AMYGDALA" target="_blank" rel="noopener" class="connect-link red">
+          <span class="connect-link-dot"></span>AMYGDALA
+        </a>
+        <a href="https://github.com/AionSystem/SYNARA" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>SYNARA
+        </a>
+        <a href="https://github.com/AionSystem/CEREBELLUM" target="_blank" rel="noopener" class="connect-link">
+          <span class="connect-link-dot"></span>CEREBELLUM
+        </a>
+        <a href="https://github.com/AionSystem/PREFRONTAL" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>PREFRONTAL
+        </a>
+        <a href="https://github.com/AionSystem/SHELDON.K.SALMON" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>SHELDON.K.SALMON
+        </a>
+        <a href="https://github.com/AionSystem/Whitepaper-Blueprint" target="_blank" rel="noopener" class="connect-link blue">
+          <span class="connect-link-dot"></span>Whitepaper Blueprint
+        </a>
+        <a href="https://github.com/AionSystem/FAILURE-ATLAS" target="_blank" rel="noopener" class="connect-link purple">
+          <span class="connect-link-dot"></span>FAILURE-ATLAS
+        </a>
+      </div>
     </div>
 
-  </div><!-- #gw-done -->
+  </div>
+</section>
 
-</div><!-- #gw -->
+<footer>
+  <div class="footer-id">
+    <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
+    AI Reliability Architect &nbsp;·&nbsp; New York &nbsp;·&nbsp; March 2026<br>
+    <span style="font-size:10px;">AION v3.0 · STP v2.0 · LEDGER-011 · © 2026 Sheldon K. Salmon</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/stack/">Stack</a></li>
+    <li><a href="/stack/eight-laws/">Eight Laws</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+</footer>
 
 <script>
-/* ════════════════════════════════════════════════════
-   AION GATEWAY v1.1 — SOVEREIGN ENTRY PROTOCOL
-   Sheldon K. Salmon · March 2026
-   Red Team Pass: 17 findings resolved
-   ════════════════════════════════════════════════════ */
-
-// ── FIX-8: Touch detection — swap instruction verb ──
-if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-  const sub = document.getElementById('gw-sub-text');
-  if (sub) sub.innerHTML = 'Tap each fragment &nbsp;·&nbsp; Five axioms to enter';
+/* ── CANVAS ── */
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], signals = [], t = 0;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+class Signal {
+  constructor() { this.reset(); }
+  reset() { this.y=Math.random()*H; this.speed=0.3+Math.random()*0.6; this.amp=8+Math.random()*20; this.freq=0.008+Math.random()*0.012; this.phase=Math.random()*Math.PI*2; this.alpha=0.04+Math.random()*0.12; this.width=0.6+Math.random()*0.8; this.life=0; this.maxLife=180+Math.random()*240; }
+  draw() { this.life++; if(this.life>this.maxLife)this.reset(); const fade=Math.sin((this.life/this.maxLife)*Math.PI); ctx.beginPath(); ctx.strokeStyle=`rgba(240,165,0,${this.alpha*fade})`; ctx.lineWidth=this.width; for(let x=0;x<=W;x+=2){const y=this.y+Math.sin(x*this.freq+this.phase+t*this.speed)*this.amp; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);} ctx.stroke(); }
 }
+class Particle {
+  constructor() { this.reset(); }
+  reset() { this.x=Math.random()*W; this.y=Math.random()*H; this.r=0.5+Math.random()*1.5; this.vx=(Math.random()-0.5)*0.2; this.vy=(Math.random()-0.5)*0.2; this.alpha=0.1+Math.random()*0.25; }
+  draw() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset(); ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(240,165,0,${this.alpha})`; ctx.fill(); }
+}
+function init() { resize(); for(let i=0;i<12;i++)signals.push(new Signal()); for(let i=0;i<60;i++)particles.push(new Particle()); }
+function loop() { ctx.clearRect(0,0,W,H); t+=0.01; signals.forEach(s=>s.draw()); particles.forEach(p=>p.draw()); requestAnimationFrame(loop); }
+window.addEventListener('resize',resize);
+init(); loop();
 
-// ── STATE ──
-const G = {
-  placed: new Set(),
-  order:  [],
-  t0:     new Date().toISOString(),
-  sid:    uid(),
-  done:   false
-};
-
-// Piece → declaration element id
-const DECL_MAP = { 1:'gd-1', 2:'gd-2', 3:'gd-3', 4:'gd-4', 5:'gd-5' };
-
-// Cross-edge map (bidirectional)
-const CE = {
-  '1-2':'ce-12','2-1':'ce-12',
-  '1-3':'ce-13','3-1':'ce-13',
-  '1-5':'ce-15','5-1':'ce-15',
-  '2-5':'ce-25','5-2':'ce-25',
-  '3-5':'ce-35','5-3':'ce-35',
-  '2-4':'ce-24','4-2':'ce-24',
-  '3-4':'ce-34','4-3':'ce-34',
-  '4-5':'ce-45','5-4':'ce-45',
-};
-
-// ── CANVAS ──
-const cv  = document.getElementById('gw-canvas');
-const ctx = cv.getContext('2d');
-let W, H, sigs = [], pts = [], T = 0;
-
-function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
-window.addEventListener('resize', resize); resize();
-
-class Sig {
-  constructor() { this.r(); }
-  r() {
-    this.y   = Math.random() * H;
-    this.sp  = 0.14 + Math.random() * 0.38;
-    this.amp = 5 + Math.random() * 18;
-    this.fr  = 0.006 + Math.random() * 0.011;
-    this.ph  = Math.random() * Math.PI * 2;
-    this.a   = 0.025 + Math.random() * 0.075;
-    this.w   = 0.5 + Math.random() * 0.8;
-    this.li  = 0; this.ml = 200 + Math.random() * 300;
-  }
-  draw() {
-    this.li++;
-    if (this.li > this.ml) { this.r(); return; }
-    const f = Math.sin(this.li / this.ml * Math.PI);
-    ctx.beginPath();
-    ctx.strokeStyle = `rgba(240,165,0,${this.a * f})`;
-    ctx.lineWidth   = this.w;
-    for (let x = 0; x <= W; x += 4) {
-      const y = this.y + Math.sin(x * this.fr + this.ph + T * this.sp) * this.amp;
-      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+/* ── TRIPLE TIME ── */
+(function() {
+  const MOONS = [
+    {num:1,name:'Magnetic',m:7,d:26},{num:2,name:'Lunar',m:8,d:23},{num:3,name:'Electric',m:9,d:20},
+    {num:4,name:'Self-Existing',m:10,d:18},{num:5,name:'Overtone',m:11,d:15},{num:6,name:'Rhythmic',m:12,d:13},
+    {num:7,name:'Resonant',m:1,d:10},{num:8,name:'Galactic',m:2,d:7},{num:9,name:'Solar',m:3,d:7},
+    {num:10,name:'Planetary',m:4,d:4},{num:11,name:'Spectral',m:5,d:2},{num:12,name:'Crystal',m:5,d:30},
+    {num:13,name:'Cosmic',m:6,d:27}
+  ];
+  function dreamspell(date) {
+    const month=date.getMonth()+1, day=date.getDate(), year=date.getFullYear();
+    const isAfterJul26=(month>7)||(month===7&&day>=26);
+    const dsYear=isAfterJul26?year:year-1;
+    const anchors=MOONS.map(m=>{let y=dsYear; if(m.num>=7)y=dsYear+1; return{...m,date:new Date(y,m.m-1,m.d)};});
+    const dot=new Date(dsYear+1,6,25);
+    const dateMs=date.getTime();
+    if(Math.abs(dateMs-dot.getTime())<43200000) return{moonNum:0,moonName:'Day Out of Time',dayOfMoon:0};
+    for(let i=anchors.length-1;i>=0;i--){
+      if(dateMs>=anchors[i].date.getTime()){
+        const d=Math.floor((dateMs-anchors[i].date.getTime())/86400000)+1;
+        if(d<=28) return{moonNum:anchors[i].num,moonName:anchors[i].name,dayOfMoon:d};
+      }
     }
-    ctx.stroke();
+    return null;
   }
-}
-
-class Pt {
-  constructor() { this.r(); }
-  r() {
-    this.x   = Math.random() * W; this.y = Math.random() * H;
-    this.vx  = (Math.random() - 0.5) * 0.12;
-    this.vy  = (Math.random() - 0.5) * 0.12;
-    this.rad = 0.4 + Math.random() * 1.3;
-    this.a   = 0.07 + Math.random() * 0.18;
-  }
-  draw() {
-    this.x += this.vx; this.y += this.vy;
-    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.r();
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.rad, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(240,165,0,${this.a})`;
-    ctx.fill();
-  }
-}
-
-for (let i = 0; i < 11; i++) sigs.push(new Sig());
-for (let i = 0; i < 55; i++) pts.push(new Pt());
-
-(function loop() {
-  ctx.clearRect(0, 0, W, H);
-  T += 0.0075;
-  sigs.forEach(s => s.draw());
-  pts.forEach(p => p.draw());
-  requestAnimationFrame(loop);
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  ['tt-gregorian','tt-dreamspell','tt-hebrew'].forEach(id=>{const el=document.getElementById(id);el.classList.add('loading');el.textContent='· · ·';});
+  const now=new Date();
+  const gel=document.getElementById('tt-gregorian'); gel.classList.remove('loading'); gel.textContent=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  const ds=dreamspell(now); const del=document.getElementById('tt-dreamspell'); del.classList.remove('loading');
+  if(!ds)del.textContent='—'; else if(ds.moonNum===0)del.textContent='Day Out of Time'; else del.textContent=`Day ${ds.dayOfMoon}, ${ds.moonName} Moon ${ds.moonNum}/13`;
+  (async()=>{const hel=document.getElementById('tt-hebrew'); try{const res=await fetch(`https://www.hebcal.com/converter?gd=${now.getDate()}&gm=${now.getMonth()+1}&gy=${now.getFullYear()}&g2h=1`); const data=await res.json(); hel.classList.remove('loading'); hel.textContent=data&&data.hebrew?data.hebrew:'FETCH FAILED';}catch(e){hel.classList.remove('loading');hel.textContent='FETCH FAILED';}})();
 })();
-
-// ── PIECE INTERACTION ──
-document.querySelectorAll('.b-piece').forEach(el => {
-  el.addEventListener('click', () => placePiece(el));
-});
-
-function placePiece(el) {
-  const id = +el.dataset.piece;
-  if (G.placed.has(id)) return;
-
-  // Freeze at current animated position
-  const frozen = getComputedStyle(el).transform;
-  el.style.animation  = 'none';
-  el.style.transform  = frozen;
-  el.style.filter     = '';
-  void el.offsetWidth; // force reflow to commit frozen state
-
-  // Snap to assembled position using --snap bezier
-  el.style.transition = `transform 0.74s var(--snap), filter 0.3s`;
-  el.style.transform  = 'translate(0,0) rotate(0deg)';
-  el.classList.add('placed');
-
-  // Snap flash fires when piece settles
-  setTimeout(() => {
-    el.style.animation = '';
-    el.classList.add('snapping');
-    el.querySelectorAll('.b-node').forEach(n => {
-      n.style.fill = '#fff8e0';
-      setTimeout(() => (n.style.fill = ''), 750);
-    });
-    setTimeout(() => el.classList.remove('snapping'), 950);
-  }, 720);
-
-  // Track
-  G.placed.add(id);
-  G.order.push(id);
-
-  // Reveal declaration
-  setTimeout(() => {
-    const d = document.getElementById(DECL_MAP[id]);
-    if (d) d.classList.add('show');
-  }, 480);
-
-  // Advance pip
-  const pip = document.getElementById('pip-' + G.placed.size);
-  if (pip) pip.classList.add('active');
-
-  // Light cross-edges to all already-placed pieces
-  G.placed.forEach(other => {
-    if (other === id) return;
-    const ceEl = document.getElementById(CE[`${id}-${other}`]);
-    if (ceEl) ceEl.classList.add('show');
-  });
-
-  // Completion check
-  if (G.placed.size === 5) setTimeout(triggerCompletion, 1100);
-}
-
-// ── COMPLETION ──
-function triggerCompletion() {
-  if (G.done) return;
-  G.done = true;
-
-  [1,2,3,4,5].forEach(n => {
-    const p = document.getElementById('pip-' + n);
-    if (p) { p.classList.remove('active'); p.classList.add('done'); }
-  });
-
-  document.querySelectorAll('.b-node').forEach(n => n.classList.add('gold'));
-  document.querySelectorAll('.b-edge').forEach(e => e.classList.add('gold'));
-  document.querySelectorAll('.b-cross').forEach(e => e.classList.add('gold'));
-
-  const outline = document.getElementById('b-outline');
-  if (outline) {
-    outline.classList.add('reveal');
-    setTimeout(() => outline.classList.add('gold'), 900);
-  }
-
-  document.getElementById('brain-svg')?.classList.add('brain-bloom');
-
-  setTimeout(() => {
-    document.getElementById('gw-done')?.classList.add('show');
-  }, 1700);
-}
-
-// ── UID ──
-function uid() {
-  const ts  = Date.now().toString(36).toUpperCase();
-  const rnd = Math.random().toString(36).slice(2, 7).toUpperCase(); // FIX-3: substr → slice
-  return `AION-${ts}-${rnd}`;
-}
-
-// ── SEAL ──
-function buildSeal() {
-  const name = (document.getElementById('gw-name')?.value || '').trim();
-  return {
-    protocol:            'AION-GATEWAY-v1.1',
-    sealed_by:           'aionsystem.github.io',
-    session_id:          G.sid,
-    entry_time_iso:      G.t0,
-    entry_time_unix:     new Date(G.t0).getTime(),
-    axioms_acknowledged: 5,
-    assembly_order:      G.order,
-    name:                name || '(not provided)',
-    note:                'Sovereign entry timestamp. Local record only. Nothing transmitted.'
-    /* FIX-1: note matches exactly what is captured — no false "network signature" claim */
-  };
-}
-
-function downloadSeal() {
-  const data = buildSeal();
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `AION-ENTRY-${G.sid}.json`;
-  a.click();
-  // FIX-2: delay revoke to prevent race condition on Safari
-  setTimeout(() => URL.revokeObjectURL(url), 1500);
-}
-
-// ── DISSOLVE ── FIX-16: null guards
-function dissolve() {
-  document.getElementById('gw')?.classList.add('dissolving');
-  document.getElementById('site-bg')?.classList.add('show');
-}
 </script>
-
-<!--
-════════════════════════════════════════════════════════════════
-INTEGRATION NOTES — gateway v1.1 → index.html
-════════════════════════════════════════════════════════════════
-
-STEP 1 — CSS
-Paste the full <style> block into index.html <head> BEFORE existing styles.
-
-STEP 2 — OVERLAY
-Paste <div id="gw">...</div> as the FIRST element inside index.html <body>.
-
-STEP 3 — SCRIPT
-Paste the <script> block before </body> in index.html.
-
-STEP 4 — REMOVE PLACEHOLDER
-Delete <div id="site-bg"></div> — the index.html body is the background.
-
-STEP 5 — NAV SKIP LINK (return visitors)
-In index.html nav <ul>, add:
-  <li><a href="#" onclick="dissolve();return false;"
-         style="font-family:var(--mono);font-size:10px;color:var(--muted);">[ENTER]</a></li>
-
-STEP 6 — REMOVE #gw-skip button
-Delete the floating skip button once the nav link is in place.
-
-STEP 7 — SESSION DETECTION (optional, recommended)
-At the very TOP of the gateway <script>:
-  if (sessionStorage.getItem('aion-v1')) { dissolve(); }
-  else { sessionStorage.setItem('aion-v1', '1'); }
-Skips gateway on page refresh within same session. Clears on tab close.
-════════════════════════════════════════════════════════════════
--->
-
 </body>
 </html>
