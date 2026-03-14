@@ -720,23 +720,10 @@ const ds=dreamspell(now);
 const del=document.getElementById('tt-dreamspell');
 if(del){del.classList.remove('loading');if(!ds)del.textContent='—';else if(ds.moonNum===0)del.textContent='Day Out of Time';else del.textContent='Day '+ds.dayOfMoon+', '+ds.moonName+' Moon '+ds.moonNum+'/13';}
 
-// Hebrew — JS immediate, hebcal updates display
+// Hebrew — JS D&R algorithm (FROZEN-2.0 port) · English output · no network dependency
+// Verified: jsHebrew(2026,3,3) = "14 Adar 5786" ✓
 const hel=document.getElementById('tt-hebrew');
-if(hel){
-  hel.classList.remove('loading');
-  hel.textContent=jsHebrew(yr,mo,dy); // immediate, no loading state
-  // Primary: hebcal live fetch
-  fetch('https://www.hebcal.com/converter?gd='+dy+'&gm='+mo+'&gy='+yr+'&g2h=1')
-    .then(r=>r.json())
-    .then(data=>{if(data&&data.hebrew)hel.textContent=data.hebrew;})
-    .catch(()=>{
-      // Secondary: hebcal alternate endpoint
-      fetch('https://www.hebcal.com/converter?gd='+dy+'&gm='+mo+'&gy='+yr+'&g2h=1&cfg=json')
-        .then(r=>r.json())
-        .then(data=>{if(data&&data.hebrew)hel.textContent=data.hebrew;})
-        .catch(()=>{}); // JS algorithm already displayed — no action needed
-    });
-}
+if(hel){hel.classList.remove('loading');hel.textContent=jsHebrew(yr,mo,dy);}
 
 })();
 </script>
