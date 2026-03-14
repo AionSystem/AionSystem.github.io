@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AionSystem Certification Verification — Sovereign Trace Protocol. Verify AION badges. Understand what STP Certified, AION Verified Simulator, and STP Auditor badges mean.">
+<meta name="description" content="AionSystem Certification Verification — Sovereign Trace Protocol. Verify AION badges. Generate your own sovereign trace seal. Understand what STP Certified, AION Verified Simulator, and STP Auditor badges mean.">
 <title>Certification Verification — AionSystem · Sovereign Trace Protocol</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
@@ -18,6 +18,8 @@
   --gold:    #D4AF37;
   --gold-d:  #8B7520;
   --blue:    #40c4ff;
+  --blue-d:  #0077aa;
+  --frozen:  #40c4ff;
   --text:    #c4d4de;
   --muted:   #4e5f6a;
   --dim:     #2a3540;
@@ -43,8 +45,11 @@ nav {
 }
 .nav-logo { font-family:var(--mono); font-size:13px; letter-spacing:3px; color:var(--amber); text-decoration:none; }
 .nav-logo span { color:var(--muted); }
+.nav-links { display:flex; align-items:center; gap:24px; }
 .nav-back { font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--muted); text-decoration:none; text-transform:uppercase; transition:color 0.2s; }
 .nav-back:hover { color:var(--amber); }
+.nav-seal { font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--frozen); text-decoration:none; text-transform:uppercase; border:1px solid rgba(64,196,255,0.3); padding:5px 12px; transition:all 0.2s; }
+.nav-seal:hover { border-color:var(--frozen); background:rgba(64,196,255,0.06); }
 
 .wrapper { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:64px 40px 80px; }
 
@@ -58,15 +63,11 @@ nav {
 @media(max-width:780px){ .badge-trio { grid-template-columns:1fr; } }
 
 .badge-card { background:var(--surface); padding:36px 28px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0; position:relative; overflow:hidden; }
-
-.badge-card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:2px;
-}
+.badge-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
 .badge-card.stp-card::before { background:var(--amber); }
 .badge-card.sim-card::before { background:var(--gold); }
 .badge-card.aud-card::before { background:var(--blue); }
 
-/* Badge SVG link wrapper */
 .badge-link { display:block; text-decoration:none; margin-bottom:20px; opacity:0.95; transition:opacity 0.2s, transform 0.2s; }
 .badge-link:hover { opacity:1; transform:scale(1.04); }
 .badge-link svg { display:block; }
@@ -79,32 +80,14 @@ nav {
 
 .badge-card-sub { font-family:var(--mono); font-size:10px; letter-spacing:1px; color:var(--muted); margin-bottom:14px; }
 
-/* BRIEF INSERT — new */
-.badge-brief {
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:1px;
-  line-height:1.7;
-  padding:10px 14px;
-  margin-bottom:14px;
-  width:100%;
-  border:1px solid var(--border);
-}
+.badge-brief { font-family:var(--mono); font-size:10px; letter-spacing:1px; line-height:1.7; padding:10px 14px; margin-bottom:14px; width:100%; border:1px solid var(--border); }
 .stp-card .badge-brief { border-left:2px solid var(--amber-d); color:var(--amber-d); background:rgba(240,165,0,0.04); }
 .sim-card .badge-brief { border-left:2px solid var(--gold-d); color:var(--gold-d); background:rgba(212,175,55,0.04); }
 .aud-card .badge-brief { border-left:2px solid var(--blue); color:var(--blue); background:rgba(64,196,255,0.04); opacity:0.8; }
-
-.badge-brief a {
-  color:inherit;
-  text-decoration:none;
-  border-bottom:1px solid currentColor;
-  opacity:0.7;
-  transition:opacity 0.15s;
-}
+.badge-brief a { color:inherit; text-decoration:none; border-bottom:1px solid currentColor; opacity:0.7; transition:opacity 0.15s; }
 .badge-brief a:hover { opacity:1; }
 
 .badge-card-desc { font-family:var(--sans); font-size:14px; font-weight:300; color:var(--muted); line-height:1.7; }
-
 .badge-divider { width:32px; height:1px; margin:16px auto; }
 .stp-card .badge-divider { background:var(--amber-d); }
 .sim-card .badge-divider { background:var(--gold-d); }
@@ -114,6 +97,45 @@ nav {
 .stp-card .badge-card-issued strong { color:var(--amber-d); }
 .sim-card .badge-card-issued strong { color:var(--gold-d); }
 .aud-card .badge-card-issued strong { color:var(--blue); opacity:0.7; }
+
+/* ── SEAL STRIP — new section ── */
+.seal-strip {
+  background:var(--panel);
+  border:1px solid rgba(64,196,255,0.2);
+  border-left:3px solid var(--frozen);
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:32px;
+  align-items:center;
+  padding:32px 36px;
+  margin-bottom:56px;
+  position:relative;
+  overflow:hidden;
+}
+.seal-strip::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 0% 50%, rgba(64,196,255,0.04) 0%, transparent 60%);
+  pointer-events:none;
+}
+@media(max-width:780px){ .seal-strip { grid-template-columns:1fr; gap:20px; } }
+@media(max-width:780px){ .seal-strip-badge { display:none; } }
+
+.seal-strip-body {}
+.seal-strip-eyebrow { font-family:var(--mono); font-size:9px; letter-spacing:3px; color:var(--frozen); text-transform:uppercase; margin-bottom:8px; opacity:0.8; }
+.seal-strip-title { font-family:var(--sans); font-size:clamp(22px,3vw,32px); font-weight:900; letter-spacing:2px; text-transform:uppercase; color:var(--text); margin-bottom:10px; }
+.seal-strip-title em { color:var(--frozen); font-style:normal; }
+.seal-strip-desc { font-family:var(--mono); font-size:11px; color:var(--muted); line-height:1.9; max-width:520px; margin-bottom:20px; }
+.seal-strip-desc strong { color:var(--text); }
+.seal-strip-times { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+.seal-strip-time { font-family:var(--mono); font-size:9px; letter-spacing:1px; color:var(--muted); padding:4px 9px; border:1px solid var(--border); }
+.seal-strip-time strong { color:var(--frozen); opacity:0.8; display:block; font-size:8px; letter-spacing:2px; margin-bottom:2px; }
+.seal-strip-actions { display:flex; gap:12px; flex-wrap:wrap; }
+.seal-cta-primary { display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; padding:11px 24px; border:1px solid var(--frozen); color:#000; background:var(--frozen); transition:all 0.2s; font-weight:700; }
+.seal-cta-primary:hover { background:#80d8ff; }
+.seal-cta-outline { display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; padding:11px 24px; border:1px solid rgba(64,196,255,0.3); color:var(--frozen); background:transparent; transition:all 0.2s; }
+.seal-cta-outline:hover { border-color:var(--frozen); background:rgba(64,196,255,0.06); }
 
 /* VERIFICATION SECTION */
 .verify-section { margin-bottom:56px; }
@@ -160,14 +182,17 @@ footer { border-top:1px solid var(--border); padding:32px 40px; display:flex; ju
 footer p { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; }
 footer a { color:var(--amber-d); text-decoration:none; }
 footer a:hover { color:var(--amber); }
-@media(max-width:640px){ .wrapper { padding:48px 20px 60px; } nav { padding:0 20px; } footer { padding:24px 20px; } }
+@media(max-width:640px){ .wrapper { padding:48px 20px 60px; } nav { padding:0 20px; } .nav-links { gap:12px; } footer { padding:24px 20px; } }
 </style>
 </head>
 <body>
 
 <nav>
   <a href="/" class="nav-logo">AION<span>system</span></a>
-  <a href="/" class="nav-back">← Back to Home</a>
+  <div class="nav-links">
+    <a href="/certify/seal/" class="nav-seal">🔒 Seal Your Work</a>
+    <a href="/" class="nav-back">← Home</a>
+  </div>
 </nav>
 
 <div class="wrapper">
@@ -360,6 +385,75 @@ footer a:hover { color:var(--amber); }
 
   </div>
 
+  <!-- ── SEAL STRIP — Sovereign Trace Seal Tool ── -->
+  <div class="section-label">Generate your own sovereign trace seal</div>
+  <div class="seal-strip">
+
+    <!-- Mini badge -->
+    <div class="seal-strip-badge">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="88" height="88">
+        <defs>
+          <linearGradient id="ss1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#80d8ff"/><stop offset="50%" stop-color="#40c4ff"/><stop offset="100%" stop-color="#0077aa"/></linearGradient>
+          <linearGradient id="sw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0077aa" stop-opacity="0.3"/><stop offset="50%" stop-color="#80d8ff"/><stop offset="100%" stop-color="#0077aa" stop-opacity="0.3"/></linearGradient>
+          <path id="st1" d="M 78,200 A 122,122 0 0,1 322,200"/>
+          <path id="sb1" d="M 92,200 A 108,108 0 0,0 308,200"/>
+        </defs>
+        <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080d14" stroke="url(#ss1)" stroke-width="4"/>
+        <circle cx="200" cy="200" r="150" fill="none" stroke="url(#ss1)" stroke-width="3"/>
+        <circle cx="200" cy="200" r="134" fill="#060b10"/>
+        <circle cx="200" cy="200" r="134" fill="none" stroke="url(#ss1)" stroke-width="1.5"/>
+        <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#sw1)" stroke-width="3" stroke-linecap="round"/>
+        <text x="200" y="195" font-family="'Courier New',monospace" font-size="18" font-weight="bold" fill="#40c4ff" text-anchor="middle" letter-spacing="2">🔒</text>
+        <text font-family="'Times New Roman',serif" font-size="13" font-weight="bold" letter-spacing="4" fill="#40c4ff" text-anchor="middle"><textPath href="#st1" startOffset="50%">SOVEREIGN · TRACE</textPath></text>
+        <text font-family="'Times New Roman',serif" font-size="10" letter-spacing="3" fill="#40c4ff" text-anchor="middle" opacity="0.7"><textPath href="#sb1" startOffset="50%">FROZEN-2.0</textPath></text>
+      </svg>
+    </div>
+
+    <!-- Body -->
+    <div class="seal-strip-body">
+      <div class="seal-strip-eyebrow">// STP Browser Seal Tool · FROZEN-2.0 · SHA-256</div>
+      <div class="seal-strip-title">Seal What Is True.<br><em>Permanently.</em></div>
+      <div class="seal-strip-desc">
+        Every individual, researcher, organization, or analyst can generate a permanent cryptographic seal binding their content to three simultaneous calendar systems. <strong>No account required. No server. Zero dependencies.</strong> The seal is computed locally in your browser using SubtleCrypto — the same SHA-256 standard as the Python package.
+      </div>
+      <div class="seal-strip-times">
+        <div class="seal-strip-time"><strong>📅 Gregorian</strong>Civic time</div>
+        <div class="seal-strip-time"><strong>🌑 Hebrew</strong>Full dehiyot · FROZEN-2.0</div>
+        <div class="seal-strip-time"><strong>🌀 Dreamspell</strong>13 Moon galactic</div>
+        <div class="seal-strip-time"><strong>🔒 SHA-256</strong>SubtleCrypto · browser-native</div>
+      </div>
+      <div class="seal-strip-desc" style="font-size:10px;margin-bottom:20px;">
+        14 submission templates — General Trace, Research Priority, Evidence Chain, Foresight Seal, AI Failure, and more. Download your sealed JSON. Then submit a GitHub Issue to enter the public ledger — Sheldon K. Salmon manually adds confirmed entries until the auto-seal workflow is funded.
+      </div>
+      <div class="seal-strip-actions">
+        <a href="/certify/seal/" class="seal-cta-primary">🔒 Open the Seal Tool →</a>
+        <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="seal-cta-outline">Submit to Public Ledger ↗</a>
+      </div>
+    </div>
+
+    <!-- Right column: live seal display placeholder -->
+    <div style="display:flex;flex-direction:column;gap:8px;min-width:180px;align-self:stretch;justify-content:center;" class="seal-strip-badge">
+      <div style="background:rgba(64,196,255,0.04);border:1px solid rgba(64,196,255,0.15);padding:14px 16px;">
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--frozen);margin-bottom:8px;opacity:0.7;">WHAT YOU RECEIVE</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted);line-height:2;">
+          ✓ Sealed JSON download<br>
+          ✓ SHA-256 content hash<br>
+          ✓ Triple-time stamp<br>
+          ✓ Ledger ID (browser-generated)<br>
+          ✓ Direct GitHub Issue link<br>
+          ✓ Local VERIFY tool<br>
+          ✓ Browser ledger history
+        </div>
+      </div>
+      <div style="background:rgba(64,196,255,0.02);border:1px solid rgba(64,196,255,0.08);padding:10px 14px;">
+        <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--frozen);margin-bottom:6px;opacity:0.5;">COST</div>
+        <div style="font-family:var(--mono);font-size:14px;color:var(--text);font-weight:700;">Free</div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;">Always. No account.</div>
+      </div>
+    </div>
+
+  </div>
+
   <!-- HOW TO VERIFY -->
   <div class="verify-section">
     <div class="section-label">How to verify a badge</div>
@@ -438,7 +532,12 @@ footer a:hover { color:var(--amber); }
 
 <footer>
   <p>AionSystem · <a href="/">Sheldon K. Salmon</a> · AI Reliability Architect · New York · March 2026</p>
-  <p><a href="/simulators/">Simulators</a> &nbsp;·&nbsp; <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener">GitHub ↗</a> &nbsp;·&nbsp; <a href="https://linkedin.com/in/sheldonksalmon" target="_blank" rel="noopener">LinkedIn ↗</a></p>
+  <p>
+    <a href="/simulators/">Simulators</a> &nbsp;·&nbsp;
+    <a href="/certify/seal/">Seal Tool</a> &nbsp;·&nbsp;
+    <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener">GitHub ↗</a> &nbsp;·&nbsp;
+    <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a>
+  </p>
 </footer>
 
 </body>
