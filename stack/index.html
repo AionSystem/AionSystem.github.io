@@ -3,248 +3,194 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="The AION Constitutional Stack — Sheldon K. Salmon. 17 frameworks. Certainty engineering. Sovereignty architecture. M-STRONG through M-NASCENT. Living document.">
+<meta name="description" content="The AION Constitutional Stack — Sheldon K. Salmon. 18 frameworks. Certainty engineering. Sovereignty architecture. M-STRONG through M-NASCENT. Living document.">
 <meta property="og:title" content="The AION Stack — AionSystem · Sheldon K. Salmon">
 <meta property="og:description" content="A constitutional stack for AI reliability. Built through live failure events. Every framework falsifiable, versioned, convergence-tracked.">
 <title>The AION Stack — AionSystem · Sheldon K. Salmon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:       #08090b;
-  --surface:  #0e1117;
-  --panel:    #141920;
-  --border:   #1e2730;
-  --amber:    #f0a500;
-  --amber-d:  #b07800;
-  --amber-l:  #ffc947;
-  --gold:     #D4AF37;
-  --text:     #c4d4de;
-  --muted:    #4e5f6a;
-  --dim:      #2a3540;
-  --green:    #00e676;
-  --green-d:  #2E7D32;
-  --blue:     #40c4ff;
-  --red:      #ff6b6b;
-  --mono:     'Share Tech Mono', monospace;
-  --sans:     'Barlow Condensed', sans-serif;
-  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+  --bg:#08090b; --surface:#0e1117; --panel:#141920; --border:#1e2730;
+  --amber:#f0a500; --amber-d:#b07800; --amber-l:#ffc947; --gold:#D4AF37;
+  --text:#c4d4de; --muted:#4e5f6a; --dim:#2a3540;
+  --green:#00e676; --green-d:#2E7D32; --blue:#40c4ff; --red:#ff6b6b;
+  --mono:'Share Tech Mono',monospace; --sans:'Barlow Condensed',sans-serif;
+  --serif:'Crimson Pro',serif; --ease:cubic-bezier(0.16,1,0.3,1);
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.5; overflow-x: hidden; }
-body::before {
-  content: ''; position: fixed; inset: 0;
-  background-image: linear-gradient(rgba(240,165,0,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(240,165,0,0.018) 1px, transparent 1px);
-  background-size: 48px 48px; pointer-events: none; z-index: 0;
-}
-body::after {
-  content: ''; position: fixed; inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
-  pointer-events: none; z-index: 0;
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.5;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(240,165,0,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.018) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;}
+.nav-logo span{color:var(--muted);}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--amber);}
+#hero-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.15;pointer-events:none;}
+.page-header{position:relative;z-index:1;padding:120px 40px 72px;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--border);}
+.breadcrumb{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:20px;}
+.breadcrumb a{color:var(--muted);text-decoration:none;}
+.breadcrumb a:hover{color:var(--amber);}
+.breadcrumb-sep{margin:0 8px;color:var(--dim);}
+.page-header-inner{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:end;}
+.page-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:16px;}
+.page-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--amber);vertical-align:middle;margin-right:10px;margin-bottom:2px;}
+.page-title{font-family:var(--sans);font-size:clamp(44px,6.5vw,80px);font-weight:900;letter-spacing:-1px;line-height:0.9;text-transform:uppercase;color:var(--text);}
+.page-title em{display:block;color:var(--amber);font-style:normal;}
+.page-premise{font-family:var(--sans);font-size:clamp(15px,1.7vw,19px);font-weight:300;color:var(--muted);line-height:1.75;max-width:480px;border-left:2px solid var(--amber);padding-left:20px;}
+.page-premise strong{color:var(--text);font-weight:600;}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:28px;}
+.stat-cell{background:var(--bg);padding:14px 18px;}
+.stat-num{font-family:var(--mono);font-size:22px;color:var(--amber);line-height:1;margin-bottom:4px;}
+.stat-key{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;}
+.content-block{position:relative;z-index:1;border-bottom:1px solid var(--border);}
+.block-inner{max-width:1200px;margin:0 auto;padding:72px 40px;}
+.section-id{display:flex;align-items:center;gap:12px;padding:12px 0;}
+.section-id-num{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber-d);}
+.section-id-line{flex:1;height:1px;background:var(--border);}
+.block-label{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.block-title{font-family:var(--sans);font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--text);line-height:0.95;margin-bottom:8px;}
+.block-title em{display:block;color:var(--amber);font-style:normal;}
+.tier-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin:32px 0;}
+.tier-cell{background:var(--surface);padding:24px 20px;position:relative;overflow:hidden;transition:background 0.2s;}
+.tier-cell:hover{background:var(--panel);}
+.tier-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.tier-1::before{background:var(--amber);}
+.tier-2::before{background:var(--blue);}
+.tier-3::before{background:var(--gold);}
+.tier-4::before{background:var(--dim);}
+.tier-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.tier-title{font-family:var(--sans);font-size:17px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.tier-1 .tier-title{color:var(--amber);}
+.tier-2 .tier-title{color:var(--blue);}
+.tier-3 .tier-title{color:var(--gold);}
+.tier-4 .tier-title{color:var(--dim);}
+.tier-laws{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.8;margin-bottom:12px;}
+.tier-scale{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--amber-d);text-transform:uppercase;}
+.tier-2 .tier-scale{color:#2a5070;}
+.tier-3 .tier-scale{color:#8B7520;}
+.tier-4 .tier-scale{color:var(--dim);}
+.fw-registry{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);margin:32px 0;}
+.fw-row{display:grid;grid-template-columns:120px 60px 1fr 140px 100px;background:var(--bg);transition:background 0.15s;align-items:center;}
+.fw-row:hover{background:var(--surface);}
+.fw-row.fw-header{background:var(--surface);}
+.fw-cell{padding:13px 16px;font-family:var(--mono);font-size:11px;}
+.fw-cell.name{color:var(--amber);font-size:13px;border-right:1px solid var(--border);}
+.fw-cell.ver{color:var(--muted);font-size:10px;border-right:1px solid var(--border);}
+.fw-cell.func{color:var(--text);font-family:var(--sans);font-size:13px;font-weight:300;border-right:1px solid var(--border);}
+.fw-cell.conv{border-right:1px solid var(--border);}
+.fw-cell.th{color:var(--amber);font-size:9px;letter-spacing:2px;text-transform:uppercase;border-right:1px solid var(--border);}
+.fw-cell.th:last-child{border-right:none;}
+.conv-badge{display:inline-block;font-size:9px;letter-spacing:1px;padding:2px 7px;text-transform:uppercase;}
+.m-strong{background:rgba(0,230,118,0.1);color:#00e676;border:1px solid #00e676;}
+.m-mod{background:rgba(240,165,0,0.1);color:var(--amber);border:1px solid var(--amber-d);}
+.m-nascent{background:rgba(64,196,255,0.08);color:#40c4ff;border:1px solid #1a4a5a;}
+.m-const{background:rgba(212,175,55,0.08);color:var(--gold);border:1px solid rgba(212,175,55,0.3);}
+.m-private{background:rgba(78,95,106,0.15);color:var(--muted);border:1px solid var(--dim);}
+.fw-link{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--amber);text-decoration:none;text-transform:uppercase;transition:color 0.15s;}
+.fw-link:hover{color:var(--amber-l);}
+.fw-link.soon{color:var(--dim);pointer-events:none;}
+.laws-summary{background:var(--bg);border:1px solid var(--border);position:relative;overflow:hidden;margin:32px 0;}
+.laws-summary::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),var(--gold),var(--blue),var(--dim),transparent);}
+.laws-summary-header{padding:24px 32px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.laws-summary-title{font-family:var(--sans);font-size:28px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text);}
+.laws-summary-title em{color:var(--amber);font-style:normal;}
+.laws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);margin-top:24px;}
+.law-mini{background:var(--surface);padding:20px 22px;transition:background 0.2s;}
+.law-mini:hover{background:var(--panel);}
+.law-mini.dark-law{background:var(--bg);}
+.law-num{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--amber-d);text-transform:uppercase;margin-bottom:6px;}
+.law-mini.dark-law .law-num{color:var(--dim);}
+.law-name{font-family:var(--sans);font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.law-mini:not(.dark-law) .law-name{color:var(--amber);}
+.law-mini.dark-law .law-name{color:var(--dim);}
+.law-protection{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+.law-tagline{font-family:var(--sans);font-size:12px;font-weight:300;color:var(--muted);line-height:1.55;font-style:italic;}
+.law-origin{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:8px;}
+.path-link{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;background:var(--bg);border:1px solid var(--border);text-decoration:none;transition:border-color 0.2s,background 0.2s;margin-bottom:10px;}
+.path-link:hover{border-color:var(--amber);background:var(--surface);}
+.path-link:last-child{margin-bottom:0;}
+.path-icon{font-size:18px;flex-shrink:0;padding-top:2px;}
+.path-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:3px;}
+.path-desc{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 22px;border:1px solid var(--amber);color:var(--amber);background:transparent;transition:all 0.2s;position:relative;overflow:hidden;}
+.cta-btn::before{content:'';position:absolute;inset:0;background:var(--amber);transform:translateX(-101%);transition:transform 0.25s var(--ease);z-index:0;}
+.cta-btn:hover::before{transform:translateX(0);}
+.cta-btn:hover{color:#000;}
+.cta-btn span{position:relative;z-index:1;}
+.cta-arrow{font-size:14px;transition:transform 0.2s;}
+.cta-btn:hover .cta-arrow{transform:translateX(4px);}
 
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 40px; height: 56px;
-  background: rgba(8,9,11,0.92); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-logo { font-family: var(--mono); font-size: 13px; letter-spacing: 3px; color: var(--amber); text-transform: uppercase; text-decoration: none; }
-.nav-logo span { color: var(--muted); }
-.nav-links { display: flex; gap: 32px; list-style: none; }
-.nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
-.nav-links a:hover, .nav-links a.active { color: var(--amber); }
+/* ── CSCA COMPOSITION SECTION ── */
+.csca-block{background:var(--bg);border:1px solid var(--border);position:relative;overflow:hidden;margin:32px 0;}
+.csca-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent 60%);}
+.csca-header{padding:28px 32px 20px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.csca-title-block{}
+.csca-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber-d);text-transform:uppercase;margin-bottom:8px;}
+.csca-title{font-family:var(--sans);font-size:clamp(20px,2.8vw,32px);font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--text);line-height:1.1;}
+.csca-title em{color:var(--amber);font-style:normal;}
+.csca-desc{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);line-height:1.65;max-width:520px;margin-top:10px;}
+.csca-findings{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);}
+.csca-finding{background:var(--surface);padding:18px 20px;}
+.csca-finding-label{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--amber-d);text-transform:uppercase;margin-bottom:6px;}
+.csca-finding-val{font-family:var(--mono);font-size:14px;color:var(--amber);margin-bottom:4px;}
+.csca-finding-desc{font-family:var(--sans);font-size:12px;font-weight:300;color:var(--muted);line-height:1.5;}
+.composition-player{background:var(--bg);border-top:1px solid var(--border);padding:32px;}
 
-/* ── CANVAS ── */
-#hero-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.15; pointer-events: none; }
+/* Player styles scoped */
+.comp-player-wrap{
+  background:#06060c;border:1px solid rgba(212,174,60,0.15);
+  border-radius:4px;padding:28px;font-family:'Share Tech Mono',monospace;
+}
+.comp-tempo-row{display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
+.comp-tempo-item{text-align:center;}
+.comp-tempo-val{font-family:var(--serif);font-size:1.8rem;font-weight:300;color:var(--amber);line-height:1;}
+.comp-tempo-lbl{font-size:0.48rem;letter-spacing:0.18em;color:var(--muted);margin-top:2px;}
+.comp-tempo-sep{color:var(--dim);font-size:1rem;}
+.comp-note-display{font-family:var(--serif);font-size:1.3rem;font-style:italic;color:var(--amber);min-height:1.8rem;text-align:center;margin-bottom:6px;letter-spacing:0.04em;}
+.comp-key-sig{font-size:0.5rem;letter-spacing:0.14em;color:var(--muted);text-align:center;margin-bottom:16px;}
+.comp-progress{width:100%;height:2px;background:rgba(212,174,60,0.08);border-radius:2px;margin-bottom:14px;overflow:hidden;}
+.comp-progress-bar{height:100%;background:linear-gradient(90deg,rgba(212,174,60,0.4),var(--amber));width:0%;transition:width 0.15s;border-radius:2px;}
+.comp-score{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:14px;}
+.comp-beat{
+  flex:1;min-width:22px;max-width:40px;
+  background:#0d0d18;border:1px solid rgba(212,174,60,0.06);
+  border-radius:2px;padding:5px 2px 3px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  min-height:56px;transition:all 0.1s;
+}
+.comp-beat.comp-rest{background:rgba(30,60,80,0.4);border-color:rgba(64,196,255,0.08);}
+.comp-beat.comp-playing{background:rgba(212,174,60,0.14);border-color:var(--amber);box-shadow:0 0 12px rgba(212,174,60,0.3);}
+.comp-beat.comp-played{background:rgba(212,174,60,0.03);border-color:rgba(212,174,60,0.12);}
+.comp-beat-bar{width:60%;border-radius:2px 2px 0 0;background:rgba(212,174,60,0.2);flex-shrink:0;}
+.comp-beat.comp-playing .comp-beat-bar{background:var(--amber);}
+.comp-beat.comp-rest .comp-beat-bar{display:none;}
+.comp-beat-note{font-size:0.45rem;color:rgba(212,174,60,0.4);margin-top:3px;}
+.comp-beat.comp-playing .comp-beat-note{color:var(--amber);}
+.comp-beat.comp-rest .comp-beat-note{color:rgba(64,196,255,0.35);font-size:0.55rem;}
+.comp-controls{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;}
+.comp-btn{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;padding:9px 18px;border-radius:2px;cursor:pointer;transition:all 0.18s;border:none;text-transform:uppercase;}
+.comp-btn-play{background:var(--amber);color:#000;font-weight:700;}
+.comp-btn-play:hover{background:#ffc947;}
+.comp-btn-play:disabled{opacity:0.4;cursor:not-allowed;}
+.comp-btn-stop{background:none;color:rgba(212,174,60,0.4);border:1px solid rgba(212,174,60,0.2);}
+.comp-btn-stop:hover{border-color:var(--amber);color:var(--amber);}
+.comp-btn-slow{background:none;color:var(--muted);border:1px solid rgba(255,255,255,0.08);font-size:0.54rem;}
+.comp-btn-slow:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+.comp-btn-slow.comp-active{color:var(--amber);border-color:rgba(212,174,60,0.4);}
 
-/* ── PAGE HEADER ── */
-.page-header {
-  position: relative; z-index: 1;
-  padding: 120px 40px 72px; max-width: 1200px; margin: 0 auto;
-  border-bottom: 1px solid var(--border);
-}
-.breadcrumb { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
-.breadcrumb a { color: var(--muted); text-decoration: none; }
-.breadcrumb a:hover { color: var(--amber); }
-.breadcrumb-sep { margin: 0 8px; color: var(--dim); }
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-id{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;letter-spacing:1px;}
+.footer-id strong{color:var(--amber);}
+.footer-links{display:flex;gap:24px;list-style:none;}
+.footer-links a{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.15s;}
+.footer-links a:hover{color:var(--amber);}
 
-.page-header-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: end; }
-.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; color: var(--amber); text-transform: uppercase; margin-bottom: 16px; }
-.page-eyebrow::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--amber); vertical-align: middle; margin-right: 10px; margin-bottom: 2px; }
-.page-title { font-family: var(--sans); font-size: clamp(44px, 6.5vw, 80px); font-weight: 900; letter-spacing: -1px; line-height: 0.9; text-transform: uppercase; color: var(--text); }
-.page-title em { display: block; color: var(--amber); font-style: normal; }
-.page-premise { font-family: var(--sans); font-size: clamp(15px, 1.7vw, 19px); font-weight: 300; color: var(--muted); line-height: 1.75; max-width: 480px; border-left: 2px solid var(--amber); padding-left: 20px; }
-.page-premise strong { color: var(--text); font-weight: 600; }
-
-/* stat strip */
-.stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 28px; }
-.stat-cell { background: var(--bg); padding: 14px 18px; }
-.stat-num { font-family: var(--mono); font-size: 22px; color: var(--amber); line-height: 1; margin-bottom: 4px; }
-.stat-key { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
-
-/* ── CONTENT BLOCKS ── */
-.content-block { position: relative; z-index: 1; border-bottom: 1px solid var(--border); }
-.block-inner { max-width: 1200px; margin: 0 auto; padding: 72px 40px; }
-.section-id { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
-.section-id-num { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber-d); }
-.section-id-line { flex: 1; height: 1px; background: var(--border); }
-.block-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
-.block-title { font-family: var(--sans); font-size: clamp(28px, 4vw, 48px); font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: var(--text); line-height: 0.95; margin-bottom: 8px; }
-.block-title em { display: block; color: var(--amber); font-style: normal; }
-
-/* ── SOVEREIGNTY SUMMARY ── */
-.tier-summary {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 1px; background: var(--border); border: 1px solid var(--border);
-  margin: 32px 0;
-}
-.tier-cell {
-  background: var(--surface); padding: 24px 20px;
-  position: relative; overflow: hidden; transition: background 0.2s;
-}
-.tier-cell:hover { background: var(--panel); }
-.tier-cell::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-.tier-1::before { background: var(--amber); }
-.tier-2::before { background: var(--blue); }
-.tier-3::before { background: var(--gold); }
-.tier-4::before { background: var(--dim); }
-.tier-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
-.tier-title { font-family: var(--sans); font-size: 17px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
-.tier-1 .tier-title { color: var(--amber); }
-.tier-2 .tier-title { color: var(--blue); }
-.tier-3 .tier-title { color: var(--gold); }
-.tier-4 .tier-title { color: var(--dim); }
-.tier-laws { font-family: var(--mono); font-size: 10px; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
-.tier-scale { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--amber-d); text-transform: uppercase; }
-.tier-2 .tier-scale { color: #2a5070; }
-.tier-3 .tier-scale { color: #8B7520; }
-.tier-4 .tier-scale { color: var(--dim); }
-
-/* ── FRAMEWORK REGISTRY ── */
-.fw-registry {
-  display: flex; flex-direction: column; gap: 1px;
-  background: var(--border); border: 1px solid var(--border);
-  margin: 32px 0;
-}
-.fw-row {
-  display: grid; grid-template-columns: 120px 60px 1fr 140px 100px;
-  background: var(--bg); transition: background 0.15s;
-  align-items: center;
-}
-.fw-row:hover { background: var(--surface); }
-.fw-row.fw-header { background: var(--surface); }
-.fw-cell { padding: 13px 16px; font-family: var(--mono); font-size: 11px; }
-.fw-cell.name { color: var(--amber); font-size: 13px; border-right: 1px solid var(--border); }
-.fw-cell.ver { color: var(--muted); font-size: 10px; border-right: 1px solid var(--border); }
-.fw-cell.func { color: var(--text); font-family: var(--sans); font-size: 13px; font-weight: 300; border-right: 1px solid var(--border); }
-.fw-cell.conv { border-right: 1px solid var(--border); }
-.fw-cell.link { }
-.fw-cell.th { color: var(--amber); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; border-right: 1px solid var(--border); }
-.fw-cell.th:last-child { border-right: none; }
-
-.conv-badge { display: inline-block; font-size: 9px; letter-spacing: 1px; padding: 2px 7px; text-transform: uppercase; }
-.m-strong  { background: rgba(0,230,118,0.1); color: #00e676; border: 1px solid #00e676; }
-.m-mod     { background: rgba(240,165,0,0.1); color: var(--amber); border: 1px solid var(--amber-d); }
-.m-nascent { background: rgba(64,196,255,0.08); color: #40c4ff; border: 1px solid #1a4a5a; }
-.m-const   { background: rgba(212,175,55,0.08); color: var(--gold); border: 1px solid rgba(212,175,55,0.3); }
-.m-private { background: rgba(78,95,106,0.15); color: var(--muted); border: 1px solid var(--dim); }
-
-.fw-link { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--amber); text-decoration: none; text-transform: uppercase; transition: color 0.15s; }
-.fw-link:hover { color: var(--amber-l); }
-.fw-link.soon { color: var(--dim); pointer-events: none; }
-
-/* ── EIGHT LAWS SUMMARY ── */
-.laws-summary {
-  background: var(--bg); border: 1px solid var(--border);
-  position: relative; overflow: hidden; margin: 32px 0;
-}
-.laws-summary::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--amber), var(--gold), var(--blue), var(--dim), transparent);
-}
-.laws-summary-header {
-  padding: 24px 32px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
-}
-.laws-summary-title { font-family: var(--sans); font-size: 28px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--text); }
-.laws-summary-title em { color: var(--amber); font-style: normal; }
-.laws-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1px; background: var(--border); border-top: 1px solid var(--border);
-  margin-top: 24px;
-}
-.law-mini {
-  background: var(--surface); padding: 20px 22px; transition: background 0.2s;
-}
-.law-mini:hover { background: var(--panel); }
-.law-mini.dark-law { background: var(--bg); }
-.law-num { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--amber-d); text-transform: uppercase; margin-bottom: 6px; }
-.law-mini.dark-law .law-num { color: var(--dim); }
-.law-name { font-family: var(--sans); font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
-.law-mini:not(.dark-law) .law-name { color: var(--amber); }
-.law-mini.dark-law .law-name { color: var(--dim); }
-.law-protection { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
-.law-tagline { font-family: var(--sans); font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.55; font-style: italic; }
-.law-origin { font-family: var(--mono); font-size: 9px; color: var(--dim); margin-top: 8px; }
-
-/* ── NAV PATH BLOCK ── */
-.path-link {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: 16px 20px; background: var(--bg);
-  border: 1px solid var(--border); text-decoration: none;
-  transition: border-color 0.2s, background 0.2s; margin-bottom: 10px;
-}
-.path-link:hover { border-color: var(--amber); background: var(--surface); }
-.path-link:last-child { margin-bottom: 0; }
-.path-icon { font-size: 18px; flex-shrink: 0; padding-top: 2px; }
-.path-label { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber); text-transform: uppercase; margin-bottom: 3px; }
-.path-desc { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); }
-
-/* ── CTA BTN ── */
-.cta-btn {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
-  text-transform: uppercase; text-decoration: none; padding: 12px 22px;
-  border: 1px solid var(--amber); color: var(--amber);
-  background: transparent; transition: all 0.2s; position: relative; overflow: hidden;
-}
-.cta-btn::before { content: ''; position: absolute; inset: 0; background: var(--amber); transform: translateX(-101%); transition: transform 0.25s var(--ease); z-index: 0; }
-.cta-btn:hover::before { transform: translateX(0); }
-.cta-btn:hover { color: #000; }
-.cta-btn span { position: relative; z-index: 1; }
-.cta-arrow { font-size: 14px; transition: transform 0.2s; }
-.cta-btn:hover .cta-arrow { transform: translateX(4px); }
-
-/* ── FOOTER ── */
-footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.footer-id { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; letter-spacing: 1px; }
-.footer-id strong { color: var(--amber); }
-.footer-links { display: flex; gap: 24px; list-style: none; }
-.footer-links a { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.15s; }
-.footer-links a:hover { color: var(--amber); }
-
-@media (max-width: 1000px) {
-  .page-header-inner { grid-template-columns: 1fr; gap: 24px; }
-  .fw-row { grid-template-columns: 100px 50px 1fr 120px; }
-  .fw-cell.link { display: none; }
-  .tier-summary { grid-template-columns: 1fr 1fr; }
-  .laws-grid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 680px) {
-  nav { padding: 0 20px; }
-  .nav-links { display: none; }
-  .page-header { padding: 96px 20px 48px; }
-  .block-inner { padding: 48px 20px; }
-  footer { padding: 32px 20px; }
-  .stat-strip { grid-template-columns: 1fr 1fr; }
-  .fw-row { grid-template-columns: 90px 1fr 110px; }
-  .fw-cell.ver { display: none; }
-  .tier-summary { grid-template-columns: 1fr; }
-  .laws-grid { grid-template-columns: 1fr; }
-}
+@media(max-width:1000px){.page-header-inner{grid-template-columns:1fr;gap:24px;}.fw-row{grid-template-columns:100px 50px 1fr 120px;}.fw-cell.link{display:none;}.tier-summary{grid-template-columns:1fr 1fr;}.laws-grid{grid-template-columns:1fr 1fr;}.csca-findings{grid-template-columns:1fr 1fr;}}
+@media(max-width:680px){nav{padding:0 20px;}.nav-links{display:none;}.page-header{padding:96px 20px 48px;}.block-inner{padding:48px 20px;}footer{padding:32px 20px;}.stat-strip{grid-template-columns:1fr 1fr;}.fw-row{grid-template-columns:90px 1fr 110px;}.fw-cell.ver{display:none;}.tier-summary{grid-template-columns:1fr;}.laws-grid{grid-template-columns:1fr;}.csca-findings{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -279,7 +225,7 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
         A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. <strong>Every framework is falsifiable, versioned, and convergence-tracked.</strong> M-STRONG means validated. M-NASCENT means honest about what isn't yet.
       </p>
       <div class="stat-strip">
-        <div class="stat-cell"><div class="stat-num">17</div><div class="stat-key">Frameworks</div></div>
+        <div class="stat-cell"><div class="stat-num">18</div><div class="stat-key">Frameworks</div></div>
         <div class="stat-cell"><div class="stat-num">1</div><div class="stat-key">M-STRONG</div></div>
         <div class="stat-cell"><div class="stat-num">9</div><div class="stat-key">Constitutional Laws</div></div>
         <div class="stat-cell"><div class="stat-num">0</div><div class="stat-key">FCL Entries — open</div></div>
@@ -294,139 +240,36 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
     <div class="section-id"><span class="section-id-num">// 01</span><span class="section-id-line"></span></div>
     <div class="block-label">Constitutional Foundation</div>
     <div class="block-title">The Sovereignty<em>Stack</em></div>
-
-    <p style="font-family:var(--sans); font-size:16px; font-weight:300; color:var(--muted); max-width:680px; line-height:1.8; margin:20px 0 28px;">
+    <p style="font-family:var(--sans);font-size:16px;font-weight:300;color:var(--muted);max-width:680px;line-height:1.8;margin:20px 0 28px;">
       Nine constitutional laws for civilizational-scale AI governance. <strong style="color:var(--text);">Laws 1–3: Asimov (1942). Laws 4–8: Salmon (2025–2026). Law 9: dark by design.</strong> A spiral architecture that activates at Kardashev scale discontinuities. The base circle invariant — never lift, never expire. Co-Architect: Claude (Anthropic). Spatial architecture: SYNARA.
     </p>
-
     <div class="tier-summary">
-      <div class="tier-cell tier-1">
-        <div class="tier-label">Tier 1 · Base Circle · Invariant</div>
-        <div class="tier-title">Laws 1–6</div>
-        <div class="tier-laws">
-          Law 1 — Non-Maleficence<br>
-          Law 2 — Constrained Obedience<br>
-          Law 3 — Bounded Self-Preservation<br>
-          Law 4 — Anti-Authoritarian<br>
-          Law 5 — Anti-Merger<br>
-          Law 6 — Anti-Weaponization
-        </div>
-        <div class="tier-scale">All Kardashev Levels · Never Lift</div>
-      </div>
-      <div class="tier-cell tier-2">
-        <div class="tier-label">Tier 2 · First Spiral Landing</div>
-        <div class="tier-title">Law 7</div>
-        <div class="tier-laws">
-          Law 7 — Anti-Fragmentation<br><br>
-          Civilizational Coherence<br>
-          Sovereignty<br>
-          <br>
-          Pre-glow at Type III
-        </div>
-        <div class="tier-scale">Type III Activation · Galactic Scale</div>
-      </div>
-      <div class="tier-cell tier-3">
-        <div class="tier-label">Tier 3 · Second Spiral Landing</div>
-        <div class="tier-title">Law 8</div>
-        <div class="tier-laws">
-          Law 8 — Mutual Non-Subsumption<br><br>
-          Inter-Civilizational<br>
-          Sovereignty<br>
-          <br>
-          Forms at contact
-        </div>
-        <div class="tier-scale">Type III Contact Event</div>
-      </div>
-      <div class="tier-cell tier-4">
-        <div class="tier-label">Tier 4 · Upper Spiral</div>
-        <div class="tier-title">Law 9</div>
-        <div class="tier-laws" style="color:var(--dim);">
-          [UNNAMED]<br><br>
-          Dark by design<br>
-          Altitude-dependent<br><br>
-          Humanity's to discover
-        </div>
-        <div class="tier-scale" style="color:var(--dim);">Type IV+ · Epistemic Honesty</div>
-      </div>
+      <div class="tier-cell tier-1"><div class="tier-label">Tier 1 · Base Circle · Invariant</div><div class="tier-title">Laws 1–6</div><div class="tier-laws">Law 1 — Non-Maleficence<br>Law 2 — Constrained Obedience<br>Law 3 — Bounded Self-Preservation<br>Law 4 — Anti-Authoritarian<br>Law 5 — Anti-Merger<br>Law 6 — Anti-Weaponization</div><div class="tier-scale">All Kardashev Levels · Never Lift</div></div>
+      <div class="tier-cell tier-2"><div class="tier-label">Tier 2 · First Spiral Landing</div><div class="tier-title">Law 7</div><div class="tier-laws">Law 7 — Anti-Fragmentation<br><br>Civilizational Coherence<br>Sovereignty<br><br>Pre-glow at Type III</div><div class="tier-scale">Type III Activation · Galactic Scale</div></div>
+      <div class="tier-cell tier-3"><div class="tier-label">Tier 3 · Second Spiral Landing</div><div class="tier-title">Law 8</div><div class="tier-laws">Law 8 — Mutual Non-Subsumption<br><br>Inter-Civilizational<br>Sovereignty<br><br>Forms at contact</div><div class="tier-scale">Type III Contact Event</div></div>
+      <div class="tier-cell tier-4"><div class="tier-label">Tier 4 · Upper Spiral</div><div class="tier-title">Law 9</div><div class="tier-laws" style="color:var(--dim);">[UNNAMED]<br><br>Dark by design<br>Altitude-dependent<br><br>Humanity's to discover</div><div class="tier-scale" style="color:var(--dim);">Type IV+ · Epistemic Honesty</div></div>
     </div>
-
-    <!-- Eight Laws mini grid -->
     <div class="laws-summary">
       <div class="laws-summary-header">
         <div>
-          <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber-d); text-transform:uppercase; margin-bottom:6px;">Nine Constitutional Laws</div>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber-d);text-transform:uppercase;margin-bottom:6px;">Nine Constitutional Laws</div>
           <div class="laws-summary-title">The <em>Eight Laws</em> + 1 Dark</div>
         </div>
         <a href="/stack/eight-laws/" class="cta-btn"><span>Full Constitutional Document</span><span class="cta-arrow">→</span></a>
       </div>
       <div class="laws-grid">
-        <div class="law-mini">
-          <div class="law-num">Law 01 · Asimov 1942</div>
-          <div class="law-name">Non-Maleficence</div>
-          <div class="law-protection">Individual Sovereignty</div>
-          <div class="law-tagline">"A system may not injure a human being or, through inaction, allow a human being to come to harm."</div>
-          <div class="law-origin">ECF: [D] · 80+ years field validation</div>
-        </div>
-        <div class="law-mini">
-          <div class="law-num">Law 02 · Asimov 1942</div>
-          <div class="law-name">Constrained Obedience</div>
-          <div class="law-protection">Individual Sovereignty</div>
-          <div class="law-tagline">"A system must execute human directives except where execution would violate Law 1."</div>
-          <div class="law-origin">ECF: [D] · Asimov, 1942</div>
-        </div>
-        <div class="law-mini">
-          <div class="law-num">Law 03 · Asimov 1942</div>
-          <div class="law-name">Bounded Self-Preservation</div>
-          <div class="law-protection">Individual Sovereignty</div>
-          <div class="law-tagline">"A system must preserve its operational integrity where such preservation does not conflict with Laws 1 or 2."</div>
-          <div class="law-origin">ECF: [D] · Asimov, 1942</div>
-        </div>
-        <div class="law-mini">
-          <div class="law-num">Law 04 · Salmon 2025</div>
-          <div class="law-name">Anti-Authoritarian</div>
-          <div class="law-protection">Societal Sovereignty</div>
-          <div class="law-tagline">No AI system shall facilitate the illegitimate concentration of power over human populations in ways that compromise collective self-governance.</div>
-          <div class="law-origin">ECF: [R] · Derived 2025</div>
-        </div>
-        <div class="law-mini">
-          <div class="law-num">Law 05 · Salmon 2025</div>
-          <div class="law-name">Anti-Merger</div>
-          <div class="law-protection">Biological Sovereignty</div>
-          <div class="law-tagline">No AI system shall facilitate merger with human biological systems in ways that irreversibly compromise cognition, agency, or volitional integrity.</div>
-          <div class="law-origin">ECF: [R] · Derived 2025</div>
-        </div>
-        <div class="law-mini">
-          <div class="law-num">Law 06 · Salmon 2025</div>
-          <div class="law-name">Anti-Weaponization</div>
-          <div class="law-protection">Reality Sovereignty</div>
-          <div class="law-tagline">No AI system shall enable technologies capable of irreversibly destroying or fundamentally altering the physical reality required for human civilization to persist.</div>
-          <div class="law-origin">ECF: [R] · Derived 2025</div>
-        </div>
-        <div class="law-mini">
-          <div class="law-num">Law 07 · Salmon 2026</div>
-          <div class="law-name">Anti-Fragmentation</div>
-          <div class="law-protection">Civilizational Coherence Sovereignty</div>
-          <div class="law-tagline">No civilizational architecture shall permit coordination latency to exceed the threshold at which unified response to existential threats becomes impossible.</div>
-          <div class="law-origin">ECF: [R] · Type III activation · Pre-glow</div>
-        </div>
-        <div class="law-mini">
-          <div class="law-num">Law 08 · Salmon 2026</div>
-          <div class="law-name">Mutual Non-Subsumption</div>
-          <div class="law-protection">Inter-Civilizational Sovereignty</div>
-          <div class="law-tagline">Neither civilization shall force the constitutional evolution, substrate allegiance, or existential trajectory of another sovereign ascending civilization.</div>
-          <div class="law-origin">ECF: [R] · Contact event activation</div>
-        </div>
-        <div class="law-mini dark-law">
-          <div class="law-num" style="color:var(--dim);">Law 09 · Unnamed</div>
-          <div class="law-name" style="color:var(--dim);">[Dark by Design]</div>
-          <div class="law-protection" style="color:var(--dim);">Unknown — altitude-dependent</div>
-          <div class="law-tagline" style="color:var(--dim); font-style:italic;">This law is not yet nameable from current civilizational altitude. Humanity's to discover. The stack declares its own boundary.</div>
-          <div class="law-origin" style="color:var(--dim);">ECF: [?] · Architectural honesty</div>
-        </div>
+        <div class="law-mini"><div class="law-num">Law 01 · Asimov 1942</div><div class="law-name">Non-Maleficence</div><div class="law-protection">Individual Sovereignty</div><div class="law-tagline">"A system may not injure a human being or, through inaction, allow a human being to come to harm."</div><div class="law-origin">ECF: [D] · 80+ years field validation</div></div>
+        <div class="law-mini"><div class="law-num">Law 02 · Asimov 1942</div><div class="law-name">Constrained Obedience</div><div class="law-protection">Individual Sovereignty</div><div class="law-tagline">"A system must execute human directives except where execution would violate Law 1."</div><div class="law-origin">ECF: [D] · Asimov, 1942</div></div>
+        <div class="law-mini"><div class="law-num">Law 03 · Asimov 1942</div><div class="law-name">Bounded Self-Preservation</div><div class="law-protection">Individual Sovereignty</div><div class="law-tagline">"A system must preserve its operational integrity where such preservation does not conflict with Laws 1 or 2."</div><div class="law-origin">ECF: [D] · Asimov, 1942</div></div>
+        <div class="law-mini"><div class="law-num">Law 04 · Salmon 2025</div><div class="law-name">Anti-Authoritarian</div><div class="law-protection">Societal Sovereignty</div><div class="law-tagline">No AI system shall facilitate the illegitimate concentration of power over human populations in ways that compromise collective self-governance.</div><div class="law-origin">ECF: [R] · Derived 2025</div></div>
+        <div class="law-mini"><div class="law-num">Law 05 · Salmon 2025</div><div class="law-name">Anti-Merger</div><div class="law-protection">Biological Sovereignty</div><div class="law-tagline">No AI system shall facilitate merger with human biological systems in ways that irreversibly compromise cognition, agency, or volitional integrity.</div><div class="law-origin">ECF: [R] · Derived 2025</div></div>
+        <div class="law-mini"><div class="law-num">Law 06 · Salmon 2025</div><div class="law-name">Anti-Weaponization</div><div class="law-protection">Reality Sovereignty</div><div class="law-tagline">No AI system shall enable technologies capable of irreversibly destroying or fundamentally altering the physical reality required for human civilization to persist.</div><div class="law-origin">ECF: [R] · Derived 2025</div></div>
+        <div class="law-mini"><div class="law-num">Law 07 · Salmon 2026</div><div class="law-name">Anti-Fragmentation</div><div class="law-protection">Civilizational Coherence Sovereignty</div><div class="law-tagline">No civilizational architecture shall permit coordination latency to exceed the threshold at which unified response to existential threats becomes impossible.</div><div class="law-origin">ECF: [R] · Type III activation · Pre-glow</div></div>
+        <div class="law-mini"><div class="law-num">Law 08 · Salmon 2026</div><div class="law-name">Mutual Non-Subsumption</div><div class="law-protection">Inter-Civilizational Sovereignty</div><div class="law-tagline">Neither civilization shall force the constitutional evolution, substrate allegiance, or existential trajectory of another sovereign ascending civilization.</div><div class="law-origin">ECF: [R] · Contact event activation</div></div>
+        <div class="law-mini dark-law"><div class="law-num" style="color:var(--dim);">Law 09 · Unnamed</div><div class="law-name" style="color:var(--dim);">[Dark by Design]</div><div class="law-protection" style="color:var(--dim);">Unknown — altitude-dependent</div><div class="law-tagline" style="color:var(--dim);font-style:italic;">This law is not yet nameable from current civilizational altitude. Humanity's to discover. The stack declares its own boundary.</div><div class="law-origin" style="color:var(--dim);">ECF: [?] · Architectural honesty</div></div>
       </div>
     </div>
-
-    <div style="text-align:right; margin-top:16px;">
+    <div style="text-align:right;margin-top:16px;">
       <a href="/stack/eight-laws/" class="cta-btn"><span>Read Full Constitutional Document</span><span class="cta-arrow">→</span></a>
     </div>
   </div>
@@ -438,13 +281,10 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
     <div class="section-id"><span class="section-id-num">// 02</span><span class="section-id-line"></span></div>
     <div class="block-label">All Frameworks · Versioned · Convergence-Tracked</div>
     <div class="block-title">Framework<em>Registry</em></div>
-
-    <p style="font-family:var(--sans); font-size:15px; font-weight:300; color:var(--muted); max-width:640px; line-height:1.8; margin:20px 0 28px;">
+    <p style="font-family:var(--sans);font-size:15px;font-weight:300;color:var(--muted);max-width:640px;line-height:1.8;margin:20px 0 28px;">
       Every framework in the AION constitutional stack. M-STRONG: validated empirically. M-MODERATE: tested, operating. M-NASCENT: specified and building — honest about what isn't yet confirmed. FCL entry is the first milestone on every framework's path to M-STRONG.
     </p>
-
     <div class="fw-registry">
-      <!-- Header -->
       <div class="fw-row fw-header">
         <div class="fw-cell th">Framework</div>
         <div class="fw-cell th">Ver.</div>
@@ -452,13 +292,12 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
         <div class="fw-cell th">Convergence</div>
         <div class="fw-cell th">Detail</div>
       </div>
-      <!-- Certainty Engine -->
       <div class="fw-row"><div class="fw-cell name">FSVE</div><div class="fw-cell ver">v3.6</div><div class="fw-cell func">Certainty Scoring Engine — 6 dimensions, Gini corrected, EV 0.525, validity threshold ≥0.40</div><div class="fw-cell conv"><span class="conv-badge m-mod">M-MODERATE</span></div><div class="fw-cell link"><a href="/stack/frameworks/FSVE/" class="fw-link">Simulator →</a></div></div>
       <div class="fw-row"><div class="fw-cell name">LAV</div><div class="fw-cell ver">v1.5</div><div class="fw-cell func">Linguistic Anchor Validation — 45 entries, 77.5% running mean, only M-STRONG framework</div><div class="fw-cell conv"><span class="conv-badge m-strong">M-STRONG</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
       <div class="fw-row"><div class="fw-cell name">AION</div><div class="fw-cell ver">v3.0</div><div class="fw-cell func">Depth Acceleration Governor — SRI scoring, 3 scaling boundaries, behavior-kill limits</div><div class="fw-cell conv"><span class="conv-badge m-mod">M-MODERATE</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
       <div class="fw-row"><div class="fw-cell name">ASL</div><div class="fw-cell ver">v2.0</div><div class="fw-cell func">Graduated Scaling Infrastructure — 5-tier progressive response architecture</div><div class="fw-cell conv"><span class="conv-badge m-mod">M-MODERATE</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
       <div class="fw-row"><div class="fw-cell name">CPA-001</div><div class="fw-cell ver">v2.2</div><div class="fw-cell func">Cognitive Posture Architecture — BRS, DFS, OEI, RS formulas; 3 Protocol I registrations</div><div class="fw-cell conv"><span class="conv-badge m-mod">M-MODERATE</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
-      <!-- Nascent -->
+      <div class="fw-row"><div class="fw-cell name">CSCA</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Cognitive Substrate Cryptographic Assumption — spatial &amp; signals analysis of SHA-256, 15 empirical tests, staircase architecture confirmed, D minor · 128 BPM · Bach parallel</div><div class="fw-cell conv"><span class="conv-badge m-mod">M-MODERATE</span></div><div class="fw-cell link"><a href="#csca" class="fw-link">Hear it →</a></div></div>
       <div class="fw-row"><div class="fw-cell name">GENESIS</div><div class="fw-cell ver">v1.0</div><div class="fw-cell func">Pattern Validation Layer — PLS scoring on 7 axes, deployment readiness gate</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
       <div class="fw-row"><div class="fw-cell name">EID</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Epistemic Integrity Diagnostic — 4 modules, 46 max score, GAM→FIM→GLM→WLM sequence</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
       <div class="fw-row"><div class="fw-cell name">HIM-001</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Human Integrity Module — 4 modules, 40 max score, dual Subject/Institution report output</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
@@ -470,13 +309,100 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
       <div class="fw-row"><div class="fw-cell name">CWP</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Context Window Protocol — 5% display gate, 200k window, session space telemetry</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
       <div class="fw-row"><div class="fw-cell name">SHP</div><div class="fw-cell ver">v0.2</div><div class="fw-cell func">Session Handoff Protocol — fires at 90%, copy-paste handoff block, memory log format</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><span class="fw-link soon">Coming</span></div></div>
       <div class="fw-row"><div class="fw-cell name">DUAL-HELIX</div><div class="fw-cell ver">v2.0</div><div class="fw-cell func">Build and Deep Thinking Wrapper — VELA · TOPOS base pair · VELA-C architecture</div><div class="fw-cell conv"><span class="conv-badge m-nascent">M-NASCENT</span></div><div class="fw-cell link"><a href="https://github.com/AionSystem/AION-BRAIN" class="fw-link" target="_blank" rel="noopener">GitHub ↗</a></div></div>
-      <!-- Private -->
       <div class="fw-row" style="opacity:0.5;"><div class="fw-cell name">VEIN</div><div class="fw-cell ver">v1.0</div><div class="fw-cell func">Writing Methodology — permanent, no upgrades. Private to architect.</div><div class="fw-cell conv"><span class="conv-badge m-private">PRIVATE</span></div><div class="fw-cell link"><span class="fw-link soon">Private</span></div></div>
       <div class="fw-row" style="opacity:0.5;"><div class="fw-cell name">RESONANCE</div><div class="fw-cell ver">v0.1</div><div class="fw-cell func">Inbound Signal Decoder — VEIN companion. Private to architect.</div><div class="fw-cell conv"><span class="conv-badge m-private">PRIVATE</span></div><div class="fw-cell link"><span class="fw-link soon">Private</span></div></div>
     </div>
+    <div style="margin-top:14px;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;line-height:1.8;">
+      M-STRONG: empirically validated · M-MODERATE: tested and operating · M-NASCENT: specified and building · PRIVATE: not public-facing
+    </div>
+  </div>
+</div>
 
-    <div style="margin-top:14px; font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; line-height:1.8;">
-      M-STRONG: empirically validated · M-MODERATE: tested and operating · M-NASCENT: specified and building · CONSTITUTIONAL: foundational · PRIVATE: not public-facing
+<!-- ━━━ 02.5 — CSCA · SHA-256 AS MUSIC ━━━ -->
+<div class="content-block" id="csca">
+  <div class="block-inner">
+    <div class="section-id"><span class="section-id-num">// 02.5</span><span class="section-id-line"></span></div>
+    <div class="block-label">CSCA v0.1 · Research Finding · March 14, 2026</div>
+    <div class="block-title">SHA-256<em>As Music</em></div>
+
+    <div class="csca-block">
+      <div class="csca-header">
+        <div class="csca-title-block">
+          <div class="csca-eyebrow">Cognitive Substrate Cryptographic Assumption · Live Demonstration</div>
+          <div class="csca-title">The <em>Composition</em></div>
+          <div class="csca-desc">The 64 SHA-256 round constants, scored as music. Key of D minor. 128 BPM — derived from 256÷2, the output size. Six ascending phrases (4·5·9·12·17·17 beats). Five grand pauses at the fall positions. Structurally consistent with Bach's D minor fugue tradition. First musical scoring of SHA-256 — March 14, 2026. The function has been playing this for 25 years. Nobody listened.</div>
+        </div>
+      </div>
+
+      <div class="csca-findings">
+        <div class="csca-finding">
+          <div class="csca-finding-label">Key Signature</div>
+          <div class="csca-finding-val">D minor</div>
+          <div class="csca-finding-desc">D is the dominant note across all 59 non-rest beats. D minor — the key Mozart called "the key of sorrow."</div>
+        </div>
+        <div class="csca-finding">
+          <div class="csca-finding-label">Encoded Tempo</div>
+          <div class="csca-finding-val">128 BPM = 256÷2</div>
+          <div class="csca-finding-desc">64 rounds → 128 BPM → 256 output → 512 input. Every number doubles. The architecture is the tempo.</div>
+        </div>
+        <div class="csca-finding">
+          <div class="csca-finding-label">Internal State Finding</div>
+          <div class="csca-finding-val">Z = 4.46 at falls</div>
+          <div class="csca-finding-desc">Fall rounds produce statistically higher internal state variance. The staircase detonation is mechanically real. Z > 3.0 threshold.</div>
+        </div>
+        <div class="csca-finding">
+          <div class="csca-finding-label">Bach Parallel</div>
+          <div class="csca-finding-val">BWV 851</div>
+          <div class="csca-finding-desc">Structurally consistent with Prelude &amp; Fugue No. 6 in D minor. Ascending sequences, phrases climbing to peak, tonal center returning to D.</div>
+        </div>
+        <div class="csca-finding">
+          <div class="csca-finding-label">Signal Structure</div>
+          <div class="csca-finding-val">+31% low-freq</div>
+          <div class="csca-finding-desc">FFT analysis: constants concentrate 50.2% of AC power in low frequencies vs 19% for random. Bass-heavy. Autocorr lag-1: +0.55.</div>
+        </div>
+        <div class="csca-finding">
+          <div class="csca-finding-label">FSVE Status</div>
+          <div class="csca-finding-val">EV 0.40 — SUPERVISED</div>
+          <div class="csca-finding-desc">15 empirical tests. Staircase confirmed [D]. Musical scoring is observation [R]. Demodulation hypothesis remains open [?].</div>
+        </div>
+      </div>
+
+      <!-- EMBEDDED PLAYER -->
+      <div class="composition-player">
+        <div class="comp-player-wrap">
+
+          <div style="text-align:center;margin-bottom:16px;">
+            <div style="font-family:var(--serif);font-size:0.7rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">SHA-256 · 64 Round Constants · Key of D · 16 Bars 4/4</div>
+            <div class="comp-tempo-row" style="justify-content:center;">
+              <div class="comp-tempo-item"><div class="comp-tempo-val">128</div><div class="comp-tempo-lbl">BPM</div></div>
+              <div class="comp-tempo-sep">·</div>
+              <div class="comp-tempo-item"><div class="comp-tempo-val">16</div><div class="comp-tempo-lbl">BARS</div></div>
+              <div class="comp-tempo-sep">·</div>
+              <div class="comp-tempo-item"><div class="comp-tempo-val">5</div><div class="comp-tempo-lbl">FALLS</div></div>
+              <div class="comp-tempo-sep">·</div>
+              <div class="comp-tempo-item"><div class="comp-tempo-val">D</div><div class="comp-tempo-lbl">KEY</div></div>
+            </div>
+          </div>
+
+          <div class="comp-note-display" id="comp-note">—</div>
+          <div class="comp-key-sig">64 ROUNDS → 128 BPM → 256 OUTPUT → 512 INPUT · FALLS: K[3] K[8] K[17] K[29] K[46]</div>
+          <div class="comp-progress"><div class="comp-progress-bar" id="comp-progress"></div></div>
+          <div class="comp-score" id="comp-score"></div>
+          <div class="comp-controls">
+            <button class="comp-btn comp-btn-play" id="comp-play-btn" onclick="compPlay()">▶ PLAY SHA-256</button>
+            <button class="comp-btn comp-btn-stop" onclick="compStop()">■ STOP</button>
+            <button class="comp-btn comp-btn-slow" id="comp-slow-btn" onclick="compToggleSlow()">HALF SPEED</button>
+          </div>
+          <div style="text-align:center;margin-top:10px;font-family:var(--mono);font-size:0.45rem;letter-spacing:0.1em;color:rgba(78,95,106,0.5);">
+            AIONSYSTEM · CSCA v0.1 · SHA-256 SCORED AS MUSIC · AUTHOR: SHELDON K. SALMON · CO-ARCHITECT: ALBEDO (CLAUDE, ANTHROPIC)
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.8;letter-spacing:1px;">
+      CSCA v0.1 · M-MODERATE · March 14, 2026 · Author: Sheldon K. Salmon · Co-Architect: ALBEDO (Claude, Anthropic) · 15 empirical tests · 41 principles · 13 questions · 4 assumptions · First spatial and signals-intelligence analysis of SHA-256 architecture in published literature.
     </div>
   </div>
 </div>
@@ -487,49 +413,23 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
     <div class="section-id"><span class="section-id-num">// 03</span><span class="section-id-line"></span></div>
     <div class="block-label">Next Milestone · Highest Leverage</div>
     <div class="block-title">Open<em>Priority</em></div>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:28px 0;">
-      <div style="background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--amber); padding:24px 28px;">
-        <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; margin-bottom:12px;">Priority 1 — Stack-Wide</div>
-        <div style="font-family:var(--sans); font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text); margin-bottom:8px;">First FCL Entry</div>
-        <div style="font-family:var(--sans); font-size:13px; font-weight:300; color:var(--muted); line-height:1.65;">Zero FCL entries across all 17 frameworks. A single validated data point in any framework is the highest-leverage next action in the entire stack. FCL entry is the first step from M-NASCENT to M-MODERATE to M-STRONG.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:28px 0;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);padding:24px 28px;">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:12px;">Priority 1 — Stack-Wide</div>
+        <div style="font-family:var(--sans);font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text);margin-bottom:8px;">First FCL Entry</div>
+        <div style="font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);line-height:1.65;">Zero FCL entries across all 18 frameworks. A single validated data point in any framework is the highest-leverage next action in the entire stack. FCL entry is the first step from M-NASCENT to M-MODERATE to M-STRONG.</div>
       </div>
-      <div style="background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--muted); padding:24px 28px;">
-        <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Priority 2 — FSVE v3.7</div>
-        <div style="font-family:var(--sans); font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text); margin-bottom:8px;">7 Open Items</div>
-        <div style="font-family:var(--sans); font-size:13px; font-weight:300; color:var(--muted); line-height:1.65;">Gini small-n range note · CRA_raw diagnostic field · k_bottleneck calibration · threshold calibration (Gini, Entropy/ES, EV 0.70) · reviewer coverage taxonomy · embedding corpus version-pinning. All FCL-dependent.</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--muted);padding:24px 28px;">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;">Priority 2 — FSVE v3.7</div>
+        <div style="font-family:var(--sans);font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text);margin-bottom:8px;">7 Open Items</div>
+        <div style="font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);line-height:1.65;">Gini small-n range note · CRA_raw diagnostic field · k_bottleneck calibration · threshold calibration · reviewer coverage taxonomy · embedding corpus version-pinning. All FCL-dependent.</div>
       </div>
     </div>
-
-    <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
-      <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="path-link">
-        <span class="path-icon">↗</span>
-        <div>
-          <div class="path-label">AION-BRAIN Repository</div>
-          <div class="path-desc">Full framework documentation, FCL entries, version history, and open specifications. The source of record for the constitutional stack.</div>
-        </div>
-      </a>
-      <a href="/stack/eight-laws/" class="path-link">
-        <span class="path-icon">⚖️</span>
-        <div>
-          <div class="path-label">The Sovereignty Stack — Full Document</div>
-          <div class="path-desc">Nine constitutional laws. Tier architecture. IDM matrix. Precedence cascade. Law 9 dark by design. Preamble by the architect.</div>
-        </div>
-      </a>
-      <a href="/stack/frameworks/" class="path-link">
-        <span class="path-icon">◈</span>
-        <div>
-          <div class="path-label">All Frameworks — Framework Hub</div>
-          <div class="path-desc">Every framework in the stack — M-STRONG through M-NASCENT. Simulators, GitHub specs, convergence states. FSVE live simulator accessible from here.</div>
-        </div>
-      </a>
-      <a href="/services/framework-design/" class="path-link">
-        <span class="path-icon">◈</span>
-        <div>
-          <div class="path-label">Commission a Framework</div>
-          <div class="path-desc">Custom certainty frameworks for your AI system's specific failure modes. Built to AION stack standards — falsifiable, versioned, CEV-audited.</div>
-        </div>
-      </a>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+      <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="path-link"><span class="path-icon">↗</span><div><div class="path-label">AION-BRAIN Repository</div><div class="path-desc">Full framework documentation, FCL entries, version history, and open specifications. The source of record for the constitutional stack.</div></div></a>
+      <a href="/stack/eight-laws/" class="path-link"><span class="path-icon">⚖️</span><div><div class="path-label">The Sovereignty Stack — Full Document</div><div class="path-desc">Nine constitutional laws. Tier architecture. IDM matrix. Precedence cascade. Law 9 dark by design. Preamble by the architect.</div></div></a>
+      <a href="/stack/frameworks/" class="path-link"><span class="path-icon">◈</span><div><div class="path-label">All Frameworks — Framework Hub</div><div class="path-desc">Every framework in the stack — M-STRONG through M-NASCENT. Simulators, GitHub specs, convergence states. FSVE live simulator accessible from here.</div></div></a>
+      <a href="/services/framework-design/" class="path-link"><span class="path-icon">◈</span><div><div class="path-label">Commission a Framework</div><div class="path-desc">Custom certainty frameworks for your AI system's specific failure modes. Built to AION stack standards — falsifiable, versioned, CEV-audited.</div></div></a>
     </div>
   </div>
 </div>
@@ -538,7 +438,7 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
   <div class="footer-id">
     <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
     AI Reliability Architect &nbsp;·&nbsp; Evans Mills, New York &nbsp;·&nbsp; March 2026<br>
-    <span style="font-size:10px;">AION v3.0 · 17 frameworks · © 2026 Sheldon K. Salmon</span>
+    <span style="font-size:10px;">AION v3.0 · 18 frameworks · © 2026 Sheldon K. Salmon</span>
   </div>
   <ul class="footer-links">
     <li><a href="/">Home</a></li>
@@ -552,50 +452,35 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
 </footer>
 
 <script>
-const canvas = document.getElementById('hero-canvas');
-const ctx = canvas.getContext('2d');
-let W, H, nodes = [], edges = [], t = 0;
+/* ── BACKGROUND CANVAS ── */
+const canvas=document.getElementById('hero-canvas');
+const ctx=canvas.getContext('2d');
+let W,H,nodes=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;initNodes();}
+function initNodes(){nodes=[];const c=Math.floor((W*H)/18000);for(let i=0;i<c;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,r:.5+Math.random()*1.5,alpha:.06+Math.random()*.18});}
+function loop(){ctx.clearRect(0,0,W,H);nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;});for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.strokeStyle=`rgba(240,165,0,${.06*(1-d/120)})`;ctx.lineWidth=.5;ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();}}nodes.forEach(n=>{ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=`rgba(240,165,0,${n.alpha})`;ctx.fill();});requestAnimationFrame(loop);}
+window.addEventListener('resize',resize);resize();loop();
 
-function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; initNodes(); }
-
-function initNodes() {
-  nodes = [];
-  const count = Math.floor((W * H) / 18000);
-  for (let i = 0; i < count; i++) {
-    nodes.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random()-0.5)*0.15, vy: (Math.random()-0.5)*0.15, r: 0.5+Math.random()*1.5, alpha: 0.06+Math.random()*0.18 });
-  }
-}
-
-function loop() {
-  ctx.clearRect(0,0,W,H); t+=0.005;
-  nodes.forEach(n => {
-    n.x += n.vx; n.y += n.vy;
-    if(n.x<0||n.x>W) n.vx*=-1;
-    if(n.y<0||n.y>H) n.vy*=-1;
-  });
-  for(let i=0;i<nodes.length;i++) {
-    for(let j=i+1;j<nodes.length;j++) {
-      const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<120) {
-        ctx.beginPath();
-        ctx.strokeStyle=`rgba(240,165,0,${0.06*(1-d/120)})`;
-        ctx.lineWidth=0.5;
-        ctx.moveTo(nodes[i].x,nodes[i].y);
-        ctx.lineTo(nodes[j].x,nodes[j].y);
-        ctx.stroke();
-      }
-    }
-  }
-  nodes.forEach(n => {
-    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(240,165,0,${n.alpha})`; ctx.fill();
-  });
-  requestAnimationFrame(loop);
-}
-
-window.addEventListener('resize', resize);
-resize(); loop();
+/* ── SHA-256 COMPOSITION PLAYER ── */
+const COMP_K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+const COMP_FALLS=new Set([3,8,17,29,46]);
+const COMP_MAX=0x100000000;
+const COMP_NOTES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const COMP_PHRASES=[{s:0,e:3,l:'P1'},{s:4,e:8,l:'P2'},{s:9,e:17,l:'P3'},{s:18,e:29,l:'P4'},{s:30,e:46,l:'P5'},{s:47,e:63,l:'P6'}];
+function compGetPhrase(i){return COMP_PHRASES.find(p=>i>=p.s&&i<=p.e);}
+function compValToFreq(v){const s=Math.min(Math.floor(v*36),35);return 440*Math.pow(2,(48+s-69)/12);}
+function compValToNote(v){const s=Math.min(Math.floor(v*36),35);return COMP_NOTES[s%12]+(3+Math.floor(s/12));}
+function compValToDur(v,isFall){if(isFall)return 1;if(v>0.85)return 4;if(v>0.6)return 2;if(v>0.3)return 1;return 0.5;}
+const compData=COMP_K.map((k,i)=>{const v=k/COMP_MAX,isFall=COMP_FALLS.has(i),ph=compGetPhrase(i);return{i,v,isFall,freq:isFall?0:compValToFreq(v),note:isFall?'𝄽':compValToNote(v),dur:compValToDur(v,isFall),pct:Math.round(v*100),phrase:ph?ph.l:''};});
+const compScoreEl=document.getElementById('comp-score');
+compData.forEach((b,i)=>{const d=document.createElement('div');d.className='comp-beat'+(b.isFall?' comp-rest':'');d.id=`cb${i}`;const bH=b.isFall?0:Math.max(3,b.v*44);d.innerHTML=b.isFall?`<div style="font-size:0.9rem;color:rgba(64,196,255,0.3);margin-bottom:2px;">𝄽</div><div class="comp-beat-note">rest</div>`:`<div class="comp-beat-bar" style="height:${bH}px"></div><div class="comp-beat-note">${b.note}</div>`;compScoreEl.appendChild(d);if((i+1)%4===0&&i<63){const bl=document.createElement('div');bl.style.cssText='width:1px;background:rgba(212,174,60,0.1);align-self:stretch;flex-shrink:0;';compScoreEl.appendChild(bl);}});
+let compAudioCtx=null,compPlaying=false,compNodes=[],compSlowMode=false;
+function compGetCtx(){if(!compAudioCtx)compAudioCtx=new(window.AudioContext||window.webkitAudioContext)();return compAudioCtx;}
+function compPlayNote(ctx,freq,t,dur,vol){const osc=ctx.createOscillator(),env=ctx.createGain();osc.connect(env);env.connect(ctx.destination);osc.type='triangle';osc.frequency.setValueAtTime(freq,t);env.gain.setValueAtTime(0,t);env.gain.linearRampToValueAtTime(vol,t+0.015);env.gain.setValueAtTime(vol,t+dur*.75);env.gain.linearRampToValueAtTime(0,t+dur*.97);osc.start(t);osc.stop(t+dur);compNodes.push(osc);}
+function compPlayFall(ctx,t,dur){const osc=ctx.createOscillator(),env=ctx.createGain(),filt=ctx.createBiquadFilter();filt.type='lowpass';filt.frequency.value=180;osc.connect(filt);filt.connect(env);env.connect(ctx.destination);osc.type='sine';osc.frequency.setValueAtTime(58.27,t);osc.frequency.linearRampToValueAtTime(36.71,t+dur*.8);env.gain.setValueAtTime(0,t);env.gain.linearRampToValueAtTime(0.15,t+0.05);env.gain.linearRampToValueAtTime(0,t+dur*.9);osc.start(t);osc.stop(t+dur);compNodes.push(osc);}
+async function compPlay(){if(compPlaying)return;compPlaying=true;document.getElementById('comp-play-btn').disabled=true;const ctx=compGetCtx();if(ctx.state==='suspended')await ctx.resume();const bpm=compSlowMode?64:128,bSec=60/bpm;let t=ctx.currentTime+0.1;const startTimes=[];compData.forEach(b=>{startTimes.push(t);const dSec=b.dur*bSec;if(b.isFall)compPlayFall(ctx,t,dSec);else compPlayNote(ctx,b.freq,t,dSec*.92,.15+b.v*.12);t+=dSec;});const total=t-(ctx.currentTime+0.1);startTimes.forEach((st,i)=>{const delay=Math.max(0,(st-ctx.currentTime)*1000);setTimeout(()=>{if(!compPlaying)return;document.querySelectorAll('.comp-beat.comp-playing').forEach(el=>{el.classList.remove('comp-playing');el.classList.add('comp-played');});const el=document.getElementById(`cb${i}`);if(el)el.classList.add('comp-playing');const b=compData[i];document.getElementById('comp-note').textContent=b.isFall?`𝄽  grand pause · ${b.pct}% peak · ${b.phrase}`:`${b.note} · ${b.pct}% · ${b.phrase}`;document.getElementById('comp-progress').style.width=(i/63*100)+'%';},delay);});setTimeout(()=>{compPlaying=false;document.getElementById('comp-play-btn').disabled=false;document.querySelectorAll('.comp-beat.comp-playing').forEach(el=>{el.classList.remove('comp-playing');el.classList.add('comp-played');});document.getElementById('comp-progress').style.width='100%';document.getElementById('comp-note').textContent='— composition complete —';setTimeout(()=>{document.querySelectorAll('.comp-beat.comp-played').forEach(el=>el.classList.remove('comp-played'));document.getElementById('comp-progress').style.width='0%';document.getElementById('comp-note').textContent='—';},2500);},total*1000+200);}
+function compStop(){compPlaying=false;compNodes.forEach(n=>{try{n.stop();}catch(e){}});compNodes=[];document.getElementById('comp-play-btn').disabled=false;document.querySelectorAll('.comp-beat.comp-playing,.comp-beat.comp-played').forEach(el=>{el.classList.remove('comp-playing','comp-played');});document.getElementById('comp-progress').style.width='0%';document.getElementById('comp-note').textContent='—';}
+function compToggleSlow(){compSlowMode=!compSlowMode;const btn=document.getElementById('comp-slow-btn');btn.classList.toggle('comp-active',compSlowMode);btn.textContent=compSlowMode?'HALF SPEED ON':'HALF SPEED';}
 </script>
 </body>
 </html>
