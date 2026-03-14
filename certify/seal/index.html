@@ -173,9 +173,6 @@ textarea.field-input{min-height:100px;}
 .action-btn.primary{border-color:var(--gold);color:var(--gold);}
 .action-btn.primary:hover{background:var(--gold);color:#000;}
 
-/* ── GITHUB SECTION ── */
-/* github-toggle/body removed v1.1 — replaced with Next Step strip */
-
 /* ── VERIFY TAB ── */
 .verify-result{padding:18px 22px;border-radius:3px;border:2px solid;margin-top:16px;display:none;}
 .verify-result.active{display:block;}
@@ -447,7 +444,8 @@ textarea.field-input{min-height:100px;}
           </div>
           <div style="font-size:0.62rem;color:var(--text-faint);margin-top:10px;font-family:var(--serif);font-style:italic;">
             Paste your sealed JSON or stamp display into the issue body. Sheldon K. Salmon will manually add confirmed entries to the ledger. <br>
-            <span style="color:var(--text-faint);font-size:0.6rem;">Note: template routing requires <code style="font-family:var(--mono);font-size:0.6rem;">(STP)</code> to be set as the default branch in the repository. If the issue chooser opens instead of a direct template, select the matching template manually.</span>
+            <!-- FIX 4: Removed misleading branch routing note -->
+            <span style="color:var(--text-faint);font-size:0.6rem;">Note: if the direct template link opens the issue chooser instead, GitHub may not have the template filename in the expected location. Select the matching template manually from the chooser.</span>
           </div>
         </div>
 
@@ -463,7 +461,8 @@ textarea.field-input{min-height:100px;}
 <div id="tab-verify" class="tab-panel">
   <div class="panel">
     <div class="panel-title">VERIFY A SOVEREIGN TRACE SEAL</div>
-    <div class="info-notice">Paste the full sealed JSON. Verification re-computes the SHA-256 hash from the content field and compares it against the stored hash. This proves the entry has not been altered since sealing. No network call required — pure local verification.</div>
+    <!-- FIX 3: Clarified that verification uses the hebrew field, not hebrew_display -->
+    <div class="info-notice">Paste the full sealed JSON. Verification re-computes the SHA-256 hash from the five-field payload and compares it against the stored hash. This proves the entry has not been altered since sealing. No network call required — pure local verification. Note: verification uses the <code style="font-family:var(--mono);font-size:0.68rem;">hebrew</code> field (computed by the JS algorithm at seal time), not <code style="font-family:var(--mono);font-size:0.68rem;">hebrew_display</code> (the Hebcal-fetched value shown to you). If those two values differ in a given entry, the <code style="font-family:var(--mono);font-size:0.68rem;">hebrew</code> field is what was hashed.</div>
     <div class="field-group">
       <div class="field-label">Sealed JSON <span class="req">* required</span></div>
       <textarea class="field-input" id="verify-json" placeholder='Paste the sealed JSON here…&#10;{"ledger_id":"STP-...", "content":"...", "content_hash":"sha256:...", ...}' rows="12"></textarea>
@@ -503,7 +502,8 @@ textarea.field-input{min-height:100px;}
   </div>
 
   <div id="ledger-entries">
-    <div class="ledger-empty">No seals generated this session.<br><br>The ledger grows only — it never deletes.<br>Complete a seal in the SEAL tab to add an entry.</div>
+    <!-- FIX 1: Removed "never deletes" claim — JSON download is the permanent record -->
+    <div class="ledger-empty">No seals generated this session.<br><br>Entries persist in this browser until cleared — the JSON download is the permanent record.<br>Complete a seal in the SEAL tab to add an entry.</div>
   </div>
 </div><!-- /tab-ledger -->
 
@@ -535,8 +535,9 @@ textarea.field-input{min-height:100px;}
 
   <div class="about-section">
     <div class="about-title">HOW THE SEAL WORKS</div>
+    <!-- FIX 2: Clarified that content_hash is a full-context stamp over five fields, not content alone -->
     <p class="about-prose">
-      The SHA-256 hash is computed over a deterministic JSON payload binding the content to all three temporal representations plus the Unix UTC timestamp. The payload structure (sorted keys, compact separators, ASCII-safe encoding) is identical between this browser tool and the Python package — seals generated here are verifiable with <code>pip install sovereign-trace</code>.
+      The SHA-256 hash is computed over a deterministic JSON payload binding five fields: <code>dreamspell</code>, <code>entry</code>, <code>gregorian</code>, <code>hebrew</code>, and <code>unix_utc</code>. The field named <code>content_hash</code> is a full-context stamp — it binds the content to all three temporal coordinates simultaneously, not the content alone. The payload structure (sorted keys, compact separators, ASCII-safe encoding) is identical between this browser tool and the Python package — seals generated here are verifiable with <code>pip install sovereign-trace</code>.
     </p>
     <div style="background:var(--bg4);border:1px solid var(--border2);padding:14px 16px;border-radius:2px;font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);line-height:1.8;margin-bottom:12px;">
       <div style="color:var(--gold-dim);">// Seal payload structure (sorted keys, no spaces, ASCII-safe)</div>
@@ -734,8 +735,6 @@ function hebrewStr(year, month, day) {
 // ═══════════════════════════════════════════════════════════
 
 function buildSealPayload(dreamspellStr, entry, gregorian, hebrew, unixUtc) {
-  // Replicate Python json.dumps(sort_keys=True, ensure_ascii=True, separators=(',',':'))
-  // Keys sorted alphabetically: dreamspell, entry, gregorian, hebrew, unix_utc
   function escStr(s) {
     let r = '"';
     for (let i = 0; i < s.length; i++) {
@@ -754,7 +753,6 @@ function buildSealPayload(dreamspellStr, entry, gregorian, hebrew, unixUtc) {
     r += '"';
     return r;
   }
-  // Note: key strings are all ASCII, so escStr on them just returns "key"
   return `{${escStr("dreamspell")}:${escStr(dreamspellStr)},${escStr("entry")}:${escStr(entry)},${escStr("gregorian")}:${escStr(gregorian)},${escStr("hebrew")}:${escStr(hebrew)},${escStr("unix_utc")}:${unixUtc}}`;
 }
 
@@ -779,7 +777,6 @@ async function updateLiveTime() {
   document.getElementById('live-dreamspell').textContent = dreamspell(y, m, d);
   document.getElementById('live-dreamspell').classList.remove('loading');
   
-  // Hebrew: try live hebcal fetch, fallback to JS algorithm
   const jsHebrew = hebrewStr(y, m, d);
   document.getElementById('live-hebrew').textContent = jsHebrew;
   document.getElementById('live-hebrew').classList.remove('loading');
@@ -806,7 +803,6 @@ function buildTemplateSelector() {
   });
 }
 
-// Declaration supplements per template (Fix 3)
 const DECL_SUPPLEMENTS = {
   '05-clinical-record':     { style:'background:var(--danger-bg);border:1px solid rgba(255,77,77,0.25);color:rgba(255,140,140,0.9);', text:'⚑ PHI GATE ACTIVE — Do not include personally identifiable patient information in the content field. The sealed record is public. Refer to template 05 guidance on anonymization before sealing.' },
   '11-audit-completion':    { style:'background:rgba(212,174,60,0.06);border:1px solid rgba(212,174,60,0.2);color:var(--gold-dim);', text:'◈ PROFESSIONAL ATTESTATION — As an STP Certified Auditor, your declaration carries professional-grade weight. Ensure audit findings are final and documented before sealing.' },
@@ -824,14 +820,12 @@ function onTemplateChange() {
   document.getElementById('template-desc').textContent  = tmpl.desc;
   info.style.display = 'block';
 
-  // Fix 8 — Webeater field show/hide
   const webeaterGroup = document.getElementById('seal-prior-hash').closest('.field-group');
   const isWebeater = val === '09-webeater-link';
   webeaterGroup.style.display = isWebeater ? 'block' : 'none';
   document.getElementById('webeater-req').style.display = isWebeater ? 'inline' : 'none';
   document.getElementById('webeater-opt').style.display = isWebeater ? 'none' : 'inline';
 
-  // Fix 3 — Declaration supplement
   const supp = document.getElementById('decl-supplement');
   const ds = DECL_SUPPLEMENTS[val];
   if (ds) {
@@ -848,7 +842,6 @@ function onTemplateChange() {
 function onContentChange() {
   const val = document.getElementById('seal-content').value;
   document.getElementById('char-count').textContent = `${val.length} character${val.length === 1 ? '' : 's'}`;
-  // Fix 4 — Non-ASCII detection
   const hasNonAscii = /[^\x00-\x7F]/.test(val);
   document.getElementById('nonascii-warn').style.display = hasNonAscii ? 'block' : 'none';
   updateSealButton();
@@ -864,7 +857,6 @@ function updateSealButton() {
   const hasTemplate = !!templateId;
   const hasContent  = document.getElementById('seal-content').value.trim().length > 0;
   const hasDecl     = document.getElementById('seal-declaration').checked;
-  // Fix 10 — template 09 requires prior hash
   const needsWebeater = templateId === '09-webeater-link';
   const hasWebeater   = document.getElementById('seal-prior-hash').value.trim().length > 0;
   const webeaterOk    = !needsWebeater || hasWebeater;
@@ -896,8 +888,6 @@ async function generateSeal() {
   btn.disabled = true;
 
   try {
-    // Fix 9 — NTP clock check (worldtimeapi, non-blocking)
-    let clockDriftWarned = false;
     try {
       const ntpRes  = await fetch('https://worldtimeapi.org/api/ip');
       const ntpData = await ntpRes.json();
@@ -912,7 +902,6 @@ async function generateSeal() {
           btn.disabled = false;
           return;
         }
-        clockDriftWarned = true;
       }
     } catch(e) { /* NTP unavailable — proceed silently */ }
 
@@ -925,11 +914,8 @@ async function generateSeal() {
 
     const gStr = gregorianStr(year, month, day);
     const dsStr = dreamspell(year, month, day);
-
-    // Hebrew: JS algorithm for seal (deterministic, no network dependency)
     const hStr = hebrewStr(year, month, day);
 
-    // Try hebcal-verified Hebrew for display only
     let hStrDisplay = hStr;
     try {
       const res = await fetch(`https://www.hebcal.com/converter?gd=${day}&gm=${month}&gy=${year}&g2h=1`);
@@ -939,7 +925,6 @@ async function generateSeal() {
 
     const sealHex = await computeSeal(dsStr, content, gStr, hStr, unixUtc);
 
-    // Fix 5 — Ledger ID with dashed date (matches live repo convention: STP-TYPE-YYYY-MM-DD-SUFFIX)
     const tmpl = TEMPLATES.find(t => t.id === templateId);
     const randSuffix = Math.random().toString(36).substring(2, 8).toUpperCase();
     const dateDashed = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
@@ -993,7 +978,6 @@ function displaySealResult(entry, sealHex, hStrDisplay) {
   document.getElementById('result-dreamspell').textContent = entry.seal.dreamspell;
   document.getElementById('result-hash-display').textContent = sealHex;
 
-  // Render JSON with syntax highlighting
   const jsonStr = JSON.stringify(entry, null, 2);
   document.getElementById('result-json').innerHTML = syntaxHighlight(jsonStr);
 
@@ -1056,7 +1040,7 @@ async function saveToLedger() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// NEXT STEP — GITHUB ISSUE ROUTING (v1.1 — no PAT required)
+// NEXT STEP — GITHUB ISSUE ROUTING
 // ═══════════════════════════════════════════════════════════
 
 function getTemplateIssueURL(templateId) {
@@ -1191,8 +1175,7 @@ async function runVerify() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// LEDGER — localStorage persistence (v1.2 — window.storage
-// is Claude-artifact-only; localStorage works on GitHub Pages)
+// LEDGER — localStorage persistence
 // ═══════════════════════════════════════════════════════════
 
 function loadLedger() {
@@ -1228,7 +1211,8 @@ function renderLedger(entries) {
   updateLedgerCount(entries.length);
 
   if (entries.length === 0) {
-    container.innerHTML = '<div class="ledger-empty">No seals generated this session.<br><br>The ledger grows only — it never deletes.<br>Complete a seal in the SEAL tab to add an entry.</div>';
+    // FIX 1 (JS path): Removed "never deletes" claim
+    container.innerHTML = '<div class="ledger-empty">No seals generated this session.<br><br>Entries persist in this browser until cleared — the JSON download is the permanent record.<br>Complete a seal in the SEAL tab to add an entry.</div>';
     return;
   }
 
@@ -1387,7 +1371,6 @@ function toggleTheme() {
 window.addEventListener('DOMContentLoaded', () => {
   buildTemplateSelector();
   updateLiveTime();
-  // Load ledger
   try {
     const entries = loadLedger();
     window._STP_LEDGER = entries;
@@ -1412,4 +1395,3 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
