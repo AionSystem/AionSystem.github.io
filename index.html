@@ -68,8 +68,9 @@ nav {
 .nav-logo { font-family: var(--mono); font-size: 13px; letter-spacing: 3px; color: var(--amber); text-transform: uppercase; text-decoration: none; }
 .nav-logo span { color: var(--muted); }
 .nav-links { display: flex; gap: 32px; list-style: none; }
-.nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
-.nav-links a:hover { color: var(--amber); }
+.nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--text); text-decoration: none; text-transform: uppercase; transition: color 0.2s, border-color 0.2s; border-bottom: 1px solid transparent; padding-bottom: 2px; }
+.nav-links a:hover { color: var(--amber); border-bottom-color: var(--amber); }
+.nav-links a.active { color: var(--amber); border-bottom-color: var(--amber); }
 
 /* ── HERO ── */
 #hero-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.35; pointer-events: none; }
@@ -363,6 +364,43 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
   .cnt-num { min-width: 0; }
   .hero-logo-img { width: 52px; height: 52px; }
 }
+
+/* ── MOBILE NAV ── */
+.nav-hamburger {
+  display: none; flex-direction: column; justify-content: space-between;
+  width: 24px; height: 18px; cursor: pointer; background: none; border: none;
+  padding: 0; z-index: 110;
+}
+.nav-hamburger span {
+  display: block; width: 100%; height: 2px;
+  background: var(--amber); border-radius: 1px;
+  transition: transform 0.25s, opacity 0.25s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+.mobile-nav {
+  display: none; position: fixed; top: 56px; left: 0; right: 0; z-index: 99;
+  background: rgba(8,9,11,0.98); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  flex-direction: column; padding: 8px 0;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 2px;
+  color: var(--text); text-decoration: none; text-transform: uppercase;
+  padding: 14px 28px; border-bottom: 1px solid var(--border);
+  transition: color 0.15s, background 0.15s; display: flex; align-items: center; gap: 10px;
+}
+.mobile-nav a:last-child { border-bottom: none; }
+.mobile-nav a:hover { color: var(--amber); background: rgba(240,165,0,0.04); }
+.mobile-nav a::before { content: '—'; color: var(--amber); font-size: 10px; opacity: 0.6; }
+
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+}
 </style>
 </head>
 <body>
@@ -382,7 +420,19 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
     <li><a href="/about/">About</a></li>
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
   </ul>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/simulators/">Simulators</a>
+  <a href="/services/">Services</a>
+  <a href="/stack/">Stack</a>
+  <a href="/certify/">Certify</a>
+  <a href="/about/">About</a>
+  <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a>
+</div>
 
 <div class="hero">
 
@@ -749,6 +799,21 @@ const hel=document.getElementById('tt-hebrew');
 if(hel){hel.classList.remove('loading');hel.textContent=jsHebrew(yr,mo,dy);}
 
 })();
+
+/* ── MOBILE NAV ── */
+function toggleMobileNav() {
+  const btn = document.getElementById('nav-hamburger');
+  const menu = document.getElementById('mobile-nav');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+// Close mobile nav on link click
+document.querySelectorAll('.mobile-nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.getElementById('nav-hamburger').classList.remove('open');
+    document.getElementById('mobile-nav').classList.remove('open');
+  });
+});
 </script>
 </body>
 </html>
