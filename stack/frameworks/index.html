@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AION Constitutional Stack — All 17 Frameworks. Certainty scoring, linguistic validation, epistemic tagging, sovereignty architecture. Simulators, specifications, and convergence state.">
+<meta name="description" content="AION Constitutional Stack — All 18 Frameworks. Certainty scoring, linguistic validation, epistemic tagging, sovereignty architecture. Simulators, specifications, and convergence state.">
 <meta property="og:title" content="Frameworks — AION Stack · AionSystem">
 <meta property="og:description" content="Every framework in the AION Constitutional Stack. M-STRONG through M-NASCENT. Live simulators where available. Full specifications on GitHub.">
 <title>Frameworks — AION Stack · AionSystem</title>
@@ -11,250 +11,126 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:       #08090b;
-  --surface:  #0e1117;
-  --panel:    #141920;
-  --border:   #1e2730;
-  --amber:    #f0a500;
-  --amber-d:  #b07800;
-  --amber-l:  #ffc947;
-  --gold:     #D4AF37;
-  --text:     #c4d4de;
-  --muted:    #4e5f6a;
-  --dim:      #2a3540;
-  --green:    #00e676;
-  --blue:     #40c4ff;
-  --red:      #ff6b6b;
-  --mono:     'Share Tech Mono', monospace;
-  --sans:     'Barlow Condensed', sans-serif;
-  --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+  --bg:#08090b;--surface:#0e1117;--panel:#141920;--border:#1e2730;
+  --amber:#f0a500;--amber-d:#b07800;--amber-l:#ffc947;--gold:#D4AF37;
+  --text:#c4d4de;--muted:#4e5f6a;--dim:#2a3540;
+  --green:#00e676;--blue:#40c4ff;--red:#ff6b6b;
+  --mono:'Share Tech Mono',monospace;--sans:'Barlow Condensed',sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.5; overflow-x: hidden; }
-
-body::before {
-  content: ''; position: fixed; inset: 0;
-  background-image:
-    linear-gradient(rgba(240,165,0,0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(240,165,0,0.018) 1px, transparent 1px);
-  background-size: 48px 48px; pointer-events: none; z-index: 0;
-}
-body::after {
-  content: ''; position: fixed; inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
-  pointer-events: none; z-index: 0;
-}
-
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 40px; height: 56px;
-  background: rgba(8,9,11,0.92); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-.nav-logo { font-family: var(--mono); font-size: 13px; letter-spacing: 3px; color: var(--amber); text-transform: uppercase; text-decoration: none; }
-.nav-logo span { color: var(--muted); }
-.nav-links { display: flex; gap: 32px; list-style: none; }
-.nav-links a { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
-.nav-links a:hover, .nav-links a.active { color: var(--amber); }
-
-/* ── CANVAS ── */
-#hero-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.12; pointer-events: none; }
-
-/* ── PAGE HEADER ── */
-.page-header {
-  position: relative; z-index: 1;
-  padding: 112px 40px 64px; max-width: 1200px; margin: 0 auto;
-  border-bottom: 1px solid var(--border);
-}
-.breadcrumb { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 20px; }
-.breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.15s; }
-.breadcrumb a:hover { color: var(--amber); }
-.breadcrumb-sep { margin: 0 8px; color: var(--dim); }
-
-.page-header-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: end; }
-.page-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 4px; color: var(--amber); text-transform: uppercase; margin-bottom: 16px; }
-.page-eyebrow::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--amber); vertical-align: middle; margin-right: 10px; margin-bottom: 2px; }
-.page-title { font-family: var(--sans); font-size: clamp(42px, 6vw, 76px); font-weight: 900; letter-spacing: -1px; line-height: 0.9; text-transform: uppercase; color: var(--text); }
-.page-title em { display: block; color: var(--amber); font-style: normal; }
-.page-premise { font-family: var(--sans); font-size: clamp(14px, 1.6vw, 18px); font-weight: 300; color: var(--muted); line-height: 1.75; max-width: 480px; border-left: 2px solid var(--amber); padding-left: 20px; }
-.page-premise strong { color: var(--text); font-weight: 600; }
-
-.stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 28px; }
-.stat-cell { background: var(--bg); padding: 14px 18px; }
-.stat-num { font-family: var(--mono); font-size: 22px; color: var(--amber); line-height: 1; margin-bottom: 4px; }
-.stat-key { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
-
-/* ── CONTENT ── */
-.content-block { position: relative; z-index: 1; border-bottom: 1px solid var(--border); }
-.block-inner { max-width: 1200px; margin: 0 auto; padding: 64px 40px; }
-.section-id { display: flex; align-items: center; gap: 12px; padding: 12px 0; margin-bottom: 8px; }
-.section-id-num { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--amber-d); }
-.section-id-line { flex: 1; height: 1px; background: var(--border); }
-.block-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
-.block-title { font-family: var(--sans); font-size: clamp(26px, 3.5vw, 44px); font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: var(--text); line-height: 0.95; margin-bottom: 20px; }
-.block-title em { color: var(--amber); font-style: normal; }
-
-/* ── TIER LABEL ── */
-.tier-label-row {
-  display: flex; align-items: center; gap: 14px; margin: 36px 0 16px;
-}
-.tier-label-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.dot-strong { background: var(--green); box-shadow: 0 0 6px rgba(0,230,118,0.5); }
-.dot-moderate { background: var(--amber); box-shadow: 0 0 6px rgba(240,165,0,0.4); }
-.dot-nascent { background: var(--blue); box-shadow: 0 0 6px rgba(64,196,255,0.3); }
-.dot-private { background: var(--dim); }
-.dot-const { background: var(--gold); }
-
-.tier-label-text { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
-.tier-label-count { font-family: var(--mono); font-size: 10px; color: var(--dim); margin-left: 4px; }
-.tier-rule { flex: 1; height: 1px; background: var(--border); }
-
-/* ── FRAMEWORK CARDS ── */
-.fw-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1px; background: var(--border); border: 1px solid var(--border);
-}
-
-.fw-card {
-  background: var(--bg);
-  display: flex; flex-direction: column;
-  position: relative; overflow: hidden;
-  transition: background 0.2s;
-  text-decoration: none;
-}
-.fw-card:hover { background: var(--surface); }
-.fw-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  transition: opacity 0.2s;
-}
-.fw-card.live { cursor: pointer; }
-.fw-card.live::before { background: var(--amber); opacity: 0.6; }
-.fw-card.live:hover::before { opacity: 1; }
-.fw-card.coming::before { background: var(--border); opacity: 1; }
-.fw-card.private-fw { opacity: 0.4; }
-.fw-card.private-fw::before { background: var(--dim); opacity: 1; }
-
-.fw-card-inner { padding: 24px 26px 20px; flex: 1; }
-.fw-name { font-family: var(--mono); font-size: 18px; letter-spacing: 1px; margin-bottom: 4px; }
-.fw-card.live .fw-name { color: var(--amber); }
-.fw-card.coming .fw-name { color: var(--text); }
-.fw-card.private-fw .fw-name { color: var(--muted); }
-
-.fw-ver { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--dim); margin-bottom: 12px; text-transform: uppercase; }
-.fw-desc { font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.65; margin-bottom: 14px; flex: 1; }
-.fw-desc strong { color: var(--text); font-weight: 600; }
-
-.fw-card-footer {
-  padding: 12px 26px; border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.fw-status {
-  font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px;
-  text-transform: uppercase; padding: 3px 8px; border: 1px solid;
-}
-.status-live { color: var(--green); border-color: rgba(0,230,118,0.4); background: rgba(0,230,118,0.06); }
-.status-coming { color: var(--dim); border-color: var(--dim); background: transparent; }
-.status-private { color: var(--dim); border-color: var(--dim); background: transparent; }
-.status-strong { color: var(--green); border-color: rgba(0,230,118,0.4); background: rgba(0,230,118,0.06); }
-.status-mod { color: var(--amber); border-color: var(--amber-d); background: rgba(240,165,0,0.06); }
-.status-nascent { color: var(--blue); border-color: rgba(64,196,255,0.3); background: rgba(64,196,255,0.04); }
-.status-const { color: var(--gold); border-color: rgba(212,175,55,0.3); background: rgba(212,175,55,0.04); }
-
-.fw-action { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--amber); text-transform: uppercase; text-decoration: none; display: flex; align-items: center; gap: 5px; transition: color 0.15s; }
-.fw-action:hover { color: var(--amber-l); }
-.fw-action.dim { color: var(--dim); pointer-events: none; }
-.fw-action.github { color: var(--muted); }
-.fw-action.github:hover { color: var(--text); }
-
-/* ── FSVE FEATURED CARD ── */
-.fw-featured {
-  background: var(--bg); border: 1px solid var(--border);
-  position: relative; overflow: hidden; margin-bottom: 1px;
-  display: grid; grid-template-columns: 1fr 1fr;
-  transition: background 0.2s; text-decoration: none;
-}
-.fw-featured:hover { background: var(--surface); }
-.fw-featured::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--amber), var(--amber-l), transparent);
-}
-.fw-featured-left { padding: 32px 36px; border-right: 1px solid var(--border); }
-.fw-featured-right { padding: 32px 36px; display: flex; flex-direction: column; justify-content: space-between; }
-.fw-featured-eyebrow { font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px; color: var(--amber); text-transform: uppercase; margin-bottom: 10px; }
-.fw-featured-name { font-family: var(--sans); font-size: clamp(36px, 5vw, 56px); font-weight: 900; letter-spacing: -1px; line-height: 0.9; text-transform: uppercase; color: var(--amber); margin-bottom: 8px; }
-.fw-featured-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 1px; margin-bottom: 20px; }
-.fw-featured-desc { font-family: var(--sans); font-size: 15px; font-weight: 300; color: var(--muted); line-height: 1.7; }
-.fw-featured-desc strong { color: var(--text); font-weight: 600; }
-
-.fw-featured-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 20px; }
-.fw-featured-stat { background: var(--surface); padding: 12px 16px; }
-.fw-featured-stat-num { font-family: var(--mono); font-size: 18px; color: var(--amber); line-height: 1; margin-bottom: 3px; }
-.fw-featured-stat-key { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
-
-.fw-featured-cta {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
-  text-transform: uppercase; text-decoration: none; padding: 12px 20px;
-  border: 1px solid var(--amber); color: var(--amber);
-  background: transparent; transition: all 0.2s; position: relative; overflow: hidden;
-  align-self: flex-start;
-}
-.fw-featured-cta::before { content: ''; position: absolute; inset: 0; background: var(--amber); transform: translateX(-101%); transition: transform 0.25s var(--ease); z-index: 0; }
-.fw-featured-cta:hover::before { transform: translateX(0); }
-.fw-featured-cta:hover { color: #000; }
-.fw-featured-cta span { position: relative; z-index: 1; }
-.cta-arrow { font-size: 14px; transition: transform 0.2s; }
-.fw-featured-cta:hover .cta-arrow { transform: translateX(4px); }
-
-/* ── LEGEND ── */
-.legend-strip {
-  display: flex; flex-wrap: wrap; gap: 20px;
-  padding: 14px 0; margin-top: 10px;
-  border-top: 1px solid var(--border);
-}
-.legend-item { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
-
-/* ── BACK PATH ── */
-.back-path {
-  display: flex; align-items: center; gap: 10px;
-  padding: 16px 20px; background: var(--bg);
-  border: 1px solid var(--border); text-decoration: none;
-  transition: border-color 0.2s, background 0.2s; margin-bottom: 10px;
-}
-.back-path:hover { border-color: var(--amber); background: var(--surface); }
-
-/* ── FOOTER ── */
-footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.footer-id { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; letter-spacing: 1px; }
-.footer-id strong { color: var(--amber); }
-.footer-links { display: flex; gap: 24px; list-style: none; }
-.footer-links a { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.15s; }
-.footer-links a:hover { color: var(--amber); }
-
-@media (max-width: 900px) {
-  .fw-grid { grid-template-columns: 1fr 1fr; }
-  .fw-featured { grid-template-columns: 1fr; }
-  .fw-featured-right { border-top: 1px solid var(--border); }
-  .page-header-inner { grid-template-columns: 1fr; gap: 24px; }
-}
-@media (max-width: 600px) {
-  nav { padding: 0 20px; }
-  .nav-links { display: none; }
-  .page-header { padding: 88px 20px 48px; }
-  .block-inner { padding: 48px 20px; }
-  footer { padding: 32px 20px; flex-direction: column; gap: 20px; }
-  .fw-grid { grid-template-columns: 1fr; }
-  .stat-strip { grid-template-columns: 1fr 1fr; }
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.5;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(240,165,0,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.018) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;}
+.nav-logo span{color:var(--muted);}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--amber);}
+#hero-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.12;pointer-events:none;}
+.page-header{position:relative;z-index:1;padding:112px 40px 64px;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--border);}
+.breadcrumb{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:20px;}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color 0.15s;}
+.breadcrumb a:hover{color:var(--amber);}
+.breadcrumb-sep{margin:0 8px;color:var(--dim);}
+.page-header-inner{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:end;}
+.page-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:16px;}
+.page-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--amber);vertical-align:middle;margin-right:10px;margin-bottom:2px;}
+.page-title{font-family:var(--sans);font-size:clamp(42px,6vw,76px);font-weight:900;letter-spacing:-1px;line-height:0.9;text-transform:uppercase;color:var(--text);}
+.page-title em{display:block;color:var(--amber);font-style:normal;}
+.page-premise{font-family:var(--sans);font-size:clamp(14px,1.6vw,18px);font-weight:300;color:var(--muted);line-height:1.75;max-width:480px;border-left:2px solid var(--amber);padding-left:20px;}
+.page-premise strong{color:var(--text);font-weight:600;}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:28px;}
+.stat-cell{background:var(--bg);padding:14px 18px;}
+.stat-num{font-family:var(--mono);font-size:22px;color:var(--amber);line-height:1;margin-bottom:4px;}
+.stat-key{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;}
+.content-block{position:relative;z-index:1;border-bottom:1px solid var(--border);}
+.block-inner{max-width:1200px;margin:0 auto;padding:64px 40px;}
+.section-id{display:flex;align-items:center;gap:12px;padding:12px 0;margin-bottom:8px;}
+.section-id-num{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber-d);}
+.section-id-line{flex:1;height:1px;background:var(--border);}
+.block-label{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+.block-title{font-family:var(--sans);font-size:clamp(26px,3.5vw,44px);font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--text);line-height:0.95;margin-bottom:20px;}
+.block-title em{color:var(--amber);font-style:normal;}
+.tier-label-row{display:flex;align-items:center;gap:14px;margin:36px 0 16px;}
+.tier-label-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dot-strong{background:var(--green);box-shadow:0 0 6px rgba(0,230,118,0.5);}
+.dot-moderate{background:var(--amber);box-shadow:0 0 6px rgba(240,165,0,0.4);}
+.dot-nascent{background:var(--blue);box-shadow:0 0 6px rgba(64,196,255,0.3);}
+.dot-private{background:var(--dim);}
+.tier-label-text{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
+.tier-label-count{font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:4px;}
+.tier-rule{flex:1;height:1px;background:var(--border);}
+.fw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.fw-card{background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden;transition:background 0.2s;text-decoration:none;}
+.fw-card:hover{background:var(--surface);}
+.fw-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;transition:opacity 0.2s;}
+.fw-card.live{cursor:pointer;}
+.fw-card.live::before{background:var(--amber);opacity:0.6;}
+.fw-card.live:hover::before{opacity:1;}
+.fw-card.coming::before{background:var(--border);opacity:1;}
+.fw-card.private-fw{opacity:0.4;}
+.fw-card.private-fw::before{background:var(--dim);opacity:1;}
+.fw-card-inner{padding:24px 26px 20px;flex:1;}
+.fw-name{font-family:var(--mono);font-size:18px;letter-spacing:1px;margin-bottom:4px;}
+.fw-card.live .fw-name{color:var(--amber);}
+.fw-card.coming .fw-name{color:var(--text);}
+.fw-card.private-fw .fw-name{color:var(--muted);}
+.fw-ver{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim);margin-bottom:12px;text-transform:uppercase;}
+.fw-desc{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);line-height:1.65;margin-bottom:14px;flex:1;}
+.fw-desc strong{color:var(--text);font-weight:600;}
+.fw-card-footer{padding:12px 26px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.fw-status{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border:1px solid;}
+.status-live{color:var(--green);border-color:rgba(0,230,118,0.4);background:rgba(0,230,118,0.06);}
+.status-coming{color:var(--dim);border-color:var(--dim);background:transparent;}
+.status-private{color:var(--dim);border-color:var(--dim);background:transparent;}
+.status-strong{color:var(--green);border-color:rgba(0,230,118,0.4);background:rgba(0,230,118,0.06);}
+.status-mod{color:var(--amber);border-color:var(--amber-d);background:rgba(240,165,0,0.06);}
+.status-nascent{color:var(--blue);border-color:rgba(64,196,255,0.3);background:rgba(64,196,255,0.04);}
+.fw-action{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--amber);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:5px;transition:color 0.15s;}
+.fw-action:hover{color:var(--amber-l);}
+.fw-action.dim{color:var(--dim);pointer-events:none;}
+.fw-action.github{color:var(--muted);}
+.fw-action.github:hover{color:var(--text);}
+.fw-featured{background:var(--bg);border:1px solid var(--border);position:relative;overflow:hidden;margin-bottom:1px;display:grid;grid-template-columns:1fr 1fr;transition:background 0.2s;text-decoration:none;}
+.fw-featured:hover{background:var(--surface);}
+.fw-featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),var(--amber-l),transparent);}
+.fw-featured-left{padding:32px 36px;border-right:1px solid var(--border);}
+.fw-featured-right{padding:32px 36px;display:flex;flex-direction:column;justify-content:space-between;}
+.fw-featured-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:2.5px;color:var(--amber);text-transform:uppercase;margin-bottom:10px;}
+.fw-featured-name{font-family:var(--sans);font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-1px;line-height:0.9;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.fw-featured-sub{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:20px;}
+.fw-featured-desc{font-family:var(--sans);font-size:15px;font-weight:300;color:var(--muted);line-height:1.7;}
+.fw-featured-desc strong{color:var(--text);font-weight:600;}
+.fw-featured-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:20px;}
+.fw-featured-stat{background:var(--surface);padding:12px 16px;}
+.fw-featured-stat-num{font-family:var(--mono);font-size:18px;color:var(--amber);line-height:1;margin-bottom:3px;}
+.fw-featured-stat-key{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+.fw-featured-cta{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 20px;border:1px solid var(--amber);color:var(--amber);background:transparent;transition:all 0.2s;position:relative;overflow:hidden;align-self:flex-start;}
+.fw-featured-cta::before{content:'';position:absolute;inset:0;background:var(--amber);transform:translateX(-101%);transition:transform 0.25s var(--ease);z-index:0;}
+.fw-featured-cta:hover::before{transform:translateX(0);}
+.fw-featured-cta:hover{color:#000;}
+.fw-featured-cta span{position:relative;z-index:1;}
+.cta-arrow{font-size:14px;transition:transform 0.2s;}
+.fw-featured-cta:hover .cta-arrow{transform:translateX(4px);}
+.legend-strip{display:flex;flex-wrap:wrap;gap:20px;padding:14px 0;margin-top:10px;border-top:1px solid var(--border);}
+.legend-item{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+.back-path{display:flex;align-items:center;gap:10px;padding:16px 20px;background:var(--bg);border:1px solid var(--border);text-decoration:none;transition:border-color 0.2s,background 0.2s;margin-bottom:10px;}
+.back-path:hover{border-color:var(--amber);background:var(--surface);}
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-id{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;letter-spacing:1px;}
+.footer-id strong{color:var(--amber);}
+.footer-links{display:flex;gap:24px;list-style:none;}
+.footer-links a{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.15s;}
+.footer-links a:hover{color:var(--amber);}
+@media(max-width:900px){.fw-grid{grid-template-columns:1fr 1fr;}.fw-featured{grid-template-columns:1fr;}.fw-featured-right{border-top:1px solid var(--border);}.page-header-inner{grid-template-columns:1fr;gap:24px;}}
+@media(max-width:600px){nav{padding:0 20px;}.nav-links{display:none;}.page-header{padding:88px 20px 48px;}.block-inner{padding:48px 20px;}footer{padding:32px 20px;flex-direction:column;gap:20px;}.fw-grid{grid-template-columns:1fr;}.stat-strip{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
-
 <canvas id="hero-canvas"></canvas>
-
 <nav>
   <a href="/" class="nav-logo">AION<span>system</span></a>
   <ul class="nav-links">
@@ -283,8 +159,8 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
         Every framework in the AION constitutional stack. <strong>M-STRONG: empirically validated. M-MODERATE: tested and operating. M-NASCENT: specified and building.</strong> Simulators go live as frameworks reach deployment-grade. Specifications on GitHub.
       </p>
       <div class="stat-strip">
-        <div class="stat-cell"><div class="stat-num">17</div><div class="stat-key">Frameworks</div></div>
-        <div class="stat-cell"><div class="stat-num">1</div><div class="stat-key">Simulator Live</div></div>
+        <div class="stat-cell"><div class="stat-num">18</div><div class="stat-key">Frameworks</div></div>
+        <div class="stat-cell"><div class="stat-num">2</div><div class="stat-key">Tools Live</div></div>
         <div class="stat-cell"><div class="stat-num">1</div><div class="stat-key">M-STRONG</div></div>
         <div class="stat-cell"><div class="stat-num">0</div><div class="stat-key">FCL Entries</div></div>
       </div>
@@ -292,25 +168,23 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
   </div>
 </div>
 
-<!-- ━━━ MAIN CONTENT ━━━ -->
 <div class="content-block">
   <div class="block-inner">
     <div class="section-id"><span class="section-id-num">// 01</span><span class="section-id-line"></span></div>
     <div class="block-label">Featured · Only Live Simulator</div>
     <div class="block-title">FSVE — <em>Certainty Scoring Engine</em></div>
 
-    <!-- FSVE featured card -->
     <a href="/stack/frameworks/FSVE/" class="fw-featured">
       <div class="fw-featured-left">
         <div class="fw-featured-eyebrow">FSVE v3.6 · M-MODERATE · Simulator Live</div>
         <div class="fw-featured-name">FSVE</div>
         <div class="fw-featured-sub">Foundational Scoring &amp; Validation Engine · Six Dimensions</div>
         <div class="fw-featured-desc">
-          The certainty scoring engine at the foundation of the AION stack. 
-          <strong>Six epistemic dimensions</strong> — Validity, Evidence, Consistency, Reliability, Accuracy, Expertise. 
+          The certainty scoring engine at the foundation of the AION stack.
+          <strong>Six epistemic dimensions</strong> — Validity, Evidence, Consistency, Reliability, Accuracy, Expertise.
           Validity threshold ≥0.40 for deployment clearance; below it triggers mandatory human oversight.
           <br><br>
-          Gini formula corrected from v3.5 — all prior Gini-based clearances voided and re-audited. 
+          Gini formula corrected from v3.5 — all prior Gini-based clearances voided and re-audited.
           Correction log public and permanent. <strong>EV 0.525. Bottleneck: E = 0.35.</strong>
         </div>
       </div>
@@ -321,14 +195,14 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
           <div class="fw-featured-stat"><div class="fw-featured-stat-num">0.525</div><div class="fw-featured-stat-key">Expected Value</div></div>
           <div class="fw-featured-stat"><div class="fw-featured-stat-num">v3.6</div><div class="fw-featured-stat-key">Current Version</div></div>
         </div>
-        <div style="font-family:var(--mono); font-size:9px; color:var(--muted); line-height:1.7; margin-bottom:20px;">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted);line-height:1.7;margin-bottom:20px;">
           Score any claim · Gini laundering detection · Sensitivity analysis · Shareable results
         </div>
         <span class="fw-featured-cta"><span>Open Simulator</span><span class="cta-arrow">→</span></span>
       </div>
     </a>
 
-    <!-- ── M-STRONG ── -->
+    <!-- M-STRONG -->
     <div class="tier-label-row">
       <div class="tier-label-dot dot-strong"></div>
       <span class="tier-label-text">M-STRONG</span>
@@ -336,7 +210,7 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
       <div class="tier-rule"></div>
     </div>
     <div class="fw-grid" style="grid-template-columns:1fr;">
-      <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="fw-card coming" style="grid-template-columns:1fr; display:grid;">
+      <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="fw-card coming" style="display:grid;">
         <div class="fw-card-inner">
           <div class="fw-name">LAV</div>
           <div class="fw-ver">Linguistic Anchor Validation · v1.5 · The only M-STRONG framework</div>
@@ -351,7 +225,7 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
       </a>
     </div>
 
-    <!-- ── M-MODERATE ── -->
+    <!-- M-MODERATE -->
     <div class="tier-label-row">
       <div class="tier-label-dot dot-moderate"></div>
       <span class="tier-label-text">M-MODERATE</span>
@@ -359,7 +233,6 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
       <div class="tier-rule"></div>
     </div>
     <div class="fw-grid">
-      <!-- FSVE in moderate row too for completeness — smaller card -->
       <a href="/stack/frameworks/FSVE/" class="fw-card live">
         <div class="fw-card-inner">
           <div class="fw-name">FSVE</div>
@@ -404,9 +277,21 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
           <span class="fw-action github">GitHub ↗</span>
         </div>
       </a>
+      <!-- CSCA — NEW -->
+      <a href="/stack/frameworks/CSCA/" class="fw-card live">
+        <div class="fw-card-inner">
+          <div class="fw-name">CSCA</div>
+          <div class="fw-ver">Cognitive Substrate Cryptographic Assumption · v0.1</div>
+          <div class="fw-desc">First spatial and signals-intelligence analysis of SHA-256. <strong>41 principles · 15 empirical tests · 13 questions.</strong> Staircase architecture confirmed. SHA-256 scored as music: D minor, 128 BPM, Bach BWV 851 parallel. Signals-engineered information destruction machine — no backdoor found. Honest null result documented. <strong>Playable composition live.</strong></div>
+        </div>
+        <div class="fw-card-footer">
+          <span class="fw-status status-live">Composition Live</span>
+          <span class="fw-action">Hear it →</span>
+        </div>
+      </a>
     </div>
 
-    <!-- ── M-NASCENT ── -->
+    <!-- M-NASCENT -->
     <div class="tier-label-row">
       <div class="tier-label-dot dot-nascent"></div>
       <span class="tier-label-text">M-NASCENT</span>
@@ -447,15 +332,16 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
           <span class="fw-action dim">Simulator Coming</span>
         </div>
       </div>
-      <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="fw-card coming">
+      <!-- TOPOS — UPDATED TO v0.4 WITH LIVE TOOL -->
+      <a href="/stack/frameworks/TOPOS/" class="fw-card live">
         <div class="fw-card-inner">
           <div class="fw-name">TOPOS</div>
-          <div class="fw-ver">Persistent Shape Architecture · v0.3</div>
-          <div class="fw-desc">4 mapping instruments. TOPOS-BIN active. 5 FCL candidates. Maps containment surface, relational vectors, steering geometry, and deformation thresholds.</div>
+          <div class="fw-ver">Persistent Shape Architecture · v0.4</div>
+          <div class="fw-desc">4 mapping instruments. TOPOS-BIN active. 5 FCL candidates. Maps containment surface, relational vectors, steering geometry, and deformation thresholds. <strong>Instrument 3 live scorer.</strong></div>
         </div>
         <div class="fw-card-footer">
-          <span class="fw-status status-nascent">M-NASCENT</span>
-          <span class="fw-action github">GitHub ↗</span>
+          <span class="fw-status status-live">Tool Live</span>
+          <span class="fw-action">Open →</span>
         </div>
       </a>
       <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="fw-card coming">
@@ -495,7 +381,7 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
         <div class="fw-card-inner">
           <div class="fw-name">CHRONOS</div>
           <div class="fw-ver">Time-Budgeted Research Protocol · v0.1</div>
-          <div class="fw-desc">T2 gate. Three phases: Scan / Dive / Refine. Anti-padding rule. Two-minute hard cap. Sprint / Timed / Deep modes. Budget declared, phase completion enforced.</div>
+          <div class="fw-desc">T2 gate. Three phases: Scan / Dive / Refine. Anti-padding rule. Two-minute hard cap. Sprint / Timed / Deep modes.</div>
         </div>
         <div class="fw-card-footer">
           <span class="fw-status status-nascent">M-NASCENT</span>
@@ -537,7 +423,7 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
       </div>
     </div>
 
-    <!-- ── PRIVATE ── -->
+    <!-- PRIVATE -->
     <div class="tier-label-row">
       <div class="tier-label-dot dot-private"></div>
       <span class="tier-label-text">Private</span>
@@ -549,12 +435,9 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
         <div class="fw-card-inner">
           <div class="fw-name">VEIN</div>
           <div class="fw-ver">Writing Methodology · v1.0 · Permanent</div>
-          <div class="fw-desc">Outbound writing architecture. Permanent — no upgrades. Private to architect. The methodology does not leave the session.</div>
+          <div class="fw-desc">Outbound writing architecture. Permanent — no upgrades. Private to architect.</div>
         </div>
-        <div class="fw-card-footer">
-          <span class="fw-status status-private">Private</span>
-          <span class="fw-action dim">Not Public</span>
-        </div>
+        <div class="fw-card-footer"><span class="fw-status status-private">Private</span><span class="fw-action dim">Not Public</span></div>
       </div>
       <div class="fw-card private-fw" style="cursor:default;">
         <div class="fw-card-inner">
@@ -562,70 +445,53 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
           <div class="fw-ver">Inbound Signal Decoder · v0.1</div>
           <div class="fw-desc">Inbound signal decoder. VEIN companion. Terrain mapping of external input before response generation. Private to architect.</div>
         </div>
-        <div class="fw-card-footer">
-          <span class="fw-status status-private">Private</span>
-          <span class="fw-action dim">Not Public</span>
-        </div>
+        <div class="fw-card-footer"><span class="fw-status status-private">Private</span><span class="fw-action dim">Not Public</span></div>
       </div>
       <div class="fw-card private-fw" style="cursor:default;">
         <div class="fw-card-inner">
           <div class="fw-name">MENSCAPE · DERU · ANCHOR</div>
           <div class="fw-ver">Proprietary Stack · Not Open-Sourced</div>
-          <div class="fw-desc">Three proprietary frameworks not open-sourced. Full stack integrity maintained. These frameworks do not have public specifications.</div>
+          <div class="fw-desc">Three proprietary frameworks not open-sourced. Full stack integrity maintained.</div>
         </div>
-        <div class="fw-card-footer">
-          <span class="fw-status status-private">Proprietary</span>
-          <span class="fw-action dim">Not Open-Sourced</span>
-        </div>
+        <div class="fw-card-footer"><span class="fw-status status-private">Proprietary</span><span class="fw-action dim">Not Open-Sourced</span></div>
       </div>
     </div>
 
-    <!-- Legend -->
     <div class="legend-strip">
-      <div class="legend-item"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(0,230,118,0.5);"></div> M-STRONG — empirically validated</div>
-      <div class="legend-item"><div style="width:8px;height:8px;border-radius:50%;background:var(--amber);"></div> M-MODERATE — tested and operating</div>
-      <div class="legend-item"><div style="width:8px;height:8px;border-radius:50%;background:var(--blue);"></div> M-NASCENT — specified and building</div>
+      <div class="legend-item"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(0,230,118,0.5);"></div> M-STRONG</div>
+      <div class="legend-item"><div style="width:8px;height:8px;border-radius:50%;background:var(--amber);"></div> M-MODERATE</div>
+      <div class="legend-item"><div style="width:8px;height:8px;border-radius:50%;background:var(--blue);"></div> M-NASCENT</div>
       <div class="legend-item"><div style="width:8px;height:8px;border-radius:50%;background:var(--dim);"></div> Private / Proprietary</div>
-      <div class="legend-item" style="margin-left:auto; color:var(--amber); border:1px solid rgba(0,230,118,0.3); padding:2px 8px;">● SIMULATOR LIVE — FSVE only</div>
+      <div class="legend-item" style="margin-left:auto;color:var(--amber);border:1px solid rgba(0,230,118,0.3);padding:2px 8px;">● TOOLS LIVE — FSVE · TOPOS · CSCA</div>
     </div>
   </div>
 </div>
 
-<!-- ━━━ 02 — NAVIGATION ━━━ -->
 <div class="content-block">
   <div class="block-inner">
     <div class="section-id"><span class="section-id-num">// 02</span><span class="section-id-line"></span></div>
     <div class="block-label">Navigation · Where to Go Next</div>
     <div class="block-title">Related<em>Paths</em></div>
-
-    <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px;">
       <a href="/stack/" class="back-path">
-        <span style="font-family:var(--mono); font-size:14px; color:var(--amber);">←</span>
-        <div>
-          <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; margin-bottom:3px;">Back to Stack Overview</div>
-          <div style="font-family:var(--sans); font-size:13px; font-weight:300; color:var(--muted);">Full sovereignty stack · Nine constitutional laws · Open priority · Version history</div>
-        </div>
+        <span style="font-family:var(--mono);font-size:14px;color:var(--amber);">←</span>
+        <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:3px;">Back to Stack Overview</div><div style="font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);">Full sovereignty stack · Nine constitutional laws · Open priority · Version history</div></div>
       </a>
       <a href="/stack/frameworks/FSVE/" class="back-path">
-        <span style="font-family:var(--mono); font-size:14px; color:var(--amber);">◈</span>
-        <div>
-          <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; margin-bottom:3px;">FSVE v3.6 — Live Simulator</div>
-          <div style="font-family:var(--sans); font-size:13px; font-weight:300; color:var(--muted);">Score any claim across six epistemic dimensions. Gini laundering detection. Validity threshold gate. Shareable results.</div>
-        </div>
+        <span style="font-family:var(--mono);font-size:14px;color:var(--amber);">◈</span>
+        <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:3px;">FSVE v3.6 — Live Simulator</div><div style="font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);">Score any claim across six epistemic dimensions. Gini laundering detection. Validity threshold gate.</div></div>
+      </a>
+      <a href="/stack/frameworks/TOPOS/" class="back-path">
+        <span style="font-family:var(--mono);font-size:14px;color:var(--amber);">◈</span>
+        <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:3px;">TOPOS v0.4 — Persistent Shape Architecture Tool</div><div style="font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);">Instrument 3 live scorer. Steering geometry mapping. Deformation threshold detection. Four instruments.</div></div>
       </a>
       <a href="/stack/eight-laws/" class="back-path">
-        <span style="font-family:var(--mono); font-size:14px; color:var(--amber);">⚖</span>
-        <div>
-          <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; margin-bottom:3px;">The Sovereignty Stack — Nine Constitutional Laws</div>
-          <div style="font-family:var(--sans); font-size:13px; font-weight:300; color:var(--muted);">Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design. Full constitutional document.</div>
-        </div>
+        <span style="font-family:var(--mono);font-size:14px;color:var(--amber);">⚖</span>
+        <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:3px;">The Sovereignty Stack — Nine Constitutional Laws</div><div style="font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);">Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design. Full constitutional document.</div></div>
       </a>
       <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="back-path">
-        <span style="font-family:var(--mono); font-size:14px; color:var(--amber);">↗</span>
-        <div>
-          <div style="font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; margin-bottom:3px;">AION-BRAIN — Full Specification Repository</div>
-          <div style="font-family:var(--sans); font-size:13px; font-weight:300; color:var(--muted);">60+ frameworks. 2,040+ files. FCL archive. CEV audit records. Version history. The source of record.</div>
-        </div>
+        <span style="font-family:var(--mono);font-size:14px;color:var(--amber);">↗</span>
+        <div><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:3px;">AION-BRAIN — Full Specification Repository</div><div style="font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);">60+ frameworks. 2,040+ files. FCL archive. CEV audit records. Version history. The source of record.</div></div>
       </a>
     </div>
   </div>
@@ -635,7 +501,7 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
   <div class="footer-id">
     <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
     AI Reliability Architect &nbsp;·&nbsp; Evans Mills, New York &nbsp;·&nbsp; March 2026<br>
-    <span style="font-size:10px;">AION v3.0 · 17 frameworks · © 2026 Sheldon K. Salmon</span>
+    <span style="font-size:10px;">AION v3.0 · 18 frameworks · © 2026 Sheldon K. Salmon</span>
   </div>
   <ul class="footer-links">
     <li><a href="/">Home</a></li>
@@ -648,58 +514,13 @@ footer { position: relative; z-index: 1; border-top: 1px solid var(--border); pa
 </footer>
 
 <script>
-const canvas = document.getElementById('hero-canvas');
-const ctx = canvas.getContext('2d');
-let W, H, nodes = [];
-
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-  initNodes();
-}
-
-function initNodes() {
-  nodes = [];
-  const count = Math.floor((W * H) / 18000);
-  for (let i = 0; i < count; i++) {
-    nodes.push({
-      x: Math.random() * W, y: Math.random() * H,
-      vx: (Math.random()-0.5)*0.15, vy: (Math.random()-0.5)*0.15,
-      r: 0.5+Math.random()*1.5, alpha: 0.06+Math.random()*0.18
-    });
-  }
-}
-
-function loop() {
-  ctx.clearRect(0,0,W,H);
-  nodes.forEach(n => {
-    n.x += n.vx; n.y += n.vy;
-    if(n.x<0||n.x>W) n.vx*=-1;
-    if(n.y<0||n.y>H) n.vy*=-1;
-  });
-  for(let i=0;i<nodes.length;i++) {
-    for(let j=i+1;j<nodes.length;j++) {
-      const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<120) {
-        ctx.beginPath();
-        ctx.strokeStyle=`rgba(240,165,0,${0.06*(1-d/120)})`;
-        ctx.lineWidth=0.5;
-        ctx.moveTo(nodes[i].x,nodes[i].y);
-        ctx.lineTo(nodes[j].x,nodes[j].y);
-        ctx.stroke();
-      }
-    }
-  }
-  nodes.forEach(n => {
-    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(240,165,0,${n.alpha})`; ctx.fill();
-  });
-  requestAnimationFrame(loop);
-}
-
-window.addEventListener('resize', resize);
-resize(); loop();
+const canvas=document.getElementById('hero-canvas');
+const ctx=canvas.getContext('2d');
+let W,H,nodes=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;initNodes();}
+function initNodes(){nodes=[];const c=Math.floor((W*H)/18000);for(let i=0;i<c;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,r:.5+Math.random()*1.5,alpha:.06+Math.random()*.18});}
+function loop(){ctx.clearRect(0,0,W,H);nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;});for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){ctx.beginPath();ctx.strokeStyle=`rgba(240,165,0,${.06*(1-d/120)})`;ctx.lineWidth=.5;ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();}}nodes.forEach(n=>{ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=`rgba(240,165,0,${n.alpha})`;ctx.fill();});requestAnimationFrame(loop);}
+window.addEventListener('resize',resize);resize();loop();
 </script>
 </body>
 </html>
