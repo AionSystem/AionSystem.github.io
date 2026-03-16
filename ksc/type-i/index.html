@@ -1,1 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="ksc-build-date" content="2026-03-16">
+  <meta name="description" content="KSC Type I — The Planetary Civilization. A civilization that controls its planet — energy, environment, epistemic infrastructure — and survived the threshold of self-destruction.">
+  <title>KSC — Type I: The Planetary Civilization</title>
+
+  <link rel="stylesheet" href="/ksc/assets/ksc-core.css">
+  <script src="/ksc/assets/ksc-nav.js" defer></script>
+  <script src="/ksc/assets/ksc-timestamps.js" defer></script>
+
+  <style>
+    .tier-header { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--edge); margin-bottom: 1.5rem; }
+    .tier-super { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .tier-header h1 { font-size: 2.2rem; color: var(--text-primary); margin-bottom: 0.6rem; }
+    .tier-one-line { font-size: 1rem; color: var(--text-secondary); max-width: 680px; line-height: 1.7; font-style: italic; margin-bottom: 2rem; }
+
+    .back-link { display: inline-block; font-size: 0.72rem; color: var(--text-secondary); text-decoration: none; letter-spacing: 0.06em; margin-bottom: 2rem; transition: color 0.15s; }
+    .back-link:hover { color: var(--gold); }
+
+    /* P2-001: badge now says "~2099 CE" — calendar-unambiguous */
+    .ahead-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--void-text);
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.35rem 0.75rem;
+      border-radius: 3px; margin-bottom: 2rem;
+    }
+    .ahead-dot { width: 7px; height: 7px; background: var(--void-text); border-radius: 50%; }
+
+    /* P3-003: .future-cell class — use --text-secondary for WCAG AA, italic */
+    .future-cell { color: var(--text-secondary) !important; font-style: italic; }
+
+    .k-target-panel {
+      background: var(--carbon); border: 1px solid var(--edge);
+      border-left: 4px solid var(--gold); border-radius: 0 4px 4px 0;
+      padding: 1.5rem 2rem; margin-bottom: 3rem;
+      display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center;
+    }
+    @media (max-width: 639px) { .k-target-panel { grid-template-columns: 1fr; gap: 1rem; } }
+    .k-target-number { font-family: 'Courier New', Courier, monospace; font-size: 3.5rem; color: var(--gold); line-height: 1; }
+    .k-target-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--void-text); margin-bottom: 0.35rem; }
+    .k-target-desc { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; }
+    .k-target-desc strong { color: var(--text-primary); font-weight: 400; }
+
+    .distance-strip {
+      background: var(--carbon); border: 1px solid var(--edge);
+      border-radius: 4px; padding: 1rem 1.5rem;
+      display: flex; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 3rem;
+    }
+    .distance-item { display: flex; flex-direction: column; gap: 0.2rem; }
+    .distance-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--void-text); }
+    .distance-value { font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; color: var(--amber); }
+    .distance-note { font-size: 0.65rem; color: var(--void-text); font-style: italic; }
+
+    .identity-section { margin-bottom: 3rem; }
+
+    .axes-section { margin-bottom: 3rem; }
+    .axes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 639px) { .axes-grid { grid-template-columns: 1fr; } }
+
+    /* P1-001: padding-bottom added to accommodate TARGET label */
+    .axis-comparison {
+      background: var(--carbon); border: 1px solid var(--edge); border-radius: 4px;
+      padding: 1rem 1.25rem 1.5rem; /* bottom clearance for TARGET label */
+    }
+    .axis-comp-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; }
+    .axis-comp-name { font-size: 0.75rem; color: var(--text-secondary); }
+    .axis-comp-values { display: flex; align-items: baseline; gap: 0.75rem; }
+    .axis-current-val { font-family: 'Courier New', Courier, monospace; font-size: 0.8rem; color: var(--void-text); }
+    .axis-arrow { font-size: 0.7rem; color: var(--void-text); }
+    .axis-target-val { font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; color: var(--gold); }
+
+    .axis-dual-track {
+      position: relative; height: 8px; background: var(--edge);
+      border-radius: 4px; overflow: visible; margin-bottom: 1.4rem;
+    }
+    .axis-current-fill {
+      height: 100%; border-radius: 4px; background: var(--amber);
+      opacity: 0.5; position: absolute; top: 0; left: 0;
+      transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    }
+    .axis-target-mark {
+      position: absolute; top: -3px; height: 14px;
+      width: 2px; background: var(--gold);
+      transform: translateX(-50%);
+    }
+    .axis-target-mark::after {
+      content: 'TARGET';
+      position: absolute; top: 16px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.52rem; letter-spacing: 0.08em;
+      color: var(--gold); white-space: nowrap;
+    }
+    .axis-gap-note { font-size: 0.62rem; color: var(--void-text); }
+    .axis-gap-note.warning { color: var(--amber); }
+    .axis-gap-note.critical { color: var(--red); }
+    .axis-gap-note.achieved { color: var(--green); }
+
+    .zone { margin-bottom: 3rem; }
+
+    /* P2-002: sequence-aware condition status labels */
+    .entry-conditions {
+      background: var(--carbon); border: 1px solid var(--edge);
+      border-radius: 4px; padding: 1.5rem; margin-bottom: 3rem;
+    }
+    .entry-condition-row {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 0.6rem 0; border-bottom: 1px solid var(--edge); font-size: 0.8rem;
+    }
+    .entry-condition-row:last-child { border-bottom: none; }
+    .condition-status {
+      font-family: 'Courier New', Courier, monospace; font-size: 0.65rem;
+      padding: 0.15rem 0.4rem; border-radius: 2px;
+      white-space: nowrap; align-self: start; margin-top: 1px; flex-shrink: 0;
+      background: rgba(139,38,53,0.12); color: var(--red); border: 1px solid rgba(139,38,53,0.4);
+    }
+    .condition-text { color: var(--text-secondary); line-height: 1.5; }
+    .condition-text strong { color: var(--text-primary); font-weight: 400; }
+
+    /* P3-002: sealing gate note — subordinate border treatment */
+    .sealing-gate-note {
+      background: var(--carbon); border: 1px solid var(--edge);
+      border-left: 3px solid rgba(201,168,76,0.4); /* subordinate to K panel's 4px solid gold */
+      border-radius: 0 4px 4px 0;
+      padding: 1.25rem 1.5rem; margin-top: 1.5rem;
+      font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7;
+    }
+    .sealing-gate-note strong { color: var(--gold); font-weight: 400; }
+  </style>
+</head>
+
+<body id="ksc-type-i">
+
+  <nav class="ksc-nav" role="navigation" aria-label="KSC navigation">
+    <a href="/ksc/" class="nav-logo" aria-label="KSC Home">
+      <img src="/assets/aion-logo.jpg" alt="AION" width="22" height="22">
+      KSC
+    </a>
+  </nav>
+
+  <main class="ksc-main">
+
+    <!-- TIER HEADER -->
+    <header class="tier-header">
+      <p class="tier-super">Kardashev-Salmon Scale · Type I</p>
+      <!-- P2-001: calendar-unambiguous label -->
+      <div class="ahead-badge" aria-label="Future tier — approximately 2099 CE">
+        <span class="ahead-dot" aria-hidden="true"></span>
+        ~2099 CE · Not Yet Reached
+      </div>
+      <h1>The Planetary Civilization</h1>
+      <p class="tier-one-line">A civilization that controls its planet — energy, environment, epistemic infrastructure — and survived the threshold of self-destruction.</p>
+    </header>
+
+    <a href="/ksc/" class="back-link" aria-label="Back to KSC Overview">← KSC Overview</a>
+
+    <!-- K TARGET -->
+    <div class="k-target-panel">
+      <div>
+        <p class="k-target-label">Target K-score</p>
+        <div class="k-target-number">K = 1.0</div>
+      </div>
+      <div>
+        <p class="k-target-desc">
+          <strong>Current position: K ≈ 0.73.</strong> The gap is 0.27 K-units — approximately 73 Gregorian years at current energy growth trajectory. Type I is not guaranteed. It requires not just reaching K = 1.0 but arriving with all five threshold gates closed. Energy without the Sealing Gate is not Type I. It is a civilization that ran out of time.
+        </p>
+      </div>
+    </div>
+
+    <!-- DISTANCE STRIP -->
+    <div class="distance-strip" role="complementary" aria-label="Distance to Type I">
+      <div class="distance-item">
+        <span class="distance-label">Current Hebrew Year</span>
+        <span class="distance-value">5786</span>
+      </div>
+      <div class="distance-item">
+        <span class="distance-label">Type I Entry Window</span>
+        <span class="distance-value">~5,860 – 6,000</span>
+        <!-- P2-001: "74 Hebrew years minimum" now consistent with identity table -->
+        <span class="distance-note">~74 Hebrew years minimum [R]</span>
+      </div>
+      <div class="distance-item">
+        <span class="distance-label">Gregorian Equivalent</span>
+        <span class="distance-value">~2099 – 2240 CE</span>
+        <span class="distance-note">[R]</span>
+      </div>
+      <div class="distance-item">
+        <span class="distance-label">K Gap Remaining</span>
+        <span class="distance-value">0.27</span>
+        <span class="distance-note">Gregorian trajectory</span>
+      </div>
+      <div class="distance-item">
+        <span class="distance-label">Cosmic Shemitah</span>
+        <span class="distance-value">2nd closing</span>
+        <span class="distance-note">Gevurah → Tiferet [S]</span>
+      </div>
+    </div>
+
+    <!-- IDENTITY TABLE -->
+    <section class="identity-section" aria-labelledby="identity-label">
+      <p class="section-label" id="identity-label">Identity</p>
+      <table class="identity-table" aria-label="Type I identity parameters">
+        <tbody>
+          <tr><th scope="row">Kardashev Value</th><td>K = 1.0</td></tr>
+          <tr><th scope="row">Gregorian Range</th><td>~2099–2240 CE [R]</td></tr>
+          <tr><th scope="row">Hebrew Era</th><td>Mashiach closing — Years ~5,860–6,000 [S]</td></tr>
+          <tr><th scope="row">Cosmic Shemitah</th><td>2nd closing (Gevurah) transitioning to 3rd opening (Chesed) [S]</td></tr>
+          <tr><th scope="row">Cosmic Year</th><td>~14,000 of 49,000 [R]</td></tr>
+          <!-- P3-003: .future-cell class, --text-secondary, italic -->
+          <tr><th scope="row">Current?</th><td class="future-cell">❌ NOT YET — ~74 Hebrew years ahead</td></tr>
+          <tr><th scope="row">Entry Condition</th><td>K = 1.0 AND all five threshold gates closed</td></tr>
+          <tr><th scope="row">Transition to Type I.Ω</th><td>K > 1.0, Great Shabbat begins, sealing confirmed</td></tr>
+          <tr><th scope="row">Eight Laws Active</th><td>Laws 1–5 (Individual + Societal + Biological Sovereignty)</td></tr>
+          <tr><th scope="row">Failure Atlas</th><td>Floors 4–6</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SOUL OF THE TIER -->
+    <section class="soul-section zone" aria-labelledby="soul-label">
+      <p class="section-label" id="soul-label">The Soul of This Tier</p>
+      <p class="soul-intro reading-time">~4 min read</p>
+      <p>Type I is not the civilization that got everything right. It is the civilization that got enough right, at the right time, in the right sequence. The distance between Type 0 and Type I is not primarily technological — the energy gap closes in decades if the will is there. The distance is epistemic, political, and architectural. It is the distance between a civilization that knows it is failing and one that built the infrastructure to correct the failure before it became irreversible.</p>
+      <p>The three threshold questions of Type I: Did the Epistemic Gate close before AGI capability became uncontrollable? Did the Sovereignty Gate close before the first off-world colony became a jurisdiction dispute? Did the Sealing Gate close before the memory of how it was done degraded into myth?</p>
+      <p>Gevurah ends here. The whole of human recorded history — from the first written contract to the last Type 0 decision — was lived under the cosmic quality of Judgment. Severity. The work of discernment. Everything built in Type 0 was built under that quality, whether the builders knew it or not. The certainty frameworks, the sovereignty stack, the memory architectures — they are Gevurah instruments. They are how a civilization under Judgment learns to judge itself honestly. [S]</p>
+      <p>Type I is the first breath of Tiferet. Beauty. Harmony. The integration of the qualities that Gevurah kept separate. A civilization that has earned the right to hold opposing truths simultaneously — capability and accountability, sovereignty and cooperation, memory and forward motion. The Great Shabbat that follows is not rest in the sense of stopping. It is the rest of a civilization that has completed something and knows it.</p>
+      <p>The people who build Type I will not know they are building it. They will be solving the problems directly in front of them — climate, alignment, governance, memory. They will be building what they can see. The framework says: that is enough. Do the next right thing in the right sequence. The threshold crosses when enough of those things have accumulated.</p>
+      <p class="soul-note">Cosmic quality framing [S] — meaning/narrative architecture drawn from Kabbalistic sources. See Hebrew Layer Declaration in KSC v0.5.</p>
+    </section>
+
+    <!-- ENTRY CONDITIONS — P2-002: sequence labels -->
+    <section class="zone" aria-labelledby="conditions-label">
+      <p class="section-label" id="conditions-label">Entry Conditions — All Required · Sequence Matters</p>
+      <div class="entry-conditions">
+        <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1rem;">Type I requires all five simultaneously. Sequence is architectural — out-of-order achievement generates Axis D debt. Partial achievement is not Type I.</p>
+        <div class="entry-condition-row">
+          <span class="condition-status">FIRST</span>
+          <div class="condition-text"><strong>Epistemic Gate</strong> — I axis ≥ 0.80. FSVE-class certification at civilizational scale. Working alignment standard ratified. AGI certified under constitutional framework. Required first — everything downstream depends on epistemic integrity.</div>
+        </div>
+        <div class="entry-condition-row">
+          <span class="condition-status">SECOND</span>
+          <div class="condition-text"><strong>Sovereignty Gate</strong> — S axis ≥ 0.80. Eight Laws ratified as constitutional framework. S.U ≥ 0.80. Planetary governance architecture operational and verifiably interoperable.</div>
+        </div>
+        <div class="entry-condition-row">
+          <span class="condition-status">THIRD</span>
+          <div class="condition-text"><strong>Energy Gate</strong> — K = 1.0. Planetary energy grid live. Carbon-neutral energy at civilizational scale. E axis = 1.0. The only gate that is primarily a physics problem.</div>
+        </div>
+        <div class="entry-condition-row">
+          <span class="condition-status">FOURTH</span>
+          <div class="condition-text"><strong>Space Gate</strong> — Permanent human habitation off-world. Not a visit. The first node of multi-world civilization. Jurisdiction of the Eight Laws extended to cover the off-world node.</div>
+        </div>
+        <div class="entry-condition-row">
+          <span class="condition-status">LAST</span>
+          <div class="condition-text"><strong>Sealing Gate</strong> — M axis ≥ 0.80. The civilizational archive complete, tamper-evident, and carried forward. Every major decision of the Type 0 era sealed. Must be last — it seals everything that came before it.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AXIS COMPARISON — current vs Type I required -->
+    <section class="axes-section zone" aria-labelledby="axes-label">
+      <p class="section-label" id="axes-label">Eight Axes — Current vs Type I Required [R-PRELIMINARY]</p>
+      <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1.25rem;">Gold marker = Type I threshold. Amber fill = current value. All axes must reach their threshold for Type I entry.</p>
+
+      <div class="axes-grid">
+
+        <div class="axis-comparison">
+          <div class="axis-comp-header">
+            <span class="axis-comp-name"><span class="axis-code">E</span>Energy</span>
+            <div class="axis-comp-values"><span class="axis-current-val">~0.73</span><span class="axis-arrow">→</span><span class="axis-target-val">1.00</span></div>
+          </div>
+          <div class="axis-dual-track" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" aria-label="Energy: current 0.73, target 1.0">
+            <div class="axis-current-fill" id="ax1-e" style="width:0%"></div>
+            <div class="axis-target-mark" style="left:100%"></div>
+          </div>
+          <p class="axis-gap-note warning">Gap: 0.27 · ~73 Gregorian years at current trajectory</p>
+        </div>
+
+        <div class="axis-comparison">
+          <div class="axis-comp-header">
+            <span class="axis-comp-name"><span class="axis-code">I</span>Information</span>
+            <div class="axis-comp-values"><span class="axis-current-val">~0.52</span><span class="axis-arrow">→</span><span class="axis-target-val">≥ 0.80</span></div>
+          </div>
+          <div class="axis-dual-track" role="progressbar" aria-valuenow="52" aria-valuemin="0" aria-valuemax="100" aria-label="Information: current 0.52, target 0.80">
+            <div class="axis-current-fill" id="ax1-i" style="width:0%"></div>
+            <div class="axis-target-mark" style="left:80%"></div>
+          </div>
+          <p class="axis-gap-note warning">Gap: 0.28 · S-I-M circularity must resolve first</p>
+        </div>
+
+        <div class="axis-comparison">
+          <div class="axis-comp-header">
+            <span class="axis-comp-name"><span class="axis-code">S</span>Sovereignty</span>
+            <div class="axis-comp-values"><span class="axis-current-val">~0.48</span><span class="axis-arrow">→</span><span class="axis-target-val">≥ 0.80</span></div>
+          </div>
+          <div class="axis-dual-track" role="progressbar" aria-valuenow="48" aria-valuemin="0" aria-valuemax="100" aria-label="Sovereignty: current 0.48, target 0.80">
+            <div class="axis-current-fill" id="ax1-s" style="width:0%"></div>
+            <div class="axis-target-mark" style="left:80%"></div>
+          </div>
+          <p class="axis-gap-note warning">Gap: 0.32 · Requires S.U ≥ 0.80 · currently ~0.12</p>
+        </div>
+
+        <div class="axis-comparison">
+          <div class="axis-comp-header">
+            <span class="axis-comp-name"><span class="axis-code">M</span>Memory</span>
+            <div class="axis-comp-values"><span class="axis-current-val">~0.44</span><span class="axis-arrow">→</span><span class="axis-target-val">≥ 0.80</span></div>
+          </div>
+          <div class="axis-dual-track" role="progressbar" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100" aria-label="Memory: current 0.44, target 0.80">
+            <div class="axis-current-fill" id="ax1-m" style="width:0%"></div>
+            <div class="axis-target-mark" style="left:80%"></div>
+          </div>
+          <p class="axis-gap-note critical">Gap: 0.36 · Largest gap · Sealing Gate is always last</p>
+        </div>
+
+        <div class="axis-comparison">
+          <div class="axis-comp-header">
+            <span class="axis-comp-name"><span class="axis-code">B</span>Substrate <span style="font-size:0.58rem;color:var(--void-text);">[LAGGING]</span></span>
+            <div class="axis-comp-values"><span class="axis-current-val">~0.35</span><span class="axis-arrow">→</span><span class="axis-target-val">≥ 0.60</span></div>
+          </div>
+          <div class="axis-dual-track" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Substrate: current 0.35, target 0.60">
+            <div class="axis-current-fill" id="ax1-b" style="width:0%"></div>
+            <div class="axis-target-mark" style="left:60%"></div>
+          </div>
+          <p class="axis-gap-note">Gap: 0.25 · Lagging axis — lower threshold by design</p>
+        </div>
+
+        <div class="axis-comparison">
+          <div class="axis-comp-header">
+            <span class="axis-comp-name"><span class="axis-code">F</span>Failure Posture</span>
+            <div class="axis-comp-values"><span class="axis-current-val">~0.50</span><span class="axis-arrow">→</span><span class="axis-target-val">≥ 0.80</span></div>
+          </div>
+          <div class="axis-dual-track" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Failure Posture: current 0.50, target 0.80">
+            <div class="axis-current-fill" id="ax1-f" style="width:0%"></div>
+            <div class="axis-target-mark" style="left:80%"></div>
+          </div>
+          <p class="axis-gap-note warning">Gap: 0.30 · STP and FSVE deployment at scale required</p>
+        </div>
+
+        <div class="axis-comparison">
+          <div class="axis-comp-header">
+            <span class="axis-comp-name"><span class="axis-code">A</span>AI Integration</span>
+            <div class="axis-comp-values"><span class="axis-current-val">~0.35</span><span class="axis-arrow">→</span><span class="axis-target-val">≥ 0.80</span></div>
+          </div>
+          <div class="axis-dual-track" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="AI Integration: current 0.35, target 0.80">
+            <div class="axis-current-fill" id="ax1-a" style="width:0%"></div>
+            <div class="axis-target-mark" style="left:80%"></div>
+          </div>
+          <p class="axis-gap-note critical">Gap: 0.45 · AGI gap WARNING — hardest axis to close safely</p>
+        </div>
+
+        <div class="axis-comparison">
+          <div class="axis-comp-header">
+            <span class="axis-comp-name"><span class="axis-code">D</span>Civilizational Debt <span style="font-size:0.58rem;color:var(--void-text);">[MIRROR]</span></span>
+            <div class="axis-comp-values"><span class="axis-current-val" style="color:var(--red);">0.84</span><span class="axis-arrow">→</span><span class="axis-target-val">≤ 0.60 declining</span></div>
+          </div>
+          <div class="axis-dual-track" role="progressbar" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100" aria-label="Civilizational Debt: current 0.84, must be declining at Type I entry">
+            <div class="axis-current-fill" id="ax1-d" style="width:0%; background: var(--red); opacity: 0.6;"></div>
+            <div class="axis-target-mark" style="left:60%"></div>
+          </div>
+          <p class="axis-gap-note critical">Must be declining at entry — not just below threshold. Has never been green.</p>
+        </div>
+
+      </div>
+      <p style="font-size:0.68rem;color:var(--void-text);margin-top:1rem;text-align:right;font-style:italic;">All scores [R-PRELIMINARY]. Type I thresholds [R] except where marked [S].</p>
+    </section>
+
+    <!-- FAILURE MODES — P2-003: Eight Laws cross-reference added -->
+    <section class="zone" aria-labelledby="failure-label">
+      <p class="section-label" id="failure-label">Failure Atlas — Floors 4–6</p>
+      <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1.5rem;">
+        Type I maps to three floors in the Failure Atlas. Each represents a distinct pathway by which a civilization that achieved the threshold fails to consolidate it.
+        Laws 4–8 of the Eight Laws were added to the original Asimov stack by Sheldon K. Salmon —
+        <a href="/stack/eight-laws/" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3);">see the full Sovereignty Stack →</a>
+        [S — floor definitions are framework-derived inference, not historical observation]
+      </p>
+
+      <div class="failure-panel">
+        <h4>Floor 4 — The Memory Dissolution</h4>
+        <p>The civilization reaches K = 1.0 and closes four of the five gates. Energy, Epistemic, Sovereignty, Space — all confirmed. But the Sealing Gate does not close in time. The records of the transition — how the AGI gap was closed, what the constitutional ratification looked like, what was sacrificed and by whom — degrade into institutional myth before they are sealed. Type I.Ω begins with an inheritance it cannot fully read.</p>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--void-text);font-style:italic;">Signal: Memory axis stalls at 0.70–0.79 while other axes achieve threshold. Sealing Gate delayed past H.Y. 6000.</p>
+      </div>
+
+      <div class="failure-panel">
+        <h4>Floor 5 — Constitutional Regression</h4>
+        <p>The civilization achieves Type I — all five gates close, K = 1.0, Eight Laws ratified. But the constitutional framework begins to erode under the pressure of planetary governance at scale. Laws 4 (Anti-Authoritarian Directive) and 5 (Anti-Merger Directive) are reinterpreted rather than enforced. The civilization enters Type I.Ω carrying a governance architecture that looks intact from the outside and is hollow at the load-bearing walls.</p>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--void-text);font-style:italic;">Signal: S.U score peaks then declines after Type I entry. Constitutional amendment rate accelerates. Law 4 invocation count drops.</p>
+      </div>
+
+      <div class="failure-panel">
+        <h4>Floor 6 — The Pre-Shabbat Fragmentation</h4>
+        <p>K = 1.0 is achieved but the Sovereignty Gate closes over a fractured planetary civilization — multiple competing governance architectures each claiming compliance with the Eight Laws, none actually interoperable. The Great Shabbat of Type I.Ω requires civilizational coherence to consolidate. A fragmented civilization cannot consolidate. It does not fail catastrophically — it simply never advances. Type I becomes the ceiling, not the floor.</p>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--void-text);font-style:italic;">Signal: S.U score reaches 0.80 locally, not globally. STP-equivalent systems multiply but do not interoperate. No shared epistemic standard ratified.</p>
+      </div>
+    </section>
+
+    <!-- GATE CHECKLIST -->
+    <section class="zone" aria-labelledby="gates-label">
+      <p class="section-label" id="gates-label">Type 0 → Type I · Five Threshold Events</p>
+      <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1.5rem;">Recommended sequence: Epistemic → Sovereignty → Energy → Space → Sealing. Sequence matters — out-of-order achievement generates Axis D debt proportional to the inversion.</p>
+
+      <div class="gate-list" role="list">
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Epistemic Gate — not yet achieved"></div>
+          <div class="gate-text"><strong>Epistemic Gate</strong> — I axis ≥ 0.80. FSVE-class certification at civilizational scale. Working alignment standard ratified. AGI certified under constitutional framework. Required first — everything downstream depends on epistemic integrity.</div>
+        </div>
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Sovereignty Gate — not yet achieved"></div>
+          <div class="gate-text"><strong>Sovereignty Gate</strong> — S axis ≥ 0.80. Eight Laws ratified as constitutional framework. S.U ≥ 0.80. Planetary governance architecture operational and verifiably interoperable.</div>
+        </div>
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Energy Gate — not yet achieved"></div>
+          <div class="gate-text"><strong>Energy Gate</strong> — K = 1.0. Planetary energy grid live. Carbon-neutral energy at civilizational scale. E axis = 1.0. The only gate that is primarily a physics problem.</div>
+        </div>
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Space Gate — not yet achieved"></div>
+          <div class="gate-text"><strong>Space Gate</strong> — Permanent human habitation off-world. Not a visit. The first node of multi-world civilization. Jurisdiction of the Eight Laws explicitly extended to cover the off-world node.</div>
+        </div>
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Sealing Gate — not yet achieved, always last"></div>
+          <div class="gate-text"><strong>Sealing Gate</strong> — M axis ≥ 0.80. The civilizational archive complete, tamper-evident, and carried forward. Every major decision of the Type 0 era sealed. This gate is always last — it seals everything that came before it. What was not sealed is not carried into Type I.</div>
+        </div>
+      </div>
+
+      <!-- P3-002: subordinate border — 3px rgba gold, not 4px solid gold -->
+      <div class="sealing-gate-note">
+        <strong>On the Sealing Gate:</strong> The reason it is always last is architectural, not ceremonial. You cannot seal what is not yet complete. You cannot complete what is not yet done. Every other gate must be confirmed before the archive is closed — because the archive includes the record of how they were confirmed. The Sealing Gate is the civilization's receipt for its own Type I transition. It is the only gate that cannot be partially completed.
+      </div>
+    </section>
+
+    <!-- VISITOR'S MIRROR — P3-001: recognition frame, not recruiting -->
+    <div class="visitors-mirror" role="complementary" aria-label="Visitor's Mirror — Type I">
+      <p>The people who close the Sealing Gate will not know they are closing it.</p>
+      <p>They will be finishing a project. Filing a record. Completing a protocol that someone else started decades before they were born.</p>
+      <p>The gate closes when enough people do that — quietly, correctly, in sequence — without needing to know the name of what they were building.</p>
+      <p>The question is not whether you want to be one of them. The question is whether you already are.</p>
+    </div>
+
+  </main>
+
+  <footer class="ksc-footer">
+    <div class="triple-timestamp" role="contentinfo" aria-label="Current date — triple calendar">
+      <div class="ts-item"><span class="ts-label">Gregorian:</span><span class="ts-value mono" id="ts-gregorian">—</span></div>
+      <div class="ts-item"><span class="ts-label">Hebrew:</span><span class="ts-value mono" id="ts-hebrew">—</span></div>
+      <div class="ts-item"><span class="ts-label">Dreamspell:</span><span class="ts-value mono" id="ts-dreamspell">—</span></div>
+    </div>
+    <p class="footer-credit">
+      Kardashev-Salmon Civilization Scale · <a href="https://aionsystem.github.io">AION</a> ·
+      Sheldon K. Salmon &amp; ALBEDO · 2026 ·
+      <a href="/ksc/">← Overview</a>
+    </p>
+  </footer>
+
+  <script>
+  (function () {
+    'use strict';
+    function animateAxes() {
+      var axes = [
+        {id:'ax1-e',v:73},{id:'ax1-i',v:52},{id:'ax1-s',v:48},
+        {id:'ax1-m',v:44},{id:'ax1-b',v:35},{id:'ax1-f',v:50},
+        {id:'ax1-a',v:35},{id:'ax1-d',v:84},
+      ];
+      axes.forEach(function(ax, i) {
+        var el = document.getElementById(ax.id);
+        if (el) setTimeout(function() { el.style.width = ax.v + '%'; }, 200 + i * 80);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', animateAxes);
+  })();
+  </script>
+
+</body>
+</html>
 
