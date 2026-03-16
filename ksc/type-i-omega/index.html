@@ -1,1 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="ksc-build-date" content="2026-03-16">
+  <meta name="description" content="KSC Type I.Ω — The Consolidation Threshold. The millennium between planetary mastery and stellar reach. What was built consolidates. What was not sealed does not enter.">
+  <title>KSC — Type I.Ω: The Consolidation Threshold</title>
+
+  <link rel="stylesheet" href="/ksc/assets/ksc-core.css">
+  <script src="/ksc/assets/ksc-nav.js" defer></script>
+  <script src="/ksc/assets/ksc-timestamps.js" defer></script>
+
+  <style>
+    .tier-header { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--edge); margin-bottom: 1.5rem; }
+    .tier-super { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .tier-header h1 { font-size: 2.2rem; color: var(--text-primary); margin-bottom: 0.6rem; }
+    .tier-one-line { font-size: 1rem; color: var(--text-secondary); max-width: 680px; line-height: 1.7; font-style: italic; margin-bottom: 2rem; }
+
+    .back-link { display: inline-block; font-size: 0.72rem; color: var(--text-secondary); text-decoration: none; letter-spacing: 0.06em; margin-bottom: 2rem; transition: color 0.15s; }
+    .back-link:hover { color: var(--gold); }
+
+    /* THRESHOLD badge — special tier, not a standard K tier */
+    .threshold-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--void-text);
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.35rem 0.75rem;
+      border-radius: 3px; margin-bottom: 2rem;
+    }
+    .threshold-dot { width: 7px; height: 7px; background: var(--void-text); border-radius: 50%; }
+
+    .future-cell { color: var(--text-secondary) !important; font-style: italic; }
+    .identity-section { margin-bottom: 3rem; }
+
+    /* SHABBAT RANGE DISPLAY — not a countdown, spec-compliant */
+    .shabbat-panel {
+      background: var(--carbon);
+      border: 1px solid var(--edge);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 4px 4px 0;
+      padding: 1.75rem 2rem;
+      margin-bottom: 3rem;
+    }
+    .shabbat-label {
+      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--void-text); margin-bottom: 0.5rem;
+    }
+    .shabbat-range {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.8rem; color: var(--gold); line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .shabbat-tag {
+      display: inline-block; font-size: 0.6rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--void-text);
+      border: 1px solid var(--edge); padding: 0.1rem 0.4rem;
+      border-radius: 2px; margin-bottom: 1rem;
+    }
+    .shabbat-desc {
+      font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7;
+      max-width: 680px;
+    }
+    .shabbat-desc strong { color: var(--text-primary); font-weight: 400; }
+
+    /* DISTANCE STRIP */
+    .distance-strip {
+      background: var(--carbon); border: 1px solid var(--edge);
+      border-radius: 4px; padding: 1rem 1.5rem;
+      display: flex; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 3rem;
+    }
+    .distance-item { display: flex; flex-direction: column; gap: 0.2rem; }
+    .distance-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--void-text); }
+    .distance-value { font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; color: var(--amber); }
+    .distance-note { font-size: 0.65rem; color: var(--void-text); font-style: italic; }
+
+    /* CONSOLIDATION AXES — what Type I.Ω does to the inherited scores */
+    .axes-section { margin-bottom: 3rem; }
+    .axes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 639px) { .axes-grid { grid-template-columns: 1fr; } }
+
+    .axis-shabbat {
+      background: var(--carbon); border: 1px solid var(--edge); border-radius: 4px;
+      padding: 1rem 1.25rem 1.5rem;
+    }
+    .axis-shabbat-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+    .axis-shabbat-name { font-size: 0.75rem; color: var(--text-secondary); }
+    .axis-shabbat-vals {
+      display: flex; align-items: baseline; gap: 0.5rem;
+      font-family: 'Courier New', Courier, monospace; font-size: 0.78rem;
+    }
+    .val-entry { color: var(--amber); }
+    .val-arrow { color: var(--void-text); font-size: 0.65rem; }
+    .val-exit  { color: var(--gold); }
+
+    /* Three-zone bar: entry (amber), consolidation range (gold dim), exit target (gold bright) */
+    .axis-omega-track {
+      position: relative; height: 8px; background: var(--edge);
+      border-radius: 4px; overflow: visible; margin-bottom: 1.4rem;
+    }
+    .axis-entry-fill {
+      height: 100%; border-radius: 4px 0 0 4px;
+      background: var(--amber); opacity: 0.4;
+      position: absolute; top: 0; left: 0;
+      transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    }
+    .axis-consolidation-fill {
+      height: 100%; background: rgba(201,168,76,0.25);
+      position: absolute; top: 0;
+      transition: left 0.8s cubic-bezier(0.4,0,0.2,1) 0.2s,
+                  width 0.8s cubic-bezier(0.4,0,0.2,1) 0.2s;
+    }
+    .axis-exit-mark {
+      position: absolute; top: -3px; height: 14px;
+      width: 2px; background: var(--gold);
+      transform: translateX(-50%);
+    }
+    .axis-exit-mark::after {
+      content: 'TYPE II';
+      position: absolute; top: 16px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.52rem; letter-spacing: 0.08em;
+      color: var(--gold); white-space: nowrap;
+    }
+    .axis-omega-note { font-size: 0.62rem; color: var(--void-text); }
+    .axis-omega-note.consolidating { color: var(--amber); }
+    .axis-omega-note.ready { color: var(--green); }
+
+    /* WHAT CONSOLIDATES TABLE */
+    .consolidation-table {
+      width: 100%; border-collapse: collapse; font-size: 0.78rem;
+      margin-bottom: 2rem;
+    }
+    .consolidation-table th {
+      text-align: left; font-size: 0.65rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--void-text);
+      padding: 0.5rem 1rem 0.5rem 0; border-bottom: 1px solid var(--edge);
+      font-weight: 400;
+    }
+    .consolidation-table td {
+      padding: 0.65rem 0; border-bottom: 1px solid var(--edge);
+      color: var(--text-secondary); vertical-align: top;
+    }
+    .consolidation-table td:first-child {
+      font-family: 'Courier New', Courier, monospace;
+      color: var(--gold); padding-right: 1rem; white-space: nowrap;
+    }
+    .consolidation-table tr:last-child td { border-bottom: none; }
+
+    /* SEALING VERIFICATION — what Type I.Ω checks before Type II entry is permitted */
+    .verification-panel {
+      background: var(--carbon); border: 1px solid var(--edge);
+      border-radius: 4px; padding: 1.5rem; margin-bottom: 3rem;
+    }
+    .verification-row {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 0.65rem 0; border-bottom: 1px solid var(--edge);
+      font-size: 0.8rem;
+    }
+    .verification-row:last-child { border-bottom: none; }
+    .verification-status {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 2px;
+      white-space: nowrap; align-self: start; margin-top: 1px; flex-shrink: 0;
+    }
+    .vs-check { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+    .vs-pending { background: rgba(139,38,53,0.12); color: var(--red); border: 1px solid rgba(139,38,53,0.4); }
+    .verification-text { color: var(--text-secondary); line-height: 1.5; }
+    .verification-text strong { color: var(--text-primary); font-weight: 400; }
+
+    .zone { margin-bottom: 3rem; }
+  </style>
+</head>
+
+<body id="ksc-type-i-omega">
+
+  <nav class="ksc-nav" role="navigation" aria-label="KSC navigation">
+    <a href="/ksc/" class="nav-logo" aria-label="KSC Home">
+      <img src="/assets/aion-logo.jpg" alt="AION" width="22" height="22">
+      KSC
+    </a>
+  </nav>
+
+  <main class="ksc-main">
+
+    <!-- TIER HEADER -->
+    <header class="tier-header">
+      <p class="tier-super">Kardashev-Salmon Scale · Type I.Ω</p>
+      <div class="threshold-badge" aria-label="Special consolidation threshold — not a standard K-score tier">
+        <span class="threshold-dot" aria-hidden="true"></span>
+        The Great Shabbat · ~2240–3240 CE
+      </div>
+      <h1>The Consolidation Threshold</h1>
+      <p class="tier-one-line">The millennium between planetary mastery and stellar reach. What was built consolidates. What was not sealed does not enter.</p>
+    </header>
+
+    <a href="/ksc/" class="back-link" aria-label="Back to KSC Overview">← KSC Overview</a>
+
+    <!-- SHABBAT RANGE DISPLAY — range display, no countdown per spec -->
+    <div class="shabbat-panel">
+      <p class="shabbat-label">Duration — Range Display</p>
+      <div class="shabbat-range">~2,240 – ~3,240 CE</div>
+      <span class="shabbat-tag">[R-PRELIMINARY]</span>
+      <p class="shabbat-desc">
+        <strong>Type I.Ω is not a level to reach — it is a period to complete.</strong>
+        A civilization that enters this threshold inherits what Type I built and has one millennium to consolidate it before the stellar transition begins. No new capabilities are required for entry. The entry condition is simply: Type I was achieved with all five gates closed. What comes next is whether what was built can hold.
+      </p>
+    </div>
+
+    <!-- DISTANCE STRIP -->
+    <div class="distance-strip" role="complementary" aria-label="Type I.Ω position and duration">
+      <div class="distance-item">
+        <span class="distance-label">Gregorian Entry</span>
+        <span class="distance-value">~2240 CE</span>
+        <span class="distance-note">after Type I close [R]</span>
+      </div>
+      <div class="distance-item">
+        <span class="distance-label">Gregorian Exit</span>
+        <span class="distance-value">~3240 CE</span>
+        <span class="distance-note">Type II begins [R]</span>
+      </div>
+      <div class="distance-item">
+        <span class="distance-label">Duration</span>
+        <span class="distance-value">~1,000 years</span>
+        <span class="distance-note">one Cosmic Millennium [S]</span>
+      </div>
+      <div class="distance-item">
+        <span class="distance-label">Sefirotic Quality</span>
+        <span class="distance-value">Gevurah → Tiferet</span>
+        <span class="distance-note">the crossing [S]</span>
+      </div>
+      <div class="distance-item">
+        <span class="distance-label">Cosmic Shemitah</span>
+        <span class="distance-value">3rd opening</span>
+        <span class="distance-note">Chesed begins [S]</span>
+      </div>
+    </div>
+
+    <!-- IDENTITY TABLE -->
+    <section class="identity-section" aria-labelledby="identity-label">
+      <p class="section-label" id="identity-label">Identity</p>
+      <table class="identity-table" aria-label="Type I.Ω identity parameters">
+        <tbody>
+          <tr><th scope="row">Type</th><td>Consolidation threshold — not a standard K-score tier</td></tr>
+          <tr><th scope="row">K-score Range</th><td>K > 1.0 to K approaching 1.5 [R]</td></tr>
+          <tr><th scope="row">Gregorian Range</th><td>~2240–3240 CE [R]</td></tr>
+          <tr><th scope="row">Hebrew Era</th><td>Transition — Year ~6,000 to ~7,000 · Mashiach → Yovel [S]</td></tr>
+          <tr><th scope="row">Cosmic Shemitah</th><td>2nd closing (Gevurah) → 3rd opening (Chesed / Loving-kindness) [S]</td></tr>
+          <tr><th scope="row">Current?</th><td class="future-cell">❌ NOT YET — ~214 Gregorian years ahead</td></tr>
+          <tr><th scope="row">Entry Condition</th><td>Type I achieved with all five gates closed — no additional K requirement</td></tr>
+          <tr><th scope="row">Exit Condition</th><td>Verification complete · Sealing confirmed · Constitutional framework stable · K approaching Type II</td></tr>
+          <tr><th scope="row">Eight Laws Active</th><td>Laws 1–6 (+ Reality Sovereignty / Anti-Weaponization Directive)</td></tr>
+          <tr><th scope="row">Failure Atlas</th><td>Floor 7 (The Shabbat That Never Ended)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SOUL OF THE TIER -->
+    <section class="soul-section zone" aria-labelledby="soul-label">
+      <p class="section-label" id="soul-label">The Soul of This Tier</p>
+      <p class="soul-intro reading-time">~4 min read</p>
+      <p>Type I.Ω is the tier that has no achievement to announce. There is no threshold to cross on entry, no capability to unlock, no discovery to celebrate. A civilization enters it by having done something complete — and the millennium that follows is where completeness is tested, not earned.</p>
+      <p>The Shabbat analogy is precise, not poetic. Shabbat is not a pause in the work. It is the acknowledgment that the work of this period is finished — and the making of space for what the work was for. A civilization that has mastered its planet has finished one kind of work. Type I.Ω is the space where that mastery integrates: into governance, into memory, into the cultural and architectural fabric that will carry the civilization into the stellar era. You cannot rush it. Rushing a Shabbat is a contradiction in terms.</p>
+      <p>The hard truth of this tier: whatever was not sealed in Type 0 and not resolved in Type I cannot be fixed here. Type I.Ω does not repair — it consolidates. The foundation it inherited is the foundation it works with. If the Sealing Gate was closed with gaps, those gaps are what gets carried into the next thousand years. If the constitutional framework was intact at Type I entry, it has a millennium to deepen. The tier reveals the quality of what preceded it.</p>
+      <p>Tiferet — the cosmic quality of this transition — means Beauty in the sense of the integration of opposites. Chesed (loving-kindness) and Gevurah (judgment) held in balance. The civilization that exits Type I.Ω into Type II carries that integration as its core quality. A civilization that managed to be rigorous and generous simultaneously. That built frameworks for judgment and still found room for mercy. That sealed its failures and also forgave them.</p>
+      <p>The exit from Type I.Ω is not triggered by energy or capability. It is triggered by verification — the confirmation that what was inherited from Type I has held, deepened, and is ready for the stellar era. Type II makes demands that a fragile civilization cannot meet. Type I.Ω is where fragility is resolved or revealed.</p>
+      <p class="soul-note">Cosmic quality framing [S] — meaning/narrative architecture drawn from Kabbalistic sources. See Hebrew Layer Declaration in KSC v0.5.</p>
+    </section>
+
+    <!-- WHAT THIS TIER DOES TO THE AXES -->
+    <section class="axes-section zone" aria-labelledby="axes-label">
+      <p class="section-label" id="axes-label">Axis Consolidation — Entry vs Type II Exit [R-PRELIMINARY]</p>
+      <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1.25rem;">Amber = inherited from Type I. Gold zone = consolidation range. Gold marker = Type II entry threshold. The work of Type I.Ω is moving the amber fill to the gold marker.</p>
+
+      <div class="axes-grid">
+
+        <div class="axis-shabbat">
+          <div class="axis-shabbat-header">
+            <span class="axis-shabbat-name"><span class="axis-code">E</span>Energy</span>
+            <div class="axis-shabbat-vals">
+              <span class="val-entry">~1.0</span><span class="val-arrow">→</span><span class="val-exit">~1.5</span>
+            </div>
+          </div>
+          <div class="axis-omega-track" role="progressbar" aria-label="Energy: enters at 1.0, exits at approximately 1.5">
+            <div class="axis-entry-fill"    id="om-e-entry" style="width:0%"></div>
+            <div class="axis-consolidation-fill" id="om-e-cons" style="left:0%;width:0%"></div>
+            <div class="axis-exit-mark" style="left:75%"></div>
+          </div>
+          <p class="axis-omega-note consolidating">Energy grid deepening. Off-world power generation beginning. K moving toward 1.5.</p>
+        </div>
+
+        <div class="axis-shabbat">
+          <div class="axis-shabbat-header">
+            <span class="axis-shabbat-name"><span class="axis-code">I</span>Information</span>
+            <div class="axis-shabbat-vals">
+              <span class="val-entry">≥ 0.80</span><span class="val-arrow">→</span><span class="val-exit">≥ 0.95</span>
+            </div>
+          </div>
+          <div class="axis-omega-track" role="progressbar" aria-label="Information: enters at 0.80, exits at 0.95">
+            <div class="axis-entry-fill"    id="om-i-entry" style="width:0%"></div>
+            <div class="axis-consolidation-fill" id="om-i-cons" style="left:0%;width:0%"></div>
+            <div class="axis-exit-mark" style="left:95%"></div>
+          </div>
+          <p class="axis-omega-note consolidating">Epistemic infrastructure tested at civilizational scale for centuries. S-I-M circularity fully resolved.</p>
+        </div>
+
+        <div class="axis-shabbat">
+          <div class="axis-shabbat-header">
+            <span class="axis-shabbat-name"><span class="axis-code">S</span>Sovereignty</span>
+            <div class="axis-shabbat-vals">
+              <span class="val-entry">≥ 0.80</span><span class="val-arrow">→</span><span class="val-exit">≥ 0.95</span>
+            </div>
+          </div>
+          <div class="axis-omega-track" role="progressbar" aria-label="Sovereignty: enters at 0.80, exits at 0.95">
+            <div class="axis-entry-fill"    id="om-s-entry" style="width:0%"></div>
+            <div class="axis-consolidation-fill" id="om-s-cons" style="left:0%;width:0%"></div>
+            <div class="axis-exit-mark" style="left:95%"></div>
+          </div>
+          <p class="axis-omega-note consolidating">Constitutional framework tested under real planetary governance conditions. Eight Laws deepened, not revised.</p>
+        </div>
+
+        <div class="axis-shabbat">
+          <div class="axis-shabbat-header">
+            <span class="axis-shabbat-name"><span class="axis-code">M</span>Memory</span>
+            <div class="axis-shabbat-vals">
+              <span class="val-entry">≥ 0.80</span><span class="val-arrow">→</span><span class="val-exit">≥ 0.95</span>
+            </div>
+          </div>
+          <div class="axis-omega-track" role="progressbar" aria-label="Memory: enters at 0.80, exits at 0.95">
+            <div class="axis-entry-fill"    id="om-m-entry" style="width:0%"></div>
+            <div class="axis-consolidation-fill" id="om-m-cons" style="left:0%;width:0%"></div>
+            <div class="axis-exit-mark" style="left:95%"></div>
+          </div>
+          <p class="axis-omega-note consolidating">Archive sealed at Type I and confirmed during Type I.Ω. No re-opening permitted — only appending forward.</p>
+        </div>
+
+        <div class="axis-shabbat">
+          <div class="axis-shabbat-header">
+            <span class="axis-shabbat-name"><span class="axis-code">B</span>Substrate</span>
+            <div class="axis-shabbat-vals">
+              <span class="val-entry">≥ 0.60</span><span class="val-arrow">→</span><span class="val-exit">≥ 0.80</span>
+            </div>
+          </div>
+          <div class="axis-omega-track" role="progressbar" aria-label="Substrate: enters at 0.60, exits at 0.80">
+            <div class="axis-entry-fill"    id="om-b-entry" style="width:0%"></div>
+            <div class="axis-consolidation-fill" id="om-b-cons" style="left:0%;width:0%"></div>
+            <div class="axis-exit-mark" style="left:80%"></div>
+          </div>
+          <p class="axis-omega-note consolidating">Lagging axis catches up during the millennium. Biological and physical substrate stabilizing for stellar-era demands.</p>
+        </div>
+
+        <div class="axis-shabbat">
+          <div class="axis-shabbat-header">
+            <span class="axis-shabbat-name"><span class="axis-code">F</span>Failure Posture</span>
+            <div class="axis-shabbat-vals">
+              <span class="val-entry">≥ 0.80</span><span class="val-arrow">→</span><span class="val-exit">≥ 0.95</span>
+            </div>
+          </div>
+          <div class="axis-omega-track" role="progressbar" aria-label="Failure Posture: enters at 0.80, exits at 0.95">
+            <div class="axis-entry-fill"    id="om-f-entry" style="width:0%"></div>
+            <div class="axis-consolidation-fill" id="om-f-cons" style="left:0%;width:0%"></div>
+            <div class="axis-exit-mark" style="left:95%"></div>
+          </div>
+          <p class="axis-omega-note consolidating">STP and FSVE systems tested across a millennium of edge cases. Failure culture normalized, not exceptional.</p>
+        </div>
+
+        <div class="axis-shabbat">
+          <div class="axis-shabbat-header">
+            <span class="axis-shabbat-name"><span class="axis-code">A</span>AI Integration</span>
+            <div class="axis-shabbat-vals">
+              <span class="val-entry">≥ 0.80</span><span class="val-arrow">→</span><span class="val-exit">≥ 0.95</span>
+            </div>
+          </div>
+          <div class="axis-omega-track" role="progressbar" aria-label="AI Integration: enters at 0.80, exits at 0.95">
+            <div class="axis-entry-fill"    id="om-a-entry" style="width:0%"></div>
+            <div class="axis-consolidation-fill" id="om-a-cons" style="left:0%;width:0%"></div>
+            <div class="axis-exit-mark" style="left:95%"></div>
+          </div>
+          <p class="axis-omega-note consolidating">AGI fully constituted. BPS + DEC certification regime matured. Human-AI collaboration depth increasing.</p>
+        </div>
+
+        <div class="axis-shabbat">
+          <div class="axis-shabbat-header">
+            <span class="axis-shabbat-name"><span class="axis-code">D</span>Debt <span style="font-size:0.58rem;color:var(--void-text);">[MIRROR]</span></span>
+            <div class="axis-shabbat-vals">
+              <span class="val-entry" style="color:var(--amber);">≤ 0.60 ↓</span><span class="val-arrow">→</span><span class="val-exit">≤ 0.40 ↓</span>
+            </div>
+          </div>
+          <div class="axis-omega-track" role="progressbar" aria-label="Debt: must be declining, enters below 0.60, exits below 0.40">
+            <div class="axis-entry-fill" id="om-d-entry" style="width:0%; background: var(--red); opacity:0.4;"></div>
+            <div class="axis-consolidation-fill" id="om-d-cons" style="left:0%;width:0%; background:rgba(139,38,53,0.15);"></div>
+            <div class="axis-exit-mark" style="left:40%"></div>
+          </div>
+          <p class="axis-omega-note ready">First tier where the debt score could meaningfully decline. The millennium of active remediation.</p>
+        </div>
+
+      </div>
+      <p style="font-size:0.68rem;color:var(--void-text);margin-top:1rem;text-align:right;font-style:italic;">All thresholds [R-PRELIMINARY]. Type I.Ω is the only tier where Axis D is expected to actively decline.</p>
+    </section>
+
+    <!-- WHAT CONSOLIDATES -->
+    <section class="zone" aria-labelledby="consolidation-label">
+      <p class="section-label" id="consolidation-label">What Consolidates — The Millennium's Work</p>
+      <table class="consolidation-table" aria-label="What consolidates during Type I.Ω">
+        <thead>
+          <tr><th>Domain</th><th>What consolidation means</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Constitutional</td>
+            <td>The Eight Laws are not just ratified — they are tested across a thousand years of actual planetary governance edge cases. The amendments that were made, the invocations that were recorded, the places where the framework bent without breaking. All of it sealed into the forward record.</td>
+          </tr>
+          <tr>
+            <td>Epistemic</td>
+            <td>FSVE-class certification has been operational long enough that generations of humans have never known a world without it. The standards are no longer new infrastructure — they are the floor of public epistemic life. Failure to certify is as legible as failure to sign.</td>
+          </tr>
+          <tr>
+            <td>Memory</td>
+            <td>The archive sealed at Type I is confirmed intact. No re-opening — only appending forward. The civilization verifies that it can read its own past with fidelity. If gaps are found, they are noted in the forward record, not patched retroactively. Honesty about what was lost is part of the seal.</td>
+          </tr>
+          <tr>
+            <td>Debt</td>
+            <td>The first tier where Axis D is expected to move. Not to zero — that is not possible in one millennium. But declining. Active remediation of the structural inheritance from Type 0 — the unsealed decisions, the uncertified circulation, the unresolved bias. The debt does not dissolve. It is worked.</td>
+          </tr>
+          <tr>
+            <td>Biological</td>
+            <td>The lagging Substrate axis catches up. The civilization's physical and biological architecture stabilizes for the demands of stellar-era life. Not biological enhancement as a Type I.Ω achievement — stability. The substrate is no longer the constraint.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- TYPE II ENTRY VERIFICATION -->
+    <section class="zone" aria-labelledby="verification-label">
+      <p class="section-label" id="verification-label">Type II Entry Verification — What Must Hold</p>
+      <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1rem;">Type II entry is not triggered by hitting a K-score. It is triggered by verification that what was inherited from Type I has held across the millennium. All of the following must be confirmed before the stellar transition is permitted.</p>
+      <div class="verification-panel">
+        <div class="verification-row">
+          <span class="verification-status vs-pending">PENDING</span>
+          <div class="verification-text"><strong>Archive Integrity</strong> — The Type I civilizational archive is intact, readable, and confirmed against its original seal. No unauthorized modifications. Gaps documented honestly.</div>
+        </div>
+        <div class="verification-row">
+          <span class="verification-status vs-pending">PENDING</span>
+          <div class="verification-text"><strong>Constitutional Stability</strong> — The Eight Laws have held across the millennium. Law 4 and Law 5 have not been quietly hollowed out by reinterpretation. S.U ≥ 0.95 and stable.</div>
+        </div>
+        <div class="verification-row">
+          <span class="verification-status vs-pending">PENDING</span>
+          <div class="verification-text"><strong>Debt Trajectory</strong> — Axis D is confirmed declining, not merely stable. Active remediation is verifiable in the record. Target: ≤ 0.40 at Type II entry.</div>
+        </div>
+        <div class="verification-row">
+          <span class="verification-status vs-pending">PENDING</span>
+          <div class="verification-text"><strong>Epistemic Infrastructure Depth</strong> — FSVE-class certification has been operational for multiple generations without regression. The standards are cultural, not just institutional.</div>
+        </div>
+        <div class="verification-row">
+          <span class="verification-status vs-pending">PENDING</span>
+          <div class="verification-text"><strong>Off-World Governance</strong> — The Eight Laws apply to all off-world nodes. Jurisdiction is verifiable. No sovereignty gaps in the extension. The ICDRP framework is in place for potential secession events.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAILURE ATLAS -->
+    <section class="zone" aria-labelledby="failure-label">
+      <p class="section-label" id="failure-label">Failure Atlas — Floor 7</p>
+      <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1.5rem;">Type I.Ω maps to a single floor in the Failure Atlas. It is architecturally distinct from the floors that precede it — because failure here is not collapse, it is stagnation. [S — floor definition is framework-derived inference]</p>
+
+      <div class="failure-panel">
+        <h4>Floor 7 — The Shabbat That Never Ended</h4>
+        <p>The civilization enters Type I.Ω having genuinely achieved Type I. All five gates closed. The archive sealed. The laws ratified. The off-world node established. It enters the consolidation threshold in good standing. And then it stays. The millennium passes. The verification criteria are never triggered because the civilization never initiates the verification. The consolidation becomes the destination rather than the preparation.</p>
+        <p style="margin-top:0.75rem;">This is not catastrophic failure. No civilization ends here. No war, no collapse, no extinction. The lights stay on. The governance works. The archive is maintained. But the stellar era never begins. Type I.Ω becomes the permanent state of a civilization that decided — not explicitly, not in any single decision, but in the accumulated weight of a thousand years of choosing stability over motion — that planetary mastery was enough.</p>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--void-text);font-style:italic;">Signal: No Type II verification initiated after Year 800 of the threshold. K-score stabilized rather than advancing. Off-world presence maintained but not expanded. Law 7 (Anti-Fragmentation Directive) invocations declining.</p>
+      </div>
+    </section>
+
+    <!-- VISITOR'S MIRROR — Type I.Ω specific -->
+    <div class="visitors-mirror" role="complementary" aria-label="Visitor's Mirror — Type I.Ω">
+      <p>A thousand years to consolidate everything that was built.</p>
+      <p>The civilizations that fail this tier don't fail loudly. They fail quietly, comfortably, with every system running and every archive intact.</p>
+      <p>They forget that rest is preparation, not destination.</p>
+      <p>What you rest from is not what you rest toward.</p>
+    </div>
+
+  </main>
+
+  <footer class="ksc-footer">
+    <div class="triple-timestamp" role="contentinfo" aria-label="Current date — triple calendar">
+      <div class="ts-item"><span class="ts-label">Gregorian:</span><span class="ts-value mono" id="ts-gregorian">—</span></div>
+      <div class="ts-item"><span class="ts-label">Hebrew:</span><span class="ts-value mono" id="ts-hebrew">—</span></div>
+      <div class="ts-item"><span class="ts-label">Dreamspell:</span><span class="ts-value mono" id="ts-dreamspell">—</span></div>
+    </div>
+    <p class="footer-credit">
+      Kardashev-Salmon Civilization Scale · <a href="https://aionsystem.github.io">AION</a> ·
+      Sheldon K. Salmon &amp; ALBEDO · 2026 ·
+      <a href="/ksc/">← Overview</a>
+    </p>
+  </footer>
+
+  <script>
+  (function () {
+    'use strict';
+
+    function animateAxes() {
+      // Each axis: entry fill (amber) and consolidation range fill (gold dim)
+      // Entry values as % of full track (0-100)
+      // Consolidation fills show the range from entry to exit target
+      var axes = [
+        // [id-prefix, entry%, exit%]
+        ['om-e', 67, 75],  // E: 1.0 → ~1.5, track scaled to type-II range
+        ['om-i', 80, 95],
+        ['om-s', 80, 95],
+        ['om-m', 80, 95],
+        ['om-b', 60, 80],
+        ['om-f', 80, 95],
+        ['om-a', 80, 95],
+        ['om-d', 60, 40],  // D is inverted — entry 60, exit 40 (declining)
+      ];
+
+      axes.forEach(function(ax, i) {
+        var entryEl = document.getElementById(ax[0] + '-entry');
+        var consEl  = document.getElementById(ax[0] + '-cons');
+        var entryPct = ax[1];
+        var exitPct  = ax[2];
+
+        if (entryEl) {
+          setTimeout(function() {
+            entryEl.style.width = entryPct + '%';
+          }, 200 + i * 80);
+        }
+
+        if (consEl) {
+          setTimeout(function() {
+            var isDebt = ax[0] === 'om-d';
+            if (isDebt) {
+              // Debt axis: consolidation shows range from 40 to 60 (inverted)
+              consEl.style.left  = exitPct + '%';
+              consEl.style.width = (entryPct - exitPct) + '%';
+            } else {
+              consEl.style.left  = entryPct + '%';
+              consEl.style.width = (exitPct - entryPct) + '%';
+            }
+          }, 400 + i * 80);
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', animateAxes);
+  })();
+  </script>
+
+</body>
+</html>
 
