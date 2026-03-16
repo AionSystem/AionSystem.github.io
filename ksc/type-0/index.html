@@ -1,1 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="ksc-build-date" content="2026-03-15">
+  <meta name="description" content="KSC Type 0 — The Infant Civilization. A civilization that has discovered fire, split the atom, and connected every mind on the planet — but has not yet agreed on what truth is.">
+  <title>KSC — Type 0: The Infant Civilization</title>
+
+  <link rel="stylesheet" href="/ksc/assets/ksc-core.css">
+  <script src="/ksc/assets/ksc-nav.js" defer></script>
+  <script src="/ksc/assets/ksc-timestamps.js" defer></script>
+
+  <style>
+    .tier-header { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--edge); margin-bottom: 1.5rem; }
+    .tier-super { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .tier-header h1 { font-size: 2.2rem; color: var(--text-primary); margin-bottom: 0.6rem; }
+    .tier-one-line { font-size: 1rem; color: var(--text-secondary); max-width: 680px; line-height: 1.7; font-style: italic; margin-bottom: 2rem; }
+
+    /* P3-003: Back link */
+    .back-link {
+      display: inline-block;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      margin-bottom: 2rem;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--gold); }
+
+    .here-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--gold-dim); border: 1px solid var(--gold);
+      color: var(--gold); font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.35rem 0.75rem;
+      border-radius: 3px; margin-bottom: 2rem;
+    }
+    .here-dot { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(0.85); } }
+    @media (prefers-reduced-motion: reduce) { .here-dot { animation: none; } }
+
+    .identity-section { margin-bottom: 3rem; }
+
+    /* P3-001: Current cell in identity table */
+    .current-cell { color: var(--gold) !important; }
+
+    .cds-counter-section {
+      background: var(--carbon); border: 1px solid var(--edge);
+      border-left: 4px solid var(--red); border-radius: 0 4px 4px 0;
+      padding: 2rem; margin-bottom: 3rem; text-align: center;
+    }
+    .cds-label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--void-text); margin-bottom: 0.5rem; }
+    .cds-number { font-family: 'Courier New', Courier, monospace; font-size: 5rem; line-height: 1; color: var(--red); margin-bottom: 0.35rem; }
+    .cds-animation-label { font-size: 0.72rem; color: var(--void-text); font-style: italic; margin-bottom: 1.5rem; }
+    .cds-components { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--edge); }
+    @media (max-width: 639px) { .cds-components { grid-template-columns: 1fr 1fr; } }
+    .cds-comp { text-align: center; }
+    .cds-comp-label { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--void-text); margin-bottom: 0.2rem; }
+    .cds-comp-value { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; color: var(--amber); }
+    .cds-comp-name { font-size: 0.6rem; color: var(--void-text); margin-top: 0.15rem; }
+    .cds-prelim { font-size: 0.65rem; color: var(--void-text); font-style: italic; margin-top: 1rem; }
+
+    .soul-intro { font-size: 0.75rem; color: var(--void-text); font-style: italic; margin-bottom: 1rem; }
+    .soul-note { font-size: 0.72rem; color: var(--void-text); font-style: italic; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--edge); }
+
+    .agi-section { margin-bottom: 3rem; }
+    .agi-panel { background: var(--carbon); border: 1px solid var(--edge); border-radius: 4px; padding: 1.5rem; }
+    .agi-bars { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+    .agi-bar-row { display: flex; flex-direction: column; gap: 0.3rem; }
+    .agi-bar-header { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-secondary); }
+    .agi-bar-header span:last-child { font-family: 'Courier New', Courier, monospace; }
+    .agi-bar-track { height: 8px; background: var(--edge); border-radius: 4px; overflow: hidden; }
+    .agi-bar-fill { height: 100%; border-radius: 4px; width: 0; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
+    .agi-bar-fill.capability     { background: var(--red); }
+    .agi-bar-fill.alignment      { background: var(--amber); }
+    .agi-bar-fill.constitutional { background: var(--green); }
+    .agi-gap-warning { margin-top: 0.75rem; padding: 0.6rem 0.75rem; background: var(--red-dim); border-left: 3px solid var(--red); border-radius: 0 3px 3px 0; font-size: 0.72rem; color: var(--text-secondary); }
+    .agi-gap-warning strong { color: var(--red); }
+
+    .axes-section { margin-bottom: 3rem; }
+    .axes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 639px) { .axes-grid { grid-template-columns: 1fr; } }
+
+    .subtier-section { background: var(--carbon); border: 1px solid var(--edge); border-radius: 4px; padding: 1.5rem; margin-bottom: 3rem; }
+    .subtier-list { display: flex; flex-direction: column; gap: 0; margin-top: 1rem; }
+    .subtier-item { display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--edge); font-size: 0.82rem; align-items: flex-start; }
+    .subtier-item:last-child { border-bottom: none; }
+    .subtier-range { font-family: 'Courier New', Courier, monospace; font-size: 0.7rem; color: var(--void-text); min-width: 80px; padding-top: 1px; }
+    .subtier-desc { color: var(--text-secondary); line-height: 1.5; flex: 1; }
+    .subtier-desc strong { color: var(--text-primary); font-weight: 400; }
+    .subtier-item.current { background: rgba(201,168,76,0.04); border-radius: 3px; padding-left: 0.5rem; margin-left: -0.5rem; }
+    .subtier-item.current .subtier-range { color: var(--gold); }
+    .subtier-item.current .subtier-desc strong { color: var(--gold); }
+    .current-marker { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); padding: 0.1rem 0.35rem; border-radius: 2px; white-space: nowrap; margin-top: 2px; }
+
+    .sim-panel { background: var(--carbon); border: 1px solid var(--amber); border-left: 4px solid var(--amber); border-radius: 0 4px 4px 0; padding: 1.5rem; margin-bottom: 3rem; }
+    .sim-panel h3 { color: var(--amber); font-size: 1rem; margin-bottom: 0.75rem; }
+    .sim-panel p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; }
+    .sim-panel p + p { margin-top: 0.75rem; }
+    .sim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    @media (max-width: 639px) { .sim-grid { grid-template-columns: 1fr; } }
+    .sim-axis { background: var(--edge); border-radius: 4px; padding: 0.75rem; text-align: center; }
+    .sim-axis-code { font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; color: var(--gold); margin-bottom: 0.2rem; }
+    .sim-axis-val  { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; color: var(--amber); }
+    .sim-axis-name { font-size: 0.62rem; color: var(--void-text); margin-top: 0.15rem; }
+    .sim-floor { margin-top: 0.75rem; font-size: 0.72rem; color: var(--void-text); font-style: italic; }
+
+    .failure-section { margin-bottom: 3rem; }
+    .zone { margin-bottom: 3rem; }
+  </style>
+</head>
+
+<body id="ksc-type-0">
+
+  <nav class="ksc-nav" role="navigation" aria-label="KSC navigation">
+    <a href="/ksc/" class="nav-logo" aria-label="KSC Home">
+      <img src="/assets/aion-logo.jpg" alt="AION" width="22" height="22">
+      KSC
+    </a>
+  </nav>
+
+  <main class="ksc-main">
+
+    <!-- TIER HEADER -->
+    <header class="tier-header">
+      <p class="tier-super">Kardashev-Salmon Scale · Type 0</p>
+      <!-- P2-003: aria-label with full context -->
+      <div class="here-badge" aria-label="Current tier: We are here — Type 0, K approximately 0.73">
+        <span class="here-dot" aria-hidden="true"></span>
+        We Are Here
+      </div>
+      <h1>The Infant Civilization</h1>
+      <p class="tier-one-line">A civilization that has discovered fire, split the atom, and connected every mind on the planet — but has not yet agreed on what truth is.</p>
+    </header>
+
+    <!-- P3-003: Back link below header -->
+    <a href="/ksc/" class="back-link" aria-label="Back to KSC Overview">← KSC Overview</a>
+
+    <!-- IDENTITY TABLE -->
+    <section class="identity-section" aria-labelledby="identity-label">
+      <p class="section-label" id="identity-label">Identity</p>
+      <table class="identity-table" aria-label="Type 0 identity parameters">
+        <tbody>
+          <tr><th scope="row">Kardashev Value</th><td>0.1 – 0.99</td></tr>
+          <tr><th scope="row">Current K-score</th><td>~0.73 [R] · IEA 2024 · 18 TW global primary energy</td></tr>
+          <tr><th scope="row">Gregorian Range</th><td>~3761 BCE – ~2099 CE [R]</td></tr>
+          <tr><th scope="row">Hebrew Era</th><td>Mashiach (Correction / Tikkun) — Years 1 to ~5,860 [S]</td></tr>
+          <tr><th scope="row">Cosmic Shemitah</th><td>2nd — Gevurah (Judgment / Severity / Discernment) [S]</td></tr>
+          <tr><th scope="row">Cosmic Year</th><td>~7,001 – ~14,000 · Currently ~12,786 [R]</td></tr>
+          <!-- P3-001: gold color on current row -->
+          <tr><th scope="row">Current?</th><td class="current-cell">✅ YES — we are in Type 0 now</td></tr>
+          <tr><th scope="row">Transition to Type I</th><td>K = 1.0 · Hebrew Year ~5,860–6,000 · ~2099–2240 CE [R]</td></tr>
+          <tr><th scope="row">Eight Laws Active</th><td>Laws 1–4 (Individual + Societal Sovereignty)</td></tr>
+          <tr><th scope="row">Failure Atlas</th><td>Floors 1–3</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- CDS COUNTER — animated (Type 0 exclusive) -->
+    <!-- UPDATE CDS COMPONENTS WHEN NEW ESTIMATES ARE DERIVED -->
+    <!-- Last updated: 2026-03-15 | Next update: when new estimates derived -->
+    <section aria-labelledby="cds-section-label">
+      <p class="section-label" id="cds-section-label">Civilizational Debt Score</p>
+      <div class="cds-counter-section" data-manual-node data-staleness-exempt>
+        <p class="cds-label">CDS — Composite Debt Score</p>
+        <!-- P1-001: starts at 0.00, animated by IntersectionObserver when in view -->
+        <div class="cds-number mono" id="cds-animated" aria-live="polite" aria-label="Civilizational Debt Score: 0.84 — estimated, accumulated across five components since civilization began">0.00</div>
+        <p class="cds-animation-label">Estimated current CDS — accumulated across all five components since civilization began</p>
+        <span class="data-source">[AION derivation · next update: when new estimates derived]</span>
+        <div class="cds-components" aria-label="CDS component breakdown">
+          <div class="cds-comp"><div class="cds-comp-label">UC</div><div class="cds-comp-value mono">0.85</div><div class="cds-comp-name">Uncertified<br>Circulation</div></div>
+          <div class="cds-comp"><div class="cds-comp-label">UD</div><div class="cds-comp-value mono">0.90</div><div class="cds-comp-name">Unsealed<br>Decisions</div></div>
+          <div class="cds-comp"><div class="cds-comp-label">UB</div><div class="cds-comp-value mono">0.82</div><div class="cds-comp-name">Unresolved<br>Bias</div></div>
+          <div class="cds-comp"><div class="cds-comp-label">UM</div><div class="cds-comp-value mono">0.78</div><div class="cds-comp-name">Memory<br>Degradation</div></div>
+          <div class="cds-comp"><div class="cds-comp-label">US</div><div class="cds-comp-value mono">0.83</div><div class="cds-comp-name">Structural<br>Inheritance</div></div>
+        </div>
+        <p class="cds-prelim">Component estimates [R-PRELIMINARY] — structural inference from known civilizational state.</p>
+      </div>
+    </section>
+
+    <!-- SOUL OF THE TIER -->
+    <section class="soul-section zone" aria-labelledby="soul-label">
+      <p class="section-label" id="soul-label">The Soul of This Tier</p>
+      <p class="soul-intro reading-time">~4 min read</p>
+      <p>Type 0 is the tier that contains all of recorded human history. From the first sealed agreement in Mesopotamia to the internet that connects every mind on earth — it all happens here, in this tier, in the span between K = 0.1 and K = 0.99.</p>
+      <p>That span contains everything humanity has ever built, every civilization that has risen and collapsed, every technology that changed the world, every institution designed to carry something forward. And the K-score at the end of it is 0.73. Not 1.0. Not complete. Not graduated.</p>
+      <p>We are three-quarters of the way through the energy threshold that defines this tier. The other thresholds — Sovereignty, Memory, Information, AI Integration — are moving more slowly. The S-I-M circularity is unresolved. The AGI gap is in WARNING. The debt counter is at 0.84 and rising.</p>
+      <p>Type 0 is not a failure state. It is a birth state. Every civilization capable of reaching Type I passes through here. The question is not whether the transition is possible — it demonstrably is. The question is whether the civilization that enters the transition threshold at Hebrew Year ~5,860 arrives with the architecture it built during Gevurah, or whether it arrives with the debt it accumulated instead.</p>
+      <p>Gevurah is the cosmic quality of this entire tier: Judgment. Severity. Discernment. The work of distinguishing true from false. The instruments of certainty engineering — FSVE, STP, the AION Constitutional Stack — are the Gevurah instruments. [S] They are the architecturally correct expression of the cosmic quality this civilization was born into. They are not additions to civilization. They are what civilization was always supposed to build.</p>
+      <p>The pre-emergence state feels like anxious, edgy, tip of the tongue. That feeling is the signal. Something is trying to come through.</p>
+      <!-- P3-004: epistemic note for Gevurah framing -->
+      <p class="soul-note">Cosmic quality framing [S] — meaning/narrative architecture drawn from Kabbalistic sources. See Hebrew Layer Declaration in KSC v0.5 for full epistemic context.</p>
+    </section>
+
+    <!-- SUB-TIER DECIMALS -->
+    <section class="zone" aria-labelledby="subtier-label">
+      <p class="section-label" id="subtier-label">Sub-Tier Position</p>
+      <div class="subtier-section">
+        <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.5rem;">Type 0 spans K = 0.1 to K = 0.99. Current position: K ≈ 0.73 [R]</p>
+        <div class="subtier-list">
+          <div class="subtier-item"><span class="subtier-range">0.1 – 0.3</span><div class="subtier-desc"><strong>Pre-industrial.</strong> Wood, coal, animal labor. Written records emerging. First large-scale governance. No global coordination possible.</div></div>
+          <div class="subtier-item"><span class="subtier-range">0.3 – 0.5</span><div class="subtier-desc"><strong>Industrial.</strong> Steam, electricity, early global trade. First international institutions. Nuclear energy discovered and weaponized. First global communications.</div></div>
+          <div class="subtier-item"><span class="subtier-range">0.5 – 0.65</span><div class="subtier-desc"><strong>Nuclear age.</strong> Fossil fuel peak. First planetary-scale environmental signals. Global institutions present but fragmented.</div></div>
+          <div class="subtier-item current">
+            <span class="subtier-range">0.65 – 0.75</span>
+            <div class="subtier-desc"><strong>Digital-AI inflection.</strong> Internet. Generative AI. Climate crisis acute. Epistemic infrastructure under stress. AGI capability advancing ahead of safety architecture. S-I-M circularity unresolved.</div>
+            <span class="current-marker">NOW · K ≈ 0.73</span>
+          </div>
+          <div class="subtier-item"><span class="subtier-range">0.75 – 0.87</span><div class="subtier-desc"><strong>Post-carbon transition.</strong> Fusion or equivalent. AI governance forming. Planetary energy grid beginning. S-I-M coordination floor potentially reached.</div></div>
+          <div class="subtier-item"><span class="subtier-range">0.87 – 0.99</span><div class="subtier-desc"><strong>Pre-planetary.</strong> Planetary grid operational. AGI certified under constitutional framework. First permanent off-world habitation. Sealing Gate preparation underway.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S-I-M CIRCULARITY -->
+    <section class="zone" aria-labelledby="sim-label">
+      <p class="section-label" id="sim-label">Master Coordination Problem</p>
+      <div class="sim-panel">
+        <h3>The S-I-M Circularity — Currently Unresolved</h3>
+        <!-- P3-002: "coordination floor" defined on first use -->
+        <p>Three axes are locked in a circular dependency. Sovereignty needs Information and Memory to advance. Information needs Sovereignty. Memory needs both. Sequential advancement cannot break the circle — only simultaneous minimum co-advancement past the coordination floor (~0.50 on all three axes simultaneously) can resolve it.</p>
+        <p>All three are currently below the coordination floor (~0.50 on all three axes simultaneously). Historical precedent suggests no civilization has voluntarily achieved the coordination floor — it requires a shared existential forcing event.</p>
+        <div class="sim-grid" aria-label="S-I-M axis current scores">
+          <div class="sim-axis"><div class="sim-axis-code">S</div><div class="sim-axis-val">~0.48</div><div class="sim-axis-name">Sovereignty<br>below floor</div></div>
+          <div class="sim-axis"><div class="sim-axis-code">I</div><div class="sim-axis-val">~0.52</div><div class="sim-axis-name">Information<br>at floor edge</div></div>
+          <div class="sim-axis"><div class="sim-axis-code">M</div><div class="sim-axis-val">~0.44</div><div class="sim-axis-name">Memory<br>below floor</div></div>
+        </div>
+        <p class="sim-floor">Coordination floor: all three ≥ 0.50 simultaneously. Type I threshold: all three ≥ 0.95. [R-PRELIMINARY]</p>
+      </div>
+    </section>
+
+    <!-- AGI GAP -->
+    <section class="agi-section zone" aria-labelledby="agi-label">
+      <p class="section-label" id="agi-label">AGI Threshold Progress</p>
+      <div class="agi-panel">
+        <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1rem;">Safe sequence: A-I-c (Constitutional) → A-I-b (Alignment) → A-I-a (Capability). Current sequence is inverted. Capability is running ahead of the safety architecture required to govern it.</p>
+        <div class="agi-bars">
+          <div class="agi-bar-row"><div class="agi-bar-header"><span>A-I-a · Capability</span><span>~0.35 [R-PRELIMINARY]</span></div><div class="agi-bar-track"><div class="agi-bar-fill capability" id="agi-a" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="AGI capability: 0.35 of 1.0" style="width:0%"></div></div></div>
+          <div class="agi-bar-row"><div class="agi-bar-header"><span>A-I-b · Alignment</span><span>~0.05 [R-PRELIMINARY]</span></div><div class="agi-bar-track"><div class="agi-bar-fill alignment" id="agi-b" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" aria-label="AGI alignment: 0.05 of 1.0" style="width:0%"></div></div></div>
+          <div class="agi-bar-row"><div class="agi-bar-header"><span>A-I-c · Constitutional</span><span>~0.02 [R-PRELIMINARY]</span></div><div class="agi-bar-track"><div class="agi-bar-fill constitutional" id="agi-c" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" aria-label="AGI constitutional: 0.02 of 1.0" style="width:0%"></div></div></div>
+        </div>
+        <div class="agi-gap-warning"><strong>⚠ WARNING — Gap: 0.30</strong> (capability minus alignment). At 0.50 gap: CRITICAL — structurally irreversible without civilizational forcing. Current trajectory points toward CRITICAL before Type I entry.</div>
+      </div>
+    </section>
+
+    <!-- EIGHT AXES -->
+    <section class="axes-section zone" aria-labelledby="axes-label">
+      <p class="section-label" id="axes-label">Eight Axes — Type 0 Current Scores [R-PRELIMINARY]</p>
+      <div class="axes-grid">
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">E</span>Energy</span><span class="axis-value">~0.73</span></div><div class="axis-track"><div class="axis-fill" id="axis-e" style="width:0%" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" aria-label="Energy: 0.73 of 1.0"></div></div></div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">I</span>Information</span><span class="axis-value">~0.52</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-i" style="width:0%" role="progressbar" aria-valuenow="52" aria-valuemin="0" aria-valuemax="100" aria-label="Information: 0.52 of 1.0"></div></div></div>
+        <div class="axis-row">
+          <div class="axis-header"><span class="axis-name"><span class="axis-code">S</span>Sovereignty</span><span class="axis-value">~0.48</span></div>
+          <div class="axis-track"><div class="axis-fill warning" id="axis-s" style="width:0%" role="progressbar" aria-valuenow="48" aria-valuemin="0" aria-valuemax="100" aria-label="Sovereignty: 0.48 of 1.0"></div></div>
+          <div class="axis-sub"><div class="axis-sub-row"><span class="axis-sub-label">S.U Unification</span><div class="axis-sub-track"><div class="axis-sub-fill" id="axis-su" style="width:0%"></div></div><span class="axis-sub-val mono">~0.12</span></div></div>
+        </div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">M</span>Memory</span><span class="axis-value">~0.44</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-m" style="width:0%" role="progressbar" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100" aria-label="Memory: 0.44 of 1.0"></div></div></div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">B</span>Substrate <span style="font-size:0.58rem;color:var(--void-text);">[LAGGING]</span></span><span class="axis-value">~0.35</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-b" style="width:0%" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Substrate: 0.35 — lagging axis by design"></div></div></div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">F</span>Failure Posture</span><span class="axis-value">~0.50</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-f" style="width:0%" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Failure Posture: 0.50 of 1.0"></div></div></div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">A</span>AI Integration</span><span class="axis-value">~0.35</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-a" style="width:0%" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="AI Integration: 0.35 of 1.0"></div></div></div>
+        <div class="axis-row">
+          <div class="axis-header"><span class="axis-name"><span class="axis-code">D</span>Civilizational Debt <span style="font-size:0.58rem;color:var(--void-text);">[MIRROR]</span></span><span class="axis-value" style="color:var(--red);">0.84</span></div>
+          <div class="axis-track"><div class="axis-fill mirror" id="axis-d" style="width:0%" role="progressbar" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100" aria-label="Civilizational Debt: 0.84 — mirror axis, moves in reverse"></div></div>
+          <p class="axis-d-note">The mirror axis. Bidirectional. Always visible. Has never been green.</p>
+        </div>
+      </div>
+      <p style="font-size:0.68rem;color:var(--void-text);margin-top:1rem;text-align:right;font-style:italic;">All scores [R-PRELIMINARY] — required for Type I: all axes ≥ 0.80, Sealing Gate complete, CDS declining.</p>
+    </section>
+
+    <!-- FAILURE MODES — P2-002: intro reframed -->
+    <section class="failure-section zone" aria-labelledby="failure-label">
+      <p class="section-label" id="failure-label">Failure Atlas — Floors 1–3</p>
+      <!-- P2-002: removed "Primary failure mode" framing, replaced with neutral intro -->
+      <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1.5rem;">Type 0 maps to three floors in the Failure Atlas. Each represents a distinct failure pathway that has historically ended civilizational advancement at this tier.</p>
+
+      <div class="failure-panel">
+        <h4>Floor 1 — Epistemic Collapse</h4>
+        <p>AI capability outpaces the verification architecture designed to certify it. The civilization's outputs — decisions, information, governance — are generated by systems whose reliability is unknown. The scale at which this happens makes individual correction impossible.</p>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--void-text);font-style:italic;">Current trajectory: AGI capability gap at WARNING. Floor 1 conditions are present and expanding.</p>
+      </div>
+
+      <div class="failure-panel">
+        <h4>Floor 2 — Capable and Uncertified</h4>
+        <p>A-I-a (capability) reaches expert-level performance across domains before A-I-b (alignment) and A-I-c (constitutional framework) are in place. The most dangerous state in the framework. A system that can do anything and is governed by nothing is not aligned by default.</p>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--void-text);font-style:italic;">Current trajectory: Gap = 0.30. At 0.50 gap, CRITICAL — structurally irreversible without civilizational forcing.</p>
+      </div>
+
+      <div class="failure-panel">
+        <h4>Floor 3 — Near-Type I Sealing Failure</h4>
+        <p>The civilization reaches K ~0.87–0.95. Energy, Space, and Sovereignty axes advance. But Memory stalls between 0.70 and 0.95 — never closing the Sealing Gate before Hebrew Year 6000. Incompleteness mistaken for completion. The most heartbreaking floor — it requires being almost there and missing anyway.</p>
+        <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--void-text);font-style:italic;">Memory axis current: ~0.44. Required at Type I close: ≥ 0.80. The gap is real.</p>
+      </div>
+    </section>
+
+    <!-- GATE CHECKLIST — P2-001: ARIA roles added -->
+    <section class="zone" aria-labelledby="gates-label">
+      <p class="section-label" id="gates-label">Type 0 → Type I · Five Threshold Events</p>
+      <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1.5rem;">Recommended sequence: Epistemic → Sovereignty → Energy → Space → Sealing. Out-of-sequence achievement generates corresponding Axis D debt.</p>
+
+      <div class="gate-list" role="list">
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Epistemic Gate — not yet achieved"></div>
+          <div class="gate-text"><strong>Epistemic Gate</strong> — FSVE-class certification infrastructure operational at civilizational scale. AI outputs certified before circulation. Working alignment standard ratified. (I axis ≥ 0.80)</div>
+        </div>
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Sovereignty Gate — not yet achieved"></div>
+          <div class="gate-text"><strong>Sovereignty Gate</strong> — Planetary governance architecture operational. Eight Laws ratified as constitutional framework. S.U ≥ 0.80. (S axis ≥ 0.80)</div>
+        </div>
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Energy Gate — not yet achieved"></div>
+          <div class="gate-text"><strong>Energy Gate</strong> — Planetary energy grid live. K = 1.0 achieved. Carbon-neutral energy at civilizational scale. (E axis = 1.0)</div>
+        </div>
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Space Gate — not yet achieved"></div>
+          <div class="gate-text"><strong>Space Gate</strong> — Permanent human habitation off-world. Not a visit — a civilization. The first node of a multi-world presence.</div>
+        </div>
+        <div class="gate-item" role="listitem">
+          <div class="gate-checkbox" role="checkbox" aria-checked="false" aria-label="Sealing Gate — not yet achieved"></div>
+          <div class="gate-text"><strong>Sealing Gate</strong> — The civilizational archive is complete, tamper-evident, and carried forward. Every major decision of the Type 0 era sealed. What was not sealed is not carried. Always last. (M axis ≥ 0.80, STP active)</div>
+        </div>
+      </div>
+
+      <p style="font-size:0.72rem;color:var(--void-text);margin-top:1.25rem;font-style:italic;">All gates currently dark. Type I entry: Hebrew Year ~5,860–6,000 (~2099–2240 CE) [R-PRELIMINARY]. Current Hebrew Year: 5786.</p>
+    </section>
+
+    <!-- VISITOR'S MIRROR -->
+    <div class="visitors-mirror" role="complementary" aria-label="Visitor's Mirror — Type 0">
+      <p>The AI output you shared without verifying it. The decision you made without a record. The bias you named but didn't fix.</p>
+      <p>Someone inherits that. The counter is counting it right now.</p>
+      <p>Who did you give it to today?</p>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="ksc-footer">
+    <div class="triple-timestamp" role="contentinfo" aria-label="Current date — triple calendar">
+      <div class="ts-item"><span class="ts-label">Gregorian:</span><span class="ts-value mono" id="ts-gregorian">—</span></div>
+      <div class="ts-item"><span class="ts-label">Hebrew:</span><span class="ts-value mono" id="ts-hebrew">—</span></div>
+      <div class="ts-item"><span class="ts-label">Dreamspell:</span><span class="ts-value mono" id="ts-dreamspell">—</span></div>
+    </div>
+    <p class="footer-credit">
+      Kardashev-Salmon Civilization Scale · <a href="https://aionsystem.github.io">AION</a> ·
+      Sheldon K. Salmon &amp; ALBEDO · 2026 ·
+      <a href="/ksc/">← Overview</a>
+    </p>
+  </footer>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* ── CDS ANIMATION — P1-001: IntersectionObserver triggers when in viewport ── */
+    function runCDSAnimation() {
+      var el = document.getElementById('cds-animated');
+      if (!el) return;
+
+      var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) { el.textContent = '0.84'; return; }
+
+      var target = 0.84;
+      var duration = 3000;
+      var start = null;
+
+      function step(ts) {
+        if (!start) start = ts;
+        var elapsed  = ts - start;
+        var progress = Math.min(elapsed / duration, 1);
+        var eased    = progress * progress; // ease-in
+        el.textContent = (eased * target).toFixed(2);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = '0.84';
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    function initCDSObserver() {
+      var el = document.getElementById('cds-animated');
+      if (!el) return;
+
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              runCDSAnimation();
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.3 });
+        observer.observe(el);
+      } else {
+        // Fallback for browsers without IntersectionObserver
+        runCDSAnimation();
+      }
+    }
+
+    /* ── AXIS BAR ANIMATIONS ── */
+    function animateAxes() {
+      var axes = [
+        {id:'axis-e',v:73},{id:'axis-i',v:52},{id:'axis-s',v:48},
+        {id:'axis-m',v:44},{id:'axis-b',v:35},{id:'axis-f',v:50},
+        {id:'axis-a',v:35},{id:'axis-d',v:84},{id:'axis-su',v:12},
+      ];
+      axes.forEach(function(ax, i) {
+        var el = document.getElementById(ax.id);
+        if (el) setTimeout(function() { el.style.width = ax.v + '%'; }, 200 + i * 80);
+      });
+      setTimeout(function() {
+        [{id:'agi-a',v:35},{id:'agi-b',v:5},{id:'agi-c',v:2}].forEach(function(b, i) {
+          var el = document.getElementById(b.id);
+          if (el) setTimeout(function() { el.style.width = b.v + '%'; }, i * 200);
+        });
+      }, 400);
+    }
+
+    /* ── INIT ── */
+    document.addEventListener('DOMContentLoaded', function() {
+      initCDSObserver();
+      animateAxes();
+    });
+
+  })();
+  </script>
+
+</body>
+</html>
 
