@@ -7,106 +7,26 @@
   <meta name="description" content="The Kardashev-Salmon Civilization Scale — eight-axis civilization measurement from 3761 BCE to the Cosmic Yovel. Where civilization is. What it owes. What it could become.">
   <title>Kardashev-Salmon Civilization Scale — AION</title>
 
+  <!-- Shared asset files — deploy to /ksc/assets/ -->
+  <link rel="stylesheet" href="/ksc/assets/ksc-core.css">
+  <script src="/ksc/assets/ksc-nav.js" defer></script>
+  <script src="/ksc/assets/ksc-timestamps.js" defer></script>
+
+  <!-- Hub-specific styles (not in shared CSS) -->
   <style>
-    :root {
-      --void: #0a0a0f;
-      --carbon: #111118;
-      --edge: #1e1e2e;
-      --edge-light: #2a2a3e;
-      --text-primary: #e8e6f0;
-      --text-secondary: #8b89a0;
-      --void-text: #4a4860;
-      --gold: #c9a84c;
-      --gold-dim: rgba(201,168,76,0.15);
-      --gold-glow: rgba(201,168,76,0.08);
-      --tiferet: #d4956a;
-      --green: #2e7d5e;
-      --green-dim: rgba(46,125,94,0.15);
-      --amber: #b8860b;
-      --amber-dim: rgba(184,134,11,0.15);
-      --red: #8b2635;
-      --red-dim: rgba(139,38,53,0.2);
-    }
+    /* ── HUB GRID LAYOUT ── */
+    .current-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 767px) { .current-grid { grid-template-columns: 1fr; } }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--void);
-      color: var(--text-primary);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    h1, h2, h3, .tier-name, .section-heading {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-    h1 { font-size: 2.4rem; }
-    h2 { font-size: 1.8rem; }
-    h3 { font-size: 1.4rem; }
-    .mono { font-family: 'Courier New', Courier, monospace; }
-
-    /* ── NAV ── */
-    .ksc-nav {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--carbon);
-      border-bottom: 1px solid var(--edge);
-      height: 52px;
-      display: flex; align-items: center; padding: 0 1.5rem;
-    }
-    .nav-logo {
-      display: flex; align-items: center; gap: 0.5rem;
-      text-decoration: none; color: var(--gold);
-      font-family: Georgia, serif; font-size: 0.85rem;
-      font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; margin-right: auto; white-space: nowrap;
-    }
-    .nav-logo img { width: 22px; height: 22px; border-radius: 50%; opacity: 0.9; }
-    .nav-items {
-      display: flex; align-items: center;
-      overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
-    }
-    .nav-items::-webkit-scrollbar { display: none; }
-    .nav-item {
-      display: block; padding: 0 1rem; height: 52px; line-height: 52px;
-      font-size: 0.72rem; font-weight: 400; letter-spacing: 0.06em;
-      text-transform: uppercase; color: var(--text-secondary);
-      text-decoration: none; white-space: nowrap;
-      transition: color 0.15s; border-bottom: 2px solid transparent;
-    }
-    .nav-item:hover { color: var(--text-primary); }
-    .nav-item.active { color: var(--gold); border-bottom-color: var(--gold); }
-    .nav-item.audit-btn {
-      cursor: pointer; background: none;
-      border-top: none; border-left: none; border-right: none;
-      border-bottom: 2px solid transparent;
-    }
-    .nav-item.audit-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-
-    /* ── LAYOUT ── */
-    .ksc-main { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+    .zone-current { margin-bottom: 4rem; }
+    .zone-axes    { margin-bottom: 4rem; }
+    .zone-tiers   { margin-bottom: 4rem; }
 
     /* ── INTRO ── */
-    .ksc-intro {
-      padding: 3rem 0 2rem;
-      border-bottom: 1px solid var(--edge);
-      margin-bottom: 3rem;
-    }
+    .ksc-intro { padding: 3rem 0 2rem; border-bottom: 1px solid var(--edge); margin-bottom: 3rem; }
     .ksc-intro h1 { color: var(--gold); font-size: 2rem; margin-bottom: 0.75rem; }
-    .ksc-intro p {
-      font-size: 1.05rem; color: var(--text-secondary);
-      max-width: 680px; line-height: 1.75;
-    }
+    .ksc-intro p { font-size: 1.05rem; color: var(--text-secondary); max-width: 680px; line-height: 1.75; }
     .ksc-intro p strong { color: var(--text-primary); font-weight: 400; }
-
-    /* ── SECTION LABEL ── */
-    .section-label {
-      font-size: 0.68rem; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--void-text); margin-bottom: 1.25rem;
-    }
 
     /* ── SHEMITAH STRIP ── */
     .shemitah-strip {
@@ -119,11 +39,6 @@
     .shemitah-value { font-size: 0.9rem; color: var(--text-secondary); }
     .shemitah-value .highlight { color: var(--gold); }
 
-    /* ── CURRENT STATE GRID ── */
-    .zone-current { margin-bottom: 4rem; }
-    .current-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    @media (max-width: 767px) { .current-grid { grid-template-columns: 1fr; } }
-
     /* ── CDS ── */
     .cds-panel {
       background: var(--carbon); border: 1px solid var(--edge);
@@ -131,16 +46,9 @@
       grid-column: 1 / -1;
     }
     .cds-label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--void-text); margin-bottom: 0.5rem; }
-    .cds-value {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 4.5rem; line-height: 1; color: var(--red); margin-bottom: 0.5rem;
-    }
-    .cds-value.amber { color: var(--amber); }
-    .cds-value.green { color: var(--green); }
+    .cds-value { font-family: 'Courier New', Courier, monospace; font-size: 4.5rem; line-height: 1; color: var(--red); margin-bottom: 0.5rem; }
     .cds-trend { font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
     .cds-history { font-size: 0.78rem; color: var(--void-text); font-style: italic; margin-bottom: 0.5rem; }
-    .data-source { font-size: 0.68rem; color: var(--void-text); font-style: italic; }
-    .data-source.stale { color: var(--amber); }
     .cds-components {
       display: grid; grid-template-columns: repeat(5, 1fr);
       gap: 0.75rem; margin-top: 1.5rem; padding-top: 1.5rem;
@@ -153,19 +61,8 @@
     .cds-comp-name { font-size: 0.62rem; color: var(--void-text); margin-top: 0.15rem; }
     .cds-prelim { font-size: 0.65rem; color: var(--void-text); font-style: italic; margin-top: 1rem; }
 
-    /* ── DATA PANEL ── */
-    .data-panel {
-      background: var(--carbon); border: 1px solid var(--edge);
-      border-radius: 4px; padding: 1.25rem 1.5rem;
-    }
-    .data-panel-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--void-text); margin-bottom: 0.35rem; }
-    .data-panel-value { font-family: 'Courier New', Courier, monospace; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.2rem; }
-
     /* ── K PANEL ── */
-    .k-panel {
-      background: var(--carbon); border: 1px solid var(--edge);
-      border-radius: 4px; padding: 1.5rem; grid-column: 1 / -1;
-    }
+    .k-panel { background: var(--carbon); border: 1px solid var(--edge); border-radius: 4px; padding: 1.5rem; grid-column: 1 / -1; }
     .k-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; }
     .k-current { font-family: 'Courier New', Courier, monospace; font-size: 2rem; color: var(--gold); }
     .k-target { font-size: 0.75rem; color: var(--void-text); }
@@ -195,150 +92,41 @@
     .clock-svg-wrap { width: 140px; height: 140px; margin: 0.75rem 0; }
     .clock-face { fill: var(--void); stroke: var(--edge); stroke-width: 1.5; }
     .clock-hand-hour { stroke: var(--gold); stroke-width: 3; stroke-linecap: round; }
-    .clock-hand-min { stroke: var(--gold); stroke-width: 1.5; stroke-linecap: round; opacity: 0.7; }
+    .clock-hand-min  { stroke: var(--gold); stroke-width: 1.5; stroke-linecap: round; opacity: 0.7; }
     .clock-dot { fill: var(--gold); }
     .clock-caption { font-size: 0.72rem; color: var(--text-secondary); text-align: center; margin-top: 0.5rem; }
     .clock-caption .mono { font-size: 0.85rem; color: var(--gold); }
 
-    /* ── ISS MAP ── */
+    /* ── ISS ── */
     .iss-panel { background: var(--carbon); border: 1px solid var(--edge); border-radius: 4px; padding: 1rem 1.5rem; grid-column: 1 / -1; }
     .iss-map { width: 100%; height: 80px; border-radius: 3px; overflow: hidden; margin: 0.5rem 0; }
     @media (max-width: 639px) { .iss-map { height: 60px; } }
     .iss-coords { font-family: 'Courier New', Courier, monospace; font-size: 0.7rem; color: var(--text-secondary); }
 
-    /* ── AXES ── */
-    .zone-axes { margin-bottom: 4rem; }
+    /* ── AXES GRID ── */
     .axes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     @media (max-width: 639px) { .axes-grid { grid-template-columns: 1fr; } }
-    .axis-row { background: var(--carbon); border: 1px solid var(--edge); border-radius: 4px; padding: 1rem 1.25rem; }
-    .axis-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
-    .axis-name { font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); }
-    .axis-code { font-family: 'Courier New', Courier, monospace; color: var(--gold); font-size: 0.7rem; margin-right: 0.4rem; }
-    .axis-value { font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; color: var(--text-primary); }
-    .axis-track { height: 6px; background: var(--edge); border-radius: 3px; overflow: hidden; }
-    .axis-fill { height: 100%; border-radius: 3px; width: 0; background: var(--gold); transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
-    .axis-fill.warning { background: var(--amber); }
-    .axis-fill.critical { background: var(--red); }
-    .axis-fill.mirror { background: var(--red); }
-    .axis-sub { margin-top: 0.5rem; }
-    .axis-sub-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.3rem; }
-    .axis-sub-label { font-size: 0.62rem; color: var(--void-text); min-width: 90px; }
-    .axis-sub-track { flex: 1; height: 4px; background: var(--edge); border-radius: 2px; overflow: hidden; }
-    .axis-sub-fill { height: 100%; background: var(--gold); border-radius: 2px; width: 0; transition: width 1s cubic-bezier(0.4,0,0.2,1) 0.3s; }
-    .axis-sub-val { font-family: 'Courier New', Courier, monospace; font-size: 0.65rem; color: var(--text-secondary); min-width: 32px; text-align: right; }
-    .axis-d-note { font-size: 0.62rem; color: var(--void-text); font-style: italic; margin-top: 0.35rem; }
 
     /* ── RADAR — DESKTOP ONLY ── */
     .radar-wrap { display: none; }
     @media (min-width: 1024px) { .radar-wrap { display: flex; justify-content: center; margin-bottom: 2rem; } }
 
-    /* ── TIER CARDS ── */
-    .zone-tiers { margin-bottom: 4rem; }
+    /* ── TIER CARDS GRID ── */
     .tier-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
     @media (max-width: 767px) { .tier-cards { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 479px) { .tier-cards { grid-template-columns: 1fr; } }
-    .tier-card {
-      background: var(--carbon); border: 1px solid var(--edge);
-      border-radius: 4px; padding: 1.5rem; text-decoration: none;
-      display: block; transition: border-color 0.2s, background 0.2s; position: relative;
-    }
-    .tier-card.active-tier {
-      border-color: var(--gold);
-      background: linear-gradient(135deg, var(--carbon) 0%, rgba(201,168,76,0.04) 100%);
-    }
-    .tier-card.active-tier:hover {
-      background: linear-gradient(135deg, var(--edge-light) 0%, rgba(201,168,76,0.08) 100%);
-    }
-    .tier-card:not(.active-tier):not(.pending):hover { border-color: var(--edge-light); background: var(--edge-light); }
-    .tier-card.pending { cursor: default; opacity: 0.6; }
-    .tier-badge { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--void-text); margin-bottom: 0.5rem; }
-    .active-tier .tier-badge { color: var(--gold); }
-    .tier-card h3 { font-size: 1rem; color: var(--text-primary); margin-bottom: 0.35rem; font-family: Georgia, serif; font-weight: 700; }
-    .pending h3 { color: var(--text-secondary); }
-    .tier-definition { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem; }
-    .tier-meta { font-size: 0.65rem; color: var(--void-text); font-family: 'Courier New', Courier, monospace; }
-    .tier-here { display: inline-block; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold); padding: 0.1rem 0.4rem; border-radius: 2px; margin-bottom: 0.5rem; }
-    .tier-wip { display: block; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--void-text); margin-top: 0.75rem; }
-
-    /* ── VISITOR'S MIRROR ── */
-    .visitors-mirror {
-      width: 100%; background: #0e0e1a;
-      border: 1px solid var(--gold); border-left: 4px solid var(--gold);
-      border-radius: 0 4px 4px 0; padding: 2.5rem 2rem;
-      margin: 3rem 0 0; text-align: center;
-    }
-    .visitors-mirror p { color: var(--text-primary); font-size: 1rem; line-height: 1.85; max-width: 660px; margin: 0 auto; }
-    .visitors-mirror p + p { margin-top: 1rem; }
-
-    /* ── AUDIT LOG ── */
-    .audit-panel { display: none; margin-top: 2rem; }
-    .audit-panel.visible { display: block; }
-    .audit-header { background: var(--carbon); border: 1px solid var(--edge); border-radius: 4px 4px 0 0; padding: 1.5rem; border-bottom: 1px solid var(--edge); position: relative; }
-    .audit-header h2 { font-size: 1.4rem; color: var(--gold); margin-bottom: 0.5rem; }
-    .audit-header p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
-    .audit-header p em { color: var(--void-text); }
-    .audit-close {
-      position: absolute; top: 1.25rem; right: 1.25rem;
-      background: none; border: 1px solid var(--edge); color: var(--text-secondary);
-      font-size: 0.72rem; padding: 0.3rem 0.75rem; border-radius: 3px; cursor: pointer;
-      letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s;
-    }
-    .audit-close:hover { color: var(--text-primary); border-color: var(--text-secondary); }
-    .audit-section { background: var(--carbon); border: 1px solid var(--edge); border-top: none; padding: 1.5rem; }
-    .audit-section:last-child { border-radius: 0 0 4px 4px; }
-    .audit-section h3 { color: var(--text-primary); font-size: 1rem; margin-bottom: 1rem; }
-    .audit-finding { display: grid; grid-template-columns: 80px 1fr; gap: 0.5rem 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--edge); font-size: 0.78rem; }
-    .audit-finding:last-child { border-bottom: none; }
-    .finding-priority { font-family: 'Courier New', Courier, monospace; font-size: 0.7rem; padding: 0.2rem 0.4rem; border-radius: 2px; text-align: center; align-self: start; margin-top: 1px; }
-    .finding-priority.p1 { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
-    .finding-priority.p2 { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber); }
-    .finding-priority.p3 { background: var(--gold-dim); color: var(--gold); border: 1px solid var(--gold); }
-    .finding-priority.resolved { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
-    .finding-text { color: var(--text-secondary); line-height: 1.5; }
-    .finding-text strong { color: var(--text-primary); font-weight: 400; }
-    .audit-role-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
-    .audit-role-table th { text-align: left; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--void-text); padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--edge); }
-    .audit-role-table td { padding: 0.6rem 0.75rem; color: var(--text-secondary); border-bottom: 1px solid var(--edge); vertical-align: top; }
-    .audit-role-table tr:last-child td { border-bottom: none; }
-    .audit-role-table td:first-child { color: var(--text-primary); }
-
-    /* ── FOOTER ── */
-    .ksc-footer { border-top: 1px solid var(--edge); padding: 1.5rem; margin-top: 2rem; }
-    .triple-timestamp { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
-    @media (max-width: 639px) { .triple-timestamp { flex-direction: column; align-items: center; gap: 0.35rem; } }
-    .ts-item { display: flex; gap: 0.35rem; align-items: center; }
-    .ts-label { color: var(--void-text); }
-    .ts-value { font-family: 'Courier New', Courier, monospace; }
-    .ts-value.fail { color: var(--void-text); font-style: italic; }
-    .footer-credit { text-align: center; font-size: 0.68rem; color: var(--void-text); }
-    .footer-credit a { color: var(--void-text); text-decoration: none; }
-    .footer-credit a:hover { color: var(--text-secondary); }
-
-    /* ── SR ONLY ── */
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-
-    /* ── MOTION ── */
-    @media (prefers-reduced-motion: reduce) {
-      .axis-fill, .k-fill, .agi-bar-fill, .axis-sub-fill { transition: none; }
-    }
   </style>
 </head>
 
-<body>
+<body id="ksc-hub">
 
+  <!-- Navigation built by ksc-nav.js -->
   <nav class="ksc-nav" role="navigation" aria-label="KSC navigation">
     <a href="/ksc/" class="nav-logo" aria-label="KSC Home">
       <img src="/assets/aion-logo.jpg" alt="AION" width="22" height="22">
       KSC
     </a>
-    <div class="nav-items" id="nav-items">
-      <a href="/ksc/" class="nav-item active" aria-current="page">Overview</a>
-      <a href="/ksc/type-0/" class="nav-item">Type 0</a>
-      <a href="/ksc/type-i/" class="nav-item">Type I</a>
-      <a href="/ksc/type-i-omega/" class="nav-item">Type I.Ω</a>
-      <a href="/ksc/type-ii/" class="nav-item">Type II</a>
-      <button class="nav-item audit-btn" id="audit-toggle" aria-expanded="false" aria-controls="audit-panel" onclick="toggleAudit()">Audit Log</button>
-    </div>
+    <!-- Nav items injected by ksc-nav.js -->
   </nav>
 
   <main class="ksc-main">
@@ -376,46 +164,24 @@
     <!-- ZONE 1: CURRENT STATE -->
     <section class="zone-current" aria-labelledby="zone1-label">
       <p class="section-label" id="zone1-label">Current Civilizational State</p>
-
       <div class="current-grid">
 
-        <!-- CDS — P2-002: epistemic tag added. data-staleness-exempt added (P2-005) -->
+        <!-- CDS -->
         <!-- UPDATE CDS COMPONENTS WHEN NEW ESTIMATES ARE DERIVED -->
         <!-- Last updated: 2026-03-15 | Next update: when new estimates derived -->
         <div class="cds-panel" data-manual-node data-staleness-exempt>
           <p class="cds-label">Civilizational Debt Score (CDS)</p>
-          <div class="cds-value mono" id="cds-display" aria-live="polite" aria-label="Civilizational Debt Score: 0.84">0.84</div>
+          <div class="cds-value mono" aria-live="polite" aria-label="Civilizational Debt Score: 0.84">0.84</div>
           <p class="cds-trend mono">↑ rising</p>
           <p class="cds-history">Has never been green in recorded history.</p>
           <span class="data-source">[AION derivation · next update: when new estimates derived]</span>
           <div class="cds-components" aria-label="CDS component breakdown">
-            <div class="cds-component">
-              <div class="cds-comp-label">UC</div>
-              <div class="cds-comp-value mono">0.85</div>
-              <div class="cds-comp-name">Uncertified<br>Circulation</div>
-            </div>
-            <div class="cds-component">
-              <div class="cds-comp-label">UD</div>
-              <div class="cds-comp-value mono">0.90</div>
-              <div class="cds-comp-name">Unsealed<br>Decisions</div>
-            </div>
-            <div class="cds-component">
-              <div class="cds-comp-label">UB</div>
-              <div class="cds-comp-value mono">0.82</div>
-              <div class="cds-comp-name">Unresolved<br>Bias</div>
-            </div>
-            <div class="cds-component">
-              <div class="cds-comp-label">UM</div>
-              <div class="cds-comp-value mono">0.78</div>
-              <div class="cds-comp-name">Memory<br>Degradation</div>
-            </div>
-            <div class="cds-component">
-              <div class="cds-comp-label">US</div>
-              <div class="cds-comp-value mono">0.83</div>
-              <div class="cds-comp-name">Structural<br>Inheritance</div>
-            </div>
+            <div class="cds-component"><div class="cds-comp-label">UC</div><div class="cds-comp-value mono">0.85</div><div class="cds-comp-name">Uncertified<br>Circulation</div></div>
+            <div class="cds-component"><div class="cds-comp-label">UD</div><div class="cds-comp-value mono">0.90</div><div class="cds-comp-name">Unsealed<br>Decisions</div></div>
+            <div class="cds-component"><div class="cds-comp-label">UB</div><div class="cds-comp-value mono">0.82</div><div class="cds-comp-name">Unresolved<br>Bias</div></div>
+            <div class="cds-component"><div class="cds-comp-label">UM</div><div class="cds-comp-value mono">0.78</div><div class="cds-comp-name">Memory<br>Degradation</div></div>
+            <div class="cds-component"><div class="cds-comp-label">US</div><div class="cds-comp-value mono">0.83</div><div class="cds-comp-name">Structural<br>Inheritance</div></div>
           </div>
-          <!-- P2-002 resolution: epistemic tag on components -->
           <p class="cds-prelim">Component estimates [R-PRELIMINARY] — structural inference from known civilizational state.</p>
         </div>
 
@@ -424,26 +190,15 @@
         <!-- Last updated: 2024 | Next update: Nov 2026 -->
         <div class="k-panel" data-manual-node>
           <div class="k-header">
-            <div>
-              <p class="data-panel-label">Kardashev Score</p>
-              <div class="k-current mono">K = 0.73</div>
-            </div>
-            <div style="text-align:right">
-              <p class="k-target">K = 1.0 at Type I</p>
-              <span class="data-source">[IEA 2024 · next update: Nov 2026]</span>
-            </div>
+            <div><p class="data-panel-label">Kardashev Score</p><div class="k-current mono">K = 0.73</div></div>
+            <div style="text-align:right"><p class="k-target">K = 1.0 at Type I</p><span class="data-source">[IEA 2024 · next update: Nov 2026]</span></div>
           </div>
           <div class="k-timeline" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" aria-label="K-score: 0.73 of 1.0 for Type I">
             <div class="k-fill" id="k-fill" style="width:0%"></div>
             <div class="k-marker" style="left:73%" data-label="WE ARE HERE"></div>
             <div class="k-marker" style="left:100%" data-label="TYPE I"></div>
           </div>
-          <div class="k-labels">
-            <span>~3761 BCE · K=0.1</span>
-            <span>2026 · K=0.73</span>
-            <span>~2099 CE · K=1.0</span>
-          </div>
-          <!-- P3-004 resolution: cleaner formula notation -->
+          <div class="k-labels"><span>~3761 BCE · K=0.1</span><span>2026 · K=0.73</span><span>~2099 CE · K=1.0</span></div>
           <p class="k-formula">K = (log₁₀(P) − 6) / 10, P in watts · 18 TW = 18 × 10¹² W → K ≈ 0.73 [IEA]</p>
         </div>
 
@@ -451,78 +206,50 @@
         <div class="agi-panel">
           <p class="data-panel-label">AGI Threshold Progress</p>
           <div class="agi-bars">
-            <div class="agi-bar-row">
-              <div class="agi-bar-header"><span>A-I-a Capability</span><span>~0.35 [R-PRELIMINARY]</span></div>
-              <div class="agi-bar-track"><div class="agi-bar-fill capability" id="agi-a" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="AGI capability: 0.35" style="width:0%"></div></div>
-            </div>
-            <div class="agi-bar-row">
-              <div class="agi-bar-header"><span>A-I-b Alignment</span><span>~0.05 [R-PRELIMINARY]</span></div>
-              <div class="agi-bar-track"><div class="agi-bar-fill alignment" id="agi-b" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" aria-label="AGI alignment: 0.05" style="width:0%"></div></div>
-            </div>
-            <div class="agi-bar-row">
-              <div class="agi-bar-header"><span>A-I-c Constitutional</span><span>~0.02 [R-PRELIMINARY]</span></div>
-              <div class="agi-bar-track"><div class="agi-bar-fill constitutional" id="agi-c" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" aria-label="AGI constitutional: 0.02" style="width:0%"></div></div>
-            </div>
+            <div class="agi-bar-row"><div class="agi-bar-header"><span>A-I-a Capability</span><span>~0.35 [R-PRELIMINARY]</span></div><div class="agi-bar-track"><div class="agi-bar-fill capability" id="agi-a" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="AGI capability: 0.35" style="width:0%"></div></div></div>
+            <div class="agi-bar-row"><div class="agi-bar-header"><span>A-I-b Alignment</span><span>~0.05 [R-PRELIMINARY]</span></div><div class="agi-bar-track"><div class="agi-bar-fill alignment" id="agi-b" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" aria-label="AGI alignment: 0.05" style="width:0%"></div></div></div>
+            <div class="agi-bar-row"><div class="agi-bar-header"><span>A-I-c Constitutional</span><span>~0.02 [R-PRELIMINARY]</span></div><div class="agi-bar-track"><div class="agi-bar-fill constitutional" id="agi-c" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" aria-label="AGI constitutional: 0.02" style="width:0%"></div></div></div>
           </div>
-          <div class="agi-gap-warning">
-            <strong>⚠ WARNING</strong> — Gap: 0.30 (capability minus alignment). Safe sequence requires constitution before capability. Current sequence is inverted.
-          </div>
+          <div class="agi-gap-warning"><strong>⚠ WARNING</strong> — Gap: 0.30 (capability minus alignment). Safe sequence requires constitution before capability. Current sequence is inverted.</div>
         </div>
 
         <!-- MILLENNIAL CLOCK -->
         <div class="clock-panel">
           <p class="data-panel-label">Millennial Clock</p>
-          <svg class="clock-svg-wrap"
-               role="img"
-               aria-label="Millennial Clock: approximately 7:50pm on the civilizational week. Hebrew Year 5786 of 7000. Late evening — the light is changing."
-               viewBox="0 0 140 140">
+          <svg class="clock-svg-wrap" role="img" aria-label="Millennial Clock: approximately 7:50pm on the civilizational week. Hebrew Year 5786 of 7000. Late evening — the light is changing." viewBox="0 0 140 140">
             <circle class="clock-face" cx="70" cy="70" r="64"/>
-            <g stroke="#1e1e2e" stroke-width="1">
-              <line x1="70" y1="10" x2="70" y2="20"/>
-              <line x1="70" y1="120" x2="70" y2="130"/>
-              <line x1="10" y1="70" x2="20" y2="70"/>
-              <line x1="120" y1="70" x2="130" y2="70"/>
-            </g>
+            <g stroke="#1e1e2e" stroke-width="1"><line x1="70" y1="10" x2="70" y2="20"/><line x1="70" y1="120" x2="70" y2="130"/><line x1="10" y1="70" x2="20" y2="70"/><line x1="120" y1="70" x2="130" y2="70"/></g>
             <circle cx="70" cy="11" r="2" fill="#4a4860"/>
-            <!-- 7:50pm on 24h face: 19.83h / 24h * 360° = 297.45° from 12 o'clock -->
             <line class="clock-hand-hour" x1="70" y1="70" x2="70" y2="30" transform="rotate(297.5, 70, 70)"/>
-            <!-- 50 min: 300° -->
-            <line class="clock-hand-min" x1="70" y1="70" x2="70" y2="20" transform="rotate(300, 70, 70)"/>
+            <line class="clock-hand-min"  x1="70" y1="70" x2="70" y2="20" transform="rotate(300, 70, 70)"/>
             <circle class="clock-dot" cx="70" cy="70" r="3"/>
           </svg>
           <span class="sr-only">Millennial Clock: Hebrew Year 5786 of 7000 — approximately 7:50pm on the civilizational week. Late evening. The light is changing.</span>
-          <div class="clock-caption">
-            <span class="mono">~7:50pm</span> of the civilizational week<br>
-            <span style="color:var(--void-text);font-size:0.65rem;">Hebrew Year 5786 of 7,000</span>
-          </div>
+          <div class="clock-caption"><span class="mono">~7:50pm</span> of the civilizational week<br><span style="color:var(--void-text);font-size:0.65rem;">Hebrew Year 5786 of 7,000</span></div>
         </div>
 
-        <!-- MANUAL CONSTANTS — P1-003 resolution: CO₂ and temp as manual constants -->
-        <!-- UPDATE WARHEAD COUNT ANNUALLY FROM SIPRI YEARBOOK (published June) -->
-        <!-- Last updated: 2024 | Next update: Jun 2026 -->
+        <!-- MANUAL CONSTANTS -->
+        <!-- UPDATE WARHEAD COUNT ANNUALLY FROM SIPRI YEARBOOK (published June) — Last updated: 2024 | Next update: Jun 2026 -->
         <div class="data-panel" data-manual-node>
           <p class="data-panel-label">Nuclear Warheads</p>
           <div class="data-panel-value mono">~12,500</div>
           <span class="data-source">[SIPRI 2024 · next update: Jun 2026]</span>
         </div>
 
-        <!-- UPDATE CO₂ MONTHLY FROM NOAA MAUNA LOA (https://gml.noaa.gov/ccgg/trends/) -->
-        <!-- Last updated: Mar 2026 | Next update: Apr 2026 -->
+        <!-- UPDATE CO₂ MONTHLY FROM NOAA MAUNA LOA — Last updated: Mar 2026 | Next update: Apr 2026 -->
         <div class="data-panel" data-manual-node>
           <p class="data-panel-label">Atmospheric CO₂</p>
           <div class="data-panel-value mono">~424 ppm</div>
           <span class="data-source">[NOAA · Mar 2026 · next update: Apr 2026]</span>
         </div>
 
-        <!-- UPDATE TEMP ANOMALY MONTHLY FROM NASA GISS (https://data.giss.nasa.gov/gistemp/) -->
-        <!-- Last updated: Feb 2026 | Next update: Mar 2026 -->
+        <!-- UPDATE TEMP ANOMALY MONTHLY FROM NASA GISS — Last updated: Feb 2026 | Next update: Mar 2026 -->
         <div class="data-panel" data-manual-node>
           <p class="data-panel-label">Surface Temp Anomaly</p>
           <div class="data-panel-value mono">+1.34°C</div>
           <span class="data-source">[NASA GISS · Feb 2026 · next update: Mar 2026]</span>
         </div>
 
-        <!-- SATELLITES — Celestrak best-effort (P1-003: still live where CORS permits) -->
         <!-- CELESTRAK: no auth required as of 2026-03-15. Verify if fetch fails consistently. -->
         <div class="data-panel" data-manual-node data-fallback="~8,400">
           <p class="data-panel-label">Active Satellites</p>
@@ -530,158 +257,100 @@
           <span class="data-source" id="sat-source">[Celestrak · daily · fetching...]</span>
         </div>
 
-        <!-- UPDATE STP COUNT WHEN NEW LEDGER ENTRIES ARE SEALED -->
-        <!-- Current count: 11 | Last updated: 2026-03-15 -->
+        <!-- UPDATE STP COUNT WHEN NEW LEDGER ENTRIES ARE SEALED — Current: 11 | Last updated: 2026-03-15 -->
         <div class="data-panel" data-manual-node data-staleness-exempt>
           <p class="data-panel-label">STP Ledger Entries</p>
           <div class="data-panel-value mono" id="stp-value">11</div>
           <span class="data-source" id="stp-source">[GitHub · on new entry]</span>
         </div>
 
-        <!-- ISS MAP — P2-004 resolution: dot inside SVG coordinate system -->
+        <!-- ISS MAP -->
         <div class="iss-panel">
           <p class="data-panel-label">ISS Position (live)</p>
           <div class="iss-map" aria-label="ISS world position map">
             <svg id="iss-svg" width="100%" height="100%" viewBox="0 0 360 180" preserveAspectRatio="none" style="display:block;">
-              <defs>
-                <filter id="iss-glow">
-                  <feGaussianBlur stdDeviation="2.5" result="blur"/>
-                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              <!-- Ocean background -->
+              <defs><filter id="iss-glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
               <rect width="360" height="180" fill="#0a0a0f"/>
-              <!-- Simplified continent outlines — equirectangular, public domain -->
-              <!-- North America -->
               <path d="M30,20 L80,15 L90,25 L88,42 L78,55 L72,68 L58,78 L42,75 L28,60 L22,42 Z" fill="#1e1e2e"/>
-              <!-- Central America -->
               <path d="M72,68 L82,70 L78,80 L70,78 Z" fill="#1e1e2e"/>
-              <!-- South America -->
               <path d="M58,85 L78,80 L84,100 L80,120 L72,138 L56,145 L44,132 L40,112 L46,90 Z" fill="#1e1e2e"/>
-              <!-- Greenland -->
               <path d="M80,5 L105,3 L110,12 L100,20 L82,18 Z" fill="#1e1e2e"/>
-              <!-- Europe -->
               <path d="M148,14 L174,10 L180,22 L172,32 L158,34 L148,26 Z" fill="#1e1e2e"/>
-              <!-- Scandinavia -->
               <path d="M158,5 L172,5 L174,14 L162,18 L156,12 Z" fill="#1e1e2e"/>
-              <!-- Africa -->
               <path d="M144,42 L178,36 L188,52 L184,90 L178,110 L164,132 L148,130 L132,108 L130,80 L136,56 Z" fill="#1e1e2e"/>
-              <!-- Asia main -->
               <path d="M178,10 L268,6 L292,18 L298,38 L284,56 L262,62 L228,60 L196,52 L182,38 L178,22 Z" fill="#1e1e2e"/>
-              <!-- Indian subcontinent -->
               <path d="M214,56 L232,54 L240,70 L226,85 L214,80 L208,66 Z" fill="#1e1e2e"/>
-              <!-- SE Asia -->
               <path d="M256,64 L284,60 L296,72 L288,82 L270,84 L256,74 Z" fill="#1e1e2e"/>
-              <!-- Japan -->
               <path d="M295,22 L306,20 L308,32 L300,36 L293,28 Z" fill="#1e1e2e"/>
-              <!-- Australia -->
               <path d="M268,94 L312,90 L322,108 L316,130 L290,134 L266,120 L262,102 Z" fill="#1e1e2e"/>
-              <!-- New Zealand -->
               <path d="M326,120 L332,118 L334,128 L328,130 Z" fill="#1e1e2e"/>
-              <!-- ISS dot — positioned by JS in SVG coordinates -->
               <circle id="iss-dot-svg" cx="180" cy="90" r="4" fill="#c9a84c" filter="url(#iss-glow)" aria-hidden="true"/>
             </svg>
           </div>
           <p class="iss-coords mono" id="iss-coords">[fetching position...]</p>
         </div>
 
-      </div><!-- /current-grid -->
+      </div>
     </section>
 
     <!-- ZONE 2: EIGHT AXES -->
     <section class="zone-axes" aria-labelledby="zone2-label">
       <p class="section-label" id="zone2-label">Eight Axes — Current Scores [R-PRELIMINARY]</p>
 
-      <!-- Radar web — desktop only. P1-002 resolution: spokes redrawn to match angle formula -->
       <div class="radar-wrap" aria-hidden="true">
         <svg width="320" height="320" viewBox="0 0 320 320" aria-hidden="true">
-          <!-- Background rings -->
           <g fill="none" stroke="#1e1e2e" stroke-width="1">
             <polygon points="160,90 222,125 222,195 160,230 98,195 98,125" opacity="0.25"/>
             <polygon points="160,60 244,108 244,212 160,260 76,212 76,108" opacity="0.15"/>
           </g>
-          <!-- P1-002: Spokes at correct angles from center 160,160, radius 115 -->
-          <!-- E(0°)→top, I(45°)→NE, S(90°)→right, M(135°)→SE, B(180°)→bottom, F(225°)→SW, A(270°)→left, D(315°)→NW -->
           <g stroke="#2a2a3e" stroke-width="1">
-            <line x1="160" y1="160" x2="160" y2="45"/>    <!-- E: 0° up -->
-            <line x1="160" y1="160" x2="241" y2="79"/>    <!-- I: 45° NE -->
-            <line x1="160" y1="160" x2="275" y2="160"/>   <!-- S: 90° right -->
-            <line x1="160" y1="160" x2="241" y2="241"/>   <!-- M: 135° SE -->
-            <line x1="160" y1="160" x2="160" y2="275"/>   <!-- B: 180° down -->
-            <line x1="160" y1="160" x2="79" y2="241"/>    <!-- F: 225° SW -->
-            <line x1="160" y1="160" x2="45" y2="160"/>    <!-- A: 270° left -->
-            <line x1="160" y1="160" x2="79" y2="79"/>     <!-- D: 315° NW -->
+            <line x1="160" y1="160" x2="160" y2="45"/>
+            <line x1="160" y1="160" x2="241" y2="79"/>
+            <line x1="160" y1="160" x2="275" y2="160"/>
+            <line x1="160" y1="160" x2="241" y2="241"/>
+            <line x1="160" y1="160" x2="160" y2="275"/>
+            <line x1="160" y1="160" x2="79" y2="241"/>
+            <line x1="160" y1="160" x2="45" y2="160"/>
+            <line x1="160" y1="160" x2="79" y2="79"/>
           </g>
-          <!-- Axis labels at correct positions -->
           <g font-family="Courier New, monospace" font-size="9" fill="#4a4860" text-anchor="middle">
-            <text x="160" y="37">E</text>
-            <text x="248" y="74">I</text>
-            <text x="283" y="163">S</text>
-            <text x="248" y="252">M</text>
-            <text x="160" y="288">B</text>
-            <text x="72" y="252">F</text>
-            <text x="37" y="163">A</text>
-            <text x="72" y="74">D</text>
+            <text x="160" y="37">E</text><text x="248" y="74">I</text>
+            <text x="283" y="163">S</text><text x="248" y="252">M</text>
+            <text x="160" y="288">B</text><text x="72" y="252">F</text>
+            <text x="37" y="163">A</text><text x="72" y="74">D</text>
           </g>
-          <!-- Score polygon — updated by JS with transition -->
           <polygon id="radar-polygon"
             points="160,160 160,160 160,160 160,160 160,160 160,160 160,160 160,160"
-            fill="rgba(201,168,76,0.08)"
-            stroke="rgba(201,168,76,0.4)"
-            stroke-width="1.5"
+            fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"
             style="transition: points 1s cubic-bezier(0.4,0,0.2,1)"/>
         </svg>
       </div>
 
       <div class="axes-grid">
-        <div class="axis-row">
-          <div class="axis-header"><span class="axis-name"><span class="axis-code">E</span>Energy</span><span class="axis-value">~0.73</span></div>
-          <div class="axis-track"><div class="axis-fill" id="axis-e" style="width:0%" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" aria-label="Energy: 0.73"></div></div>
-        </div>
-        <div class="axis-row">
-          <div class="axis-header"><span class="axis-name"><span class="axis-code">I</span>Information</span><span class="axis-value">~0.52</span></div>
-          <div class="axis-track"><div class="axis-fill warning" id="axis-i" style="width:0%" role="progressbar" aria-valuenow="52" aria-valuemin="0" aria-valuemax="100" aria-label="Information: 0.52"></div></div>
-        </div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">E</span>Energy</span><span class="axis-value">~0.73</span></div><div class="axis-track"><div class="axis-fill" id="axis-e" style="width:0%" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" aria-label="Energy: 0.73"></div></div></div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">I</span>Information</span><span class="axis-value">~0.52</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-i" style="width:0%" role="progressbar" aria-valuenow="52" aria-valuemin="0" aria-valuemax="100" aria-label="Information: 0.52"></div></div></div>
         <div class="axis-row">
           <div class="axis-header"><span class="axis-name"><span class="axis-code">S</span>Sovereignty</span><span class="axis-value">~0.48</span></div>
           <div class="axis-track"><div class="axis-fill warning" id="axis-s" style="width:0%" role="progressbar" aria-valuenow="48" aria-valuemin="0" aria-valuemax="100" aria-label="Sovereignty: 0.48"></div></div>
-          <div class="axis-sub">
-            <div class="axis-sub-row">
-              <span class="axis-sub-label">S.U Unification</span>
-              <div class="axis-sub-track"><div class="axis-sub-fill" id="axis-su" style="width:0%"></div></div>
-              <span class="axis-sub-val mono">0.12</span>
-            </div>
-          </div>
+          <div class="axis-sub"><div class="axis-sub-row"><span class="axis-sub-label">S.U Unification</span><div class="axis-sub-track"><div class="axis-sub-fill" id="axis-su" style="width:0%"></div></div><span class="axis-sub-val mono">0.12</span></div></div>
         </div>
-        <div class="axis-row">
-          <div class="axis-header"><span class="axis-name"><span class="axis-code">M</span>Memory</span><span class="axis-value">~0.44</span></div>
-          <div class="axis-track"><div class="axis-fill warning" id="axis-m" style="width:0%" role="progressbar" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100" aria-label="Memory: 0.44"></div></div>
-        </div>
-        <div class="axis-row">
-          <div class="axis-header"><span class="axis-name"><span class="axis-code">B</span>Substrate <span style="font-size:0.58rem;color:var(--void-text);">[LAGGING]</span></span><span class="axis-value">~0.35</span></div>
-          <div class="axis-track"><div class="axis-fill warning" id="axis-b" style="width:0%" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Substrate: 0.35 — lagging axis by design"></div></div>
-        </div>
-        <div class="axis-row">
-          <div class="axis-header"><span class="axis-name"><span class="axis-code">F</span>Failure Posture</span><span class="axis-value">~0.50</span></div>
-          <div class="axis-track"><div class="axis-fill warning" id="axis-f" style="width:0%" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Failure Posture: 0.50"></div></div>
-        </div>
-        <div class="axis-row">
-          <div class="axis-header"><span class="axis-name"><span class="axis-code">A</span>AI Integration</span><span class="axis-value">~0.35</span></div>
-          <div class="axis-track"><div class="axis-fill warning" id="axis-a" style="width:0%" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="AI Integration: 0.35"></div></div>
-        </div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">M</span>Memory</span><span class="axis-value">~0.44</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-m" style="width:0%" role="progressbar" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100" aria-label="Memory: 0.44"></div></div></div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">B</span>Substrate <span style="font-size:0.58rem;color:var(--void-text);">[LAGGING]</span></span><span class="axis-value">~0.35</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-b" style="width:0%" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Substrate: 0.35 — lagging axis by design"></div></div></div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">F</span>Failure Posture</span><span class="axis-value">~0.50</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-f" style="width:0%" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Failure Posture: 0.50"></div></div></div>
+        <div class="axis-row"><div class="axis-header"><span class="axis-name"><span class="axis-code">A</span>AI Integration</span><span class="axis-value">~0.35</span></div><div class="axis-track"><div class="axis-fill warning" id="axis-a" style="width:0%" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="AI Integration: 0.35"></div></div></div>
         <div class="axis-row">
           <div class="axis-header"><span class="axis-name"><span class="axis-code">D</span>Civilizational Debt <span style="font-size:0.58rem;color:var(--void-text);">[MIRROR]</span></span><span class="axis-value" style="color:var(--red);">0.84</span></div>
-          <div class="axis-track"><div class="axis-fill mirror" id="axis-d" style="width:0%" role="progressbar" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100" aria-label="Civilizational Debt: 0.84 — mirror axis, only axis that moves in reverse"></div></div>
+          <div class="axis-track"><div class="axis-fill mirror" id="axis-d" style="width:0%" role="progressbar" aria-valuenow="84" aria-valuemin="0" aria-valuemax="100" aria-label="Civilizational Debt: 0.84 — mirror axis, moves in reverse"></div></div>
           <p class="axis-d-note">The mirror axis. Bidirectional. Always visible. Has never been green.</p>
         </div>
       </div>
 
       <p style="font-size:0.68rem;color:var(--void-text);margin-top:1rem;text-align:right;font-style:italic;">
-        All axis scores [R-PRELIMINARY] — structural inference from known civilizational state. See Audit Log for methodology.
+        All axis scores [R-PRELIMINARY] — structural inference. See Audit Log for methodology.
       </p>
     </section>
 
-    <!-- ZONE 3: TIER NAVIGATION -->
+    <!-- ZONE 3: TIERS -->
     <section class="zone-tiers" aria-labelledby="zone3-label">
       <p class="section-label" id="zone3-label">Civilizational Tiers</p>
       <div class="tier-cards">
@@ -727,22 +396,21 @@
       </div>
     </section>
 
-    <!-- VISITOR'S MIRROR — P3-002 resolution: hub-specific text -->
+    <!-- VISITOR'S MIRROR -->
     <div class="visitors-mirror" role="complementary" aria-label="Visitor's Mirror">
       <p>You are somewhere on this scale right now. So is your AI. So is your organization.</p>
       <p>The debt counter has never been green. Every output without a seal, every decision without a record, every bias named and not fixed — it is all in that number.</p>
       <p>What would it take to make it go green? What would you have to change today?</p>
     </div>
 
-    <!-- AUDIT LOG — P2-003 resolution: close button added -->
+    <!-- AUDIT LOG -->
     <section class="audit-panel" id="audit-panel" aria-labelledby="audit-heading" aria-hidden="true">
       <div class="audit-header">
         <button class="audit-close" onclick="toggleAudit()" aria-label="Close Audit Log">✕ Close</button>
         <h2 id="audit-heading">Audit Log</h2>
-        <p>The KSC framework and this tool were built under structured adversarial review. Every architectural decision, design choice, and data integration was challenged before code was written. This log is the permanent record of that process.</p>
-        <p style="margin-top:0.75rem;"><em>All build roles and red team panelists listed below are structured fictional personas representing distinct epistemic viewpoints used for adversarial review methodology — not individual practitioners or real people.</em></p>
+        <p>The KSC framework and this tool were built under structured adversarial review. Every architectural decision, design choice, and data integration was challenged before code was written.</p>
+        <p style="margin-top:0.75rem;"><em>All build roles and red team panelists are structured fictional personas representing distinct epistemic viewpoints — not individual practitioners or real people.</em></p>
       </div>
-
       <div class="audit-section">
         <h3>Role Registry</h3>
         <table class="audit-role-table">
@@ -763,29 +431,28 @@
           </tbody>
         </table>
       </div>
-
       <div class="audit-section">
-        <h3>Tool Build — 27 Findings Across 3 Phases · All Resolved</h3>
-        <div class="audit-finding"><span class="finding-priority resolved">P1 ✓</span><div class="finding-text"><strong>Shared asset path fragility</strong> — Absolute paths declared. Relative paths prohibited.</div></div>
+        <h3>Tool Build — 27 Findings · 3 Phases · All Resolved</h3>
+        <div class="audit-finding"><span class="finding-priority resolved">P1 ✓</span><div class="finding-text"><strong>Shared asset path fragility</strong> — Absolute paths. Relative paths prohibited.</div></div>
         <div class="audit-finding"><span class="finding-priority resolved">P1 ✓</span><div class="finding-text"><strong>No failure state for live data</strong> — Hard constraint: no panel blanks silently.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P1 ✓</span><div class="finding-text"><strong>CORS block on NOAA/NASA</strong> — CO₂ and temperature converted to manually maintained constants with scheduled update dates.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P1 ✓</span><div class="finding-text"><strong>CORS block on NOAA/NASA</strong> — Converted to manually maintained constants with scheduled update dates.</div></div>
         <div class="audit-finding"><span class="finding-priority resolved">P1 ✓</span><div class="finding-text"><strong>ISS idle timer — interval never restarts</strong> — resetIdle() now restarts interval on user activity.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P1 ✓</span><div class="finding-text"><strong>Radar polygon spoke misalignment</strong> — SVG spokes redrawn at correct angles matching polygon formula. E at top, 45° intervals clockwise.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>CDS components — no epistemic tag</strong> — [R-PRELIMINARY] note added below component grid.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>Audit log no close button</strong> — Close button added. scrollIntoView uses block: nearest.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>ISS dot coordinate mismatch with SVG</strong> — Dot moved inside SVG as SVG circle element using viewBox coordinate system.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>Staleness check redundant on CDS/STP</strong> — data-staleness-exempt attribute added to CDS and STP panels.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>Mobile nav active item off-screen</strong> — Active item auto-scrolled into view on page load.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P3 ✓</span><div class="finding-text"><strong>Radar polygon no animation</strong> — CSS transition on polygon + start from center points.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P3 ✓</span><div class="finding-text"><strong>Visitor's Mirror uses Type 0 text on hub</strong> — Hub mirror replaced with hub-specific text addressing the full scale.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P3 ✓</span><div class="finding-text"><strong>K-score formula notation non-standard</strong> — Cleaner notation: P in watts explicitly stated.</div></div>
-        <div class="audit-finding"><span class="finding-priority resolved">P3 ✓</span><div class="finding-text"><strong>Shemitah strip screen reader order</strong> — Structure reads naturally in order. Verified acceptable.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P1 ✓</span><div class="finding-text"><strong>Radar polygon spoke misalignment</strong> — SVG spokes redrawn. E at top, 45° intervals clockwise.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>CDS components — no epistemic tag</strong> — [R-PRELIMINARY] note added.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>Audit log no close button</strong> — Close button added.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>ISS dot coordinate mismatch</strong> — Dot moved inside SVG coordinate system.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>Staleness check redundant on CDS/STP</strong> — data-staleness-exempt added.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P2 ✓</span><div class="finding-text"><strong>Mobile nav active item off-screen</strong> — Auto-scrolled into view on load.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P3 ✓</span><div class="finding-text"><strong>Radar polygon no animation</strong> — CSS transition + animates from center.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P3 ✓</span><div class="finding-text"><strong>Visitor's Mirror — Type 0 text on hub</strong> — Hub mirror replaced with hub-specific text.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P3 ✓</span><div class="finding-text"><strong>K-score formula notation</strong> — P in watts explicitly stated.</div></div>
+        <div class="audit-finding"><span class="finding-priority resolved">P3 ✓</span><div class="finding-text"><strong>Shemitah strip screen reader order</strong> — Structure reads naturally. Verified acceptable.</div></div>
       </div>
     </section>
 
   </main>
 
-  <!-- FOOTER -->
+  <!-- FOOTER — timestamps rendered by ksc-timestamps.js -->
   <footer class="ksc-footer">
     <div class="triple-timestamp" role="contentinfo" aria-label="Current date — triple calendar">
       <div class="ts-item"><span class="ts-label">Gregorian:</span><span class="ts-value mono" id="ts-gregorian">—</span></div>
@@ -798,247 +465,151 @@
     </p>
   </footer>
 
+  <!-- Hub-specific JavaScript (ksc-timestamps.js handles timestamps + toggleAudit) -->
   <script>
-  /* ── FETCH WRAPPER ── */
-  async function fetchWithTimeout(url, ms = 5000) {
-    const ctrl = new AbortController();
-    const id = setTimeout(() => ctrl.abort(), ms);
-    try {
-      const r = await fetch(url, { signal: ctrl.signal });
-      clearTimeout(id);
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r;
-    } catch(e) { clearTimeout(id); throw e; }
-  }
+  (function () {
+    'use strict';
 
-  /* ── DREAMSPELL ── */
-  const MOON_NAMES = ['','Magnetic','Lunar','Electric','Self-Existing','Overtone',
-    'Rhythmic','Resonant','Galactic','Solar','Planetary','Spectral','Crystal','Cosmic'];
-
-  function getDreamspell(d) {
-    d = d || new Date();
-    const yr = d.getFullYear();
-    const anchorThis = new Date(yr, 6, 26);
-    const anchor = d >= anchorThis ? anchorThis : new Date(yr - 1, 6, 26);
-    const dot = new Date(anchor.getFullYear(), 6, 25);
-    if (d.toDateString() === dot.toDateString()) return { special: 'Day Out of Time' };
-    const days = Math.floor((d - anchor) / 86400000);
-    const moon = Math.floor(days / 28) + 1;
-    return { moon, moonName: MOON_NAMES[moon] || '?', day: (days % 28) + 1 };
-  }
-
-  /* ── HEBREW DATE ── */
-  function hebKey() {
-    const n = new Date();
-    return `ksc-heb-${n.toISOString().split('T')[0]}-${n.getHours() >= 18 ? 'eve' : 'day'}`;
-  }
-
-  async function getHebrew() {
-    const key = hebKey();
-    try { const c = sessionStorage.getItem(key); if (c) return JSON.parse(c); } catch(e) {}
-    const n = new Date();
-    const url = `https://www.hebcal.com/converter?gd=${n.getDate()}&gm=${n.getMonth()+1}&gy=${n.getFullYear()}&g2h=1&cfg=json`;
-    try {
-      const r = await fetchWithTimeout(url);
-      const data = await r.json();
-      try { sessionStorage.setItem(key, JSON.stringify(data)); } catch(e) {}
-      return data;
-    } catch(e) { return null; }
-  }
-
-  /* ── SATELLITES (Celestrak — best-effort) ── */
-  async function fetchSatellites() {
-    const el = document.getElementById('sat-value');
-    const src = document.getElementById('sat-source');
-    const fb = document.querySelector('[data-fallback]')?.dataset.fallback || '~8,400';
-    if (!el) return;
-    try {
-      const r = await fetchWithTimeout('https://celestrak.org/satcat/records.php?STATUS=A&FORMAT=json', 8000);
-      if (r.status === 403) throw new Error('rate limited');
-      const data = await r.json();
-      el.textContent = data.length.toLocaleString();
-      if (src) src.textContent = '[Celestrak · daily · live]';
-    } catch(e) {
-      // Keep fallback value, update source label
-      if (src) { src.textContent = '[cached · verify source]'; src.classList.add('stale'); }
+    /* ── FETCH WRAPPER ── */
+    async function fetchWithTimeout(url, ms) {
+      ms = ms || 5000;
+      const ctrl = new AbortController();
+      const id = setTimeout(() => ctrl.abort(), ms);
+      try {
+        const r = await fetch(url, { signal: ctrl.signal });
+        clearTimeout(id);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r;
+      } catch(e) { clearTimeout(id); throw e; }
     }
-  }
 
-  /* ── STP COUNT ── */
-  async function fetchSTP() {
-    const el = document.getElementById('stp-value');
-    const src = document.getElementById('stp-source');
-    if (!el) return;
-    try {
-      const cached = sessionStorage.getItem('ksc-stp');
-      if (cached) { if (src) src.textContent = '[GitHub · cached]'; return; }
-      const r = await fetchWithTimeout('https://api.github.com/repos/AionSystem/SOVEREIGN-TRACE-PROTOCOL/contents/ledger');
-      if (r.status === 403) throw new Error('rate limited');
-      const data = await r.json();
-      if (Array.isArray(data)) {
-        el.textContent = data.length.toString();
-        try { sessionStorage.setItem('ksc-stp', data.length.toString()); } catch(e) {}
-        if (src) src.textContent = '[GitHub · live]';
+    /* ── SATELLITES ── */
+    async function fetchSatellites() {
+      const el  = document.getElementById('sat-value');
+      const src = document.getElementById('sat-source');
+      const fb  = document.querySelector('[data-fallback]');
+      if (!el) return;
+      try {
+        const r = await fetchWithTimeout('https://celestrak.org/satcat/records.php?STATUS=A&FORMAT=json', 8000);
+        if (r.status === 403) throw new Error('rate limited');
+        const data = await r.json();
+        el.textContent = data.length.toLocaleString();
+        if (src) src.textContent = '[Celestrak · daily · live]';
+      } catch(e) {
+        if (src) { src.textContent = '[cached · verify source]'; src.classList.add('stale'); }
       }
-    } catch(e) {
-      if (src && e.message === 'rate limited') { src.textContent = '[rate limited · retry later]'; src.classList.add('stale'); }
     }
-  }
 
-  /* ── ISS TRACKING — P1-001 resolution: interval restarts on user activity ── */
-  let issInterval = null;
-  let issIdle = null;
-
-  function updateISSDisplay(lat, lon) {
-    const dot = document.getElementById('iss-dot-svg');
-    const coords = document.getElementById('iss-coords');
-    if (dot) {
-      // SVG coordinate system: viewBox 0 0 360 180
-      const cx = ((parseFloat(lon) + 180)).toFixed(1);
-      const cy = ((90 - parseFloat(lat))).toFixed(1);
-      dot.setAttribute('cx', cx);
-      dot.setAttribute('cy', cy);
-    }
-    if (coords) {
-      const latV = parseFloat(lat), lonV = parseFloat(lon);
-      coords.textContent = `${Math.abs(latV).toFixed(2)}°${latV>=0?'N':'S'}  ${Math.abs(lonV).toFixed(2)}°${lonV>=0?'E':'W'}`;
-    }
-  }
-
-  async function fetchISS() {
-    const coords = document.getElementById('iss-coords');
-    try {
-      const r = await fetchWithTimeout('https://api.wheretheiss.at/v1/satellites/25544', 4000);
-      const d = await r.json();
-      updateISSDisplay(d.latitude, d.longitude);
-    } catch(e) {
-      if (coords) coords.textContent = '[position unavailable]';
-      const dot = document.getElementById('iss-dot-svg');
-      if (dot) dot.setAttribute('opacity', '0.2');
-    }
-  }
-
-  function startISS() {
-    fetchISS();
-    issInterval = setInterval(fetchISS, 10000);
-
-    const resetIdle = () => {
-      clearTimeout(issIdle);
-      // P1-001: restart interval if stopped
-      if (!issInterval) {
-        fetchISS();
-        issInterval = setInterval(fetchISS, 10000);
+    /* ── STP COUNT ── */
+    async function fetchSTP() {
+      const el  = document.getElementById('stp-value');
+      const src = document.getElementById('stp-source');
+      if (!el) return;
+      try {
+        const cached = sessionStorage.getItem('ksc-stp');
+        if (cached) { if (src) src.textContent = '[GitHub · cached]'; return; }
+        const r = await fetchWithTimeout('https://api.github.com/repos/AionSystem/SOVEREIGN-TRACE-PROTOCOL/contents/ledger');
+        if (r.status === 403) throw new Error('rate limited');
+        const data = await r.json();
+        if (Array.isArray(data)) {
+          el.textContent = data.length.toString();
+          try { sessionStorage.setItem('ksc-stp', data.length.toString()); } catch(e) {}
+          if (src) src.textContent = '[GitHub · live]';
+        }
+      } catch(e) {
+        if (src && e.message === 'rate limited') { src.textContent = '[rate limited · retry later]'; src.classList.add('stale'); }
       }
-      issIdle = setTimeout(() => {
-        clearInterval(issInterval);
-        issInterval = null;
-      }, 30000);
-    };
-    ['mousemove','touchstart','keydown'].forEach(e => document.addEventListener(e, resetIdle));
-    resetIdle();
-  }
+    }
 
-  /* ── AXIS ANIMATIONS ── */
-  function animateAxes() {
-    const axes = [
-      {id:'axis-e',v:73},{id:'axis-i',v:52},{id:'axis-s',v:48},
-      {id:'axis-m',v:44},{id:'axis-b',v:35},{id:'axis-f',v:50},
-      {id:'axis-a',v:35},{id:'axis-d',v:84},{id:'axis-su',v:12},
-    ];
-    axes.forEach((ax,i) => {
-      const el = document.getElementById(ax.id);
-      if (el) setTimeout(() => { el.style.width = ax.v + '%'; }, 100 + i * 60);
-    });
-    setTimeout(() => {
-      [{id:'agi-a',v:35},{id:'agi-b',v:5},{id:'agi-c',v:2}].forEach((b,i) => {
-        const el = document.getElementById(b.id);
-        if (el) setTimeout(() => { el.style.width = b.v + '%'; }, i * 150);
+    /* ── ISS ── */
+    var issInterval = null;
+    var issIdle = null;
+
+    function updateISS(lat, lon) {
+      var dot = document.getElementById('iss-dot-svg');
+      var coords = document.getElementById('iss-coords');
+      if (dot) {
+        dot.setAttribute('cx', (parseFloat(lon) + 180).toFixed(1));
+        dot.setAttribute('cy', (90 - parseFloat(lat)).toFixed(1));
+      }
+      if (coords) {
+        var lt = parseFloat(lat), ln = parseFloat(lon);
+        coords.textContent = Math.abs(lt).toFixed(2) + '°' + (lt >= 0 ? 'N' : 'S') + '  ' + Math.abs(ln).toFixed(2) + '°' + (ln >= 0 ? 'E' : 'W');
+      }
+    }
+
+    async function fetchISS() {
+      var coords = document.getElementById('iss-coords');
+      try {
+        var r = await fetchWithTimeout('https://api.wheretheiss.at/v1/satellites/25544', 4000);
+        var d = await r.json();
+        updateISS(d.latitude, d.longitude);
+      } catch(e) {
+        if (coords) coords.textContent = '[position unavailable]';
+        var dot = document.getElementById('iss-dot-svg');
+        if (dot) dot.setAttribute('opacity', '0.2');
+      }
+    }
+
+    function startISS() {
+      fetchISS();
+      issInterval = setInterval(fetchISS, 10000);
+      function resetIdle() {
+        clearTimeout(issIdle);
+        if (!issInterval) { fetchISS(); issInterval = setInterval(fetchISS, 10000); }
+        issIdle = setTimeout(function() { clearInterval(issInterval); issInterval = null; }, 30000);
+      }
+      ['mousemove','touchstart','keydown'].forEach(function(e) { document.addEventListener(e, resetIdle); });
+      resetIdle();
+    }
+
+    /* ── AXIS ANIMATIONS ── */
+    function animateAxes() {
+      var axes = [
+        {id:'axis-e',v:73},{id:'axis-i',v:52},{id:'axis-s',v:48},
+        {id:'axis-m',v:44},{id:'axis-b',v:35},{id:'axis-f',v:50},
+        {id:'axis-a',v:35},{id:'axis-d',v:84},{id:'axis-su',v:12},
+      ];
+      axes.forEach(function(ax, i) {
+        var el = document.getElementById(ax.id);
+        if (el) setTimeout(function() { el.style.width = ax.v + '%'; }, 100 + i * 60);
       });
-    }, 300);
-    setTimeout(() => {
-      const kf = document.getElementById('k-fill');
-      if (kf) kf.style.width = '73%';
-    }, 200);
-  }
+      setTimeout(function() {
+        [{id:'agi-a',v:35},{id:'agi-b',v:5},{id:'agi-c',v:2}].forEach(function(b,i) {
+          var el = document.getElementById(b.id);
+          if (el) setTimeout(function() { el.style.width = b.v + '%'; }, i * 150);
+        });
+      }, 300);
+      setTimeout(function() {
+        var kf = document.getElementById('k-fill');
+        if (kf) kf.style.width = '73%';
+      }, 200);
+    }
 
-  /* ── RADAR — P1-002 + P3-001 resolution: correct angles + animated from center ── */
-  function updateRadar() {
-    const poly = document.getElementById('radar-polygon');
-    if (!poly) return;
-    // Angles: E=0°(top), I=45°, S=90°, M=135°, B=180°, F=225°, A=270°, D=315°
-    // D axis is inverted (debt): high debt = short spoke = closer to center
-    const vals = [0.73, 0.52, 0.48, 0.44, 0.35, 0.50, 0.35, 1 - 0.84]; // D inverted
-    const cx = 160, cy = 160, maxR = 115;
-    const pts = vals.map((v,i) => {
-      const angle = (i * 45 - 90) * Math.PI / 180;
-      const r = v * maxR;
-      return `${(cx + r * Math.cos(angle)).toFixed(1)},${(cy + r * Math.sin(angle)).toFixed(1)}`;
+    /* ── RADAR ── */
+    function updateRadar() {
+      var poly = document.getElementById('radar-polygon');
+      if (!poly) return;
+      var vals = [0.73, 0.52, 0.48, 0.44, 0.35, 0.50, 0.35, 1 - 0.84];
+      var cx = 160, cy = 160, maxR = 115;
+      var pts = vals.map(function(v, i) {
+        var angle = (i * 45 - 90) * Math.PI / 180;
+        var r = v * maxR;
+        return (cx + r * Math.cos(angle)).toFixed(1) + ',' + (cy + r * Math.sin(angle)).toFixed(1);
+      });
+      setTimeout(function() { poly.setAttribute('points', pts.join(' ')); }, 200);
+    }
+
+    /* ── INIT ── */
+    document.addEventListener('DOMContentLoaded', function() {
+      animateAxes();
+      updateRadar();
+      Promise.allSettled([fetchSTP()]);
+      startISS();
+      setTimeout(fetchSatellites, 2000);
     });
-    // Start from center, then animate to correct position
-    setTimeout(() => { poly.setAttribute('points', pts.join(' ')); }, 200);
-  }
 
-  /* ── AUDIT TOGGLE — P2-003 resolution ── */
-  function toggleAudit() {
-    const panel = document.getElementById('audit-panel');
-    const btn = document.getElementById('audit-toggle');
-    if (!panel || !btn) return;
-    const open = panel.classList.toggle('visible');
-    panel.setAttribute('aria-hidden', !open);
-    btn.setAttribute('aria-expanded', open);
-    btn.classList.toggle('active', open);
-    if (open) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  /* ── STALENESS CHECK — P2-005 resolution: exempt flagged nodes ── */
-  function checkStaleness() {
-    const meta = document.querySelector('meta[name="ksc-build-date"]');
-    if (!meta) return;
-    const months = (new Date() - new Date(meta.content)) / (1000 * 60 * 60 * 24 * 30);
-    if (months > 18) {
-      document.querySelectorAll('[data-manual-node]:not([data-staleness-exempt]) .data-source')
-        .forEach(el => { el.textContent += ' · verify current'; el.classList.add('stale'); });
-    }
-  }
-
-  /* ── NAV SCROLL TO ACTIVE — P2-006 resolution ── */
-  function scrollNavToActive() {
-    const active = document.querySelector('.nav-item.active');
-    if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-  }
-
-  /* ── PAGE LOAD SEQUENCE ── */
-  document.addEventListener('DOMContentLoaded', async () => {
-    // Priority 1: immediate
-    const now = new Date();
-    const ds = getDreamspell(now);
-    const tsDream = document.getElementById('ts-dreamspell');
-    if (tsDream) tsDream.textContent = ds.special ? ds.special : `Day ${ds.day}, ${ds.moonName} Moon ${ds.moon}`;
-    const tsGreg = document.getElementById('ts-gregorian');
-    if (tsGreg) tsGreg.textContent = now.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
-
-    animateAxes();
-    updateRadar();
-    checkStaleness();
-    scrollNavToActive();
-
-    // Priority 2: Hebrew date
-    const hd = await getHebrew();
-    const tsHeb = document.getElementById('ts-hebrew');
-    if (tsHeb) {
-      if (hd && hd.hebrew) { tsHeb.textContent = hd.hebrew; }
-      else { tsHeb.textContent = '[date unavailable]'; tsHeb.classList.add('fail'); }
-    }
-
-    // Priority 3: medium fetches
-    Promise.allSettled([fetchSTP()]);
-
-    // ISS tracking
-    startISS();
-
-    // Priority 4: heaviest
-    setTimeout(fetchSatellites, 2000);
-  });
+  })();
   </script>
 
 </body>
