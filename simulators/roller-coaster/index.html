@@ -470,8 +470,7 @@
 
 <script>
 // =====================================================
-// COMPLETE FRONTEND CODE - ALL BUTTONS AND LOGIC INCLUDED
-// All calculations call the backend API
+// COMPLETE FRONTEND CODE - FIXED API URL AND ERROR HANDLING
 // =====================================================
 
 // ═══════════════════════════════════════════════════════════════
@@ -482,7 +481,7 @@ const G_BLACKOUT = 8.0, G_REDOUT = 3.0, G_LINEAR = 20.0, G_FATAL = 40.0;
 const G_CAUTION = 5.0, G_WARNING = 6.5, G_NEG_WARN = 2.0;
 let UNITS = 'SI'; // 'SI' | 'IMP'
 
-// API Configuration - REPLACE THIS WITH YOUR ACTUAL VERCEL URL
+// ⚡ FIXED API URL - Uses your actual Vercel domain from the screenshot ⚡
 const API_BASE_URL = 'https://aion-backend-mu.vercel.app/api/simulators/roller-coaster';
 
 // User-friendly error messages
@@ -614,24 +613,42 @@ function resultBox(rows, extra = '') {
   ).join('')}${extra}</div>`;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// API CALL FUNCTION
-// ═══════════════════════════════════════════════════════════════
+// =====================================================
+// FIXED API CALL FUNCTION - Handles 404 and non-JSON responses
+// =====================================================
 async function callSimulator(module, params) {
-  const response = await fetch(API_BASE_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ module, params, unitSystem: UNITS })
-  });
-  
-  const data = await response.json();
-  
-  if (!response.ok || data.error) {
-    const userMessage = ERROR_MESSAGES[data.error] || data.userMessage || 'Calculation error';
-    throw { userMessage, ...data };
+  try {
+    const response = await fetch(API_BASE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ module, params, unitSystem: UNITS })
+    });
+
+    // Check if the response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      // If it's not JSON, it's probably a 404 HTML page
+      const text = await response.text();
+      console.error('Non-JSON response:', text.substring(0, 200));
+      throw { 
+        userMessage: 'Backend connection failed. The API endpoint might be wrong or the server is down.',
+        details: `Status: ${response.status}`
+      };
+    }
+
+    const data = await response.json();
+
+    if (!response.ok || data.error) {
+      const userMessage = ERROR_MESSAGES[data.error] || data.userMessage || 'Calculation error';
+      throw { userMessage, ...data };
+    }
+
+    return data;
+    
+  } catch (error) {
+    console.error('API call failed:', error);
+    throw error;
   }
-  
-  return data;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -689,7 +706,7 @@ async function calcEnergy() {
     } catch (error) {
       document.getElementById('ec-result').innerHTML = 
         `<div class="result-box" style="border-left-color:var(--red)">
-          <div style="color:var(--red);font-family:var(--mono)">${error.userMessage || 'Connection error'}</div>
+          <div style="color:var(--red);font-family:var(--mono)">${error.userMessage || 'Connection error. Check console.'}</div>
         </div>`;
     }
   });
