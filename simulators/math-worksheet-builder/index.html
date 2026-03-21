@@ -453,14 +453,14 @@ footer{margin-top:40px;padding:32px 0 20px;border-top:2px solid var(--border);di
 // API CONFIGURATION
 // ══════════════════════════════════════════════════════════
 // UPDATE to your actual Vercel URL before deploying
-const API_BASE_URL = 'https://aion-backend-mu.vercel.app';
+const API_BASE_URL = 'https://aion-backend-mu.vercel.app/api/simulators';
 
 async function callAPI(module, params) {
   try {
     const res = await fetch(`${API_BASE_URL}/api/math-worksheet`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ module, params })
+      body: JSON.stringify({ simulator: 'math-worksheet', module, params })
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
