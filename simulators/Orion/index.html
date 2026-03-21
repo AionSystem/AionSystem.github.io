@@ -531,14 +531,14 @@ SYM = 1 − normalized_asymmetry_index<br><br>
 // API CONFIGURATION
 // ══════════════════════════════════════════════════════════
 // UPDATE THIS to your actual Vercel deployment URL
-const API_BASE_URL = 'https://aion-backend-mu.vercel.app';
+const API_BASE_URL = 'https://aion-backend-mu.vercel.app/api/simulators';
 
 async function callAPI(module, params) {
   try {
     const res = await fetch(`${API_BASE_URL}/api/orion`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ module, params })
+      body: JSON.stringify({ simulator: 'orion', module, params })
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
