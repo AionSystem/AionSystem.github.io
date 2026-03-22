@@ -6,6 +6,8 @@ Evans Mills, New York · March 2026
 → **[aionsystem.github.io](https://aionsystem.github.io)** — The full site. Start here.
 
 ---
+[![ORCID — Sheldon K. Salmon](https://img.shields.io/badge/ORCID-0009--0005--8057--5115-a6ce39?style=flat&logo=orcid&logoColor=white)](https://orcid.org/0009-0005-8057-5115)
+---
 
 ## What This Is
 
