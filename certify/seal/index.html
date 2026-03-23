@@ -8,38 +8,22 @@
 <meta property="og:title" content="STP Seal Tool — Sovereign Trace Protocol">
 <meta property="og:description" content="SHA-256 binding. Triple-time stamp. Gregorian · Hebrew · Dreamspell. FROZEN-2.0.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ── VARIABLES ── */
 :root {
-  --bg:        #07070d;
-  --bg2:       #0d0d18;
-  --bg3:       #12121f;
-  --bg4:       #171726;
-  --border:    rgba(212,174,60,0.18);
-  --border2:   rgba(212,174,60,0.08);
-  --border3:   rgba(212,174,60,0.04);
-  --gold:      #d4ae3c;
-  --gold-dim:  rgba(212,174,60,0.55);
-  --gold-glow: rgba(212,174,60,0.10);
-  --gold-l:    #f0cc60;
-  --text:      #e8e4d8;
-  --text-dim:  #8a8678;
-  --text-faint:#4a4840;
-  --valid:     #3ddc84;
-  --valid-bg:  rgba(61,220,132,0.08);
-  --warn:      #ff8040;
-  --warn-bg:   rgba(255,128,64,0.08);
-  --danger:    #ff4d4d;
-  --danger-bg: rgba(255,77,77,0.08);
-  --frozen:    #40c4ff;
-  --frozen-bg: rgba(64,196,255,0.08);
-  --mono:      'JetBrains Mono', monospace;
-  --serif:     'Crimson Pro', Georgia, serif;
-  --sans:      'Syne', sans-serif;
-  --ease:      cubic-bezier(0.16,1,0.3,1);
+  --bg:#07070d; --bg2:#0d0d18; --bg3:#12121f; --bg4:#171726;
+  --border:rgba(212,174,60,0.18); --border2:rgba(212,174,60,0.08); --border3:rgba(212,174,60,0.04);
+  --gold:#d4ae3c; --gold-dim:rgba(212,174,60,0.55); --gold-glow:rgba(212,174,60,0.10); --gold-l:#f0cc60;
+  --text:#e8e4d8; --text-dim:#8a8678; --text-faint:#4a4840;
+  --valid:#3ddc84; --valid-bg:rgba(61,220,132,0.08);
+  --warn:#ff8040; --warn-bg:rgba(255,128,64,0.08);
+  --danger:#ff4d4d; --danger-bg:rgba(255,77,77,0.08);
+  --frozen:#40c4ff; --frozen-bg:rgba(64,196,255,0.08);
+  --mono:'JetBrains Mono',monospace;
+  --serif:'Crimson Pro',Georgia,serif;
+  --sans:'Syne',sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
 }
 [data-theme="light"] {
   --bg:#f4f1e8; --bg2:#ede9dc; --bg3:#e5e0d0; --bg4:#dbd5c4;
@@ -47,23 +31,13 @@
   --gold:#8c6414; --gold-dim:rgba(140,100,20,0.65); --gold-glow:rgba(140,100,20,0.07); --gold-l:#6b4c0f;
   --text:#1a1810; --text-dim:#5a5040; --text-faint:#aaa090;
 }
-
-/* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{font-size:15px;scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;overflow-x:hidden;}
-
-/* ── CANVAS ── */
 #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.3;}
 
 /* ── STATUS BAR ── */
-.status-bar{
-  background:linear-gradient(135deg,rgba(64,196,255,0.06),rgba(212,174,60,0.04));
-  border-bottom:1px solid var(--border);
-  padding:8px 24px;display:flex;align-items:center;gap:8px;
-  font-size:0.68rem;color:var(--text-dim);letter-spacing:0.08em;
-  flex-wrap:wrap;position:relative;z-index:2;
-}
+.status-bar{background:linear-gradient(135deg,rgba(64,196,255,0.06),rgba(212,174,60,0.04));border-bottom:1px solid var(--border);padding:8px 24px;display:flex;align-items:center;gap:8px;font-size:0.68rem;color:var(--text-dim);letter-spacing:0.08em;flex-wrap:wrap;position:relative;z-index:2;}
 .status-bar .dot{width:6px;height:6px;border-radius:50%;background:var(--frozen);box-shadow:0 0 6px var(--frozen);flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;}
 @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.4;}}
 .status-bar strong{color:var(--frozen);}
@@ -71,6 +45,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:1
 
 /* ── LAYOUT ── */
 .page{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 24px 80px;}
+.theme-btn{position:fixed;top:46px;right:20px;z-index:100;background:var(--bg3);border:1px solid var(--border);color:var(--text-dim);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;padding:5px 9px;cursor:pointer;border-radius:2px;transition:all 0.2s;}
+.theme-btn:hover{border-color:var(--gold);color:var(--gold);}
 
 /* ── HEADER ── */
 header{padding:44px 0 28px;border-bottom:1px solid var(--border2);position:relative;z-index:1;}
@@ -86,10 +62,7 @@ header{padding:44px 0 28px;border-bottom:1px solid var(--border2);position:relat
 .badge{font-size:0.62rem;letter-spacing:0.12em;padding:3px 9px;border-radius:2px;border:1px solid var(--border);color:var(--gold-dim);background:var(--gold-glow);white-space:nowrap;}
 .badge.frozen{border-color:rgba(64,196,255,0.3);color:rgba(64,196,255,0.8);background:rgba(64,196,255,0.05);}
 .badge.live{border-color:rgba(61,220,132,0.3);color:rgba(61,220,132,0.8);background:rgba(61,220,132,0.05);}
-
-/* ── THEME BTN ── */
-.theme-btn{position:fixed;top:46px;right:20px;z-index:100;background:var(--bg3);border:1px solid var(--border);color:var(--text-dim);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;padding:5px 9px;cursor:pointer;border-radius:2px;transition:all 0.2s;}
-.theme-btn:hover{border-color:var(--gold);color:var(--gold);}
+.badge.auto{border-color:rgba(61,220,132,0.4);color:rgba(61,220,132,0.9);background:rgba(61,220,132,0.08);}
 
 /* ── TABS ── */
 .tabs{display:flex;gap:0;margin:28px 0 0;border-bottom:1px solid var(--border);overflow-x:auto;}
@@ -112,7 +85,7 @@ header{padding:44px 0 28px;border-bottom:1px solid var(--border2);position:relat
 .panel{background:var(--bg2);border:1px solid var(--border2);border-radius:3px;padding:22px 24px;margin-bottom:16px;}
 .panel-title{font-size:0.62rem;letter-spacing:0.15em;color:var(--gold-dim);margin-bottom:18px;padding-bottom:9px;border-bottom:1px solid var(--border2);}
 
-/* ── FORM ELEMENTS ── */
+/* ── FORM ── */
 .field-group{margin-bottom:16px;}
 .field-label{font-size:0.65rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:8px;}
 .field-label .req{color:var(--danger);font-size:0.6rem;}
@@ -124,33 +97,51 @@ textarea.field-input{min-height:100px;}
 .select-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:0.78rem;padding:9px 12px;border-radius:2px;cursor:pointer;transition:border-color 0.2s;}
 .select-input:focus{outline:none;border-color:var(--gold);}
 .select-input option{background:var(--bg3);}
-
-/* ── TEMPLATE BADGE ── */
 .template-badge{display:inline-block;font-size:0.62rem;letter-spacing:0.1em;padding:3px 9px;border-radius:2px;margin-top:8px;border:1px solid var(--border);color:var(--gold-dim);background:var(--gold-glow);}
 .template-desc{font-size:0.68rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;margin-top:5px;}
 
-/* ── DECLARATION CHECK ── */
+/* ── DECLARATION ── */
 .decl-row{display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--bg3);border:1px solid var(--border2);border-radius:2px;margin-top:10px;cursor:pointer;}
 .decl-row input[type=checkbox]{accent-color:var(--gold);width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;}
 .decl-text{font-size:0.76rem;color:var(--text-dim);line-height:1.6;font-family:var(--serif);font-style:italic;}
 .decl-text strong{color:var(--text);font-style:normal;}
 
 /* ── SEAL BUTTON ── */
-.seal-btn{width:100%;font-family:var(--mono);font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;padding:14px 24px;background:var(--gold);color:#000;border:none;cursor:pointer;border-radius:2px;transition:all 0.2s;position:relative;overflow:hidden;font-weight:700;margin-top:6px;}
+.seal-btn{width:100%;font-family:var(--mono);font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;padding:14px 24px;background:var(--gold);color:#000;border:none;cursor:pointer;border-radius:2px;transition:all 0.2s;font-weight:700;margin-top:6px;}
 .seal-btn:hover{background:var(--gold-l);}
 .seal-btn:disabled{opacity:0.35;cursor:not-allowed;}
 .seal-btn.sealing{background:var(--bg3);color:var(--gold);border:1px solid var(--gold);}
+
+/* ── RESET BUTTON ── */
+.reset-btn{width:100%;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;padding:11px 24px;background:transparent;color:var(--text-faint);border:1px solid var(--border2);cursor:pointer;border-radius:2px;transition:all 0.2s;margin-top:8px;display:none;}
+.reset-btn:hover{border-color:var(--gold-dim);color:var(--gold-dim);}
+.reset-btn.visible{display:block;}
 
 /* ── SEAL RESULT ── */
 .seal-result{display:none;animation:fadeIn 0.4s var(--ease) forwards;}
 .seal-result.active{display:block;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
+/* ── STATUS CARDS ── */
 .seal-status-card{padding:18px 22px;border-radius:3px;border:2px solid var(--valid);background:var(--valid-bg);margin-bottom:16px;display:flex;align-items:center;gap:16px;}
 .seal-status-icon{font-size:1.4rem;flex-shrink:0;}
 .seal-status-label{font-family:var(--sans);font-size:1.1rem;font-weight:700;letter-spacing:0.06em;color:var(--valid);margin-bottom:2px;}
 .seal-status-id{font-family:var(--mono);font-size:0.72rem;color:var(--text-dim);word-break:break-all;}
 
+/* Ledger status — auto GitHub  */
+.ledger-status-card{padding:16px 20px;border-radius:3px;border:2px solid var(--frozen);background:var(--frozen-bg);margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.ledger-status-card.pending{border-color:var(--warn);background:var(--warn-bg);}
+.ledger-status-card.failed{border-color:var(--danger);background:var(--danger-bg);}
+.lsc-icon{font-size:1.2rem;flex-shrink:0;}
+.lsc-body{}
+.lsc-label{font-family:var(--sans);font-size:0.95rem;font-weight:700;letter-spacing:0.06em;color:var(--frozen);margin-bottom:2px;}
+.ledger-status-card.pending .lsc-label{color:var(--warn);}
+.ledger-status-card.failed .lsc-label{color:var(--danger);}
+.lsc-sub{font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);}
+.lsc-link{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;color:var(--frozen);text-decoration:none;border:1px solid rgba(64,196,255,0.3);padding:5px 12px;border-radius:2px;transition:all 0.2s;}
+.lsc-link:hover{background:rgba(64,196,255,0.1);border-color:var(--frozen);}
+
+/* ── TRIPLE TIME AT SEAL ── */
 .seal-times{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border2);border:1px solid var(--border2);border-radius:2px;margin-bottom:14px;}
 .seal-time-cell{background:var(--bg3);padding:10px 14px;}
 .seal-time-sys{font-size:0.58rem;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:4px;}
@@ -159,13 +150,13 @@ textarea.field-input{min-height:100px;}
 
 /* ── JSON DISPLAY ── */
 .json-panel{background:var(--bg4);border:1px solid var(--border2);border-radius:2px;padding:16px;margin-bottom:14px;overflow-x:auto;}
-.json-pre{font-family:var(--mono);font-size:0.72rem;line-height:1.8;color:var(--text-dim);white-space:pre;word-break:break-all;white-space:pre-wrap;}
+.json-pre{font-family:var(--mono);font-size:0.72rem;line-height:1.8;color:var(--text-dim);white-space:pre-wrap;word-break:break-all;}
 .json-key{color:var(--gold-dim);}
 .json-str{color:rgba(61,220,132,0.9);}
 .json-num{color:var(--frozen);}
 .json-bool{color:var(--warn);}
 
-/* ── ACTION ROW ── */
+/* ── ACTIONS ── */
 .action-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
 .action-btn{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;padding:8px 14px;border:1px solid var(--border2);cursor:pointer;border-radius:2px;background:var(--bg3);color:var(--text-dim);transition:all 0.18s;flex:1;min-width:120px;}
 .action-btn:hover{border-color:var(--gold);color:var(--gold);}
@@ -206,7 +197,7 @@ textarea.field-input{min-height:100px;}
 .le-time{font-size:0.62rem;color:var(--text-faint);}
 .le-time strong{color:var(--gold-dim);}
 .le-hash{font-size:0.62rem;color:var(--text-faint);font-family:var(--mono);word-break:break-all;margin-bottom:8px;}
-.le-github-link{font-size:0.62rem;color:var(--frozen);text-decoration:none;}
+.le-github-link{font-size:0.62rem;color:var(--frozen);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-bottom:8px;}
 .le-github-link:hover{text-decoration:underline;}
 .le-actions{display:flex;gap:6px;flex-wrap:wrap;}
 .le-btn{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;padding:5px 10px;border:1px solid var(--border2);cursor:pointer;border-radius:2px;background:none;color:var(--text-faint);transition:all 0.15s;}
@@ -225,30 +216,22 @@ textarea.field-input{min-height:100px;}
 .about-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
 .about-link{font-size:0.68rem;letter-spacing:0.1em;color:var(--gold-dim);text-decoration:none;padding:5px 10px;border:1px solid var(--border);border-radius:2px;transition:all 0.18s;}
 .about-link:hover{color:var(--gold);border-color:var(--gold);}
-
-/* ── FROZEN DECLARATION BLOCK ── */
 .frozen-block{background:rgba(64,196,255,0.04);border:1px solid rgba(64,196,255,0.2);padding:16px 20px;border-radius:3px;margin-bottom:16px;}
 .frozen-title{font-size:0.65rem;letter-spacing:0.15em;color:var(--frozen);margin-bottom:10px;font-family:var(--mono);}
 .frozen-text{font-family:var(--serif);font-size:0.88rem;color:var(--text-dim);line-height:1.65;}
 .frozen-text strong{color:var(--text);}
 
-/* ── ERROR / INFO NOTICES ── */
+/* ── NOTICES ── */
 .error-notice{background:var(--danger-bg);border:1px solid rgba(255,77,77,0.25);padding:10px 14px;border-radius:2px;font-size:0.7rem;color:rgba(255,140,140,0.9);margin-top:8px;display:none;}
 .error-notice.active{display:block;}
 .info-notice{background:rgba(212,174,60,0.05);border:1px solid rgba(212,174,60,0.15);padding:10px 14px;border-radius:2px;font-size:0.7rem;color:var(--gold-dim);margin-bottom:12px;}
 .success-notice{background:var(--valid-bg);border:1px solid rgba(61,220,132,0.25);padding:10px 14px;border-radius:2px;font-size:0.7rem;color:rgba(61,220,132,0.9);margin-top:8px;display:none;}
 .success-notice.active{display:block;}
-
-/* ── HASH DISPLAY ── */
 .hash-display{background:var(--bg4);border:1px solid var(--border2);padding:10px 14px;border-radius:2px;font-family:var(--mono);font-size:0.68rem;color:var(--text-faint);word-break:break-all;margin-bottom:10px;}
 .hash-display .hash-prefix{color:var(--gold-dim);}
 .hash-display .hash-value{color:var(--text-dim);}
 
-/* ── RESPONSIVE ── */
-@media(max-width:760px){
-  nav { padding: 0 20px; }
-  .seal-grid { grid-template-columns: 1fr; }
-}
+@media(max-width:760px){.seal-grid{grid-template-columns:1fr !important;}}
 </style>
 </head>
 <body>
@@ -256,18 +239,13 @@ textarea.field-input{min-height:100px;}
 <canvas id="bg-canvas"></canvas>
 <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">LIGHT</button>
 
-<!-- STATUS BAR -->
 <div class="status-bar">
   <div class="dot"></div>
   <strong>FROZEN-2.0 ACTIVE</strong>
-  <span class="sep">·</span>
-  <span>SHA-256 BINDING</span>
-  <span class="sep">·</span>
-  <span>TRIPLE-TIME SEAL</span>
-  <span class="sep">·</span>
-  <span>ZERO DEPENDENCIES</span>
-  <span class="sep">·</span>
-  <span>BROWSER-NATIVE SubtleCrypto</span>
+  <span class="sep">·</span><span>SHA-256 BINDING</span>
+  <span class="sep">·</span><span>TRIPLE-TIME SEAL</span>
+  <span class="sep">·</span><span>AUTO LEDGER — GITHUB ISSUE CREATED INSTANTLY</span>
+  <span class="sep">·</span><span>BROWSER-NATIVE SubtleCrypto</span>
 </div>
 
 <div class="page">
@@ -285,7 +263,6 @@ textarea.field-input{min-height:100px;}
       <div class="header-meta">The stamp is permanent. The stamp is the resolution.</div>
     </div>
     <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
-      <!-- OCTAGONAL BADGE SVG -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="72" height="72">
         <defs>
           <linearGradient id="hb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient>
@@ -305,7 +282,7 @@ textarea.field-input{min-height:100px;}
         <div class="badge frozen">FROZEN-2.0</div>
         <div class="badge">SHA-256 · TRIPLE-TIME</div>
         <div class="badge live">BROWSER-NATIVE</div>
-        <div class="badge">14 TEMPLATES</div>
+        <div class="badge auto">AUTO LEDGER ✓</div>
       </div>
     </div>
   </div>
@@ -319,12 +296,9 @@ textarea.field-input{min-height:100px;}
   <button class="tab-btn" onclick="switchTab('about',this)">[ ABOUT STP ]</button>
 </div>
 
-<!-- ══════════════════════════════════════════════════ -->
-<!-- TAB: SEAL                                          -->
-<!-- ══════════════════════════════════════════════════ -->
+<!-- ══ TAB: SEAL ══ -->
 <div id="tab-seal" class="tab-panel active">
 
-  <!-- LIVE TRIPLE TIME STRIP -->
   <div class="triple-time-strip">
     <div class="tt-cell"><div class="tt-sys">Gregorian</div><div class="tt-val loading" id="live-gregorian">· · ·</div></div>
     <div class="tt-cell"><div class="tt-sys">13 Moon · Dreamspell</div><div class="tt-val loading" id="live-dreamspell">· · ·</div></div>
@@ -355,28 +329,29 @@ textarea.field-input{min-height:100px;}
           <div class="field-label">Content to Seal <span class="req">* required</span></div>
           <textarea class="field-input" id="seal-content" placeholder="Enter exact present-moment content — no narrative arc, no retrospective framing. What is true right now?" rows="6" oninput="onContentChange()"></textarea>
           <div style="font-size:0.62rem;color:var(--text-faint);margin-top:4px;" id="char-count">0 characters</div>
-          <div id="nonascii-warn" style="display:none;font-size:0.68rem;color:var(--warn);margin-top:6px;padding:6px 10px;background:var(--warn-bg);border:1px solid rgba(255,128,64,0.25);border-radius:2px;">⚑ Non-ASCII characters detected. This seal is valid for verification within this tool. Cross-verification with <code style="font-family:var(--mono);font-size:0.65rem;">pip install sovereign-trace</code> may differ for non-ASCII content.</div>
+          <div id="nonascii-warn" style="display:none;font-size:0.68rem;color:var(--warn);margin-top:6px;padding:6px 10px;background:var(--warn-bg);border:1px solid rgba(255,128,64,0.25);border-radius:2px;">⚑ Non-ASCII characters detected. This seal is valid for verification within this tool.</div>
         </div>
-
         <div class="field-group">
           <div class="field-label">Author / Identifier <span class="opt">optional</span></div>
           <input type="text" class="field-input" id="seal-author" placeholder="Your name, handle, or organization identifier…">
         </div>
-
-        <div class="field-group" style="display:none;">
-          <div class="field-label">Prior Seal Hash (Webeater Link) <span class="req" id="webeater-req" style="display:none;">* required for Template 09</span><span class="opt" id="webeater-opt">optional</span></div>
-          <input type="text" class="field-input" id="seal-prior-hash" placeholder="sha256:... — cryptographic link to a prior sealed entry" oninput="updateSealButton()">
+        <div class="field-group" id="webeater-group" style="display:none;">
+          <div class="field-label">Prior Seal Hash (Webeater Link) <span class="req" id="webeater-req" style="display:none;">* required for Template 09</span></div>
+          <input type="text" class="field-input" id="seal-prior-hash" placeholder="sha256:… — cryptographic link to a prior sealed entry" oninput="updateSealButton()">
         </div>
-
         <label class="decl-row" for="seal-declaration">
           <input type="checkbox" id="seal-declaration" onchange="onDeclChange()">
-          <div class="decl-text" id="decl-text"><strong>Declaration:</strong> I declare this entry accurate to the best of my knowledge at the time of sealing. I understand this seal is permanent and tamper-evident.</div>
+          <div class="decl-text"><strong>Declaration:</strong> I declare this entry accurate to the best of my knowledge at the time of sealing. I understand this seal is permanent and tamper-evident.</div>
         </label>
         <div id="decl-supplement" style="display:none;font-size:0.7rem;padding:8px 12px;border-radius:2px;margin-top:6px;font-family:var(--serif);font-style:italic;line-height:1.6;"></div>
         <div class="error-notice" id="decl-error">Declaration required — this is the foundation of the sovereign trace.</div>
 
         <button class="seal-btn" id="seal-btn" onclick="generateSeal()" style="margin-top:14px;" disabled>
-          🔒 GENERATE SEAL
+          🔒 GENERATE SEAL + ENTER LEDGER
+        </button>
+        <!-- RESET BUTTON — appears after seal fires -->
+        <button class="reset-btn" id="reset-btn" onclick="resetTool()">
+          ↺ Reset — Seal Another
         </button>
         <div class="error-notice" id="seal-error"></div>
       </div>
@@ -384,16 +359,14 @@ textarea.field-input{min-height:100px;}
 
     <!-- RIGHT: OUTPUT -->
     <div>
-      <!-- Placeholder before seal -->
       <div id="seal-placeholder" class="panel" style="text-align:center;padding:48px 24px;">
         <div style="font-size:2rem;margin-bottom:16px;opacity:0.3;">🔒</div>
-        <div style="font-size:0.78rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;line-height:1.7;">Select a template, enter your content,<br>declare your intent, then generate the seal.<br><br>The stamp is permanent.<br>The stamp is the resolution.</div>
+        <div style="font-size:0.78rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;line-height:1.7;">Select a template, enter your content,<br>declare your intent, then generate the seal.<br><br>Your seal is computed locally in your browser.<br>The GitHub ledger entry is created automatically.<br>No GitHub account required to seal.</div>
       </div>
 
-      <!-- Seal result (shown after generation) -->
       <div class="seal-result" id="seal-result">
 
-        <!-- Status card -->
+        <!-- Local seal confirmed -->
         <div class="seal-status-card">
           <div class="seal-status-icon">🔒</div>
           <div>
@@ -402,7 +375,16 @@ textarea.field-input{min-height:100px;}
           </div>
         </div>
 
-        <!-- Triple-time at seal moment -->
+        <!-- Ledger status card — updated by JS -->
+        <div class="ledger-status-card pending" id="ledger-status-card">
+          <div class="lsc-icon">⟳</div>
+          <div class="lsc-body">
+            <div class="lsc-label">Creating Ledger Entry…</div>
+            <div class="lsc-sub">Opening GitHub issue automatically</div>
+          </div>
+        </div>
+
+        <!-- Triple time at seal moment -->
         <div class="panel" style="padding:16px 20px;">
           <div class="panel-title" style="margin-bottom:12px;">SEAL MOMENT — TRIPLE-TIME</div>
           <div class="seal-times">
@@ -415,69 +397,42 @@ textarea.field-input{min-height:100px;}
           </div>
         </div>
 
-        <!-- JSON Display -->
+        <!-- JSON -->
         <div class="panel" style="padding:16px 20px;">
-          <div class="panel-title" style="margin-bottom:12px;">SEALED JSON — STORE THIS</div>
+          <div class="panel-title" style="margin-bottom:12px;">SEALED JSON — DOWNLOAD AND STORE</div>
           <div class="json-panel">
             <pre class="json-pre" id="result-json"></pre>
           </div>
           <div class="action-row">
-            <button class="action-btn primary" onclick="downloadJSON()">↓ DOWNLOAD JSON</button>
-            <button class="action-btn" id="copy-json-btn" onclick="copyJSON()">COPY JSON</button>
-            <button class="action-btn" id="save-ledger-btn" onclick="saveToLedger()">SAVE TO LEDGER</button>
+            <button class="action-btn primary" onclick="downloadJSON()">↓ Download JSON</button>
+            <button class="action-btn" id="copy-json-btn" onclick="copyJSON()">Copy JSON</button>
+            <button class="action-btn" id="save-ledger-btn" onclick="saveToLedger()">Save to Session</button>
           </div>
-          <div class="success-notice" id="save-success">✓ Saved to Ledger. View in the LEDGER tab.</div>
-        </div>
-
-        <!-- NEXT STEP — GitHub Issues -->
-        <div style="background:rgba(64,196,255,0.04);border:1px solid rgba(64,196,255,0.18);border-radius:3px;padding:16px 20px;margin-bottom:14px;">
-          <div style="font-size:0.62rem;letter-spacing:0.15em;color:var(--frozen);margin-bottom:10px;font-family:var(--mono);">STEP 2 — ENTER THE PUBLIC LEDGER</div>
-          <div style="font-size:0.78rem;color:var(--text-dim);font-family:var(--serif);line-height:1.65;margin-bottom:14px;">
-            Your seal is downloaded and cryptographically permanent. To register it in the public STP ledger, copy your sealed JSON and submit it as a GitHub Issue using the correct template. The submission is independently timestamped by GitHub — that timestamp is outside your control and cannot be altered retroactively.
-          </div>
-          <div style="font-size:0.68rem;color:var(--text-faint);margin-bottom:12px;font-family:var(--mono);">
-            Selected template: <span id="next-step-template" style="color:var(--gold);">—</span>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="action-btn" id="copy-stamp-btn" onclick="copyStampDisplay()" style="flex:1;min-width:140px;">COPY STAMP DISPLAY</button>
-            <button class="action-btn primary" id="gh-issue-btn" onclick="openGitHubTemplate()" style="flex:1;min-width:140px;">OPEN GITHUB ISSUE TEMPLATE →</button>
-          </div>
-          <div style="font-size:0.62rem;color:var(--text-faint);margin-top:10px;font-family:var(--serif);font-style:italic;">
-            Paste your sealed JSON or stamp display into the issue body. Sheldon K. Salmon will manually add confirmed entries to the ledger. <br>
-            <!-- FIX 4: Removed misleading branch routing note -->
-            <span style="color:var(--text-faint);font-size:0.6rem;">Note: if the direct template link opens the issue chooser instead, GitHub may not have the template filename in the expected location. Select the matching template manually from the chooser.</span>
-          </div>
+          <div class="success-notice" id="save-success">✓ Saved to session Ledger tab.</div>
         </div>
 
       </div><!-- /seal-result -->
     </div>
-
-  </div><!-- /seal-grid -->
+  </div>
 </div><!-- /tab-seal -->
 
-<!-- ══════════════════════════════════════════════════ -->
-<!-- TAB: VERIFY                                        -->
-<!-- ══════════════════════════════════════════════════ -->
+<!-- ══ TAB: VERIFY ══ -->
 <div id="tab-verify" class="tab-panel">
   <div class="panel">
     <div class="panel-title">VERIFY A SOVEREIGN TRACE SEAL</div>
-    <!-- FIX 3: Clarified that verification uses the hebrew field, not hebrew_display -->
-    <div class="info-notice">Paste the full sealed JSON. Verification re-computes the SHA-256 hash from the five-field payload and compares it against the stored hash. This proves the entry has not been altered since sealing. No network call required — pure local verification. Note: verification uses the <code style="font-family:var(--mono);font-size:0.68rem;">hebrew</code> field (computed by the JS algorithm at seal time), not <code style="font-family:var(--mono);font-size:0.68rem;">hebrew_display</code> (the Hebcal-fetched value shown to you). If those two values differ in a given entry, the <code style="font-family:var(--mono);font-size:0.68rem;">hebrew</code> field is what was hashed.</div>
+    <div class="info-notice">Paste the full sealed JSON. Verification re-computes the SHA-256 hash from the five-field payload and compares it against the stored hash. No network call required — pure local verification.</div>
     <div class="field-group">
       <div class="field-label">Sealed JSON <span class="req">* required</span></div>
-      <textarea class="field-input" id="verify-json" placeholder='Paste the sealed JSON here…&#10;{"ledger_id":"STP-...", "content":"...", "content_hash":"sha256:...", ...}' rows="12"></textarea>
+      <textarea class="field-input" id="verify-json" placeholder='Paste the sealed JSON here…' rows="12"></textarea>
     </div>
     <button class="action-btn primary" onclick="runVerify()" style="width:100%;text-align:center;padding:10px;">VERIFY SEAL →</button>
     <div class="error-notice" id="verify-error"></div>
   </div>
-
   <div class="verify-result" id="verify-result">
     <div class="verify-label" id="verify-label"></div>
     <div class="verify-detail" id="verify-detail"></div>
     <div class="verify-hash-row" id="verify-hash-row"></div>
   </div>
-
-  <!-- Verified entry display -->
   <div id="verify-entry-display" style="display:none;">
     <div class="panel" style="margin-top:16px;">
       <div class="panel-title">VERIFIED ENTRY</div>
@@ -486,72 +441,44 @@ textarea.field-input{min-height:100px;}
       <div style="font-size:0.78rem;color:var(--text-dim);font-family:var(--serif);margin-top:10px;line-height:1.6;" id="verify-content-preview"></div>
     </div>
   </div>
-</div><!-- /tab-verify -->
+</div>
 
-<!-- ══════════════════════════════════════════════════ -->
-<!-- TAB: LEDGER                                        -->
-<!-- ══════════════════════════════════════════════════ -->
+<!-- ══ TAB: LEDGER ══ -->
 <div id="tab-ledger" class="tab-panel">
   <div class="ledger-stats">
     <span class="ledger-stat">Session entries: <strong id="ledger-count">0</strong></span>
-    <span class="ledger-stat" id="ledger-github-count" style="display:none;">GitHub issues created: <strong id="ledger-gh-count">0</strong></span>
+    <span class="ledger-stat" id="ledger-github-stat" style="display:none;">GitHub issues: <strong id="ledger-gh-count">0</strong></span>
     <div style="margin-left:auto;display:flex;gap:8px;">
       <button class="action-btn" onclick="copyLedgerSummary()" style="flex:none;font-size:0.62rem;padding:5px 10px;">Copy Summary</button>
       <button class="action-btn" onclick="clearLedger()" style="flex:none;font-size:0.62rem;padding:5px 10px;color:var(--danger);border-color:rgba(255,77,77,0.2);">Clear Session</button>
     </div>
   </div>
-
   <div id="ledger-entries">
-    <!-- FIX 1: Removed "never deletes" claim — JSON download is the permanent record -->
-    <div class="ledger-empty">No seals generated this session.<br><br>Entries persist in this browser until cleared — the JSON download is the permanent record.<br>Complete a seal in the SEAL tab to add an entry.</div>
+    <div class="ledger-empty">No seals generated this session.<br><br>Entries with auto-created GitHub issues will appear here.<br>The JSON download is your permanent local record.</div>
   </div>
-</div><!-- /tab-ledger -->
+</div>
 
-<!-- ══════════════════════════════════════════════════ -->
-<!-- TAB: ABOUT STP                                     -->
-<!-- ══════════════════════════════════════════════════ -->
+<!-- ══ TAB: ABOUT ══ -->
 <div id="tab-about" class="tab-panel">
-
   <div class="about-section">
     <div class="frozen-block">
       <div class="frozen-title">FROZEN DECLARATION — FROZEN-2.0</div>
-      <div class="frozen-text">
-        <strong>This tool implements the FROZEN-2.0 stamp function.</strong> The SHA-256 seal generated here is compatible with the Python package <code>sovereign-trace</code> v2.0.0 for ASCII content. FROZEN-2.0 was rebuilt from first principles after FROZEN-1.0 was retired due to an incomplete dehiyot implementation causing Hebrew off-by-one errors for all 5786 dates. The defect is documented permanently in the ledger. It is never erased.
-      </div>
+      <div class="frozen-text"><strong>This tool implements the FROZEN-2.0 stamp function.</strong> The SHA-256 seal is computed locally in your browser using SubtleCrypto. The GitHub ledger entry is created automatically via the AION backend — no GitHub account required. FROZEN-2.0 was rebuilt from first principles after FROZEN-1.0 was retired due to an incomplete dehiyot implementation. The defect is documented permanently in the ledger.</div>
     </div>
   </div>
-
+  <div class="about-section">
+    <div class="about-title">HOW THE AUTO LEDGER WORKS</div>
+    <p class="about-prose">When you generate a seal, two things happen simultaneously: <strong>(1)</strong> SHA-256 is computed locally in your browser — this never touches a server and is cryptographically final. <strong>(2)</strong> The AION backend is called to create a GitHub issue in the SOVEREIGN-TRACE-PROTOCOL repository automatically. The issue carries your seal hash, triple-time stamp, and template classification. You receive the issue URL immediately.</p>
+    <p class="about-prose">You do not need a GitHub account. You do not need to touch GitHub at all. The ledger entry is created for you. The SHA-256 seal is the truth — the GitHub issue is the permanent public witness.</p>
+  </div>
   <div class="about-section">
     <div class="about-title">THE TRIPLE-TIME SEAL</div>
-    <p class="about-prose">
-      Each seal encodes a moment simultaneously in three civilizational time systems. This is not redundancy — it is a claim: this moment of human significance deserves to be held in every major framework for measuring <em>when</em>.
-    </p>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:2px;margin-bottom:16px;">
-      <div style="background:var(--bg2);padding:14px 16px;"><div style="font-size:0.62rem;color:var(--gold-dim);letter-spacing:0.12em;margin-bottom:6px;">GREGORIAN</div><div style="font-size:0.78rem;color:var(--text-dim);font-family:var(--serif);font-style:italic;line-height:1.6;">Civic time — the calendar of current infrastructure. Locates the moment in the operating system of modern institutions.</div></div>
-      <div style="background:var(--bg2);padding:14px 16px;"><div style="font-size:0.62rem;color:var(--gold-dim);letter-spacing:0.12em;margin-bottom:6px;">HEBREW LUNISOLAR</div><div style="font-size:0.78rem;color:var(--text-dim);font-family:var(--serif);font-style:italic;line-height:1.6;">Theological-historical continuity — 5786 years of counted time. Full dehiyot (GaTaRaD, BeTUTeKaPoT). Civil-day convention. Hebcal/Chabad-verified.</div></div>
-      <div style="background:var(--bg2);padding:14px 16px;"><div style="font-size:0.62rem;color:var(--gold-dim);letter-spacing:0.12em;margin-bottom:6px;">13 MOON DREAMSPELL</div><div style="font-size:0.78rem;color:var(--text-dim);font-family:var(--serif);font-style:italic;line-height:1.6;">Rhythmic time — Argüelles system. 13 moons × 28 days. Year begins July 26. Day Out of Time: July 25. Galactic count.</div></div>
+      <div style="background:var(--bg2);padding:14px 16px;"><div style="font-size:0.62rem;color:var(--gold-dim);letter-spacing:0.12em;margin-bottom:6px;">GREGORIAN</div><div style="font-size:0.78rem;color:var(--text-dim);font-family:var(--serif);font-style:italic;line-height:1.6;">Civic time — the calendar of current infrastructure.</div></div>
+      <div style="background:var(--bg2);padding:14px 16px;"><div style="font-size:0.62rem;color:var(--gold-dim);letter-spacing:0.12em;margin-bottom:6px;">HEBREW LUNISOLAR</div><div style="font-size:0.78rem;color:var(--text-dim);font-family:var(--serif);font-style:italic;line-height:1.6;">5786 years of counted time. Full dehiyot. Hebcal-verified.</div></div>
+      <div style="background:var(--bg2);padding:14px 16px;"><div style="font-size:0.62rem;color:var(--gold-dim);letter-spacing:0.12em;margin-bottom:6px;">13 MOON DREAMSPELL</div><div style="font-size:0.78rem;color:var(--text-dim);font-family:var(--serif);font-style:italic;line-height:1.6;">Argüelles system. 13 moons × 28 days. Year begins July 26.</div></div>
     </div>
   </div>
-
-  <div class="about-section">
-    <div class="about-title">HOW THE SEAL WORKS</div>
-    <!-- FIX 2: Clarified that content_hash is a full-context stamp over five fields, not content alone -->
-    <p class="about-prose">
-      The SHA-256 hash is computed over a deterministic JSON payload binding five fields: <code>dreamspell</code>, <code>entry</code>, <code>gregorian</code>, <code>hebrew</code>, and <code>unix_utc</code>. The field named <code>content_hash</code> is a full-context stamp — it binds the content to all three temporal coordinates simultaneously, not the content alone. The payload structure (sorted keys, compact separators, ASCII-safe encoding) is identical between this browser tool and the Python package — seals generated here are verifiable with <code>pip install sovereign-trace</code>.
-    </p>
-    <div style="background:var(--bg4);border:1px solid var(--border2);padding:14px 16px;border-radius:2px;font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);line-height:1.8;margin-bottom:12px;">
-      <div style="color:var(--gold-dim);">// Seal payload structure (sorted keys, no spaces, ASCII-safe)</div>
-      <div>{<span style="color:var(--valid);">"dreamspell"</span>:<span style="color:rgba(61,220,132,0.7);">"Day 7, Solar Moon 9/13"</span>,</div>
-      <div> <span style="color:var(--valid);">"entry"</span>:<span style="color:rgba(61,220,132,0.7);">"Your content here"</span>,</div>
-      <div> <span style="color:var(--valid);">"gregorian"</span>:<span style="color:rgba(61,220,132,0.7);">"March 13, 2026"</span>,</div>
-      <div> <span style="color:var(--valid);">"hebrew"</span>:<span style="color:rgba(61,220,132,0.7);">"13 Adar II 5786"</span>,</div>
-      <div> <span style="color:var(--valid);">"unix_utc"</span>:<span style="color:var(--frozen);">1741892285</span>}</div>
-    </div>
-    <p class="about-prose" style="font-size:0.78rem;">
-      <strong>Note on cross-platform compatibility:</strong> The Python package uses <code>ensure_ascii=True</code> which escapes non-ASCII characters as <code>\uXXXX</code>. This browser tool implements the same escaping. Seals containing non-BMP characters (emoji, etc.) may differ from Python output for surrogate pair encoding edge cases. ASCII content is fully cross-compatible.
-    </p>
-  </div>
-
   <div class="about-section">
     <div class="about-title">WHO SEALS WHAT</div>
     <table class="who-table">
@@ -561,60 +488,45 @@ textarea.field-input{min-height:100px;}
         <tr><td>Researcher</td><td>Hypothesis before running the experiment</td><td>Kills HARKing. Priority claim. No institution required.</td></tr>
         <tr><td>Journalist</td><td>Source document at point of receipt</td><td>Proves the document was not altered after receipt.</td></tr>
         <tr><td>Contractor</td><td>Agreed scope before work begins</td><td>Scope creep disputes resolved by the sealed ledger.</td></tr>
-        <tr><td>Hospital</td><td>Clinical data before analysis begins</td><td>FDA 21 CFR Part 11 compatible. Record cannot be quietly altered.</td></tr>
-        <tr><td>Foresight analyst</td><td>Dated prediction before it resolves</td><td>Verifiable track record that cannot be fabricated after the fact.</td></tr>
-        <tr><td>Anyone</td><td>Any present-moment truth that deserves permanence</td><td>The hunger for recognition of significance resolves at stamp generation — not when someone reads it.</td></tr>
+        <tr><td>Foresight analyst</td><td>Dated prediction before it resolves</td><td>Verifiable track record. Cannot be fabricated after the fact.</td></tr>
+        <tr><td>Anyone</td><td>Any present-moment truth that deserves permanence</td><td>The stamp is the resolution.</td></tr>
       </tbody>
     </table>
   </div>
-
-  <div class="about-section">
-    <div class="about-title">SUBMISSION LAYER — 14 TEMPLATES</div>
-    <p class="about-prose">Structured submissions via GitHub Issues use official templates. Each template produces a structured, legally-declared record before sealing. Blank issues are disabled — every submission uses a template.</p>
-    <div class="about-links">
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="about-link">Submit via GitHub Issues ↗</a>
-      <a href="https://pypi.org/project/sovereign-trace/" target="_blank" rel="noopener" class="about-link">PyPI: sovereign-trace ↗</a>
-      <a href="https://doi.org/10.5281/zenodo.18941392" target="_blank" rel="noopener" class="about-link">Zenodo DOI ↗</a>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener" class="about-link">GitHub Repo ↗</a>
-      <a href="/certify/" class="about-link">Certification Tiers →</a>
-    </div>
-  </div>
-
   <div class="about-section">
     <div class="about-title">ATTRIBUTION</div>
     <p style="font-size:0.7rem;color:var(--text-faint);font-family:var(--serif);font-style:italic;">
-      Sovereign Trace Protocol · FROZEN-2.0 · Browser Seal Tool v1.0<br>
+      Sovereign Trace Protocol · FROZEN-2.0 · Browser Seal Tool v2.0 (Auto Ledger)<br>
       Author: Sheldon K. Salmon — AI Reliability Architect<br>
       Co-Architect: ALBEDO (Claude, Anthropic) · March 2026<br>
-      Stack: DUAL-HELIX v2.0 · TOPOS v0.3 · VELA-C v0.3 · CPA-001 v2.2<br>
-      Hebrew algorithm: Dershowitz & Reingold — full four dehiyot · Civil-day convention · Hebcal/Chabad verified
+      Hebrew algorithm: Dershowitz & Reingold — full four dehiyot · Civil-day convention
     </p>
   </div>
-
-</div><!-- /tab-about -->
+</div>
 
 </div><!-- /page -->
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// CONSTANTS
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════
+const STP_ENDPOINT = 'https://aion-backend-mu.vercel.app/api/stp-seal';
 
 const TEMPLATES = [
-  { id:'07-general-trace',       name:'General Trace',            slug:'GENERAL-TRACE',       desc:'Any observation, decision, record, or moment that deserves permanence.' },
-  { id:'01-ai-failure',          name:'AI Failure',               slug:'AI-FAILURE',          desc:'AI system output failure — identity verified, legal declaration required.' },
-  { id:'02-research-priority',   name:'Research Priority',        slug:'RESEARCH-PRIORITY',   desc:'Hypothesis or finding sealed before results are known.' },
-  { id:'03-evidence-chain',      name:'Evidence Chain',           slug:'EVIDENCE-CHAIN',      desc:'Document or source communication at point of receipt.' },
-  { id:'04-creative-priority',   name:'Creative Priority',        slug:'CREATIVE-PRIORITY',   desc:'Creative work — music, writing, art, design, code.' },
-  { id:'05-clinical-record',     name:'Clinical Record',          slug:'CLINICAL-RECORD',     desc:'Clinical incident, trial data, or institutional record — PHI gate active.' },
-  { id:'06-scope-anchor',        name:'Scope Anchor',             slug:'SCOPE-ANCHOR',        desc:'Agreed scope or negotiated position before work begins.' },
-  { id:'08-foresight-seal',      name:'Foresight Seal',           slug:'FORESIGHT-SEAL',      desc:'Dated professional prediction before it resolves.' },
-  { id:'09-webeater-link',       name:'Webeater Link',            slug:'WEBEATER-LINK',       desc:'Cryptographic link between two sealed entities.' },
-  { id:'10-audit-request',       name:'Audit Request',            slug:'AUDIT-REQUEST',       desc:'Request a certified audit — Stripe payment required.' },
-  { id:'11-audit-completion',    name:'Audit Completion',         slug:'AUDIT-COMPLETION',    desc:'STP Certified Auditor files a completed audit to the ledger.' },
-  { id:'12-auditor-application', name:'Auditor Application',      slug:'AUDITOR-APPLICATION', desc:'Apply to become an STP Certified Auditor.' },
-  { id:'13-integrity-violation', name:'Integrity Violation',      slug:'INTEGRITY-VIOLATION', desc:'Report badge misuse, bribery, or coercion.' },
-  { id:'14-near-miss',           name:'Near Miss',                slug:'NEAR-MISS',           desc:'AI near-miss before internal review begins.' },
+  { id:'07-general-trace',       name:'General Trace',         slug:'GENERAL-TRACE',       stpType:'07', desc:'Any observation, decision, record, or moment that deserves permanence.' },
+  { id:'01-ai-failure',          name:'AI Failure',            slug:'AI-FAILURE',          stpType:'01', desc:'AI system output failure — identity verified, legal declaration required.' },
+  { id:'02-research-priority',   name:'Research Priority',     slug:'RESEARCH-PRIORITY',   stpType:'02', desc:'Hypothesis or finding sealed before results are known.' },
+  { id:'03-evidence-chain',      name:'Evidence Chain',        slug:'EVIDENCE-CHAIN',      stpType:'03', desc:'Document or source communication at point of receipt.' },
+  { id:'04-creative-priority',   name:'Creative Priority',     slug:'CREATIVE-PRIORITY',   stpType:'04', desc:'Creative work — music, writing, art, design, code.' },
+  { id:'05-clinical-record',     name:'Clinical Record',       slug:'CLINICAL-RECORD',     stpType:'05', desc:'Clinical incident or trial data — PHI gate active.' },
+  { id:'06-scope-anchor',        name:'Scope Anchor',          slug:'SCOPE-ANCHOR',        stpType:'06', desc:'Agreed scope or negotiated position before work begins.' },
+  { id:'08-foresight-seal',      name:'Foresight Seal',        slug:'FORESIGHT-SEAL',      stpType:'08', desc:'Dated professional prediction before it resolves.' },
+  { id:'09-webeater-link',       name:'Webeater Link',         slug:'WEBEATER-LINK',       stpType:'09', desc:'Cryptographic link between two sealed entities.' },
+  { id:'10-audit-request',       name:'Audit Request',         slug:'AUDIT-REQUEST',       stpType:'10', desc:'Request a certified audit — Stripe payment required.' },
+  { id:'11-audit-completion',    name:'Audit Completion',      slug:'AUDIT-COMPLETION',    stpType:'11', desc:'STP Certified Auditor files a completed audit to the ledger.' },
+  { id:'12-auditor-application', name:'Auditor Application',   slug:'AUDITOR-APPLICATION', stpType:'12', desc:'Apply to become an STP Certified Auditor.' },
+  { id:'13-integrity-violation', name:'Integrity Violation',   slug:'INTEGRITY-VIOLATION', stpType:'13', desc:'Report badge misuse, bribery, or coercion.' },
+  { id:'14-near-miss',           name:'Near Miss',             slug:'NEAR-MISS',           stpType:'14', desc:'AI near-miss before internal review begins.' },
 ];
 
 const GREGORIAN_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -623,774 +535,445 @@ const HEBREW_EPOCH_JD = 347998;
 const COMMON_MONTHS = ['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
 const LEAP_MONTHS   = ['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar I','Adar II','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
 
-// ═══════════════════════════════════════════════════════════
-// GREGORIAN
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// CALENDAR FUNCTIONS
+// ═══════════════════════════════════════
+function gregorianStr(y,m,d){ return `${GREGORIAN_MONTHS[m-1]} ${d}, ${y}`; }
 
-function gregorianStr(year, month, day) {
-  return `${GREGORIAN_MONTHS[month-1]} ${day}, ${year}`;
-}
-
-// ═══════════════════════════════════════════════════════════
-// DREAMSPELL — Argüelles system (ported from FROZEN-2.0 Python)
-// ═══════════════════════════════════════════════════════════
-
-function dreamspell(year, month, day) {
-  if (month === 7 && day === 25) return 'Day Out of Time';
-  const current = new Date(year, month - 1, day);
-  let yearStartDate;
-  if (month > 7 || (month === 7 && day >= 26)) {
-    yearStartDate = new Date(year, 6, 26);
-  } else {
-    yearStartDate = new Date(year - 1, 6, 26);
-  }
-  const delta = Math.round((current - yearStartDate) / 86400000);
-  if (delta < 0 || delta >= 364) return 'Day Out of Time';
-  const moon = Math.floor(delta / 28) + 1;
-  const dayNum = (delta % 28) + 1;
+function dreamspell(year,month,day){
+  if(month===7&&day===25) return 'Day Out of Time';
+  const cur=new Date(year,month-1,day);
+  const start=(month>7||(month===7&&day>=26))?new Date(year,6,26):new Date(year-1,6,26);
+  const delta=Math.round((cur-start)/86400000);
+  if(delta<0||delta>=364) return 'Day Out of Time';
+  const moon=Math.floor(delta/28)+1;
+  const dayNum=(delta%28)+1;
   return `Day ${dayNum}, ${MOON_NAMES[moon-1]} Moon ${moon}/13`;
 }
 
-// ═══════════════════════════════════════════════════════════
-// HEBREW CALENDAR — Full four dehiyot (ported from FROZEN-2.0)
-// Algorithm: Dershowitz & Reingold two-pass approach
-// Verified: hebrewStr(2026,3,3) == "14 Adar 5786" (Purim) ✓
-// ═══════════════════════════════════════════════════════════
+function jdFromGregorian(y,m,d){const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;return d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;}
+function isHebrewLeap(y){return(7*y+1)%19<7;}
+function elapsedDays(y){const m=Math.floor((235*y-234)/19),p=12084+13753*m;let d=m*29+Math.floor(p/25920);if((3*(d+1))%7<3)d++;return d;}
+function newYearDelay(y){const n0=elapsedDays(y-1),n1=elapsedDays(y),n2=elapsedDays(y+1);if(n2-n1===356)return 2;if(n1-n0===382)return 1;return 0;}
+function tishri1JD(y){return elapsedDays(y)+newYearDelay(y)+HEBREW_EPOCH_JD;}
+function yearLength(y){return tishri1JD(y+1)-tishri1JD(y);}
+function gregorianToHebrew(y,m,d){
+  const jd=jdFromGregorian(y,m,d);let hy=Math.floor((jd-HEBREW_EPOCH_JD)*19/6935)+1;
+  while(tishri1JD(hy+1)<=jd)hy++;while(tishri1JD(hy)>jd)hy--;
+  const doy=jd-tishri1JD(hy),lp=isHebrewLeap(hy),yl=yearLength(hy),lc=yl%10===5,sk=yl%10===3;
+  const ml=[30,lc?30:29,sk?29:30,29,30,lp?30:29];if(lp)ml.push(29);ml.push(30,29,30,29,30,29);
+  const mn=lp?LEAP_MONTHS:COMMON_MONTHS;let r=doy;
+  for(let i=0;i<ml.length;i++){if(r<ml[i])return{year:hy,month:mn[i],day:r+1};r-=ml[i];}
+}
+function hebrewStr(y,m,d){const{year:hy,month:hm,day:hd}=gregorianToHebrew(y,m,d);return`${hd} ${hm} ${hy}`;}
 
-function jdFromGregorian(year, month, day) {
-  const a = Math.floor((14 - month) / 12);
-  const y = year + 4800 - a;
-  const m = month + 12 * a - 3;
-  return (day
-    + Math.floor((153 * m + 2) / 5)
-    + 365 * y
-    + Math.floor(y / 4)
-    - Math.floor(y / 100)
-    + Math.floor(y / 400)
-    - 32045);
+// ═══════════════════════════════════════
+// SHA-256 — SubtleCrypto FROZEN-2.0
+// ═══════════════════════════════════════
+function buildSealPayload(ds,entry,greg,heb,unix){
+  function escStr(s){let r='"';for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);if(c===0x22)r+='\\"';else if(c===0x5C)r+='\\\\';else if(c===0x08)r+='\\b';else if(c===0x0C)r+='\\f';else if(c===0x0A)r+='\\n';else if(c===0x0D)r+='\\r';else if(c===0x09)r+='\\t';else if(c<0x20)r+='\\u'+c.toString(16).padStart(4,'0');else if(c<0x80)r+=s[i];else r+='\\u'+c.toString(16).padStart(4,'0');}r+='"';return r;}
+  return `{${escStr("dreamspell")}:${escStr(ds)},${escStr("entry")}:${escStr(entry)},${escStr("gregorian")}:${escStr(greg)},${escStr("hebrew")}:${escStr(heb)},${escStr("unix_utc")}:${unix}}`;
+}
+async function computeSeal(ds,entry,greg,heb,unix){
+  const payload=buildSealPayload(ds,entry,greg,heb,unix);
+  const data=new TextEncoder().encode(payload);
+  const buf=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
-function isHebrewLeap(year) {
-  return (7 * year + 1) % 19 < 7;
-}
-
-function elapsedDays(year) {
-  const months = Math.floor((235 * year - 234) / 19);
-  const parts  = 12084 + 13753 * months;
-  let day      = months * 29 + Math.floor(parts / 25920);
-  if ((3 * (day + 1)) % 7 < 3) day++;
-  return day;
-}
-
-function newYearDelay(year) {
-  const ny0 = elapsedDays(year - 1);
-  const ny1 = elapsedDays(year);
-  const ny2 = elapsedDays(year + 1);
-  if (ny2 - ny1 === 356) return 2;
-  if (ny1 - ny0 === 382) return 1;
-  return 0;
-}
-
-function tishri1JD(hYear) {
-  return elapsedDays(hYear) + newYearDelay(hYear) + HEBREW_EPOCH_JD;
-}
-
-function yearLength(hYear) {
-  return tishri1JD(hYear + 1) - tishri1JD(hYear);
-}
-
-function gregorianToHebrew(year, month, day) {
-  const jd = jdFromGregorian(year, month, day);
-  let hYear = Math.floor((jd - HEBREW_EPOCH_JD) * 19 / 6935) + 1;
-  while (tishri1JD(hYear + 1) <= jd) hYear++;
-  while (tishri1JD(hYear) > jd) hYear--;
-
-  const dayOfYear    = jd - tishri1JD(hYear);
-  const leap         = isHebrewLeap(hYear);
-  const yLen         = yearLength(hYear);
-  const longCheshvan = (yLen % 10 === 5);
-  const shortKislev  = (yLen % 10 === 3);
-
-  const mLens = [30, longCheshvan ? 30 : 29, shortKislev ? 29 : 30, 29, 30, leap ? 30 : 29];
-  if (leap) mLens.push(29);
-  mLens.push(30, 29, 30, 29, 30, 29);
-
-  const mNames = leap ? LEAP_MONTHS : COMMON_MONTHS;
-  let remaining = dayOfYear;
-  for (let i = 0; i < mLens.length; i++) {
-    if (remaining < mLens[i]) return { year: hYear, month: mNames[i], day: remaining + 1 };
-    remaining -= mLens[i];
-  }
-  throw new Error(`Hebrew overflow: ${year}-${month}-${day}`);
-}
-
-function hebrewStr(year, month, day) {
-  const { year: hy, month: hm, day: hd } = gregorianToHebrew(year, month, day);
-  return `${hd} ${hm} ${hy}`;
-}
-
-// ═══════════════════════════════════════════════════════════
-// SHA-256 SEAL — SubtleCrypto, replicates Python FROZEN-2.0
-// Payload: sorted keys, no spaces, ensure_ascii-compatible
-// ═══════════════════════════════════════════════════════════
-
-function buildSealPayload(dreamspellStr, entry, gregorian, hebrew, unixUtc) {
-  function escStr(s) {
-    let r = '"';
-    for (let i = 0; i < s.length; i++) {
-      const c = s.charCodeAt(i);
-      if (c === 0x22) r += '\\"';
-      else if (c === 0x5C) r += '\\\\';
-      else if (c === 0x08) r += '\\b';
-      else if (c === 0x0C) r += '\\f';
-      else if (c === 0x0A) r += '\\n';
-      else if (c === 0x0D) r += '\\r';
-      else if (c === 0x09) r += '\\t';
-      else if (c < 0x20) r += '\\u' + c.toString(16).padStart(4, '0');
-      else if (c < 0x80) r += s[i];
-      else r += '\\u' + c.toString(16).padStart(4, '0');
-    }
-    r += '"';
-    return r;
-  }
-  return `{${escStr("dreamspell")}:${escStr(dreamspellStr)},${escStr("entry")}:${escStr(entry)},${escStr("gregorian")}:${escStr(gregorian)},${escStr("hebrew")}:${escStr(hebrew)},${escStr("unix_utc")}:${unixUtc}}`;
-}
-
-async function computeSeal(dreamspellStr, entry, gregorian, hebrew, unixUtc) {
-  const payload = buildSealPayload(dreamspellStr, entry, gregorian, hebrew, unixUtc);
-  const encoder = new TextEncoder();
-  const data = encoder.encode(payload);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-// ═══════════════════════════════════════════════════════════
-// LIVE TRIPLE TIME DISPLAY
-// ═══════════════════════════════════════════════════════════
-
-async function updateLiveTime() {
-  const now = new Date();
-  const y = now.getFullYear(), m = now.getMonth() + 1, d = now.getDate();
-  document.getElementById('live-gregorian').textContent  = gregorianStr(y, m, d);
+// ═══════════════════════════════════════
+// LIVE TIME
+// ═══════════════════════════════════════
+async function updateLiveTime(){
+  const now=new Date(),y=now.getFullYear(),m=now.getMonth()+1,d=now.getDate();
+  document.getElementById('live-gregorian').textContent=gregorianStr(y,m,d);
   document.getElementById('live-gregorian').classList.remove('loading');
-  document.getElementById('live-dreamspell').textContent = dreamspell(y, m, d);
+  document.getElementById('live-dreamspell').textContent=dreamspell(y,m,d);
   document.getElementById('live-dreamspell').classList.remove('loading');
-  
-  const jsHebrew = hebrewStr(y, m, d);
-  document.getElementById('live-hebrew').textContent = jsHebrew;
+  const jsH=hebrewStr(y,m,d);
+  document.getElementById('live-hebrew').textContent=jsH;
   document.getElementById('live-hebrew').classList.remove('loading');
-  try {
-    const res = await fetch(`https://www.hebcal.com/converter?gd=${d}&gm=${m}&gy=${y}&g2h=1`);
-    const data = await res.json();
-    if (data && data.hebrew) {
-      document.getElementById('live-hebrew').textContent = data.hebrew;
-    }
-  } catch(e) { /* use JS algorithm fallback */ }
+  try{const r=await fetch(`https://www.hebcal.com/converter?gd=${d}&gm=${m}&gy=${y}&g2h=1`);const data=await r.json();if(data&&data.hebrew)document.getElementById('live-hebrew').textContent=data.hebrew;}catch(e){}
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // TEMPLATE SELECTOR
-// ═══════════════════════════════════════════════════════════
-
-function buildTemplateSelector() {
-  const sel = document.getElementById('seal-template');
-  TEMPLATES.forEach(t => {
-    const opt = document.createElement('option');
-    opt.value = t.id;
-    opt.textContent = `${t.id.split('-')[0]} — ${t.name}`;
-    sel.appendChild(opt);
-  });
+// ═══════════════════════════════════════
+function buildTemplateSelector(){
+  const sel=document.getElementById('seal-template');
+  TEMPLATES.forEach(t=>{const opt=document.createElement('option');opt.value=t.id;opt.textContent=`${t.id.split('-')[0]} — ${t.name}`;sel.appendChild(opt);});
 }
 
-const DECL_SUPPLEMENTS = {
-  '05-clinical-record':     { style:'background:var(--danger-bg);border:1px solid rgba(255,77,77,0.25);color:rgba(255,140,140,0.9);', text:'⚑ PHI GATE ACTIVE — Do not include personally identifiable patient information in the content field. The sealed record is public. Refer to template 05 guidance on anonymization before sealing.' },
-  '11-audit-completion':    { style:'background:rgba(212,174,60,0.06);border:1px solid rgba(212,174,60,0.2);color:var(--gold-dim);', text:'◈ PROFESSIONAL ATTESTATION — As an STP Certified Auditor, your declaration carries professional-grade weight. Ensure audit findings are final and documented before sealing.' },
-  '13-integrity-violation': { style:'background:var(--danger-bg);border:1px solid rgba(255,77,77,0.25);color:rgba(255,140,140,0.9);', text:'⚑ PERMANENT PUBLIC RECORD — This submission creates a permanent, publicly visible accusation. Ensure all claims are documented and accurate. False reports are a violation of the STP terms of service.' },
-  '10-audit-request':       { style:'background:rgba(64,196,255,0.06);border:1px solid rgba(64,196,255,0.2);color:var(--frozen);', text:'◈ STRIPE PAYMENT REQUIRED — Audit request seals are preliminary. Payment via Stripe must be completed through the GitHub issue template before intake is confirmed. This seal records your intent, not your payment.' },
+const DECL_SUPPLEMENTS={
+  '05-clinical-record':{style:'background:var(--danger-bg);border:1px solid rgba(255,77,77,0.25);color:rgba(255,140,140,0.9);',text:'⚑ PHI GATE ACTIVE — Do not include personally identifiable patient information. The sealed record is public.'},
+  '13-integrity-violation':{style:'background:var(--danger-bg);border:1px solid rgba(255,77,77,0.25);color:rgba(255,140,140,0.9);',text:'⚑ PERMANENT PUBLIC RECORD — This creates a permanent publicly visible accusation. Ensure all claims are documented and accurate.'},
+  '10-audit-request':{style:'background:var(--frozen-bg);border:1px solid rgba(64,196,255,0.2);color:var(--frozen);',text:'◈ STRIPE PAYMENT REQUIRED — This seal records your intent, not your payment. Payment via Stripe must be completed in the GitHub issue.'},
 };
 
-function onTemplateChange() {
-  const val = document.getElementById('seal-template').value;
-  const info = document.getElementById('template-info');
-  if (!val) { info.style.display = 'none'; return; }
-  const tmpl = TEMPLATES.find(t => t.id === val);
-  if (!tmpl) return;
-  document.getElementById('template-badge').textContent = tmpl.id;
-  document.getElementById('template-desc').textContent  = tmpl.desc;
-  info.style.display = 'block';
-
-  const webeaterGroup = document.getElementById('seal-prior-hash').closest('.field-group');
-  const isWebeater = val === '09-webeater-link';
-  webeaterGroup.style.display = isWebeater ? 'block' : 'none';
-  document.getElementById('webeater-req').style.display = isWebeater ? 'inline' : 'none';
-  document.getElementById('webeater-opt').style.display = isWebeater ? 'none' : 'inline';
-
-  const supp = document.getElementById('decl-supplement');
-  const ds = DECL_SUPPLEMENTS[val];
-  if (ds) {
-    supp.innerHTML = ds.text;
-    supp.style.cssText = `display:block;font-size:0.7rem;padding:8px 12px;border-radius:2px;margin-top:6px;font-family:var(--serif);font-style:italic;line-height:1.6;${ds.style}`;
-  } else {
-    supp.style.display = 'none';
-    supp.textContent = '';
-  }
-
+function onTemplateChange(){
+  const val=document.getElementById('seal-template').value;
+  const info=document.getElementById('template-info');
+  if(!val){info.style.display='none';return;}
+  const tmpl=TEMPLATES.find(t=>t.id===val);if(!tmpl)return;
+  document.getElementById('template-badge').textContent=tmpl.id;
+  document.getElementById('template-desc').textContent=tmpl.desc;
+  info.style.display='block';
+  const wg=document.getElementById('webeater-group');
+  const isW=val==='09-webeater-link';
+  wg.style.display=isW?'block':'none';
+  document.getElementById('webeater-req').style.display=isW?'inline':'none';
+  const supp=document.getElementById('decl-supplement');
+  const ds=DECL_SUPPLEMENTS[val];
+  if(ds){supp.innerHTML=ds.text;supp.style.cssText=`display:block;font-size:0.7rem;padding:8px 12px;border-radius:2px;margin-top:6px;font-family:var(--serif);font-style:italic;line-height:1.6;${ds.style}`;}
+  else{supp.style.display='none';supp.textContent='';}
   updateSealButton();
 }
 
-function onContentChange() {
-  const val = document.getElementById('seal-content').value;
-  document.getElementById('char-count').textContent = `${val.length} character${val.length === 1 ? '' : 's'}`;
-  const hasNonAscii = /[^\x00-\x7F]/.test(val);
-  document.getElementById('nonascii-warn').style.display = hasNonAscii ? 'block' : 'none';
+function onContentChange(){
+  const val=document.getElementById('seal-content').value;
+  document.getElementById('char-count').textContent=`${val.length} character${val.length===1?'':'s'}`;
+  document.getElementById('nonascii-warn').style.display=/[^\x00-\x7F]/.test(val)?'block':'none';
   updateSealButton();
 }
 
-function onDeclChange() {
-  document.getElementById('decl-error').classList.remove('active');
-  updateSealButton();
+function onDeclChange(){document.getElementById('decl-error').classList.remove('active');updateSealButton();}
+
+function updateSealButton(){
+  const tId=document.getElementById('seal-template').value;
+  const hasC=document.getElementById('seal-content').value.trim().length>0;
+  const hasD=document.getElementById('seal-declaration').checked;
+  const needsW=tId==='09-webeater-link';
+  const hasW=document.getElementById('seal-prior-hash').value.trim().length>0;
+  document.getElementById('seal-btn').disabled=!(tId&&hasC&&hasD&&(!needsW||hasW));
 }
 
-function updateSealButton() {
-  const templateId  = document.getElementById('seal-template').value;
-  const hasTemplate = !!templateId;
-  const hasContent  = document.getElementById('seal-content').value.trim().length > 0;
-  const hasDecl     = document.getElementById('seal-declaration').checked;
-  const needsWebeater = templateId === '09-webeater-link';
-  const hasWebeater   = document.getElementById('seal-prior-hash').value.trim().length > 0;
-  const webeaterOk    = !needsWebeater || hasWebeater;
-  document.getElementById('seal-btn').disabled = !(hasTemplate && hasContent && hasDecl && webeaterOk);
-}
+// ═══════════════════════════════════════
+// MAIN SEAL GENERATION
+// ═══════════════════════════════════════
+let CURRENT_ENTRY=null;
 
-// ═══════════════════════════════════════════════════════════
-// SEAL GENERATION
-// ═══════════════════════════════════════════════════════════
-
-let CURRENT_ENTRY = null;
-
-async function generateSeal() {
-  const templateId = document.getElementById('seal-template').value;
-  const content    = document.getElementById('seal-content').value.trim();
-  const author     = document.getElementById('seal-author').value.trim();
-  const priorHash  = document.getElementById('seal-prior-hash').value.trim();
-  const declaration = document.getElementById('seal-declaration').checked;
-
+async function generateSeal(){
+  const tId=document.getElementById('seal-template').value;
+  const content=document.getElementById('seal-content').value.trim();
+  const author=document.getElementById('seal-author').value.trim();
+  const priorHash=document.getElementById('seal-prior-hash').value.trim();
+  const decl=document.getElementById('seal-declaration').checked;
   document.getElementById('seal-error').classList.remove('active');
+  if(!tId){showSealError('Select a template.');return;}
+  if(!content){showSealError('Content is required.');return;}
+  if(!decl){document.getElementById('decl-error').classList.add('active');return;}
 
-  if (!templateId) { showSealError('Select a template.'); return; }
-  if (!content)    { showSealError('Content is required — an empty trace seals nothing.'); return; }
-  if (!declaration){ document.getElementById('decl-error').classList.add('active'); return; }
+  const btn=document.getElementById('seal-btn');
+  btn.textContent='⟳ SEALING…';btn.classList.add('sealing');btn.disabled=true;
 
-  const btn = document.getElementById('seal-btn');
-  btn.textContent = '⟳ GENERATING SEAL…';
-  btn.classList.add('sealing');
-  btn.disabled = true;
+  try{
+    const now=new Date();
+    const y=now.getFullYear(),m=now.getMonth()+1,d=now.getDate();
+    const unix=Math.floor(now.getTime()/1000);
+    const isoTs=now.toISOString();
+    const gStr=gregorianStr(y,m,d);
+    const dsStr=dreamspell(y,m,d);
+    const hStr=hebrewStr(y,m,d);
 
-  try {
-    try {
-      const ntpRes  = await fetch('https://worldtimeapi.org/api/ip');
-      const ntpData = await ntpRes.json();
-      const ntpUnix = ntpData.unixtime;
-      const localUnix = Math.floor(Date.now() / 1000);
-      const drift = Math.abs(ntpUnix - localUnix);
-      if (drift > 60) {
-        const proceed = confirm(`⚑ CLOCK DRIFT DETECTED — Your system clock appears to be off by ~${drift} seconds from network time. For time-critical templates (Research Priority, Audit Request), this affects timestamp accuracy.\n\nDrift: ${drift}s\n\nProceed anyway?`);
-        if (!proceed) {
-          btn.textContent = '🔒 GENERATE SEAL';
-          btn.classList.remove('sealing');
-          btn.disabled = false;
-          return;
-        }
-      }
-    } catch(e) { /* NTP unavailable — proceed silently */ }
+    let hStrDisplay=hStr;
+    try{const r=await fetch(`https://www.hebcal.com/converter?gd=${d}&gm=${m}&gy=${y}&g2h=1`);const data=await r.json();if(data&&data.hebrew)hStrDisplay=data.hebrew;}catch(e){}
 
-    const now      = new Date();
-    const year     = now.getFullYear();
-    const month    = now.getMonth() + 1;
-    const day      = now.getDate();
-    const unixUtc  = Math.floor(now.getTime() / 1000);
-    const isoTs    = now.toISOString();
+    const sealHex=await computeSeal(dsStr,content,gStr,hStr,unix);
+    const tmpl=TEMPLATES.find(t=>t.id===tId);
 
-    const gStr = gregorianStr(year, month, day);
-    const dsStr = dreamspell(year, month, day);
-    const hStr = hebrewStr(year, month, day);
+    // Build entry content string for Vercel endpoint
+    const entryText=`${tmpl.name} Seal\n${author?`Author: ${author}\n`:''}${priorHash?`Prior Seal: ${priorHash}\n`:''}Content: ${content}\nSHA-256: sha256:${sealHex}\nFROZEN-2.0 | ${gStr} | ${hStrDisplay} | ${dsStr}`;
 
-    let hStrDisplay = hStr;
-    try {
-      const res = await fetch(`https://www.hebcal.com/converter?gd=${day}&gm=${month}&gy=${year}&g2h=1`);
-      const data = await res.json();
-      if (data && data.hebrew) hStrDisplay = data.hebrew;
-    } catch(e) {}
+    // Build full local entry
+    const dateDashed=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const randSuffix=Math.random().toString(36).substring(2,8).toUpperCase();
+    const ledgerId=`STP-${tmpl.slug}-${dateDashed}-${randSuffix}`;
 
-    const sealHex = await computeSeal(dsStr, content, gStr, hStr, unixUtc);
-
-    const tmpl = TEMPLATES.find(t => t.id === templateId);
-    const randSuffix = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const dateDashed = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const ledgerId = `STP-${tmpl.slug}-${dateDashed}-${randSuffix}`;
-
-    const entry = {
-      ledger_id:   ledgerId,
-      template:    templateId,
-      template_name: tmpl.name,
-      content:     content,
-      ...(author    ? { author }     : {}),
-      ...(priorHash ? { prior_seal_hash: priorHash } : {}),
-      content_hash: `sha256:${sealHex}`,
-      seal: {
-        gregorian:     gStr,
-        hebrew:        hStr,
-        hebrew_display: hStrDisplay,
-        dreamspell:    dsStr,
-        timestamp_iso: isoTs,
-        unix_utc:      unixUtc,
-        seal_method:   'SHA-256-SubtleCrypto-FROZEN-2.0',
-      },
-      frozen:      'FROZEN-2.0',
-      declaration: 'I declare this entry accurate to the best of my knowledge at the time of sealing.',
-      aion_version: 'browser-v1.0',
+    const entry={
+      ledger_id:ledgerId,template:tId,template_name:tmpl.name,
+      content,...(author?{author}:{}),
+      ...(priorHash?{prior_seal_hash:priorHash}:{}),
+      content_hash:`sha256:${sealHex}`,
+      seal:{gregorian:gStr,hebrew:hStr,hebrew_display:hStrDisplay,dreamspell:dsStr,timestamp_iso:isoTs,unix_utc:unix,seal_method:'SHA-256-SubtleCrypto-FROZEN-2.0'},
+      frozen:'FROZEN-2.0',declaration:'I declare this entry accurate to the best of my knowledge at the time of sealing.',aion_version:'browser-v2.0-auto',
     };
 
-    CURRENT_ENTRY = entry;
-    displaySealResult(entry, sealHex, hStrDisplay);
+    CURRENT_ENTRY=entry;
+    displaySealResult(entry,sealHex,hStrDisplay);
 
-  } catch(e) {
+    // ── AUTO LEDGER — call Vercel endpoint ──
+    setLedgerStatus('pending','⟳','Creating Ledger Entry…','Opening GitHub issue automatically');
+    try{
+      const resp=await fetch(STP_ENDPOINT,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({entry:entryText,type:tmpl.stpType,sessionId:ledgerId})
+      });
+      if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data=await resp.json();
+
+      // Update entry with Vercel seal data
+      CURRENT_ENTRY.vercel_seal=data.seal||null;
+      CURRENT_ENTRY.github_issue_url=data.issue_url||null;
+      CURRENT_ENTRY.github_ledger_file=data.ledger_file||null;
+
+      if(data.github_error){
+        setLedgerStatus('failed','⚠','SHA-256 Sealed · Ledger Entry Failed',`GitHub error: ${data.github_error} — download JSON and submit manually`);
+      } else {
+        setLedgerStatus('success','✓','Ledger Entry Created',data.issue_url||'');
+        // Refresh the JSON display with updated entry
+        document.getElementById('result-json').innerHTML=syntaxHighlight(JSON.stringify(CURRENT_ENTRY,null,2));
+      }
+    }catch(e){
+      setLedgerStatus('failed','⚠','Auto Ledger Failed',`${e.message} — your SHA-256 seal is still valid. Download JSON to keep your record.`);
+    }
+
+    // Show reset button
+    document.getElementById('reset-btn').classList.add('visible');
+
+  }catch(e){
     showSealError(`Seal generation failed: ${e.message}`);
-  } finally {
-    btn.textContent = '🔒 GENERATE SEAL';
+  }finally{
+    btn.textContent='🔒 GENERATE SEAL + ENTER LEDGER';
     btn.classList.remove('sealing');
-    btn.disabled = false;
+    btn.disabled=false;
   }
 }
 
-function showSealError(msg) {
-  const err = document.getElementById('seal-error');
-  err.textContent = msg;
-  err.classList.add('active');
+function setLedgerStatus(state,icon,label,sub){
+  const card=document.getElementById('ledger-status-card');
+  card.className=`ledger-status-card ${state==='success'?'':'state==="failed"?failed:pending'}`;
+  if(state==='success') card.className='ledger-status-card';
+  else if(state==='failed') card.className='ledger-status-card failed';
+  else card.className='ledger-status-card pending';
+  card.querySelector('.lsc-icon').textContent=icon;
+  card.querySelector('.lsc-label').textContent=label;
+
+  const body=card.querySelector('.lsc-body');
+  // Remove old link if any
+  const old=body.querySelector('.lsc-link');if(old)old.remove();
+  const old2=body.querySelector('.lsc-sub');if(old2)old2.remove();
+
+  if(state==='success'&&sub){
+    const link=document.createElement('a');
+    link.className='lsc-link';link.href=sub;link.target='_blank';link.rel='noopener';
+    link.innerHTML='View GitHub Issue ↗';
+    body.appendChild(link);
+  } else {
+    const subEl=document.createElement('div');
+    subEl.className='lsc-sub';subEl.textContent=sub;
+    body.appendChild(subEl);
+  }
 }
 
-function displaySealResult(entry, sealHex, hStrDisplay) {
-  document.getElementById('seal-placeholder').style.display = 'none';
-  document.getElementById('result-ledger-id').textContent  = entry.ledger_id;
-  document.getElementById('result-gregorian').textContent  = entry.seal.gregorian;
-  document.getElementById('result-hebrew').textContent     = hStrDisplay;
-  document.getElementById('result-dreamspell').textContent = entry.seal.dreamspell;
-  document.getElementById('result-hash-display').textContent = sealHex;
+function showSealError(msg){const e=document.getElementById('seal-error');e.textContent=msg;e.classList.add('active');}
 
-  const jsonStr = JSON.stringify(entry, null, 2);
-  document.getElementById('result-json').innerHTML = syntaxHighlight(jsonStr);
-
-  const result = document.getElementById('seal-result');
-  result.classList.add('active');
+function displaySealResult(entry,sealHex,hStrDisplay){
+  document.getElementById('seal-placeholder').style.display='none';
+  document.getElementById('result-ledger-id').textContent=entry.ledger_id;
+  document.getElementById('result-gregorian').textContent=entry.seal.gregorian;
+  document.getElementById('result-hebrew').textContent=hStrDisplay;
+  document.getElementById('result-dreamspell').textContent=entry.seal.dreamspell;
+  document.getElementById('result-hash-display').textContent=sealHex;
+  document.getElementById('result-json').innerHTML=syntaxHighlight(JSON.stringify(entry,null,2));
+  document.getElementById('seal-result').classList.add('active');
   document.getElementById('save-success').classList.remove('active');
-  updateNextStepStrip();
-
-  result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('seal-result').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function syntaxHighlight(json) {
-  return json
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
-      let cls = 'json-num';
-      if (/^"/.test(match)) {
-        if (/:$/.test(match)) cls = 'json-key';
-        else cls = 'json-str';
-      } else if (/true|false/.test(match)) cls = 'json-bool';
-      return `<span class="${cls}">${match}</span>`;
+function syntaxHighlight(json){
+  return json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,function(m){
+      let cls='json-num';
+      if(/^"/.test(m)){if(/:$/.test(m))cls='json-key';else cls='json-str';}
+      else if(/true|false/.test(m))cls='json-bool';
+      return`<span class="${cls}">${m}</span>`;
     });
 }
 
-// ═══════════════════════════════════════════════════════════
-// DOWNLOAD / COPY / LEDGER ACTIONS
-// ═══════════════════════════════════════════════════════════
-
-function downloadJSON() {
-  if (!CURRENT_ENTRY) return;
-  const blob = new Blob([JSON.stringify(CURRENT_ENTRY, null, 2)], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `${CURRENT_ENTRY.ledger_id}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+// ═══════════════════════════════════════
+// RESET — clear form, ready for next seal
+// ═══════════════════════════════════════
+function resetTool(){
+  // Save current entry to session ledger before reset
+  if(CURRENT_ENTRY){
+    const existing=loadLedger();
+    if(!existing.find(e=>e.ledger_id===CURRENT_ENTRY.ledger_id)){
+      existing.push({...CURRENT_ENTRY,_saved_at:new Date().toISOString()});
+      persistLedger(existing);
+      window._STP_LEDGER=existing;
+    }
+  }
+  // Reset state
+  CURRENT_ENTRY=null;
+  document.getElementById('seal-template').value='';
+  document.getElementById('seal-content').value='';
+  document.getElementById('seal-author').value='';
+  document.getElementById('seal-prior-hash').value='';
+  document.getElementById('seal-declaration').checked=false;
+  document.getElementById('char-count').textContent='0 characters';
+  document.getElementById('nonascii-warn').style.display='none';
+  document.getElementById('template-info').style.display='none';
+  document.getElementById('decl-supplement').style.display='none';
+  document.getElementById('decl-error').classList.remove('active');
+  document.getElementById('seal-error').classList.remove('active');
+  document.getElementById('seal-result').classList.remove('active');
+  document.getElementById('seal-placeholder').style.display='block';
+  document.getElementById('reset-btn').classList.remove('visible');
+  document.getElementById('webeater-group').style.display='none';
+  document.getElementById('seal-btn').disabled=true;
+  // Reset ledger status card
+  setLedgerStatus('pending','⟳','Creating Ledger Entry…','Opening GitHub issue automatically');
+  // Scroll back to top of form
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function copyJSON() {
-  if (!CURRENT_ENTRY) return;
-  navigator.clipboard.writeText(JSON.stringify(CURRENT_ENTRY, null, 2)).then(() => {
-    const btn = document.getElementById('copy-json-btn');
-    btn.textContent = '✓ COPIED';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'COPY JSON'; btn.classList.remove('copied'); }, 2000);
+// ═══════════════════════════════════════
+// DOWNLOAD / COPY
+// ═══════════════════════════════════════
+function downloadJSON(){
+  if(!CURRENT_ENTRY)return;
+  const blob=new Blob([JSON.stringify(CURRENT_ENTRY,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`${CURRENT_ENTRY.ledger_id}.json`;a.click();URL.revokeObjectURL(url);
+}
+
+function copyJSON(){
+  if(!CURRENT_ENTRY)return;
+  navigator.clipboard.writeText(JSON.stringify(CURRENT_ENTRY,null,2)).then(()=>{
+    const btn=document.getElementById('copy-json-btn');btn.textContent='✓ Copied';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy JSON';btn.classList.remove('copied');},2000);
   });
 }
 
-async function saveToLedger() {
-  if (!CURRENT_ENTRY) return;
-  const existing = loadLedger();
-  if (!existing.find(e => e.ledger_id === CURRENT_ENTRY.ledger_id)) {
-    existing.push({ ...CURRENT_ENTRY, _saved_at: new Date().toISOString() });
-    persistLedger(existing);
-    window._STP_LEDGER = existing;
+function saveToLedger(){
+  if(!CURRENT_ENTRY)return;
+  const existing=loadLedger();
+  if(!existing.find(e=>e.ledger_id===CURRENT_ENTRY.ledger_id)){
+    existing.push({...CURRENT_ENTRY,_saved_at:new Date().toISOString()});
+    persistLedger(existing);window._STP_LEDGER=existing;
   }
   document.getElementById('save-success').classList.add('active');
   updateLedgerCount(existing.length);
 }
 
-// ═══════════════════════════════════════════════════════════
-// NEXT STEP — GITHUB ISSUE ROUTING
-// ═══════════════════════════════════════════════════════════
-
-function getTemplateIssueURL(templateId) {
-  if (!templateId) return 'https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose';
-  return `https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=${templateId}.yml`;
-}
-
-function openGitHubTemplate() {
-  const url = CURRENT_ENTRY
-    ? getTemplateIssueURL(CURRENT_ENTRY.template)
-    : 'https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose';
-  window.open(url, '_blank', 'noopener,noreferrer');
-}
-
-function updateNextStepStrip() {
-  if (!CURRENT_ENTRY) return;
-  const tmpl  = TEMPLATES.find(t => t.id === CURRENT_ENTRY.template);
-  const label = document.getElementById('next-step-template');
-  if (label) label.textContent = tmpl ? `${tmpl.id} — ${tmpl.name}` : '—';
-}
-
-function copyStampDisplay() {
-  if (!CURRENT_ENTRY) return;
-  const s = CURRENT_ENTRY.seal;
-  const display =
-`SOVEREIGN TRACE PROTOCOL — FROZEN-2.0
-Ledger ID:   ${CURRENT_ENTRY.ledger_id}
-Template:    ${CURRENT_ENTRY.template_name} (${CURRENT_ENTRY.template})
-──────────────────────────────────────────────
-📅 Gregorian:  ${s.gregorian}
-🌑 Hebrew:     ${s.hebrew}
-🌀 Dreamspell: ${s.dreamspell}
-🔒 Seal:       ${CURRENT_ENTRY.content_hash}
-🕐 Timestamp:  ${s.timestamp_iso}
-──────────────────────────────────────────────
-Content:
-${CURRENT_ENTRY.content}
-${CURRENT_ENTRY.author ? `\nAuthor: ${CURRENT_ENTRY.author}` : ''}
-──────────────────────────────────────────────
-Sealed via aionsystem.github.io/certify/seal/ · FROZEN-2.0`;
-
-  navigator.clipboard.writeText(display).then(() => {
-    const btn = document.getElementById('copy-stamp-btn');
-    btn.textContent = '✓ COPIED';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'COPY STAMP DISPLAY'; btn.classList.remove('copied'); }, 2000);
-  });
-}
-
-// ═══════════════════════════════════════════════════════════
-// VERIFY TAB
-// ═══════════════════════════════════════════════════════════
-
-async function runVerify() {
-  const jsonStr = document.getElementById('verify-json').value.trim();
-  const errEl   = document.getElementById('verify-error');
-  const result  = document.getElementById('verify-result');
-  const display = document.getElementById('verify-entry-display');
-
-  errEl.classList.remove('active');
-  result.classList.remove('active');
-  display.style.display = 'none';
-
-  if (!jsonStr) {
-    errEl.textContent = 'Paste a sealed JSON to verify.';
-    errEl.classList.add('active');
-    return;
-  }
-
-  let entry;
-  try {
-    entry = JSON.parse(jsonStr);
-  } catch(e) {
-    errEl.textContent = 'Invalid JSON — could not parse.';
-    errEl.classList.add('active');
-    return;
-  }
-
-  if (!entry.content || !entry.content_hash || !entry.seal) {
-    errEl.textContent = 'JSON missing required fields: content, content_hash, seal.';
-    errEl.classList.add('active');
-    return;
-  }
-
-  const storedHash = entry.content_hash.replace(/^sha256:/, '');
-  const seal = entry.seal;
-
-  let computedHash;
-  try {
-    computedHash = await computeSeal(
-      seal.dreamspell,
-      entry.content,
-      seal.gregorian,
-      seal.hebrew,
-      seal.unix_utc
-    );
-  } catch(e) {
-    errEl.textContent = `Hash computation failed: ${e.message}`;
-    errEl.classList.add('active');
-    return;
-  }
-
-  const isMatch = computedHash === storedHash;
-
-  result.className = `verify-result active ${isMatch ? 'verified' : 'tampered'}`;
-  document.getElementById('verify-label').textContent = isMatch ? '✓ SEAL VERIFIED' : '✗ SEAL TAMPERED';
-  document.getElementById('verify-detail').textContent = isMatch
-    ? 'The entry content matches the SHA-256 seal exactly. This trace has not been altered since sealing.'
-    : 'The computed hash does not match the stored seal. The entry content has been altered after sealing — or the seal was generated by an incompatible version.';
-
-  document.getElementById('verify-hash-row').innerHTML = `
-    <span class="vhr-label">Stored hash:</span>
-    <span class="vhr-val">${storedHash.substring(0, 32)}…</span>
-    <span class="vhr-label">Computed hash:</span>
-    <span class="vhr-val ${isMatch ? 'vhr-match' : 'vhr-mismatch'}">${computedHash.substring(0, 32)}…</span>
-    <span class="vhr-label">Result:</span>
-    <span class="${isMatch ? 'vhr-match' : 'vhr-mismatch'}">${isMatch ? 'MATCH — integrity confirmed' : 'MISMATCH — integrity violated'}</span>
-  `;
-
-  if (isMatch && seal) {
-    display.style.display = 'block';
-    document.getElementById('verify-times').innerHTML = `
-      <div class="seal-time-cell"><div class="seal-time-sys">Gregorian</div><div class="seal-time-val">${seal.gregorian || '—'}</div></div>
-      <div class="seal-time-cell"><div class="seal-time-sys">Hebrew Calendar</div><div class="seal-time-val">${seal.hebrew || '—'}</div></div>
-      <div class="seal-time-cell"><div class="seal-time-sys">Dreamspell</div><div class="seal-time-val">${seal.dreamspell || '—'}</div></div>
-    `;
-    document.getElementById('verify-hash-display').innerHTML =
-      `<span class="hash-prefix">sha256: </span><span class="hash-value">${computedHash}</span>`;
-    document.getElementById('verify-content-preview').textContent =
-      entry.content.length > 300 ? entry.content.substring(0, 300) + '…' : entry.content;
+// ═══════════════════════════════════════
+// VERIFY
+// ═══════════════════════════════════════
+async function runVerify(){
+  const jsonStr=document.getElementById('verify-json').value.trim();
+  const errEl=document.getElementById('verify-error');
+  const result=document.getElementById('verify-result');
+  const display=document.getElementById('verify-entry-display');
+  errEl.classList.remove('active');result.classList.remove('active');display.style.display='none';
+  if(!jsonStr){errEl.textContent='Paste a sealed JSON to verify.';errEl.classList.add('active');return;}
+  let entry;try{entry=JSON.parse(jsonStr);}catch(e){errEl.textContent='Invalid JSON.';errEl.classList.add('active');return;}
+  if(!entry.content||!entry.content_hash||!entry.seal){errEl.textContent='JSON missing required fields.';errEl.classList.add('active');return;}
+  const stored=entry.content_hash.replace(/^sha256:/,'');
+  const seal=entry.seal;
+  const computed=await computeSeal(seal.dreamspell,entry.content,seal.gregorian,seal.hebrew,seal.unix_utc);
+  const ok=computed===stored;
+  result.className=`verify-result active ${ok?'verified':'tampered'}`;
+  document.getElementById('verify-label').textContent=ok?'✓ SEAL VERIFIED':'✗ SEAL TAMPERED';
+  document.getElementById('verify-detail').textContent=ok?'Content matches SHA-256 seal. Not altered since sealing.':'Computed hash does not match stored seal. Content altered after sealing.';
+  document.getElementById('verify-hash-row').innerHTML=`<span class="vhr-label">Stored:</span><span class="vhr-val">${stored.substring(0,32)}…</span><span class="vhr-label">Computed:</span><span class="vhr-val ${ok?'vhr-match':'vhr-mismatch'}">${computed.substring(0,32)}…</span><span class="vhr-label">Result:</span><span class="${ok?'vhr-match':'vhr-mismatch'}">${ok?'MATCH — integrity confirmed':'MISMATCH — integrity violated'}</span>`;
+  if(ok&&seal){
+    display.style.display='block';
+    document.getElementById('verify-times').innerHTML=`<div class="seal-time-cell"><div class="seal-time-sys">Gregorian</div><div class="seal-time-val">${seal.gregorian||'—'}</div></div><div class="seal-time-cell"><div class="seal-time-sys">Hebrew</div><div class="seal-time-val">${seal.hebrew||'—'}</div></div><div class="seal-time-cell"><div class="seal-time-sys">Dreamspell</div><div class="seal-time-val">${seal.dreamspell||'—'}</div></div>`;
+    document.getElementById('verify-hash-display').innerHTML=`<span class="hash-prefix">sha256: </span><span class="hash-value">${computed}</span>`;
+    document.getElementById('verify-content-preview').textContent=entry.content.length>300?entry.content.substring(0,300)+'…':entry.content;
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-// LEDGER — localStorage persistence
-// ═══════════════════════════════════════════════════════════
-
-function loadLedger() {
-  try {
-    const raw = localStorage.getItem('stp-ledger-v1');
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  return [];
+// ═══════════════════════════════════════
+// LEDGER — localStorage
+// ═══════════════════════════════════════
+function loadLedger(){try{const r=localStorage.getItem('stp-ledger-v1');if(r)return JSON.parse(r);}catch(e){}return[];}
+function persistLedger(entries){try{localStorage.setItem('stp-ledger-v1',JSON.stringify(entries));return true;}catch(e){return false;}}
+function updateLedgerCount(n){
+  document.getElementById('ledger-count').textContent=n;
+  const ghN=(window._STP_LEDGER||[]).filter(e=>e.github_issue_url).length;
+  if(ghN>0){document.getElementById('ledger-github-stat').style.display='inline';document.getElementById('ledger-gh-count').textContent=ghN;}
 }
 
-function persistLedger(entries) {
-  try {
-    localStorage.setItem('stp-ledger-v1', JSON.stringify(entries));
-    return true;
-  } catch(e) {
-    console.warn('STP: localStorage unavailable — ledger is session-only', e);
-    return false;
-  }
-}
-
-function updateLedgerCount(n) {
-  document.getElementById('ledger-count').textContent = n;
-  const ghCount = (window._STP_LEDGER || []).filter(e => e.github_issue_url).length;
-  if (ghCount > 0) {
-    document.getElementById('ledger-github-count').style.display = 'inline';
-    document.getElementById('ledger-gh-count').textContent = ghCount;
-  }
-}
-
-function renderLedger(entries) {
-  window._STP_LEDGER = entries;
-  const container = document.getElementById('ledger-entries');
+function renderLedger(entries){
+  window._STP_LEDGER=entries;
+  const container=document.getElementById('ledger-entries');
   updateLedgerCount(entries.length);
-
-  if (entries.length === 0) {
-    // FIX 1 (JS path): Removed "never deletes" claim
-    container.innerHTML = '<div class="ledger-empty">No seals generated this session.<br><br>Entries persist in this browser until cleared — the JSON download is the permanent record.<br>Complete a seal in the SEAL tab to add an entry.</div>';
-    return;
-  }
-
-  container.innerHTML = '';
-  [...entries].reverse().forEach((e, idx) => {
-    const div = document.createElement('div');
-    div.className = 'ledger-entry';
-    const ts = e._saved_at || e.seal?.timestamp_iso || '';
-    const tsDisplay = ts ? new Date(ts).toLocaleString() : '—';
-    div.innerHTML = `
-      <div class="le-header">
-        <span class="le-id">${e.ledger_id}</span>
-        <span class="le-template">${e.template_name || e.template}</span>
-        <span class="le-ts">${tsDisplay}</span>
-      </div>
-      <div class="le-content">${(e.content || '').substring(0, 160)}${(e.content || '').length > 160 ? '…' : ''}</div>
+  if(entries.length===0){container.innerHTML='<div class="ledger-empty">No seals this session.<br><br>Completed seals are saved here automatically after reset.<br>JSON download is your permanent local record.</div>';return;}
+  container.innerHTML='';
+  [...entries].reverse().forEach((e,idx)=>{
+    const div=document.createElement('div');div.className='ledger-entry';
+    const ts=e._saved_at||e.seal?.timestamp_iso||'';
+    const tsD=ts?new Date(ts).toLocaleString():'—';
+    div.innerHTML=`
+      <div class="le-header"><span class="le-id">${e.ledger_id}</span><span class="le-template">${e.template_name||e.template}</span><span class="le-ts">${tsD}</span></div>
+      <div class="le-content">${(e.content||'').substring(0,160)}${(e.content||'').length>160?'…':''}</div>
       <div class="le-times">
-        <span class="le-time"><strong>Gregorian:</strong> ${e.seal?.gregorian || '—'}</span>
-        <span class="le-time"><strong>Hebrew:</strong> ${e.seal?.hebrew || '—'}</span>
-        <span class="le-time"><strong>Dreamspell:</strong> ${e.seal?.dreamspell || '—'}</span>
+        <span class="le-time"><strong>Gregorian:</strong> ${e.seal?.gregorian||'—'}</span>
+        <span class="le-time"><strong>Hebrew:</strong> ${e.seal?.hebrew||'—'}</span>
+        <span class="le-time"><strong>Dreamspell:</strong> ${e.seal?.dreamspell||'—'}</span>
       </div>
-      <div class="le-hash">sha256: ${(e.content_hash || '').replace('sha256:','').substring(0,48)}…</div>
-      ${e.github_issue_url ? `<div style="margin-bottom:8px;"><a href="${e.github_issue_url}" target="_blank" rel="noopener" class="le-github-link">GitHub Issue #${e.github_issue_number} ↗</a></div>` : ''}
+      <div class="le-hash">sha256: ${(e.content_hash||'').replace('sha256:','').substring(0,48)}…</div>
+      ${e.github_issue_url?`<a href="${e.github_issue_url}" target="_blank" rel="noopener" class="le-github-link">✓ GitHub Ledger Issue ↗</a>`:'<div style="font-size:0.62rem;color:var(--warn);margin-bottom:8px;">⚠ Ledger issue not created — download JSON</div>'}
       <div class="le-actions">
-        <button class="le-btn" onclick="ledgerDownload(${entries.length - 1 - idx})">↓ Download JSON</button>
-        <button class="le-btn" onclick="ledgerCopy(${entries.length - 1 - idx})">Copy JSON</button>
-        <button class="le-btn" onclick="ledgerVerify(${entries.length - 1 - idx})">Verify →</button>
+        <button class="le-btn" onclick="ledgerDownload(${entries.length-1-idx})">↓ Download</button>
+        <button class="le-btn" onclick="ledgerCopy(${entries.length-1-idx})">Copy JSON</button>
+        <button class="le-btn" onclick="ledgerVerify(${entries.length-1-idx})">Verify →</button>
       </div>`;
     container.appendChild(div);
   });
 }
 
-function ledgerDownload(idx) {
-  const entries = window._STP_LEDGER || [];
-  const entry   = entries[idx];
-  if (!entry) return;
-  const blob = new Blob([JSON.stringify(entry, null, 2)], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `${entry.ledger_id}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
+function ledgerDownload(i){const e=(window._STP_LEDGER||[])[i];if(!e)return;const blob=new Blob([JSON.stringify(e,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${e.ledger_id}.json`;a.click();URL.revokeObjectURL(url);}
+function ledgerCopy(i){const e=(window._STP_LEDGER||[])[i];if(!e)return;navigator.clipboard.writeText(JSON.stringify(e,null,2));}
+function ledgerVerify(i){const e=(window._STP_LEDGER||[])[i];if(!e)return;document.getElementById('verify-json').value=JSON.stringify(e,null,2);switchTab('verify',document.querySelectorAll('.tab-btn')[1]);setTimeout(()=>runVerify(),100);}
+async function copyLedgerSummary(){const entries=window._STP_LEDGER||[];const lines=entries.map(e=>`${e.ledger_id} | ${e.template_name} | ${e.seal?.gregorian} | ${e.github_issue_url?'✓ GitHub':'⚠ No issue'}`);await navigator.clipboard.writeText(`STP LEDGER SUMMARY — ${new Date().toISOString()}\n${'─'.repeat(60)}\n${lines.join('\n')}`);}
+function clearLedger(){if(!confirm('Clear session ledger?'))return;window._STP_LEDGER=[];persistLedger([]);renderLedger([]);}
 
-function ledgerCopy(idx) {
-  const entries = window._STP_LEDGER || [];
-  const entry   = entries[idx];
-  if (!entry) return;
-  navigator.clipboard.writeText(JSON.stringify(entry, null, 2));
-}
-
-function ledgerVerify(idx) {
-  const entries = window._STP_LEDGER || [];
-  const entry   = entries[idx];
-  if (!entry) return;
-  document.getElementById('verify-json').value = JSON.stringify(entry, null, 2);
-  switchTab('verify', document.querySelectorAll('.tab-btn')[1]);
-  setTimeout(() => runVerify(), 100);
-}
-
-async function copyLedgerSummary() {
-  const entries = window._STP_LEDGER || [];
-  const lines = entries.map(e =>
-    `${e.ledger_id} | ${e.template_name} | ${e.seal?.gregorian} | sha256:${(e.content_hash||'').replace('sha256:','').substring(0,16)}… | ${(e.content||'').substring(0,60)}`
-  );
-  await navigator.clipboard.writeText(`STP LEDGER SUMMARY — ${new Date().toISOString()}\n${'─'.repeat(60)}\n${lines.join('\n')}`);
-}
-
-function clearLedger() {
-  if (!confirm('Clear session ledger? Entries already downloaded/submitted are unaffected.')) return;
-  window._STP_LEDGER = [];
-  persistLedger([]);
-  renderLedger([]);
-}
-
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // TABS
-// ═══════════════════════════════════════════════════════════
-
-function switchTab(id, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+// ═══════════════════════════════════════
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(`tab-${id}`).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (id === 'ledger') { const entries = loadLedger(); window._STP_LEDGER = entries; renderLedger(entries); }
+  if(btn)btn.classList.add('active');
+  if(id==='ledger'){const e=loadLedger();window._STP_LEDGER=e;renderLedger(e);}
 }
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // THEME
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
+function toggleTheme(){const l=document.documentElement.getAttribute('data-theme')==='light';document.documentElement.setAttribute('data-theme',l?'':'light');document.getElementById('theme-btn').textContent=l?'LIGHT':'DARK';}
 
-function toggleTheme() {
-  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-  document.documentElement.setAttribute('data-theme', isLight ? '' : 'light');
-  document.getElementById('theme-btn').textContent = isLight ? 'LIGHT' : 'DARK';
-}
-
-// ═══════════════════════════════════════════════════════════
-// BACKGROUND CANVAS PARTICLES
-// ═══════════════════════════════════════════════════════════
-
-(function() {
-  const canvas = document.getElementById('bg-canvas');
-  const ctx    = canvas.getContext('2d');
-  let W, H, pts = [];
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    init();
-  }
-
-  function init() {
-    pts = [];
-    const n = Math.max(30, Math.floor((W * H) / 24000));
-    for (let i = 0; i < n; i++) {
-      pts.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-.5)*.25, vy: (Math.random()-.5)*.25, r: Math.random()*1.4+.4 });
-    }
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    pts.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(212,174,60,0.5)'; ctx.fill();
-    });
-    for (let i = 0; i < pts.length; i++) {
-      for (let j = i+1; j < pts.length; j++) {
-        const dx = pts[i].x-pts[j].x, dy = pts[i].y-pts[j].y;
-        const d  = Math.sqrt(dx*dx+dy*dy);
-        if (d < 110) {
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(212,174,60,${0.09*(1-d/110)})`;
-          ctx.lineWidth = .5;
-          ctx.moveTo(pts[i].x, pts[i].y);
-          ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  resize(); draw();
+// ═══════════════════════════════════════
+// BACKGROUND CANVAS
+// ═══════════════════════════════════════
+(function(){
+  const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;init();}
+  function init(){pts=[];const n=Math.max(30,Math.floor((W*H)/24000));for(let i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.4+.4});}
+  function draw(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(212,174,60,0.5)';ctx.fill();});for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){ctx.beginPath();ctx.strokeStyle=`rgba(212,174,60,${0.09*(1-d/110)})`;ctx.lineWidth=.5;ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();}}requestAnimationFrame(draw);}
+  window.addEventListener('resize',resize);resize();draw();
 })();
 
-// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════════════════
-
-window.addEventListener('DOMContentLoaded', () => {
+// ═══════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
   buildTemplateSelector();
   updateLiveTime();
-  try {
-    const entries = loadLedger();
-    window._STP_LEDGER = entries;
-    updateLedgerCount(entries.length);
-  } catch(e) { window._STP_LEDGER = []; }
+  try{const e=loadLedger();window._STP_LEDGER=e;updateLedgerCount(e.length);}catch(e){window._STP_LEDGER=[];}
 });
 
-// Quick anchor self-test on load (silent — logs to console only)
-(function selfTest() {
-  try {
-    const h = hebrewStr(2026, 3, 3);
-    if (h !== '14 Adar 5786') console.warn(`STP SELF-TEST FAIL: Hebrew anchor expected "14 Adar 5786", got "${h}"`);
-    const ds = dreamspell(2026, 3, 3);
-    if (ds !== 'Day 25, Galactic Moon 8/13') console.warn(`STP SELF-TEST FAIL: Dreamspell anchor expected "Day 25, Galactic Moon 8/13", got "${ds}"`);
-    const g = gregorianStr(2026, 3, 3);
-    if (g !== 'March 3, 2026') console.warn(`STP SELF-TEST FAIL: Gregorian anchor expected "March 3, 2026", got "${g}"`);
-    console.log('STP FROZEN-2.0 browser self-test: PASS — Hebrew anchor "14 Adar 5786" ✓, Dreamspell "Day 25, Galactic Moon 8/13" ✓');
-  } catch(e) {
-    console.error('STP SELF-TEST ERROR:', e);
-  }
+// Self-test
+(function(){
+  try{
+    const h=hebrewStr(2026,3,3);if(h!=='14 Adar 5786')console.warn(`STP SELF-TEST FAIL: Hebrew "${h}"`);
+    const ds=dreamspell(2026,3,3);if(ds!=='Day 25, Galactic Moon 8/13')console.warn(`STP SELF-TEST FAIL: Dreamspell "${ds}"`);
+    console.log('STP FROZEN-2.0 self-test: PASS ✓');
+  }catch(e){console.error('STP SELF-TEST ERROR:',e);}
 })();
 </script>
 </body>
