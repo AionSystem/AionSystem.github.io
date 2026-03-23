@@ -4,45 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="AionSystem Certification Verification — Sovereign Trace Protocol. Verify AION badges. Generate your own sovereign trace seal. Understand what STP Certified, AION Verified Simulator, and STP Auditor badges mean.">
+<meta property="og:title" content="Certification — AionSystem · Sovereign Trace Protocol">
+<meta property="og:description" content="Verify badges. Generate seals. Understand what certification actually means.">
+<meta property="og:type" content="website">
 <title>Certification Verification — AionSystem · Sovereign Trace Protocol</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:      #08090b;
   --surface: #0e1117;
   --panel:   #141920;
   --border:  #1e2730;
+  --border2: rgba(255,255,255,0.12);
   --amber:   #f0a500;
   --amber-d: #b07800;
+  --amber-l: #ffc947;
   --gold:    #D4AF37;
   --gold-d:  #8B7520;
   --blue:    #40c4ff;
   --blue-d:  #0077aa;
   --frozen:  #40c4ff;
+  --green:   #00e676;
+  --red:     #ff5252;
   --text:    #c4d4de;
   --muted:   #4e5f6a;
   --dim:     #2a3540;
   --mono:    'Share Tech Mono', monospace;
   --sans:    'Barlow Condensed', sans-serif;
+  --jmono:   'JetBrains Mono', monospace;
   --ease:    cubic-bezier(0.16, 1, 0.3, 1);
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { background:var(--bg); color:var(--text); font-family:var(--sans); overflow-x:hidden; }
-body::before {
-  content:''; position:fixed; inset:0;
-  background-image: linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px);
-  background-size:48px 48px; pointer-events:none; z-index:0;
-}
 
-nav {
-  position:sticky; top:0; z-index:100;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 40px; height:56px;
-  background:rgba(8,9,11,0.94); backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--text); font-family:var(--sans); overflow-x:hidden; font-size:16px; }
+body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px); background-size:48px 48px; pointer-events:none; z-index:0; }
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 40px; height:56px; background:rgba(8,9,11,0.94); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
 .nav-logo { font-family:var(--mono); font-size:13px; letter-spacing:3px; color:var(--amber); text-decoration:none; }
 .nav-logo span { color:var(--muted); }
 .nav-links { display:flex; align-items:center; gap:24px; }
@@ -51,78 +51,147 @@ nav {
 .nav-seal { font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--frozen); text-decoration:none; text-transform:uppercase; border:1px solid rgba(64,196,255,0.3); padding:5px 12px; transition:all 0.2s; }
 .nav-seal:hover { border-color:var(--frozen); background:rgba(64,196,255,0.06); }
 
+/* ── LAYOUT ──────────────────────────────────────────────── */
 .wrapper { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:64px 40px 80px; }
 
+/* ── HERO ────────────────────────────────────────────────── */
 .page-eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:4px; color:var(--gold); text-transform:uppercase; margin-bottom:12px; }
 .page-title { font-family:var(--sans); font-size:clamp(36px,6vw,68px); font-weight:900; letter-spacing:2px; text-transform:uppercase; line-height:0.95; color:var(--text); margin-bottom:20px; }
 .page-title em { color:var(--gold); font-style:normal; }
-.page-lead { font-family:var(--sans); font-size:18px; font-weight:300; font-style:italic; color:var(--muted); max-width:600px; line-height:1.6; margin-bottom:56px; border-left:2px solid var(--gold); padding-left:20px; }
+.page-lead { font-family:var(--sans); font-size:18px; font-weight:300; font-style:italic; color:var(--muted); max-width:600px; line-height:1.6; border-left:2px solid var(--gold); padding-left:20px; margin-bottom:16px; }
 
-/* BADGE TRIO */
-.badge-trio { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:56px; }
+/* Live ledger counter strip */
+.ledger-counter-strip { display:flex; gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:48px; }
+.lc-cell { background:var(--surface); padding:14px 20px; flex:1; }
+.lc-label { font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
+.lc-value { font-family:var(--jmono); font-size:20px; font-weight:700; color:var(--amber); }
+.lc-value.green { color:var(--green); }
+.lc-value.blue  { color:var(--frozen); }
+@media(max-width:600px) { .ledger-counter-strip { flex-direction:column; } }
+
+/* ── CHOOSE YOUR PATH ───────────────────────────────────── */
+.section-label { font-family:var(--mono); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:24px; display:flex; align-items:center; gap:12px; }
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.path-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:48px; }
+@media(max-width:720px) { .path-grid { grid-template-columns:1fr; } }
+
+.path-card { background:var(--surface); padding:32px 28px; cursor:pointer; transition:background 0.2s; position:relative; overflow:hidden; border-bottom:2px solid transparent; text-decoration:none; display:block; }
+.path-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; transform:scaleX(0); transform-origin:left; transition:transform 0.3s var(--ease); }
+.path-card.individual::before { background:var(--frozen); }
+.path-card.org::before       { background:var(--amber); }
+.path-card.verify::before    { background:var(--green); }
+.path-card:hover { background:var(--panel); }
+.path-card:hover::before { transform:scaleX(1); }
+.path-num { font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:16px; }
+.path-icon { font-size:28px; margin-bottom:12px; display:block; }
+.path-title { font-family:var(--sans); font-size:20px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+.path-card.individual .path-title { color:var(--frozen); }
+.path-card.org .path-title       { color:var(--amber); }
+.path-card.verify .path-title    { color:var(--green); }
+.path-desc { font-family:var(--mono); font-size:10px; color:var(--muted); line-height:1.8; margin-bottom:16px; }
+.path-cta { font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase; display:flex; align-items:center; gap:6px; }
+.path-card.individual .path-cta { color:var(--frozen); }
+.path-card.org .path-cta       { color:var(--amber); }
+.path-card.verify .path-cta    { color:var(--green); }
+
+/* ── GUIDED STEPS (show/hide per path) ─────────────────── */
+.path-steps { display:none; background:var(--panel); border:1px solid var(--border); margin-bottom:48px; animation:fadeUp 0.4s var(--ease) both; }
+.path-steps.active { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+
+.steps-header { padding:20px 28px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.steps-header-title { font-family:var(--sans); font-size:18px; font-weight:700; letter-spacing:2px; text-transform:uppercase; }
+.steps-header-title.blue  { color:var(--frozen); }
+.steps-header-title.amber { color:var(--amber); }
+.steps-header-title.green { color:var(--green); }
+.steps-close { font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--muted); background:none; border:none; cursor:pointer; text-transform:uppercase; transition:color 0.2s; }
+.steps-close:hover { color:var(--text); }
+
+.steps-list { display:flex; flex-direction:column; }
+.step-row { display:flex; align-items:flex-start; gap:20px; padding:20px 28px; border-bottom:1px solid var(--border); }
+.step-row:last-child { border-bottom:none; }
+.step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11px; flex-shrink:0; margin-top:2px; }
+.step-dot.blue  { border:1.5px solid var(--frozen); color:var(--frozen); }
+.step-dot.amber { border:1.5px solid var(--amber); color:var(--amber); }
+.step-dot.green { border:1.5px solid var(--green); color:var(--green); }
+.step-body {}
+.step-title { font-family:var(--sans); font-size:16px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text); margin-bottom:4px; }
+.step-desc { font-family:var(--mono); font-size:10px; color:var(--muted); line-height:1.8; }
+.step-desc a { color:var(--frozen); text-decoration:none; border-bottom:1px solid transparent; transition:border-color 0.15s; }
+.step-desc a:hover { border-bottom-color:var(--frozen); }
+.step-desc a.amber { color:var(--amber); }
+.step-desc a.amber:hover { border-bottom-color:var(--amber); }
+.step-desc a.green { color:var(--green); }
+.step-desc a.green:hover { border-bottom-color:var(--green); }
+
+/* ── INTERACTIVE VERIFIER ───────────────────────────────── */
+.verifier-block { background:var(--panel); border:1px solid rgba(0,230,118,0.2); border-left:3px solid var(--green); padding:32px 36px; margin-bottom:48px; }
+.verifier-title { font-family:var(--sans); font-size:20px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--green); margin-bottom:8px; }
+.verifier-sub { font-family:var(--mono); font-size:10px; color:var(--muted); margin-bottom:20px; line-height:1.8; }
+.verifier-input-row { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.verifier-input { flex:1; min-width:240px; background:var(--surface); border:1px solid var(--border); color:var(--text); font-family:var(--jmono); font-size:12px; padding:11px 14px; outline:none; transition:border-color 0.2s; }
+.verifier-input:focus { border-color:var(--green); box-shadow:0 0 0 2px rgba(0,230,118,0.15); }
+.verifier-input::placeholder { color:var(--dim); }
+.verifier-btn { padding:11px 24px; font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase; border:none; cursor:pointer; transition:all 0.2s; }
+.verifier-btn.verify-go { background:var(--green); color:#000; font-weight:700; }
+.verifier-btn.verify-go:hover { background:#33eb91; }
+.verifier-result { display:none; background:var(--surface); border:1px solid var(--border); padding:20px; animation:fadeUp 0.3s var(--ease) both; }
+.verifier-result.show { display:block; }
+.verifier-result.valid   { border-color:var(--green); }
+.verifier-result.invalid { border-color:var(--red); }
+.verifier-result.format-error { border-color:var(--amber); }
+.vr-status { font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.vr-dot { width:6px; height:6px; border-radius:50%; }
+.vr-dot.green { background:var(--green); box-shadow:0 0 6px var(--green); }
+.vr-dot.red   { background:var(--red);   box-shadow:0 0 6px var(--red); }
+.vr-dot.amber { background:var(--amber); box-shadow:0 0 6px var(--amber); }
+.vr-fields { display:flex; flex-direction:column; gap:6px; }
+.vr-row { display:flex; justify-content:space-between; font-family:var(--mono); font-size:10px; padding:5px 0; border-bottom:1px solid var(--border); gap:16px; }
+.vr-row:last-child { border-bottom:none; }
+.vr-key { color:var(--muted); flex-shrink:0; }
+.vr-val { color:var(--text); text-align:right; word-break:break-all; }
+.vr-val.link a { color:var(--frozen); text-decoration:none; }
+.vr-val.link a:hover { text-decoration:underline; }
+.vr-examples { margin-top:12px; font-family:var(--mono); font-size:9px; color:var(--dim); line-height:2; }
+.vr-examples span { color:var(--muted); }
+
+/* ── BADGE TRIO ─────────────────────────────────────────── */
+.badge-trio { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:48px; }
 @media(max-width:780px){ .badge-trio { grid-template-columns:1fr; } }
-
-.badge-card { background:var(--surface); padding:36px 28px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0; position:relative; overflow:hidden; }
+.badge-card { background:var(--surface); padding:36px 28px; display:flex; flex-direction:column; align-items:center; text-align:center; position:relative; overflow:hidden; }
 .badge-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
 .badge-card.stp-card::before { background:var(--amber); }
 .badge-card.sim-card::before { background:var(--gold); }
 .badge-card.aud-card::before { background:var(--blue); }
-
-.badge-link { display:block; text-decoration:none; margin-bottom:20px; opacity:0.95; transition:opacity 0.2s, transform 0.2s; }
+.badge-link { display:block; text-decoration:none; margin-bottom:20px; opacity:0.95; transition:opacity 0.2s,transform 0.2s; }
 .badge-link:hover { opacity:1; transform:scale(1.04); }
-.badge-link svg { display:block; }
-
 .badge-card-name { font-family:var(--sans); font-size:16px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:4px; text-decoration:none; }
 .stp-card .badge-card-name { color:var(--amber); }
 .sim-card .badge-card-name { color:var(--gold); }
 .aud-card .badge-card-name { color:var(--blue); }
 .badge-card-name:hover { text-decoration:underline; text-underline-offset:3px; }
-
 .badge-card-sub { font-family:var(--mono); font-size:10px; letter-spacing:1px; color:var(--muted); margin-bottom:14px; }
-
 .badge-brief { font-family:var(--mono); font-size:10px; letter-spacing:1px; line-height:1.7; padding:10px 14px; margin-bottom:14px; width:100%; border:1px solid var(--border); }
 .stp-card .badge-brief { border-left:2px solid var(--amber-d); color:var(--amber-d); background:rgba(240,165,0,0.04); }
 .sim-card .badge-brief { border-left:2px solid var(--gold-d); color:var(--gold-d); background:rgba(212,175,55,0.04); }
 .aud-card .badge-brief { border-left:2px solid var(--blue); color:var(--blue); background:rgba(64,196,255,0.04); opacity:0.8; }
 .badge-brief a { color:inherit; text-decoration:none; border-bottom:1px solid currentColor; opacity:0.7; transition:opacity 0.15s; }
 .badge-brief a:hover { opacity:1; }
-
 .badge-card-desc { font-family:var(--sans); font-size:14px; font-weight:300; color:var(--muted); line-height:1.7; }
 .badge-divider { width:32px; height:1px; margin:16px auto; }
 .stp-card .badge-divider { background:var(--amber-d); }
 .sim-card .badge-divider { background:var(--gold-d); }
 .aud-card .badge-divider { background:var(--blue); opacity:0.4; }
-
 .badge-card-issued { font-family:var(--mono); font-size:10px; color:var(--dim); letter-spacing:1px; line-height:1.8; }
 .stp-card .badge-card-issued strong { color:var(--amber-d); }
 .sim-card .badge-card-issued strong { color:var(--gold-d); }
 .aud-card .badge-card-issued strong { color:var(--blue); opacity:0.7; }
 
-/* ── SEAL STRIP — new section ── */
-.seal-strip {
-  background:var(--panel);
-  border:1px solid rgba(64,196,255,0.2);
-  border-left:3px solid var(--frozen);
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:32px;
-  align-items:center;
-  padding:32px 36px;
-  margin-bottom:56px;
-  position:relative;
-  overflow:hidden;
-}
-.seal-strip::before {
-  content:'';
-  position:absolute;
-  inset:0;
-  background:radial-gradient(ellipse at 0% 50%, rgba(64,196,255,0.04) 0%, transparent 60%);
-  pointer-events:none;
-}
-@media(max-width:780px){ .seal-strip { grid-template-columns:1fr; gap:20px; } }
-@media(max-width:780px){ .seal-strip-badge { display:none; } }
-
-.seal-strip-body {}
+/* ── SEAL STRIP ─────────────────────────────────────────── */
+.seal-strip { background:var(--panel); border:1px solid rgba(64,196,255,0.2); border-left:3px solid var(--frozen); display:grid; grid-template-columns:auto 1fr auto; gap:32px; align-items:center; padding:32px 36px; margin-bottom:48px; position:relative; overflow:hidden; }
+.seal-strip::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 0% 50%,rgba(64,196,255,0.04) 0%,transparent 60%); pointer-events:none; }
+@media(max-width:780px){ .seal-strip { grid-template-columns:1fr; gap:20px; } .seal-strip-badge { display:none; } }
 .seal-strip-eyebrow { font-family:var(--mono); font-size:9px; letter-spacing:3px; color:var(--frozen); text-transform:uppercase; margin-bottom:8px; opacity:0.8; }
 .seal-strip-title { font-family:var(--sans); font-size:clamp(22px,3vw,32px); font-weight:900; letter-spacing:2px; text-transform:uppercase; color:var(--text); margin-bottom:10px; }
 .seal-strip-title em { color:var(--frozen); font-style:normal; }
@@ -137,40 +206,34 @@ nav {
 .seal-cta-outline { display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; padding:11px 24px; border:1px solid rgba(64,196,255,0.3); color:var(--frozen); background:transparent; transition:all 0.2s; }
 .seal-cta-outline:hover { border-color:var(--frozen); background:rgba(64,196,255,0.06); }
 
-/* VERIFICATION SECTION */
-.verify-section { margin-bottom:56px; }
-.section-label { font-family:var(--mono); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:24px; display:flex; align-items:center; gap:12px; }
-.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
-
-.verify-how { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-@media(max-width:680px) { .verify-how { grid-template-columns:1fr; } }
-
+/* ── VERIFY HOW ─────────────────────────────────────────── */
+.verify-how { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:48px; }
+@media(max-width:680px){ .verify-how { grid-template-columns:1fr; } }
 .verify-card { background:var(--surface); border:1px solid var(--border); padding:28px; }
 .verify-card h3 { font-family:var(--sans); font-size:18px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text); margin-bottom:12px; }
 .verify-card p { font-family:var(--mono); font-size:11px; color:var(--muted); line-height:1.9; }
 .verify-card a { color:var(--amber); text-decoration:none; border-bottom:1px solid transparent; transition:border-color 0.15s; }
 .verify-card a:hover { border-bottom-color:var(--amber); }
 
-/* WHAT CERT IS NOT */
-.cert-philosophy { background:var(--panel); border:1px solid var(--border); border-left:3px solid var(--gold); padding:32px 36px; margin-bottom:56px; }
+/* ── PHILOSOPHY ─────────────────────────────────────────── */
+.cert-philosophy { background:var(--panel); border:1px solid var(--border); border-left:3px solid var(--gold); padding:32px 36px; margin-bottom:48px; }
 .cert-philosophy h2 { font-family:var(--sans); font-size:22px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
 .cert-philosophy p { font-family:var(--sans); font-size:16px; font-weight:300; color:var(--muted); line-height:1.8; max-width:700px; }
-.cert-philosophy p + p { margin-top:12px; }
+.cert-philosophy p+p { margin-top:12px; }
 .cert-philosophy strong { color:var(--text); font-weight:600; }
 
-/* TIERS */
+/* ── TIERS ──────────────────────────────────────────────── */
 .tiers-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:40px; }
-@media(max-width:900px) { .tiers-grid { grid-template-columns:repeat(2,1fr); } }
-@media(max-width:480px) { .tiers-grid { grid-template-columns:1fr; } }
-
+@media(max-width:900px){ .tiers-grid { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:480px){ .tiers-grid { grid-template-columns:1fr; } }
 .tier-card { background:var(--surface); padding:24px 20px; }
 .tier-num { font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:10px; }
 .tier-name { font-family:var(--sans); font-size:15px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:6px; }
 .tier-price { font-family:var(--mono); font-size:18px; color:var(--text); margin-bottom:10px; }
 .tier-desc { font-family:var(--mono); font-size:10px; color:var(--muted); line-height:1.8; }
 
-/* CTA */
-.cta-block { text-align:center; padding:40px; background:var(--surface); border:1px solid var(--border); }
+/* ── CTA ────────────────────────────────────────────────── */
+.cta-block { text-align:center; padding:40px; background:var(--surface); border:1px solid var(--border); margin-bottom:48px; }
 .cta-block h3 { font-family:var(--sans); font-size:24px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--text); margin-bottom:8px; }
 .cta-block p { font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:24px; }
 .cta-btn { display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; padding:12px 28px; border:1px solid var(--amber); color:#000; background:var(--amber); transition:background 0.2s; }
@@ -178,10 +241,12 @@ nav {
 .cta-btn-outline { background:transparent; color:var(--amber); margin-left:12px; }
 .cta-btn-outline:hover { background:rgba(240,165,0,0.08); }
 
+/* ── FOOTER ─────────────────────────────────────────────── */
 footer { border-top:1px solid var(--border); padding:32px 40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; max-width:1100px; margin:0 auto; position:relative; z-index:1; }
 footer p { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; }
 footer a { color:var(--amber-d); text-decoration:none; }
 footer a:hover { color:var(--amber); }
+
 @media(max-width:640px){ .wrapper { padding:48px 20px 60px; } nav { padding:0 20px; } .nav-links { gap:12px; } footer { padding:24px 20px; } }
 </style>
 </head>
@@ -197,253 +262,293 @@ footer a:hover { color:var(--amber); }
 
 <div class="wrapper">
 
+  <!-- HERO -->
   <div class="page-eyebrow">// Sovereign Trace Protocol · Certification Registry</div>
   <h1 class="page-title">Verify a<br><em>Certification</em></h1>
   <p class="page-lead">A badge is only as meaningful as what's behind it. Here's exactly what each AION badge means, who issued it, and how to verify it hasn't been misrepresented.</p>
 
-  <!-- THREE BADGES -->
+  <!-- Live Ledger Counter -->
+  <div class="ledger-counter-strip">
+    <div class="lc-cell">
+      <div class="lc-label">Ledger Entries · STP</div>
+      <div class="lc-value green" id="lc-entries">11</div>
+    </div>
+    <div class="lc-cell">
+      <div class="lc-label">Simulators Verified</div>
+      <div class="lc-value" id="lc-sims">3</div>
+    </div>
+    <div class="lc-cell">
+      <div class="lc-label">Certified Orgs</div>
+      <div class="lc-value" id="lc-orgs">0</div>
+    </div>
+    <div class="lc-cell">
+      <div class="lc-label">Certified Auditors</div>
+      <div class="lc-value blue" id="lc-auditors">0</div>
+    </div>
+    <div class="lc-cell">
+      <div class="lc-label">Standard</div>
+      <div class="lc-value" style="font-size:14px;color:var(--frozen)">FROZEN-2.0</div>
+    </div>
+  </div>
+
+  <!-- CHOOSE YOUR PATH -->
+  <div class="section-label">Choose your path</div>
+  <div class="path-grid">
+
+    <a href="#path-individual" class="path-card individual" onclick="showPath('individual'); return false;">
+      <div class="path-num">Path 01</div>
+      <span class="path-icon">🔒</span>
+      <div class="path-title">Seal Your Work</div>
+      <div class="path-desc">You are an individual — researcher, analyst, journalist, developer, or creator. You want to permanently seal a piece of work, a prediction, or an observation with a cryptographic triple-time stamp.</div>
+      <div class="path-cta">Get Started <span>→</span></div>
+    </a>
+
+    <a href="#path-org" class="path-card org" onclick="showPath('org'); return false;">
+      <div class="path-num">Path 02</div>
+      <span class="path-icon">🏛</span>
+      <div class="path-title">Certify Your AI</div>
+      <div class="path-desc">You represent an organization deploying AI systems. You want formal certification that your infrastructure meets the FROZEN-2.0 standard — immutable failure capture, transparent remediation, honest epistemic record.</div>
+      <div class="path-cta">Start Certification <span>→</span></div>
+    </a>
+
+    <a href="#path-verify" class="path-card verify" onclick="showPath('verify'); return false;">
+      <div class="path-num">Path 03</div>
+      <span class="path-icon">🔍</span>
+      <div class="path-title">Verify a Badge</div>
+      <div class="path-desc">You have seen an AION badge in the wild — on a simulator, a service page, or a certification document. You want to know if it's legitimate and what it actually means.</div>
+      <div class="path-cta">Check a Badge <span>→</span></div>
+    </a>
+
+  </div>
+
+  <!-- PATH 01: INDIVIDUAL SEALING -->
+  <div class="path-steps" id="path-individual">
+    <div class="steps-header">
+      <div class="steps-header-title blue">Path 01 — Seal Your Work</div>
+      <button class="steps-close" onclick="closePath('individual')">✕ Close</button>
+    </div>
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-dot blue">1</div>
+        <div class="step-body">
+          <div class="step-title">Open the Seal Tool</div>
+          <div class="step-desc">Go to <a href="/certify/seal/">aionsystem.github.io/certify/seal/</a> — no account required, no server, zero dependencies. The SHA-256 seal is computed locally in your browser using SubtleCrypto.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot blue">2</div>
+        <div class="step-body">
+          <div class="step-title">Write Your Entry</div>
+          <div class="step-desc">Type exactly what you are sealing — a hypothesis before an experiment, a prediction before it resolves, a document you received, a creative work before submission. Write in present tense. Be precise. The content you write is the content that gets sealed.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot blue">3</div>
+        <div class="step-body">
+          <div class="step-title">Select Your Template</div>
+          <div class="step-desc">Choose from 14 template types: General Trace, Research Priority, Evidence Chain, Foresight Seal, AI Failure, Creative Priority, Clinical Record, Scope Anchor, and more. The template shapes how the ledger entry is categorized.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot blue">4</div>
+        <div class="step-body">
+          <div class="step-title">Generate Your Seal</div>
+          <div class="step-desc">The tool generates a SHA-256 hash of your content bound to the current Gregorian, Hebrew (full dehiyot), and 13 Moon Dreamspell timestamps simultaneously. Download the sealed JSON file. This is your permanent record.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot blue">5</div>
+        <div class="step-body">
+          <div class="step-title">Submit to the Public Ledger (Optional)</div>
+          <div class="step-desc">Open a GitHub Issue on the <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener">SOVEREIGN-TRACE-PROTOCOL repository ↗</a> using the correct template. Paste your sealed JSON as a comment. Sheldon K. Salmon manually confirms entries until the auto-seal workflow is funded. Your entry becomes permanently public and citable.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot blue">6</div>
+        <div class="step-body">
+          <div class="step-title">Done — Your Seal is Permanent</div>
+          <div class="step-desc">Whether or not you submit to the ledger, your local JSON is cryptographically sealed. The hash cannot be retroactively altered. Store your JSON file. The seal is the resolution. <a href="/certify/seal/" class="amber">Open Seal Tool →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PATH 02: ORGANIZATION CERTIFICATION -->
+  <div class="path-steps" id="path-org">
+    <div class="steps-header">
+      <div class="steps-header-title amber">Path 02 — Certify Your AI Deployment</div>
+      <button class="steps-close" onclick="closePath('org')">✕ Close</button>
+    </div>
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-dot amber">1</div>
+        <div class="step-body">
+          <div class="step-title">Review the Certification Methodology</div>
+          <div class="step-desc">Read <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="amber">CERTIFICATION.md ↗</a> in full. It defines exactly what the FROZEN-2.0 standard requires, what each tier covers, and what the Epistemic Debt Score measures. Certification is not installation — it is formal verification.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot amber">2</div>
+        <div class="step-body">
+          <div class="step-title">Choose Your Tier</div>
+          <div class="step-desc">Tier 1 ($2,500) — single event verification, 5–7 days, automated intake.<br>Tier 2 ($25,000/yr) — full implementation audit, annual badge license, AION Registry listing.<br>Tier 3 ($100k+/yr) — quarterly reviews, Epistemic Debt Statement, C-Suite engagement.<br>Tier 4 (negotiated) — NIST AI RMF, CMMC 2.0, EU AI Act, FAR/DFARS alignment.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot amber">3</div>
+        <div class="step-body">
+          <div class="step-title">File a Certification Issue</div>
+          <div class="step-desc">Open a GitHub Issue using the <strong>Audit Request template (Template 10)</strong> on the <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="amber">SOVEREIGN-TRACE-PROTOCOL repository ↗</a>. Tier 1 and Tier 2 intake is automated — no call required. Tier 3 and 4 intakes are Monday/Tuesday only.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot amber">4</div>
+        <div class="step-body">
+          <div class="step-title">Audit Process</div>
+          <div class="step-desc">The audit covers: failure capture architecture, remediation documentation, epistemic record integrity, and Epistemic Debt Score calculation. The EDS formula is public. You will receive a Certification Report with ledger entry ID and SHA-256 seal before your badge is issued.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot amber">5</div>
+        <div class="step-body">
+          <div class="step-title">Badge Issuance</div>
+          <div class="step-desc">On certification completion, your organization is listed in the AION Registry with a verifiable ledger entry. You receive a licensed badge SVG and usage guidelines. The badge is non-transferable and linked to your specific ledger entry. <a href="mailto:aionsystem@outlook.com" class="amber">Questions → aionsystem@outlook.com</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PATH 03: VERIFY A BADGE -->
+  <div class="path-steps" id="path-verify">
+    <div class="steps-header">
+      <div class="steps-header-title green">Path 03 — Verify a Badge</div>
+      <button class="steps-close" onclick="closePath('verify')">✕ Close</button>
+    </div>
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-dot green">1</div>
+        <div class="step-body">
+          <div class="step-title">Identify the Badge Type</div>
+          <div class="step-desc">Is it an <strong>STP Certified</strong> badge (amber hexagonal shield)? An <strong>AION Verified Simulator</strong> badge (gold octagonal seal)? Or an <strong>STP Certified Auditor</strong> badge (cyan hexagonal shield)? Each has different verification steps. See the badge reference section below.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot green">2</div>
+        <div class="step-body">
+          <div class="step-title">Check for a Ledger Entry ID</div>
+          <div class="step-desc">Every legitimately issued badge is linked to a ledger entry in the <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener" class="green">SOVEREIGN-TRACE-PROTOCOL public ledger ↗</a>. Request the entry ID from the badge holder. A badge with no corresponding ledger entry is not valid.</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot green">3</div>
+        <div class="step-body">
+          <div class="step-title">Use the Verifier Tool Below</div>
+          <div class="step-desc">Paste the ledger entry ID in the interactive verifier on this page. It will validate the format, generate the correct GitHub URL, and confirm what a valid entry for that ID should contain. <a href="#verifier" class="green" onclick="document.getElementById('verifier').scrollIntoView({behavior:'smooth'});return false;">Jump to Verifier →</a></div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-dot green">4</div>
+        <div class="step-body">
+          <div class="step-title">For Simulator Badges</div>
+          <div class="step-desc">The simulator itself must contain: a Red Team tab documenting all issues found and resolved, source reference citation, red team pass count, and issue count in the footer. If any of these are missing, the badge has not been legitimately issued.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE VERIFIER -->
+  <div class="section-label" id="verifier">Interactive badge verifier</div>
+  <div class="verifier-block">
+    <div class="verifier-title">🔍 Verify a Ledger Entry</div>
+    <div class="verifier-sub">
+      Paste a ledger entry ID (format: <span style="color:var(--text)">STP-[TEMPLATE]-[DATE]-[ID]</span>) to validate its format and generate the direct GitHub verification link.<br>
+      The verifier checks format validity locally — click the generated link to confirm the entry exists on GitHub.
+    </div>
+    <div class="verifier-input-row">
+      <input type="text" class="verifier-input" id="verifier-input"
+        placeholder="e.g. STP-GENERAL-TRACE-2026-03-09-000005"
+        oninput="liveVerify(this.value)">
+      <button class="verifier-btn verify-go" onclick="runVerifier()">Verify →</button>
+    </div>
+    <div class="verifier-result" id="verifier-result"></div>
+    <div class="vr-examples">
+      <span>Example valid IDs:</span><br>
+      STP-GENERAL-TRACE-2026-03-09-000005 &nbsp;·&nbsp;
+      STP-CREATIVE-PRIORITY-2026-03-10-000008 &nbsp;·&nbsp;
+      STP-RESEARCH-PRIORITY-2026-03-14-U3N9CK
+    </div>
+  </div>
+
+  <!-- THREE BADGES REFERENCE -->
   <div class="section-label">The three badge types</div>
   <div class="badge-trio">
 
-    <!-- STP CERTIFIED -->
     <div class="badge-card stp-card">
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
-         target="_blank" rel="noopener" class="badge-link" title="View STP Certification methodology ↗">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="90" height="90">
-          <defs>
-            <linearGradient id="bv1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffc947"/><stop offset="50%" stop-color="#f0a500"/><stop offset="100%" stop-color="#b07800"/></linearGradient>
-          </defs>
-          <polygon points="200,30 370,110 370,290 200,370 30,290 30,110" fill="#0f1015" stroke="url(#bv1)" stroke-width="4"/>
-          <polygon points="200,55 345,123 345,277 200,345 55,277 55,123" fill="none" stroke="url(#bv1)" stroke-width="1.5" stroke-opacity="0.5"/>
-          <circle cx="200" cy="200" r="90" fill="none" stroke="url(#bv1)" stroke-width="2"/>
-          <text x="200" y="188" font-family="'Barlow Condensed',sans-serif" font-size="28" font-weight="900" fill="#f0a500" text-anchor="middle" letter-spacing="2">STP</text>
-          <text x="200" y="218" font-family="'Courier New',monospace" font-size="12" fill="#b07800" text-anchor="middle" letter-spacing="2">CERTIFIED</text>
-        </svg>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="badge-link" title="View STP Certification methodology ↗">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="90" height="90"><defs><linearGradient id="bv1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ffc947"/><stop offset="50%" stop-color="#f0a500"/><stop offset="100%" stop-color="#b07800"/></linearGradient></defs><polygon points="200,30 370,110 370,290 200,370 30,290 30,110" fill="#0f1015" stroke="url(#bv1)" stroke-width="4"/><polygon points="200,55 345,123 345,277 200,345 55,277 55,123" fill="none" stroke="url(#bv1)" stroke-width="1.5" stroke-opacity="0.5"/><circle cx="200" cy="200" r="90" fill="none" stroke="url(#bv1)" stroke-width="2"/><text x="200" y="188" font-family="'Barlow Condensed',sans-serif" font-size="28" font-weight="900" fill="#f0a500" text-anchor="middle" letter-spacing="2">STP</text><text x="200" y="218" font-family="'Courier New',monospace" font-size="12" fill="#b07800" text-anchor="middle" letter-spacing="2">CERTIFIED</text></svg>
       </a>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
-         target="_blank" rel="noopener" class="badge-card-name">STP Certified</a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="badge-card-name">STP Certified</a>
       <div class="badge-card-sub">Sovereign Trace Protocol · FROZEN-2.0</div>
-      <div class="badge-brief">
-        Issued to organizations whose AI deployment infrastructure has been<br>
-        formally audited against the FROZEN-2.0 standard.<br>
-        <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
-           target="_blank" rel="noopener">View full certification methodology ↗</a>
-      </div>
+      <div class="badge-brief">Issued to organizations whose AI deployment infrastructure has been formally audited against the FROZEN-2.0 standard.<br><a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener">View full certification methodology ↗</a></div>
       <div class="badge-divider"></div>
       <div class="badge-card-desc">Immutable failure capture, transparent remediation, honest epistemic record. Four tiers — Basic through Defense Grade.</div>
       <div class="badge-divider"></div>
-      <div class="badge-card-issued">
-        <strong>Issued to:</strong> Organizations<br>
-        <strong>Palette:</strong> Amber &amp; Black<br>
-        <strong>Shape:</strong> Hexagonal shield<br>
-        <strong>Tiers:</strong> Basic · Enterprise · Strategic · Defense
-      </div>
+      <div class="badge-card-issued"><strong>Issued to:</strong> Organizations<br><strong>Palette:</strong> Amber &amp; Black<br><strong>Shape:</strong> Hexagonal shield<br><strong>Tiers:</strong> Basic · Enterprise · Strategic · Defense</div>
     </div>
 
-    <!-- AION VERIFIED SIMULATOR -->
     <div class="badge-card sim-card">
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
-         target="_blank" rel="noopener" class="badge-link" title="View AION Verified Simulator certification methodology ↗">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="130" height="130">
-          <defs>
-            <linearGradient id="bv2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#F5E070"/><stop offset="35%" stop-color="#D4AF37"/>
-              <stop offset="65%" stop-color="#C9A028"/><stop offset="100%" stop-color="#8B7520"/>
-            </linearGradient>
-            <linearGradient id="bv2s" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#FAF0A0"/><stop offset="30%" stop-color="#D4AF37"/>
-              <stop offset="70%" stop-color="#B8921E"/><stop offset="100%" stop-color="#7A6418"/>
-            </linearGradient>
-            <linearGradient id="bw2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/>
-              <stop offset="20%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#F5E070"/>
-              <stop offset="80%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/>
-            </linearGradient>
-            <linearGradient id="bd2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#6B5510" stop-opacity="0.1"/>
-              <stop offset="50%" stop-color="#D4AF37" stop-opacity="0.7"/>
-              <stop offset="100%" stop-color="#6B5510" stop-opacity="0.1"/>
-            </linearGradient>
-            <filter id="bwg2" x="-20%" y="-100%" width="140%" height="300%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
-              <feColorMatrix in="blur" type="matrix" values="1 0.8 0 0 0.1 0.7 0.5 0 0 0 0 0 0 0 0 0 0 0 0.8 0" result="gb"/>
-              <feMerge><feMergeNode in="gb"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="bsh2" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#D4AF37" flood-opacity="0.3"/>
-            </filter>
-            <path id="bta2"  d="M 78,200 A 122,122 0 0,1 322,200"/>
-            <path id="btsa2" d="M 98,200 A 102,102 0 0,1 302,200"/>
-            <path id="bba2"  d="M 92,200 A 108,108 0 0,0 308,200"/>
-          </defs>
-          <polygon points="368.1,269.6 269.6,368.1 130.4,368.1 31.9,269.6 31.9,130.4 130.4,31.9 269.6,31.9 368.1,130.4" fill="#0d0b08" stroke="url(#bv2)" stroke-width="3" filter="url(#bsh2)"/>
-          <polygon points="358.5,264.9 264.9,358.5 135.1,358.5 41.5,264.9 41.5,135.1 135.1,41.5 264.9,41.5 358.5,135.1" fill="none" stroke="url(#bv2s)" stroke-width="0.8" stroke-opacity="0.5"/>
-          <g>
-            <line x1="355" y1="200" x2="368" y2="200" stroke="url(#bv2)" stroke-width="1.5"/>
-            <line x1="349.7" y1="240.1" x2="356.5" y2="241.9" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="334.2" y1="277.5" x2="340.3" y2="281" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="309.6" y1="309.6" x2="314.6" y2="314.6" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="277.5" y1="334.2" x2="281" y2="340.3" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="240.1" y1="349.7" x2="241.9" y2="356.5" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="200" y1="355" x2="200" y2="368" stroke="url(#bv2)" stroke-width="1.5"/>
-            <line x1="159.9" y1="349.7" x2="158.1" y2="356.5" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="122.5" y1="334.2" x2="119" y2="340.3" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="90.4" y1="309.6" x2="85.4" y2="314.6" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="65.8" y1="277.5" x2="59.7" y2="281" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="50.3" y1="240.1" x2="43.5" y2="241.9" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="45" y1="200" x2="32" y2="200" stroke="url(#bv2)" stroke-width="1.5"/>
-            <line x1="50.3" y1="159.9" x2="43.5" y2="158.1" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="65.8" y1="122.5" x2="59.7" y2="119" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="90.4" y1="90.4" x2="85.4" y2="85.4" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="122.5" y1="65.8" x2="119" y2="59.7" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="159.9" y1="50.3" x2="158.1" y2="43.5" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="200" y1="45" x2="200" y2="32" stroke="url(#bv2)" stroke-width="1.5"/>
-            <line x1="240.1" y1="50.3" x2="241.9" y2="43.5" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="277.5" y1="65.8" x2="281" y2="59.7" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="309.6" y1="90.4" x2="314.6" y2="85.4" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="334.2" y1="122.5" x2="340.3" y2="119" stroke="url(#bv2)" stroke-width="0.8"/>
-            <line x1="349.7" y1="159.9" x2="356.5" y2="158.1" stroke="url(#bv2)" stroke-width="0.8"/>
-          </g>
-          <circle cx="200" cy="200" r="150" fill="none" stroke="url(#bv2)" stroke-width="2.5"/>
-          <circle cx="200" cy="200" r="142" fill="none" stroke="url(#bv2s)" stroke-width="0.8" stroke-dasharray="3 5" stroke-opacity="0.6"/>
-          <circle cx="200" cy="200" r="134" fill="#0d0b08"/>
-          <circle cx="200" cy="200" r="134" fill="none" stroke="url(#bv2)" stroke-width="1.5"/>
-          <polygon points="62,195 57,200 62,205 67,200" fill="url(#bv2)" opacity="0.9"/>
-          <polygon points="338,195 333,200 338,205 343,200" fill="url(#bv2)" opacity="0.9"/>
-          <circle cx="200" cy="66" r="2.5" fill="url(#bv2)" opacity="0.8"/>
-          <circle cx="200" cy="334" r="2.5" fill="url(#bv2)" opacity="0.8"/>
-          <text font-family="'Times New Roman',Georgia,serif" font-size="15" font-weight="bold" letter-spacing="5" fill="url(#bv2s)" text-anchor="middle"><textPath href="#bta2" startOffset="50%">AION · VERIFIED</textPath></text>
-          <text font-family="'Times New Roman',Georgia,serif" font-size="11.5" letter-spacing="7" fill="#C9A028" text-anchor="middle" opacity="0.85"><textPath href="#btsa2" startOffset="50%">· SIMULATOR ·</textPath></text>
-          <text font-family="'Times New Roman',Georgia,serif" font-size="11" font-weight="bold" letter-spacing="3" fill="url(#bv2s)" text-anchor="middle"><textPath href="#bba2" startOffset="50%">SHELDON K. SALMON</textPath></text>
-          <line x1="78" y1="200" x2="142" y2="200" stroke="url(#bd2)" stroke-width="1"/>
-          <line x1="258" y1="200" x2="322" y2="200" stroke="url(#bd2)" stroke-width="1"/>
-          <polygon points="142,197 137,200 142,203 147,200" fill="#C9A028" opacity="0.6"/>
-          <polygon points="258,197 253,200 258,203 263,200" fill="#C9A028" opacity="0.6"/>
-          <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="#D4AF37" stroke-width="8" stroke-linecap="round" opacity="0.1"/>
-          <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#bw2)" stroke-width="2.8" stroke-linecap="round" filter="url(#bwg2)"/>
-          <text x="200" y="167" font-family="'Courier New',monospace" font-size="9" letter-spacing="3" fill="#D4AF37" text-anchor="middle" opacity="0.9">VERIFIED SIMULATION</text>
-          <text x="200" y="242" font-family="'Courier New',monospace" font-size="8" letter-spacing="2.5" fill="#8B7520" text-anchor="middle" opacity="0.8">v1.0 · 2026 · AION STACK</text>
-          <text x="200" y="257" font-family="'Courier New',monospace" font-size="7" letter-spacing="1" fill="#5a4e20" text-anchor="middle" opacity="0.6">NON-TRANSFERABLE · SHA-256 · STP SEALED</text>
-        </svg>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="badge-link" title="View AION Verified Simulator certification methodology ↗">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="130" height="130"><defs><linearGradient id="bv2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="35%" stop-color="#D4AF37"/><stop offset="65%" stop-color="#C9A028"/><stop offset="100%" stop-color="#8B7520"/></linearGradient><linearGradient id="bv2s" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#FAF0A0"/><stop offset="30%" stop-color="#D4AF37"/><stop offset="70%" stop-color="#B8921E"/><stop offset="100%" stop-color="#7A6418"/></linearGradient><linearGradient id="bw2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="20%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#F5E070"/><stop offset="80%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient><path id="bta2" d="M 78,200 A 122,122 0 0,1 322,200"/><path id="btsa2" d="M 98,200 A 102,102 0 0,1 302,200"/><path id="bba2" d="M 92,200 A 108,108 0 0,0 308,200"/></defs><polygon points="368.1,269.6 269.6,368.1 130.4,368.1 31.9,269.6 31.9,130.4 130.4,31.9 269.6,31.9 368.1,130.4" fill="#0d0b08" stroke="url(#bv2)" stroke-width="3"/><circle cx="200" cy="200" r="150" fill="none" stroke="url(#bv2)" stroke-width="2.5"/><circle cx="200" cy="200" r="134" fill="#0d0b08"/><circle cx="200" cy="200" r="134" fill="none" stroke="url(#bv2)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#bw2)" stroke-width="2.8" stroke-linecap="round"/><text font-family="'Times New Roman',Georgia,serif" font-size="15" font-weight="bold" letter-spacing="5" fill="url(#bv2s)" text-anchor="middle"><textPath href="#bta2" startOffset="50%">AION · VERIFIED</textPath></text><text font-family="'Times New Roman',Georgia,serif" font-size="11.5" letter-spacing="7" fill="#C9A028" text-anchor="middle" opacity="0.85"><textPath href="#btsa2" startOffset="50%">· SIMULATOR ·</textPath></text><text font-family="'Times New Roman',Georgia,serif" font-size="11" font-weight="bold" letter-spacing="3" fill="url(#bv2s)" text-anchor="middle"><textPath href="#bba2" startOffset="50%">SHELDON K. SALMON</textPath></text></svg>
       </a>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
-         target="_blank" rel="noopener" class="badge-card-name">AION Verified Simulator</a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="badge-card-name">AION Verified Simulator</a>
       <div class="badge-card-sub">Simulation Certification · v1.0 · March 2026</div>
-      <div class="badge-brief">
-        Issued to simulation tools: physics verified, red-teamed,<br>
-        peer-reviewed. Issued by Sheldon K. Salmon under AION methodology.<br>
-        <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
-           target="_blank" rel="noopener">View full certification methodology ↗</a>
-      </div>
+      <div class="badge-brief">Issued to simulation tools: physics verified, red-teamed, peer-reviewed. Issued by Sheldon K. Salmon under AION methodology.<br><a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener">View full certification methodology ↗</a></div>
       <div class="badge-divider"></div>
       <div class="badge-card-desc">Every issue found is documented in the simulator's Red Team tab. The badge is not issued until that documentation is complete.</div>
       <div class="badge-divider"></div>
-      <div class="badge-card-issued">
-        <strong>Issued to:</strong> Simulation tools<br>
-        <strong>Palette:</strong> Black &amp; Gold (#D4AF37)<br>
-        <strong>Shape:</strong> Octagonal precision seal · 24 ticks<br>
-        <strong>Motif:</strong> Sine wave — simulation universal<br>
-        <strong>Seal:</strong> NON-TRANSFERABLE · SHA-256
-      </div>
+      <div class="badge-card-issued"><strong>Issued to:</strong> Simulation tools<br><strong>Palette:</strong> Black &amp; Gold (#D4AF37)<br><strong>Shape:</strong> Octagonal precision seal · 24 ticks<br><strong>Seal:</strong> NON-TRANSFERABLE · SHA-256</div>
     </div>
 
-    <!-- STP AUDITOR -->
     <div class="badge-card aud-card">
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
-         target="_blank" rel="noopener" class="badge-link" title="View STP Auditor certification methodology ↗">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="90" height="90">
-          <defs>
-            <linearGradient id="bv3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#80d8ff"/><stop offset="50%" stop-color="#40c4ff"/><stop offset="100%" stop-color="#0077aa"/></linearGradient>
-          </defs>
-          <polygon points="200,30 370,110 370,290 200,370 30,290 30,110" fill="#08101a" stroke="url(#bv3)" stroke-width="4"/>
-          <polygon points="200,55 345,123 345,277 200,345 55,277 55,123" fill="none" stroke="url(#bv3)" stroke-width="1.5" stroke-opacity="0.4"/>
-          <circle cx="200" cy="200" r="90" fill="none" stroke="url(#bv3)" stroke-width="2"/>
-          <text x="200" y="185" font-family="'Barlow Condensed',sans-serif" font-size="22" font-weight="900" fill="#40c4ff" text-anchor="middle" letter-spacing="2">STP</text>
-          <text x="200" y="210" font-family="'Courier New',monospace" font-size="10" fill="#0077aa" text-anchor="middle" letter-spacing="1">CERTIFIED</text>
-          <text x="200" y="228" font-family="'Courier New',monospace" font-size="10" fill="#0077aa" text-anchor="middle" letter-spacing="1">AUDITOR</text>
-        </svg>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="badge-link" title="View STP Auditor certification methodology ↗">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="90" height="90"><defs><linearGradient id="bv3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#80d8ff"/><stop offset="50%" stop-color="#40c4ff"/><stop offset="100%" stop-color="#0077aa"/></linearGradient></defs><polygon points="200,30 370,110 370,290 200,370 30,290 30,110" fill="#08101a" stroke="url(#bv3)" stroke-width="4"/><polygon points="200,55 345,123 345,277 200,345 55,277 55,123" fill="none" stroke="url(#bv3)" stroke-width="1.5" stroke-opacity="0.4"/><circle cx="200" cy="200" r="90" fill="none" stroke="url(#bv3)" stroke-width="2"/><text x="200" y="185" font-family="'Barlow Condensed',sans-serif" font-size="22" font-weight="900" fill="#40c4ff" text-anchor="middle" letter-spacing="2">STP</text><text x="200" y="210" font-family="'Courier New',monospace" font-size="10" fill="#0077aa" text-anchor="middle" letter-spacing="1">CERTIFIED</text><text x="200" y="228" font-family="'Courier New',monospace" font-size="10" fill="#0077aa" text-anchor="middle" letter-spacing="1">AUDITOR</text></svg>
       </a>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
-         target="_blank" rel="noopener" class="badge-card-name">STP Certified Auditor</a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="badge-card-name">STP Certified Auditor</a>
       <div class="badge-card-sub">Independent Auditor Credential</div>
-      <div class="badge-brief">
-        Issued to individuals authorized to file audit completions<br>
-        to the AION ledger under their own badge number.<br>
-        <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md"
-           target="_blank" rel="noopener">View full certification methodology ↗</a>
-      </div>
+      <div class="badge-brief">Issued to individuals authorized to file audit completions to the AION ledger under their own badge number.<br><a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener">View full certification methodology ↗</a></div>
       <div class="badge-divider"></div>
       <div class="badge-card-desc">SHA-256 sealed at issuance. Non-transferable. Annual cap: 50 sealed audits. Renewable by reapplication only.</div>
       <div class="badge-divider"></div>
-      <div class="badge-card-issued">
-        <strong>Issued to:</strong> Individual auditors<br>
-        <strong>Palette:</strong> Cyan &amp; Dark<br>
-        <strong>Shape:</strong> Hexagonal shield variant<br>
-        <strong>Term:</strong> 1 year · renewable by reapplication
-      </div>
+      <div class="badge-card-issued"><strong>Issued to:</strong> Individual auditors<br><strong>Palette:</strong> Cyan &amp; Dark<br><strong>Shape:</strong> Hexagonal shield variant<br><strong>Term:</strong> 1 year · renewable by reapplication</div>
     </div>
 
   </div>
 
-  <!-- ── SEAL STRIP — Sovereign Trace Seal Tool ── -->
+  <!-- SEAL STRIP -->
   <div class="section-label">Generate your own sovereign trace seal</div>
   <div class="seal-strip">
-
-    <!-- Mini badge -->
     <div class="seal-strip-badge">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="88" height="88">
-        <defs>
-          <linearGradient id="ss1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#80d8ff"/><stop offset="50%" stop-color="#40c4ff"/><stop offset="100%" stop-color="#0077aa"/></linearGradient>
-          <linearGradient id="sw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0077aa" stop-opacity="0.3"/><stop offset="50%" stop-color="#80d8ff"/><stop offset="100%" stop-color="#0077aa" stop-opacity="0.3"/></linearGradient>
-          <path id="st1" d="M 78,200 A 122,122 0 0,1 322,200"/>
-          <path id="sb1" d="M 92,200 A 108,108 0 0,0 308,200"/>
-        </defs>
-        <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080d14" stroke="url(#ss1)" stroke-width="4"/>
-        <circle cx="200" cy="200" r="150" fill="none" stroke="url(#ss1)" stroke-width="3"/>
-        <circle cx="200" cy="200" r="134" fill="#060b10"/>
-        <circle cx="200" cy="200" r="134" fill="none" stroke="url(#ss1)" stroke-width="1.5"/>
-        <path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#sw1)" stroke-width="3" stroke-linecap="round"/>
-        <text x="200" y="195" font-family="'Courier New',monospace" font-size="18" font-weight="bold" fill="#40c4ff" text-anchor="middle" letter-spacing="2">🔒</text>
-        <text font-family="'Times New Roman',serif" font-size="13" font-weight="bold" letter-spacing="4" fill="#40c4ff" text-anchor="middle"><textPath href="#st1" startOffset="50%">SOVEREIGN · TRACE</textPath></text>
-        <text font-family="'Times New Roman',serif" font-size="10" letter-spacing="3" fill="#40c4ff" text-anchor="middle" opacity="0.7"><textPath href="#sb1" startOffset="50%">FROZEN-2.0</textPath></text>
-      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="88" height="88"><defs><linearGradient id="ss1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#80d8ff"/><stop offset="50%" stop-color="#40c4ff"/><stop offset="100%" stop-color="#0077aa"/></linearGradient><linearGradient id="sw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0077aa" stop-opacity="0.3"/><stop offset="50%" stop-color="#80d8ff"/><stop offset="100%" stop-color="#0077aa" stop-opacity="0.3"/></linearGradient><path id="st1" d="M 78,200 A 122,122 0 0,1 322,200"/><path id="sb1" d="M 92,200 A 108,108 0 0,0 308,200"/></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080d14" stroke="url(#ss1)" stroke-width="4"/><circle cx="200" cy="200" r="150" fill="none" stroke="url(#ss1)" stroke-width="3"/><circle cx="200" cy="200" r="134" fill="#060b10"/><circle cx="200" cy="200" r="134" fill="none" stroke="url(#ss1)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#sw1)" stroke-width="3" stroke-linecap="round"/><text x="200" y="195" font-family="'Courier New',monospace" font-size="18" font-weight="bold" fill="#40c4ff" text-anchor="middle" letter-spacing="2">🔒</text><text font-family="'Times New Roman',serif" font-size="13" font-weight="bold" letter-spacing="4" fill="#40c4ff" text-anchor="middle"><textPath href="#st1" startOffset="50%">SOVEREIGN · TRACE</textPath></text><text font-family="'Times New Roman',serif" font-size="10" letter-spacing="3" fill="#40c4ff" text-anchor="middle" opacity="0.7"><textPath href="#sb1" startOffset="50%">FROZEN-2.0</textPath></text></svg>
     </div>
-
-    <!-- Body -->
     <div class="seal-strip-body">
       <div class="seal-strip-eyebrow">// STP Browser Seal Tool · FROZEN-2.0 · SHA-256</div>
       <div class="seal-strip-title">Seal What Is True.<br><em>Permanently.</em></div>
-      <div class="seal-strip-desc">
-        Every individual, researcher, organization, or analyst can generate a permanent cryptographic seal binding their content to three simultaneous calendar systems. <strong>No account required. No server. Zero dependencies.</strong> The seal is computed locally in your browser using SubtleCrypto — the same SHA-256 standard as the Python package.
-      </div>
+      <div class="seal-strip-desc">Every individual, researcher, organization, or analyst can generate a permanent cryptographic seal binding their content to three simultaneous calendar systems. <strong>No account required. No server. Zero dependencies.</strong> The seal is computed locally in your browser using SubtleCrypto — the same SHA-256 standard as the Python package.</div>
       <div class="seal-strip-times">
         <div class="seal-strip-time"><strong>📅 Gregorian</strong>Civic time</div>
         <div class="seal-strip-time"><strong>🌑 Hebrew</strong>Full dehiyot · FROZEN-2.0</div>
         <div class="seal-strip-time"><strong>🌀 Dreamspell</strong>13 Moon galactic</div>
         <div class="seal-strip-time"><strong>🔒 SHA-256</strong>SubtleCrypto · browser-native</div>
       </div>
-      <div class="seal-strip-desc" style="font-size:10px;margin-bottom:20px;">
-        14 submission templates — General Trace, Research Priority, Evidence Chain, Foresight Seal, AI Failure, and more. Download your sealed JSON. Then submit a GitHub Issue to enter the public ledger — Sheldon K. Salmon manually adds confirmed entries until the auto-seal workflow is funded.
-      </div>
       <div class="seal-strip-actions">
         <a href="/certify/seal/" class="seal-cta-primary">🔒 Open the Seal Tool →</a>
         <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="seal-cta-outline">Submit to Public Ledger ↗</a>
       </div>
     </div>
-
-    <!-- Right column: live seal display placeholder -->
     <div style="display:flex;flex-direction:column;gap:8px;min-width:180px;align-self:stretch;justify-content:center;" class="seal-strip-badge">
       <div style="background:rgba(64,196,255,0.04);border:1px solid rgba(64,196,255,0.15);padding:14px 16px;">
         <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--frozen);margin-bottom:8px;opacity:0.7;">WHAT YOU RECEIVE</div>
-        <div style="font-family:var(--mono);font-size:9px;color:var(--muted);line-height:2;">
-          ✓ Sealed JSON download<br>
-          ✓ SHA-256 content hash<br>
-          ✓ Triple-time stamp<br>
-          ✓ Ledger ID (browser-generated)<br>
-          ✓ Direct GitHub Issue link<br>
-          ✓ Local VERIFY tool<br>
-          ✓ Browser ledger history
-        </div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--muted);line-height:2;">✓ Sealed JSON download<br>✓ SHA-256 content hash<br>✓ Triple-time stamp<br>✓ Ledger ID (browser-generated)<br>✓ Direct GitHub Issue link<br>✓ Local VERIFY tool<br>✓ Browser ledger history</div>
       </div>
       <div style="background:rgba(64,196,255,0.02);border:1px solid rgba(64,196,255,0.08);padding:10px 14px;">
         <div style="font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--frozen);margin-bottom:6px;opacity:0.5;">COST</div>
@@ -451,35 +556,28 @@ footer a:hover { color:var(--amber); }
         <div style="font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;">Always. No account.</div>
       </div>
     </div>
-
   </div>
 
   <!-- HOW TO VERIFY -->
-  <div class="verify-section">
-    <div class="section-label">How to verify a badge</div>
-    <div class="verify-how">
-      <div class="verify-card">
-        <h3>For Simulator Badges</h3>
-        <p>
-          Every AION Verified Simulator badge is linked to a specific tool. To verify:<br><br>
-          1. The badge should link to this page or to the CERTIFICATION.md file.<br>
-          2. The simulator should contain a Red Team tab documenting all issues found and resolved.<br>
-          3. The footer should name the source reference, red team pass count, and issue count.<br><br>
-          If any of these are missing, the badge has not been legitimately issued.<br><br>
-          <a href="/simulators/roller-coaster/" target="_blank">View live example: Roller Coaster Simulator →</a>
-        </p>
-      </div>
-      <div class="verify-card">
-        <h3>For STP Certification Badges</h3>
-        <p>
-          STP Certified badges are issued through the Sovereign Trace Protocol ledger on GitHub. To verify:<br><br>
-          1. Request the organization's Certification Report — it contains a ledger entry ID.<br>
-          2. Look up that entry ID in the <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener">AionSystem/SOVEREIGN-TRACE-PROTOCOL public ledger ↗</a>.<br>
-          3. Confirm the entry is signed by Sheldon K. Salmon with a triple-time seal.<br><br>
-          A badge with no corresponding ledger entry is not valid. The AION Registry is the source of truth, not the badge itself.<br><br>
-          <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md" target="_blank" rel="noopener">Full certification methodology ↗</a>
-        </p>
-      </div>
+  <div class="section-label">How to verify a badge manually</div>
+  <div class="verify-how">
+    <div class="verify-card">
+      <h3>For Simulator Badges</h3>
+      <p>Every AION Verified Simulator badge is linked to a specific tool. To verify:<br><br>
+      1. The badge should link to this page or to the CERTIFICATION.md file.<br>
+      2. The simulator must contain a Red Team tab documenting all issues found and resolved.<br>
+      3. The footer must name the source reference, red team pass count, and issue count.<br><br>
+      If any of these are missing, the badge has not been legitimately issued.<br><br>
+      <a href="/simulators/roller-coaster/" target="_blank">View live example: Roller Coaster Simulator →</a></p>
+    </div>
+    <div class="verify-card">
+      <h3>For STP Certification Badges</h3>
+      <p>STP Certified badges are issued through the Sovereign Trace Protocol ledger on GitHub. To verify:<br><br>
+      1. Request the organization's Certification Report — it contains a ledger entry ID.<br>
+      2. Look up that ID in the <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener">AionSystem/SOVEREIGN-TRACE-PROTOCOL public ledger ↗</a>.<br>
+      3. Confirm the entry is signed by Sheldon K. Salmon with a triple-time seal.<br><br>
+      A badge with no corresponding ledger entry is not valid. The AION Registry is the source of truth.<br><br>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener">Full certification methodology ↗</a></p>
     </div>
   </div>
 
@@ -525,7 +623,7 @@ footer a:hover { color:var(--amber); }
     <h3>Engage Certification</h3>
     <p>File a certification issue on GitHub. Automated intake — no call required for Tier 1 and Tier 2.</p>
     <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="cta-btn">File a Certification Issue ↗</a>
-    <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/(STP)/CERTIFICATION.md" target="_blank" rel="noopener" class="cta-btn cta-btn-outline">Read Full Methodology</a>
+    <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener" class="cta-btn cta-btn-outline">Read Full Methodology</a>
   </div>
 
 </div>
@@ -540,5 +638,157 @@ footer a:hover { color:var(--amber); }
   </p>
 </footer>
 
+<script>
+// ── PATH FLOW ─────────────────────────────────────────────────
+function showPath(id) {
+  // Hide all others
+  ['individual','org','verify'].forEach(p => {
+    const el = document.getElementById('path-' + p);
+    if (el) el.classList.remove('active');
+  });
+  // Show selected
+  const target = document.getElementById('path-' + id);
+  if (target) {
+    target.classList.add('active');
+    setTimeout(() => target.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+  }
+}
+
+function closePath(id) {
+  const el = document.getElementById('path-' + id);
+  if (el) el.classList.remove('active');
+}
+
+// ── LEDGER VERIFIER ───────────────────────────────────────────
+// Known ledger entries from the public ledger
+const KNOWN_ENTRIES = {
+  'STP-GENERAL-TRACE-2026-03-09-000005':        { label:'LEDGER-001', desc:'Founding seal', template:'07 — General Trace' },
+  'STP-GENERAL-TRACE-2026-03-10-000006':        { label:'LEDGER-002', desc:'Archive layer activation', template:'07 — General Trace' },
+  'STP-GENERAL-TRACE-2026-03-10-000007':        { label:'LEDGER-003', desc:'Zenodo DOI registration', template:'07 — General Trace' },
+  'STP-CREATIVE-PRIORITY-2026-03-10-000008':    { label:'LEDGER-004', desc:'PROJECT ORION v2.1 spec', template:'04 — Creative Priority' },
+  'STP-GENERAL-TRACE-2026-03-10-000009':        { label:'LEDGER-005', desc:'UNDP evaluation notification', template:'07 — General Trace' },
+  'STP-GENERAL-TRACE-2026-03-10-000010':        { label:'LEDGER-006', desc:'IPFS archive layer activation', template:'07 — General Trace' },
+  'STP-GENERAL-TRACE-2026-03-10-000011':        { label:'LEDGER-007', desc:'Software Heritage submission', template:'07 — General Trace' },
+  'STP-FORESIGHT-SEAL-2026-03-10-000012':       { label:'LEDGER-008', desc:'AI Resonance Dating App concept', template:'08 — Foresight Seal' },
+  'STP-CREATIVE-PRIORITY-2026-03-10-000013':    { label:'LEDGER-009', desc:'Hyperloop Improved Concept v1–v3', template:'04 — Creative Priority' },
+  'STP-CREATIVE-PRIORITY-2026-03-10-000014':    { label:'LEDGER-010', desc:'Spatial Loci World & AGI v0.4', template:'04 — Creative Priority' },
+  'STP-FORESIGHT-SEAL-2026-03-11-000015':       { label:'LEDGER-011', desc:'FAILURE ATLAS concept origin', template:'08 — Foresight Seal' },
+  'STP-RESEARCH-PRIORITY-2026-03-14-U3N9CK':    { label:'LEDGER-012', desc:'Research priority seal', template:'02 — Research Priority' },
+};
+
+// Valid template codes
+const VALID_TEMPLATES = [
+  'GENERAL-TRACE','AI-FAILURE','RESEARCH-PRIORITY','EVIDENCE-CHAIN',
+  'CREATIVE-PRIORITY','CLINICAL-RECORD','SCOPE-ANCHOR','FORESIGHT-SEAL',
+  'WEBEATER-LINK','AUDIT-REQUEST','AUDIT-COMPLETION','AUDITOR-APPLICATION',
+  'INTEGRITY-VIOLATION','NEAR-MISS'
+];
+
+function parseEntryId(id) {
+  if (!id || !id.trim()) return { valid:false, reason:'empty' };
+  const clean = id.trim().toUpperCase();
+
+  // Format: STP-[TEMPLATE]-[YYYY-MM-DD]-[ID]
+  // Template can have hyphens. ID can be numeric or alphanumeric
+  const match = clean.match(/^STP-(.+)-(\d{4}-\d{2}-\d{2})-([A-Z0-9]+)$/);
+  if (!match) return { valid:false, reason:'format', clean };
+
+  const template = match[1];
+  const date     = match[2];
+  const entryId  = match[3];
+
+  const templateValid = VALID_TEMPLATES.includes(template);
+
+  return {
+    valid: true,
+    clean,
+    template,
+    templateValid,
+    date,
+    entryId,
+    githubSearchUrl: `https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues?q=${encodeURIComponent(id.trim())}`,
+    ledgerFileUrl:   `https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/ledger/${clean}.json`,
+  };
+}
+
+function liveVerify(val) {
+  if (!val.trim()) {
+    document.getElementById('verifier-result').classList.remove('show');
+    return;
+  }
+  // Show result div with live feedback as user types
+  const parsed = parseEntryId(val);
+  if (parsed.valid) {
+    renderVerifierResult(parsed);
+  } else {
+    document.getElementById('verifier-result').classList.remove('show');
+  }
+}
+
+function runVerifier() {
+  const val = document.getElementById('verifier-input').value;
+  const parsed = parseEntryId(val);
+  const el = document.getElementById('verifier-result');
+
+  if (!val.trim()) {
+    el.className = 'verifier-result format-error show';
+    el.innerHTML = `<div class="vr-status"><div class="vr-dot amber"></div><span style="color:var(--amber)">NO INPUT — Paste a ledger entry ID to verify</span></div>`;
+    return;
+  }
+
+  if (!parsed.valid && parsed.reason === 'format') {
+    el.className = 'verifier-result format-error show';
+    el.innerHTML = `
+      <div class="vr-status"><div class="vr-dot amber"></div><span style="color:var(--amber)">FORMAT ERROR — Not a valid STP ledger entry ID</span></div>
+      <div class="vr-fields">
+        <div class="vr-row"><span class="vr-key">Expected format</span><span class="vr-val">STP-[TEMPLATE]-[YYYY-MM-DD]-[ID]</span></div>
+        <div class="vr-row"><span class="vr-key">You entered</span><span class="vr-val">${escHtml(val.trim())}</span></div>
+        <div class="vr-row"><span class="vr-key">Example</span><span class="vr-val">STP-GENERAL-TRACE-2026-03-09-000005</span></div>
+      </div>`;
+    return;
+  }
+
+  renderVerifierResult(parsed);
+}
+
+function renderVerifierResult(parsed) {
+  const el = document.getElementById('verifier-result');
+  const known = KNOWN_ENTRIES[parsed.clean];
+
+  let statusClass, statusColor, statusText, statusDot;
+  if (known) {
+    statusClass = 'valid'; statusColor = 'var(--green)'; statusDot = 'green';
+    statusText = 'KNOWN LEDGER ENTRY — Confirmed in public registry';
+  } else {
+    statusClass = 'valid'; statusColor = 'var(--frozen)'; statusDot = 'amber';
+    statusText = 'VALID FORMAT — Click link below to confirm on GitHub';
+  }
+
+  el.className = `verifier-result ${statusClass} show`;
+  el.innerHTML = `
+    <div class="vr-status"><div class="vr-dot ${statusDot}"></div><span style="color:${statusColor}">${statusText}</span></div>
+    <div class="vr-fields">
+      <div class="vr-row"><span class="vr-key">Entry ID</span><span class="vr-val">${parsed.clean}</span></div>
+      <div class="vr-row"><span class="vr-key">Template</span><span class="vr-val" style="color:${parsed.templateValid ? 'var(--text)' : 'var(--amber)'}">${parsed.template} ${parsed.templateValid ? '✓' : '⚠ unrecognized'}</span></div>
+      <div class="vr-row"><span class="vr-key">Sealed date</span><span class="vr-val">${parsed.date}</span></div>
+      <div class="vr-row"><span class="vr-key">Entry suffix</span><span class="vr-val">${parsed.entryId}</span></div>
+      ${known ? `<div class="vr-row"><span class="vr-key">Registry label</span><span class="vr-val" style="color:var(--green)">${known.label} — ${known.desc}</span></div>` : ''}
+      <div class="vr-row"><span class="vr-key">Verify on GitHub</span><span class="vr-val link"><a href="${parsed.githubSearchUrl}" target="_blank" rel="noopener">Search ledger issues ↗</a></span></div>
+      <div class="vr-row"><span class="vr-key">Expected ledger file</span><span class="vr-val link"><a href="${parsed.ledgerFileUrl}" target="_blank" rel="noopener">View in ledger/ folder ↗</a></span></div>
+    </div>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:10px;line-height:1.8;">
+      The verifier checks format validity locally. Use the GitHub links above to confirm the entry exists and was sealed by Sheldon K. Salmon.
+    </div>`;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Enter key support
+document.getElementById('verifier-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') runVerifier();
+});
+</script>
 </body>
 </html>
