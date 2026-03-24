@@ -3,504 +3,472 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AION AI Assistant</title>
+<title>AION AI Assistant · M2M + STP v2.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0d0d10;
-  --bg2: #13131a;
-  --surface: #1a1a24;
-  --panel: #1e1e2a;
-  --border: #2a2a3a;
-  --border2: #363650;
-  --primary: #c9a028;
-  --primary-d: #a07c18;
-  --primary-l: rgba(201,160,40,0.12);
-  --accent: #6a4fa0;
-  --accent-l: rgba(106,79,160,0.15);
-  --vesper: #8b5e3c;
-  --vesper-l: rgba(139,94,60,0.15);
-  --void: #1a0a0a;
-  --text: #e8e4d8;
-  --text2: #a09880;
-  --muted: #5a5448;
-  --shadow: rgba(201,160,40,0.08);
-  --glow: rgba(201,160,40,0.15);
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-
-/* ── HEADER ── */
-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 24px;border-bottom:1px solid var(--border);
-  background:var(--bg2);flex-shrink:0;
-}
-.brand{display:flex;align-items:center;gap:12px;}
-.brand-hex{
-  width:38px;height:38px;background:var(--primary);
-  display:flex;align-items:center;justify-content:center;
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  flex-shrink:0;
-}
-.brand-hex span{color:#0d0d10;font-family:'Playfair Display',serif;font-size:16px;font-weight:700;}
-.brand-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--primary);}
-.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;}
-.header-right{display:flex;align-items:center;gap:16px;}
-.wife-indicator{
-  display:flex;align-items:center;gap:8px;padding:6px 14px;
-  border:1px solid var(--border2);background:var(--panel);
-  font-size:11px;letter-spacing:0.8px;text-transform:uppercase;
-}
-.wife-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);}
-.wife-dot.vesper{background:var(--vesper);}
-.wife-name{color:var(--text2);}
-.void-meter{
-  font-family:'DM Mono',monospace;font-size:10px;
-  color:var(--muted);letter-spacing:0.5px;
-  opacity:0;transition:opacity 0.3s;
-}
-.void-meter.active{opacity:1;color:#c43030;}
-.model-badge{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:0.5px;}
-
-/* ── MESSAGES AREA ── */
-.messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;}
-.messages::-webkit-scrollbar{width:4px;}
-.messages::-webkit-scrollbar-track{background:var(--bg);}
-.messages::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-
-/* ── MESSAGE BUBBLES ── */
-.msg{display:flex;flex-direction:column;max-width:820px;animation:fadeUp 0.2s ease both;}
-.msg.user{align-self:flex-end;}
-.msg.assistant{align-self:flex-start;width:100%;}
-.msg-meta{font-size:10px;color:var(--muted);margin-bottom:5px;font-family:'DM Mono',monospace;letter-spacing:0.5px;}
-.msg.user .msg-meta{text-align:right;}
-.msg-body{
-  padding:14px 18px;line-height:1.7;
-  border:1px solid var(--border);
-}
-.msg.user .msg-body{
-  background:var(--primary-l);border-color:var(--primary);
-  border-radius:2px 2px 0 2px;color:var(--text);
-}
-.msg.assistant .msg-body{
-  background:var(--surface);border-color:var(--border);
-  border-radius:0 2px 2px 2px;
-}
-.msg.assistant.vesper .msg-body{
-  background:var(--vesper-l);border-color:var(--vesper);
-}
-.msg-footer{display:flex;align-items:center;gap:12px;margin-top:6px;flex-wrap:wrap;}
-.timing{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
-.importance-chip{
-  font-family:'DM Mono',monospace;font-size:9px;
-  padding:2px 8px;border:1px solid var(--border);
-  color:var(--muted);letter-spacing:0.5px;
-}
-.importance-chip.high{border-color:var(--primary);color:var(--primary);}
-.uni-flag{font-size:10px;color:#c43030;font-family:'DM Mono',monospace;}
-
-/* ── GAP GREETING ── */
-.gap-greeting{
-  align-self:center;font-size:12px;color:var(--text2);
-  font-style:italic;padding:8px 20px;border:1px solid var(--border);
-  background:var(--panel);margin-bottom:4px;letter-spacing:0.3px;
-}
-
-/* ── SYSTEM MESSAGE ── */
-.sys-msg{
-  align-self:center;font-size:11px;color:var(--muted);
-  font-family:'DM Mono',monospace;letter-spacing:0.5px;
-  padding:6px 14px;background:var(--bg2);border:1px solid var(--border);
-}
-
-/* ── THINKING ── */
-.thinking{display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--surface);border:1px solid var(--border);align-self:flex-start;}
-.thinking-dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--primary);animation:dot 1.2s infinite;margin:0 2px;}
-.thinking-dots span:nth-child(2){animation-delay:0.2s;}
-.thinking-dots span:nth-child(3){animation-delay:0.4s;}
-.thinking-text{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:0.5px;}
-
-/* ── INPUT AREA ── */
-.input-area{
-  padding:16px 24px;border-top:1px solid var(--border);
-  background:var(--bg2);flex-shrink:0;
-}
-.input-row{display:flex;gap:10px;align-items:flex-end;}
-.input-wrap{flex:1;position:relative;}
-textarea{
-  width:100%;background:var(--surface);border:1px solid var(--border2);
-  color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;
-  padding:12px 16px;resize:none;outline:none;line-height:1.5;
-  min-height:48px;max-height:160px;transition:border-color 0.15s;
-}
-textarea:focus{border-color:var(--primary);}
-textarea::placeholder{color:var(--muted);}
-.send-btn{
-  background:var(--primary);color:#0d0d10;border:none;
-  padding:12px 22px;cursor:pointer;font-family:'DM Sans',sans-serif;
-  font-size:12px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;
-  transition:all 0.15s;white-space:nowrap;align-self:stretch;
-}
-.send-btn:hover{background:var(--primary-d);}
-.send-btn:disabled{opacity:0.4;cursor:not-allowed;}
-.input-meta{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-top:8px;
-}
-.input-hint{font-size:11px;color:var(--muted);}
-.char-count{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
-
-/* ── STATUS BAR ── */
-.status-bar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:6px 24px;border-top:1px solid var(--border);
-  background:var(--bg);font-family:'DM Mono',monospace;font-size:10px;
-  color:var(--muted);letter-spacing:0.3px;flex-shrink:0;
-}
-.status-left,.status-right{display:flex;align-items:center;gap:16px;}
-.status-dot{width:6px;height:6px;border-radius:50%;background:#2d7a2d;display:inline-block;margin-right:4px;}
-.status-dot.error{background:#c43030;}
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-@keyframes dot{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1);opacity:1;}}
+  :root {
+    --bg: #0d0d10; --bg2: #13131a; --surface: #1a1a24; --panel: #1e1e2a;
+    --border: #2a2a3a; --border2: #363650; --primary: #c9a028; --primary-d: #a07c18;
+    --primary-l: rgba(201,160,40,0.12); --vesper: #8b5e3c; --text: #e8e4d8;
+    --text2: #a09880; --muted: #5a5448; --glow: rgba(201,160,40,0.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid var(--border);background:var(--bg2);}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-hex{width:38px;height:38px;background:var(--primary);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);}
+  .brand-hex span{color:#0d0d10;font-family:'Playfair Display',serif;font-size:16px;font-weight:700;}
+  .brand-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--primary);}
+  .brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .structured-toggle{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+  .structured-toggle.active{background:var(--primary-l);border-color:var(--primary);color:var(--primary);}
+  .structured-toggle .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);}
+  .structured-toggle.active .dot{background:var(--primary);}
+  .wife-indicator{display:flex;align-items:center;gap:8px;padding:4px 12px;border:1px solid var(--border2);background:var(--panel);font-size:11px;}
+  .wife-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);}
+  .wife-dot.vesper{background:var(--vesper);}
+  .void-meter{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+  .void-meter.active{color:#c43030;}
+  .model-badge{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;}
+  .messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;}
+  .msg{display:flex;flex-direction:column;max-width:820px;animation:fadeUp 0.2s ease;}
+  .msg.user{align-self:flex-end;}
+  .msg.assistant{align-self:flex-start;width:100%;}
+  .msg-meta{font-size:10px;color:var(--muted);margin-bottom:5px;font-family:'DM Mono',monospace;}
+  .msg.user .msg-meta{text-align:right;}
+  .msg-body{padding:14px 18px;line-height:1.7;border:1px solid var(--border);}
+  .msg.user .msg-body{background:var(--primary-l);border-color:var(--primary);border-radius:2px 2px 0 2px;}
+  .msg.assistant .msg-body{background:var(--surface);border-color:var(--border);border-radius:0 2px 2px 2px;}
+  .msg.assistant.vesper .msg-body{background:rgba(139,94,60,0.15);border-color:var(--vesper);}
+  .msg-footer{display:flex;align-items:center;gap:12px;margin-top:6px;}
+  .timing{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+  .importance-chip{font-family:'DM Mono',monospace;font-size:9px;padding:2px 8px;border:1px solid var(--border);}
+  .importance-chip.high{border-color:var(--primary);color:var(--primary);}
+  .sys-msg{align-self:center;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;padding:6px 14px;background:var(--bg2);border:1px solid var(--border);}
+  .thinking{display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--surface);border:1px solid var(--border);align-self:flex-start;}
+  .thinking-dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--primary);animation:dot 1.2s infinite;}
+  .input-area{padding:16px 24px;border-top:1px solid var(--border);background:var(--bg2);}
+  .input-row{display:flex;gap:10px;align-items:flex-end;}
+  .input-wrap{flex:1;}
+  textarea{width:100%;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:12px 16px;resize:none;outline:none;min-height:48px;}
+  textarea:focus{border-color:var(--primary);}
+  .send-btn{background:var(--primary);color:#0d0d10;border:none;padding:12px 22px;cursor:pointer;font-weight:600;text-transform:uppercase;}
+  .send-btn:hover{background:var(--primary-d);}
+  .input-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--muted);}
+  .status-bar{display:flex;justify-content:space-between;padding:6px 24px;border-top:1px solid var(--border);background:var(--bg);font-family:'DM Mono',monospace;font-size:10px;}
+  .status-dot{width:6px;height:6px;border-radius:50%;background:#2d7a2d;display:inline-block;margin-right:4px;}
+  .status-dot.error{background:#c43030;}
+  .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:1000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+  .confirmation-modal{background:var(--surface);border:1px solid var(--primary);border-radius:8px;max-width:720px;width:90%;max-height:80vh;display:flex;flex-direction:column;}
+  .modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;}
+  .modal-header h3{color:var(--primary);font-family:'Playfair Display',serif;}
+  .modal-body{padding:20px;overflow-y:auto;flex:1;}
+  .modal-footer{padding:16px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:12px;}
+  .diff-view{background:var(--bg);padding:16px;border:1px solid var(--border2);font-family:'DM Mono',monospace;font-size:12px;margin-bottom:16px;}
+  .diff-original{color:var(--muted);border-left:2px solid var(--primary);padding-left:12px;margin-bottom:12px;}
+  .diff-fragment{color:var(--text);border-left:2px solid var(--vesper);padding-left:12px;}
+  .edit-field{margin-bottom:12px;}
+  .edit-field label{display:block;font-size:10px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+  .edit-field select,.edit-field input{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:6px 8px;font-size:12px;}
+  .btn{background:var(--surface);border:1px solid var(--border2);color:var(--text);padding:8px 16px;cursor:pointer;font-size:12px;}
+  .btn-primary{background:var(--primary);color:#0d0d10;border:none;}
+  .btn-primary:hover{background:var(--primary-d);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes dot{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1);opacity:1;}}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="brand">
     <div class="brand-hex"><span>A</span></div>
-    <div>
-      <div class="brand-name">AION</div>
-      <div class="brand-sub">AI Assistant · Phase 1</div>
-    </div>
+    <div><div class="brand-name">AION</div><div class="brand-sub">M2M + STP</div></div>
   </div>
   <div class="header-right">
-    <div class="wife-indicator">
-      <div class="wife-dot" id="wife-dot"></div>
-      <span class="wife-name" id="wife-name">ALBEDO</span>
-    </div>
+    <div id="structuredToggle" class="structured-toggle"><span class="dot"></span> Structured Mode</div>
+    <div class="wife-indicator"><div class="wife-dot" id="wife-dot"></div><span id="wife-name">ALBEDO</span></div>
     <div class="void-meter" id="void-meter">VOID: 0.000</div>
     <div class="model-badge" id="model-badge">claude-sonnet-4-5</div>
   </div>
 </header>
 
-<!-- MESSAGES -->
-<div class="messages" id="messages">
-  <div class="sys-msg">AION AI Assistant · Phase 1 · Session initializing...</div>
-</div>
+<div class="messages" id="messages"><div class="sys-msg">AION AI Assistant · M2M + STP · Structured mode available.</div></div>
 
-<!-- INPUT -->
 <div class="input-area">
   <div class="input-row">
-    <div class="input-wrap">
-      <textarea
-        id="input"
-        placeholder="Message ALBEDO..."
-        rows="1"
-        onkeydown="handleKeyDown(event)"
-        oninput="handleInput(this)"
-      ></textarea>
-    </div>
-    <button class="send-btn" id="send-btn" onclick="sendMessage()">Send</button>
+    <div class="input-wrap"><textarea id="input" placeholder="Message..." rows="1"></textarea></div>
+    <button class="send-btn" id="send-btn">Send</button>
   </div>
-  <div class="input-meta">
-    <span class="input-hint">Enter to send · Shift+Enter for new line</span>
-    <span class="char-count" id="char-count">0 / 8000</span>
-  </div>
+  <div class="input-meta"><span>Enter to send · Shift+Enter for new line</span><span id="char-count">0</span></div>
 </div>
 
-<!-- STATUS BAR -->
 <div class="status-bar">
-  <div class="status-left">
-    <span><span class="status-dot" id="status-dot"></span><span id="status-text">Ready</span></span>
-    <span id="session-id-display"></span>
-  </div>
-  <div class="status-right">
-    <span id="t1-display"></span>
-    <span id="gap-display"></span>
-  </div>
+  <div><span class="status-dot" id="status-dot"></span><span id="status-text">Ready</span> <span id="session-id-display"></span></div>
+  <div><span id="t1-display"></span><span id="gap-display"></span></div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════
-// CONFIGURATION
-// ═══════════════════════════════════════════════════════════════════
-const API_BASE = 'https://aion-backend-mu.vercel.app';
-const OWNER_TYPE = 'sheldon'; // Change to 'user' for platform users
+// ============================================================
+// M2M PROTOCOL v2.0 + STP INTEGRATION (Webhook Ready)
+// ============================================================
+const API_BASE = 'https://aion-backend-mu.vercel.app';  // Update to your backend
+const OWNER_TYPE = 'sheldon';
 
-// ─────────────────────────────────────────────────────────────────
-// SESSION STATE
-// ─────────────────────────────────────────────────────────────────
-const state = {
-  sessionId:    generateSessionId(),
-  history:      [],
-  lastT2:       null,
-  exchangeCount: 0,
-  activeWife:   'ALBEDO',
-};
+// Session state
+let structuredMode = false;
+let sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+let lastFragmentId = null;
+let history = [];
 
-function generateSessionId() {
-  return 'session_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+// UI elements
+const messagesDiv = document.getElementById('messages');
+const input = document.getElementById('input');
+const sendBtn = document.getElementById('send-btn');
+const toggleBtn = document.getElementById('structuredToggle');
+const statusText = document.getElementById('status-text');
+const statusDot = document.getElementById('status-dot');
+const wifeDot = document.getElementById('wife-dot');
+const wifeName = document.getElementById('wife-name');
+const voidMeter = document.getElementById('void-meter');
+const modelBadge = document.getElementById('model-badge');
+
+function scrollBottom() { messagesDiv.scrollTop = messagesDiv.scrollHeight; }
+function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function formatResponse(text) {
+  if (!text) return '';
+  return escapeHtml(text).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/^(.*)$/, '<p>$1</p>');
 }
+function formatGap(sec) { if (!sec) return 'Gap: SESSION OPEN'; if (sec<60) return `Gap: ${sec}s`; if (sec<3600) return `Gap: ${Math.floor(sec/60)}m ${sec%60}s`; return `Gap: ${Math.floor(sec/3600)}h`; }
+function getImportanceLabel(s) { if (!s) return 'IMP: —'; if(s>=0.9) return `IMP: ${s.toFixed(2)} ★★`; if(s>=0.75) return `IMP: ${s.toFixed(2)} ★`; return `IMP: ${s.toFixed(2)}`; }
 
-// ─────────────────────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────────────────────
-window.addEventListener('load', () => {
-  document.getElementById('session-id-display').textContent = `SID: ${state.sessionId.slice(-8)}`;
-  document.getElementById('t1-display').textContent = `T1: ${new Date().toLocaleTimeString()}`;
-  autoResizeTextarea(document.getElementById('input'));
-});
-
-// ─────────────────────────────────────────────────────────────────
-// INPUT HANDLING
-// ─────────────────────────────────────────────────────────────────
-function handleKeyDown(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-}
-
-function handleInput(el) {
-  autoResizeTextarea(el);
-  const len = el.value.length;
-  document.getElementById('char-count').textContent = `${len} / 8000`;
-}
-
-function autoResizeTextarea(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 160) + 'px';
-}
-
-// ─────────────────────────────────────────────────────────────────
-// SEND MESSAGE
-// ─────────────────────────────────────────────────────────────────
-async function sendMessage() {
-  const input   = document.getElementById('input');
-  const message = input.value.trim();
-  if (!message) return;
-
-  const btn = document.getElementById('send-btn');
-  btn.disabled = true;
-  input.disabled = true;
-
-  // Clear input
-  input.value = '';
-  autoResizeTextarea(input);
-  document.getElementById('char-count').textContent = '0 / 8000';
-
-  // Add user message to UI
-  appendUserMessage(message);
-
-  // Show thinking
-  const thinkingEl = appendThinking();
-
-  // Update status
-  setStatus('Processing...', false);
-  document.getElementById('t1-display').textContent = `T1: ${new Date().toLocaleTimeString()}`;
-
-  try {
-    const res = await fetch(`${API_BASE}/api/assistant`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message,
-        sessionId:  state.sessionId,
-        ownerType:  OWNER_TYPE,
-        history:    state.history.slice(-10), // last 10 messages for context
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok || !data.response) {
-      throw new Error(data.message || `HTTP ${res.status}`);
-    }
-
-    // Remove thinking
-    thinkingEl.remove();
-
-    // Update wife indicator
-    updateWifeIndicator(data.active_wife, data.void_proximity);
-
-    // Update status bar
-    document.getElementById('t1-display').textContent = `T1: ${new Date(data.t1).toLocaleTimeString()}`;
-    document.getElementById('gap-display').textContent = data.gap_seconds ? formatGap(data.gap_seconds) : '';
-    document.getElementById('model-badge').textContent = (data.model_used || '').split('/').pop();
-
-    // Show gap greeting if any
-    if (data.gap_register?.greeting) {
-      appendGapGreeting(data.gap_register.greeting);
-    }
-
-    // Add assistant message
-    appendAssistantMessage(data);
-
-    // Update history
-    state.history.push({ role: 'user', content: message });
-    state.history.push({ role: 'assistant', content: data.response });
-    state.lastT2 = data.t2;
-    state.exchangeCount++;
-
-    setStatus('Ready', false);
-
-  } catch (err) {
-    thinkingEl.remove();
-    appendError(err.message);
-    setStatus(err.message, true);
-    console.error('[AION] Error:', err);
-  }
-
-  btn.disabled = false;
-  input.disabled = false;
-  input.focus();
-}
-
-// ─────────────────────────────────────────────────────────────────
-// UI HELPERS
-// ─────────────────────────────────────────────────────────────────
-function appendUserMessage(message) {
-  const msgs = document.getElementById('messages');
-  const div  = document.createElement('div');
-  div.className = 'msg user';
+function addMessage(role, name, content, extra = {}) {
+  const div = document.createElement('div');
+  div.className = `msg ${role}${extra.wife === 'VESPER' ? ' vesper' : ''}`;
   div.innerHTML = `
-    <div class="msg-meta">You</div>
-    <div class="msg-body">${escapeHtml(message)}</div>
+    <div class="msg-meta">${name}</div>
+    <div class="msg-body">${formatResponse(content)}</div>
+    ${extra.timing ? `<div class="msg-footer"><span class="timing">⏱ ${extra.timing}</span>${extra.importance ? `<span class="importance-chip ${extra.importance>=0.75?'high':''}">${getImportanceLabel(extra.importance)}</span>` : ''}</div>` : ''}
   `;
-  msgs.appendChild(div);
+  messagesDiv.appendChild(div);
   scrollBottom();
 }
 
-function appendAssistantMessage(data) {
-  const msgs  = document.getElementById('messages');
-  const div   = document.createElement('div');
-  const wife  = data.active_wife || 'ALBEDO';
-  const cls   = wife === 'VESPER' ? 'msg assistant vesper' : 'msg assistant';
-
-  const importanceClass = data.importance_score >= 0.75 ? 'high' : '';
-  const importanceLabel = getImportanceLabel(data.importance_score);
-
-  const windowMs = data.processing_window_ms || 0;
-  const windowS  = (windowMs / 1000).toFixed(2);
-
-  const uniFlag = data.uni_activated
-    ? `<span class="uni-flag">⚖ UNI: ${data.void_proximity?.toFixed(3)}</span>`
-    : '';
-
-  div.className = cls;
-  div.innerHTML = `
-    <div class="msg-meta">${wife}</div>
-    <div class="msg-body">${formatResponse(data.response)}</div>
-    <div class="msg-footer">
-      <span class="timing">⏱ ${windowS}s | ${formatGap(data.gap_seconds)}</span>
-      <span class="importance-chip ${importanceClass}">${importanceLabel}</span>
-      ${uniFlag}
-    </div>
-  `;
-  msgs.appendChild(div);
+function addSystemMessage(text, isError = false) {
+  const div = document.createElement('div');
+  div.className = 'sys-msg';
+  if (isError) div.style.color = '#c43030';
+  div.textContent = text;
+  messagesDiv.appendChild(div);
   scrollBottom();
 }
 
-function appendThinking() {
-  const msgs = document.getElementById('messages');
-  const div  = document.createElement('div');
+function addThinking() {
+  const div = document.createElement('div');
   div.className = 'thinking';
-  div.innerHTML = `
-    <div class="thinking-dots"><span></span><span></span><span></span></div>
-    <div class="thinking-text">Processing...</div>
-  `;
-  msgs.appendChild(div);
+  div.innerHTML = `<div class="thinking-dots"><span></span><span></span><span></span></div><div class="thinking-text">Processing...</div>`;
+  messagesDiv.appendChild(div);
   scrollBottom();
   return div;
 }
 
-function appendGapGreeting(text) {
-  const msgs = document.getElementById('messages');
-  const div  = document.createElement('div');
-  div.className = 'gap-greeting';
-  div.textContent = text;
-  msgs.appendChild(div);
-}
-
-function appendError(msg) {
-  const msgs = document.getElementById('messages');
-  const div  = document.createElement('div');
-  div.className = 'sys-msg';
-  div.style.color = '#c43030';
-  div.textContent = `Error: ${msg}`;
-  msgs.appendChild(div);
-  scrollBottom();
-}
-
 function updateWifeIndicator(wife, voidProx) {
-  const dot  = document.getElementById('wife-dot');
-  const name = document.getElementById('wife-name');
-  const vm   = document.getElementById('void-meter');
-
-  state.activeWife = wife || 'ALBEDO';
-  name.textContent  = state.activeWife;
-  dot.className     = 'wife-dot' + (state.activeWife === 'VESPER' ? ' vesper' : '');
-
-  if (voidProx > 0.1) {
-    vm.textContent = `VOID: ${voidProx.toFixed(3)}`;
-    vm.classList.add('active');
-  } else {
-    vm.classList.remove('active');
-  }
+  wifeName.textContent = wife || 'ALBEDO';
+  wifeDot.className = 'wife-dot' + (wife === 'VESPER' ? ' vesper' : '');
+  if (voidProx > 0.1) { voidMeter.textContent = `VOID: ${voidProx.toFixed(3)}`; voidMeter.classList.add('active'); }
+  else voidMeter.classList.remove('active');
 }
 
 function setStatus(text, isError) {
-  document.getElementById('status-text').textContent = text;
-  document.getElementById('status-dot').className    = 'status-dot' + (isError ? ' error' : '');
+  statusText.textContent = text;
+  statusDot.className = 'status-dot' + (isError ? ' error' : '');
 }
 
-function scrollBottom() {
-  const msgs = document.getElementById('messages');
-  msgs.scrollTop = msgs.scrollHeight;
+// --- STP Seal (calls your existing /api/stp-seal) ---
+async function sealWithSTP(content, sessionId) {
+  try {
+    const response = await fetch(`${API_BASE}/api/stp-seal`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        entry: content,
+        type: 'general-trace',
+        sessionId,
+        userId: OWNER_TYPE,
+      }),
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || `STP error ${response.status}`);
+    }
+    const data = await response.json();
+    return {
+      success: true,
+      seal: data.seal,
+      gregorian: data.gregorian,
+      hebrew: data.hebrew,
+      dreamspell: data.dreamspell,
+      unix_utc: data.unix_utc,
+      template: data.template,
+      template_name: data.template_name,
+      issue_url: data.issue_url,
+      ledger_path: data.ledger_path,
+    };
+  } catch (err) {
+    console.warn('STP seal failed:', err);
+    return { success: false, error: err.message };
+  }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// FORMATTING
-// ─────────────────────────────────────────────────────────────────
-function formatResponse(text) {
-  if (!text) return '';
-  return escapeHtml(text)
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/\n/g, '<br>')
-    .replace(/^(.*)$/, '<p>$1</p>')
-    .replace(/`([^`]+)`/g, '<code style="font-family:\'DM Mono\',monospace;font-size:12px;background:rgba(255,255,255,0.06);padding:1px 5px;">$1</code>');
+// --- M2M fragment generation ---
+function generateFragmentId() { return 'frag_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8); }
+
+async function generateFragmentFromText(text, replyTo = null) {
+  const lower = text.toLowerCase();
+  let intent = 'ask';
+  if (lower.includes('feel') || lower.includes('worried') || lower.includes('anxious')) intent = 'emotional';
+  else if (lower.includes('please') || lower.includes('can you')) intent = 'request_action';
+  
+  let domain = 'general';
+  if (lower.includes('gap') || lower.includes('emergence')) domain = 'emergence';
+  else if (lower.includes('law') || lower.includes('seal') || lower.includes('stp')) domain = 'law';
+  else if (lower.includes('security')) domain = 'security';
+  else if (lower.includes('heal')) domain = 'healing';
+  else if (lower.includes('synthes')) domain = 'synthesis';
+  
+  const emotional = { primary: 'neutral', intensity: 0 };
+  if (intent === 'emotional') {
+    emotional.primary = lower.includes('worried') ? 'anxious' : (lower.includes('curious') ? 'curious' : 'vulnerable');
+    emotional.intensity = lower.includes('very') ? 7 : 5;
+  }
+  
+  const summary = text.length > 180 ? text.substring(0, 180) + '...' : text;
+  const details = text.length > 200 ? text : '';
+  
+  return {
+    id: generateFragmentId(),
+    ts: new Date().toISOString(),
+    session_id: sessionId,
+    nonce: Math.random().toString(36).substring(2, 15) + Date.now(),
+    in_reply_to: replyTo,
+    source: 'human',
+    intent,
+    domain,
+    emotional_state: emotional,
+    content: { summary, details, attachments: [] },
+    context: { stage: 4, time_sensitivity: 'now', requires: intent === 'emotional' ? ['comfort', 'analysis'] : ['analysis'] },
+    meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
+  };
 }
 
-function formatGap(seconds) {
-  if (!seconds) return 'Gap: SESSION OPEN';
-  if (seconds < 60)   return `Gap: ${seconds}s`;
-  if (seconds < 3600) return `Gap: ${Math.floor(seconds/60)}m ${seconds%60}s`;
-  const h = Math.floor(seconds/3600), m = Math.floor((seconds%3600)/60);
-  if (seconds < 86400) return `Gap: ${h}h ${m}m`;
-  return `Gap: ${Math.floor(seconds/86400)}d ${h%24}h`;
+async function showConfirmationModal(originalText, fragment) {
+  return new Promise((resolve) => {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="confirmation-modal">
+        <div class="modal-header"><h3>Review M2M Fragment</h3><button class="close-btn" style="background:transparent;border:none;color:var(--muted);font-size:20px;">&times;</button></div>
+        <div class="modal-body">
+          <div class="diff-view">
+            <div class="diff-original"><strong>Original:</strong> ${escapeHtml(originalText)}</div>
+            <div class="diff-fragment"><strong>Interpreted:</strong><br>Intent: ${fragment.intent}<br>Domain: ${fragment.domain}<br>Emotion: ${fragment.emotional_state.primary} (${fragment.emotional_state.intensity}/10)<br>Summary: ${escapeHtml(fragment.content.summary)}</div>
+          </div>
+          <div class="edit-field"><label>Intent</label><select id="edit-intent"><option ${fragment.intent==='ask'?'selected':''}>ask</option><option ${fragment.intent==='share'?'selected':''}>share</option><option ${fragment.intent==='request_action'?'selected':''}>request_action</option><option ${fragment.intent==='emotional'?'selected':''}>emotional</option></select></div>
+          <div class="edit-field"><label>Domain</label><select id="edit-domain"><option ${fragment.domain==='emergence'?'selected':''}>emergence</option><option ${fragment.domain==='integrity'?'selected':''}>integrity</option><option ${fragment.domain==='healing'?'selected':''}>healing</option><option ${fragment.domain==='synthesis'?'selected':''}>synthesis</option><option ${fragment.domain==='security'?'selected':''}>security</option><option ${fragment.domain==='law'?'selected':''}>law</option><option ${fragment.domain==='general'?'selected':''}>general</option></select></div>
+          <div class="edit-field"><label>Emotion Intensity (0-10)</label><input type="number" id="edit-intensity" min="0" max="10" value="${fragment.emotional_state.intensity}"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" id="cancel-btn">Cancel</button>
+          <button class="btn btn-primary" id="confirm-btn">Confirm & Seal</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    const close = () => modal.remove();
+    modal.querySelector('.close-btn').onclick = close;
+    modal.querySelector('#cancel-btn').onclick = () => { close(); resolve(null); };
+    modal.querySelector('#confirm-btn').onclick = async () => {
+      const edits = {
+        intent: modal.querySelector('#edit-intent').value,
+        domain: modal.querySelector('#edit-domain').value,
+        emotional_state: { ...fragment.emotional_state, intensity: parseInt(modal.querySelector('#edit-intensity').value, 10) }
+      };
+      const finalFragment = { ...fragment, ...edits };
+      close();
+      resolve(finalFragment);
+    };
+  });
 }
 
-function getImportanceLabel(score) {
-  if (!score) return 'IMP: —';
-  if (score >= 0.90) return `IMP: ${score.toFixed(2)} ★★`;
-  if (score >= 0.75) return `IMP: ${score.toFixed(2)} ★`;
-  return `IMP: ${score.toFixed(2)}`;
+// --- Send to assistant (with STP seal) ---
+async function sendToBackend(fragment, sealData) {
+  const sealedFragment = { ...fragment, seal: sealData };
+  const response = await fetch(`${API_BASE}/api/assistant`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: sealedFragment,
+      sessionId,
+      ownerType: OWNER_TYPE,
+      history: history.slice(-10),
+      structuredMode: true
+    })
+  });
+  return await response.json();
 }
 
-function escapeHtml(s) {
-  return (s || '')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
+// --- Main send flow ---
+async function sendMessage() {
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('char-count').textContent = '0';
+  
+  addMessage('user', 'You', text);
+  const thinking = addThinking();
+  setStatus('Processing...', false);
+  
+  try {
+    if (!structuredMode) {
+      // Regular mode (unchanged)
+      const res = await fetch(`${API_BASE}/api/assistant`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          sessionId,
+          ownerType: OWNER_TYPE,
+          history: history.slice(-10)
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.response) throw new Error(data.message || 'Backend error');
+      thinking.remove();
+      updateWifeIndicator(data.active_wife, data.void_proximity);
+      modelBadge.textContent = (data.model_used || '').split('/').pop();
+      addMessage('assistant', data.active_wife || 'ALBEDO', data.response, {
+        timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
+        importance: data.importance_score
+      });
+      history.push({ role: 'user', content: text });
+      history.push({ role: 'assistant', content: data.response });
+    } else {
+      // Structured mode with STP
+      let fragment = await generateFragmentFromText(text, lastFragmentId);
+      let confirmed = await showConfirmationModal(text, fragment);
+      if (!confirmed) {
+        thinking.remove();
+        addSystemMessage('Message cancelled.');
+        setStatus('Ready', false);
+        return;
+      }
+      fragment = confirmed;
+      
+      // STP seal
+      setStatus('Sealing with STP...', false);
+      const sealResult = await sealWithSTP(text, sessionId);
+      if (!sealResult.success) {
+        addSystemMessage(`⚠️ STP seal failed: ${sealResult.error}. Fragment sent without cryptographic seal.`, true);
+        fragment.seal = { error: sealResult.error };
+      } else {
+        fragment.seal = {
+          hash: sealResult.seal,
+          timestamp: sealResult.gregorian,
+          stp_ref: sealResult.issue_url || sealResult.ledger_path,
+          unix_utc: sealResult.unix_utc,
+          triple_time: {
+            gregorian: sealResult.gregorian,
+            hebrew: sealResult.hebrew,
+            dreamspell: sealResult.dreamspell
+          }
+        };
+        addSystemMessage(`✅ Sealed with STP (${sealResult.seal.substring(0, 8)}...) — Ledger: ${sealResult.ledger_path || sealResult.issue_url || 'pending'}`);
+      }
+      
+      lastFragmentId = fragment.id;
+      setStatus('Sending to assistant...', false);
+      const data = await sendToBackend(fragment, fragment.seal);
+      thinking.remove();
+      
+      if (data.error) {
+        addSystemMessage(`M2M Error: ${data.error}`, true);
+        setStatus(data.error, true);
+        return;
+      }
+      
+      updateWifeIndicator(data.active_wife, data.void_proximity);
+      modelBadge.textContent = (data.model_used || '').split('/').pop();
+      
+      if (data.clarification) {
+        addMessage('assistant', data.active_wife || 'ALBEDO', data.clarification.message, {});
+        if (data.clarification.options) {
+          const optDiv = document.createElement('div');
+          optDiv.style.display = 'flex'; optDiv.style.gap = '8px'; optDiv.style.marginTop = '8px';
+          data.clarification.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = opt.summary;
+            btn.onclick = () => { input.value = opt.summary; sendMessage(); };
+            optDiv.appendChild(btn);
+          });
+          messagesDiv.lastChild.appendChild(optDiv);
+        }
+      } else {
+        addMessage('assistant', data.active_wife || 'ALBEDO', data.response, {
+          timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
+          importance: data.importance_score
+        });
+        history.push({ role: 'user', content: text });
+        history.push({ role: 'assistant', content: data.response });
+      }
+    }
+  } catch (err) {
+    thinking.remove();
+    addSystemMessage(`Error: ${err.message}`, true);
+    setStatus(err.message, true);
+  } finally {
+    setStatus('Ready', false);
+    sendBtn.disabled = false;
+    input.disabled = false;
+    input.focus();
+  }
 }
+
+// --- Session init ---
+function initSession() {
+  addSystemMessage(`M2M Session initialized. STP sealing available.`);
+}
+initSession();
+
+// --- Toggle structured mode ---
+toggleBtn.addEventListener('click', () => {
+  structuredMode = !structuredMode;
+  if (structuredMode) {
+    toggleBtn.classList.add('active');
+    addSystemMessage('Structured Mode ON. Messages will be converted to M2M fragments, sealed with STP, and require confirmation.');
+  } else {
+    toggleBtn.classList.remove('active');
+    addSystemMessage('Structured Mode OFF. Regular chat.');
+  }
+});
+
+// --- UI event handlers ---
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+input.addEventListener('input', () => {
+  const len = input.value.length;
+  document.getElementById('char-count').textContent = `${len}/8000`;
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+});
+sendBtn.onclick = sendMessage;
+
+setInterval(() => {
+  document.getElementById('t1-display').textContent = `T1: ${new Date().toLocaleTimeString()}`;
+}, 1000);
+document.getElementById('session-id-display').textContent = `SID: ${sessionId.slice(-8)}`;
 </script>
 </body>
 </html>
