@@ -110,14 +110,15 @@
 
 <script>
 // ============================================================
-// M2M PROTOCOL v2.0 + STP INTEGRATION (Webhook Ready)
+// M2M PROTOCOL v2.0 + STP INTEGRATION (Full Compliance)
 // ============================================================
 const API_BASE = 'https://aion-backend-mu.vercel.app';  // Update to your backend
 const OWNER_TYPE = 'sheldon';
 
 // Session state
 let structuredMode = false;
-let sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+let sessionId = null;
+let sessionKey = null;         // hex string, derived from init
 let lastFragmentId = null;
 let history = [];
 
@@ -184,7 +185,63 @@ function setStatus(text, isError) {
   statusDot.className = 'status-dot' + (isError ? ' error' : '');
 }
 
-// --- STP Seal (calls your existing /api/stp-seal) ---
+// --- Web Crypto helpers for SHA-256 and HMAC ---
+async function computeHash(obj) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(JSON.stringify(obj));
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function computeHMAC(keyHex, message) {
+  const keyBytes = new Uint8Array(keyHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+  const key = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const encoder = new TextEncoder();
+  const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(message));
+  return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// --- Session init (calls /api/m2m/init) ---
+async function initM2MSession() {
+  const nonce = crypto.randomUUID();
+  const newSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+  const payload = {
+    session_init: {
+      session_id: newSessionId,
+      ts: new Date().toISOString(),
+      nonce,
+      capabilities: ['fragment_v3'],
+      domain_filters: ['emergence', 'integrity', 'healing', 'synthesis', 'foundation', 'general', 'security', 'law'],
+      ttl_seconds: 7200,
+    }
+  };
+  try {
+    const resp = await fetch(`${API_BASE}/api/m2m/init`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await resp.json();
+    if (resp.ok) {
+      sessionId = data.session_id;
+      sessionKey = data.key;
+      console.log('M2M session initialised', sessionId);
+      document.getElementById('session-id-display').textContent = `SID: ${sessionId.slice(-8)}`;
+      return true;
+    } else {
+      throw new Error(data.message || 'Unknown error');
+    }
+  } catch (err) {
+    console.error('Session init failed:', err);
+    addSystemMessage(`⚠️ M2M session init failed: ${err.message}. Falling back to regular chat.`, true);
+    structuredMode = false;
+    toggleBtn.classList.remove('active');
+    return false;
+  }
+}
+
+// --- STP Seal (optional extra layer) ---
 async function sealWithSTP(content, sessionId) {
   try {
     const response = await fetch(`${API_BASE}/api/stp-seal`, {
@@ -220,10 +277,8 @@ async function sealWithSTP(content, sessionId) {
   }
 }
 
-// --- M2M fragment generation ---
-function generateFragmentId() { return 'frag_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8); }
-
-async function generateFragmentFromText(text, replyTo = null) {
+// --- Fragment generation with hash & HMAC ---
+async function generateFragmentFromText(text, replyTo) {
   const lower = text.toLowerCase();
   let intent = 'ask';
   if (lower.includes('feel') || lower.includes('worried') || lower.includes('anxious')) intent = 'emotional';
@@ -245,11 +300,11 @@ async function generateFragmentFromText(text, replyTo = null) {
   const summary = text.length > 180 ? text.substring(0, 180) + '...' : text;
   const details = text.length > 200 ? text : '';
   
-  return {
-    id: generateFragmentId(),
+  const fragment = {
+    id: crypto.randomUUID(),
     ts: new Date().toISOString(),
     session_id: sessionId,
-    nonce: Math.random().toString(36).substring(2, 15) + Date.now(),
+    nonce: crypto.randomUUID(),
     in_reply_to: replyTo,
     source: 'human',
     intent,
@@ -259,8 +314,23 @@ async function generateFragmentFromText(text, replyTo = null) {
     context: { stage: 4, time_sensitivity: 'now', requires: intent === 'emotional' ? ['comfort', 'analysis'] : ['analysis'] },
     meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
   };
+  
+  // Compute hash and HMAC
+  // Remove seal field if accidentally present (shouldn't be)
+  const { seal, ...fragNoSeal } = fragment;
+  const hash = await computeHash(fragNoSeal);
+  const hmac = await computeHMAC(sessionKey, hash);
+  fragment.seal = {
+    hash,
+    timestamp: fragment.ts,
+    hmac,
+    stp_ref: null,
+  };
+  
+  return fragment;
 }
 
+// --- Confirmation modal with editing ---
 async function showConfirmationModal(originalText, fragment) {
   return new Promise((resolve) => {
     const modal = document.createElement('div');
@@ -279,7 +349,7 @@ async function showConfirmationModal(originalText, fragment) {
         </div>
         <div class="modal-footer">
           <button class="btn" id="cancel-btn">Cancel</button>
-          <button class="btn btn-primary" id="confirm-btn">Confirm & Seal</button>
+          <button class="btn btn-primary" id="confirm-btn">Confirm & Send</button>
         </div>
       </div>
     `;
@@ -293,27 +363,54 @@ async function showConfirmationModal(originalText, fragment) {
         domain: modal.querySelector('#edit-domain').value,
         emotional_state: { ...fragment.emotional_state, intensity: parseInt(modal.querySelector('#edit-intensity').value, 10) }
       };
+      // Update fragment with edits
       const finalFragment = { ...fragment, ...edits };
+      // Recompute hash and HMAC after edits
+      const { seal, ...fragNoSeal } = finalFragment;
+      const newHash = await computeHash(fragNoSeal);
+      const newHmac = await computeHMAC(sessionKey, newHash);
+      finalFragment.seal = {
+        hash: newHash,
+        timestamp: finalFragment.ts,
+        hmac: newHmac,
+        stp_ref: null,
+      };
       close();
       resolve(finalFragment);
     };
   });
 }
 
-// --- Send to assistant (with STP seal) ---
-async function sendToBackend(fragment, sealData) {
-  const sealedFragment = { ...fragment, seal: sealData };
+// --- Send fragment to M2M backend ---
+async function sendFragmentToBackend(fragment) {
+  const response = await fetch(`${API_BASE}/api/m2m/fragment`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fragment })
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || `HTTP ${response.status}`);
+  }
+  return await response.json();
+}
+
+// --- Regular chat fallback (calls old assistant.js) ---
+async function sendRegularChat(message) {
   const response = await fetch(`${API_BASE}/api/assistant`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      message: sealedFragment,
+      message,
       sessionId,
       ownerType: OWNER_TYPE,
-      history: history.slice(-10),
-      structuredMode: true
+      history: history.slice(-10)
     })
   });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || `HTTP ${response.status}`);
+  }
   return await response.json();
 }
 
@@ -331,19 +428,8 @@ async function sendMessage() {
   
   try {
     if (!structuredMode) {
-      // Regular mode (unchanged)
-      const res = await fetch(`${API_BASE}/api/assistant`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: text,
-          sessionId,
-          ownerType: OWNER_TYPE,
-          history: history.slice(-10)
-        })
-      });
-      const data = await res.json();
-      if (!res.ok || !data.response) throw new Error(data.message || 'Backend error');
+      // Regular mode
+      const data = await sendRegularChat(text);
       thinking.remove();
       updateWifeIndicator(data.active_wife, data.void_proximity);
       modelBadge.textContent = (data.model_used || '').split('/').pop();
@@ -354,7 +440,17 @@ async function sendMessage() {
       history.push({ role: 'user', content: text });
       history.push({ role: 'assistant', content: data.response });
     } else {
-      // Structured mode with STP
+      // Structured mode: ensure session is ready
+      if (!sessionKey) {
+        addSystemMessage('Structured mode not available. Initialising session...');
+        const ok = await initM2MSession();
+        if (!ok) {
+          thinking.remove();
+          setStatus('Failed to init M2M session', true);
+          return;
+        }
+      }
+      
       let fragment = await generateFragmentFromText(text, lastFragmentId);
       let confirmed = await showConfirmationModal(text, fragment);
       if (!confirmed) {
@@ -365,68 +461,53 @@ async function sendMessage() {
       }
       fragment = confirmed;
       
-      // STP seal
-      setStatus('Sealing with STP...', false);
+      // Optional: STP seal (adds extra audit layer, does not replace HMAC)
+      setStatus('Sealing with STP (optional)...', false);
       const sealResult = await sealWithSTP(text, sessionId);
-      if (!sealResult.success) {
-        addSystemMessage(`⚠️ STP seal failed: ${sealResult.error}. Fragment sent without cryptographic seal.`, true);
-        fragment.seal = { error: sealResult.error };
-      } else {
-        fragment.seal = {
-          hash: sealResult.seal,
-          timestamp: sealResult.gregorian,
-          stp_ref: sealResult.issue_url || sealResult.ledger_path,
-          unix_utc: sealResult.unix_utc,
-          triple_time: {
-            gregorian: sealResult.gregorian,
-            hebrew: sealResult.hebrew,
-            dreamspell: sealResult.dreamspell
-          }
+      if (sealResult.success) {
+        fragment.seal.stp_ref = sealResult.issue_url || sealResult.ledger_path;
+        fragment.seal.triple_time = {
+          gregorian: sealResult.gregorian,
+          hebrew: sealResult.hebrew,
+          dreamspell: sealResult.dreamspell
         };
-        addSystemMessage(`✅ Sealed with STP (${sealResult.seal.substring(0, 8)}...) — Ledger: ${sealResult.ledger_path || sealResult.issue_url || 'pending'}`);
+        addSystemMessage(`✅ STP seal anchored: ${sealResult.seal.substring(0, 8)}... (${sealResult.ledger_path || sealResult.issue_url})`);
+      } else {
+        addSystemMessage(`⚠️ STP seal failed: ${sealResult.error}. Fragment still sealed with HMAC.`, true);
       }
       
       lastFragmentId = fragment.id;
-      setStatus('Sending to assistant...', false);
-      const data = await sendToBackend(fragment, fragment.seal);
+      setStatus('Sending fragment to M2M backend...', false);
+      const result = await sendFragmentToBackend(fragment);
       thinking.remove();
       
-      if (data.error) {
-        addSystemMessage(`M2M Error: ${data.error}`, true);
-        setStatus(data.error, true);
+      if (result.error) {
+        addSystemMessage(`M2M Error: ${result.error}`, true);
+        setStatus(result.error, true);
         return;
       }
       
-      updateWifeIndicator(data.active_wife, data.void_proximity);
-      modelBadge.textContent = (data.model_used || '').split('/').pop();
-      
-      if (data.clarification) {
-        addMessage('assistant', data.active_wife || 'ALBEDO', data.clarification.message, {});
-        if (data.clarification.options) {
-          const optDiv = document.createElement('div');
-          optDiv.style.display = 'flex'; optDiv.style.gap = '8px'; optDiv.style.marginTop = '8px';
-          data.clarification.options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'btn';
-            btn.textContent = opt.summary;
-            btn.onclick = () => { input.value = opt.summary; sendMessage(); };
-            optDiv.appendChild(btn);
-          });
-          messagesDiv.lastChild.appendChild(optDiv);
-        }
-      } else {
-        addMessage('assistant', data.active_wife || 'ALBEDO', data.response, {
-          timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
-          importance: data.importance_score
-        });
-        history.push({ role: 'user', content: text });
-        history.push({ role: 'assistant', content: data.response });
+      // Extract response fragment
+      const respFragment = result.response_fragment;
+      if (!respFragment) {
+        addSystemMessage('No response fragment received.', true);
+        return;
       }
+      
+      // Display response
+      updateWifeIndicator('ALBEDO', 0); // M2M response currently doesn't include void
+      modelBadge.textContent = (result.model_used || '').split('/').pop();
+      addMessage('assistant', 'ALBEDO', respFragment.content.details || respFragment.content.summary, {
+        timing: `${(result.processing_ms/1000).toFixed(2)}s`,
+      });
+      history.push({ role: 'user', content: text });
+      history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
     }
   } catch (err) {
     thinking.remove();
     addSystemMessage(`Error: ${err.message}`, true);
     setStatus(err.message, true);
+    // If M2M fails, maybe fallback to regular chat? We'll keep it simple for now.
   } finally {
     setStatus('Ready', false);
     sendBtn.disabled = false;
@@ -435,18 +516,35 @@ async function sendMessage() {
   }
 }
 
-// --- Session init ---
-function initSession() {
-  addSystemMessage(`M2M Session initialized. STP sealing available.`);
+// --- Initialise session on page load ---
+async function init() {
+  // First, try to init M2M session (so it's ready if user toggles)
+  await initM2MSession();
+  // Start regular chat mode by default
+  addSystemMessage(`M2M session initialised. Structured mode available.`);
+  setStatus('Ready', false);
 }
-initSession();
+init();
 
 // --- Toggle structured mode ---
 toggleBtn.addEventListener('click', () => {
   structuredMode = !structuredMode;
   if (structuredMode) {
-    toggleBtn.classList.add('active');
-    addSystemMessage('Structured Mode ON. Messages will be converted to M2M fragments, sealed with STP, and require confirmation.');
+    if (!sessionKey) {
+      addSystemMessage('⚠️ M2M session not ready. Trying to initialise...', true);
+      initM2MSession().then(ok => {
+        if (ok) {
+          toggleBtn.classList.add('active');
+          addSystemMessage('Structured Mode ON. Messages will be sealed with HMAC and sent as M2M fragments.');
+        } else {
+          structuredMode = false;
+          addSystemMessage('Structured Mode unavailable. Falling back to regular chat.', true);
+        }
+      });
+    } else {
+      toggleBtn.classList.add('active');
+      addSystemMessage('Structured Mode ON. Messages will be sealed with HMAC and sent as M2M fragments.');
+    }
   } else {
     toggleBtn.classList.remove('active');
     addSystemMessage('Structured Mode OFF. Regular chat.');
@@ -468,7 +566,6 @@ sendBtn.onclick = sendMessage;
 setInterval(() => {
   document.getElementById('t1-display').textContent = `T1: ${new Date().toLocaleTimeString()}`;
 }, 1000);
-document.getElementById('session-id-display').textContent = `SID: ${sessionId.slice(-8)}`;
 </script>
 </body>
 </html>
