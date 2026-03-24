@@ -4,11 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>AION.AI · Six Wives · Epistemic Atlas</title>
+  <!-- Import map for Three.js -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+      }
+    }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
+    /* (same styles as before – unchanged) */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg-dark: #0a0a0f;
@@ -194,7 +204,7 @@
     JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA', description: 'balanced blue, structured' }
   };
 
-  // Helper functions
+  // Helper functions (unchanged, except where noted)
   function scrollBottom() { messagesDiv.scrollTop = messagesDiv.scrollHeight; }
   function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function renderMarkdown(text) {
@@ -220,10 +230,7 @@
     return [ppi, ratio].filter(Boolean).join(' · ');
   }
 
-  // Enhanced multi-wife parser – supports:
-  //   **ALBEDO:** content
-  //   **[ALBEDO]:** content
-  //   ---\n\nALBEDO: content
+  // Multi-wife parser (unchanged)
   function parseMultiWifeResponse(text) {
     const blocks = [];
     const lines = text.split('\n');
@@ -232,7 +239,6 @@
     const markerRegex = /^(\*\*([A-Z_]+):|^\*\*\[([A-Z_]+)\]):|^---\n\n([A-Z_]+):/i;
     for (let i = 0; i < lines.length; i++) {
       let line = lines[i];
-      // Special case: detect a marker that spans two lines (---\n\nNAME:)
       if (line.trim() === '---' && i + 1 < lines.length && lines[i+1].trim().match(/^([A-Z_]+):/i)) {
         const name = lines[i+1].trim().match(/^([A-Z_]+):/i)[1];
         if (currentWife && currentContent.length) {
@@ -240,7 +246,7 @@
         }
         currentWife = name.toUpperCase();
         currentContent = [];
-        i++; // skip the next line
+        i++;
         continue;
       }
       const match = line.match(markerRegex);
@@ -254,7 +260,6 @@
         if (contentAfterMarker) currentContent.push(contentAfterMarker);
       } else {
         if (currentWife !== null) currentContent.push(line);
-        // else ignore preamble before first marker
       }
     }
     if (currentWife && currentContent.length) {
@@ -263,15 +268,12 @@
     return blocks.length ? blocks : null;
   }
 
-  // Render a single assistant message (may contain multiple wives)
   function renderAssistantResponse(rawText, extra) {
     const blocks = parseMultiWifeResponse(rawText);
     if (!blocks) {
-      // Fallback: single voice
       addMessage('assistant', extra.active_wife || 'ALBEDO', rawText, extra);
       return;
     }
-    // Render each block in order
     for (const block of blocks) {
       const wife = WIFE_STYLES[block.wife] ? block.wife : 'ALBEDO';
       addMessage('assistant', wife, block.content, extra);
@@ -351,7 +353,7 @@
     document.getElementById('statusDot').style.color = isError ? '#ff5e5e' : '#4c9f70';
   }
 
-  // Crypto helpers (kept for structured mode)
+  // Crypto helpers (unchanged)
   async function computeHash(obj) {
     const encoder = new TextEncoder();
     const data = encoder.encode(JSON.stringify(obj));
@@ -365,7 +367,7 @@
     return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
   }
 
-  // Session persistence
+  // Session persistence (unchanged)
   function loadSessionFromStorage() {
     const stored = localStorage.getItem('aion_session');
     if (stored) {
@@ -444,7 +446,6 @@
     }
   }
 
-  // Send a message to a specific wife using /talk command (sets exclusive mode)
   async function sendToWife(wife, text) {
     const msgText = `/talk ${wife}\n${text}`;
     const resp = await fetchWithTimeout(`${API_BASE}/api/assistant`, {
@@ -461,7 +462,6 @@
     return resp.json();
   }
 
-  // Ask all wives (parallel)
   async function askAllWives() {
     const text = input.value.trim();
     if (!text) return;
@@ -510,7 +510,6 @@
     }
   }
 
-  // Regular chat (single wife)
   async function sendRegularChat(message) {
     const resp = await fetchWithTimeout(`${API_BASE}/api/assistant`, {
       method: 'POST',
@@ -627,10 +626,9 @@
     fileInput.click();
   };
 
-  // Ask All Wives
   askAllBtn.onclick = askAllWives;
 
-  // Settings modal
+  // Settings modal (unchanged)
   function showSettingsModal() {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
@@ -691,7 +689,7 @@
   }
   settingsBtn.onclick = showSettingsModal;
 
-  // Private room modal (reuse)
+  // Private room modal (unchanged)
   function showPrivateRoomModal() {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
@@ -722,7 +720,7 @@
   }
   privateRoomBtn.onclick = showPrivateRoomModal;
 
-  // FCL mode toggle
+  // FCL mode toggle (unchanged)
   fclToggleBtn.onclick = () => {
     fclMode = fclMode === 'GREEN' ? 'BLACK' : 'GREEN';
     fclToggleBtn.textContent = fclMode === 'GREEN' ? '⚡ FCL: GREEN' : '⚡ FCL: BLACK';
@@ -730,7 +728,7 @@
     addSystemMessage(`🔄 FCL mode switched to ${fclMode} ALERT.`);
   };
 
-  // Brain Analytics modal (simplified)
+  // Brain Analytics modal (unchanged)
   let analyticsModal = null;
   async function showAnalytics() {
     setStatus('Loading analytics...', false);
@@ -771,7 +769,7 @@
   }
   analyticsBtn.onclick = showAnalytics;
 
-  // Epistemic Atlas – lazy load with error handling (kept)
+  // Epistemic Atlas – corrected with import map and dynamic imports
   let atlasModal = null;
   async function loadEpistemicAtlas() {
     if (atlasLoaded) return;
@@ -782,10 +780,9 @@
     atlasLoaded = true;
     setStatus('Loading constellation...', false);
     try {
-      await import('https://unpkg.com/three@0.128.0/build/three.module.js');
-      await import('https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js');
-      const { default: THREE } = await import('https://unpkg.com/three@0.128.0/build/three.module.js');
-      const { OrbitControls } = await import('https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js');
+      // Using import map, we can now import the modules
+      const THREE = await import('three');
+      const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
       const resp = await fetch(`${API_BASE}/api/epistemic-atlas?sessionId=${sessionId}`);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -891,7 +888,7 @@
   }
   constellationBtn.onclick = loadEpistemicAtlas;
 
-  // Particles background
+  // Particles background (unchanged)
   function initParticles() {
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
