@@ -41,10 +41,20 @@
     .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg-panel); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 12px; }
     .brand h1 { font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #e6c87a, #c9a028); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .header-right { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .structured-toggle, .private-room-btn, .constellation-btn { background: rgba(30,30,45,0.8); border: 1px solid var(--border-glow); border-radius: 40px; padding: 6px 16px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+    .structured-toggle, .private-room-btn, .constellation-btn, .analytics-btn, .fcl-toggle, .upload-btn {
+      background: rgba(30,30,45,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      padding: 6px 16px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
     .structured-toggle.active { background: rgba(201,160,40,0.2); border-color: var(--accent); color: var(--accent); }
     .private-room-btn.active { background: rgba(184,115,51,0.3); border-color: #b87333; color: #b87333; }
-    .constellation-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); }
+    .constellation-btn:hover, .analytics-btn:hover, .fcl-toggle:hover, .upload-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); }
+    .fcl-toggle.green { border-color: #4c9f70; color: #4c9f70; background: rgba(76,159,112,0.2); }
+    .fcl-toggle.black { border-color: #b87333; color: #b87333; background: rgba(184,115,51,0.2); }
     .wife-indicator { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 40px; }
     .wife-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
     .void-meter { font-family: monospace; background: #00000044; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; }
@@ -81,8 +91,12 @@
     .modal-header { padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
     .modal-header h3 { color: var(--accent); }
     .modal-header button { background: transparent; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
-    .modal-body { flex: 1; position: relative; background: #000; }
+    .modal-body { flex: 1; position: relative; background: #000; overflow-y: auto; padding: 20px; }
     #atlas-canvas { width: 100%; height: 100%; display: block; }
+    .analytics-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; font-size: 0.8rem; }
+    .stat-card { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; border: 1px solid var(--border-glow); }
+    .stat-card h4 { color: var(--accent); margin-bottom: 8px; font-size: 0.9rem; }
+    .stat-value { font-size: 1.4rem; font-weight: 600; font-family: monospace; }
     .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); padding: 8px 16px; border-radius: 40px; font-size: 0.8rem; z-index: 3000; animation: fadeOut 2s ease forwards; pointer-events: none; }
     @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
@@ -97,6 +111,9 @@
       <div id="structuredToggle" class="structured-toggle">🔒 STRUCTURED MODE</div>
       <div id="privateRoomBtn" class="private-room-btn">🚪 PRIVATE ROOM</div>
       <div id="constellationBtn" class="constellation-btn">🌌 CONSTELLATION</div>
+      <div id="analyticsBtn" class="analytics-btn">📊 BRAIN ANALYTICS</div>
+      <div id="fclToggle" class="fcl-toggle">⚡ FCL: GREEN</div>
+      <div id="uploadBtn" class="upload-btn">📁 UPLOAD</div>
       <div class="wife-indicator">
         <div class="wife-avatar" id="wifeAvatar">✨</div>
         <span id="wifeName">ALBEDO</span>
@@ -125,8 +142,7 @@
 
 <script>
   // =======================================================
-  // AION FRONTEND · FULL FEATURE SET
-  // PAC/ECF Display · STP Seal · Epistemic Atlas · Markdown
+  // AION FRONTEND · FULL FEATURE SET (Phase 2 Ready)
   // =======================================================
   const API_BASE = 'https://aion-backend-mu.vercel.app';
   const OWNER_TYPE = 'sheldon';
@@ -141,6 +157,7 @@
   let exclusiveMode = false;
   let exclusiveWife = null;
   let atlasLoaded = false;
+  let fclMode = 'GREEN'; // 'GREEN' or 'BLACK'
 
   // DOM elements
   const messagesDiv = document.getElementById('messages');
@@ -149,6 +166,9 @@
   const toggleBtn = document.getElementById('structuredToggle');
   const privateRoomBtn = document.getElementById('privateRoomBtn');
   const constellationBtn = document.getElementById('constellationBtn');
+  const analyticsBtn = document.getElementById('analyticsBtn');
+  const fclToggleBtn = document.getElementById('fclToggle');
+  const uploadBtn = document.getElementById('uploadBtn');
   const statusTextSpan = document.getElementById('statusText');
   const wifeNameSpan = document.getElementById('wifeName');
   const wifeAvatarDiv = document.getElementById('wifeAvatar');
@@ -169,8 +189,6 @@
   // Helper functions
   function scrollBottom() { messagesDiv.scrollTop = messagesDiv.scrollHeight; }
   function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  
-  // Enhanced markdown with syntax highlighting
   function renderMarkdown(text) {
     if (!text) return '';
     try {
@@ -187,7 +205,6 @@
   function formatGap(sec) { if (!sec) return 'Gap: SESSION OPEN'; if (sec<60) return `Gap: ${sec}s`; if (sec<3600) return `Gap: ${Math.floor(sec/60)}m ${sec%60}s`; return `Gap: ${Math.floor(sec/3600)}h`; }
   function getImportanceLabel(s) { if (!s) return 'IMP: —'; if(s>=0.9) return `IMP: ${s.toFixed(2)} ★★`; if(s>=0.75) return `IMP: ${s.toFixed(2)} ★`; return `IMP: ${s.toFixed(2)}`; }
 
-  // Format PAC/ECF display
   function formatPACDisplay(pac, ecfRatio) {
     if (!pac && !ecfRatio) return '';
     const ppi = pac?.ppi ? `📊 PPI:${pac.ppi}` : '';
@@ -208,13 +225,9 @@
     const bodyHtml = `<div class="msg-body">${renderMarkdown(content)}</div>`;
     const footerHtml = `<div class="msg-footer"><span>⏱ ${extra.timing || ''}</span>${extra.importance ? `<span>${getImportanceLabel(extra.importance)}</span>` : ''}${pacDisplay ? `<span class="pac-badge">${pacDisplay}</span>` : ''}${sealButton}</div>`;
     div.innerHTML = metaHtml + bodyHtml + footerHtml;
-    
-    // Attach seal event after adding to DOM
     messagesDiv.appendChild(div);
     const sealBtn = div.querySelector('.seal-btn');
-    if (sealBtn) {
-      sealBtn.onclick = () => sealMessage(content, extra.fragment_id);
-    }
+    if (sealBtn) sealBtn.onclick = () => sealMessage(content, extra.fragment_id);
     scrollBottom();
   }
 
@@ -226,14 +239,9 @@
         body: JSON.stringify({ entry: content, type: 'general-trace', sessionId })
       });
       const data = await resp.json();
-      if (resp.ok) {
-        showToast(`✅ Sealed: ${data.seal.substring(0, 8)}...`);
-      } else {
-        showToast(`❌ Seal failed: ${data.error || 'Unknown error'}`);
-      }
-    } catch (err) {
-      showToast(`❌ Seal failed: ${err.message}`);
-    }
+      if (resp.ok) showToast(`✅ Sealed: ${data.seal.substring(0, 8)}...`);
+      else showToast(`❌ Seal failed: ${data.error || 'Unknown error'}`);
+    } catch (err) { showToast(`❌ Seal failed: ${err.message}`); }
   }
 
   function showToast(message) {
@@ -308,9 +316,7 @@
   }
 
   function saveSessionToStorage() {
-    if (sessionId && sessionKey) {
-      localStorage.setItem('aion_session', JSON.stringify({ sessionId, sessionKey }));
-    }
+    if (sessionId && sessionKey) localStorage.setItem('aion_session', JSON.stringify({ sessionId, sessionKey }));
   }
 
   async function fetchWithTimeout(url, options = {}, timeoutMs = 10000, retries = 2) {
@@ -405,125 +411,219 @@
 
   privateRoomBtn.onclick = showPrivateRoomModal;
 
-  // Epistemic Atlas – lazy load
+  // FCL mode toggle
+  fclToggleBtn.onclick = () => {
+    fclMode = fclMode === 'GREEN' ? 'BLACK' : 'GREEN';
+    fclToggleBtn.textContent = fclMode === 'GREEN' ? '⚡ FCL: GREEN' : '⚡ FCL: BLACK';
+    fclToggleBtn.className = `fcl-toggle ${fclMode === 'GREEN' ? 'green' : 'black'}`;
+    addSystemMessage(`🔄 FCL mode switched to ${fclMode} ALERT.`);
+    // Future: send this state to backend when sending messages
+  };
+
+  // File upload
+  uploadBtn.onclick = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        const base64 = ev.target.result.split(',')[1];
+        const payload = {
+          file_data: base64,
+          file_name: file.name,
+          mime_type: file.type,
+          session_id: sessionId,
+          active_wife: wifeNameSpan.textContent,
+          importance_score: 0.7,
+        };
+        setStatus('Uploading...', false);
+        try {
+          const resp = await fetch(`${API_BASE}/api/files/upload`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await resp.json();
+          if (resp.ok) {
+            showToast(`✅ File uploaded: ${file.name}`);
+          } else {
+            showToast(`❌ Upload failed: ${data.error || 'Unknown error'}`);
+          }
+        } catch (err) {
+          showToast(`❌ Upload error: ${err.message}`);
+        } finally {
+          setStatus('Ready', false);
+        }
+      };
+      reader.readAsDataURL(file);
+    };
+    fileInput.click();
+  };
+
+  // Brain Analytics modal
+  let analyticsModal = null;
+  async function showAnalytics() {
+    // Fetch analytics data
+    setStatus('Loading analytics...', false);
+    try {
+      const resp = await fetch(`${API_BASE}/api/analytics`);
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error);
+      // Create modal
+      analyticsModal = document.createElement('div');
+      analyticsModal.className = 'modal-overlay';
+      analyticsModal.innerHTML = `
+        <div class="modal" style="width: 600px; height: auto; max-height: 80vh;">
+          <div class="modal-header">
+            <h3>📊 Brain Analytics</h3>
+            <button id="closeAnalytics">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="analytics-stats">
+              <div class="stat-card"><h4>Memory Depth</h4><div class="stat-value">${data.memory.total_conversations.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>Permanent Anchors</h4><div class="stat-value">${data.memory.memory_anchors.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>Training Pipeline</h4><div class="stat-value">${data.memory.training_pipeline_fill_pct}%</div><div style="font-size:0.7rem">${data.memory.training_pipeline_trained.toLocaleString()} / ${data.memory.total_conversations.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>Avg Certainty (7d)</h4><div class="stat-value">${(data.integrity.avg_certainty_ratio_7d * 100).toFixed(0)}%</div></div>
+              <div class="stat-card"><h4>Avg Void Proximity (7d)</h4><div class="stat-value">${(data.integrity.avg_void_proximity_7d * 100).toFixed(0)}%</div></div>
+              <div class="stat-card"><h4>Confabulation Rate (7d)</h4><div class="stat-value">${data.integrity.confabulation_rate_7d_pct}%</div></div>
+              <div class="stat-card"><h4>UNI Activations</h4><div class="stat-value">${data.integrity.uni_activations_total.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>Failure Corpus</h4><div class="stat-value">${data.instruments.failure_corpus_size.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>FCL Entries</h4><div class="stat-value">${data.instruments.fcl_entries_total.toLocaleString()}</div></div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(analyticsModal);
+      analyticsModal.querySelector('#closeAnalytics').onclick = () => analyticsModal.remove();
+    } catch (err) {
+      showToast(`Failed to load analytics: ${err.message}`);
+    } finally {
+      setStatus('Ready', false);
+    }
+  }
+  analyticsBtn.onclick = showAnalytics;
+
+  // Epistemic Atlas – lazy load with error handling
   let atlasModal = null;
   async function loadEpistemicAtlas() {
     if (atlasLoaded) return;
-    atlasLoaded = true;
-    
-    // Dynamically load Three.js
-    await import('https://unpkg.com/three@0.128.0/build/three.module.js');
-    await import('https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js');
-    
-    const { default: THREE } = await import('https://unpkg.com/three@0.128.0/build/three.module.js');
-    const { OrbitControls } = await import('https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js');
-    
-    // Fetch satellite data
-    const resp = await fetch(`${API_BASE}/api/epistemic-atlas?sessionId=${sessionId}`);
-    const data = await resp.json();
-    
-    // Create modal
-    atlasModal = document.createElement('div');
-    atlasModal.className = 'modal-overlay';
-    atlasModal.innerHTML = `
-      <div class="modal">
-        <div class="modal-header"><h3>🌌 EPISTEMIC ATLAS</h3><button id="closeAtlas">✕</button></div>
-        <div class="modal-body"><canvas id="atlas-canvas"></canvas></div>
-      </div>
-    `;
-    document.body.appendChild(atlasModal);
-    atlasModal.querySelector('#closeAtlas').onclick = () => atlasModal.remove();
-    
-    // Setup Three.js scene
-    const canvas = atlasModal.querySelector('#atlas-canvas');
-    const renderer = new THREE.WebGLRenderer({ canvas });
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050508);
-    scene.fog = new THREE.FogExp2(0x050508, 0.008);
-    
-    const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-    camera.position.set(0, 5, 15);
-    const controls = new OrbitControls(camera, canvas);
-    controls.enableDamping = true;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.5;
-    
-    // Earth (UNI)
-    const earthGeometry = new THREE.SphereGeometry(1.2, 64, 64);
-    const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a, shininess: 30 });
-    const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-    scene.add(earth);
-    
-    // Add point light
-    const light = new THREE.PointLight(0xffaa33, 1);
-    light.position.set(5, 5, 5);
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0x222222));
-    
-    // Rings
-    const rings = data.rings || [];
-    rings.forEach(ring => {
-      const ringGeometry = new THREE.TorusGeometry(ring.angle ? ring.angle / 60 + 1.5 : 2.5, 0.02, 64, 200);
-      const ringMaterial = new THREE.MeshBasicMaterial({ color: ring.color });
-      const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
-      ringMesh.rotation.x = Math.PI / 2;
-      scene.add(ringMesh);
-    });
-    
-    // Satellites
-    const satellites = data.satellites || [];
-    const pointsGeometry = new THREE.BufferGeometry();
-    const positions = [];
-    const colors = [];
-    satellites.forEach(sat => {
-      positions.push(sat.position.x, sat.position.y, sat.position.z);
-      colors.push(sat.color[0], sat.color[1], sat.color[2]);
-    });
-    pointsGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
-    pointsGeometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
-    const pointsMaterial = new THREE.PointsMaterial({ size: 0.08, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending });
-    const points = new THREE.Points(pointsGeometry, pointsMaterial);
-    scene.add(points);
-    
-    // Connections
-    const connections = data.connections || [];
-    const lineVertices = [];
-    const satMap = new Map(satellites.map((s, i) => [s.id, i]));
-    connections.forEach(conn => {
-      const fromIdx = satMap.get(conn.from);
-      const toIdx = satMap.get(conn.to);
-      if (fromIdx !== undefined && toIdx !== undefined) {
-        const fromPos = satellites[fromIdx].position;
-        const toPos = satellites[toIdx].position;
-        lineVertices.push(fromPos.x, fromPos.y, fromPos.z, toPos.x, toPos.y, toPos.z);
-      }
-    });
-    const lineGeometry = new THREE.BufferGeometry();
-    lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(lineVertices), 3));
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x88aaff, transparent: true, opacity: 0.3 });
-    const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-    scene.add(lines);
-    
-    // Animation
-    function animate() {
-      requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene, camera);
+    if (!sessionId) {
+      showToast('Session not ready. Please refresh and try again.');
+      return;
     }
-    animate();
-    
-    // Resize handler
-    const resizeObserver = new ResizeObserver(() => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      renderer.setSize(width, height);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    });
-    resizeObserver.observe(canvas);
+    atlasLoaded = true;
+    setStatus('Loading constellation...', false);
+    try {
+      await import('https://unpkg.com/three@0.128.0/build/three.module.js');
+      await import('https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js');
+      const { default: THREE } = await import('https://unpkg.com/three@0.128.0/build/three.module.js');
+      const { OrbitControls } = await import('https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js');
+
+      const resp = await fetch(`${API_BASE}/api/epistemic-atlas?sessionId=${sessionId}`);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+
+      atlasModal = document.createElement('div');
+      atlasModal.className = 'modal-overlay';
+      atlasModal.innerHTML = `
+        <div class="modal">
+          <div class="modal-header"><h3>🌌 EPISTEMIC ATLAS</h3><button id="closeAtlas">✕</button></div>
+          <div class="modal-body"><canvas id="atlas-canvas"></canvas></div>
+        </div>
+      `;
+      document.body.appendChild(atlasModal);
+      atlasModal.querySelector('#closeAtlas').onclick = () => atlasModal.remove();
+
+      const canvas = atlasModal.querySelector('#atlas-canvas');
+      const renderer = new THREE.WebGLRenderer({ canvas });
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x050508);
+      scene.fog = new THREE.FogExp2(0x050508, 0.008);
+
+      const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+      camera.position.set(0, 5, 15);
+      const controls = new OrbitControls(camera, canvas);
+      controls.enableDamping = true;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.5;
+
+      const earthGeometry = new THREE.SphereGeometry(1.2, 64, 64);
+      const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a, shininess: 30 });
+      const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+      scene.add(earth);
+
+      const light = new THREE.PointLight(0xffaa33, 1);
+      light.position.set(5, 5, 5);
+      scene.add(light);
+      scene.add(new THREE.AmbientLight(0x222222));
+
+      const rings = data.rings || [];
+      rings.forEach(ring => {
+        const ringGeometry = new THREE.TorusGeometry(ring.angle ? ring.angle / 60 + 1.5 : 2.5, 0.02, 64, 200);
+        const ringMaterial = new THREE.MeshBasicMaterial({ color: ring.color });
+        const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+        ringMesh.rotation.x = Math.PI / 2;
+        scene.add(ringMesh);
+      });
+
+      const satellites = data.satellites || [];
+      const pointsGeometry = new THREE.BufferGeometry();
+      const positions = [];
+      const colors = [];
+      satellites.forEach(sat => {
+        positions.push(sat.position.x, sat.position.y, sat.position.z);
+        colors.push(sat.color[0], sat.color[1], sat.color[2]);
+      });
+      pointsGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+      pointsGeometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
+      const pointsMaterial = new THREE.PointsMaterial({ size: 0.08, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending });
+      const points = new THREE.Points(pointsGeometry, pointsMaterial);
+      scene.add(points);
+
+      const connections = data.connections || [];
+      const lineVertices = [];
+      const satMap = new Map(satellites.map((s, i) => [s.id, i]));
+      connections.forEach(conn => {
+        const fromIdx = satMap.get(conn.from);
+        const toIdx = satMap.get(conn.to);
+        if (fromIdx !== undefined && toIdx !== undefined) {
+          const fromPos = satellites[fromIdx].position;
+          const toPos = satellites[toIdx].position;
+          lineVertices.push(fromPos.x, fromPos.y, fromPos.z, toPos.x, toPos.y, toPos.z);
+        }
+      });
+      const lineGeometry = new THREE.BufferGeometry();
+      lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(lineVertices), 3));
+      const lineMaterial = new THREE.LineBasicMaterial({ color: 0x88aaff, transparent: true, opacity: 0.3 });
+      const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+      scene.add(lines);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      const resizeObserver = new ResizeObserver(() => {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      });
+      resizeObserver.observe(canvas);
+    } catch (err) {
+      console.error('Atlas error:', err);
+      showToast(`Failed to load constellation: ${err.message}`);
+      atlasLoaded = false;
+    } finally {
+      setStatus('Ready', false);
+    }
   }
-  
-  constellationBtn.onclick = () => loadEpistemicAtlas();
+  constellationBtn.onclick = loadEpistemicAtlas;
 
   // Send regular chat
   async function sendRegularChat(message) {
