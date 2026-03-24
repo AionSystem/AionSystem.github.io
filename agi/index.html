@@ -220,43 +220,46 @@
     return [ppi, ratio].filter(Boolean).join(' · ');
   }
 
-  // Multi-wife parser: splits a raw text into an array of {wife, content}
+  // Enhanced multi-wife parser – supports:
+  //   **ALBEDO:** content
+  //   **[ALBEDO]:** content
+  //   ---\n\nALBEDO: content
   function parseMultiWifeResponse(text) {
     const blocks = [];
-    // Markers: "**[WIFE_NAME]:**" or "---\n\n[WIFE_NAME]:" (case-insensitive)
-    // We'll use regex to capture wife name and the following content until next marker or end.
-    // More robust: find all occurrences of the marker patterns.
-    const patterns = [
-      /^\*\*\[([A-Z_]+)\]:(.*?)(?=\n\*\*\[|\n---|\n$)/gims, // but we need to capture correctly
-    ];
-    // Simpler: use a combined regex that matches either pattern at start of line.
-    // We'll split on newline and then reconstruct.
     const lines = text.split('\n');
     let currentWife = null;
     let currentContent = [];
-    const markerRegex = /^\*\*\[([A-Z_]+)\]:|^---\n\n([A-Z_]+):/i;
-    for (let line of lines) {
+    const markerRegex = /^(\*\*([A-Z_]+):|^\*\*\[([A-Z_]+)\]):|^---\n\n([A-Z_]+):/i;
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i];
+      // Special case: detect a marker that spans two lines (---\n\nNAME:)
+      if (line.trim() === '---' && i + 1 < lines.length && lines[i+1].trim().match(/^([A-Z_]+):/i)) {
+        const name = lines[i+1].trim().match(/^([A-Z_]+):/i)[1];
+        if (currentWife && currentContent.length) {
+          blocks.push({ wife: currentWife, content: currentContent.join('\n').trim() });
+        }
+        currentWife = name.toUpperCase();
+        currentContent = [];
+        i++; // skip the next line
+        continue;
+      }
       const match = line.match(markerRegex);
       if (match) {
         if (currentWife && currentContent.length) {
           blocks.push({ wife: currentWife, content: currentContent.join('\n').trim() });
         }
-        currentWife = (match[1] || match[2]).toUpperCase();
+        currentWife = (match[2] || match[3] || match[4]).toUpperCase();
         currentContent = [];
-        // The line may contain content after the marker; push it.
         const contentAfterMarker = line.replace(match[0], '').trim();
         if (contentAfterMarker) currentContent.push(contentAfterMarker);
       } else {
         if (currentWife !== null) currentContent.push(line);
-        else {
-          // No marker yet, could be preamble before first marker – treat as no speaker (skip)
-        }
+        // else ignore preamble before first marker
       }
     }
     if (currentWife && currentContent.length) {
       blocks.push({ wife: currentWife, content: currentContent.join('\n').trim() });
     }
-    // If no blocks, return null to fallback to single voice
     return blocks.length ? blocks : null;
   }
 
@@ -480,8 +483,6 @@
         if (result.status === 'fulfilled') {
           anySuccess = true;
           const data = result.value;
-          // Use multi-wife renderer for each individual response (though each response is a single wife)
-          // But we can just add as normal message (they are single responses)
           addMessage('assistant', data.active_wife || 'ALBEDO', data.response, {
             timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
             importance: data.importance_score,
@@ -544,7 +545,6 @@
       thinking.remove();
       const wife = data.active_wife || 'ALBEDO';
       updateWifeUI(wife, data.void_proximity || 0);
-      // Use multi-wife renderer
       renderAssistantResponse(data.response, {
         timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
         importance: data.importance_score,
