@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AION AI Assistant · M2M + STP v2.0</title>
+<title>AION AI Assistant · M2M + STP v2.0 (Fully Compliant)</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -74,6 +74,9 @@
   .btn{background:var(--surface);border:1px solid var(--border2);color:var(--text);padding:8px 16px;cursor:pointer;font-size:12px;}
   .btn-primary{background:var(--primary);color:#0d0d10;border:none;}
   .btn-primary:hover{background:var(--primary-d);}
+  .clarification-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+  .clarification-options button{background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:6px 12px;font-size:12px;cursor:pointer;}
+  .clarification-options button:hover{background:var(--primary-l);border-color:var(--primary);}
   @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
   @keyframes dot{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1);opacity:1;}}
 </style>
@@ -110,17 +113,23 @@
 
 <script>
 // ============================================================
-// M2M PROTOCOL v2.0 + STP INTEGRATION (Full Compliance)
+// CONFIGURATION – CHANGE THIS TO YOUR BACKEND URL
 // ============================================================
-const API_BASE = 'https://aion-backend-mu.vercel.app';  // Update to your backend
+const API_BASE = 'https://aion-backend-mu.vercel.app';  // ← Update to your actual backend
 const OWNER_TYPE = 'sheldon';
 
-// Session state
+// ============================================================
+// STATE MACHINE & VARIABLES
+// ============================================================
 let structuredMode = false;
 let sessionId = null;
-let sessionKey = null;         // hex string, derived from init
+let sessionKey = null;
 let lastFragmentId = null;
 let history = [];
+let currentState = 'SESSION_INIT'; // matches protocol
+let clarificationCount = 0;
+let pendingClarification = null; // store fragment that asked for clarification
+let isSending = false;
 
 // UI elements
 const messagesDiv = document.getElementById('messages');
@@ -134,6 +143,9 @@ const wifeName = document.getElementById('wife-name');
 const voidMeter = document.getElementById('void-meter');
 const modelBadge = document.getElementById('model-badge');
 
+// ============================================================
+// UTILITIES
+// ============================================================
 function scrollBottom() { messagesDiv.scrollTop = messagesDiv.scrollHeight; }
 function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function formatResponse(text) {
@@ -185,13 +197,15 @@ function setStatus(text, isError) {
   statusDot.className = 'status-dot' + (isError ? ' error' : '');
 }
 
-// --- Web Crypto helpers for SHA-256 and HMAC ---
+// ============================================================
+// CRYPTO HELPERS
+// ============================================================
 async function computeHash(obj) {
   const encoder = new TextEncoder();
   const data = encoder.encode(JSON.stringify(obj));
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
 async function computeHMAC(keyHex, message) {
@@ -199,11 +213,13 @@ async function computeHMAC(keyHex, message) {
   const key = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   const encoder = new TextEncoder();
   const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(message));
-  return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
-// --- Session init (calls /api/m2m/init) ---
-async function initM2MSession() {
+// ============================================================
+// SESSION INIT (with retry)
+// ============================================================
+async function initM2MSession(retry = true) {
   const nonce = crypto.randomUUID();
   const newSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
   const payload = {
@@ -222,26 +238,36 @@ async function initM2MSession() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    const data = await resp.json();
-    if (resp.ok) {
-      sessionId = data.session_id;
-      sessionKey = data.key;
-      console.log('M2M session initialised', sessionId);
-      document.getElementById('session-id-display').textContent = `SID: ${sessionId.slice(-8)}`;
-      return true;
-    } else {
-      throw new Error(data.message || 'Unknown error');
+    if (!resp.ok) {
+      const errData = await resp.json();
+      throw new Error(errData.message || `HTTP ${resp.status}`);
     }
+    const data = await resp.json();
+    sessionId = data.session_id;
+    sessionKey = data.key;
+    document.getElementById('session-id-display').textContent = `SID: ${sessionId.slice(-8)}`;
+    currentState = 'REGULAR_CHAT';
+    addSystemMessage(`✅ M2M session established. Session key derived.`);
+    return true;
   } catch (err) {
     console.error('Session init failed:', err);
-    addSystemMessage(`⚠️ M2M session init failed: ${err.message}. Falling back to regular chat.`, true);
-    structuredMode = false;
-    toggleBtn.classList.remove('active');
-    return false;
+    if (retry) {
+      addSystemMessage(`⚠️ M2M session init failed. Retrying once...`, true);
+      return initM2MSession(false);
+    } else {
+      addSystemMessage(`❌ M2M session init failed: ${err.message}. Structured mode will be disabled.`, true);
+      if (structuredMode) {
+        structuredMode = false;
+        toggleBtn.classList.remove('active');
+      }
+      return false;
+    }
   }
 }
 
-// --- STP Seal (optional extra layer) ---
+// ============================================================
+// STP SEAL (OPTIONAL)
+// ============================================================
 async function sealWithSTP(content, sessionId) {
   try {
     const response = await fetch(`${API_BASE}/api/stp-seal`, {
@@ -254,30 +280,18 @@ async function sealWithSTP(content, sessionId) {
         userId: OWNER_TYPE,
       }),
     });
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.message || `STP error ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`STP error ${response.status}`);
     const data = await response.json();
-    return {
-      success: true,
-      seal: data.seal,
-      gregorian: data.gregorian,
-      hebrew: data.hebrew,
-      dreamspell: data.dreamspell,
-      unix_utc: data.unix_utc,
-      template: data.template,
-      template_name: data.template_name,
-      issue_url: data.issue_url,
-      ledger_path: data.ledger_path,
-    };
+    return { success: true, ...data };
   } catch (err) {
     console.warn('STP seal failed:', err);
     return { success: false, error: err.message };
   }
 }
 
-// --- Fragment generation with hash & HMAC ---
+// ============================================================
+// FRAGMENT GENERATION WITH SEAL
+// ============================================================
 async function generateFragmentFromText(text, replyTo) {
   const lower = text.toLowerCase();
   let intent = 'ask';
@@ -315,8 +329,7 @@ async function generateFragmentFromText(text, replyTo) {
     meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
   };
   
-  // Compute hash and HMAC
-  // Remove seal field if accidentally present (shouldn't be)
+  // Compute seal
   const { seal, ...fragNoSeal } = fragment;
   const hash = await computeHash(fragNoSeal);
   const hmac = await computeHMAC(sessionKey, hash);
@@ -326,11 +339,24 @@ async function generateFragmentFromText(text, replyTo) {
     hmac,
     stp_ref: null,
   };
-  
   return fragment;
 }
 
-// --- Confirmation modal with editing ---
+// ============================================================
+// VERIFY INCOMING FRAGMENT SEAL
+// ============================================================
+async function verifyIncomingFragment(fragment) {
+  if (!fragment.seal) return false;
+  const { seal, ...fragNoSeal } = fragment;
+  const computedHash = await computeHash(fragNoSeal);
+  if (computedHash !== fragment.seal.hash) return false;
+  const expectedHmac = await computeHMAC(sessionKey, computedHash);
+  return expectedHmac === fragment.seal.hmac;
+}
+
+// ============================================================
+// CONFIRMATION MODAL (with edit and recompute)
+// ============================================================
 async function showConfirmationModal(originalText, fragment) {
   return new Promise((resolve) => {
     const modal = document.createElement('div');
@@ -363,9 +389,8 @@ async function showConfirmationModal(originalText, fragment) {
         domain: modal.querySelector('#edit-domain').value,
         emotional_state: { ...fragment.emotional_state, intensity: parseInt(modal.querySelector('#edit-intensity').value, 10) }
       };
-      // Update fragment with edits
       const finalFragment = { ...fragment, ...edits };
-      // Recompute hash and HMAC after edits
+      // Recompute seal
       const { seal, ...fragNoSeal } = finalFragment;
       const newHash = await computeHash(fragNoSeal);
       const newHmac = await computeHMAC(sessionKey, newHash);
@@ -381,7 +406,9 @@ async function showConfirmationModal(originalText, fragment) {
   });
 }
 
-// --- Send fragment to M2M backend ---
+// ============================================================
+// SEND TO M2M BACKEND
+// ============================================================
 async function sendFragmentToBackend(fragment) {
   const response = await fetch(`${API_BASE}/api/m2m/fragment`, {
     method: 'POST',
@@ -395,14 +422,16 @@ async function sendFragmentToBackend(fragment) {
   return await response.json();
 }
 
-// --- Regular chat fallback (calls old assistant.js) ---
+// ============================================================
+// REGULAR CHAT (fallback)
+// ============================================================
 async function sendRegularChat(message) {
   const response = await fetch(`${API_BASE}/api/assistant`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message,
-      sessionId,
+      sessionId: sessionId || 'regular-session',
       ownerType: OWNER_TYPE,
       history: history.slice(-10)
     })
@@ -414,8 +443,64 @@ async function sendRegularChat(message) {
   return await response.json();
 }
 
-// --- Main send flow ---
+// ============================================================
+// HANDLE CLARIFICATION OPTIONS
+// ============================================================
+function renderClarificationOptions(fragment, messageDiv) {
+  const optionsDiv = document.createElement('div');
+  optionsDiv.className = 'clarification-options';
+  fragment.clarification_options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.textContent = opt.summary;
+    btn.title = opt.details || '';
+    btn.onclick = async () => {
+      // Send the selected option as a new fragment, referencing the original fragment
+      const replyFragment = await generateFragmentFromText(opt.summary, fragment.id);
+      replyFragment.intent = 'clarify'; // mark as clarification response
+      // Send it
+      isSending = true;
+      sendBtn.disabled = true;
+      input.disabled = true;
+      setStatus('Sending clarification...', false);
+      try {
+        const result = await sendFragmentToBackend(replyFragment);
+        if (result.response_fragment) {
+          // Verify incoming fragment seal
+          const verified = await verifyIncomingFragment(result.response_fragment);
+          if (!verified) {
+            addSystemMessage('⚠️ Warning: Incoming fragment seal invalid!', true);
+          }
+          addMessage('assistant', 'ALBEDO', result.response_fragment.content.details || result.response_fragment.content.summary, {});
+          history.push({ role: 'assistant', content: result.response_fragment.content.details || result.response_fragment.content.summary });
+        } else {
+          addSystemMessage('No response fragment from backend.', true);
+        }
+      } catch (err) {
+        addSystemMessage(`Error: ${err.message}`, true);
+      } finally {
+        isSending = false;
+        sendBtn.disabled = false;
+        input.disabled = false;
+        input.focus();
+        setStatus('Ready', false);
+        // Remove the options so they don't reappear
+        if (optionsDiv.parentNode) optionsDiv.remove();
+      }
+    };
+    optionsDiv.appendChild(btn);
+  });
+  messageDiv.appendChild(optionsDiv);
+  scrollBottom();
+}
+
+// ============================================================
+// MAIN SEND FLOW
+// ============================================================
 async function sendMessage() {
+  if (isSending) {
+    addSystemMessage('Please wait, previous message still sending.', true);
+    return;
+  }
   const text = input.value.trim();
   if (!text) return;
   input.value = '';
@@ -425,6 +510,9 @@ async function sendMessage() {
   addMessage('user', 'You', text);
   const thinking = addThinking();
   setStatus('Processing...', false);
+  isSending = true;
+  sendBtn.disabled = true;
+  input.disabled = true;
   
   try {
     if (!structuredMode) {
@@ -439,20 +527,30 @@ async function sendMessage() {
       });
       history.push({ role: 'user', content: text });
       history.push({ role: 'assistant', content: data.response });
+      currentState = 'REGULAR_CHAT';
     } else {
-      // Structured mode: ensure session is ready
+      // Structured mode: ensure session ready
       if (!sessionKey) {
-        addSystemMessage('Structured mode not available. Initialising session...');
+        addSystemMessage('Initialising M2M session...');
         const ok = await initM2MSession();
         if (!ok) {
           thinking.remove();
-          setStatus('Failed to init M2M session', true);
+          setStatus('Structured mode unavailable', true);
           return;
         }
       }
       
-      let fragment = await generateFragmentFromText(text, lastFragmentId);
-      let confirmed = await showConfirmationModal(text, fragment);
+      // Check if we are in clarification loop
+      if (currentState === 'CLARIFICATION_LOOP') {
+        // User is replying to a clarification – we treat this as a normal fragment with in_reply_to set to the clarification fragment
+        // The backend will handle it. We'll just send it.
+      }
+      
+      // Generate fragment
+      let fragment = await generateFragmentFromText(text, pendingClarification ? pendingClarification.id : lastFragmentId);
+      
+      // Show confirmation modal (edit allowed)
+      const confirmed = await showConfirmationModal(text, fragment);
       if (!confirmed) {
         thinking.remove();
         addSystemMessage('Message cancelled.');
@@ -461,23 +559,23 @@ async function sendMessage() {
       }
       fragment = confirmed;
       
-      // Optional: STP seal (adds extra audit layer, does not replace HMAC)
-      setStatus('Sealing with STP (optional)...', false);
-      const sealResult = await sealWithSTP(text, sessionId);
-      if (sealResult.success) {
-        fragment.seal.stp_ref = sealResult.issue_url || sealResult.ledger_path;
+      // Optional STP seal (adds extra audit)
+      setStatus('Anchoring STP (optional)...', false);
+      const stpResult = await sealWithSTP(text, sessionId);
+      if (stpResult.success) {
+        fragment.seal.stp_ref = stpResult.issue_url || stpResult.ledger_path;
         fragment.seal.triple_time = {
-          gregorian: sealResult.gregorian,
-          hebrew: sealResult.hebrew,
-          dreamspell: sealResult.dreamspell
+          gregorian: stpResult.gregorian,
+          hebrew: stpResult.hebrew,
+          dreamspell: stpResult.dreamspell
         };
-        addSystemMessage(`✅ STP seal anchored: ${sealResult.seal.substring(0, 8)}... (${sealResult.ledger_path || sealResult.issue_url})`);
+        addSystemMessage(`✅ STP anchored: ${stpResult.seal.substring(0,8)}...`);
       } else {
-        addSystemMessage(`⚠️ STP seal failed: ${sealResult.error}. Fragment still sealed with HMAC.`, true);
+        addSystemMessage(`⚠️ STP failed: ${stpResult.error}`, true);
       }
       
       lastFragmentId = fragment.id;
-      setStatus('Sending fragment to M2M backend...', false);
+      setStatus('Sending fragment...', false);
       const result = await sendFragmentToBackend(fragment);
       thinking.remove();
       
@@ -487,71 +585,112 @@ async function sendMessage() {
         return;
       }
       
-      // Extract response fragment
       const respFragment = result.response_fragment;
       if (!respFragment) {
-        addSystemMessage('No response fragment received.', true);
+        addSystemMessage('No response fragment from backend.', true);
         return;
       }
       
-      // Display response
-      updateWifeIndicator('ALBEDO', 0); // M2M response currently doesn't include void
-      modelBadge.textContent = (result.model_used || '').split('/').pop();
-      addMessage('assistant', 'ALBEDO', respFragment.content.details || respFragment.content.summary, {
-        timing: `${(result.processing_ms/1000).toFixed(2)}s`,
-      });
-      history.push({ role: 'user', content: text });
-      history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
+      // Verify incoming fragment seal
+      const verified = await verifyIncomingFragment(respFragment);
+      if (!verified) {
+        addSystemMessage('⚠️ Warning: Incoming fragment seal invalid!', true);
+      }
+      
+      // Handle clarification
+      if (respFragment.intent === 'clarify') {
+        currentState = 'CLARIFICATION_LOOP';
+        clarificationCount++;
+        if (clarificationCount > 5) {
+          addSystemMessage('Too many clarifications in this session. Falling back to regular chat.', true);
+          structuredMode = false;
+          toggleBtn.classList.remove('active');
+          currentState = 'REGULAR_CHAT';
+          return;
+        }
+        pendingClarification = respFragment;
+        // Display the clarification message and options
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'msg assistant';
+        msgDiv.innerHTML = `<div class="msg-meta">ALBEDO</div><div class="msg-body">${formatResponse(respFragment.content.details || respFragment.content.summary)}</div>`;
+        messagesDiv.appendChild(msgDiv);
+        if (respFragment.clarification_options && respFragment.clarification_options.length) {
+          renderClarificationOptions(respFragment, msgDiv);
+        }
+        scrollBottom();
+      } else {
+        // Normal response
+        currentState = 'REGULAR_CHAT';
+        pendingClarification = null;
+        addMessage('assistant', 'ALBEDO', respFragment.content.details || respFragment.content.summary, {
+          timing: `${(result.processing_ms/1000).toFixed(2)}s`,
+        });
+        history.push({ role: 'user', content: text });
+        history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
+      }
+      
+      // Update UI with model info (if present)
+      if (result.model_used) modelBadge.textContent = result.model_used.split('/').pop();
     }
   } catch (err) {
     thinking.remove();
     addSystemMessage(`Error: ${err.message}`, true);
     setStatus(err.message, true);
-    // If M2M fails, maybe fallback to regular chat? We'll keep it simple for now.
+    // If structured mode fails, fallback to regular chat for next message?
+    if (structuredMode && err.message.includes('fetch')) {
+      addSystemMessage('Network error with M2M backend. Falling back to regular chat.', true);
+      structuredMode = false;
+      toggleBtn.classList.remove('active');
+      currentState = 'REGULAR_CHAT';
+    }
   } finally {
-    setStatus('Ready', false);
+    isSending = false;
     sendBtn.disabled = false;
     input.disabled = false;
     input.focus();
+    setStatus('Ready', false);
   }
 }
 
-// --- Initialise session on page load ---
+// ============================================================
+// INITIALISE
+// ============================================================
 async function init() {
-  // First, try to init M2M session (so it's ready if user toggles)
+  // Try to init M2M session in background (doesn't affect regular chat)
   await initM2MSession();
-  // Start regular chat mode by default
-  addSystemMessage(`M2M session initialised. Structured mode available.`);
-  setStatus('Ready', false);
+  addSystemMessage('Ready. Toggle Structured Mode for M2M protocol.');
 }
 init();
 
-// --- Toggle structured mode ---
-toggleBtn.addEventListener('click', () => {
-  structuredMode = !structuredMode;
+// ============================================================
+// TOGGLE STRUCTURED MODE
+// ============================================================
+toggleBtn.addEventListener('click', async () => {
   if (structuredMode) {
-    if (!sessionKey) {
-      addSystemMessage('⚠️ M2M session not ready. Trying to initialise...', true);
-      initM2MSession().then(ok => {
-        if (ok) {
-          toggleBtn.classList.add('active');
-          addSystemMessage('Structured Mode ON. Messages will be sealed with HMAC and sent as M2M fragments.');
-        } else {
-          structuredMode = false;
-          addSystemMessage('Structured Mode unavailable. Falling back to regular chat.', true);
-        }
-      });
-    } else {
-      toggleBtn.classList.add('active');
-      addSystemMessage('Structured Mode ON. Messages will be sealed with HMAC and sent as M2M fragments.');
-    }
-  } else {
+    structuredMode = false;
     toggleBtn.classList.remove('active');
+    currentState = 'REGULAR_CHAT';
     addSystemMessage('Structured Mode OFF. Regular chat.');
+  } else {
+    // If no session key, try to init
+    if (!sessionKey) {
+      addSystemMessage('Initialising M2M session...');
+      const ok = await initM2MSession();
+      if (!ok) {
+        addSystemMessage('Cannot enable Structured Mode: M2M session init failed.', true);
+        return;
+      }
+    }
+    structuredMode = true;
+    toggleBtn.classList.add('active');
+    currentState = 'REGULAR_CHAT'; // start in regular, will transition on send
+    addSystemMessage('Structured Mode ON. Messages will be sealed with HMAC and sent as M2M fragments.');
   }
 });
 
-// --- UI event handlers ---
+// ============================================================
+// UI EVENT HANDLERS
+// ============================================================
 input.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
