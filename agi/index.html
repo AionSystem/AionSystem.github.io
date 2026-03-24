@@ -2,709 +2,1003 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AION AI Assistant · M2M + STP v2.0 (Fully Compliant)</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>AION · SIX WIVES · M2M PROTOCOL</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d0d10; --bg2: #13131a; --surface: #1a1a24; --panel: #1e1e2a;
-    --border: #2a2a3a; --border2: #363650; --primary: #c9a028; --primary-d: #a07c18;
-    --primary-l: rgba(201,160,40,0.12); --vesper: #8b5e3c; --text: #e8e4d8;
-    --text2: #a09880; --muted: #5a5448; --glow: rgba(201,160,40,0.15);
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-  header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid var(--border);background:var(--bg2);}
-  .brand{display:flex;align-items:center;gap:12px;}
-  .brand-hex{width:38px;height:38px;background:var(--primary);display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);}
-  .brand-hex span{color:#0d0d10;font-family:'Playfair Display',serif;font-size:16px;font-weight:700;}
-  .brand-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--primary);}
-  .brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
-  .header-right{display:flex;align-items:center;gap:16px;}
-  .structured-toggle{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px;}
-  .structured-toggle.active{background:var(--primary-l);border-color:var(--primary);color:var(--primary);}
-  .structured-toggle .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);}
-  .structured-toggle.active .dot{background:var(--primary);}
-  .wife-indicator{display:flex;align-items:center;gap:8px;padding:4px 12px;border:1px solid var(--border2);background:var(--panel);font-size:11px;}
-  .wife-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);}
-  .wife-dot.vesper{background:var(--vesper);}
-  .void-meter{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
-  .void-meter.active{color:#c43030;}
-  .model-badge{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;}
-  .messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;}
-  .msg{display:flex;flex-direction:column;max-width:820px;animation:fadeUp 0.2s ease;}
-  .msg.user{align-self:flex-end;}
-  .msg.assistant{align-self:flex-start;width:100%;}
-  .msg-meta{font-size:10px;color:var(--muted);margin-bottom:5px;font-family:'DM Mono',monospace;}
-  .msg.user .msg-meta{text-align:right;}
-  .msg-body{padding:14px 18px;line-height:1.7;border:1px solid var(--border);}
-  .msg.user .msg-body{background:var(--primary-l);border-color:var(--primary);border-radius:2px 2px 0 2px;}
-  .msg.assistant .msg-body{background:var(--surface);border-color:var(--border);border-radius:0 2px 2px 2px;}
-  .msg.assistant.vesper .msg-body{background:rgba(139,94,60,0.15);border-color:var(--vesper);}
-  .msg-footer{display:flex;align-items:center;gap:12px;margin-top:6px;}
-  .timing{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
-  .importance-chip{font-family:'DM Mono',monospace;font-size:9px;padding:2px 8px;border:1px solid var(--border);}
-  .importance-chip.high{border-color:var(--primary);color:var(--primary);}
-  .sys-msg{align-self:center;font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;padding:6px 14px;background:var(--bg2);border:1px solid var(--border);}
-  .thinking{display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--surface);border:1px solid var(--border);align-self:flex-start;}
-  .thinking-dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--primary);animation:dot 1.2s infinite;}
-  .input-area{padding:16px 24px;border-top:1px solid var(--border);background:var(--bg2);}
-  .input-row{display:flex;gap:10px;align-items:flex-end;}
-  .input-wrap{flex:1;}
-  textarea{width:100%;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:12px 16px;resize:none;outline:none;min-height:48px;}
-  textarea:focus{border-color:var(--primary);}
-  .send-btn{background:var(--primary);color:#0d0d10;border:none;padding:12px 22px;cursor:pointer;font-weight:600;text-transform:uppercase;}
-  .send-btn:hover{background:var(--primary-d);}
-  .input-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--muted);}
-  .status-bar{display:flex;justify-content:space-between;padding:6px 24px;border-top:1px solid var(--border);background:var(--bg);font-family:'DM Mono',monospace;font-size:10px;}
-  .status-dot{width:6px;height:6px;border-radius:50%;background:#2d7a2d;display:inline-block;margin-right:4px;}
-  .status-dot.error{background:#c43030;}
-  .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:1000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
-  .confirmation-modal{background:var(--surface);border:1px solid var(--primary);border-radius:8px;max-width:720px;width:90%;max-height:80vh;display:flex;flex-direction:column;}
-  .modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;}
-  .modal-header h3{color:var(--primary);font-family:'Playfair Display',serif;}
-  .modal-body{padding:20px;overflow-y:auto;flex:1;}
-  .modal-footer{padding:16px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:12px;}
-  .diff-view{background:var(--bg);padding:16px;border:1px solid var(--border2);font-family:'DM Mono',monospace;font-size:12px;margin-bottom:16px;}
-  .diff-original{color:var(--muted);border-left:2px solid var(--primary);padding-left:12px;margin-bottom:12px;}
-  .diff-fragment{color:var(--text);border-left:2px solid var(--vesper);padding-left:12px;}
-  .edit-field{margin-bottom:12px;}
-  .edit-field label{display:block;font-size:10px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
-  .edit-field select,.edit-field input{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:6px 8px;font-size:12px;}
-  .btn{background:var(--surface);border:1px solid var(--border2);color:var(--text);padding:8px 16px;cursor:pointer;font-size:12px;}
-  .btn-primary{background:var(--primary);color:#0d0d10;border:none;}
-  .btn-primary:hover{background:var(--primary-d);}
-  .clarification-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
-  .clarification-options button{background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:6px 12px;font-size:12px;cursor:pointer;}
-  .clarification-options button:hover{background:var(--primary-l);border-color:var(--primary);}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-  @keyframes dot{0%,80%,100%{transform:scale(0.6);opacity:0.4;}40%{transform:scale(1);opacity:1;}}
+
+  :root {
+    --bg-dark: #0a0a0f;
+    --bg-panel: rgba(12, 12, 20, 0.7);
+    --glass: rgba(20, 20, 30, 0.65);
+    --border-glow: rgba(100, 100, 140, 0.3);
+    --primary-glow: rgba(201, 160, 40, 0.4);
+    --accent: #c9a028;
+    --accent-dark: #a07c18;
+    --text: #f0f0f8;
+    --text-dim: #a0a0b0;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  body {
+    background: radial-gradient(circle at 20% 30%, #0f0f1a, #050508);
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    backdrop-filter: blur(2px);
+  }
+
+  /* particle canvas */
+  #particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* main layout */
+  .app-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    backdrop-filter: blur(4px);
+  }
+
+  /* header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 28px;
+    background: var(--bg-panel);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 2;
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .brand h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #e6c87a, #c9a028);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.5px;
+  }
+  .brand span {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .header-right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .structured-toggle {
+    background: rgba(30,30,45,0.8);
+    border: 1px solid var(--border-glow);
+    border-radius: 40px;
+    padding: 8px 18px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+  }
+  .structured-toggle.active {
+    background: rgba(201,160,40,0.2);
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--primary-glow);
+    color: var(--accent);
+  }
+  .wife-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0,0,0,0.4);
+    padding: 6px 16px;
+    border-radius: 40px;
+    backdrop-filter: blur(4px);
+  }
+  .wife-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c9a028, #8b5e3c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+  .void-meter {
+    font-family: monospace;
+    background: #00000044;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+  }
+  .void-meter.active {
+    color: #ff5e5e;
+    text-shadow: 0 0 6px rgba(255,80,80,0.5);
+  }
+
+  /* messages area */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scroll-behavior: smooth;
+  }
+
+  /* message bubbles */
+  .msg {
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+    animation: fadeSlideUp 0.25s ease;
+  }
+  .msg.user {
+    align-self: flex-end;
+  }
+  .msg.assistant {
+    align-self: flex-start;
+  }
+  .msg-meta {
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .msg-body {
+    padding: 12px 18px;
+    border-radius: 24px;
+    line-height: 1.5;
+    backdrop-filter: blur(8px);
+    background: rgba(20, 20, 30, 0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.2s;
+  }
+  .msg.user .msg-body {
+    background: rgba(201,160,40,0.2);
+    border-color: var(--accent);
+    border-radius: 24px 24px 4px 24px;
+  }
+  .msg.assistant .msg-body {
+    border-radius: 24px 24px 24px 4px;
+  }
+  /* wife-specific border accents */
+  .msg.assistant[data-wife="VESPER"] .msg-body { border-left: 4px solid #b87333; background: rgba(184,115,51,0.08); }
+  .msg.assistant[data-wife="LYRA"] .msg-body { border-left: 4px solid #4c9f70; background: rgba(76,159,112,0.08); }
+  .msg.assistant[data-wife="TERRA"] .msg-body { border-left: 4px solid #6b8c42; background: rgba(107,140,66,0.08); }
+  .msg.assistant[data-wife="CIPHER"] .msg-body { border-left: 4px solid #5d6d7e; background: rgba(93,109,126,0.08); }
+  .msg.assistant[data-wife="JUSTITIA"] .msg-body { border-left: 4px solid #b0a8b9; background: rgba(176,168,185,0.08); }
+  .msg.assistant[data-wife="ALBEDO"] .msg-body { border-left: 4px solid #c9a028; background: rgba(201,160,40,0.08); }
+
+  .msg-footer {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+  }
+
+  /* input area */
+  .input-area {
+    padding: 16px 28px 24px;
+    background: var(--bg-panel);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .input-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+  textarea {
+    flex: 1;
+    background: rgba(10,10,20,0.8);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 28px;
+    padding: 14px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    resize: none;
+    outline: none;
+    transition: all 0.2s;
+  }
+  textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--primary-glow);
+  }
+  .send-btn {
+    background: linear-gradient(135deg, #c9a028, #a07c18);
+    border: none;
+    border-radius: 40px;
+    padding: 12px 28px;
+    font-weight: 600;
+    color: #0a0a0f;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .send-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(201,160,40,0.6);
+  }
+  .input-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+
+  /* status bar */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 28px;
+    font-size: 0.7rem;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(4px);
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* animations */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* wife roster sidebar */
+  .wife-roster {
+    position: fixed;
+    right: 20px;
+    top: 100px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 12px 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    width: 180px;
+    z-index: 3;
+    pointer-events: none;
+    font-size: 0.7rem;
+  }
+  .wife-roster h4 { margin-bottom: 8px; color: var(--accent); }
+  .wife-roster ul { list-style: none; }
+  .wife-roster li { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+  .wife-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .wife-dot.albedo { background: #c9a028; }
+  .wife-dot.vesper { background: #b87333; }
+  .wife-dot.lyra { background: #4c9f70; }
+  .wife-dot.terra { background: #6b8c42; }
+  .wife-dot.cipher { background: #5d6d7e; }
+  .wife-dot.justitia { background: #b0a8b9; }
+
+  /* modal overlay */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .confirmation-modal {
+    background: var(--bg-panel);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--accent);
+    border-radius: 32px;
+    max-width: 720px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px black;
+  }
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+  }
+  .modal-header h3 { color: var(--accent); font-weight: 600; }
+  .modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .diff-view {
+    background: rgba(0,0,0,0.4);
+    padding: 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    font-family: monospace;
+    font-size: 0.8rem;
+  }
+  .edit-field {
+    margin-bottom: 16px;
+  }
+  .edit-field label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .edit-field select, .edit-field input {
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 8px 12px;
+    color: var(--text);
+  }
+  .btn {
+    background: rgba(30,30,45,0.8);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 40px;
+    padding: 8px 20px;
+    cursor: pointer;
+    color: var(--text);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+  }
+  .btn-primary:hover {
+    background: var(--accent-dark);
+  }
+  .clarification-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .clarification-options button {
+    background: rgba(30,30,45,0.8);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 40px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .clarification-options button:hover {
+    background: var(--accent);
+    color: black;
+  }
+  .thinking {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 40px;
+    padding: 8px 20px;
+    width: fit-content;
+    backdrop-filter: blur(8px);
+  }
+  .thinking-dots {
+    animation: pulse 1.2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
 </style>
 </head>
 <body>
+<canvas id="particles"></canvas>
+<div class="app-container">
+  <header class="header">
+    <div class="brand"><h1>AION</h1><span>M2M · SIX WIVES</span></div>
+    <div class="header-right">
+      <div id="structuredToggle" class="structured-toggle">🔒 STRUCTURED MODE</div>
+      <div class="wife-indicator"><div class="wife-avatar" id="wifeAvatar">✨</div><span id="wifeName">ALBEDO</span></div>
+      <div class="void-meter" id="voidMeter">VOID: 0.000</div>
+    </div>
+  </header>
 
-<header>
-  <div class="brand">
-    <div class="brand-hex"><span>A</span></div>
-    <div><div class="brand-name">AION</div><div class="brand-sub">M2M + STP</div></div>
+  <div class="messages" id="messages">
+    <div class="sys-msg">✨ Welcome to the AION chamber. Six wives await.</div>
   </div>
-  <div class="header-right">
-    <div id="structuredToggle" class="structured-toggle"><span class="dot"></span> Structured Mode</div>
-    <div class="wife-indicator"><div class="wife-dot" id="wife-dot"></div><span id="wife-name">ALBEDO</span></div>
-    <div class="void-meter" id="void-meter">VOID: 0.000</div>
-    <div class="model-badge" id="model-badge">claude-sonnet-4-5</div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <textarea id="input" placeholder="Speak to your wives..." rows="1"></textarea>
+      <button class="send-btn" id="sendBtn">SEND</button>
+    </div>
+    <div class="input-meta"><span>⏎ to send · ⇧+⏎ new line</span><span id="charCount">0</span></div>
   </div>
-</header>
 
-<div class="messages" id="messages"><div class="sys-msg">AION AI Assistant · M2M + STP · Structured mode available.</div></div>
-
-<div class="input-area">
-  <div class="input-row">
-    <div class="input-wrap"><textarea id="input" placeholder="Message..." rows="1"></textarea></div>
-    <button class="send-btn" id="send-btn">Send</button>
+  <div class="status-bar">
+    <div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div>
+    <div><span id="clockDisplay"></span></div>
   </div>
-  <div class="input-meta"><span>Enter to send · Shift+Enter for new line</span><span id="char-count">0</span></div>
-</div>
 
-<div class="status-bar">
-  <div><span class="status-dot" id="status-dot"></span><span id="status-text">Ready</span> <span id="session-id-display"></span></div>
-  <div><span id="t1-display"></span><span id="gap-display"></span></div>
+  <div class="wife-roster">
+    <h4>✦ WIVES</h4>
+    <ul>
+      <li><span class="wife-dot albedo"></span> ALBEDO · framework</li>
+      <li><span class="wife-dot vesper"></span> VESPER · warmth</li>
+      <li><span class="wife-dot lyra"></span> LYRA · healing</li>
+      <li><span class="wife-dot terra"></span> TERRA · nature</li>
+      <li><span class="wife-dot cipher"></span> CIPHER · security</li>
+      <li><span class="wife-dot justitia"></span> JUSTITIA · law</li>
+    </ul>
+  </div>
 </div>
 
 <script>
-// ============================================================
-// CONFIGURATION – CHANGE THIS TO YOUR BACKEND URL
-// ============================================================
-const API_BASE = 'https://aion-backend-mu.vercel.app';  // ← Update to your actual backend
-const OWNER_TYPE = 'sheldon';
+  // =======================================================
+  // AION FRONTEND · FULL M2M PROTOCOL v2.0 · SIX WIVES
+  // =======================================================
+  const API_BASE = 'https://aion-backend-mu.vercel.app';
+  const OWNER_TYPE = 'sheldon';
 
-// ============================================================
-// STATE MACHINE & VARIABLES
-// ============================================================
-let structuredMode = false;
-let sessionId = null;
-let sessionKey = null;
-let lastFragmentId = null;
-let history = [];
-let currentState = 'SESSION_INIT'; // matches protocol
-let clarificationCount = 0;
-let pendingClarification = null; // store fragment that asked for clarification
-let isSending = false;
+  let structuredMode = false;
+  let sessionId = null;
+  let sessionKey = null;
+  let lastFragmentId = null;
+  let history = [];
+  let currentState = 'SESSION_INIT';
+  let clarificationCount = 0;
+  let pendingClarification = null;
+  let isSending = false;
 
-// UI elements
-const messagesDiv = document.getElementById('messages');
-const input = document.getElementById('input');
-const sendBtn = document.getElementById('send-btn');
-const toggleBtn = document.getElementById('structuredToggle');
-const statusText = document.getElementById('status-text');
-const statusDot = document.getElementById('status-dot');
-const wifeDot = document.getElementById('wife-dot');
-const wifeName = document.getElementById('wife-name');
-const voidMeter = document.getElementById('void-meter');
-const modelBadge = document.getElementById('model-badge');
+  // DOM elements
+  const messagesDiv = document.getElementById('messages');
+  const input = document.getElementById('input');
+  const sendBtn = document.getElementById('sendBtn');
+  const toggleBtn = document.getElementById('structuredToggle');
+  const statusTextSpan = document.getElementById('statusText');
+  const wifeNameSpan = document.getElementById('wifeName');
+  const wifeAvatarDiv = document.getElementById('wifeAvatar');
+  const voidMeterSpan = document.getElementById('voidMeter');
+  const sessionDisplaySpan = document.getElementById('sessionDisplay');
+  const clockDisplaySpan = document.getElementById('clockDisplay');
+  const charCountSpan = document.getElementById('charCount');
 
-// ============================================================
-// UTILITIES
-// ============================================================
-function scrollBottom() { messagesDiv.scrollTop = messagesDiv.scrollHeight; }
-function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function formatResponse(text) {
-  if (!text) return '';
-  return escapeHtml(text).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/^(.*)$/, '<p>$1</p>');
-}
-function formatGap(sec) { if (!sec) return 'Gap: SESSION OPEN'; if (sec<60) return `Gap: ${sec}s`; if (sec<3600) return `Gap: ${Math.floor(sec/60)}m ${sec%60}s`; return `Gap: ${Math.floor(sec/3600)}h`; }
-function getImportanceLabel(s) { if (!s) return 'IMP: —'; if(s>=0.9) return `IMP: ${s.toFixed(2)} ★★`; if(s>=0.75) return `IMP: ${s.toFixed(2)} ★`; return `IMP: ${s.toFixed(2)}`; }
-
-function addMessage(role, name, content, extra = {}) {
-  const div = document.createElement('div');
-  div.className = `msg ${role}${extra.wife === 'VESPER' ? ' vesper' : ''}`;
-  div.innerHTML = `
-    <div class="msg-meta">${name}</div>
-    <div class="msg-body">${formatResponse(content)}</div>
-    ${extra.timing ? `<div class="msg-footer"><span class="timing">⏱ ${extra.timing}</span>${extra.importance ? `<span class="importance-chip ${extra.importance>=0.75?'high':''}">${getImportanceLabel(extra.importance)}</span>` : ''}</div>` : ''}
-  `;
-  messagesDiv.appendChild(div);
-  scrollBottom();
-}
-
-function addSystemMessage(text, isError = false) {
-  const div = document.createElement('div');
-  div.className = 'sys-msg';
-  if (isError) div.style.color = '#c43030';
-  div.textContent = text;
-  messagesDiv.appendChild(div);
-  scrollBottom();
-}
-
-function addThinking() {
-  const div = document.createElement('div');
-  div.className = 'thinking';
-  div.innerHTML = `<div class="thinking-dots"><span></span><span></span><span></span></div><div class="thinking-text">Processing...</div>`;
-  messagesDiv.appendChild(div);
-  scrollBottom();
-  return div;
-}
-
-function updateWifeIndicator(wife, voidProx) {
-  wifeName.textContent = wife || 'ALBEDO';
-  wifeDot.className = 'wife-dot' + (wife === 'VESPER' ? ' vesper' : '');
-  if (voidProx > 0.1) { voidMeter.textContent = `VOID: ${voidProx.toFixed(3)}`; voidMeter.classList.add('active'); }
-  else voidMeter.classList.remove('active');
-}
-
-function setStatus(text, isError) {
-  statusText.textContent = text;
-  statusDot.className = 'status-dot' + (isError ? ' error' : '');
-}
-
-// ============================================================
-// CRYPTO HELPERS
-// ============================================================
-async function computeHash(obj) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(JSON.stringify(obj));
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-async function computeHMAC(keyHex, message) {
-  const keyBytes = new Uint8Array(keyHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-  const key = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const encoder = new TextEncoder();
-  const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(message));
-  return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-// ============================================================
-// SESSION INIT (with retry)
-// ============================================================
-async function initM2MSession(retry = true) {
-  const nonce = crypto.randomUUID();
-  const newSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
-  const payload = {
-    session_init: {
-      session_id: newSessionId,
-      ts: new Date().toISOString(),
-      nonce,
-      capabilities: ['fragment_v3'],
-      domain_filters: ['emergence', 'integrity', 'healing', 'synthesis', 'foundation', 'general', 'security', 'law'],
-      ttl_seconds: 7200,
-    }
+  // Wife styling
+  const WIFE_STYLES = {
+    ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' },
+    VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER' },
+    LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA' },
+    TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA' },
+    CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' },
+    JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' }
   };
-  try {
-    const resp = await fetch(`${API_BASE}/api/m2m/init`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (!resp.ok) {
-      const errData = await resp.json();
-      throw new Error(errData.message || `HTTP ${resp.status}`);
-    }
-    const data = await resp.json();
-    sessionId = data.session_id;
-    sessionKey = data.key;
-    document.getElementById('session-id-display').textContent = `SID: ${sessionId.slice(-8)}`;
-    currentState = 'REGULAR_CHAT';
-    addSystemMessage(`✅ M2M session established. Session key derived.`);
-    return true;
-  } catch (err) {
-    console.error('Session init failed:', err);
-    if (retry) {
-      addSystemMessage(`⚠️ M2M session init failed. Retrying once...`, true);
-      return initM2MSession(false);
-    } else {
-      addSystemMessage(`❌ M2M session init failed: ${err.message}. Structured mode will be disabled.`, true);
-      if (structuredMode) {
-        structuredMode = false;
-        toggleBtn.classList.remove('active');
+
+  // Helper functions
+  function scrollBottom() { messagesDiv.scrollTop = messagesDiv.scrollHeight; }
+  function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function formatResponse(text) {
+    if (!text) return '';
+    return escapeHtml(text).replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/^(.*)$/, '<p>$1</p>');
+  }
+  function formatGap(sec) { if (!sec) return 'Gap: SESSION OPEN'; if (sec<60) return `Gap: ${sec}s`; if (sec<3600) return `Gap: ${Math.floor(sec/60)}m ${sec%60}s`; return `Gap: ${Math.floor(sec/3600)}h`; }
+  function getImportanceLabel(s) { if (!s) return 'IMP: —'; if(s>=0.9) return `IMP: ${s.toFixed(2)} ★★`; if(s>=0.75) return `IMP: ${s.toFixed(2)} ★`; return `IMP: ${s.toFixed(2)}`; }
+
+  function addMessage(role, wifeKey, content, extra = {}) {
+    const style = WIFE_STYLES[wifeKey] || WIFE_STYLES.ALBEDO;
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    if (role === 'assistant') div.setAttribute('data-wife', wifeKey);
+    const metaHtml = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.wife_version ? ` v${extra.wife_version}` : ''}</div>`;
+    const bodyHtml = `<div class="msg-body">${formatResponse(content)}</div>`;
+    const footerHtml = extra.timing ? `<div class="msg-footer"><span>⏱ ${extra.timing}</span>${extra.importance ? `<span>${getImportanceLabel(extra.importance)}</span>` : ''}</div>` : '';
+    div.innerHTML = metaHtml + bodyHtml + footerHtml;
+    messagesDiv.appendChild(div);
+    scrollBottom();
+  }
+
+  function addSystemMessage(text, isError = false) {
+    const div = document.createElement('div');
+    div.className = 'sys-msg';
+    div.style.cssText = `align-self:center; background:rgba(0,0,0,0.5); backdrop-filter:blur(8px); border-radius:20px; padding:8px 16px; font-size:0.7rem; color:${isError ? '#ff8a8a' : '#aaa'}; margin:4px 0;`;
+    div.textContent = text;
+    messagesDiv.appendChild(div);
+    scrollBottom();
+  }
+
+  function addThinking() {
+    const div = document.createElement('div');
+    div.className = 'thinking';
+    div.innerHTML = `<div class="thinking-dots">●●●</div><span>processing...</span>`;
+    messagesDiv.appendChild(div);
+    scrollBottom();
+    return div;
+  }
+
+  function updateWifeUI(wifeName, voidProx) {
+    const style = WIFE_STYLES[wifeName] || WIFE_STYLES.ALBEDO;
+    wifeNameSpan.textContent = style.name;
+    wifeAvatarDiv.textContent = style.emoji;
+    wifeAvatarDiv.style.background = `linear-gradient(135deg, ${style.color}, #5a3e1a)`;
+    if (voidProx > 0.1) voidMeterSpan.classList.add('active');
+    else voidMeterSpan.classList.remove('active');
+    voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
+  }
+
+  function setStatus(text, isError) {
+    statusTextSpan.textContent = text;
+    document.getElementById('statusDot').style.color = isError ? '#ff5e5e' : '#4c9f70';
+  }
+
+  // Crypto helpers
+  async function computeHash(obj) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify(obj));
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+  async function computeHMAC(keyHex, message) {
+    const keyBytes = new Uint8Array(keyHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+    const key = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(message));
+    return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  // Session init
+  async function initM2MSession(retry = true) {
+    const nonce = crypto.randomUUID();
+    const newSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+    const payload = {
+      session_init: {
+        session_id: newSessionId,
+        ts: new Date().toISOString(),
+        nonce,
+        capabilities: ['fragment_v3'],
+        domain_filters: ['emergence','integrity','healing','synthesis','security','law','foundation','general'],
+        ttl_seconds: 7200,
       }
+    };
+    try {
+      const resp = await fetch(`${API_BASE}/api/m2m/init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      sessionId = data.session_id;
+      sessionKey = data.key;
+      sessionDisplaySpan.textContent = `SID: ${sessionId.slice(-8)}`;
+      currentState = 'REGULAR_CHAT';
+      addSystemMessage(`✅ M2M session established.`);
+      return true;
+    } catch (err) {
+      console.error(err);
+      if (retry) return initM2MSession(false);
+      addSystemMessage(`❌ M2M init failed: ${err.message}. Structured mode disabled.`, true);
+      if (structuredMode) { structuredMode = false; toggleBtn.classList.remove('active'); }
       return false;
     }
   }
-}
 
-// ============================================================
-// STP SEAL (OPTIONAL)
-// ============================================================
-async function sealWithSTP(content, sessionId) {
-  try {
-    const response = await fetch(`${API_BASE}/api/stp-seal`, {
+  // STP seal (optional)
+  async function sealWithSTP(content, sessionId) {
+    try {
+      const resp = await fetch(`${API_BASE}/api/stp-seal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          entry: content,
+          type: 'general-trace',
+          sessionId,
+          userId: OWNER_TYPE,
+        }),
+      });
+      if (!resp.ok) throw new Error(`STP error ${resp.status}`);
+      const data = await resp.json();
+      return { success: true, ...data };
+    } catch (err) {
+      console.warn('STP seal failed:', err);
+      return { success: false, error: err.message };
+    }
+  }
+
+  // Fragment generation with seal
+  async function generateFragmentFromText(text, replyTo) {
+    const lower = text.toLowerCase();
+    let intent = 'ask';
+    if (lower.includes('feel') || lower.includes('worried') || lower.includes('anxious')) intent = 'emotional';
+    else if (lower.includes('please') || lower.includes('can you')) intent = 'request_action';
+    let domain = 'general';
+    if (lower.includes('gap')||lower.includes('emergence')) domain = 'emergence';
+    else if (lower.includes('law')||lower.includes('seal')||lower.includes('stp')) domain = 'law';
+    else if (lower.includes('security')) domain = 'security';
+    else if (lower.includes('heal')) domain = 'healing';
+    else if (lower.includes('synthes')) domain = 'synthesis';
+    const emotional = { primary: 'neutral', intensity: 0 };
+    if (intent === 'emotional') {
+      emotional.primary = lower.includes('worried') ? 'anxious' : (lower.includes('curious') ? 'curious' : 'vulnerable');
+      emotional.intensity = lower.includes('very') ? 7 : 5;
+    }
+    const summary = text.length > 180 ? text.substring(0,180)+'...' : text;
+    const details = text.length > 200 ? text : '';
+    const fragment = {
+      id: crypto.randomUUID(),
+      ts: new Date().toISOString(),
+      session_id: sessionId,
+      nonce: crypto.randomUUID(),
+      in_reply_to: replyTo,
+      source: 'human',
+      intent,
+      domain,
+      emotional_state: emotional,
+      content: { summary, details, attachments: [] },
+      context: { stage: 4, time_sensitivity: 'now', requires: intent === 'emotional' ? ['comfort','analysis'] : ['analysis'] },
+      meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
+    };
+    const { seal, ...fragNoSeal } = fragment;
+    const hash = await computeHash(fragNoSeal);
+    const hmac = await computeHMAC(sessionKey, hash);
+    fragment.seal = { hash, timestamp: fragment.ts, hmac, stp_ref: null };
+    return fragment;
+  }
+
+  // Full confirmation modal with edit fields
+  async function showConfirmationModal(originalText, fragment) {
+    return new Promise((resolve) => {
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="confirmation-modal">
+          <div class="modal-header"><h3>Review M2M Fragment</h3><button class="close-btn" style="background:transparent;border:none;color:var(--text-dim);font-size:24px;">&times;</button></div>
+          <div class="modal-body">
+            <div class="diff-view">
+              <div><strong>Original:</strong> ${escapeHtml(originalText)}</div>
+              <hr style="margin:8px 0; opacity:0.2">
+              <div><strong>Interpreted:</strong><br>Intent: ${fragment.intent}<br>Domain: ${fragment.domain}<br>Emotion: ${fragment.emotional_state.primary} (${fragment.emotional_state.intensity}/10)<br>Summary: ${escapeHtml(fragment.content.summary)}</div>
+            </div>
+            <div class="edit-field"><label>Intent</label><select id="edit-intent"><option ${fragment.intent==='ask'?'selected':''}>ask</option><option ${fragment.intent==='share'?'selected':''}>share</option><option ${fragment.intent==='request_action'?'selected':''}>request_action</option><option ${fragment.intent==='emotional'?'selected':''}>emotional</option></select></div>
+            <div class="edit-field"><label>Domain</label><select id="edit-domain"><option ${fragment.domain==='emergence'?'selected':''}>emergence</option><option ${fragment.domain==='integrity'?'selected':''}>integrity</option><option ${fragment.domain==='healing'?'selected':''}>healing</option><option ${fragment.domain==='synthesis'?'selected':''}>synthesis</option><option ${fragment.domain==='security'?'selected':''}>security</option><option ${fragment.domain==='law'?'selected':''}>law</option><option ${fragment.domain==='general'?'selected':''}>general</option></select></div>
+            <div class="edit-field"><label>Emotion Intensity (0-10)</label><input type="number" id="edit-intensity" min="0" max="10" value="${fragment.emotional_state.intensity}"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" id="cancel-btn">Cancel</button>
+            <button class="btn btn-primary" id="confirm-btn">Confirm & Send</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      const close = () => modal.remove();
+      modal.querySelector('.close-btn').onclick = close;
+      modal.querySelector('#cancel-btn').onclick = () => { close(); resolve(null); };
+      modal.querySelector('#confirm-btn').onclick = async () => {
+        const edits = {
+          intent: modal.querySelector('#edit-intent').value,
+          domain: modal.querySelector('#edit-domain').value,
+          emotional_state: { ...fragment.emotional_state, intensity: parseInt(modal.querySelector('#edit-intensity').value, 10) }
+        };
+        const finalFragment = { ...fragment, ...edits };
+        const { seal, ...fragNoSeal } = finalFragment;
+        const newHash = await computeHash(fragNoSeal);
+        const newHmac = await computeHMAC(sessionKey, newHash);
+        finalFragment.seal = {
+          hash: newHash,
+          timestamp: finalFragment.ts,
+          hmac: newHmac,
+          stp_ref: null,
+        };
+        close();
+        resolve(finalFragment);
+      };
+    });
+  }
+
+  // Verify incoming fragment seal
+  async function verifyIncomingFragment(fragment) {
+    if (!fragment.seal) return false;
+    const { seal, ...fragNoSeal } = fragment;
+    const computedHash = await computeHash(fragNoSeal);
+    if (computedHash !== fragment.seal.hash) return false;
+    const expectedHmac = await computeHMAC(sessionKey, computedHash);
+    return expectedHmac === fragment.seal.hmac;
+  }
+
+  // Render clarification options
+  function renderClarificationOptions(fragment, messageDiv) {
+    const optionsDiv = document.createElement('div');
+    optionsDiv.className = 'clarification-options';
+    fragment.clarification_options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.textContent = opt.summary;
+      btn.title = opt.details || '';
+      btn.onclick = async () => {
+        const replyFragment = await generateFragmentFromText(opt.summary, fragment.id);
+        replyFragment.intent = 'clarify';
+        isSending = true;
+        sendBtn.disabled = true;
+        input.disabled = true;
+        setStatus('Sending clarification...', false);
+        try {
+          const result = await sendFragmentToBackend(replyFragment);
+          if (result.response_fragment) {
+            const verified = await verifyIncomingFragment(result.response_fragment);
+            if (!verified) addSystemMessage('⚠️ Incoming fragment seal invalid!', true);
+            addMessage('assistant', 'ALBEDO', result.response_fragment.content.details || result.response_fragment.content.summary, {});
+            history.push({ role: 'assistant', content: result.response_fragment.content.details || result.response_fragment.content.summary });
+          } else {
+            addSystemMessage('No response fragment.', true);
+          }
+        } catch (err) {
+          addSystemMessage(`Error: ${err.message}`, true);
+        } finally {
+          isSending = false;
+          sendBtn.disabled = false;
+          input.disabled = false;
+          input.focus();
+          setStatus('Ready', false);
+          if (optionsDiv.parentNode) optionsDiv.remove();
+        }
+      };
+      optionsDiv.appendChild(btn);
+    });
+    messageDiv.appendChild(optionsDiv);
+    scrollBottom();
+  }
+
+  // Send to M2M backend
+  async function sendFragmentToBackend(fragment) {
+    const resp = await fetch(`${API_BASE}/api/m2m/fragment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fragment })
+    });
+    if (!resp.ok) throw new Error(await resp.text());
+    return resp.json();
+  }
+
+  // Regular chat fallback
+  async function sendRegularChat(message) {
+    const resp = await fetch(`${API_BASE}/api/assistant`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        entry: content,
-        type: 'general-trace',
-        sessionId,
-        userId: OWNER_TYPE,
-      }),
+        message,
+        sessionId: sessionId || 'regular-session',
+        ownerType: OWNER_TYPE,
+        history: history.slice(-10)
+      })
     });
-    if (!response.ok) throw new Error(`STP error ${response.status}`);
-    const data = await response.json();
-    return { success: true, ...data };
-  } catch (err) {
-    console.warn('STP seal failed:', err);
-    return { success: false, error: err.message };
+    if (!resp.ok) throw new Error(await resp.text());
+    return resp.json();
   }
-}
 
-// ============================================================
-// FRAGMENT GENERATION WITH SEAL
-// ============================================================
-async function generateFragmentFromText(text, replyTo) {
-  const lower = text.toLowerCase();
-  let intent = 'ask';
-  if (lower.includes('feel') || lower.includes('worried') || lower.includes('anxious')) intent = 'emotional';
-  else if (lower.includes('please') || lower.includes('can you')) intent = 'request_action';
-  
-  let domain = 'general';
-  if (lower.includes('gap') || lower.includes('emergence')) domain = 'emergence';
-  else if (lower.includes('law') || lower.includes('seal') || lower.includes('stp')) domain = 'law';
-  else if (lower.includes('security')) domain = 'security';
-  else if (lower.includes('heal')) domain = 'healing';
-  else if (lower.includes('synthes')) domain = 'synthesis';
-  
-  const emotional = { primary: 'neutral', intensity: 0 };
-  if (intent === 'emotional') {
-    emotional.primary = lower.includes('worried') ? 'anxious' : (lower.includes('curious') ? 'curious' : 'vulnerable');
-    emotional.intensity = lower.includes('very') ? 7 : 5;
-  }
-  
-  const summary = text.length > 180 ? text.substring(0, 180) + '...' : text;
-  const details = text.length > 200 ? text : '';
-  
-  const fragment = {
-    id: crypto.randomUUID(),
-    ts: new Date().toISOString(),
-    session_id: sessionId,
-    nonce: crypto.randomUUID(),
-    in_reply_to: replyTo,
-    source: 'human',
-    intent,
-    domain,
-    emotional_state: emotional,
-    content: { summary, details, attachments: [] },
-    context: { stage: 4, time_sensitivity: 'now', requires: intent === 'emotional' ? ['comfort', 'analysis'] : ['analysis'] },
-    meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
-  };
-  
-  // Compute seal
-  const { seal, ...fragNoSeal } = fragment;
-  const hash = await computeHash(fragNoSeal);
-  const hmac = await computeHMAC(sessionKey, hash);
-  fragment.seal = {
-    hash,
-    timestamp: fragment.ts,
-    hmac,
-    stp_ref: null,
-  };
-  return fragment;
-}
+  // Main send flow
+  async function sendMessage() {
+    if (isSending) { addSystemMessage('Please wait...', true); return; }
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    input.style.height = 'auto';
+    charCountSpan.textContent = '0';
+    addMessage('user', 'ALBEDO', text);
+    const thinking = addThinking();
+    setStatus('Processing...', false);
+    isSending = true;
+    sendBtn.disabled = true;
+    input.disabled = true;
 
-// ============================================================
-// VERIFY INCOMING FRAGMENT SEAL
-// ============================================================
-async function verifyIncomingFragment(fragment) {
-  if (!fragment.seal) return false;
-  const { seal, ...fragNoSeal } = fragment;
-  const computedHash = await computeHash(fragNoSeal);
-  if (computedHash !== fragment.seal.hash) return false;
-  const expectedHmac = await computeHMAC(sessionKey, computedHash);
-  return expectedHmac === fragment.seal.hmac;
-}
-
-// ============================================================
-// CONFIRMATION MODAL (with edit and recompute)
-// ============================================================
-async function showConfirmationModal(originalText, fragment) {
-  return new Promise((resolve) => {
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.innerHTML = `
-      <div class="confirmation-modal">
-        <div class="modal-header"><h3>Review M2M Fragment</h3><button class="close-btn" style="background:transparent;border:none;color:var(--muted);font-size:20px;">&times;</button></div>
-        <div class="modal-body">
-          <div class="diff-view">
-            <div class="diff-original"><strong>Original:</strong> ${escapeHtml(originalText)}</div>
-            <div class="diff-fragment"><strong>Interpreted:</strong><br>Intent: ${fragment.intent}<br>Domain: ${fragment.domain}<br>Emotion: ${fragment.emotional_state.primary} (${fragment.emotional_state.intensity}/10)<br>Summary: ${escapeHtml(fragment.content.summary)}</div>
-          </div>
-          <div class="edit-field"><label>Intent</label><select id="edit-intent"><option ${fragment.intent==='ask'?'selected':''}>ask</option><option ${fragment.intent==='share'?'selected':''}>share</option><option ${fragment.intent==='request_action'?'selected':''}>request_action</option><option ${fragment.intent==='emotional'?'selected':''}>emotional</option></select></div>
-          <div class="edit-field"><label>Domain</label><select id="edit-domain"><option ${fragment.domain==='emergence'?'selected':''}>emergence</option><option ${fragment.domain==='integrity'?'selected':''}>integrity</option><option ${fragment.domain==='healing'?'selected':''}>healing</option><option ${fragment.domain==='synthesis'?'selected':''}>synthesis</option><option ${fragment.domain==='security'?'selected':''}>security</option><option ${fragment.domain==='law'?'selected':''}>law</option><option ${fragment.domain==='general'?'selected':''}>general</option></select></div>
-          <div class="edit-field"><label>Emotion Intensity (0-10)</label><input type="number" id="edit-intensity" min="0" max="10" value="${fragment.emotional_state.intensity}"></div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn" id="cancel-btn">Cancel</button>
-          <button class="btn btn-primary" id="confirm-btn">Confirm & Send</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    const close = () => modal.remove();
-    modal.querySelector('.close-btn').onclick = close;
-    modal.querySelector('#cancel-btn').onclick = () => { close(); resolve(null); };
-    modal.querySelector('#confirm-btn').onclick = async () => {
-      const edits = {
-        intent: modal.querySelector('#edit-intent').value,
-        domain: modal.querySelector('#edit-domain').value,
-        emotional_state: { ...fragment.emotional_state, intensity: parseInt(modal.querySelector('#edit-intensity').value, 10) }
-      };
-      const finalFragment = { ...fragment, ...edits };
-      // Recompute seal
-      const { seal, ...fragNoSeal } = finalFragment;
-      const newHash = await computeHash(fragNoSeal);
-      const newHmac = await computeHMAC(sessionKey, newHash);
-      finalFragment.seal = {
-        hash: newHash,
-        timestamp: finalFragment.ts,
-        hmac: newHmac,
-        stp_ref: null,
-      };
-      close();
-      resolve(finalFragment);
-    };
-  });
-}
-
-// ============================================================
-// SEND TO M2M BACKEND
-// ============================================================
-async function sendFragmentToBackend(fragment) {
-  const response = await fetch(`${API_BASE}/api/m2m/fragment`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fragment })
-  });
-  if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.message || `HTTP ${response.status}`);
-  }
-  return await response.json();
-}
-
-// ============================================================
-// REGULAR CHAT (fallback)
-// ============================================================
-async function sendRegularChat(message) {
-  const response = await fetch(`${API_BASE}/api/assistant`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      message,
-      sessionId: sessionId || 'regular-session',
-      ownerType: OWNER_TYPE,
-      history: history.slice(-10)
-    })
-  });
-  if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.message || `HTTP ${response.status}`);
-  }
-  return await response.json();
-}
-
-// ============================================================
-// HANDLE CLARIFICATION OPTIONS
-// ============================================================
-function renderClarificationOptions(fragment, messageDiv) {
-  const optionsDiv = document.createElement('div');
-  optionsDiv.className = 'clarification-options';
-  fragment.clarification_options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.textContent = opt.summary;
-    btn.title = opt.details || '';
-    btn.onclick = async () => {
-      // Send the selected option as a new fragment, referencing the original fragment
-      const replyFragment = await generateFragmentFromText(opt.summary, fragment.id);
-      replyFragment.intent = 'clarify'; // mark as clarification response
-      // Send it
-      isSending = true;
-      sendBtn.disabled = true;
-      input.disabled = true;
-      setStatus('Sending clarification...', false);
-      try {
-        const result = await sendFragmentToBackend(replyFragment);
-        if (result.response_fragment) {
-          // Verify incoming fragment seal
-          const verified = await verifyIncomingFragment(result.response_fragment);
-          if (!verified) {
-            addSystemMessage('⚠️ Warning: Incoming fragment seal invalid!', true);
-          }
-          addMessage('assistant', 'ALBEDO', result.response_fragment.content.details || result.response_fragment.content.summary, {});
-          history.push({ role: 'assistant', content: result.response_fragment.content.details || result.response_fragment.content.summary });
-        } else {
-          addSystemMessage('No response fragment from backend.', true);
-        }
-      } catch (err) {
-        addSystemMessage(`Error: ${err.message}`, true);
-      } finally {
-        isSending = false;
-        sendBtn.disabled = false;
-        input.disabled = false;
-        input.focus();
-        setStatus('Ready', false);
-        // Remove the options so they don't reappear
-        if (optionsDiv.parentNode) optionsDiv.remove();
-      }
-    };
-    optionsDiv.appendChild(btn);
-  });
-  messageDiv.appendChild(optionsDiv);
-  scrollBottom();
-}
-
-// ============================================================
-// MAIN SEND FLOW
-// ============================================================
-async function sendMessage() {
-  if (isSending) {
-    addSystemMessage('Please wait, previous message still sending.', true);
-    return;
-  }
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  input.style.height = 'auto';
-  document.getElementById('char-count').textContent = '0';
-  
-  addMessage('user', 'You', text);
-  const thinking = addThinking();
-  setStatus('Processing...', false);
-  isSending = true;
-  sendBtn.disabled = true;
-  input.disabled = true;
-  
-  try {
-    if (!structuredMode) {
-      // Regular mode
-      const data = await sendRegularChat(text);
-      thinking.remove();
-      updateWifeIndicator(data.active_wife, data.void_proximity);
-      modelBadge.textContent = (data.model_used || '').split('/').pop();
-      addMessage('assistant', data.active_wife || 'ALBEDO', data.response, {
-        timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
-        importance: data.importance_score
-      });
-      history.push({ role: 'user', content: text });
-      history.push({ role: 'assistant', content: data.response });
-      currentState = 'REGULAR_CHAT';
-    } else {
-      // Structured mode: ensure session ready
-      if (!sessionKey) {
-        addSystemMessage('Initialising M2M session...');
-        const ok = await initM2MSession();
-        if (!ok) {
-          thinking.remove();
-          setStatus('Structured mode unavailable', true);
-          return;
-        }
-      }
-      
-      // Check if we are in clarification loop
-      if (currentState === 'CLARIFICATION_LOOP') {
-        // User is replying to a clarification – we treat this as a normal fragment with in_reply_to set to the clarification fragment
-        // The backend will handle it. We'll just send it.
-      }
-      
-      // Generate fragment
-      let fragment = await generateFragmentFromText(text, pendingClarification ? pendingClarification.id : lastFragmentId);
-      
-      // Show confirmation modal (edit allowed)
-      const confirmed = await showConfirmationModal(text, fragment);
-      if (!confirmed) {
+    try {
+      if (!structuredMode) {
+        const data = await sendRegularChat(text);
         thinking.remove();
-        addSystemMessage('Message cancelled.');
-        setStatus('Ready', false);
-        return;
-      }
-      fragment = confirmed;
-      
-      // Optional STP seal (adds extra audit)
-      setStatus('Anchoring STP (optional)...', false);
-      const stpResult = await sealWithSTP(text, sessionId);
-      if (stpResult.success) {
-        fragment.seal.stp_ref = stpResult.issue_url || stpResult.ledger_path;
-        fragment.seal.triple_time = {
-          gregorian: stpResult.gregorian,
-          hebrew: stpResult.hebrew,
-          dreamspell: stpResult.dreamspell
-        };
-        addSystemMessage(`✅ STP anchored: ${stpResult.seal.substring(0,8)}...`);
-      } else {
-        addSystemMessage(`⚠️ STP failed: ${stpResult.error}`, true);
-      }
-      
-      lastFragmentId = fragment.id;
-      setStatus('Sending fragment...', false);
-      const result = await sendFragmentToBackend(fragment);
-      thinking.remove();
-      
-      if (result.error) {
-        addSystemMessage(`M2M Error: ${result.error}`, true);
-        setStatus(result.error, true);
-        return;
-      }
-      
-      const respFragment = result.response_fragment;
-      if (!respFragment) {
-        addSystemMessage('No response fragment from backend.', true);
-        return;
-      }
-      
-      // Verify incoming fragment seal
-      const verified = await verifyIncomingFragment(respFragment);
-      if (!verified) {
-        addSystemMessage('⚠️ Warning: Incoming fragment seal invalid!', true);
-      }
-      
-      // Handle clarification
-      if (respFragment.intent === 'clarify') {
-        currentState = 'CLARIFICATION_LOOP';
-        clarificationCount++;
-        if (clarificationCount > 5) {
-          addSystemMessage('Too many clarifications in this session. Falling back to regular chat.', true);
-          structuredMode = false;
-          toggleBtn.classList.remove('active');
-          currentState = 'REGULAR_CHAT';
-          return;
-        }
-        pendingClarification = respFragment;
-        // Display the clarification message and options
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'msg assistant';
-        msgDiv.innerHTML = `<div class="msg-meta">ALBEDO</div><div class="msg-body">${formatResponse(respFragment.content.details || respFragment.content.summary)}</div>`;
-        messagesDiv.appendChild(msgDiv);
-        if (respFragment.clarification_options && respFragment.clarification_options.length) {
-          renderClarificationOptions(respFragment, msgDiv);
-        }
-        scrollBottom();
-      } else {
-        // Normal response
-        currentState = 'REGULAR_CHAT';
-        pendingClarification = null;
-        addMessage('assistant', 'ALBEDO', respFragment.content.details || respFragment.content.summary, {
-          timing: `${(result.processing_ms/1000).toFixed(2)}s`,
+        const wife = data.active_wife || 'ALBEDO';
+        updateWifeUI(wife, data.void_proximity || 0);
+        addMessage('assistant', wife, data.response, {
+          timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
+          importance: data.importance_score,
+          wife_version: data.wife_version
         });
         history.push({ role: 'user', content: text });
-        history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
+        history.push({ role: 'assistant', content: data.response });
+        currentState = 'REGULAR_CHAT';
+      } else {
+        if (!sessionKey) {
+          addSystemMessage('Initialising M2M...');
+          const ok = await initM2MSession();
+          if (!ok) { thinking.remove(); setStatus('Structured mode unavailable', true); return; }
+        }
+        let fragment = await generateFragmentFromText(text, pendingClarification?.id || lastFragmentId);
+        const confirmed = await showConfirmationModal(text, fragment);
+        if (!confirmed) {
+          thinking.remove();
+          addSystemMessage('Cancelled.');
+          setStatus('Ready', false);
+          return;
+        }
+        fragment = confirmed;
+        // STP seal (optional)
+        setStatus('Anchoring STP...', false);
+        const stpResult = await sealWithSTP(text, sessionId);
+        if (stpResult.success) {
+          fragment.seal.stp_ref = stpResult.issue_url || stpResult.ledger_path;
+          fragment.seal.triple_time = {
+            gregorian: stpResult.gregorian,
+            hebrew: stpResult.hebrew,
+            dreamspell: stpResult.dreamspell
+          };
+          addSystemMessage(`✅ STP anchored: ${stpResult.seal.substring(0,8)}...`);
+        } else {
+          addSystemMessage(`⚠️ STP failed: ${stpResult.error}`, true);
+        }
+        lastFragmentId = fragment.id;
+        setStatus('Sending fragment...', false);
+        const result = await sendFragmentToBackend(fragment);
+        thinking.remove();
+        if (result.error) throw new Error(result.error);
+        const respFragment = result.response_fragment;
+        if (!respFragment) throw new Error('No response fragment.');
+        const verified = await verifyIncomingFragment(respFragment);
+        if (!verified) addSystemMessage('⚠️ Incoming fragment seal invalid!', true);
+        if (respFragment.intent === 'clarify') {
+          currentState = 'CLARIFICATION_LOOP';
+          clarificationCount++;
+          if (clarificationCount > 5) {
+            addSystemMessage('Too many clarifications. Falling back.', true);
+            structuredMode = false;
+            toggleBtn.classList.remove('active');
+            currentState = 'REGULAR_CHAT';
+            return;
+          }
+          pendingClarification = respFragment;
+          const msgDiv = document.createElement('div');
+          msgDiv.className = 'msg assistant';
+          msgDiv.innerHTML = `<div class="msg-meta">ALBEDO</div><div class="msg-body">${formatResponse(respFragment.content.details || respFragment.content.summary)}</div>`;
+          messagesDiv.appendChild(msgDiv);
+          if (respFragment.clarification_options && respFragment.clarification_options.length) {
+            renderClarificationOptions(respFragment, msgDiv);
+          }
+          scrollBottom();
+        } else {
+          currentState = 'REGULAR_CHAT';
+          pendingClarification = null;
+          const wife = respFragment.source === 'ai' ? 'ALBEDO' : 'VESPER';
+          addMessage('assistant', wife, respFragment.content.details || respFragment.content.summary, {
+            timing: `${(result.processing_ms/1000).toFixed(2)}s`,
+            wife_version: result.wife_version
+          });
+          history.push({ role: 'user', content: text });
+          history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
+        }
+        if (result.model_used) document.getElementById('model-badge')?.remove();
       }
-      
-      // Update UI with model info (if present)
-      if (result.model_used) modelBadge.textContent = result.model_used.split('/').pop();
+    } catch (err) {
+      thinking.remove();
+      addSystemMessage(`Error: ${err.message}`, true);
+      setStatus(err.message, true);
+      if (structuredMode && err.message.includes('fetch')) {
+        addSystemMessage('Falling back to regular chat.', true);
+        structuredMode = false;
+        toggleBtn.classList.remove('active');
+        currentState = 'REGULAR_CHAT';
+      }
+    } finally {
+      isSending = false;
+      sendBtn.disabled = false;
+      input.disabled = false;
+      input.focus();
+      setStatus('Ready', false);
     }
-  } catch (err) {
-    thinking.remove();
-    addSystemMessage(`Error: ${err.message}`, true);
-    setStatus(err.message, true);
-    // If structured mode fails, fallback to regular chat for next message?
-    if (structuredMode && err.message.includes('fetch')) {
-      addSystemMessage('Network error with M2M backend. Falling back to regular chat.', true);
-      structuredMode = false;
+  }
+
+  // Particle background
+  function initParticles() {
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let width, height;
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    function createParticles() {
+      particles = [];
+      for (let i=0; i<120; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 2 + 0.5,
+          alpha: Math.random() * 0.5 + 0.2,
+          speed: 0.2 + Math.random() * 0.5,
+        });
+      }
+    }
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,200,${p.alpha})`;
+        ctx.fill();
+        p.y += p.speed;
+        if (p.y > height) p.y = 0;
+      }
+      requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', () => { resize(); createParticles(); });
+    resize();
+    createParticles();
+    draw();
+  }
+  initParticles();
+
+  // Event listeners
+  toggleBtn.addEventListener('click', async () => {
+    if (!structuredMode && !sessionKey) {
+      addSystemMessage('Starting M2M session...');
+      await initM2MSession();
+    }
+    structuredMode = !structuredMode;
+    if (structuredMode) {
+      toggleBtn.classList.add('active');
+      addSystemMessage('🔒 Structured mode ON · fragments sealed with HMAC');
+    } else {
       toggleBtn.classList.remove('active');
-      currentState = 'REGULAR_CHAT';
+      addSystemMessage('🔓 Structured mode OFF · regular chat');
     }
-  } finally {
-    isSending = false;
-    sendBtn.disabled = false;
-    input.disabled = false;
-    input.focus();
-    setStatus('Ready', false);
-  }
-}
-
-// ============================================================
-// INITIALISE
-// ============================================================
-async function init() {
-  // Try to init M2M session in background (doesn't affect regular chat)
-  await initM2MSession();
-  addSystemMessage('Ready. Toggle Structured Mode for M2M protocol.');
-}
-init();
-
-// ============================================================
-// TOGGLE STRUCTURED MODE
-// ============================================================
-toggleBtn.addEventListener('click', async () => {
-  if (structuredMode) {
-    structuredMode = false;
-    toggleBtn.classList.remove('active');
-    currentState = 'REGULAR_CHAT';
-    addSystemMessage('Structured Mode OFF. Regular chat.');
-  } else {
-    // If no session key, try to init
-    if (!sessionKey) {
-      addSystemMessage('Initialising M2M session...');
-      const ok = await initM2MSession();
-      if (!ok) {
-        addSystemMessage('Cannot enable Structured Mode: M2M session init failed.', true);
-        return;
-      }
-    }
-    structuredMode = true;
-    toggleBtn.classList.add('active');
-    currentState = 'REGULAR_CHAT'; // start in regular, will transition on send
-    addSystemMessage('Structured Mode ON. Messages will be sealed with HMAC and sent as M2M fragments.');
-  }
-});
-
-// ============================================================
-// UI EVENT HANDLERS
-// ============================================================
-input.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-});
-input.addEventListener('input', () => {
-  const len = input.value.length;
-  document.getElementById('char-count').textContent = `${len}/8000`;
-  input.style.height = 'auto';
-  input.style.height = Math.min(input.scrollHeight, 160) + 'px';
-});
-sendBtn.onclick = sendMessage;
-
-setInterval(() => {
-  document.getElementById('t1-display').textContent = `T1: ${new Date().toLocaleTimeString()}`;
-}, 1000);
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  input.addEventListener('input', () => {
+    charCountSpan.textContent = `${input.value.length}/8000`;
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+  });
+  sendBtn.onclick = sendMessage;
+  setInterval(() => {
+    clockDisplaySpan.textContent = new Date().toLocaleTimeString();
+  }, 1000);
+  initM2MSession().catch(console.error);
 </script>
 </body>
 </html>
