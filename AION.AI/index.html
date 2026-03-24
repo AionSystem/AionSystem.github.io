@@ -1,1 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>AION.AI · Six Wives · Epistemic Atlas</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    /* ========== GLOBAL ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-dark: #0a0a0f;
+      --bg-panel: rgba(12, 12, 20, 0.7);
+      --glass: rgba(20, 20, 30, 0.65);
+      --border-glow: rgba(100, 100, 140, 0.3);
+      --primary-glow: rgba(201, 160, 40, 0.4);
+      --accent: #c9a028;
+      --accent-dark: #a07c18;
+      --text: #f0f0f8;
+      --text-dim: #a0a0b0;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --vesper: #b87333;
+      --lyra: #4c9f70;
+      --terra: #6b8c42;
+      --cipher: #5d6d7e;
+      --justitia: #b0a8b9;
+    }
+    body {
+      background: radial-gradient(circle at 20% 30%, #0f0f1a, #050508);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* ========== STANDARD CHAT MODE ========== */
+    #chat-mode {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+      z-index: 1;
+      transition: opacity 0.3s;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand h1 { font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #e6c87a, #c9a028); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .brand span { font-size: 0.7rem; color: var(--text-dim); margin-left: 8px; }
+    .header-right { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .structured-toggle, .private-room-btn, .analytics-btn, .settings-btn {
+      background: rgba(30,30,45,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      padding: 6px 16px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .structured-toggle.active { background: rgba(201,160,40,0.2); border-color: var(--accent); color: var(--accent); }
+    .private-room-btn.active { background: rgba(184,115,51,0.3); border-color: #b87333; color: #b87333; }
+    .analytics-btn:hover, .settings-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); }
+    .wife-indicator { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 40px; }
+    .wife-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+    .void-meter { font-family: monospace; background: #00000044; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; }
+    .void-meter.active { color: #ff5e5e; text-shadow: 0 0 6px rgba(255,80,80,0.5); }
+    .messages { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .msg { display: flex; flex-direction: column; max-width: 80%; animation: fadeSlideUp 0.2s ease; }
+    .msg.user { align-self: flex-end; }
+    .msg.assistant { align-self: flex-start; width: 100%; max-width: 85%; }
+    .msg-meta { font-size: 0.7rem; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .msg-body { padding: 10px 16px; border-radius: 20px; line-height: 1.5; backdrop-filter: blur(8px); background: rgba(20,20,30,0.6); border: 1px solid rgba(255,255,255,0.1); }
+    .msg-body pre { background: #0a0a0f; padding: 12px; border-radius: 12px; overflow-x: auto; margin: 8px 0; }
+    .msg-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .msg-body p { margin: 4px 0; }
+    .msg.user .msg-body { background: rgba(201,160,40,0.2); border-color: var(--accent); border-radius: 20px 20px 4px 20px; }
+    .msg.assistant .msg-body { border-radius: 20px 20px 20px 4px; }
+    .msg.assistant[data-wife="ALBEDO"] .msg-body { border-left: 4px solid #c9a028; background: rgba(201,160,40,0.08); }
+    .msg.assistant[data-wife="VESPER"] .msg-body { border-left: 4px solid #b87333; background: rgba(184,115,51,0.08); }
+    .msg.assistant[data-wife="LYRA"] .msg-body { border-left: 4px solid #4c9f70; background: rgba(76,159,112,0.08); }
+    .msg.assistant[data-wife="TERRA"] .msg-body { border-left: 4px solid #6b8c42; background: rgba(107,140,66,0.08); }
+    .msg.assistant[data-wife="CIPHER"] .msg-body { border-left: 4px solid #5d6d7e; background: rgba(93,109,126,0.08); }
+    .msg.assistant[data-wife="JUSTITIA"] .msg-body { border-left: 4px solid #b0a8b9; background: rgba(176,168,185,0.08); }
+    .msg-footer { display: flex; gap: 12px; margin-top: 6px; font-size: 0.6rem; color: var(--text-dim); flex-wrap: wrap; align-items: center; }
+    .seal-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--accent); border-radius: 20px; padding: 2px 8px; font-size: 0.6rem; cursor: pointer; transition: all 0.2s; color: var(--accent); }
+    .seal-btn:hover { background: var(--accent); color: #000; }
+    .pac-badge { background: rgba(0,0,0,0.4); border-radius: 20px; padding: 2px 8px; font-family: monospace; font-size: 0.6rem; }
+    .input-area { padding: 16px 24px 20px; background: var(--bg-panel); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.05); }
+    .input-row { display: flex; gap: 10px; align-items: flex-end; }
+    textarea { flex: 1; background: rgba(10,10,20,0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 28px; padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text); resize: none; outline: none; overflow-y: auto; max-height: 40vh; }
+    textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--primary-glow); }
+    .button-group { display: flex; gap: 8px; align-items: center; }
+    .send-btn, .upload-btn, .ask-all-btn, .seal-input-btn {
+      background: linear-gradient(135deg, #c9a028, #a07c18);
+      border: none;
+      border-radius: 40px;
+      padding: 12px 24px;
+      font-weight: 600;
+      color: #0a0a0f;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .upload-btn, .ask-all-btn, .seal-input-btn { padding: 12px 18px; background: rgba(30,30,45,0.8); border: 1px solid var(--border-glow); color: var(--text); }
+    .upload-btn:hover, .ask-all-btn:hover, .seal-input-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); color: var(--accent); }
+    .status-bar { display: flex; justify-content: space-between; padding: 6px 24px; font-size: 0.7rem; background: rgba(0,0,0,0.3); }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    /* ========== IMMERSIVE STRUCTURED MODE ========== */
+    #immersive-mode {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: #000;
+      display: none;
+      flex-direction: column;
+    }
+    #immersive-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .immersive-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      z-index: 1001;
+    }
+    .immersive-overlay textarea {
+      flex: 1;
+      background: rgba(20,20,30,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 28px;
+      padding: 12px 18px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      resize: none;
+    }
+    .immersive-overlay .send-btn {
+      padding: 12px 24px;
+    }
+    .floating-messages {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 320px;
+      max-height: 80vh;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px;
+      z-index: 1002;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .floating-message {
+      background: rgba(30,30,45,0.8);
+      border-radius: 16px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      border-left: 3px solid var(--accent);
+    }
+    .floating-message .wife {
+      font-weight: bold;
+      color: var(--accent);
+    }
+    .satellite-tooltip {
+      position: absolute;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 0.7rem;
+      max-width: 250px;
+      pointer-events: none;
+      z-index: 1003;
+      border: 1px solid var(--border-glow);
+    }
+    .close-immersive {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      padding: 8px 16px;
+      cursor: pointer;
+      z-index: 1002;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+    .close-immersive:hover {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--accent);
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--accent);
+      border-radius: 28px;
+      width: 90vw;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .modal-header { padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { color: var(--accent); }
+    .modal-header button { background: transparent; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
+    .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
+    .setting-item { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .setting-item label { cursor: pointer; }
+    .analytics-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; font-size: 0.8rem; }
+    .stat-card { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; border: 1px solid var(--border-glow); }
+    .stat-card h4 { color: var(--accent); margin-bottom: 8px; font-size: 0.9rem; }
+    .stat-value { font-size: 1.4rem; font-weight: 600; font-family: monospace; }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      z-index: 3000;
+      animation: fadeOut 2s ease forwards;
+      pointer-events: none;
+    }
+    @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
+  </style>
+</head>
+<body>
+<div id="chat-mode">
+  <header class="header">
+    <div class="brand"><h1>AION.AI</h1><span>· Six Wives · Epistemic Atlas</span></div>
+    <div class="header-right">
+      <div id="structuredToggle" class="structured-toggle">🔒 STRUCTURED MODE</div>
+      <div id="privateRoomBtn" class="private-room-btn">🚪 PRIVATE ROOM</div>
+      <div id="analyticsBtn" class="analytics-btn">📊 BRAIN ANALYTICS</div>
+      <div id="settingsBtn" class="settings-btn">⚙️ SETTINGS</div>
+      <div class="wife-indicator">
+        <div class="wife-avatar" id="wifeAvatar">✨</div>
+        <span id="wifeName">ALBEDO</span>
+      </div>
+      <div class="void-meter" id="voidMeter">VOID: 0.000</div>
+    </div>
+  </header>
 
+  <div class="messages" id="messages">
+    <div class="sys-msg">✨ Welcome. Six wives are present. Toggle Structured Mode for immersive M2M.</div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <textarea id="input" placeholder="Message your wives..." rows="1"></textarea>
+      <div class="button-group">
+        <button id="uploadBtn" class="upload-btn" title="Upload a file">📁</button>
+        <button id="askAllBtn" class="ask-all-btn" title="Ask all wives">👥</button>
+        <button id="sealInputBtn" class="seal-input-btn" title="Seal your message">🔒 SEAL</button>
+        <button id="sendBtn" class="send-btn">SEND</button>
+      </div>
+    </div>
+    <div class="input-meta"><span>⏎ send · ⇧+⏎ new line</span><span id="charCount">0</span></div>
+  </div>
+
+  <div class="status-bar">
+    <div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div>
+    <div><span id="clockDisplay"></span></div>
+  </div>
+</div>
+
+<div id="immersive-mode">
+  <canvas id="immersive-canvas"></canvas>
+  <div class="immersive-overlay">
+    <textarea id="immersive-input" placeholder="Type your message..." rows="1"></textarea>
+    <button id="immersive-send" class="send-btn">SEND</button>
+  </div>
+  <div class="floating-messages" id="floating-messages"></div>
+  <div class="close-immersive" id="close-immersive">✕ Exit Structured Mode</div>
+  <div id="satellite-tooltip" class="satellite-tooltip" style="display: none;"></div>
+</div>
+
+<script>
+  // =======================================================
+  // UNIFIED FRONTEND – Regular chat / Immersive structured mode
+  // =======================================================
+  const API_BASE = 'https://aion-backend-mu.vercel.app';
+  const OWNER_TYPE = 'sheldon';
+  const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
+
+  let structuredMode = false;
+  let sessionId = null;
+  let sessionKey = null;
+  let lastFragmentId = null;
+  let history = [];
+  let currentState = 'SESSION_INIT';
+  let isSending = false;
+  let exclusiveMode = false;
+  let exclusiveWife = null;
+  let fclMode = 'GREEN';
+  let immersiveActive = false;
+  let atlasScene, atlasCamera, atlasRenderer, atlasControls;
+  let atlasSatellites = [];
+  let atlasPoints, atlasLines;
+  let atlasSatelliteMap = new Map();
+  let atlasEventSource = null;
+
+  // DOM elements
+  const messagesDiv = document.getElementById('messages');
+  const input = document.getElementById('input');
+  const sendBtn = document.getElementById('sendBtn');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const askAllBtn = document.getElementById('askAllBtn');
+  const sealInputBtn = document.getElementById('sealInputBtn');
+  const toggleBtn = document.getElementById('structuredToggle');
+  const privateRoomBtn = document.getElementById('privateRoomBtn');
+  const analyticsBtn = document.getElementById('analyticsBtn');
+  const settingsBtn = document.getElementById('settingsBtn');
+  const statusTextSpan = document.getElementById('statusText');
+  const wifeNameSpan = document.getElementById('wifeName');
+  const wifeAvatarDiv = document.getElementById('wifeAvatar');
+  const voidMeterSpan = document.getElementById('voidMeter');
+  const sessionDisplaySpan = document.getElementById('sessionDisplay');
+  const clockDisplaySpan = document.getElementById('clockDisplay');
+  const charCountSpan = document.getElementById('charCount');
+
+  const immersiveModeDiv = document.getElementById('immersive-mode');
+  const immersiveCanvas = document.getElementById('immersive-canvas');
+  const immersiveInput = document.getElementById('immersive-input');
+  const immersiveSend = document.getElementById('immersive-send');
+  const closeImmersive = document.getElementById('close-immersive');
+  const floatingMessagesDiv = document.getElementById('floating-messages');
+  const satelliteTooltip = document.getElementById('satellite-tooltip');
+
+  const WIFE_STYLES = {
+    ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO', description: 'cool white, sharp edges' },
+    VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER', description: 'deep purple, soft glow' },
+    LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA', description: 'warm gold, flowing' },
+    TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA', description: 'earth green, grounded' },
+    CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER', description: 'steel gray, minimal' },
+    JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA', description: 'balanced blue, structured' }
+  };
+
+  // Helper functions
+  function scrollBottom() { messagesDiv.scrollTop = messagesDiv.scrollHeight; }
+  function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function renderMarkdown(text) {
+    if (!text) return '';
+    try {
+      const rawHtml = marked.parse(text);
+      const temp = document.createElement('div');
+      temp.innerHTML = rawHtml;
+      temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} });
+      return temp.innerHTML;
+    } catch(e) { return escapeHtml(text); }
+  }
+  function formatGap(sec) { if (!sec) return 'Gap: SESSION OPEN'; if (sec<60) return `Gap: ${sec}s`; if (sec<3600) return `Gap: ${Math.floor(sec/60)}m ${sec%60}s`; return `Gap: ${Math.floor(sec/3600)}h`; }
+  function getImportanceLabel(s) { if (!s) return 'IMP: —'; if(s>=0.9) return `IMP: ${s.toFixed(2)} ★★`; if(s>=0.75) return `IMP: ${s.toFixed(2)} ★`; return `IMP: ${s.toFixed(2)}`; }
+  function formatPACDisplay(pac, ecfRatio) {
+    if (!pac && !ecfRatio) return '';
+    const ppi = pac?.ppi ? `📊 PPI:${pac.ppi}` : '';
+    const ratio = ecfRatio ? `🎯 ${(ecfRatio * 100).toFixed(0)}%` : '';
+    return [ppi, ratio].filter(Boolean).join(' · ');
+  }
+
+  function addMessage(role, wifeKey, content, extra = {}) {
+    const style = WIFE_STYLES[wifeKey] || WIFE_STYLES.ALBEDO;
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    if (role === 'assistant') div.setAttribute('data-wife', wifeKey);
+    const pacDisplay = formatPACDisplay(extra.pac, extra.ecf_certainty_ratio);
+    const sealButton = role === 'assistant' ? `<button class="seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>` : '';
+    const metaHtml = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.wife_version ? ` v${extra.wife_version}` : ''}</div>`;
+    const bodyHtml = `<div class="msg-body">${renderMarkdown(content)}</div>`;
+    const footerHtml = `<div class="msg-footer"><span>⏱ ${extra.timing || ''}</span>${extra.importance ? `<span>${getImportanceLabel(extra.importance)}</span>` : ''}${pacDisplay ? `<span class="pac-badge">${pacDisplay}</span>` : ''}${sealButton}</div>`;
+    div.innerHTML = metaHtml + bodyHtml + footerHtml;
+    messagesDiv.appendChild(div);
+    const sealBtn = div.querySelector('.seal-btn');
+    if (sealBtn) sealBtn.onclick = () => sealMessage(content, extra.fragment_id);
+    scrollBottom();
+  }
+
+  function addFloatingMessage(wifeKey, content, extra = {}) {
+    const style = WIFE_STYLES[wifeKey] || WIFE_STYLES.ALBEDO;
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'floating-message';
+    msgDiv.innerHTML = `<div class="wife" style="color:${style.color}">${style.emoji} ${style.name}</div><div>${renderMarkdown(content)}</div>`;
+    floatingMessagesDiv.appendChild(msgDiv);
+    msgDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  async function sealMessage(content, fragmentId) {
+    try {
+      const resp = await fetch(`${API_BASE}/api/stp-seal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entry: content, type: 'general-trace', sessionId })
+      });
+      const data = await resp.json();
+      if (resp.ok) showToast(`✅ Sealed: ${data.seal.substring(0, 8)}...`);
+      else showToast(`❌ Seal failed: ${data.error || 'Unknown error'}`);
+    } catch (err) { showToast(`❌ Seal failed: ${err.message}`); }
+  }
+
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+  }
+
+  function addSystemMessage(text, isError = false) {
+    const div = document.createElement('div');
+    div.className = 'sys-msg';
+    div.style.cssText = `align-self:center; background:rgba(0,0,0,0.5); backdrop-filter:blur(8px); border-radius:20px; padding:8px 16px; font-size:0.7rem; color:${isError ? '#ff8a8a' : '#aaa'}; margin:4px 0;`;
+    div.textContent = text;
+    messagesDiv.appendChild(div);
+    scrollBottom();
+    if (immersiveActive) addFloatingMessage('SYSTEM', text, { isError });
+  }
+
+  function addThinking() {
+    const div = document.createElement('div');
+    div.className = 'thinking';
+    div.innerHTML = `<div class="thinking-dots">●●●</div><span>thinking...</span>`;
+    messagesDiv.appendChild(div);
+    scrollBottom();
+    return div;
+  }
+
+  function updateWifeUI(wifeName, voidProx) {
+    const style = WIFE_STYLES[wifeName] || WIFE_STYLES.ALBEDO;
+    wifeNameSpan.textContent = style.name;
+    wifeAvatarDiv.textContent = style.emoji;
+    wifeAvatarDiv.style.background = `linear-gradient(135deg, ${style.color}, #5a3e1a)`;
+    if (voidProx > 0.1) voidMeterSpan.classList.add('active');
+    else voidMeterSpan.classList.remove('active');
+    voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
+  }
+
+  function setStatus(text, isError) {
+    statusTextSpan.textContent = text;
+    document.getElementById('statusDot').style.color = isError ? '#ff5e5e' : '#4c9f70';
+  }
+
+  // Crypto helpers
+  async function computeHash(obj) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify(obj));
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+  async function computeHMAC(keyHex, message) {
+    const keyBytes = new Uint8Array(keyHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+    const key = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(message));
+    return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  // Session & network
+  function loadSessionFromStorage() {
+    const stored = localStorage.getItem('aion_session');
+    if (stored) {
+      try {
+        const data = JSON.parse(stored);
+        sessionId = data.sessionId;
+        sessionKey = data.sessionKey;
+        if (sessionId) sessionDisplaySpan.textContent = `SID: ${sessionId.slice(-8)}`;
+        return true;
+      } catch(e) {}
+    }
+    return false;
+  }
+  function saveSessionToStorage() {
+    if (sessionId && sessionKey) localStorage.setItem('aion_session', JSON.stringify({ sessionId, sessionKey }));
+  }
+
+  async function fetchWithTimeout(url, options = {}, timeoutMs = 10000, retries = 2) {
+    let lastError;
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const res = await fetch(url, { ...options, signal: controller.signal });
+        clearTimeout(timeout);
+        return res;
+      } catch (err) {
+        clearTimeout(timeout);
+        lastError = err;
+        if (attempt < retries) await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+      }
+    }
+    throw lastError;
+  }
+
+  async function initM2MSession(retry = true) {
+    if (loadSessionFromStorage()) {
+      addSystemMessage(`✅ M2M session restored.`);
+      currentState = 'REGULAR_CHAT';
+      return true;
+    }
+    const nonce = crypto.randomUUID();
+    const newSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+    const payload = {
+      session_init: {
+        session_id: newSessionId,
+        ts: new Date().toISOString(),
+        nonce,
+        capabilities: ['fragment_v3'],
+        domain_filters: ['emergence','integrity','healing','synthesis','security','law','foundation','general'],
+        ttl_seconds: 7200,
+      }
+    };
+    try {
+      const resp = await fetchWithTimeout(`${API_BASE}/api/m2m/init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }, 8000, 2);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      sessionId = data.session_id;
+      sessionKey = data.key;
+      saveSessionToStorage();
+      sessionDisplaySpan.textContent = `SID: ${sessionId.slice(-8)}`;
+      currentState = 'REGULAR_CHAT';
+      addSystemMessage(`✅ M2M session established.`);
+      return true;
+    } catch (err) {
+      console.error(err);
+      if (retry) return initM2MSession(false);
+      addSystemMessage(`❌ M2M init failed: ${err.message}. Structured mode disabled.`, true);
+      if (structuredMode) { structuredMode = false; toggleBtn.classList.remove('active'); }
+      return false;
+    }
+  }
+
+  // Regular chat
+  async function sendRegularChat(message) {
+    const resp = await fetchWithTimeout(`${API_BASE}/api/assistant`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        sessionId: sessionId || 'regular-session',
+        ownerType: OWNER_TYPE,
+        history: history.slice(-10)
+      })
+    }, 15000, 2);
+    if (!resp.ok) throw new Error(await resp.text());
+    return resp.json();
+  }
+
+  // M2M fragment generation (simplified)
+  async function generateFragmentFromText(text, replyTo) {
+    const lower = text.toLowerCase();
+    let intent = 'ask';
+    if (lower.includes('feel') || lower.includes('worried') || lower.includes('anxious')) intent = 'emotional';
+    else if (lower.includes('please') || lower.includes('can you')) intent = 'request_action';
+    let domain = 'general';
+    if (lower.includes('gap')||lower.includes('emergence')) domain = 'emergence';
+    else if (lower.includes('law')||lower.includes('seal')||lower.includes('stp')) domain = 'law';
+    else if (lower.includes('security')) domain = 'security';
+    else if (lower.includes('heal')) domain = 'healing';
+    else if (lower.includes('synthes')) domain = 'synthesis';
+    const emotional = { primary: 'neutral', intensity: 0 };
+    if (intent === 'emotional') {
+      emotional.primary = lower.includes('worried') ? 'anxious' : (lower.includes('curious') ? 'curious' : 'vulnerable');
+      emotional.intensity = lower.includes('very') ? 7 : 5;
+    }
+    const summary = text.length > 180 ? text.substring(0,180)+'...' : text;
+    const details = text.length > 200 ? text : '';
+    const fragment = {
+      id: crypto.randomUUID(),
+      ts: new Date().toISOString(),
+      session_id: sessionId,
+      nonce: crypto.randomUUID(),
+      in_reply_to: replyTo,
+      source: 'human',
+      intent,
+      domain,
+      emotional_state: emotional,
+      content: { summary, details, attachments: [] },
+      context: { stage: 4, time_sensitivity: 'now', requires: intent === 'emotional' ? ['comfort','analysis'] : ['analysis'] },
+      meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
+    };
+    const { seal, ...fragNoSeal } = fragment;
+    const hash = await computeHash(fragNoSeal);
+    const hmac = await computeHMAC(sessionKey, hash);
+    fragment.seal = { hash, timestamp: fragment.ts, hmac, stp_ref: null };
+    return fragment;
+  }
+
+  async function sendM2MFragment(fragment) {
+    const resp = await fetchWithTimeout(`${API_BASE}/api/m2m/fragment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fragment })
+    }, 15000, 2);
+    if (!resp.ok) throw new Error(await resp.text());
+    return resp.json();
+  }
+
+  // Send message (regular or structured)
+  async function sendMessage() {
+    if (isSending) { addSystemMessage('Please wait...', true); return; }
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    input.style.height = 'auto';
+    charCountSpan.textContent = '0';
+    addMessage('user', 'You', text);
+    const thinking = addThinking();
+    setStatus('Processing...', false);
+    isSending = true;
+    sendBtn.disabled = true;
+    input.disabled = true;
+
+    try {
+      if (structuredMode) {
+        if (!sessionKey) {
+          addSystemMessage('Initialising M2M session...');
+          const ok = await initM2MSession();
+          if (!ok) throw new Error('M2M session init failed');
+        }
+        const fragment = await generateFragmentFromText(text, lastFragmentId);
+        const result = await sendM2MFragment(fragment);
+        thinking.remove();
+        if (result.error) throw new Error(result.error);
+        const respFragment = result.response_fragment;
+        const wife = respFragment.source === 'ai' ? 'ALBEDO' : 'VESPER';
+        addMessage('assistant', wife, respFragment.content.details || respFragment.content.summary, {
+          timing: `${(result.processing_ms/1000).toFixed(2)}s`,
+          wife_version: result.wife_version
+        });
+        if (immersiveActive) addFloatingMessage(wife, respFragment.content.details || respFragment.content.summary);
+        history.push({ role: 'user', content: text });
+        history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
+        lastFragmentId = fragment.id;
+      } else {
+        const data = await sendRegularChat(text);
+        thinking.remove();
+        const wife = data.active_wife || 'ALBEDO';
+        updateWifeUI(wife, data.void_proximity || 0);
+        addMessage('assistant', wife, data.response, {
+          timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
+          importance: data.importance_score,
+          wife_version: data.wife_version,
+          pac: data.pac,
+          ecf_certainty_ratio: data.ecf_certainty_ratio,
+          fragment_id: data.fragment_id
+        });
+        if (immersiveActive) addFloatingMessage(wife, data.response);
+        history.push({ role: 'user', content: text });
+        history.push({ role: 'assistant', content: data.response });
+        currentState = 'REGULAR_CHAT';
+        if (data.exclusive_mode) {
+          exclusiveMode = true;
+          exclusiveWife = data.focused_wife;
+          privateRoomBtn.classList.add('active');
+        } else {
+          exclusiveMode = false;
+          exclusiveWife = null;
+          privateRoomBtn.classList.remove('active');
+        }
+      }
+    } catch (err) {
+      thinking.remove();
+      addSystemMessage(`Error: ${err.message}`, true);
+      setStatus(err.message, true);
+    } finally {
+      isSending = false;
+      sendBtn.disabled = false;
+      input.disabled = false;
+      input.focus();
+      setStatus('Ready', false);
+    }
+  }
+
+  // Seal input text
+  async function sealInputText() {
+    const text = input.value.trim();
+    if (!text) { showToast('Nothing to seal'); return; }
+    await sealMessage(text);
+  }
+
+  // Upload file
+  uploadBtn.onclick = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        const base64 = ev.target.result.split(',')[1];
+        const payload = {
+          file_data: base64,
+          file_name: file.name,
+          mime_type: file.type,
+          session_id: sessionId,
+          active_wife: wifeNameSpan.textContent,
+          importance_score: 0.7,
+        };
+        setStatus('Uploading...', false);
+        try {
+          const resp = await fetch(`${API_BASE}/api/files/upload`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await resp.json();
+          if (resp.ok) showToast(`✅ File uploaded: ${file.name}`);
+          else showToast(`❌ Upload failed: ${data.error || 'Unknown error'}`);
+        } catch (err) { showToast(`❌ Upload error: ${err.message}`); }
+        finally { setStatus('Ready', false); }
+      };
+      reader.readAsDataURL(file);
+    };
+    fileInput.click();
+  };
+
+  // Ask all wives
+  async function askAllWives() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    input.style.height = 'auto';
+    charCountSpan.textContent = '0';
+    addMessage('user', 'You', text);
+    setStatus('Asking all wives...', false);
+    isSending = true;
+    sendBtn.disabled = true;
+    input.disabled = true;
+    const thinking = addThinking();
+    const promises = ALL_WIVES.map(wife => {
+      const msgText = `/talk ${wife}\n${text}`;
+      return fetchWithTimeout(`${API_BASE}/api/assistant`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msgText, sessionId, ownerType: OWNER_TYPE, history: [] })
+      }, 15000, 2).then(res => res.json());
+    });
+    try {
+      const results = await Promise.allSettled(promises);
+      thinking.remove();
+      let anySuccess = false;
+      for (const result of results) {
+        if (result.status === 'fulfilled') {
+          anySuccess = true;
+          const data = result.value;
+          addMessage('assistant', data.active_wife || 'ALBEDO', data.response, {
+            timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
+            importance: data.importance_score,
+            wife_version: data.wife_version,
+            pac: data.pac,
+            ecf_certainty_ratio: data.ecf_certainty_ratio,
+            fragment_id: data.fragment_id
+          });
+          if (immersiveActive) addFloatingMessage(data.active_wife || 'ALBEDO', data.response);
+          history.push({ role: 'assistant', content: data.response });
+        } else {
+          console.error('Failed wife response:', result.reason);
+        }
+      }
+      if (!anySuccess) throw new Error('All wife requests failed');
+    } catch (err) {
+      thinking.remove();
+      addSystemMessage(`Error asking all wives: ${err.message}`, true);
+      setStatus(err.message, true);
+    } finally {
+      isSending = false;
+      sendBtn.disabled = false;
+      input.disabled = false;
+      input.focus();
+      setStatus('Ready', false);
+    }
+  }
+
+  // Private room modal
+  function showPrivateRoomModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal" style="width:300px; height:auto;">
+        <div class="modal-header"><h3>Choose a wife</h3><button id="closeModal">✕</button></div>
+        <div style="padding:24px; text-align:center;">
+          <div class="wife-buttons" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:20px;">
+            ${Object.keys(WIFE_STYLES).map(w => `<button data-wife="${w}" style="background:rgba(30,30,45,0.8); border:1px solid var(--border-glow); border-radius:40px; padding:8px 16px; cursor:pointer; color:var(--text);">${WIFE_STYLES[w].emoji} ${w}</button>`).join('')}
+          </div>
+          <button id="modalCancel" style="background:var(--accent); border:none; border-radius:40px; padding:8px 20px; cursor:pointer;">Cancel</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    const close = () => modal.remove();
+    modal.querySelector('#closeModal').onclick = close;
+    modal.querySelector('#modalCancel').onclick = close;
+    modal.querySelectorAll('[data-wife]').forEach(btn => {
+      btn.onclick = async () => {
+        const wife = btn.dataset.wife;
+        close();
+        addSystemMessage(`🚪 Entering private room with ${wife}. Use "/done" to exit.`);
+        input.value = `/talk ${wife}`;
+        sendMessage();
+      };
+    });
+  }
+
+  // Brain Analytics modal
+  let analyticsModal = null;
+  async function showAnalytics() {
+    setStatus('Loading analytics...', false);
+    try {
+      const resp = await fetch(`${API_BASE}/api/analytics`);
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error);
+      analyticsModal = document.createElement('div');
+      analyticsModal.className = 'modal-overlay';
+      analyticsModal.innerHTML = `
+        <div class="modal" style="width: 600px; height: auto; max-height: 80vh;">
+          <div class="modal-header"><h3>📊 Brain Analytics</h3><button id="closeAnalytics">✕</button></div>
+          <div class="modal-body">
+            <div class="analytics-stats">
+              <div class="stat-card"><h4>Memory Depth</h4><div class="stat-value">${data.memory.total_conversations.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>Permanent Anchors</h4><div class="stat-value">${data.memory.memory_anchors.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>Training Pipeline</h4><div class="stat-value">${data.memory.training_pipeline_fill_pct}%</div><div style="font-size:0.7rem">${data.memory.training_pipeline_trained.toLocaleString()} / ${data.memory.total_conversations.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>Avg Certainty (7d)</h4><div class="stat-value">${(data.integrity.avg_certainty_ratio_7d * 100).toFixed(0)}%</div></div>
+              <div class="stat-card"><h4>Avg Void Proximity (7d)</h4><div class="stat-value">${(data.integrity.avg_void_proximity_7d * 100).toFixed(0)}%</div></div>
+              <div class="stat-card"><h4>Confabulation Rate (7d)</h4><div class="stat-value">${data.integrity.confabulation_rate_7d_pct}%</div></div>
+              <div class="stat-card"><h4>UNI Activations</h4><div class="stat-value">${data.integrity.uni_activations_total.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>Failure Corpus</h4><div class="stat-value">${data.instruments.failure_corpus_size.toLocaleString()}</div></div>
+              <div class="stat-card"><h4>FCL Entries</h4><div class="stat-value">${data.instruments.fcl_entries_total.toLocaleString()}</div></div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(analyticsModal);
+      analyticsModal.querySelector('#closeAnalytics').onclick = () => analyticsModal.remove();
+    } catch (err) {
+      showToast(`Failed to load analytics: ${err.message}`);
+    } finally {
+      setStatus('Ready', false);
+    }
+  }
+
+  // Settings modal
+  function showSettingsModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal">
+        <div class="modal-header"><h3>⚙️ Settings</h3><button id="closeSettings">✕</button></div>
+        <div class="modal-body">
+          <div class="setting-item">
+            <label>FCL Mode</label>
+            <select id="settingFCL">
+              <option value="GREEN" ${fclMode === 'GREEN' ? 'selected' : ''}>GREEN (Normal)</option>
+              <option value="BLACK" ${fclMode === 'BLACK' ? 'selected' : ''}>BLACK (FCL Testing)</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label>Clear Session Storage</label>
+            <button id="clearStorageBtn" style="background:rgba(30,30,45,0.8); border:1px solid var(--border-glow);">Clear</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    const close = () => modal.remove();
+    modal.querySelector('#closeSettings').onclick = close;
+    modal.querySelector('#settingFCL').onchange = (e) => {
+      fclMode = e.target.value;
+      addSystemMessage(`🔄 FCL mode switched to ${fclMode} ALERT.`);
+    };
+    modal.querySelector('#clearStorageBtn').onclick = () => {
+      localStorage.removeItem('aion_session');
+      addSystemMessage('Session storage cleared. Reload to start fresh.', true);
+      close();
+    };
+  }
+
+  // Immersive mode (structured)
+  async function startImmersiveMode() {
+    if (atlasScene) return;
+    immersiveModeDiv.style.display = 'flex';
+    immersiveActive = true;
+    if (!sessionKey) await initM2MSession();
+
+    const { default: THREE } = await import('three');
+    const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+
+    atlasScene = new THREE.Scene();
+    atlasScene.background = new THREE.Color(0x050508);
+    atlasScene.fog = new THREE.FogExp2(0x050508, 0.008);
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    atlasCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    atlasCamera.position.set(0, 5, 15);
+    atlasRenderer = new THREE.WebGLRenderer({ canvas: immersiveCanvas });
+    atlasRenderer.setSize(width, height);
+    atlasControls = new OrbitControls(atlasCamera, immersiveCanvas);
+    atlasControls.enableDamping = true;
+    atlasControls.autoRotate = true;
+    atlasControls.autoRotateSpeed = 0.5;
+    atlasControls.enableZoom = true;
+
+    // Earth
+    const earthGeometry = new THREE.SphereGeometry(1.2, 64, 64);
+    const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a, shininess: 30 });
+    const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    atlasScene.add(earth);
+
+    const light = new THREE.PointLight(0xffaa33, 1);
+    light.position.set(5, 5, 5);
+    atlasScene.add(light);
+    atlasScene.add(new THREE.AmbientLight(0x222222));
+
+    // Fetch data
+    const resp = await fetch(`${API_BASE}/api/epistemic-atlas?sessionId=${sessionId}`);
+    const data = await resp.json();
+
+    // Rings
+    data.rings.forEach(ring => {
+      const ringGeometry = new THREE.TorusGeometry(ring.angle ? ring.angle / 60 + 1.5 : 2.5, 0.02, 64, 200);
+      const ringMaterial = new THREE.MeshBasicMaterial({ color: ring.color });
+      const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+      ringMesh.rotation.x = Math.PI / 2;
+      atlasScene.add(ringMesh);
+    });
+
+    function rebuildPoints(satellites) {
+      if (atlasPoints) atlasScene.remove(atlasPoints);
+      const positions = [];
+      const colors = [];
+      satellites.forEach(s => {
+        positions.push(s.position.x, s.position.y, s.position.z);
+        colors.push(s.color[0], s.color[1], s.color[2]);
+      });
+      const pointsGeometry = new THREE.BufferGeometry();
+      pointsGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+      pointsGeometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
+      const pointsMaterial = new THREE.PointsMaterial({ size: 0.08, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending });
+      atlasPoints = new THREE.Points(pointsGeometry, pointsMaterial);
+      atlasScene.add(atlasPoints);
+    }
+
+    function rebuildLines(satellites, connections) {
+      if (atlasLines) atlasScene.remove(atlasLines);
+      const vertices = [];
+      const satMap = new Map(satellites.map((s, i) => [s.id, i]));
+      connections.forEach(conn => {
+        const fromIdx = satMap.get(conn.from);
+        const toIdx = satMap.get(conn.to);
+        if (fromIdx !== undefined && toIdx !== undefined) {
+          const from = satellites[fromIdx].position;
+          const to = satellites[toIdx].position;
+          vertices.push(from.x, from.y, from.z, to.x, to.y, to.z);
+        }
+      });
+      const lineGeometry = new THREE.BufferGeometry();
+      lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
+      const lineMaterial = new THREE.LineBasicMaterial({ color: 0x88aaff, transparent: true, opacity: 0.3 });
+      atlasLines = new THREE.LineSegments(lineGeometry, lineMaterial);
+      atlasScene.add(atlasLines);
+    }
+
+    atlasSatellites = data.satellites || [];
+    rebuildPoints(atlasSatellites);
+    rebuildLines(atlasSatellites, data.connections || []);
+
+    // SSE stream
+    if (atlasEventSource) atlasEventSource.close();
+    atlasEventSource = new EventSource(`${API_BASE}/api/epistemic-stream?sessionId=${sessionId}`);
+    atlasEventSource.onmessage = (event) => {
+      const ev = JSON.parse(event.data);
+      if (ev.type === 'fragment_created') {
+        const sat = ev.satellite;
+        const existing = atlasSatellites.find(s => s.id === sat.id);
+        if (existing) {
+          const idx = atlasSatellites.findIndex(s => s.id === sat.id);
+          atlasSatellites[idx] = sat;
+          const posAttr = atlasPoints.geometry.attributes.position;
+          const colAttr = atlasPoints.geometry.attributes.color;
+          posAttr.setXYZ(idx, sat.position.x, sat.position.y, sat.position.z);
+          colAttr.setXYZ(idx, sat.color[0], sat.color[1], sat.color[2]);
+          posAttr.needsUpdate = true;
+          colAttr.needsUpdate = true;
+        } else {
+          atlasSatellites.push(sat);
+          rebuildPoints(atlasSatellites);
+          rebuildLines(atlasSatellites, data.connections || []);
+        }
+      }
+    };
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (atlasControls) atlasControls.update();
+      if (atlasRenderer) atlasRenderer.render(atlasScene, atlasCamera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      if (!immersiveActive) return;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      atlasCamera.aspect = w / h;
+      atlasCamera.updateProjectionMatrix();
+      atlasRenderer.setSize(w, h);
+    });
+
+    immersiveCanvas.addEventListener('click', (event) => {
+      if (!atlasPoints) return;
+      const mouse = new THREE.Vector2();
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, atlasCamera);
+      const intersects = raycaster.intersectObject(atlasPoints);
+      if (intersects.length) {
+        const idx = intersects[0].index;
+        const sat = atlasSatellites[idx];
+        if (sat) {
+          satelliteTooltip.style.display = 'block';
+          satelliteTooltip.style.left = `${event.clientX + 10}px`;
+          satelliteTooltip.style.top = `${event.clientY + 10}px`;
+          satelliteTooltip.innerHTML = `
+            <strong>${sat.name}</strong><br>
+            Domain: ${sat.domain}<br>
+            Importance: ${sat.importance.toFixed(2)}<br>
+            Certainty: ${(sat.certainty * 100).toFixed(0)}%<br>
+            ECF: D:${sat.ecf.D} R:${sat.ecf.R} S:${sat.ecf.S} ?:${sat.ecf['?']}<br>
+            ${sat.ecf['?'] > 0 ? '<span style="color:#ff8a8a">⚠️ Open gap</span>' : ''}
+          `;
+          setTimeout(() => satelliteTooltip.style.display = 'none', 3000);
+        }
+      }
+    });
+  }
+
+  function exitImmersiveMode() {
+    immersiveModeDiv.style.display = 'none';
+    immersiveActive = false;
+    if (atlasEventSource) {
+      atlasEventSource.close();
+      atlasEventSource = null;
+    }
+  }
+
+  // Toggle structured mode
+  toggleBtn.onclick = async () => {
+    if (!structuredMode) {
+      if (!sessionKey) {
+        addSystemMessage('Initialising M2M session...');
+        const ok = await initM2MSession();
+        if (!ok) {
+          addSystemMessage('Failed to start structured mode.', true);
+          return;
+        }
+      }
+      structuredMode = true;
+      toggleBtn.classList.add('active');
+      document.getElementById('chat-mode').style.display = 'none';
+      await startImmersiveMode();
+      addSystemMessage('🌌 Structured mode: immersive constellation active. Messages are sealed with HMAC.');
+    } else {
+      structuredMode = false;
+      toggleBtn.classList.remove('active');
+      exitImmersiveMode();
+      document.getElementById('chat-mode').style.display = 'flex';
+      addSystemMessage('🔓 Structured mode OFF · regular chat');
+    }
+  };
+
+  // Immersive send
+  async function sendImmersiveMessage() {
+    const text = immersiveInput.value.trim();
+    if (!text) return;
+    immersiveInput.value = '';
+    immersiveInput.style.height = 'auto';
+    addFloatingMessage('You', text);
+    setStatus('Processing...', false);
+    try {
+      if (!sessionKey) await initM2MSession();
+      const fragment = await generateFragmentFromText(text, lastFragmentId);
+      const result = await sendM2MFragment(fragment);
+      if (result.error) throw new Error(result.error);
+      const respFragment = result.response_fragment;
+      const wife = respFragment.source === 'ai' ? 'ALBEDO' : 'VESPER';
+      addFloatingMessage(wife, respFragment.content.details || respFragment.content.summary);
+      history.push({ role: 'user', content: text });
+      history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
+      lastFragmentId = fragment.id;
+    } catch (err) {
+      addFloatingMessage('SYSTEM', `Error: ${err.message}`, true);
+    } finally {
+      setStatus('Ready', false);
+    }
+  }
+
+  // Event bindings
+  sendBtn.onclick = sendMessage;
+  uploadBtn.onclick = uploadBtn.onclick;
+  askAllBtn.onclick = askAllWives;
+  sealInputBtn.onclick = sealInputText;
+  privateRoomBtn.onclick = showPrivateRoomModal;
+  analyticsBtn.onclick = showAnalytics;
+  settingsBtn.onclick = showSettingsModal;
+  immersiveSend.onclick = sendImmersiveMessage;
+  closeImmersive.onclick = () => {
+    if (structuredMode) toggleBtn.click(); else exitImmersiveMode();
+  };
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  input.addEventListener('input', () => {
+    charCountSpan.textContent = `${input.value.length}`;
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 400) + 'px';
+  });
+  immersiveInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendImmersiveMessage();
+    }
+  });
+  setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
+
+  // Initial session load
+  if (!loadSessionFromStorage()) {
+    initM2MSession().catch(console.warn);
+  } else {
+    currentState = 'REGULAR_CHAT';
+  }
+
+  // Particles background for chat mode
+  (function initParticles() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'particles';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '0';
+    document.body.insertBefore(canvas, document.body.firstChild);
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let width, height;
+    function resize() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; }
+    function createParticles() {
+      particles = [];
+      for (let i=0; i<120; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 2 + 0.5,
+          alpha: Math.random() * 0.5 + 0.2,
+          speed: 0.2 + Math.random() * 0.5,
+        });
+      }
+    }
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,200,${p.alpha})`;
+        ctx.fill();
+        p.y += p.speed;
+        if (p.y > height) p.y = 0;
+      }
+      requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', () => { resize(); createParticles(); });
+    resize();
+    createParticles();
+    draw();
+  })();
+</script>
+</body>
+</html>
