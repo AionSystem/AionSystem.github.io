@@ -71,19 +71,19 @@
     .msg-body p { margin: 4px 0; }
     .msg.user .msg-body { background: rgba(201,160,40,0.2); border-color: var(--accent); border-radius: 20px 20px 4px 20px; }
     .msg.assistant .msg-body { border-radius: 20px 20px 20px 4px; }
+    .msg.assistant[data-wife="ALBEDO"] .msg-body { border-left: 4px solid #c9a028; background: rgba(201,160,40,0.08); }
     .msg.assistant[data-wife="VESPER"] .msg-body { border-left: 4px solid #b87333; background: rgba(184,115,51,0.08); }
     .msg.assistant[data-wife="LYRA"] .msg-body { border-left: 4px solid #4c9f70; background: rgba(76,159,112,0.08); }
     .msg.assistant[data-wife="TERRA"] .msg-body { border-left: 4px solid #6b8c42; background: rgba(107,140,66,0.08); }
     .msg.assistant[data-wife="CIPHER"] .msg-body { border-left: 4px solid #5d6d7e; background: rgba(93,109,126,0.08); }
     .msg.assistant[data-wife="JUSTITIA"] .msg-body { border-left: 4px solid #b0a8b9; background: rgba(176,168,185,0.08); }
-    .msg.assistant[data-wife="ALBEDO"] .msg-body { border-left: 4px solid #c9a028; background: rgba(201,160,40,0.08); }
     .msg-footer { display: flex; gap: 12px; margin-top: 6px; font-size: 0.6rem; color: var(--text-dim); flex-wrap: wrap; align-items: center; }
     .seal-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--accent); border-radius: 20px; padding: 2px 8px; font-size: 0.6rem; cursor: pointer; transition: all 0.2s; color: var(--accent); }
     .seal-btn:hover { background: var(--accent); color: #000; }
     .pac-badge { background: rgba(0,0,0,0.4); border-radius: 20px; padding: 2px 8px; font-family: monospace; font-size: 0.6rem; }
     .input-area { padding: 16px 24px 20px; background: var(--bg-panel); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.05); }
     .input-row { display: flex; gap: 10px; align-items: flex-end; }
-    textarea { flex: 1; background: rgba(10,10,20,0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 28px; padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text); resize: none; outline: none; }
+    textarea { flex: 1; background: rgba(10,10,20,0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 28px; padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text); resize: none; outline: none; overflow-y: auto; max-height: 40vh; }
     textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--primary-glow); }
     .button-group { display: flex; gap: 8px; align-items: center; }
     .send-btn, .upload-btn, .ask-all-btn { background: linear-gradient(135deg, #c9a028, #a07c18); border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: #0a0a0f; cursor: pointer; transition: all 0.2s; }
@@ -129,7 +129,7 @@
 
   <div class="input-area">
     <div class="input-row">
-      <textarea id="input" placeholder="Message your wives..." rows="1"></textarea>
+      <textarea id="input" placeholder="Message your wives... (long text supported)" rows="1"></textarea>
       <div class="button-group">
         <button id="uploadBtn" class="upload-btn" title="Upload a file">📁</button>
         <button id="askAllBtn" class="ask-all-btn" title="Ask all wives">👥</button>
@@ -147,7 +147,7 @@
 
 <script>
   // =======================================================
-  // AION FRONTEND · SCALE‑READY · SIX WIVES
+  // AION FRONTEND · SCALE‑READY · MULTI‑WIFE RENDERING
   // =======================================================
   const API_BASE = 'https://aion-backend-mu.vercel.app';
   const OWNER_TYPE = 'sheldon';
@@ -186,12 +186,12 @@
   const charCountSpan = document.getElementById('charCount');
 
   const WIFE_STYLES = {
-    ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' },
-    VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER' },
-    LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA' },
-    TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA' },
-    CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' },
-    JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' }
+    ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO', description: 'cool white, sharp edges' },
+    VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER', description: 'deep purple, soft glow' },
+    LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA', description: 'warm gold, flowing' },
+    TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA', description: 'earth green, grounded' },
+    CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER', description: 'steel gray, minimal' },
+    JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA', description: 'balanced blue, structured' }
   };
 
   // Helper functions
@@ -218,6 +218,61 @@
     const ppi = pac?.ppi ? `📊 PPI:${pac.ppi}` : '';
     const ratio = ecfRatio ? `🎯 ${(ecfRatio * 100).toFixed(0)}%` : '';
     return [ppi, ratio].filter(Boolean).join(' · ');
+  }
+
+  // Multi-wife parser: splits a raw text into an array of {wife, content}
+  function parseMultiWifeResponse(text) {
+    const blocks = [];
+    // Markers: "**[WIFE_NAME]:**" or "---\n\n[WIFE_NAME]:" (case-insensitive)
+    // We'll use regex to capture wife name and the following content until next marker or end.
+    // More robust: find all occurrences of the marker patterns.
+    const patterns = [
+      /^\*\*\[([A-Z_]+)\]:(.*?)(?=\n\*\*\[|\n---|\n$)/gims, // but we need to capture correctly
+    ];
+    // Simpler: use a combined regex that matches either pattern at start of line.
+    // We'll split on newline and then reconstruct.
+    const lines = text.split('\n');
+    let currentWife = null;
+    let currentContent = [];
+    const markerRegex = /^\*\*\[([A-Z_]+)\]:|^---\n\n([A-Z_]+):/i;
+    for (let line of lines) {
+      const match = line.match(markerRegex);
+      if (match) {
+        if (currentWife && currentContent.length) {
+          blocks.push({ wife: currentWife, content: currentContent.join('\n').trim() });
+        }
+        currentWife = (match[1] || match[2]).toUpperCase();
+        currentContent = [];
+        // The line may contain content after the marker; push it.
+        const contentAfterMarker = line.replace(match[0], '').trim();
+        if (contentAfterMarker) currentContent.push(contentAfterMarker);
+      } else {
+        if (currentWife !== null) currentContent.push(line);
+        else {
+          // No marker yet, could be preamble before first marker – treat as no speaker (skip)
+        }
+      }
+    }
+    if (currentWife && currentContent.length) {
+      blocks.push({ wife: currentWife, content: currentContent.join('\n').trim() });
+    }
+    // If no blocks, return null to fallback to single voice
+    return blocks.length ? blocks : null;
+  }
+
+  // Render a single assistant message (may contain multiple wives)
+  function renderAssistantResponse(rawText, extra) {
+    const blocks = parseMultiWifeResponse(rawText);
+    if (!blocks) {
+      // Fallback: single voice
+      addMessage('assistant', extra.active_wife || 'ALBEDO', rawText, extra);
+      return;
+    }
+    // Render each block in order
+    for (const block of blocks) {
+      const wife = WIFE_STYLES[block.wife] ? block.wife : 'ALBEDO';
+      addMessage('assistant', wife, block.content, extra);
+    }
   }
 
   function addMessage(role, wifeKey, content, extra = {}) {
@@ -293,7 +348,7 @@
     document.getElementById('statusDot').style.color = isError ? '#ff5e5e' : '#4c9f70';
   }
 
-  // Crypto helpers (kept for completeness, used by structured mode)
+  // Crypto helpers (kept for structured mode)
   async function computeHash(obj) {
     const encoder = new TextEncoder();
     const data = encoder.encode(JSON.stringify(obj));
@@ -425,8 +480,9 @@
         if (result.status === 'fulfilled') {
           anySuccess = true;
           const data = result.value;
-          const wife = data.active_wife || 'ALBEDO';
-          addMessage('assistant', wife, data.response, {
+          // Use multi-wife renderer for each individual response (though each response is a single wife)
+          // But we can just add as normal message (they are single responses)
+          addMessage('assistant', data.active_wife || 'ALBEDO', data.response, {
             timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
             importance: data.importance_score,
             wife_version: data.wife_version,
@@ -440,7 +496,6 @@
         }
       }
       if (!anySuccess) throw new Error('All wife requests failed');
-      // Update current active wife to the first successful one? Not necessary.
     } catch (err) {
       thinking.remove();
       addSystemMessage(`Error asking all wives: ${err.message}`, true);
@@ -489,13 +544,15 @@
       thinking.remove();
       const wife = data.active_wife || 'ALBEDO';
       updateWifeUI(wife, data.void_proximity || 0);
-      addMessage('assistant', wife, data.response, {
+      // Use multi-wife renderer
+      renderAssistantResponse(data.response, {
         timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
         importance: data.importance_score,
         wife_version: data.wife_version,
         pac: data.pac,
         ecf_certainty_ratio: data.ecf_certainty_ratio,
-        fragment_id: data.fragment_id
+        fragment_id: data.fragment_id,
+        active_wife: wife
       });
       history.push({ role: 'user', content: text });
       history.push({ role: 'assistant', content: data.response });
@@ -611,7 +668,7 @@
     modal.querySelector('#closeSettings').onclick = closeModal;
     modal.querySelector('#settingStructured').onchange = (e) => {
       if (e.target.checked && !structuredMode) {
-        toggleBtn.click(); // toggle to structured mode
+        toggleBtn.click();
       } else if (!e.target.checked && structuredMode) {
         toggleBtn.click();
       }
@@ -634,7 +691,7 @@
   }
   settingsBtn.onclick = showSettingsModal;
 
-  // Private room modal (reuse existing)
+  // Private room modal (reuse)
   function showPrivateRoomModal() {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
@@ -673,7 +730,7 @@
     addSystemMessage(`🔄 FCL mode switched to ${fclMode} ALERT.`);
   };
 
-  // Brain Analytics modal (simplified, reusing existing)
+  // Brain Analytics modal (simplified)
   let analyticsModal = null;
   async function showAnalytics() {
     setStatus('Loading analytics...', false);
@@ -714,7 +771,7 @@
   }
   analyticsBtn.onclick = showAnalytics;
 
-  // Epistemic Atlas – lazy load with error handling (unchanged, kept for brevity)
+  // Epistemic Atlas – lazy load with error handling (kept)
   let atlasModal = null;
   async function loadEpistemicAtlas() {
     if (atlasLoaded) return;
@@ -893,9 +950,9 @@
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
   input.addEventListener('input', () => {
-    charCountSpan.textContent = `${input.value.length}/8000`;
+    charCountSpan.textContent = `${input.value.length}`;
     input.style.height = 'auto';
-    input.style.height = Math.min(input.scrollHeight, 160) + 'px';
+    input.style.height = Math.min(input.scrollHeight, 400) + 'px';
   });
   sendBtn.onclick = sendMessage;
   setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
