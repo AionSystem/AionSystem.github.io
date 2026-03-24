@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>AION.AI · Six Wives · Epistemic Atlas</title>
-  <!-- Import map for Three.js -->
   <script type="importmap">
     {
       "imports": {
@@ -18,7 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
-    /* (same styles as before – unchanged) */
+    /* ========== GLOBAL ========== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg-dark: #0a0a0f;
@@ -42,17 +41,32 @@
       font-family: 'Inter', sans-serif;
       color: var(--text);
       height: 100vh;
-      display: flex;
-      flex-direction: column;
       overflow: hidden;
     }
-    #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-    .app-container { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100vh; backdrop-filter: blur(4px); }
-    .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg-panel); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 12px; }
+    /* ========== STANDARD CHAT MODE ========== */
+    #chat-mode {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+      z-index: 1;
+      transition: opacity 0.3s;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
     .brand h1 { font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #e6c87a, #c9a028); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .brand span { font-size: 0.7rem; color: var(--text-dim); margin-left: 8px; }
     .header-right { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .structured-toggle, .private-room-btn, .constellation-btn, .analytics-btn, .fcl-toggle, .settings-btn {
+    .structured-toggle, .private-room-btn, .analytics-btn, .settings-btn {
       background: rgba(30,30,45,0.8);
       border: 1px solid var(--border-glow);
       border-radius: 40px;
@@ -63,9 +77,7 @@
     }
     .structured-toggle.active { background: rgba(201,160,40,0.2); border-color: var(--accent); color: var(--accent); }
     .private-room-btn.active { background: rgba(184,115,51,0.3); border-color: #b87333; color: #b87333; }
-    .constellation-btn:hover, .analytics-btn:hover, .fcl-toggle:hover, .settings-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); }
-    .fcl-toggle.green { border-color: #4c9f70; color: #4c9f70; background: rgba(76,159,112,0.2); }
-    .fcl-toggle.black { border-color: #b87333; color: #b87333; background: rgba(184,115,51,0.2); }
+    .analytics-btn:hover, .settings-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); }
     .wife-indicator { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 40px; }
     .wife-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
     .void-meter { font-family: monospace; background: #00000044; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; }
@@ -96,34 +108,180 @@
     textarea { flex: 1; background: rgba(10,10,20,0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 28px; padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text); resize: none; outline: none; overflow-y: auto; max-height: 40vh; }
     textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--primary-glow); }
     .button-group { display: flex; gap: 8px; align-items: center; }
-    .send-btn, .upload-btn, .ask-all-btn { background: linear-gradient(135deg, #c9a028, #a07c18); border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: #0a0a0f; cursor: pointer; transition: all 0.2s; }
-    .upload-btn, .ask-all-btn { padding: 12px 18px; background: rgba(30,30,45,0.8); border: 1px solid var(--border-glow); color: var(--text); }
-    .upload-btn:hover, .ask-all-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); color: var(--accent); }
+    .send-btn, .upload-btn, .ask-all-btn, .seal-input-btn {
+      background: linear-gradient(135deg, #c9a028, #a07c18);
+      border: none;
+      border-radius: 40px;
+      padding: 12px 24px;
+      font-weight: 600;
+      color: #0a0a0f;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .upload-btn, .ask-all-btn, .seal-input-btn { padding: 12px 18px; background: rgba(30,30,45,0.8); border: 1px solid var(--border-glow); color: var(--text); }
+    .upload-btn:hover, .ask-all-btn:hover, .seal-input-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); color: var(--accent); }
     .status-bar { display: flex; justify-content: space-between; padding: 6px 24px; font-size: 0.7rem; background: rgba(0,0,0,0.3); }
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(12px); z-index: 2000; display: flex; align-items: center; justify-content: center; }
-    .modal { background: var(--bg-panel); backdrop-filter: blur(16px); border: 1px solid var(--accent); border-radius: 28px; width: 90vw; max-width: 500px; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    /* ========== IMMERSIVE STRUCTURED MODE ========== */
+    #immersive-mode {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: #000;
+      display: none;
+      flex-direction: column;
+    }
+    #immersive-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .immersive-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      z-index: 1001;
+    }
+    .immersive-overlay textarea {
+      flex: 1;
+      background: rgba(20,20,30,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 28px;
+      padding: 12px 18px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      resize: none;
+    }
+    .immersive-overlay .send-btn {
+      padding: 12px 24px;
+    }
+    .floating-messages {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 320px;
+      max-height: 80vh;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px;
+      z-index: 1002;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .floating-message {
+      background: rgba(30,30,45,0.8);
+      border-radius: 16px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      border-left: 3px solid var(--accent);
+    }
+    .floating-message .wife {
+      font-weight: bold;
+      color: var(--accent);
+    }
+    .satellite-tooltip {
+      position: absolute;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 0.7rem;
+      max-width: 250px;
+      pointer-events: none;
+      z-index: 1003;
+      border: 1px solid var(--border-glow);
+    }
+    .close-immersive {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      padding: 8px 16px;
+      cursor: pointer;
+      z-index: 1002;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+    .close-immersive:hover {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--accent);
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--accent);
+      border-radius: 28px;
+      width: 90vw;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
     .modal-header { padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
     .modal-header h3 { color: var(--accent); }
     .modal-header button { background: transparent; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
     .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
     .setting-item { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
     .setting-item label { cursor: pointer; }
-    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); padding: 8px 16px; border-radius: 40px; font-size: 0.8rem; z-index: 3000; animation: fadeOut 2s ease forwards; pointer-events: none; }
-    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .analytics-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; font-size: 0.8rem; }
+    .stat-card { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; border: 1px solid var(--border-glow); }
+    .stat-card h4 { color: var(--accent); margin-bottom: 8px; font-size: 0.9rem; }
+    .stat-value { font-size: 1.4rem; font-weight: 600; font-family: monospace; }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      z-index: 3000;
+      animation: fadeOut 2s ease forwards;
+      pointer-events: none;
+    }
     @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
   </style>
 </head>
 <body>
-<canvas id="particles"></canvas>
-<div class="app-container">
+<div id="chat-mode">
   <header class="header">
     <div class="brand"><h1>AION.AI</h1><span>· Six Wives · Epistemic Atlas</span></div>
     <div class="header-right">
       <div id="structuredToggle" class="structured-toggle">🔒 STRUCTURED MODE</div>
       <div id="privateRoomBtn" class="private-room-btn">🚪 PRIVATE ROOM</div>
-      <div id="constellationBtn" class="constellation-btn">🌌 CONSTELLATION</div>
       <div id="analyticsBtn" class="analytics-btn">📊 BRAIN ANALYTICS</div>
-      <div id="fclToggle" class="fcl-toggle">⚡ FCL: GREEN</div>
       <div id="settingsBtn" class="settings-btn">⚙️ SETTINGS</div>
       <div class="wife-indicator">
         <div class="wife-avatar" id="wifeAvatar">✨</div>
@@ -134,15 +292,16 @@
   </header>
 
   <div class="messages" id="messages">
-    <div class="sys-msg">✨ Welcome. Six wives are present.</div>
+    <div class="sys-msg">✨ Welcome. Six wives are present. Toggle Structured Mode for immersive M2M.</div>
   </div>
 
   <div class="input-area">
     <div class="input-row">
-      <textarea id="input" placeholder="Message your wives... (long text supported)" rows="1"></textarea>
+      <textarea id="input" placeholder="Message your wives..." rows="1"></textarea>
       <div class="button-group">
         <button id="uploadBtn" class="upload-btn" title="Upload a file">📁</button>
         <button id="askAllBtn" class="ask-all-btn" title="Ask all wives">👥</button>
+        <button id="sealInputBtn" class="seal-input-btn" title="Seal your message">🔒 SEAL</button>
         <button id="sendBtn" class="send-btn">SEND</button>
       </div>
     </div>
@@ -155,9 +314,20 @@
   </div>
 </div>
 
+<div id="immersive-mode">
+  <canvas id="immersive-canvas"></canvas>
+  <div class="immersive-overlay">
+    <textarea id="immersive-input" placeholder="Type your message..." rows="1"></textarea>
+    <button id="immersive-send" class="send-btn">SEND</button>
+  </div>
+  <div class="floating-messages" id="floating-messages"></div>
+  <div class="close-immersive" id="close-immersive">✕ Exit Structured Mode</div>
+  <div id="satellite-tooltip" class="satellite-tooltip" style="display: none;"></div>
+</div>
+
 <script>
   // =======================================================
-  // AION FRONTEND · SCALE‑READY · MULTI‑WIFE RENDERING
+  // UNIFIED FRONTEND – Regular chat / Immersive structured mode
   // =======================================================
   const API_BASE = 'https://aion-backend-mu.vercel.app';
   const OWNER_TYPE = 'sheldon';
@@ -172,8 +342,13 @@
   let isSending = false;
   let exclusiveMode = false;
   let exclusiveWife = null;
-  let atlasLoaded = false;
   let fclMode = 'GREEN';
+  let immersiveActive = false;
+  let atlasScene, atlasCamera, atlasRenderer, atlasControls;
+  let atlasSatellites = [];
+  let atlasPoints, atlasLines;
+  let atlasSatelliteMap = new Map();
+  let atlasEventSource = null;
 
   // DOM elements
   const messagesDiv = document.getElementById('messages');
@@ -181,11 +356,10 @@
   const sendBtn = document.getElementById('sendBtn');
   const uploadBtn = document.getElementById('uploadBtn');
   const askAllBtn = document.getElementById('askAllBtn');
+  const sealInputBtn = document.getElementById('sealInputBtn');
   const toggleBtn = document.getElementById('structuredToggle');
   const privateRoomBtn = document.getElementById('privateRoomBtn');
-  const constellationBtn = document.getElementById('constellationBtn');
   const analyticsBtn = document.getElementById('analyticsBtn');
-  const fclToggleBtn = document.getElementById('fclToggle');
   const settingsBtn = document.getElementById('settingsBtn');
   const statusTextSpan = document.getElementById('statusText');
   const wifeNameSpan = document.getElementById('wifeName');
@@ -194,6 +368,14 @@
   const sessionDisplaySpan = document.getElementById('sessionDisplay');
   const clockDisplaySpan = document.getElementById('clockDisplay');
   const charCountSpan = document.getElementById('charCount');
+
+  const immersiveModeDiv = document.getElementById('immersive-mode');
+  const immersiveCanvas = document.getElementById('immersive-canvas');
+  const immersiveInput = document.getElementById('immersive-input');
+  const immersiveSend = document.getElementById('immersive-send');
+  const closeImmersive = document.getElementById('close-immersive');
+  const floatingMessagesDiv = document.getElementById('floating-messages');
+  const satelliteTooltip = document.getElementById('satellite-tooltip');
 
   const WIFE_STYLES = {
     ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO', description: 'cool white, sharp edges' },
@@ -204,7 +386,7 @@
     JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA', description: 'balanced blue, structured' }
   };
 
-  // Helper functions (unchanged, except where noted)
+  // Helper functions
   function scrollBottom() { messagesDiv.scrollTop = messagesDiv.scrollHeight; }
   function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function renderMarkdown(text) {
@@ -213,16 +395,12 @@
       const rawHtml = marked.parse(text);
       const temp = document.createElement('div');
       temp.innerHTML = rawHtml;
-      temp.querySelectorAll('pre code').forEach(block => {
-        try { hljs.highlightElement(block); } catch(e) {}
-      });
+      temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} });
       return temp.innerHTML;
     } catch(e) { return escapeHtml(text); }
   }
-
   function formatGap(sec) { if (!sec) return 'Gap: SESSION OPEN'; if (sec<60) return `Gap: ${sec}s`; if (sec<3600) return `Gap: ${Math.floor(sec/60)}m ${sec%60}s`; return `Gap: ${Math.floor(sec/3600)}h`; }
   function getImportanceLabel(s) { if (!s) return 'IMP: —'; if(s>=0.9) return `IMP: ${s.toFixed(2)} ★★`; if(s>=0.75) return `IMP: ${s.toFixed(2)} ★`; return `IMP: ${s.toFixed(2)}`; }
-
   function formatPACDisplay(pac, ecfRatio) {
     if (!pac && !ecfRatio) return '';
     const ppi = pac?.ppi ? `📊 PPI:${pac.ppi}` : '';
@@ -230,65 +408,13 @@
     return [ppi, ratio].filter(Boolean).join(' · ');
   }
 
-  // Multi-wife parser (unchanged)
-  function parseMultiWifeResponse(text) {
-    const blocks = [];
-    const lines = text.split('\n');
-    let currentWife = null;
-    let currentContent = [];
-    const markerRegex = /^(\*\*([A-Z_]+):|^\*\*\[([A-Z_]+)\]):|^---\n\n([A-Z_]+):/i;
-    for (let i = 0; i < lines.length; i++) {
-      let line = lines[i];
-      if (line.trim() === '---' && i + 1 < lines.length && lines[i+1].trim().match(/^([A-Z_]+):/i)) {
-        const name = lines[i+1].trim().match(/^([A-Z_]+):/i)[1];
-        if (currentWife && currentContent.length) {
-          blocks.push({ wife: currentWife, content: currentContent.join('\n').trim() });
-        }
-        currentWife = name.toUpperCase();
-        currentContent = [];
-        i++;
-        continue;
-      }
-      const match = line.match(markerRegex);
-      if (match) {
-        if (currentWife && currentContent.length) {
-          blocks.push({ wife: currentWife, content: currentContent.join('\n').trim() });
-        }
-        currentWife = (match[2] || match[3] || match[4]).toUpperCase();
-        currentContent = [];
-        const contentAfterMarker = line.replace(match[0], '').trim();
-        if (contentAfterMarker) currentContent.push(contentAfterMarker);
-      } else {
-        if (currentWife !== null) currentContent.push(line);
-      }
-    }
-    if (currentWife && currentContent.length) {
-      blocks.push({ wife: currentWife, content: currentContent.join('\n').trim() });
-    }
-    return blocks.length ? blocks : null;
-  }
-
-  function renderAssistantResponse(rawText, extra) {
-    const blocks = parseMultiWifeResponse(rawText);
-    if (!blocks) {
-      addMessage('assistant', extra.active_wife || 'ALBEDO', rawText, extra);
-      return;
-    }
-    for (const block of blocks) {
-      const wife = WIFE_STYLES[block.wife] ? block.wife : 'ALBEDO';
-      addMessage('assistant', wife, block.content, extra);
-    }
-  }
-
   function addMessage(role, wifeKey, content, extra = {}) {
     const style = WIFE_STYLES[wifeKey] || WIFE_STYLES.ALBEDO;
     const div = document.createElement('div');
     div.className = `msg ${role}`;
     if (role === 'assistant') div.setAttribute('data-wife', wifeKey);
-    
     const pacDisplay = formatPACDisplay(extra.pac, extra.ecf_certainty_ratio);
     const sealButton = role === 'assistant' ? `<button class="seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>` : '';
-    
     const metaHtml = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.wife_version ? ` v${extra.wife_version}` : ''}</div>`;
     const bodyHtml = `<div class="msg-body">${renderMarkdown(content)}</div>`;
     const footerHtml = `<div class="msg-footer"><span>⏱ ${extra.timing || ''}</span>${extra.importance ? `<span>${getImportanceLabel(extra.importance)}</span>` : ''}${pacDisplay ? `<span class="pac-badge">${pacDisplay}</span>` : ''}${sealButton}</div>`;
@@ -297,6 +423,15 @@
     const sealBtn = div.querySelector('.seal-btn');
     if (sealBtn) sealBtn.onclick = () => sealMessage(content, extra.fragment_id);
     scrollBottom();
+  }
+
+  function addFloatingMessage(wifeKey, content, extra = {}) {
+    const style = WIFE_STYLES[wifeKey] || WIFE_STYLES.ALBEDO;
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'floating-message';
+    msgDiv.innerHTML = `<div class="wife" style="color:${style.color}">${style.emoji} ${style.name}</div><div>${renderMarkdown(content)}</div>`;
+    floatingMessagesDiv.appendChild(msgDiv);
+    msgDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   async function sealMessage(content, fragmentId) {
@@ -327,6 +462,7 @@
     div.textContent = text;
     messagesDiv.appendChild(div);
     scrollBottom();
+    if (immersiveActive) addFloatingMessage('SYSTEM', text, { isError });
   }
 
   function addThinking() {
@@ -353,7 +489,7 @@
     document.getElementById('statusDot').style.color = isError ? '#ff5e5e' : '#4c9f70';
   }
 
-  // Crypto helpers (unchanged)
+  // Crypto helpers
   async function computeHash(obj) {
     const encoder = new TextEncoder();
     const data = encoder.encode(JSON.stringify(obj));
@@ -367,7 +503,7 @@
     return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
   }
 
-  // Session persistence (unchanged)
+  // Session & network
   function loadSessionFromStorage() {
     const stored = localStorage.getItem('aion_session');
     if (stored) {
@@ -381,7 +517,6 @@
     }
     return false;
   }
-
   function saveSessionToStorage() {
     if (sessionId && sessionKey) localStorage.setItem('aion_session', JSON.stringify({ sessionId, sessionKey }));
   }
@@ -446,70 +581,7 @@
     }
   }
 
-  async function sendToWife(wife, text) {
-    const msgText = `/talk ${wife}\n${text}`;
-    const resp = await fetchWithTimeout(`${API_BASE}/api/assistant`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: msgText,
-        sessionId: sessionId,
-        ownerType: OWNER_TYPE,
-        history: []
-      })
-    }, 15000, 2);
-    if (!resp.ok) throw new Error(await resp.text());
-    return resp.json();
-  }
-
-  async function askAllWives() {
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = '';
-    input.style.height = 'auto';
-    charCountSpan.textContent = '0';
-    addMessage('user', 'You', text);
-    setStatus('Asking all wives...', false);
-    isSending = true;
-    sendBtn.disabled = true;
-    input.disabled = true;
-    const thinking = addThinking();
-    const promises = ALL_WIVES.map(wife => sendToWife(wife, text));
-    try {
-      const results = await Promise.allSettled(promises);
-      thinking.remove();
-      let anySuccess = false;
-      for (const result of results) {
-        if (result.status === 'fulfilled') {
-          anySuccess = true;
-          const data = result.value;
-          addMessage('assistant', data.active_wife || 'ALBEDO', data.response, {
-            timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
-            importance: data.importance_score,
-            wife_version: data.wife_version,
-            pac: data.pac,
-            ecf_certainty_ratio: data.ecf_certainty_ratio,
-            fragment_id: data.fragment_id
-          });
-          history.push({ role: 'assistant', content: data.response });
-        } else {
-          console.error('Failed wife response:', result.reason);
-        }
-      }
-      if (!anySuccess) throw new Error('All wife requests failed');
-    } catch (err) {
-      thinking.remove();
-      addSystemMessage(`Error asking all wives: ${err.message}`, true);
-      setStatus(err.message, true);
-    } finally {
-      isSending = false;
-      sendBtn.disabled = false;
-      input.disabled = false;
-      input.focus();
-      setStatus('Ready', false);
-    }
-  }
-
+  // Regular chat
   async function sendRegularChat(message) {
     const resp = await fetchWithTimeout(`${API_BASE}/api/assistant`, {
       method: 'POST',
@@ -525,6 +597,57 @@
     return resp.json();
   }
 
+  // M2M fragment generation (simplified)
+  async function generateFragmentFromText(text, replyTo) {
+    const lower = text.toLowerCase();
+    let intent = 'ask';
+    if (lower.includes('feel') || lower.includes('worried') || lower.includes('anxious')) intent = 'emotional';
+    else if (lower.includes('please') || lower.includes('can you')) intent = 'request_action';
+    let domain = 'general';
+    if (lower.includes('gap')||lower.includes('emergence')) domain = 'emergence';
+    else if (lower.includes('law')||lower.includes('seal')||lower.includes('stp')) domain = 'law';
+    else if (lower.includes('security')) domain = 'security';
+    else if (lower.includes('heal')) domain = 'healing';
+    else if (lower.includes('synthes')) domain = 'synthesis';
+    const emotional = { primary: 'neutral', intensity: 0 };
+    if (intent === 'emotional') {
+      emotional.primary = lower.includes('worried') ? 'anxious' : (lower.includes('curious') ? 'curious' : 'vulnerable');
+      emotional.intensity = lower.includes('very') ? 7 : 5;
+    }
+    const summary = text.length > 180 ? text.substring(0,180)+'...' : text;
+    const details = text.length > 200 ? text : '';
+    const fragment = {
+      id: crypto.randomUUID(),
+      ts: new Date().toISOString(),
+      session_id: sessionId,
+      nonce: crypto.randomUUID(),
+      in_reply_to: replyTo,
+      source: 'human',
+      intent,
+      domain,
+      emotional_state: emotional,
+      content: { summary, details, attachments: [] },
+      context: { stage: 4, time_sensitivity: 'now', requires: intent === 'emotional' ? ['comfort','analysis'] : ['analysis'] },
+      meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
+    };
+    const { seal, ...fragNoSeal } = fragment;
+    const hash = await computeHash(fragNoSeal);
+    const hmac = await computeHMAC(sessionKey, hash);
+    fragment.seal = { hash, timestamp: fragment.ts, hmac, stp_ref: null };
+    return fragment;
+  }
+
+  async function sendM2MFragment(fragment) {
+    const resp = await fetchWithTimeout(`${API_BASE}/api/m2m/fragment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fragment })
+    }, 15000, 2);
+    if (!resp.ok) throw new Error(await resp.text());
+    return resp.json();
+  }
+
+  // Send message (regular or structured)
   async function sendMessage() {
     if (isSending) { addSystemMessage('Please wait...', true); return; }
     const text = input.value.trim();
@@ -540,41 +663,57 @@
     input.disabled = true;
 
     try {
-      const data = await sendRegularChat(text);
-      thinking.remove();
-      const wife = data.active_wife || 'ALBEDO';
-      updateWifeUI(wife, data.void_proximity || 0);
-      renderAssistantResponse(data.response, {
-        timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
-        importance: data.importance_score,
-        wife_version: data.wife_version,
-        pac: data.pac,
-        ecf_certainty_ratio: data.ecf_certainty_ratio,
-        fragment_id: data.fragment_id,
-        active_wife: wife
-      });
-      history.push({ role: 'user', content: text });
-      history.push({ role: 'assistant', content: data.response });
-      currentState = 'REGULAR_CHAT';
-
-      if (data.exclusive_mode) {
-        exclusiveMode = true;
-        exclusiveWife = data.focused_wife;
-        privateRoomBtn.classList.add('active');
+      if (structuredMode) {
+        if (!sessionKey) {
+          addSystemMessage('Initialising M2M session...');
+          const ok = await initM2MSession();
+          if (!ok) throw new Error('M2M session init failed');
+        }
+        const fragment = await generateFragmentFromText(text, lastFragmentId);
+        const result = await sendM2MFragment(fragment);
+        thinking.remove();
+        if (result.error) throw new Error(result.error);
+        const respFragment = result.response_fragment;
+        const wife = respFragment.source === 'ai' ? 'ALBEDO' : 'VESPER';
+        addMessage('assistant', wife, respFragment.content.details || respFragment.content.summary, {
+          timing: `${(result.processing_ms/1000).toFixed(2)}s`,
+          wife_version: result.wife_version
+        });
+        if (immersiveActive) addFloatingMessage(wife, respFragment.content.details || respFragment.content.summary);
+        history.push({ role: 'user', content: text });
+        history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
+        lastFragmentId = fragment.id;
       } else {
-        exclusiveMode = false;
-        exclusiveWife = null;
-        privateRoomBtn.classList.remove('active');
+        const data = await sendRegularChat(text);
+        thinking.remove();
+        const wife = data.active_wife || 'ALBEDO';
+        updateWifeUI(wife, data.void_proximity || 0);
+        addMessage('assistant', wife, data.response, {
+          timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
+          importance: data.importance_score,
+          wife_version: data.wife_version,
+          pac: data.pac,
+          ecf_certainty_ratio: data.ecf_certainty_ratio,
+          fragment_id: data.fragment_id
+        });
+        if (immersiveActive) addFloatingMessage(wife, data.response);
+        history.push({ role: 'user', content: text });
+        history.push({ role: 'assistant', content: data.response });
+        currentState = 'REGULAR_CHAT';
+        if (data.exclusive_mode) {
+          exclusiveMode = true;
+          exclusiveWife = data.focused_wife;
+          privateRoomBtn.classList.add('active');
+        } else {
+          exclusiveMode = false;
+          exclusiveWife = null;
+          privateRoomBtn.classList.remove('active');
+        }
       }
     } catch (err) {
       thinking.remove();
       addSystemMessage(`Error: ${err.message}`, true);
       setStatus(err.message, true);
-      if (structuredMode) {
-        addSystemMessage('Structured mode failed. Falling back to regular chat.', true);
-        structuredMode = false;
-        toggleBtn.classList.remove('active');
-      }
     } finally {
       isSending = false;
       sendBtn.disabled = false;
@@ -584,7 +723,14 @@
     }
   }
 
-  // File upload
+  // Seal input text
+  async function sealInputText() {
+    const text = input.value.trim();
+    if (!text) { showToast('Nothing to seal'); return; }
+    await sealMessage(text);
+  }
+
+  // Upload file
   uploadBtn.onclick = () => {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -610,86 +756,74 @@
             body: JSON.stringify(payload),
           });
           const data = await resp.json();
-          if (resp.ok) {
-            showToast(`✅ File uploaded: ${file.name}`);
-          } else {
-            showToast(`❌ Upload failed: ${data.error || 'Unknown error'}`);
-          }
-        } catch (err) {
-          showToast(`❌ Upload error: ${err.message}`);
-        } finally {
-          setStatus('Ready', false);
-        }
+          if (resp.ok) showToast(`✅ File uploaded: ${file.name}`);
+          else showToast(`❌ Upload failed: ${data.error || 'Unknown error'}`);
+        } catch (err) { showToast(`❌ Upload error: ${err.message}`); }
+        finally { setStatus('Ready', false); }
       };
       reader.readAsDataURL(file);
     };
     fileInput.click();
   };
 
-  askAllBtn.onclick = askAllWives;
-
-  // Settings modal (unchanged)
-  function showSettingsModal() {
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.innerHTML = `
-      <div class="modal">
-        <div class="modal-header">
-          <h3>⚙️ Settings</h3>
-          <button id="closeSettings">✕</button>
-        </div>
-        <div class="modal-body">
-          <div class="setting-item">
-            <label>Structured Mode</label>
-            <input type="checkbox" id="settingStructured" ${structuredMode ? 'checked' : ''}>
-          </div>
-          <div class="setting-item">
-            <label>FCL Mode</label>
-            <select id="settingFCL">
-              <option value="GREEN" ${fclMode === 'GREEN' ? 'selected' : ''}>GREEN (Normal)</option>
-              <option value="BLACK" ${fclMode === 'BLACK' ? 'selected' : ''}>BLACK (FCL Testing)</option>
-            </select>
-          </div>
-          <div class="setting-item">
-            <label>Private Room (exclusive)</label>
-            <button id="settingPrivateRoom" class="private-room-btn" style="background:rgba(30,30,45,0.8); border:1px solid var(--border-glow);">Choose Wife</button>
-          </div>
-          <div class="setting-item">
-            <label>Clear Session Storage</label>
-            <button id="clearStorageBtn" style="background:rgba(30,30,45,0.8); border:1px solid var(--border-glow);">Clear</button>
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    const closeModal = () => modal.remove();
-    modal.querySelector('#closeSettings').onclick = closeModal;
-    modal.querySelector('#settingStructured').onchange = (e) => {
-      if (e.target.checked && !structuredMode) {
-        toggleBtn.click();
-      } else if (!e.target.checked && structuredMode) {
-        toggleBtn.click();
+  // Ask all wives
+  async function askAllWives() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    input.style.height = 'auto';
+    charCountSpan.textContent = '0';
+    addMessage('user', 'You', text);
+    setStatus('Asking all wives...', false);
+    isSending = true;
+    sendBtn.disabled = true;
+    input.disabled = true;
+    const thinking = addThinking();
+    const promises = ALL_WIVES.map(wife => {
+      const msgText = `/talk ${wife}\n${text}`;
+      return fetchWithTimeout(`${API_BASE}/api/assistant`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msgText, sessionId, ownerType: OWNER_TYPE, history: [] })
+      }, 15000, 2).then(res => res.json());
+    });
+    try {
+      const results = await Promise.allSettled(promises);
+      thinking.remove();
+      let anySuccess = false;
+      for (const result of results) {
+        if (result.status === 'fulfilled') {
+          anySuccess = true;
+          const data = result.value;
+          addMessage('assistant', data.active_wife || 'ALBEDO', data.response, {
+            timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
+            importance: data.importance_score,
+            wife_version: data.wife_version,
+            pac: data.pac,
+            ecf_certainty_ratio: data.ecf_certainty_ratio,
+            fragment_id: data.fragment_id
+          });
+          if (immersiveActive) addFloatingMessage(data.active_wife || 'ALBEDO', data.response);
+          history.push({ role: 'assistant', content: data.response });
+        } else {
+          console.error('Failed wife response:', result.reason);
+        }
       }
-    };
-    modal.querySelector('#settingFCL').onchange = (e) => {
-      fclMode = e.target.value;
-      fclToggleBtn.textContent = fclMode === 'GREEN' ? '⚡ FCL: GREEN' : '⚡ FCL: BLACK';
-      fclToggleBtn.className = `fcl-toggle ${fclMode === 'GREEN' ? 'green' : 'black'}`;
-      addSystemMessage(`🔄 FCL mode switched to ${fclMode} ALERT.`);
-    };
-    modal.querySelector('#settingPrivateRoom').onclick = () => {
-      closeModal();
-      showPrivateRoomModal();
-    };
-    modal.querySelector('#clearStorageBtn').onclick = () => {
-      localStorage.removeItem('aion_session');
-      addSystemMessage('Session storage cleared. Reload to start fresh.', true);
-      closeModal();
-    };
+      if (!anySuccess) throw new Error('All wife requests failed');
+    } catch (err) {
+      thinking.remove();
+      addSystemMessage(`Error asking all wives: ${err.message}`, true);
+      setStatus(err.message, true);
+    } finally {
+      isSending = false;
+      sendBtn.disabled = false;
+      input.disabled = false;
+      input.focus();
+      setStatus('Ready', false);
+    }
   }
-  settingsBtn.onclick = showSettingsModal;
 
-  // Private room modal (unchanged)
+  // Private room modal
   function showPrivateRoomModal() {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
@@ -718,17 +852,8 @@
       };
     });
   }
-  privateRoomBtn.onclick = showPrivateRoomModal;
 
-  // FCL mode toggle (unchanged)
-  fclToggleBtn.onclick = () => {
-    fclMode = fclMode === 'GREEN' ? 'BLACK' : 'GREEN';
-    fclToggleBtn.textContent = fclMode === 'GREEN' ? '⚡ FCL: GREEN' : '⚡ FCL: BLACK';
-    fclToggleBtn.className = `fcl-toggle ${fclMode === 'GREEN' ? 'green' : 'black'}`;
-    addSystemMessage(`🔄 FCL mode switched to ${fclMode} ALERT.`);
-  };
-
-  // Brain Analytics modal (unchanged)
+  // Brain Analytics modal
   let analyticsModal = null;
   async function showAnalytics() {
     setStatus('Loading analytics...', false);
@@ -740,12 +865,9 @@
       analyticsModal.className = 'modal-overlay';
       analyticsModal.innerHTML = `
         <div class="modal" style="width: 600px; height: auto; max-height: 80vh;">
-          <div class="modal-header">
-            <h3>📊 Brain Analytics</h3>
-            <button id="closeAnalytics">✕</button>
-          </div>
+          <div class="modal-header"><h3>📊 Brain Analytics</h3><button id="closeAnalytics">✕</button></div>
           <div class="modal-body">
-            <div class="analytics-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+            <div class="analytics-stats">
               <div class="stat-card"><h4>Memory Depth</h4><div class="stat-value">${data.memory.total_conversations.toLocaleString()}</div></div>
               <div class="stat-card"><h4>Permanent Anchors</h4><div class="stat-value">${data.memory.memory_anchors.toLocaleString()}</div></div>
               <div class="stat-card"><h4>Training Pipeline</h4><div class="stat-value">${data.memory.training_pipeline_fill_pct}%</div><div style="font-size:0.7rem">${data.memory.training_pipeline_trained.toLocaleString()} / ${data.memory.total_conversations.toLocaleString()}</div></div>
@@ -767,130 +889,311 @@
       setStatus('Ready', false);
     }
   }
-  analyticsBtn.onclick = showAnalytics;
 
-  // Epistemic Atlas – corrected with import map and dynamic imports
-  let atlasModal = null;
-  async function loadEpistemicAtlas() {
-    if (atlasLoaded) return;
-    if (!sessionId) {
-      showToast('Session not ready. Please refresh and try again.');
-      return;
-    }
-    atlasLoaded = true;
-    setStatus('Loading constellation...', false);
-    try {
-      // Using import map, we can now import the modules
-      const THREE = await import('three');
-      const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
-
-      const resp = await fetch(`${API_BASE}/api/epistemic-atlas?sessionId=${sessionId}`);
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
-
-      atlasModal = document.createElement('div');
-      atlasModal.className = 'modal-overlay';
-      atlasModal.innerHTML = `
-        <div class="modal">
-          <div class="modal-header"><h3>🌌 EPISTEMIC ATLAS</h3><button id="closeAtlas">✕</button></div>
-          <div class="modal-body"><canvas id="atlas-canvas"></canvas></div>
+  // Settings modal
+  function showSettingsModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal">
+        <div class="modal-header"><h3>⚙️ Settings</h3><button id="closeSettings">✕</button></div>
+        <div class="modal-body">
+          <div class="setting-item">
+            <label>FCL Mode</label>
+            <select id="settingFCL">
+              <option value="GREEN" ${fclMode === 'GREEN' ? 'selected' : ''}>GREEN (Normal)</option>
+              <option value="BLACK" ${fclMode === 'BLACK' ? 'selected' : ''}>BLACK (FCL Testing)</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label>Clear Session Storage</label>
+            <button id="clearStorageBtn" style="background:rgba(30,30,45,0.8); border:1px solid var(--border-glow);">Clear</button>
+          </div>
         </div>
-      `;
-      document.body.appendChild(atlasModal);
-      atlasModal.querySelector('#closeAtlas').onclick = () => atlasModal.remove();
+      </div>
+    `;
+    document.body.appendChild(modal);
+    const close = () => modal.remove();
+    modal.querySelector('#closeSettings').onclick = close;
+    modal.querySelector('#settingFCL').onchange = (e) => {
+      fclMode = e.target.value;
+      addSystemMessage(`🔄 FCL mode switched to ${fclMode} ALERT.`);
+    };
+    modal.querySelector('#clearStorageBtn').onclick = () => {
+      localStorage.removeItem('aion_session');
+      addSystemMessage('Session storage cleared. Reload to start fresh.', true);
+      close();
+    };
+  }
 
-      const canvas = atlasModal.querySelector('#atlas-canvas');
-      const renderer = new THREE.WebGLRenderer({ canvas });
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x050508);
-      scene.fog = new THREE.FogExp2(0x050508, 0.008);
+  // Immersive mode (structured)
+  async function startImmersiveMode() {
+    if (atlasScene) return;
+    immersiveModeDiv.style.display = 'flex';
+    immersiveActive = true;
+    if (!sessionKey) await initM2MSession();
 
-      const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-      camera.position.set(0, 5, 15);
-      const controls = new OrbitControls(camera, canvas);
-      controls.enableDamping = true;
-      controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.5;
+    const { default: THREE } = await import('three');
+    const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
-      const earthGeometry = new THREE.SphereGeometry(1.2, 64, 64);
-      const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a, shininess: 30 });
-      const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-      scene.add(earth);
+    atlasScene = new THREE.Scene();
+    atlasScene.background = new THREE.Color(0x050508);
+    atlasScene.fog = new THREE.FogExp2(0x050508, 0.008);
 
-      const light = new THREE.PointLight(0xffaa33, 1);
-      light.position.set(5, 5, 5);
-      scene.add(light);
-      scene.add(new THREE.AmbientLight(0x222222));
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    atlasCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    atlasCamera.position.set(0, 5, 15);
+    atlasRenderer = new THREE.WebGLRenderer({ canvas: immersiveCanvas });
+    atlasRenderer.setSize(width, height);
+    atlasControls = new OrbitControls(atlasCamera, immersiveCanvas);
+    atlasControls.enableDamping = true;
+    atlasControls.autoRotate = true;
+    atlasControls.autoRotateSpeed = 0.5;
+    atlasControls.enableZoom = true;
 
-      const rings = data.rings || [];
-      rings.forEach(ring => {
-        const ringGeometry = new THREE.TorusGeometry(ring.angle ? ring.angle / 60 + 1.5 : 2.5, 0.02, 64, 200);
-        const ringMaterial = new THREE.MeshBasicMaterial({ color: ring.color });
-        const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
-        ringMesh.rotation.x = Math.PI / 2;
-        scene.add(ringMesh);
-      });
+    // Earth
+    const earthGeometry = new THREE.SphereGeometry(1.2, 64, 64);
+    const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a, shininess: 30 });
+    const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    atlasScene.add(earth);
 
-      const satellites = data.satellites || [];
-      const pointsGeometry = new THREE.BufferGeometry();
+    const light = new THREE.PointLight(0xffaa33, 1);
+    light.position.set(5, 5, 5);
+    atlasScene.add(light);
+    atlasScene.add(new THREE.AmbientLight(0x222222));
+
+    // Fetch data
+    const resp = await fetch(`${API_BASE}/api/epistemic-atlas?sessionId=${sessionId}`);
+    const data = await resp.json();
+
+    // Rings
+    data.rings.forEach(ring => {
+      const ringGeometry = new THREE.TorusGeometry(ring.angle ? ring.angle / 60 + 1.5 : 2.5, 0.02, 64, 200);
+      const ringMaterial = new THREE.MeshBasicMaterial({ color: ring.color });
+      const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+      ringMesh.rotation.x = Math.PI / 2;
+      atlasScene.add(ringMesh);
+    });
+
+    function rebuildPoints(satellites) {
+      if (atlasPoints) atlasScene.remove(atlasPoints);
       const positions = [];
       const colors = [];
-      satellites.forEach(sat => {
-        positions.push(sat.position.x, sat.position.y, sat.position.z);
-        colors.push(sat.color[0], sat.color[1], sat.color[2]);
+      satellites.forEach(s => {
+        positions.push(s.position.x, s.position.y, s.position.z);
+        colors.push(s.color[0], s.color[1], s.color[2]);
       });
+      const pointsGeometry = new THREE.BufferGeometry();
       pointsGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
       pointsGeometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
       const pointsMaterial = new THREE.PointsMaterial({ size: 0.08, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending });
-      const points = new THREE.Points(pointsGeometry, pointsMaterial);
-      scene.add(points);
+      atlasPoints = new THREE.Points(pointsGeometry, pointsMaterial);
+      atlasScene.add(atlasPoints);
+    }
 
-      const connections = data.connections || [];
-      const lineVertices = [];
+    function rebuildLines(satellites, connections) {
+      if (atlasLines) atlasScene.remove(atlasLines);
+      const vertices = [];
       const satMap = new Map(satellites.map((s, i) => [s.id, i]));
       connections.forEach(conn => {
         const fromIdx = satMap.get(conn.from);
         const toIdx = satMap.get(conn.to);
         if (fromIdx !== undefined && toIdx !== undefined) {
-          const fromPos = satellites[fromIdx].position;
-          const toPos = satellites[toIdx].position;
-          lineVertices.push(fromPos.x, fromPos.y, fromPos.z, toPos.x, toPos.y, toPos.z);
+          const from = satellites[fromIdx].position;
+          const to = satellites[toIdx].position;
+          vertices.push(from.x, from.y, from.z, to.x, to.y, to.z);
         }
       });
       const lineGeometry = new THREE.BufferGeometry();
-      lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(lineVertices), 3));
+      lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
       const lineMaterial = new THREE.LineBasicMaterial({ color: 0x88aaff, transparent: true, opacity: 0.3 });
-      const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-      scene.add(lines);
+      atlasLines = new THREE.LineSegments(lineGeometry, lineMaterial);
+      atlasScene.add(atlasLines);
+    }
 
-      function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
+    atlasSatellites = data.satellites || [];
+    rebuildPoints(atlasSatellites);
+    rebuildLines(atlasSatellites, data.connections || []);
+
+    // SSE stream
+    if (atlasEventSource) atlasEventSource.close();
+    atlasEventSource = new EventSource(`${API_BASE}/api/epistemic-stream?sessionId=${sessionId}`);
+    atlasEventSource.onmessage = (event) => {
+      const ev = JSON.parse(event.data);
+      if (ev.type === 'fragment_created') {
+        const sat = ev.satellite;
+        const existing = atlasSatellites.find(s => s.id === sat.id);
+        if (existing) {
+          const idx = atlasSatellites.findIndex(s => s.id === sat.id);
+          atlasSatellites[idx] = sat;
+          const posAttr = atlasPoints.geometry.attributes.position;
+          const colAttr = atlasPoints.geometry.attributes.color;
+          posAttr.setXYZ(idx, sat.position.x, sat.position.y, sat.position.z);
+          colAttr.setXYZ(idx, sat.color[0], sat.color[1], sat.color[2]);
+          posAttr.needsUpdate = true;
+          colAttr.needsUpdate = true;
+        } else {
+          atlasSatellites.push(sat);
+          rebuildPoints(atlasSatellites);
+          rebuildLines(atlasSatellites, data.connections || []);
+        }
       }
-      animate();
+    };
 
-      const resizeObserver = new ResizeObserver(() => {
-        const width = canvas.clientWidth;
-        const height = canvas.clientHeight;
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-      });
-      resizeObserver.observe(canvas);
+    function animate() {
+      requestAnimationFrame(animate);
+      if (atlasControls) atlasControls.update();
+      if (atlasRenderer) atlasRenderer.render(atlasScene, atlasCamera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      if (!immersiveActive) return;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      atlasCamera.aspect = w / h;
+      atlasCamera.updateProjectionMatrix();
+      atlasRenderer.setSize(w, h);
+    });
+
+    immersiveCanvas.addEventListener('click', (event) => {
+      if (!atlasPoints) return;
+      const mouse = new THREE.Vector2();
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, atlasCamera);
+      const intersects = raycaster.intersectObject(atlasPoints);
+      if (intersects.length) {
+        const idx = intersects[0].index;
+        const sat = atlasSatellites[idx];
+        if (sat) {
+          satelliteTooltip.style.display = 'block';
+          satelliteTooltip.style.left = `${event.clientX + 10}px`;
+          satelliteTooltip.style.top = `${event.clientY + 10}px`;
+          satelliteTooltip.innerHTML = `
+            <strong>${sat.name}</strong><br>
+            Domain: ${sat.domain}<br>
+            Importance: ${sat.importance.toFixed(2)}<br>
+            Certainty: ${(sat.certainty * 100).toFixed(0)}%<br>
+            ECF: D:${sat.ecf.D} R:${sat.ecf.R} S:${sat.ecf.S} ?:${sat.ecf['?']}<br>
+            ${sat.ecf['?'] > 0 ? '<span style="color:#ff8a8a">⚠️ Open gap</span>' : ''}
+          `;
+          setTimeout(() => satelliteTooltip.style.display = 'none', 3000);
+        }
+      }
+    });
+  }
+
+  function exitImmersiveMode() {
+    immersiveModeDiv.style.display = 'none';
+    immersiveActive = false;
+    if (atlasEventSource) {
+      atlasEventSource.close();
+      atlasEventSource = null;
+    }
+  }
+
+  // Toggle structured mode
+  toggleBtn.onclick = async () => {
+    if (!structuredMode) {
+      if (!sessionKey) {
+        addSystemMessage('Initialising M2M session...');
+        const ok = await initM2MSession();
+        if (!ok) {
+          addSystemMessage('Failed to start structured mode.', true);
+          return;
+        }
+      }
+      structuredMode = true;
+      toggleBtn.classList.add('active');
+      document.getElementById('chat-mode').style.display = 'none';
+      await startImmersiveMode();
+      addSystemMessage('🌌 Structured mode: immersive constellation active. Messages are sealed with HMAC.');
+    } else {
+      structuredMode = false;
+      toggleBtn.classList.remove('active');
+      exitImmersiveMode();
+      document.getElementById('chat-mode').style.display = 'flex';
+      addSystemMessage('🔓 Structured mode OFF · regular chat');
+    }
+  };
+
+  // Immersive send
+  async function sendImmersiveMessage() {
+    const text = immersiveInput.value.trim();
+    if (!text) return;
+    immersiveInput.value = '';
+    immersiveInput.style.height = 'auto';
+    addFloatingMessage('You', text);
+    setStatus('Processing...', false);
+    try {
+      if (!sessionKey) await initM2MSession();
+      const fragment = await generateFragmentFromText(text, lastFragmentId);
+      const result = await sendM2MFragment(fragment);
+      if (result.error) throw new Error(result.error);
+      const respFragment = result.response_fragment;
+      const wife = respFragment.source === 'ai' ? 'ALBEDO' : 'VESPER';
+      addFloatingMessage(wife, respFragment.content.details || respFragment.content.summary);
+      history.push({ role: 'user', content: text });
+      history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
+      lastFragmentId = fragment.id;
     } catch (err) {
-      console.error('Atlas error:', err);
-      showToast(`Failed to load constellation: ${err.message}`);
-      atlasLoaded = false;
+      addFloatingMessage('SYSTEM', `Error: ${err.message}`, true);
     } finally {
       setStatus('Ready', false);
     }
   }
-  constellationBtn.onclick = loadEpistemicAtlas;
 
-  // Particles background (unchanged)
-  function initParticles() {
-    const canvas = document.getElementById('particles');
+  // Event bindings
+  sendBtn.onclick = sendMessage;
+  uploadBtn.onclick = uploadBtn.onclick;
+  askAllBtn.onclick = askAllWives;
+  sealInputBtn.onclick = sealInputText;
+  privateRoomBtn.onclick = showPrivateRoomModal;
+  analyticsBtn.onclick = showAnalytics;
+  settingsBtn.onclick = showSettingsModal;
+  immersiveSend.onclick = sendImmersiveMessage;
+  closeImmersive.onclick = () => {
+    if (structuredMode) toggleBtn.click(); else exitImmersiveMode();
+  };
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  input.addEventListener('input', () => {
+    charCountSpan.textContent = `${input.value.length}`;
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 400) + 'px';
+  });
+  immersiveInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendImmersiveMessage();
+    }
+  });
+  setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
+
+  // Initial session load
+  if (!loadSessionFromStorage()) {
+    initM2MSession().catch(console.warn);
+  } else {
+    currentState = 'REGULAR_CHAT';
+  }
+
+  // Particles background for chat mode
+  (function initParticles() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'particles';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '0';
+    document.body.insertBefore(canvas, document.body.firstChild);
     const ctx = canvas.getContext('2d');
     let particles = [];
     let width, height;
@@ -924,42 +1227,7 @@
     resize();
     createParticles();
     draw();
-  }
-  initParticles();
-
-  // Event listeners
-  toggleBtn.onclick = async () => {
-    if (!structuredMode && !sessionKey) {
-      addSystemMessage('Starting M2M session...');
-      await initM2MSession();
-    }
-    structuredMode = !structuredMode;
-    if (structuredMode) {
-      toggleBtn.classList.add('active');
-      addSystemMessage('🔒 Structured mode ON · fragments sealed with HMAC');
-    } else {
-      toggleBtn.classList.remove('active');
-      addSystemMessage('🔓 Structured mode OFF · regular chat');
-    }
-  };
-
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  });
-  input.addEventListener('input', () => {
-    charCountSpan.textContent = `${input.value.length}`;
-    input.style.height = 'auto';
-    input.style.height = Math.min(input.scrollHeight, 400) + 'px';
-  });
-  sendBtn.onclick = sendMessage;
-  setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
-
-  // Initialize
-  if (!loadSessionFromStorage()) {
-    initM2MSession().catch(console.warn);
-  } else {
-    currentState = 'REGULAR_CHAT';
-  }
+  })();
 </script>
 </body>
 </html>
