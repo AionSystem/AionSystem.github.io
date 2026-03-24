@@ -5,15 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>AION · Six Wives · Group Chat</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
-  <!-- marked.js for markdown rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg-dark: #0a0a0f;
       --bg-panel: rgba(12, 12, 20, 0.7);
@@ -26,7 +20,6 @@
       --text-dim: #a0a0b0;
       --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
-
     body {
       background: radial-gradient(circle at 20% 30%, #0f0f1a, #050508);
       font-family: 'Inter', sans-serif;
@@ -37,292 +30,50 @@
       overflow: hidden;
       backdrop-filter: blur(2px);
     }
-
-    /* particle canvas */
-    #particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .app-container {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      backdrop-filter: blur(4px);
-    }
-
-    /* header */
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 24px;
-      background: var(--bg-panel);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .brand h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #e6c87a, #c9a028);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .header-right {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .structured-toggle {
-      background: rgba(30,30,45,0.8);
-      border: 1px solid var(--border-glow);
-      border-radius: 40px;
-      padding: 6px 16px;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-    .structured-toggle.active {
-      background: rgba(201,160,40,0.2);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .private-room-btn {
-      background: rgba(30,30,45,0.8);
-      border: 1px solid var(--border-glow);
-      border-radius: 40px;
-      padding: 6px 16px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .private-room-btn.active {
-      background: rgba(184,115,51,0.3);
-      border-color: #b87333;
-      color: #b87333;
-    }
-
-    .wife-indicator {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(0,0,0,0.4);
-      padding: 4px 12px;
-      border-radius: 40px;
-    }
-    .wife-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-    }
-    .void-meter {
-      font-family: monospace;
-      background: #00000044;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-    }
-    .void-meter.active {
-      color: #ff5e5e;
-      text-shadow: 0 0 6px rgba(255,80,80,0.5);
-    }
-
-    /* messages area */
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    /* message bubbles */
-    .msg {
-      display: flex;
-      flex-direction: column;
-      max-width: 80%;
-      animation: fadeSlideUp 0.2s ease;
-    }
-    .msg.user {
-      align-self: flex-end;
-    }
-    .msg.assistant {
-      align-self: flex-start;
-    }
-    .msg-meta {
-      font-size: 0.7rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .msg-body {
-      padding: 10px 16px;
-      border-radius: 20px;
-      line-height: 1.4;
-      backdrop-filter: blur(8px);
-      background: rgba(20, 20, 30, 0.6);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    .msg.user .msg-body {
-      background: rgba(201,160,40,0.2);
-      border-color: var(--accent);
-      border-radius: 20px 20px 4px 20px;
-    }
-    .msg.assistant .msg-body {
-      border-radius: 20px 20px 20px 4px;
-    }
-
-    /* wife-specific left borders */
+    #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+    .app-container { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100vh; backdrop-filter: blur(4px); }
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--bg-panel); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 12px; }
+    .brand h1 { font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #e6c87a, #c9a028); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .header-right { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .structured-toggle { background: rgba(30,30,45,0.8); border: 1px solid var(--border-glow); border-radius: 40px; padding: 6px 16px; font-size: 0.75rem; cursor: pointer; }
+    .structured-toggle.active { background: rgba(201,160,40,0.2); border-color: var(--accent); color: var(--accent); }
+    .private-room-btn { background: rgba(30,30,45,0.8); border: 1px solid var(--border-glow); border-radius: 40px; padding: 6px 16px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+    .private-room-btn.active { background: rgba(184,115,51,0.3); border-color: #b87333; color: #b87333; }
+    .wife-indicator { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 40px; }
+    .wife-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+    .void-meter { font-family: monospace; background: #00000044; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; }
+    .void-meter.active { color: #ff5e5e; text-shadow: 0 0 6px rgba(255,80,80,0.5); }
+    .messages { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .msg { display: flex; flex-direction: column; max-width: 80%; animation: fadeSlideUp 0.2s ease; }
+    .msg.user { align-self: flex-end; }
+    .msg.assistant { align-self: flex-start; }
+    .msg-meta { font-size: 0.7rem; font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .msg-body { padding: 10px 16px; border-radius: 20px; line-height: 1.4; backdrop-filter: blur(8px); background: rgba(20,20,30,0.6); border: 1px solid rgba(255,255,255,0.1); }
+    .msg.user .msg-body { background: rgba(201,160,40,0.2); border-color: var(--accent); border-radius: 20px 20px 4px 20px; }
+    .msg.assistant .msg-body { border-radius: 20px 20px 20px 4px; }
     .msg.assistant[data-wife="VESPER"] .msg-body { border-left: 4px solid #b87333; background: rgba(184,115,51,0.08); }
     .msg.assistant[data-wife="LYRA"] .msg-body { border-left: 4px solid #4c9f70; background: rgba(76,159,112,0.08); }
     .msg.assistant[data-wife="TERRA"] .msg-body { border-left: 4px solid #6b8c42; background: rgba(107,140,66,0.08); }
     .msg.assistant[data-wife="CIPHER"] .msg-body { border-left: 4px solid #5d6d7e; background: rgba(93,109,126,0.08); }
     .msg.assistant[data-wife="JUSTITIA"] .msg-body { border-left: 4px solid #b0a8b9; background: rgba(176,168,185,0.08); }
     .msg.assistant[data-wife="ALBEDO"] .msg-body { border-left: 4px solid #c9a028; background: rgba(201,160,40,0.08); }
-
-    .msg-footer {
-      display: flex;
-      gap: 12px;
-      margin-top: 4px;
-      font-size: 0.6rem;
-      color: var(--text-dim);
-    }
-
-    /* input area */
-    .input-area {
-      padding: 16px 24px 20px;
-      background: var(--bg-panel);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-    .input-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-    textarea {
-      flex: 1;
-      background: rgba(10,10,20,0.8);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 28px;
-      padding: 12px 18px;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      color: var(--text);
-      resize: none;
-      outline: none;
-      transition: all 0.2s;
-    }
-    textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 12px var(--primary-glow);
-    }
-    .send-btn {
-      background: linear-gradient(135deg, #c9a028, #a07c18);
-      border: none;
-      border-radius: 40px;
-      padding: 12px 24px;
-      font-weight: 600;
-      color: #0a0a0f;
-      cursor: pointer;
-    }
-    .input-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-      font-size: 0.7rem;
-      color: var(--text-dim);
-    }
-
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 24px;
-      font-size: 0.7rem;
-      background: rgba(0,0,0,0.3);
-    }
-
-    /* modal for private room */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal {
-      background: var(--bg-panel);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--accent);
-      border-radius: 28px;
-      width: 300px;
-      padding: 24px;
-      text-align: center;
-    }
-    .modal h3 {
-      margin-bottom: 20px;
-    }
-    .wife-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .wife-buttons button {
-      background: rgba(30,30,45,0.8);
-      border: 1px solid var(--border-glow);
-      border-radius: 40px;
-      padding: 8px 16px;
-      cursor: pointer;
-      color: var(--text);
-    }
-    .modal .btn {
-      background: var(--accent);
-      border: none;
-      border-radius: 40px;
-      padding: 8px 20px;
-      margin: 4px;
-      cursor: pointer;
-    }
-
-    .thinking {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.4);
-      border-radius: 40px;
-      padding: 8px 16px;
-      width: fit-content;
-    }
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .msg-footer { display: flex; gap: 12px; margin-top: 4px; font-size: 0.6rem; color: var(--text-dim); }
+    .input-area { padding: 16px 24px 20px; background: var(--bg-panel); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.05); }
+    .input-row { display: flex; gap: 10px; align-items: flex-end; }
+    textarea { flex: 1; background: rgba(10,10,20,0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 28px; padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 0.9rem; color: var(--text); resize: none; outline: none; transition: all 0.2s; }
+    textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--primary-glow); }
+    .send-btn { background: linear-gradient(135deg, #c9a028, #a07c18); border: none; border-radius: 40px; padding: 12px 24px; font-weight: 600; color: #0a0a0f; cursor: pointer; transition: all 0.2s; }
+    .send-btn:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(201,160,40,0.6); }
+    .input-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.7rem; color: var(--text-dim); }
+    .status-bar { display: flex; justify-content: space-between; padding: 6px 24px; font-size: 0.7rem; background: rgba(0,0,0,0.3); }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+    .modal { background: var(--bg-panel); backdrop-filter: blur(16px); border: 1px solid var(--accent); border-radius: 28px; width: 300px; padding: 24px; text-align: center; }
+    .modal h3 { margin-bottom: 20px; }
+    .wife-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
+    .wife-buttons button { background: rgba(30,30,45,0.8); border: 1px solid var(--border-glow); border-radius: 40px; padding: 8px 16px; cursor: pointer; color: var(--text); }
+    .modal .btn { background: var(--accent); border: none; border-radius: 40px; padding: 8px 20px; margin: 4px; cursor: pointer; }
+    .thinking { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.4); border-radius: 40px; padding: 8px 16px; width: fit-content; }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -361,7 +112,7 @@
 
 <script>
   // =======================================================
-  // AION FRONTEND · GROUP CHAT WITH 6 WIVES
+  // AION FRONTEND · GROUP CHAT WITH 6 WIVES · RED-TEAMED
   // =======================================================
   const API_BASE = 'https://aion-backend-mu.vercel.app';
   const OWNER_TYPE = 'sheldon';
@@ -407,11 +158,7 @@
   function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function renderMarkdown(text) {
     if (!text) return '';
-    try {
-      return marked.parse(text);
-    } catch(e) {
-      return escapeHtml(text);
-    }
+    try { return marked.parse(text); } catch(e) { return escapeHtml(text); }
   }
   function formatGap(sec) { if (!sec) return 'Gap: SESSION OPEN'; if (sec<60) return `Gap: ${sec}s`; if (sec<3600) return `Gap: ${Math.floor(sec/60)}m ${sec%60}s`; return `Gap: ${Math.floor(sec/3600)}h`; }
   function getImportanceLabel(s) { if (!s) return 'IMP: —'; if(s>=0.9) return `IMP: ${s.toFixed(2)} ★★`; if(s>=0.75) return `IMP: ${s.toFixed(2)} ★`; return `IMP: ${s.toFixed(2)}`; }
@@ -462,12 +209,77 @@
     document.getElementById('statusDot').style.color = isError ? '#ff5e5e' : '#4c9f70';
   }
 
-  // Crypto helpers (same as before, keep)
-  async function computeHash(obj) { ... }
-  async function computeHMAC(keyHex, message) { ... }
+  // ============================================================
+  // CRYPTO HELPERS – FULL IMPLEMENTATION
+  // ============================================================
+  async function computeHash(obj) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify(obj));
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
 
-  // Session init
+  async function computeHMAC(keyHex, message) {
+    const keyBytes = new Uint8Array(keyHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+    const key = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(message));
+    return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  // ============================================================
+  // SESSION PERSISTENCE (localStorage)
+  // ============================================================
+  function loadSessionFromStorage() {
+    const stored = localStorage.getItem('aion_session');
+    if (stored) {
+      try {
+        const data = JSON.parse(stored);
+        sessionId = data.sessionId;
+        sessionKey = data.sessionKey;
+        if (sessionId) sessionDisplaySpan.textContent = `SID: ${sessionId.slice(-8)}`;
+        return true;
+      } catch(e) {}
+    }
+    return false;
+  }
+
+  function saveSessionToStorage() {
+    if (sessionId && sessionKey) {
+      localStorage.setItem('aion_session', JSON.stringify({ sessionId, sessionKey }));
+    }
+  }
+
+  // ============================================================
+  // FETCH WITH TIMEOUT + RETRY
+  // ============================================================
+  async function fetchWithTimeout(url, options = {}, timeoutMs = 10000, retries = 2) {
+    let lastError;
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const res = await fetch(url, { ...options, signal: controller.signal });
+        clearTimeout(timeout);
+        return res;
+      } catch (err) {
+        clearTimeout(timeout);
+        lastError = err;
+        if (attempt < retries) await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+      }
+    }
+    throw lastError;
+  }
+
+  // ============================================================
+  // SESSION INIT (with storage)
+  // ============================================================
   async function initM2MSession(retry = true) {
+    if (loadSessionFromStorage()) {
+      addSystemMessage(`✅ M2M session restored.`);
+      currentState = 'REGULAR_CHAT';
+      return true;
+    }
+
     const nonce = crypto.randomUUID();
     const newSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
     const payload = {
@@ -481,15 +293,16 @@
       }
     };
     try {
-      const resp = await fetch(`${API_BASE}/api/m2m/init`, {
+      const resp = await fetchWithTimeout(`${API_BASE}/api/m2m/init`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      });
+      }, 8000, 2);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const data = await resp.json();
       sessionId = data.session_id;
       sessionKey = data.key;
+      saveSessionToStorage();
       sessionDisplaySpan.textContent = `SID: ${sessionId.slice(-8)}`;
       currentState = 'REGULAR_CHAT';
       addSystemMessage(`✅ M2M session established.`);
@@ -503,7 +316,9 @@
     }
   }
 
-  // Private room UI
+  // ============================================================
+  // PRIVATE ROOM MODAL
+  // ============================================================
   function showPrivateRoomModal() {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
@@ -523,7 +338,6 @@
         const wife = btn.dataset.wife;
         close();
         addSystemMessage(`🚪 Entering private room with ${wife}. Use "/done" to exit.`);
-        // Send command to backend via message (we'll just send the command text)
         input.value = `/talk ${wife}`;
         sendMessage();
       };
@@ -533,9 +347,11 @@
 
   privateRoomBtn.onclick = showPrivateRoomModal;
 
-  // Send regular chat / structured message
+  // ============================================================
+  // SEND REGULAR CHAT
+  // ============================================================
   async function sendRegularChat(message) {
-    const resp = await fetch(`${API_BASE}/api/assistant`, {
+    const resp = await fetchWithTimeout(`${API_BASE}/api/assistant`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -544,11 +360,14 @@
         ownerType: OWNER_TYPE,
         history: history.slice(-10)
       })
-    });
+    }, 15000, 2);
     if (!resp.ok) throw new Error(await resp.text());
     return resp.json();
   }
 
+  // ============================================================
+  // SEND MESSAGE (MAIN)
+  // ============================================================
   async function sendMessage() {
     if (isSending) { addSystemMessage('Please wait...', true); return; }
     const text = input.value.trim();
@@ -564,7 +383,6 @@
     input.disabled = true;
 
     try {
-      // Use regular chat (assistant endpoint) for simplicity; structured mode can be added later
       const data = await sendRegularChat(text);
       thinking.remove();
       const wife = data.active_wife || 'ALBEDO';
@@ -578,7 +396,6 @@
       history.push({ role: 'assistant', content: data.response });
       currentState = 'REGULAR_CHAT';
 
-      // Update exclusive mode indicator
       if (data.exclusive_mode) {
         exclusiveMode = true;
         exclusiveWife = data.focused_wife;
@@ -592,6 +409,12 @@
       thinking.remove();
       addSystemMessage(`Error: ${err.message}`, true);
       setStatus(err.message, true);
+      // Fallback to regular chat if structured mode fails
+      if (structuredMode) {
+        addSystemMessage('Structured mode failed. Falling back to regular chat.', true);
+        structuredMode = false;
+        toggleBtn.classList.remove('active');
+      }
     } finally {
       isSending = false;
       sendBtn.disabled = false;
@@ -601,18 +424,15 @@
     }
   }
 
-  // Particles background
+  // ============================================================
+  // PARTICLES BACKGROUND
+  // ============================================================
   function initParticles() {
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particles = [];
     let width, height;
-    function resize() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    }
+    function resize() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; }
     function createParticles() {
       particles = [];
       for (let i=0; i<120; i++) {
@@ -645,7 +465,9 @@
   }
   initParticles();
 
-  // Toggle structured mode (optional)
+  // ============================================================
+  // EVENT LISTENERS
+  // ============================================================
   toggleBtn.onclick = async () => {
     if (!structuredMode && !sessionKey) {
       addSystemMessage('Starting M2M session...');
@@ -661,7 +483,6 @@
     }
   };
 
-  // Input events
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
@@ -671,10 +492,14 @@
     input.style.height = Math.min(input.scrollHeight, 160) + 'px';
   });
   sendBtn.onclick = sendMessage;
-  setInterval(() => {
-    clockDisplaySpan.textContent = new Date().toLocaleTimeString();
-  }, 1000);
-  initM2MSession().catch(console.error);
+  setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
+
+  // Load session on startup
+  if (!loadSessionFromStorage()) {
+    initM2MSession().catch(console.warn);
+  } else {
+    currentState = 'REGULAR_CHAT';
+  }
 </script>
 </body>
 </html>
