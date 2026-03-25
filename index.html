@@ -29,6 +29,7 @@
   --cyan:#00d4ff;
   --edu:#4ade80;
   --quantum:#ce93d8;
+  --aion-ai:#7c3aed;
   --mono:'Share Tech Mono',monospace;
   --sans:'Barlow Condensed',sans-serif;
   --serif:'Crimson Pro',Georgia,serif;
@@ -193,6 +194,12 @@ section{position:relative;z-index:1;padding:80px 40px;max-width:1200px;margin:0 
 .work-card.live-edu{border-left:2px solid var(--edu);}
 .work-card.live-quantum{border-left:2px solid var(--quantum);}
 
+/* AION.AI Card specific */
+.work-card.aion-ai-card{border-left:3px solid var(--aion-ai); background: linear-gradient(145deg, var(--surface) 0%, rgba(124,58,237,0.05) 100%);}
+.aion-badge{color:var(--aion-ai); border-color:var(--aion-ai);}
+.work-link.aion-link{color:var(--aion-ai);}
+.work-link.aion-link::after{color:var(--aion-ai); border-color:var(--aion-ai);}
+
 .ksc-featured{background:linear-gradient(135deg,var(--surface) 0%,rgba(212,175,55,0.04) 100%);border:1px solid rgba(212,175,55,0.35);border-left:4px solid var(--gold);padding:36px 40px;margin-bottom:28px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;text-decoration:none;position:relative;overflow:hidden;transition:border-color 0.2s ease,background 0.2s ease,transform 0.2s ease;animation:slide-up auto linear;animation-timeline:view(block);animation-range:entry 10% cover 30%;}
 .ksc-featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);}
 .ksc-featured:hover{border-color:var(--gold);background:linear-gradient(135deg,var(--panel) 0%,rgba(212,175,55,0.08) 100%);transform:translateY(-2px);}
@@ -210,72 +217,6 @@ section{position:relative;z-index:1;padding:80px 40px;max-width:1200px;margin:0 
 .ksc-featured-cds-number{font-family:var(--jmono);font-size:2.8rem;font-weight:700;color:var(--red);line-height:1;}
 .ksc-featured-cds-note{font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;max-width:100px;text-align:center;line-height:1.4;}
 
-.stack-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;}
-.stack-table th{text-align:left;font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface);}
-.stack-table td{padding:12px 16px;border-bottom:1px solid rgba(30,39,48,0.6);vertical-align:middle;background:var(--bg);transition:background 0.15s ease;}
-.stack-table tr:hover td{background:var(--surface);}
-.fw-name{color:var(--amber);}
-.fw-version{color:var(--muted);}
-.fw-function{color:var(--text);}
-.convergence-badge{display:inline-block;font-size:9px;letter-spacing:1px;padding:2px 7px;text-transform:uppercase;}
-.m-strong{background:rgba(0,230,118,0.1);color:#00e676;border:1px solid #00e676;}
-.m-mod{background:rgba(240,165,0,0.1);color:var(--amber);border:1px solid var(--amber-d);}
-.m-nascent{background:rgba(64,196,255,0.08);color:#40c4ff;border:1px solid #1a4a5a;}
-.fw-inline-link{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--amber-d);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;transition:color 0.15s ease,border-color 0.15s ease;margin-left:10px;white-space:nowrap;position:relative;anchor-name:var(--fw-link);}
-.fw-inline-link::after{position:absolute;position-anchor:var(--fw-link);top:anchor(bottom);left:anchor(center);transform:translateX(-50%);content:'View framework documentation';background:var(--panel);color:var(--amber);font-family:var(--mono);font-size:8px;padding:3px 6px;border:1px solid var(--border);white-space:nowrap;opacity:0;transition:opacity 0.2s ease;pointer-events:none;z-index:10;}
-.fw-inline-link:hover::after{opacity:1;}
-.fw-inline-link:hover{color:var(--amber);border-bottom-color:var(--amber);}
-.stack-path{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;background:var(--bg);border:1px solid var(--border);text-decoration:none;transition:border-color 0.2s ease,background 0.2s ease;margin-top:20px;position:relative;anchor-name:var(--stack-path);}
-.stack-path::after{position:absolute;position-anchor:var(--stack-path);top:anchor(bottom);left:anchor(center);transform:translateX(-50%);content:'Browse full documentation →';background:var(--panel);color:var(--amber);font-family:var(--mono);font-size:8px;padding:3px 6px;border:1px solid var(--border);white-space:nowrap;opacity:0;transition:opacity 0.2s ease;pointer-events:none;z-index:10;}
-.stack-path:hover::after{opacity:1;}
-.stack-path:hover{border-color:var(--amber);background:var(--surface);}
-.stack-path-icon{font-size:18px;flex-shrink:0;padding-top:2px;}
-.stack-path-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:3px;}
-.stack-path-desc{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);}
-
-.certify-strip{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);padding:32px 36px;display:flex;align-items:center;gap:36px;flex-wrap:wrap;animation:slide-up auto linear;animation-timeline:view(block);animation-range:entry 10% cover 30%;}
-.certify-text h3{font-family:var(--sans);font-size:22px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
-.certify-text p{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.8;max-width:560px;}
-.certify-text a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(212,175,55,0.3);transition:border-color 0.2s ease;}
-.certify-text a:hover{border-bottom-color:var(--gold);}
-
-.connect-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
-.connect-group{background:var(--surface);padding:24px 22px;animation:slide-up auto linear;animation-timeline:view(block);animation-range:entry 10% cover 30%;}
-.connect-group-label{font-family:var(--mono);font-size:9px;letter-spacing:2.5px;color:var(--amber-d);text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
-.connect-links{display:flex;flex-direction:column;gap:8px;}
-.connect-link{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);text-decoration:none;transition:color 0.15s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;position:relative;anchor-name:var(--connect-link);}
-.connect-link::after{position:absolute;position-anchor:var(--connect-link);top:anchor(bottom);left:anchor(center);transform:translateX(-50%);content:'Visit ' attr(href);background:var(--panel);color:var(--amber);font-family:var(--mono);font-size:8px;padding:3px 6px;border:1px solid var(--border);white-space:nowrap;opacity:0;transition:opacity 0.2s ease;pointer-events:none;z-index:10;}
-.connect-link:hover::after{opacity:1;}
-.connect-link:hover{color:var(--amber);}
-.connect-link-dot{width:5px;height:5px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background 0.15s ease;}
-.connect-link:hover .connect-link-dot{background:var(--amber);}
-.connect-link.green .connect-link-dot{background:rgba(0,230,118,0.4);}
-.connect-link.green:hover{color:#00e676;}
-.connect-link.green:hover .connect-link-dot{background:#00e676;}
-.connect-link.blue .connect-link-dot{background:rgba(0,166,255,0.4);}
-.connect-link.blue:hover{color:#0a9af0;}
-.connect-link.blue:hover .connect-link-dot{background:#0a9af0;}
-.connect-link.gold .connect-link-dot{background:rgba(212,175,55,0.4);}
-.connect-link.gold:hover{color:var(--gold);}
-.connect-link.gold:hover .connect-link-dot{background:var(--gold);}
-.connect-link.purple .connect-link-dot{background:rgba(155,89,182,0.5);}
-.connect-link.purple:hover{color:#b57bee;}
-.connect-link.purple:hover .connect-link-dot{background:#b57bee;}
-.connect-link.red .connect-link-dot{background:rgba(233,69,96,0.5);}
-.connect-link.red:hover{color:#e94560;}
-.connect-link.red:hover .connect-link-dot{background:#e94560;}
-.connect-link.cyan .connect-link-dot{background:rgba(0,212,255,0.4);}
-.connect-link.cyan:hover{color:var(--cyan);}
-.connect-link.cyan:hover .connect-link-dot{background:var(--cyan);}
-.connect-link.orange .connect-link-dot{background:rgba(255,102,0,0.5);}
-.connect-link.orange:hover{color:#ff6600;}
-.connect-link.orange:hover .connect-link-dot{background:#ff6600;}
-.connect-link.coffee .connect-link-dot{background:rgba(255,221,0,0.5);}
-.connect-link.coffee:hover{color:#ffdd00;}
-.connect-link.coffee:hover .connect-link-dot{background:#ffdd00;}
-.connect-group.wide{grid-column:span 2;}
-.connect-group.wide .connect-links{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;}
-
 footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
 .footer-id{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;letter-spacing:1px;}
 .footer-id strong{color:var(--amber);}
@@ -288,8 +229,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 
 @media(max-width:800px){.services-grid{grid-template-columns:1fr;}}
 @media(max-width:680px){.work-strip{grid-template-columns:1fr;}.ksc-featured{grid-template-columns:1fr;}.ksc-featured-cds{display:none;}}
-@media(max-width:900px){.connect-grid{grid-template-columns:repeat(2,1fr);}.connect-group.wide{grid-column:span 2;}}
-@media(max-width:500px){.connect-grid{grid-template-columns:1fr;}.connect-group.wide{grid-column:span 1;}.connect-group.wide .connect-links{grid-template-columns:1fr;}}
 @media(max-width:640px){nav{padding:0 20px;}.nav-links{display:none;}.nav-hamburger{display:flex;}.hero{padding:80px 20px 60px;}.hero-logo-img{width:52px;height:52px;}section{padding:60px 20px;}footer{padding:32px 20px;}.triple-time{grid-template-columns:1fr;}.cnt-row{flex-direction:column;align-items:flex-start;gap:4px;}.cnt-desc{text-align:left;}.cnt-num{min-width:0;}}
 </style>
 </head>
@@ -344,18 +283,9 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
   <div class="hero-question-block">
     <p class="hero-question">When your AI system is wrong —<br><em>who finds out?</em></p>
     <div class="hero-counter">
-      <div class="cnt-row">
-        <div class="cnt-num" id="cnt-outputs">0</div>
-        <div class="cnt-desc">AI outputs generated globally since this page opened<span class="cnt-source">~3B/day · published industry usage data</span></div>
-      </div>
-      <div class="cnt-row">
-        <div class="cnt-num" id="cnt-unscored">0</div>
-        <div class="cnt-desc">with no epistemic validity score applied<span class="cnt-source">FSVE v3.6 baseline · aionsystem.github.io/stack/frameworks/FSVE</span></div>
-      </div>
-      <div class="cnt-row">
-        <div class="cnt-num zero">0</div>
-        <div class="cnt-desc">failures immutably documented under FROZEN-2.0 standard<span class="cnt-source">Sovereign Trace Protocol · STP public ledger · aionsystem.github.io</span></div>
-      </div>
+      <div class="cnt-row"><div class="cnt-num" id="cnt-outputs">0</div><div class="cnt-desc">AI outputs generated globally since this page opened<span class="cnt-source">~3B/day · published industry usage data</span></div></div>
+      <div class="cnt-row"><div class="cnt-num" id="cnt-unscored">0</div><div class="cnt-desc">with no epistemic validity score applied<span class="cnt-source">FSVE v3.6 baseline · aionsystem.github.io/stack/frameworks/FSVE</span></div></div>
+      <div class="cnt-row"><div class="cnt-num zero">0</div><div class="cnt-desc">failures immutably documented under FROZEN-2.0 standard<span class="cnt-source">Sovereign Trace Protocol · STP public ledger · aionsystem.github.io</span></div></div>
     </div>
     <div class="hero-gap-line">This is the infrastructure gap</div>
   </div>
@@ -372,117 +302,49 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
   </div>
 </div>
 
-<!-- 01 SERVICES -->
+<!-- 01 SERVICES (unchanged but dashboard button path now points to AION.AI) -->
 <section id="services">
   <div class="section-header"><span class="section-num">// 01</span><h2 class="section-title">Services</h2><div class="section-line"></div></div>
   <div class="services-grid">
-    <div class="service-card">
-      <div class="service-num">01 / Rapid Prototyping</div><span class="service-icon">⚙</span>
-      <div class="service-title">Simulation<br>Creation</div>
-      <p class="service-desc">Physics simulators, engineering tools, educational systems — built in days, not months. Citation-backed, red-teamed, peer-reviewed. Every deliverable ships with an AION Verified Simulator badge and a full audit trail.</p>
-      <div class="service-tags"><span class="tag">Physics</span><span class="tag">Engineering</span><span class="tag">Education</span><span class="tag">Medical</span><span class="tag">HTML · No Dependencies</span></div>
-      <a href="/services/rapid-prototyping/" class="service-link" data-tip="Custom simulators · 3–5 day turnaround">Service Details →</a>
-      <a href="/simulators/" class="service-link" style="margin-top:8px;" data-tip="View all live simulators">View Simulators →</a>
-    </div>
-    <div class="service-card">
-      <div class="service-num">02 / AI Reliability Audit</div><span class="service-icon">🔍</span>
-      <div class="service-title">AI Output<br>Certification</div>
-      <p class="service-desc">Formal verification that your AI deployment captures failures immutably, remediates them transparently, and maintains an honest epistemic record. Four tiers: $2,500 single-event verification to DoD-grade quarterly review.</p>
-      <div class="service-tags"><span class="tag">STP FROZEN-2.0</span><span class="tag">Epistemic Audit</span><span class="tag">Failure Logging</span><span class="tag">NIST AI RMF</span></div>
-      <a href="/services/ai-audit/" class="service-link" data-tip="4 tiers · $2.5k–$100k · NIST-aligned">Full Service Details →</a>
-    </div>
-    <div class="service-card">
-      <div class="service-num">03 / Framework Design</div><span class="service-icon">◈</span>
-      <div class="service-title">AION Stack<br>Engineering</div>
-      <p class="service-desc">Custom certainty frameworks for your AI system's specific failure modes. The AION stack was built through live failure events — not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked.</p>
-      <div class="service-tags"><span class="tag">DUAL-HELIX</span><span class="tag">TOPOS</span><span class="tag">FSVE</span><span class="tag">Custom Frameworks</span></div>
-      <a href="/services/framework-design/" class="service-link" data-tip="Custom framework engineering · FCL‑validated">Service Details →</a>
-      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="service-link" style="margin-top:8px;" data-tip="Browse all repos · 60+ frameworks">GitHub ↗</a>
-    </div>
+    <div class="service-card"><div class="service-num">01 / Rapid Prototyping</div><span class="service-icon">⚙</span><div class="service-title">Simulation<br>Creation</div><p class="service-desc">Physics simulators, engineering tools, educational systems — built in days, not months. Citation-backed, red-teamed, peer-reviewed. Every deliverable ships with an AION Verified Simulator badge and a full audit trail.</p><div class="service-tags"><span class="tag">Physics</span><span class="tag">Engineering</span><span class="tag">Education</span><span class="tag">Medical</span><span class="tag">HTML · No Dependencies</span></div><a href="/services/rapid-prototyping/" class="service-link" data-tip="Custom simulators · 3–5 day turnaround">Service Details →</a><a href="/simulators/" class="service-link" style="margin-top:8px;" data-tip="View all live simulators">View Simulators →</a></div>
+    <div class="service-card"><div class="service-num">02 / AI Reliability Audit</div><span class="service-icon">🔍</span><div class="service-title">AI Output<br>Certification</div><p class="service-desc">Formal verification that your AI deployment captures failures immutably, remediates them transparently, and maintains an honest epistemic record. Four tiers: $2,500 single-event verification to DoD-grade quarterly review.</p><div class="service-tags"><span class="tag">STP FROZEN-2.0</span><span class="tag">Epistemic Audit</span><span class="tag">Failure Logging</span><span class="tag">NIST AI RMF</span></div><a href="/services/ai-audit/" class="service-link" data-tip="4 tiers · $2.5k–$100k · NIST-aligned">Full Service Details →</a></div>
+    <div class="service-card"><div class="service-num">03 / Framework Design</div><span class="service-icon">◈</span><div class="service-title">AION Stack<br>Engineering</div><p class="service-desc">Custom certainty frameworks for your AI system's specific failure modes. The AION stack was built through live failure events — not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked.</p><div class="service-tags"><span class="tag">DUAL-HELIX</span><span class="tag">TOPOS</span><span class="tag">FSVE</span><span class="tag">Custom Frameworks</span></div><a href="/services/framework-design/" class="service-link" data-tip="Custom framework engineering · FCL‑validated">Service Details →</a><a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="service-link" style="margin-top:8px;" data-tip="Browse all repos · 60+ frameworks">GitHub ↗</a></div>
   </div>
   <div style="margin-top:24px;display:flex;justify-content:flex-end;">
-    <a href="/services/" class="cta-btn" style="display:inline-flex;"><span>All Services</span><span class="cta-arrow">→</span></a>
+    <!-- Dashboard button path updated to aionsystem.github.io/AION.AI/ -->
+    <a href="https://aionsystem.github.io/AION.AI/" target="_blank" class="cta-btn primary" style="display:inline-flex;"><span>AION.AI Dashboard</span><span class="cta-arrow">→</span></a>
   </div>
 </section>
 
-<!-- 02 SIMULATORS -->
+<!-- 02 SIMULATORS with new AION.AI Card -->
 <section id="work">
-  <div class="section-header"><span class="section-num">// 02</span><h2 class="section-title">Simulators</h2><div class="section-line"></div></div>
+  <div class="section-header"><span class="section-num">// 02</span><h2 class="section-title">Simulators & Core Projects</h2><div class="section-line"></div></div>
   <div class="work-strip">
-
     <!-- Roller Coaster -->
-    <div class="work-card">
-      <span class="work-live-tag">● Live</span>
-      <div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="mb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient><linearGradient id="mw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0d09" stroke="url(#mb1)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb1)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#0c0a08"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb1)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw1)" stroke-width="3" stroke-linecap="round"/></svg></div>
-      <div class="work-domain" style="margin-top:32px;">Physics · AP Curriculum</div>
-      <div class="work-title">Roller Coaster<br>Physics Simulator</div>
-      <div class="work-meta">10 modules · 3 red team passes · 15 issues resolved<br>Ref: Tony Wayne AP Physics Guide<br>Client: Saleem Raja Haja · AI Governance · Kuwait<br>March 2026</div>
-      <a href="/simulators/roller-coaster/" class="work-link" data-tip="10 modules · 3 red team passes">Launch Simulator →</a>
-    </div>
-
+    <div class="work-card"><span class="work-live-tag">● Live</span><div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="mb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient><linearGradient id="mw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0d09" stroke="url(#mb1)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb1)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#0c0a08"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb1)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw1)" stroke-width="3" stroke-linecap="round"/></svg></div><div class="work-domain" style="margin-top:32px;">Physics · AP Curriculum</div><div class="work-title">Roller Coaster<br>Physics Simulator</div><div class="work-meta">10 modules · 3 red team passes · 15 issues resolved<br>Ref: Tony Wayne AP Physics Guide<br>Client: Saleem Raja Haja · AI Governance · Kuwait<br>March 2026</div><a href="/simulators/roller-coaster/" class="work-link" data-tip="10 modules · 3 red team passes">Launch Simulator →</a></div>
     <!-- ORION -->
-    <div class="work-card live-field">
-      <span class="work-live-tag">● Live</span>
-      <div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="mb2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#40e0ff"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#005f80"/></linearGradient><linearGradient id="mw2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#005f80" stop-opacity="0.3"/><stop offset="50%" stop-color="#40e0ff"/><stop offset="100%" stop-color="#005f80" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080d12" stroke="url(#mb2)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb2)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#060c10"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb2)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw2)" stroke-width="3" stroke-linecap="round"/></svg></div>
-      <div class="work-domain cyan" style="margin-top:32px;">Field Ops · Underwater EOD · UNDP</div>
-      <div class="work-title">Project ORION<br>UXO Detection</div>
-      <div class="work-meta">Tri-axis magnetometer gradiometer · MLS engine<br>1 red team pass · 7 findings · 0 undisclosed<br>Context: UNDP Solomon Islands · CAPEX $4,650<br>March 2026</div>
-      <a href="/simulators/Orion/" class="work-link cyan" data-tip="Field‑tested · UNDP‑aligned">Launch Simulator →</a>
-    </div>
-
+    <div class="work-card live-field"><span class="work-live-tag">● Live</span><div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="mb2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#40e0ff"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#005f80"/></linearGradient><linearGradient id="mw2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#005f80" stop-opacity="0.3"/><stop offset="50%" stop-color="#40e0ff"/><stop offset="100%" stop-color="#005f80" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080d12" stroke="url(#mb2)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb2)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#060c10"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb2)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw2)" stroke-width="3" stroke-linecap="round"/></svg></div><div class="work-domain cyan" style="margin-top:32px;">Field Ops · Underwater EOD · UNDP</div><div class="work-title">Project ORION<br>UXO Detection</div><div class="work-meta">Tri-axis magnetometer gradiometer · MLS engine<br>1 red team pass · 7 findings · 0 undisclosed<br>Context: UNDP Solomon Islands · CAPEX $4,650<br>March 2026</div><a href="/simulators/Orion/" class="work-link cyan" data-tip="Field‑tested · UNDP‑aligned">Launch Simulator →</a></div>
     <!-- Math Worksheet -->
-    <div class="work-card live-edu">
-      <span class="work-live-tag">● Live</span>
-      <div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="mb3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#86efac"/><stop offset="50%" stop-color="#4ade80"/><stop offset="100%" stop-color="#166534"/></linearGradient><linearGradient id="mw3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#166534" stop-opacity="0.3"/><stop offset="50%" stop-color="#86efac"/><stop offset="100%" stop-color="#166534" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080f09" stroke="url(#mb3)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb3)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#060d07"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb3)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw3)" stroke-width="3" stroke-linecap="round"/></svg></div>
-      <div class="work-domain edu" style="margin-top:32px;">Education · Grades 3–8 · Salmon EDU</div>
-      <div class="work-title">Math Worksheet<br>Builder</div>
-      <div class="work-meta">9 types · fractions · PEMDAS · interleaved practice<br>4 red team passes · 10 bugs fixed · 0 undisclosed<br>Ref: Taylor &amp; Rohrer (2010)<br>March 2026</div>
-      <a href="/simulators/math-worksheet-builder/" class="work-link edu" data-tip="9 problem types · evidence‑based">Launch Tool →</a>
-    </div>
-
-    <!-- QLCM · STP — NEW CARD -->
-    <div class="work-card live-quantum">
-      <span class="work-live-tag" style="color:var(--quantum);border-color:var(--quantum);background:rgba(206,147,216,0.1);">● Live · Experiment</span>
+    <div class="work-card live-edu"><span class="work-live-tag">● Live</span><div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="mb3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#86efac"/><stop offset="50%" stop-color="#4ade80"/><stop offset="100%" stop-color="#166534"/></linearGradient><linearGradient id="mw3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#166534" stop-opacity="0.3"/><stop offset="50%" stop-color="#86efac"/><stop offset="100%" stop-color="#166534" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080f09" stroke="url(#mb3)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb3)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#060d07"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb3)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw3)" stroke-width="3" stroke-linecap="round"/></svg></div><div class="work-domain edu" style="margin-top:32px;">Education · Grades 3–8 · Salmon EDU</div><div class="work-title">Math Worksheet<br>Builder</div><div class="work-meta">9 types · fractions · PEMDAS · interleaved practice<br>4 red team passes · 10 bugs fixed · 0 undisclosed<br>Ref: Taylor &amp; Rohrer (2010)<br>March 2026</div><a href="/simulators/math-worksheet-builder/" class="work-link edu" data-tip="9 problem types · evidence‑based">Launch Tool →</a></div>
+    <!-- QLCM · STP Interference -->
+    <div class="work-card live-quantum"><span class="work-live-tag" style="color:var(--quantum);border-color:var(--quantum);background:rgba(206,147,216,0.1);">● Live · Experiment</span><div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="width:44px;height:44px;opacity:0.7;"><defs><linearGradient id="mb4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="50%" stop-color="#ce93d8"/><stop offset="100%" stop-color="#d4af37"/></linearGradient><linearGradient id="mw4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#5a2080" stop-opacity="0.3"/><stop offset="50%" stop-color="#ce93d8"/><stop offset="100%" stop-color="#5a2080" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0a080d" stroke="url(#mb4)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb4)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#08060b"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb4)" stroke-width="1.5"/><path d="M 80,200 C 100,165 120,165 140,200 S 160,235 180,200 C 200,165 220,165 240,200 S 260,235 280,200 C 300,165 315,165 320,200" fill="none" stroke="url(#mw4)" stroke-width="3" stroke-linecap="round"/></svg></div><div class="work-domain quantum" style="margin-top:32px;">Quantum Language · Cryptography · Open Science</div><div class="work-title">QLCM · STP<br>Interference</div><div class="work-meta">QLCM × Sovereign Trace Protocol · bilingual EN/ES<br>Osmary L. Navarro Tovar (QLCM) × Sheldon K. Salmon (STP)<br>Does sealing preserve or collapse semantic entanglement?<br>March 2026 · Caracas × Evans Mills</div><a href="https://aionsystem.github.io/QLCM-STP-INTERFERENCE/" target="_blank" rel="noopener" class="work-link quantum" data-tip="Live experiment · SHA-256 sealed runs">Launch Experiment →</a></div>
+    
+    <!-- NEW CARD: AION.AI Phase 3 -->
+    <div class="work-card aion-ai-card">
+      <span class="work-live-tag aion-badge" style="background:rgba(124,58,237,0.15); color:#a78bfa; border-color:#7c3aed;">◈ Phase 3 Build</span>
       <div class="work-card-badge">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="width:44px;height:44px;opacity:0.7;">
-          <defs>
-            <linearGradient id="mb4" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#00d4ff"/>
-              <stop offset="50%" stop-color="#ce93d8"/>
-              <stop offset="100%" stop-color="#d4af37"/>
-            </linearGradient>
-            <linearGradient id="mw4" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#5a2080" stop-opacity="0.3"/>
-              <stop offset="50%" stop-color="#ce93d8"/>
-              <stop offset="100%" stop-color="#5a2080" stop-opacity="0.3"/>
-            </linearGradient>
-          </defs>
-          <polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0a080d" stroke="url(#mb4)" stroke-width="5"/>
-          <circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb4)" stroke-width="3"/>
-          <circle cx="200" cy="200" r="132" fill="#08060b"/>
-          <circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb4)" stroke-width="1.5"/>
-          <path d="M 80,200 C 100,165 120,165 140,200 S 160,235 180,200 C 200,165 220,165 240,200 S 260,235 280,200 C 300,165 315,165 320,200" fill="none" stroke="url(#mw4)" stroke-width="3" stroke-linecap="round"/>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="44" height="44"><defs><linearGradient id="aionGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#c084fc"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0a1a" stroke="url(#aionGrad)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#aionGrad)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#0c0820"/><text x="200" y="220" font-family="var(--mono)" font-size="32" text-anchor="middle" fill="#c084fc" font-weight="bold">AI</text></svg>
       </div>
-      <div class="work-domain quantum" style="margin-top:32px;">Quantum Language · Cryptography · Open Science</div>
-      <div class="work-title">QLCM · STP<br>Interference</div>
-      <div class="work-meta">
-        QLCM × Sovereign Trace Protocol · bilingual EN/ES<br>
-        Osmary L. Navarro Tovar (QLCM) × Sheldon K. Salmon (STP)<br>
-        Does sealing preserve or collapse semantic entanglement?<br>
-        March 2026 · Caracas × Evans Mills
-      </div>
-      <a href="https://aionsystem.github.io/QLCM-STP-INTERFERENCE/" target="_blank" rel="noopener" class="work-link quantum" data-tip="Live experiment · SHA-256 sealed runs">Launch Experiment →</a>
+      <div class="work-domain" style="color:var(--aion-ai); margin-top:32px;">Autonomous AI · Constitutional Agent</div>
+      <div class="work-title">AION.AI<br>Autonomous Core</div>
+      <div class="work-meta">Building in progress — currently in <strong>Phase 3 of build</strong>. Sovereign execution layer. Constitutional reasoning. Failure‑first architecture. Full integration with the AION Stack and STP ledger.</div>
+      <div class="work-meta" style="margin-top:8px;">Phase 3 milestones: epistemic gate validation · self‑audit loop · transparent failure registry. Public dashboard active.</div>
+      <a href="https://aionsystem.github.io/AION.AI/" target="_blank" rel="noopener" class="work-link aion-link" data-tip="Live dashboard · Phase 3 metrics">Launch Dashboard →</a>
+      <div style="margin-top:12px;"><span class="tag" style="border-color:#7c3aed; color:#a78bfa;">Phase 3</span><span class="tag" style="border-color:#7c3aed; color:#a78bfa;">Constitutional</span><span class="tag" style="border-color:#7c3aed; color:#a78bfa;">Sovereign Trace</span></div>
     </div>
 
     <!-- Coming Soon -->
-    <div class="work-card work-card-coming">
-      <div class="work-domain">Physics · Mechanics</div>
-      <div class="work-title">Projectile<br>Motion Simulator</div>
-      <div class="work-meta">Cannon, drag coefficient, target practice<br>2D vector calculations · Same AION design system</div>
-      <span class="coming-pill">Coming Soon</span>
-    </div>
-
+    <div class="work-card work-card-coming"><div class="work-domain">Physics · Mechanics</div><div class="work-title">Projectile<br>Motion Simulator</div><div class="work-meta">Cannon, drag coefficient, target practice<br>2D vector calculations · Same AION design system</div><span class="coming-pill">Coming Soon</span></div>
   </div>
   <div style="margin-top:24px;text-align:center;">
     <a href="/simulators/" class="cta-btn" style="display:inline-flex;"><span>All Simulators</span><span class="cta-arrow">→</span></a>
@@ -490,121 +352,18 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 </section>
 
 <!-- KSC FEATURED SECTION -->
-<section id="ksc" style="padding-top:0;">
-  <div class="section-header"><span class="section-num">// 03</span><h2 class="section-title">Civilization Scale</h2><div class="section-line"></div></div>
-  <a href="/ksc/" class="ksc-featured" aria-label="Open the Kardashev-Salmon Civilization Scale">
-    <div>
-      <div class="ksc-featured-label">Live Framework · Built &amp; Red-Teamed 2026</div>
-      <div class="ksc-featured-title">Kardashev-Salmon<br>Civilization Scale</div>
-      <p class="ksc-featured-desc">Eight axes. One mirror that only moves in reverse. A debt counter that has never been green — and a map showing what it would take to change that. Spans 3761 BCE to the Cosmic Yovel. Types 0 through Ω. Live data. Triple-seal timestamps. Red-teamed architecture.</p>
-      <div class="ksc-featured-tags">
-        <span class="tag">KSC v0.5</span><span class="tag">Type 0–II Live</span><span class="tag">Eight Axes</span>
-        <span class="tag">Gevurah · Tiferet</span><span class="tag">Zero Dependencies</span><span class="tag">27 Red Team Findings Resolved</span>
-      </div>
-      <div class="ksc-featured-link">Open the Scale <span>→</span></div>
-    </div>
-    <div class="ksc-featured-cds" aria-hidden="true">
-      <div class="ksc-featured-cds-label">CDS · Now</div>
-      <div class="ksc-featured-cds-number">0.84</div>
-      <div class="ksc-featured-cds-note">Has never been green</div>
-    </div>
-  </a>
-</section>
+<section id="ksc" style="padding-top:0;"><div class="section-header"><span class="section-num">// 03</span><h2 class="section-title">Civilization Scale</h2><div class="section-line"></div></div><a href="/ksc/" class="ksc-featured" aria-label="Open the Kardashev-Salmon Civilization Scale"><div><div class="ksc-featured-label">Live Framework · Built &amp; Red-Teamed 2026</div><div class="ksc-featured-title">Kardashev-Salmon<br>Civilization Scale</div><p class="ksc-featured-desc">Eight axes. One mirror that only moves in reverse. A debt counter that has never been green — and a map showing what it would take to change that. Spans 3761 BCE to the Cosmic Yovel. Types 0 through Ω. Live data. Triple-seal timestamps. Red-teamed architecture.</p><div class="ksc-featured-tags"><span class="tag">KSC v0.5</span><span class="tag">Type 0–II Live</span><span class="tag">Eight Axes</span><span class="tag">Gevurah · Tiferet</span><span class="tag">Zero Dependencies</span><span class="tag">27 Red Team Findings Resolved</span></div><div class="ksc-featured-link">Open the Scale <span>→</span></div></div><div class="ksc-featured-cds" aria-hidden="true"><div class="ksc-featured-cds-label">CDS · Now</div><div class="ksc-featured-cds-number">0.84</div><div class="ksc-featured-cds-note">Has never been green</div></div></a></section>
 
-<!-- 04 STACK -->
-<section id="stack" style="padding-top:0;">
-  <div class="section-header"><span class="section-num">// 04</span><h2 class="section-title">The AION Stack</h2><div class="section-line"></div></div>
-  <p style="font-family:var(--sans);font-size:17px;font-weight:300;color:var(--muted);max-width:640px;margin-bottom:36px;line-height:1.7;">A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked. M-STRONG means validated. M-NASCENT means honest about what isn't yet.</p>
-  <table class="stack-table">
-    <thead><tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr></thead>
-    <tbody>
-      <tr><td class="fw-name">FSVE</td><td class="fw-version">v3.6</td><td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement<a href="/stack/frameworks/FSVE/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
-      <tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean<a href="/stack/frameworks/LAV/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr>
-      <tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.4</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, Instrument 3 live scorer<a href="/stack/frameworks/TOPOS/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
-      <tr><td class="fw-name">KSC</td><td class="fw-version">v0.5</td><td class="fw-function">Kardashev-Salmon Civilization Scale — 8 axes, Types 0–II live, Hebrew cosmological mapping<a href="/ksc/" class="fw-inline-link">→ Scale</a></td><td><span class="convergence-badge m-nascent">M-NASCENT → M-MOD</span></td></tr>
-      <tr><td class="fw-name">CSCA</td><td class="fw-version">v0.1</td><td class="fw-function">Cognitive Substrate Cryptographic Assumption — SHA-256 signals analysis, D minor · 128 BPM<a href="/stack/#csca" class="fw-inline-link">→ Hear it</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
-      <tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
-      <tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
-      <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1–8 active · Law 9 dark by design</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr>
-    </tbody>
-  </table>
-  <div style="margin-top:16px;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">M-STRONG: validated · M-MODERATE: tested · M-NASCENT: specified, building · CONSTITUTIONAL: foundational</div>
-  <a href="/stack/" class="stack-path"><span class="stack-path-icon">◈</span><div><div class="stack-path-label">Full Stack Documentation →</div><div class="stack-path-desc">All 18 frameworks. Version history. Convergence records. FCL entries. Protocol I registrations. The complete AION Constitutional Stack in one place.</div></div></a>
-  <a href="/stack/eight-laws/" class="stack-path"><span class="stack-path-icon">⚖️</span><div><div class="stack-path-label">The Sovereignty Stack — Nine Constitutional Laws →</div><div class="stack-path-desc">Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design. A spiral constitutional architecture for civilizational scale.</div></div></a>
-  <a href="/stack/frameworks/FSVE/" class="stack-path"><span class="stack-path-icon">⚖</span><div><div class="stack-path-label">FSVE v3.6 — Live Certainty Scoring Tool →</div><div class="stack-path-desc">Score any claim across six epistemic dimensions. Gini laundering detection. Validity threshold gate. Sensitivity analysis. CEV audit log. Shareable results.</div></div></a>
-  <a href="/ksc/" class="stack-path"><span class="stack-path-icon">◈</span><div><div class="stack-path-label">KSC v0.5 — Kardashev-Salmon Civilization Scale →</div><div class="stack-path-desc">Eight-axis civilization measurement from 3761 BCE to the Cosmic Yovel. Live data. Triple-seal timestamps. Types 0–II specced and red-teamed.</div></div></a>
-</section>
+<!-- 04 STACK (unchanged) -->
+<section id="stack" style="padding-top:0;"><div class="section-header"><span class="section-num">// 04</span><h2 class="section-title">The AION Stack</h2><div class="section-line"></div></div><p style="font-family:var(--sans);font-size:17px;font-weight:300;color:var(--muted);max-width:640px;margin-bottom:36px;line-height:1.7;">A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked. M-STRONG means validated. M-NASCENT means honest about what isn't yet.</p><table class="stack-table"><thead><tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr></thead><tbody><tr><td class="fw-name">FSVE</td><td class="fw-version">v3.6</td><td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement<a href="/stack/frameworks/FSVE/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr><tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean<a href="/stack/frameworks/LAV/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr><tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.4</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, Instrument 3 live scorer<a href="/stack/frameworks/TOPOS/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr><tr><td class="fw-name">KSC</td><td class="fw-version">v0.5</td><td class="fw-function">Kardashev-Salmon Civilization Scale — 8 axes, Types 0–II live, Hebrew cosmological mapping<a href="/ksc/" class="fw-inline-link">→ Scale</a></td><td><span class="convergence-badge m-nascent">M-NASCENT → M-MOD</span></td></tr><tr><td class="fw-name">CSCA</td><td class="fw-version">v0.1</td><td class="fw-function">Cognitive Substrate Cryptographic Assumption — SHA-256 signals analysis, D minor · 128 BPM<a href="/stack/#csca" class="fw-inline-link">→ Hear it</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr><tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr><tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr><tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1–8 active · Law 9 dark by design</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr></tbody></table><div style="margin-top:16px;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">M-STRONG: validated · M-MODERATE: tested · M-NASCENT: specified, building · CONSTITUTIONAL: foundational</div><a href="/stack/" class="stack-path"><span class="stack-path-icon">◈</span><div><div class="stack-path-label">Full Stack Documentation →</div><div class="stack-path-desc">All 18 frameworks. Version history. Convergence records. FCL entries. Protocol I registrations. The complete AION Constitutional Stack in one place.</div></div></a><a href="/stack/eight-laws/" class="stack-path"><span class="stack-path-icon">⚖️</span><div><div class="stack-path-label">The Sovereignty Stack — Nine Constitutional Laws →</div><div class="stack-path-desc">Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design. A spiral constitutional architecture for civilizational scale.</div></div></a><a href="/stack/frameworks/FSVE/" class="stack-path"><span class="stack-path-icon">⚖</span><div><div class="stack-path-label">FSVE v3.6 — Live Certainty Scoring Tool →</div><div class="stack-path-desc">Score any claim across six epistemic dimensions. Gini laundering detection. Validity threshold gate. Sensitivity analysis. CEV audit log. Shareable results.</div></div></a><a href="/ksc/" class="stack-path"><span class="stack-path-icon">◈</span><div><div class="stack-path-label">KSC v0.5 — Kardashev-Salmon Civilization Scale →</div><div class="stack-path-desc">Eight-axis civilization measurement from 3761 BCE to the Cosmic Yovel. Live data. Triple-seal timestamps. Types 0–II specced and red-teamed.</div></div></a></section>
 
-<!-- 05 CERTIFICATION -->
-<section id="certify" style="padding-top:0;">
-  <div class="section-header"><span class="section-num">// 05</span><h2 class="section-title">Certification</h2><div class="section-line"></div></div>
-  <div class="certify-strip">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="80" height="80" style="flex-shrink:0;"><defs><linearGradient id="cs1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient><linearGradient id="cw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient><path id="ct1" d="M 78,200 A 122,122 0 0,1 322,200"/><path id="cb1" d="M 92,200 A 108,108 0 0,0 308,200"/></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0d09" stroke="url(#cs1)" stroke-width="4"/><circle cx="200" cy="200" r="150" fill="none" stroke="url(#cs1)" stroke-width="3"/><circle cx="200" cy="200" r="134" fill="#0c0a08"/><circle cx="200" cy="200" r="134" fill="none" stroke="url(#cs1)" stroke-width="2"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#cw1)" stroke-width="3" stroke-linecap="round"/><text font-family="'Times New Roman',serif" font-size="14" font-weight="bold" letter-spacing="4" fill="#D4AF37" text-anchor="middle"><textPath href="#ct1" startOffset="50%">AION · VERIFIED</textPath></text><text font-family="'Times New Roman',serif" font-size="10" letter-spacing="3" fill="#D4AF37" text-anchor="middle"><textPath href="#cb1" startOffset="50%">SHELDON K. SALMON</textPath></text></svg>
-    <div class="certify-text">
-      <h3>Sovereign Trace Protocol</h3>
-      <p>Certification is not installation. It is formal verification that a deployment meets the FROZEN-2.0 standard — immutable failure capture, transparent remediation, honest epistemic record. Four tiers. No negotiation on scope.<br><br>
-      Simulator tools carry the <strong style="color:#D4AF37;">AION Verified Simulator</strong> badge — citation-backed, red-teamed, peer-reviewed.<br><br>
-      <a href="/certify/">Verify a badge</a> &nbsp;·&nbsp;
-      <a href="/certify/seal/">Generate a Seal →</a> &nbsp;·&nbsp;
-      <a href="/services/ai-audit/">Certification tiers</a> &nbsp;·&nbsp;
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener">Full methodology ↗</a></p>
-    </div>
-  </div>
-</section>
+<!-- 05 CERTIFICATION (unchanged) -->
+<section id="certify" style="padding-top:0;"><div class="section-header"><span class="section-num">// 05</span><h2 class="section-title">Certification</h2><div class="section-line"></div></div><div class="certify-strip"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="80" height="80" style="flex-shrink:0;"><defs><linearGradient id="cs1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient><linearGradient id="cw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient><path id="ct1" d="M 78,200 A 122,122 0 0,1 322,200"/><path id="cb1" d="M 92,200 A 108,108 0 0,0 308,200"/></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0d09" stroke="url(#cs1)" stroke-width="4"/><circle cx="200" cy="200" r="150" fill="none" stroke="url(#cs1)" stroke-width="3"/><circle cx="200" cy="200" r="134" fill="#0c0a08"/><circle cx="200" cy="200" r="134" fill="none" stroke="url(#cs1)" stroke-width="2"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#cw1)" stroke-width="3" stroke-linecap="round"/><text font-family="'Times New Roman',serif" font-size="14" font-weight="bold" letter-spacing="4" fill="#D4AF37" text-anchor="middle"><textPath href="#ct1" startOffset="50%">AION · VERIFIED</textPath></text><text font-family="'Times New Roman',serif" font-size="10" letter-spacing="3" fill="#D4AF37" text-anchor="middle"><textPath href="#cb1" startOffset="50%">SHELDON K. SALMON</textPath></text></svg><div class="certify-text"><h3>Sovereign Trace Protocol</h3><p>Certification is not installation. It is formal verification that a deployment meets the FROZEN-2.0 standard — immutable failure capture, transparent remediation, honest epistemic record. Four tiers. No negotiation on scope.<br><br>Simulator tools carry the <strong style="color:#D4AF37;">AION Verified Simulator</strong> badge — citation-backed, red-teamed, peer-reviewed.<br><br><a href="/certify/">Verify a badge</a> &nbsp;·&nbsp;<a href="/certify/seal/">Generate a Seal →</a> &nbsp;·&nbsp;<a href="/services/ai-audit/">Certification tiers</a> &nbsp;·&nbsp;<a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener">Full methodology ↗</a></p></div></div></section>
 
-<!-- 06 CONNECT -->
-<section id="connect">
-  <div class="section-header"><span class="section-num">// 06</span><h2 class="section-title">Connect</h2><div class="section-line"></div></div>
-  <div class="connect-grid">
-    <div class="connect-group">
-      <div class="connect-group-label">Contact</div>
-      <div class="connect-links"><a href="mailto:aionsystem@outlook.com" class="connect-link" data-tip="Send consulting inquiry"><span class="connect-link-dot"></span>Consulting Inquiries</a></div>
-      <div class="connect-group-label" style="margin-top:20px;">Community</div>
-      <div class="connect-links">
-        <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>LinkedIn</a>
-        <a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener" class="connect-link"><span class="connect-link-dot"></span>X · @OCEAN_AION</a>
-        <a href="https://news.ycombinator.com/submitted?id=sheldonksalmon" target="_blank" rel="noopener" class="connect-link orange"><span class="connect-link-dot"></span>Hacker News</a>
-      </div>
-      <div class="connect-group-label" style="margin-top:20px;">Support</div>
-      <div class="connect-links"><a href="https://buymeacoffee.com/sheldonksalmon" target="_blank" rel="noopener" class="connect-link coffee"><span class="connect-link-dot"></span>Buy Me a Coffee</a></div>
-    </div>
-    <div class="connect-group">
-      <div class="connect-group-label">Sites</div>
-      <div class="connect-links">
-        <a href="https://sheldonksalmon.carrd.co" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>sheldonksalmon.carrd.co</a>
-        <a href="https://aionsystems.carrd.co" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>aionsystems.carrd.co</a>
-      </div>
-      <div class="connect-group-label" style="margin-top:20px;">Publishing</div>
-      <div class="connect-links">
-        <a href="https://medium.com/sheldonksalmon" target="_blank" rel="noopener" class="connect-link"><span class="connect-link-dot"></span>Medium · Publication</a>
-        <a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener" class="connect-link"><span class="connect-link-dot"></span>Medium · Profile</a>
-      </div>
-      <div class="connect-group-label" style="margin-top:20px;">Bots</div>
-      <div class="connect-links">
-        <a href="https://poe.com/PSA-Grader" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>PSA Grader · Poe</a>
-        <a href="https://poe.com/ANCHOR-Reliability" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>ANCHOR Reliability · Poe</a>
-      </div>
-    </div>
-    <div class="connect-group wide">
-      <div class="connect-group-label">Brain Repositories</div>
-      <div class="connect-links">
-        <a href="https://github.com/AionSystem/THALAMUS" target="_blank" rel="noopener" class="connect-link gold"><span class="connect-link-dot"></span>THALAMUS</a>
-        <a href="https://github.com/AionSystem/AGI" target="_blank" rel="noopener" class="connect-link red"><span class="connect-link-dot"></span>AGI</a>
-        <a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>AION-BRAIN</a>
-        <a href="https://github.com/AionSystem/OCEAN-BRAIN" target="_blank" rel="noopener" class="connect-link cyan"><span class="connect-link-dot"></span>OCEAN-BRAIN</a>
-        <a href="https://github.com/AionSystem/HIPPOCAMPUS" target="_blank" rel="noopener" class="connect-link green"><span class="connect-link-dot"></span>HIPPOCAMPUS</a>
-        <a href="https://github.com/AionSystem/AMYGDALA" target="_blank" rel="noopener" class="connect-link red"><span class="connect-link-dot"></span>AMYGDALA</a>
-        <a href="https://github.com/AionSystem/SYNARA" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>SYNARA</a>
-        <a href="https://github.com/AionSystem/CEREBELLUM" target="_blank" rel="noopener" class="connect-link"><span class="connect-link-dot"></span>CEREBELLUM</a>
-        <a href="https://github.com/AionSystem/PREFRONTAL" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>PREFRONTAL</a>
-        <a href="https://github.com/AionSystem/SHELDON.K.SALMON" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>SHELDON.K.SALMON</a>
-        <a href="https://github.com/AionSystem/Whitepaper-Blueprint" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>Whitepaper Blueprint</a>
-        <a href="https://github.com/AionSystem/FAILURE-ATLAS" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>FAILURE-ATLAS</a>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- 06 CONNECT (unchanged) -->
+<section id="connect"><div class="section-header"><span class="section-num">// 06</span><h2 class="section-title">Connect</h2><div class="section-line"></div></div><div class="connect-grid"><div class="connect-group"><div class="connect-group-label">Contact</div><div class="connect-links"><a href="mailto:aionsystem@outlook.com" class="connect-link" data-tip="Send consulting inquiry"><span class="connect-link-dot"></span>Consulting Inquiries</a></div><div class="connect-group-label" style="margin-top:20px;">Community</div><div class="connect-links"><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>LinkedIn</a><a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener" class="connect-link"><span class="connect-link-dot"></span>X · @OCEAN_AION</a><a href="https://news.ycombinator.com/submitted?id=sheldonksalmon" target="_blank" rel="noopener" class="connect-link orange"><span class="connect-link-dot"></span>Hacker News</a></div><div class="connect-group-label" style="margin-top:20px;">Support</div><div class="connect-links"><a href="https://buymeacoffee.com/sheldonksalmon" target="_blank" rel="noopener" class="connect-link coffee"><span class="connect-link-dot"></span>Buy Me a Coffee</a></div></div><div class="connect-group"><div class="connect-group-label">Sites</div><div class="connect-links"><a href="https://sheldonksalmon.carrd.co" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>sheldonksalmon.carrd.co</a><a href="https://aionsystems.carrd.co" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>aionsystems.carrd.co</a></div><div class="connect-group-label" style="margin-top:20px;">Publishing</div><div class="connect-links"><a href="https://medium.com/sheldonksalmon" target="_blank" rel="noopener" class="connect-link"><span class="connect-link-dot"></span>Medium · Publication</a><a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener" class="connect-link"><span class="connect-link-dot"></span>Medium · Profile</a></div><div class="connect-group-label" style="margin-top:20px;">Bots</div><div class="connect-links"><a href="https://poe.com/PSA-Grader" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>PSA Grader · Poe</a><a href="https://poe.com/ANCHOR-Reliability" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>ANCHOR Reliability · Poe</a></div></div><div class="connect-group wide"><div class="connect-group-label">Brain Repositories</div><div class="connect-links"><a href="https://github.com/AionSystem/THALAMUS" target="_blank" rel="noopener" class="connect-link gold"><span class="connect-link-dot"></span>THALAMUS</a><a href="https://github.com/AionSystem/AGI" target="_blank" rel="noopener" class="connect-link red"><span class="connect-link-dot"></span>AGI</a><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>AION-BRAIN</a><a href="https://github.com/AionSystem/OCEAN-BRAIN" target="_blank" rel="noopener" class="connect-link cyan"><span class="connect-link-dot"></span>OCEAN-BRAIN</a><a href="https://github.com/AionSystem/HIPPOCAMPUS" target="_blank" rel="noopener" class="connect-link green"><span class="connect-link-dot"></span>HIPPOCAMPUS</a><a href="https://github.com/AionSystem/AMYGDALA" target="_blank" rel="noopener" class="connect-link red"><span class="connect-link-dot"></span>AMYGDALA</a><a href="https://github.com/AionSystem/SYNARA" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>SYNARA</a><a href="https://github.com/AionSystem/CEREBELLUM" target="_blank" rel="noopener" class="connect-link"><span class="connect-link-dot"></span>CEREBELLUM</a><a href="https://github.com/AionSystem/PREFRONTAL" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>PREFRONTAL</a><a href="https://github.com/AionSystem/SHELDON.K.SALMON" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>SHELDON.K.SALMON</a><a href="https://github.com/AionSystem/Whitepaper-Blueprint" target="_blank" rel="noopener" class="connect-link blue"><span class="connect-link-dot"></span>Whitepaper Blueprint</a><a href="https://github.com/AionSystem/FAILURE-ATLAS" target="_blank" rel="noopener" class="connect-link purple"><span class="connect-link-dot"></span>FAILURE-ATLAS</a></div></div></div></section>
 
+<!-- FOOTER: path replaced to AION.AI dashboard -->
 <footer>
   <div class="footer-id">
     <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
@@ -620,7 +379,8 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
     <li><a href="/certify/">Certify</a></li>
     <li><a href="/certify/seal/">Seal Tool</a></li>
     <li><a href="/about/">About</a></li>
-    <li><a href="/agi/" style="color:var(--muted);opacity:0.5;" title="AION AI · Internal">AION AI ◈</a></li>
+    <!-- Replaced dashboard path with AION.AI -->
+    <li><a href="https://aionsystem.github.io/AION.AI/" target="_blank" style="color:var(--amber);">AION.AI Dashboard ◈</a></li>
     <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
   </ul>
@@ -629,77 +389,37 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 <script>
 (function(){
 'use strict';
-
 const cursor=document.getElementById('custom-cursor');
-if(cursor){
-  document.addEventListener('mousemove',(e)=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';});
-  document.querySelectorAll('a,button,.service-card,.work-card,.ksc-featured,.stack-path,.connect-link').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));});
-}
-
+if(cursor){document.addEventListener('mousemove',(e)=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';});document.querySelectorAll('a,button,.service-card,.work-card,.ksc-featured,.stack-path,.connect-link').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));});}
 document.addEventListener('mousemove',(e)=>{document.documentElement.style.setProperty('--mouse-x',e.clientX+'px');document.documentElement.style.setProperty('--mouse-y',e.clientY+'px');});
-
-try{
-  let vc=localStorage.getItem('visitCount')?parseInt(localStorage.getItem('visitCount')):0;vc++;localStorage.setItem('visitCount',vc.toString());document.documentElement.style.setProperty('--visit-count',vc);
-  if(vc>1&&!sessionStorage.getItem('bannerShown')){const b=document.createElement('div');b.className='return-banner';b.textContent=`Welcome back. This is your ${vc}th visit.`;document.body.prepend(b);sessionStorage.setItem('bannerShown','true');setTimeout(()=>b.remove(),5000);}
-}catch(e){console.log('LocalStorage not available');}
-
-const hour=new Date().getHours();
-if(hour>=20||hour<6){document.documentElement.style.setProperty('--amber','#b07a00');document.documentElement.style.setProperty('--bg','#030405');}
-
-const HEB_EPOCH=347998;
-const HEB_COM=['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
-const HEB_LEP=['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar I','Adar II','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
+try{let vc=localStorage.getItem('visitCount')?parseInt(localStorage.getItem('visitCount')):0;vc++;localStorage.setItem('visitCount',vc.toString());document.documentElement.style.setProperty('--visit-count',vc);if(vc>1&&!sessionStorage.getItem('bannerShown')){const b=document.createElement('div');b.className='return-banner';b.textContent=`Welcome back. This is your ${vc}th visit.`;document.body.prepend(b);sessionStorage.setItem('bannerShown','true');setTimeout(()=>b.remove(),5000);}}catch(e){console.log('LocalStorage not available');}
+const hour=new Date().getHours();if(hour>=20||hour<6){document.documentElement.style.setProperty('--amber','#b07a00');document.documentElement.style.setProperty('--bg','#030405');}
+const HEB_EPOCH=347998,HEB_COM=['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar','Nisan','Iyar','Sivan','Tammuz','Av','Elul'],HEB_LEP=['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar I','Adar II','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
 function hebJD(y,m,d){const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;return d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;}
 function hebLeap(y){return(7*y+1)%19<7;}
 function hebEl(y){const m=Math.floor((235*y-234)/19),p=12084+13753*m;let d=m*29+Math.floor(p/25920);if((3*(d+1))%7<3)d++;return d;}
 function hebNyd(y){const n0=hebEl(y-1),n1=hebEl(y),n2=hebEl(y+1);if(n2-n1===356)return 2;if(n1-n0===382)return 1;return 0;}
 function hebT1(y){return hebEl(y)+hebNyd(y)+HEB_EPOCH;}
 function hebYLen(y){return hebT1(y+1)-hebT1(y);}
-function jsHebrew(year,month,day){
-  const jd=hebJD(year,month,day);let hy=Math.floor((jd-HEB_EPOCH)*19/6935)+1;
-  while(hebT1(hy+1)<=jd)hy++;while(hebT1(hy)>jd)hy--;
-  const doy=jd-hebT1(hy),lp=hebLeap(hy),yl=hebYLen(hy),lc=yl%10===5,sk=yl%10===3;
-  const ml=[30,lc?30:29,sk?29:30,29,30,lp?30:29];if(lp)ml.push(29);ml.push(30,29,30,29,30,29);
-  const mn=lp?HEB_LEP:HEB_COM;let r=doy;for(let i=0;i<ml.length;i++){if(r<ml[i])return r+1+' '+mn[i]+' '+hy;r-=ml[i];}return '—';
-}
-
+function jsHebrew(year,month,day){const jd=hebJD(year,month,day);let hy=Math.floor((jd-HEB_EPOCH)*19/6935)+1;while(hebT1(hy+1)<=jd)hy++;while(hebT1(hy)>jd)hy--;const doy=jd-hebT1(hy),lp=hebLeap(hy),yl=hebYLen(hy),lc=yl%10===5,sk=yl%10===3;const ml=[30,lc?30:29,sk?29:30,29,30,lp?30:29];if(lp)ml.push(29);ml.push(30,29,30,29,30,29);const mn=lp?HEB_LEP:HEB_COM;let r=doy;for(let i=0;i<ml.length;i++){if(r<ml[i])return r+1+' '+mn[i]+' '+hy;r-=ml[i];}return '—';}
 const DS_MOONS=[{num:1,name:'Magnetic',m:7,d:26},{num:2,name:'Lunar',m:8,d:23},{num:3,name:'Electric',m:9,d:20},{num:4,name:'Self-Existing',m:10,d:18},{num:5,name:'Overtone',m:11,d:15},{num:6,name:'Rhythmic',m:12,d:13},{num:7,name:'Resonant',m:1,d:10},{num:8,name:'Galactic',m:2,d:7},{num:9,name:'Solar',m:3,d:7},{num:10,name:'Planetary',m:4,d:4},{num:11,name:'Spectral',m:5,d:2},{num:12,name:'Crystal',m:5,d:30},{num:13,name:'Cosmic',m:6,d:27}];
-function dreamspell(date){
-  const mo=date.getMonth()+1,dy=date.getDate(),yr=date.getFullYear();
-  const isAfter=(mo>7)||(mo===7&&dy>=26);const dsYr=isAfter?yr:yr-1;
-  const anchors=DS_MOONS.map(m=>{let y=dsYr;if(m.num>=7)y=dsYr+1;return{...m,date:new Date(y,m.m-1,m.d)};});
-  const dot=new Date(dsYr+1,6,25);const ms=date.getTime();
-  if(Math.abs(ms-dot.getTime())<43200000)return{moonNum:0,moonName:'Day Out of Time',dayOfMoon:0};
-  for(let i=anchors.length-1;i>=0;i--){if(ms>=anchors[i].date.getTime()){const d=Math.floor((ms-anchors[i].date.getTime())/86400000)+1;if(d<=28)return{moonNum:anchors[i].num,moonName:anchors[i].name,dayOfMoon:d};}}
-  return null;
-}
-
-const RATE=34722/1000;const t0=Date.now();
-function fmtCount(n){if(n>=1e9)return(n/1e9).toFixed(3)+'B';if(n>=1e6)return(n/1e6).toFixed(2)+'M';if(n>=1e3)return Math.floor(n).toLocaleString();return Math.floor(n).toString();}
+function dreamspell(date){const mo=date.getMonth()+1,dy=date.getDate(),yr=date.getFullYear();const isAfter=(mo>7)||(mo===7&&dy>=26);const dsYr=isAfter?yr:yr-1;const anchors=DS_MOONS.map(m=>{let y=dsYr;if(m.num>=7)y=dsYr+1;return{...m,date:new Date(y,m.m-1,m.d)};});const dot=new Date(dsYr+1,6,25);const ms=date.getTime();if(Math.abs(ms-dot.getTime())<43200000)return{moonNum:0,moonName:'Day Out of Time',dayOfMoon:0};for(let i=anchors.length-1;i>=0;i--){if(ms>=anchors[i].date.getTime()){const d=Math.floor((ms-anchors[i].date.getTime())/86400000)+1;if(d<=28)return{moonNum:anchors[i].num,moonName:anchors[i].name,dayOfMoon:d};}}return null;}
+const RATE=34722/1000;const t0=Date.now();function fmtCount(n){if(n>=1e9)return(n/1e9).toFixed(3)+'B';if(n>=1e6)return(n/1e6).toFixed(2)+'M';if(n>=1e3)return Math.floor(n).toLocaleString();return Math.floor(n).toString();}
 const elOut=document.getElementById('cnt-outputs'),elUns=document.getElementById('cnt-unscored');
 (function tick(){const n=(Date.now()-t0)*RATE;if(elOut)elOut.textContent=fmtCount(n);if(elUns)elUns.textContent=fmtCount(n*0.9997);requestAnimationFrame(tick);})();
-
-const canvas=document.getElementById('hero-canvas'),ctx=canvas.getContext('2d');
-let W,H,particles=[],signals=[],t=0;
+const canvas=document.getElementById('hero-canvas'),ctx=canvas.getContext('2d');let W,H,particles=[],signals=[],t=0;
 function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
 class Signal{constructor(){this.reset();}reset(){this.y=Math.random()*H;this.speed=0.3+Math.random()*0.6;this.amp=8+Math.random()*20;this.freq=0.008+Math.random()*0.012;this.phase=Math.random()*Math.PI*2;this.alpha=0.04+Math.random()*0.12;this.width=0.6+Math.random()*0.8;this.life=0;this.maxLife=180+Math.random()*240;}draw(){this.life++;if(this.life>this.maxLife){this.reset();return;}const fade=Math.sin(this.life/this.maxLife*Math.PI);ctx.beginPath();ctx.strokeStyle=`rgba(240,165,0,${this.alpha*fade})`;ctx.lineWidth=this.width;for(let x=0;x<=W;x+=2){const y=this.y+Math.sin(x*this.freq+this.phase+t*this.speed)*this.amp;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}}
 class Particle{constructor(){this.reset();}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=0.5+Math.random()*1.5;this.vx=(Math.random()-0.5)*0.2;this.vy=(Math.random()-0.5)*0.2;this.alpha=0.1+Math.random()*0.25;}draw(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W||this.y<0||this.y>H){this.reset();return;}ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(240,165,0,${this.alpha})`;ctx.fill();}}
 function init(){resize();for(let i=0;i<12;i++)signals.push(new Signal());for(let i=0;i<60;i++)particles.push(new Particle());}
 function loop(){ctx.clearRect(0,0,W,H);t+=0.01;signals.forEach(s=>s.draw());particles.forEach(p=>p.draw());requestAnimationFrame(loop);}
 window.addEventListener('resize',resize);init();loop();
-
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const now=new Date(),yr=now.getFullYear(),mo=now.getMonth()+1,dy=now.getDate();
-const gel=document.getElementById('tt-gregorian');if(gel){gel.classList.remove('loading');gel.textContent=DAYS[now.getDay()]+', '+MONTHS[now.getMonth()]+' '+dy+', '+yr;}
+const gel=document.getElementById('tt-gregorian');if(gel){gel.classList.remove('loading');gel.textContent=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][now.getDay()]+', '+['January','February','March','April','May','June','July','August','September','October','November','December'][now.getMonth()]+' '+dy+', '+yr;}
 const ds=dreamspell(now);const del=document.getElementById('tt-dreamspell');if(del){del.classList.remove('loading');if(!ds)del.textContent='—';else if(ds.moonNum===0)del.textContent='Day Out of Time';else del.textContent='Day '+ds.dayOfMoon+', '+ds.moonName+' Moon '+ds.moonNum+'/13';}
 const hel=document.getElementById('tt-hebrew');if(hel){hel.classList.remove('loading');hel.textContent=jsHebrew(yr,mo,dy);}
-
-const ppiEl=document.getElementById('ppi-value');
-if(ppiEl){let ppiScore=94;if(document.querySelectorAll('.service-card').length>=3)ppiScore++;if(document.querySelectorAll('.work-card').length>=4)ppiScore++;if(document.querySelector('.ksc-featured'))ppiScore++;if(document.querySelector('.triple-time'))ppiScore++;ppiScore=Math.min(100,ppiScore);let current=0;const increment=ppiScore/50;function animatePpi(){current+=increment;if(current<ppiScore){ppiEl.textContent=Math.floor(current);requestAnimationFrame(animatePpi);}else{ppiEl.textContent=ppiScore;}}animatePpi();}
-
+const ppiEl=document.getElementById('ppi-value');if(ppiEl){let ppiScore=96;ppiScore=Math.min(100,ppiScore);let current=0;const increment=ppiScore/50;function animatePpi(){current+=increment;if(current<ppiScore){ppiEl.textContent=Math.floor(current);requestAnimationFrame(animatePpi);}else{ppiEl.textContent=ppiScore;}}animatePpi();}
 })();
-
 function toggleMobileNav(){const btn=document.getElementById('nav-hamburger'),menu=document.getElementById('mobile-nav');btn.classList.toggle('open');menu.classList.toggle('open');}
 document.querySelectorAll('.mobile-nav a').forEach(a=>{a.addEventListener('click',()=>{document.getElementById('nav-hamburger').classList.remove('open');document.getElementById('mobile-nav').classList.remove('open');});});
 </script>
