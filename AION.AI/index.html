@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>AION</title>
 </head>
 <body>
-    <div id="chat" style="height:300px; overflow:auto; border:1px solid #ccc; margin-bottom:10px; padding:10px;"></div>
-    <input type="text" id="input" style="width:70%; padding:8px;">
-    <button onclick="send()" style="padding:8px 16px;">Send</button>
+    <div id="chat" style="height:400px; overflow:auto; border:1px solid #ccc; margin:10px; padding:10px;"></div>
+    <div style="margin:10px;">
+        <input type="text" id="input" style="width:70%; padding:10px;">
+        <button onclick="send()" style="padding:10px 20px;">Send</button>
+    </div>
 
     <script>
         const API = 'https://aion-backend-mu.vercel.app';
         
-        // Get or create session ID
         let sessionId = localStorage.getItem('sessionId');
         if (!sessionId) {
             sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
@@ -25,15 +30,13 @@
             const msgDiv = document.createElement('div');
             msgDiv.style.margin = '8px 0';
             msgDiv.style.padding = '8px';
-            msgDiv.style.borderRadius = '8px';
             if (role === 'user') {
                 msgDiv.style.backgroundColor = '#e3f2fd';
                 msgDiv.style.textAlign = 'right';
-                msgDiv.innerHTML = '<strong>You:</strong> ' + text;
+                msgDiv.innerHTML = '<b>You:</b> ' + text;
             } else {
                 msgDiv.style.backgroundColor = '#f5f5f5';
-                msgDiv.style.textAlign = 'left';
-                msgDiv.innerHTML = '<strong>AI:</strong> ' + text;
+                msgDiv.innerHTML = '<b>AI:</b> ' + text;
             }
             chatDiv.appendChild(msgDiv);
             chatDiv.scrollTop = chatDiv.scrollHeight;
@@ -41,26 +44,24 @@
         
         async function send() {
             const message = inputField.value.trim();
-            if (message === '') return;
+            if (!message) return;
             
             addMessage('user', message);
             inputField.value = '';
             inputField.disabled = true;
             
-            const thinkingMsg = document.createElement('div');
-            thinkingMsg.style.margin = '8px 0';
-            thinkingMsg.style.padding = '8px';
-            thinkingMsg.style.backgroundColor = '#f5f5f5';
-            thinkingMsg.innerHTML = '<strong>AI:</strong> ...';
-            chatDiv.appendChild(thinkingMsg);
+            const thinking = document.createElement('div');
+            thinking.style.margin = '8px 0';
+            thinking.style.padding = '8px';
+            thinking.style.backgroundColor = '#f5f5f5';
+            thinking.innerHTML = '<b>AI:</b> ...';
+            chatDiv.appendChild(thinking);
             chatDiv.scrollTop = chatDiv.scrollHeight;
             
             try {
-                const response = await fetch(`${API}/api/assistant`, {
+                const res = await fetch(`${API}/api/assistant`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         message: message,
                         sessionId: sessionId,
@@ -69,28 +70,26 @@
                     })
                 });
                 
-                const data = await response.json();
+                const data = await res.json();
                 
-                if (response.ok && data.response) {
-                    thinkingMsg.innerHTML = '<strong>AI:</strong> ' + data.response;
+                if (res.ok && data.response) {
+                    thinking.innerHTML = '<b>AI:</b> ' + data.response;
                 } else {
-                    thinkingMsg.innerHTML = '<strong>AI:</strong> Error: ' + (data.error || 'Unknown error');
+                    thinking.innerHTML = '<b>AI:</b> Error: ' + (data.error || 'Unknown');
                 }
-            } catch (error) {
-                thinkingMsg.innerHTML = '<strong>AI:</strong> Connection error: ' + error.message;
+            } catch (err) {
+                thinking.innerHTML = '<b>AI:</b> Connection error: ' + err.message;
             }
             
             inputField.disabled = false;
             inputField.focus();
         }
         
-        inputField.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                send();
-            }
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') send();
         });
         
-        addMessage('ai', 'Connected. Type your message and press Enter.');
+        addMessage('ai', 'Connected. Type a message.');
     </script>
 </body>
 </html>
