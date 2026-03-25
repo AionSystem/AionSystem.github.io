@@ -101,6 +101,7 @@
             padding: 8px;
             border-top: 1px solid #2a2a3a;
             flex-wrap: wrap;
+            align-items: center;
         }
         .mode-indicator {
             display: inline-block;
@@ -232,6 +233,18 @@
             text-align: left;
             cursor: pointer;
         }
+        .toggle-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .toggle-label input {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            cursor: pointer;
+        }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
         @media (max-width: 600px) {
             body { padding: 12px; }
@@ -311,6 +324,9 @@
         <span id="modeBadge" class="mode-indicator">⚡ REGULAR</span>
         <span id="velaDisplay" class="vela-badge vela-pass">⚖️ READY</span>
         <span id="lastSeal"></span>
+        <label class="toggle-label" title="Enable ADA loop for self‑refinement (may take extra time)">
+            <input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span>
+        </label>
     </div>
 
     <script>
@@ -325,6 +341,18 @@
             localStorage.setItem('sessionExpiry', Date.now() + 7*24*60*60*1000);
         }
         document.getElementById('sessionDisplay').textContent = `Session: ${sessionId.slice(-8)}`;
+
+        // ADA Loop toggle
+        let adaLoopEnabled = localStorage.getItem('adaLoopEnabled') !== 'false'; // default true
+        const adaLoopToggle = document.getElementById('adaLoopToggle');
+        if (adaLoopToggle) {
+            adaLoopToggle.checked = adaLoopEnabled;
+            adaLoopToggle.addEventListener('change', () => {
+                adaLoopEnabled = adaLoopToggle.checked;
+                localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
+                addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled – responses will be automatically refined.' : '⚡ ADA loop disabled – responses will be generated directly.');
+            });
+        }
 
         // State
         let lastResponse = null;
@@ -461,7 +489,8 @@
                 domain: 'general',
                 emotional_state: { primary: 'neutral', intensity: 5 },
                 content: { summary: `Clarification: ${option.text}`, details: option.text },
-                context: { time_sensitivity: 'now', stage: 4, requires: ['analysis'] }
+                context: { time_sensitivity: 'now', stage: 4, requires: ['analysis'] },
+                adaLoopEnabled   // Pass the current toggle state
             };
             try {
                 const res = await fetch(`${API}/api/structured-mode`, {
@@ -471,7 +500,7 @@
                 });
                 const result = await res.json();
                 if (result.response) {
-                    addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt });
+                    addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt, adaLoop: result.ada_loop });
                     lastResponse = result.response;
                     clarificationDepth = 0;
                     pendingClarification = null;
@@ -525,7 +554,13 @@
             const res = await fetch(`${API}/api/assistant`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message, sessionId, ownerType: 'sheldon', history: [] })
+                body: JSON.stringify({ 
+                    message, 
+                    sessionId, 
+                    ownerType: 'sheldon', 
+                    history: [],
+                    adaLoopEnabled   // Pass the current toggle state
+                })
             });
             if (!res.ok) throw new Error(await res.text());
             return res.json();
@@ -573,7 +608,8 @@
                 domain: itlDomain.value,
                 emotional_state: { primary: itlEmotion.value, intensity: 5 },
                 content: { summary: rawMessage.substring(0,100), details: rawMessage },
-                context: { time_sensitivity: itlTime.value, stage: 4, requires: ['analysis'] }
+                context: { time_sensitivity: itlTime.value, stage: 4, requires: ['analysis'] },
+                adaLoopEnabled   // Pass the toggle state
             };
             if (replyTo) frag.in_reply_to = replyTo;
             return frag;
@@ -705,7 +741,8 @@
                 lastFragmentId,
                 lastResponsePreview: lastResponse?.substring(0, 100),
                 pendingClarification: pendingClarification ? true : false,
-                clarificationDepth
+                clarificationDepth,
+                adaLoopEnabled
             };
             showModal('Ada‑VELA Trace', JSON.stringify(traceInfo, null, 2));
             console.log('Trace data:', traceInfo);
