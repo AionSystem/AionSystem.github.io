@@ -15,7 +15,6 @@
             padding: 20px;
             background: #0a0a0f;
             color: #f0f0f8;
-            position: relative;
         }
         #chat {
             height: 500px;
@@ -25,7 +24,6 @@
             padding: 10px;
             background: #0f0f14;
             border-radius: 8px;
-            scroll-behavior: smooth;
         }
         .message {
             margin: 8px 0;
@@ -55,13 +53,6 @@
         .vela-pass { background: #1e4620; color: #4ade80; }
         .vela-flag { background: #5f3a1a; color: #ffaa33; }
         .vela-block { background: #5f1a1a; color: #ff4d4d; }
-        .checkpoint-badge {
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 12px;
-            background: #2a2a3a;
-            margin-left: 8px;
-        }
         input, button {
             padding: 10px;
             font-size: 14px;
@@ -181,13 +172,6 @@
             padding: 4px 8px;
             border-radius: 12px;
         }
-        .checkpoint-display {
-            font-size: 11px;
-            padding: 8px;
-            background: #0f0f14;
-            border-radius: 8px;
-            margin-top: 8px;
-        }
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -282,7 +266,6 @@
             </div>
         </div>
         <div class="selected-values" id="selectedValues"></div>
-        <div id="checkpointDisplay" class="checkpoint-display"></div>
     </div>
 
     <div class="status-bar">
@@ -350,7 +333,6 @@
         let lastResponse = null;
         let isSending = false;
         let structuredModeActive = false;
-        let currentCheckpoints = { preCleared: [], open: [] };
         
         // DOM elements
         const chatDiv = document.getElementById('chat');
@@ -364,7 +346,6 @@
         const lastSealSpan = document.getElementById('lastSeal');
         const structuredUI = document.getElementById('structuredUI');
         const selectedValuesDiv = document.getElementById('selectedValues');
-        const checkpointDisplay = document.getElementById('checkpointDisplay');
         const itlIntent = document.getElementById('itlIntent');
         const itlDomain = document.getElementById('itlDomain');
         const itlEmotion = document.getElementById('itlEmotion');
@@ -409,7 +390,7 @@
             return data;
         });
         
-        // ========== GATE-ITL ==========
+        // ========== Structured Mode: Build formatted message ==========
         function updateSelectedValuesDisplay() {
             const selected = {
                 intent: itlIntent.options[itlIntent.selectedIndex]?.text,
@@ -421,42 +402,12 @@
                 .map(([k,v]) => `<span class="selected-value">${k}: ${v}</span>`).join('');
         }
         
-        function updateCheckpointDisplay() {
-            checkpointDisplay.innerHTML = `
-                ✅ Pre-cleared: ${currentCheckpoints.preCleared.map(c => `<span style="color:#4ade80">${c}</span>`).join(', ') || 'none'}<br>
-                🔓 Still open: ${currentCheckpoints.open.map(c => `<span style="color:#ffaa33">${c}</span>`).join(', ') || 'none'}
-            `;
-        }
-        
-        function buildStructuredFragment(message) {
+        function formatStructuredMessage(rawMessage) {
             const intent = itlIntent.value;
             const domain = itlDomain.value;
             const emotion = itlEmotion.value;
             const timeSens = itlTime.value;
-            
-            const preCleared = [];
-            if (intent) preCleared.push('intent');
-            if (domain) preCleared.push('domain');
-            if (emotion) preCleared.push('emotional_state');
-            if (timeSens) preCleared.push('time_sensitivity');
-            if (message) preCleared.push('content');
-            
-            const open = [];
-            if (!intent) open.push('intent_ambiguous');
-            if (!domain) open.push('domain_boundary_exceeded');
-            if (message.length < 3) open.push('context_missing');
-            
-            currentCheckpoints = { preCleared, open };
-            updateCheckpointDisplay();
-            
-            return {
-                intent, domain, emotion, timeSens, message,
-                checkpoints: currentCheckpoints,
-                toText: () => {
-                    // Convert to a human-readable format for the assistant
-                    return `[STRUCTURED MODE] Intent: ${intent}, Domain: ${domain}, Emotional state: ${emotion}, Time sensitivity: ${timeSens}\n\nMessage: ${message}`;
-                }
-            };
+            return `[STRUCTURED MODE]\nIntent: ${intent}\nDomain: ${domain}\nEmotional state: ${emotion}\nTime sensitivity: ${timeSens}\n\nMessage: ${rawMessage}`;
         }
         
         // ========== UI ==========
@@ -469,9 +420,6 @@
                 const v = extra.velaResult;
                 const cls = v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
                 extraHtml += `<span class="vela-badge ${cls}">⚖️ VELA: ${v.status}</span>`;
-            }
-            if (extra.checkpoints) {
-                extraHtml += `<span class="checkpoint-badge">📋 ${extra.checkpoints.preCleared.length}/${extra.checkpoints.preCleared.length + extra.checkpoints.open.length} cleared</span>`;
             }
             msgDiv.innerHTML = `<strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${escapeHtml(text)}${extraHtml}`;
             chatDiv.appendChild(msgDiv);
@@ -540,7 +488,7 @@
             showModal('Ada‑VELA Trace', JSON.stringify(trace, null, 2));
         }
         
-        // ========== Send (works for both modes) ==========
+        // ========== Send ==========
         async function send() {
             if (isSending) { showToast('Already sending, please wait...'); return; }
             const rawMessage = inputField.value.trim();
@@ -551,30 +499,12 @@
             isSending = true;
             
             let payloadText = rawMessage;
-            let checkpointsInfo = null;
-            
             if (structuredModeActive) {
-                const fragment = buildStructuredFragment(rawMessage);
-                if (!fragment) {
-                    showToast('Failed to build structured fragment', true);
-                    inputField.disabled = false;
-                    isSending = false;
-                    return;
-                }
-                // Convert fragment to human-readable text for the AI
-                payloadText = fragment.toText();
-                checkpointsInfo = fragment.checkpoints;
-                
-                // CEP Intercept: if open checkpoints exist and not urgent
-                if (fragment.checkpoints.open.length > 0 && fragment.timeSens !== 'now') {
-                    addSystemMessage(`⚠️ **CEP INTERCEPT** – ${fragment.checkpoints.open.length} checkpoint(s) open.\n\nPlease clarify: ${fragment.checkpoints.open.join(', ')}`);
-                    inputField.disabled = false;
-                    isSending = false;
-                    return;
-                }
+                payloadText = formatStructuredMessage(rawMessage);
+                addMessage('user', rawMessage, { structured: true });
+            } else {
+                addMessage('user', rawMessage);
             }
-            
-            addMessage('user', rawMessage, { checkpoints: checkpointsInfo });
             
             const thinking = document.createElement('div');
             thinking.className = 'message ai';
@@ -592,7 +522,7 @@
                     const cls = v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
                     velaDisplay.className = `vela-badge ${cls}`;
                     velaDisplay.innerHTML = `⚖️ VELA: ${v.status}`;
-                    addMessage('ai', result.response, { sealHash: true, velaResult: v, checkpoints: checkpointsInfo });
+                    addMessage('ai', result.response, { sealHash: true, velaResult: v });
                 } else {
                     thinking.innerHTML = '<strong>AI:</strong> Error: No response';
                 }
@@ -615,8 +545,7 @@
                 modeBadge.classList.add('structured');
                 inputField.placeholder = 'Type your message (will be structured)';
                 updateSelectedValuesDisplay();
-                buildStructuredFragment('');
-                addSystemMessage('🌌 **STRUCTURED MODE ACTIVE**\n\nSet intent, domain, emotion, time. Your message will be wrapped with these fields.');
+                addSystemMessage('🌌 **STRUCTURED MODE ACTIVE**\n\nSet intent, domain, emotion, time. Your message will be sent with these fields.');
             } else {
                 structuredUI.classList.remove('active');
                 modeBadge.textContent = '⚡ REGULAR';
@@ -644,20 +573,11 @@
         inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') send(); });
         
         [itlIntent, itlDomain, itlEmotion, itlTime].forEach(el => {
-            el.addEventListener('change', () => {
-                if (structuredModeActive) {
-                    updateSelectedValuesDisplay();
-                    buildStructuredFragment(inputField.value.trim());
-                }
-            });
+            el.addEventListener('change', updateSelectedValuesDisplay);
         });
-        inputField.addEventListener('input', () => {
-            if (structuredModeActive) buildStructuredFragment(inputField.value.trim());
-        });
-        
         updateSelectedValuesDisplay();
-        buildStructuredFragment('');
-        addMessage('ai', 'Ada‑VELA active. Click + → Structured Mode to activate GATE-ITL.');
+        
+        addMessage('ai', 'Ada‑VELA active. Click + → Structured Mode to activate.');
     </script>
 </body>
 </html>
