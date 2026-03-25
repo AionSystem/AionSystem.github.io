@@ -7,6 +7,9 @@
     <meta http-equiv="Expires" content="0">
     <title>AION · Ada‑VELA</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: system-ui, -apple-system, sans-serif;
             max-width: 800px;
@@ -14,20 +17,23 @@
             padding: 20px;
             background: #0a0a0f;
             color: #f0f0f8;
+            position: relative;
         }
         #chat {
             height: 500px;
-            overflow: auto;
+            overflow-y: auto;
             border: 1px solid #2a2a3a;
             margin: 10px 0;
             padding: 10px;
             background: #0f0f14;
             border-radius: 8px;
+            scroll-behavior: smooth;
         }
         .message {
             margin: 8px 0;
             padding: 10px;
             border-radius: 8px;
+            word-wrap: break-word;
         }
         .user {
             background: #1e3a5f;
@@ -101,18 +107,6 @@
             padding: 8px;
             border-top: 1px solid #2a2a3a;
             flex-wrap: wrap;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-        .small-btn {
-            background: #2a2a3a;
-            color: #c9a028;
-            padding: 6px 12px;
-            font-size: 12px;
         }
         .mode-indicator {
             display: inline-block;
@@ -208,6 +202,47 @@
             background: #0f0f14;
             border-radius: 8px;
             margin-top: 8px;
+        }
+        /* Modal for trace/validate results */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal {
+            background: #1e1e2d;
+            border: 1px solid #c9a028;
+            border-radius: 16px;
+            max-width: 90%;
+            width: 500px;
+            max-height: 80%;
+            overflow: auto;
+            padding: 20px;
+            position: relative;
+        }
+        .modal h3 {
+            color: #c9a028;
+            margin-bottom: 12px;
+        }
+        .modal pre {
+            background: #0a0a0f;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .modal button {
+            margin-top: 16px;
+            background: #c9a028;
+            color: #0a0a0f;
+            padding: 8px 16px;
         }
         @keyframes fadeOut {
             0% { opacity: 1; }
@@ -412,6 +447,7 @@
         
         const assistantOp = new AdaOperation('ASSISTANT_CALL');
         assistantOp.setFunction(async (message) => {
+            // The API expects a 'message' field that is a string
             const res = await fetch(`${API}/api/assistant`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -536,9 +572,28 @@
                 background: ${isError ? '#5f1a1a' : '#1e4620'}; color: white;
                 padding: 8px 16px; border-radius: 20px; font-size: 12px;
                 z-index: 1000; animation: fadeOut 2s forwards;
+                pointer-events: none;
             `;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2000);
+        }
+        
+        function showModal(title, content) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            overlay.innerHTML = `
+                <div class="modal">
+                    <h3>${title}</h3>
+                    <pre>${escapeHtml(content)}</pre>
+                    <button id="closeModalBtn">Close</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            overlay.querySelector('#closeModalBtn').onclick = () => overlay.remove();
+            // Close on backdrop click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.remove();
+            });
         }
         
         async function sealMessage(content) {
@@ -562,19 +617,35 @@
                 const statusClass = result.status === 'BLOCKED' ? 'vela-block' : (result.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
                 velaDisplay.className = `vela-badge ${statusClass}`;
                 velaDisplay.innerHTML = `⚖️ VELA: ${result.status}`;
-                showToast(`VELA: ${result.status} | Fidelity: ${((result.screen1Result?.fidelity_estimate || 0) * 100).toFixed(0)}%`);
+                // Show detailed result in modal
+                const details = JSON.stringify(result, null, 2);
+                showModal('VELA Validation Result', details);
             } catch (err) {
                 showToast(`Validation failed: ${err.message}`, true);
             }
         }
         
+        function showTrace() {
+            const traceData = {
+                session: sessionVar.trace(),
+                chatHistory: chatHistory.trace(),
+                assistantCalls: assistantOp.getExecutions(),
+                sealCalls: sealOp.getExecutions(),
+                velaCalls: velaOp.getExecutions()
+            };
+            showModal('Ada‑VELA Trace', JSON.stringify(traceData, null, 2));
+        }
+        
         // ========== Main Send (handles both modes) ==========
         async function send() {
+            if (isSending) {
+                showToast('Already sending, please wait...');
+                return;
+            }
             const message = inputField.value.trim();
             if (!message) return;
-            if (isSending) return;
             
-            // Clear input field
+            // Clear input field and disable temporarily
             inputField.value = '';
             inputField.disabled = true;
             isSending = true;
@@ -607,6 +678,7 @@
             // Add user message with checkpoint info if any
             addMessage('user', message, { checkpoints: checkpointsInfo });
             
+            // Add thinking indicator
             const thinking = document.createElement('div');
             thinking.className = 'message ai';
             thinking.innerHTML = '<strong>AI:</strong> ...';
@@ -614,6 +686,7 @@
             chatDiv.scrollTop = chatDiv.scrollHeight;
             
             try {
+                // Send the payload (either plain text or JSON string)
                 const { result } = await assistantOp.execute(payload);
                 
                 if (result && result.response) {
@@ -640,11 +713,12 @@
                 }
             } catch (err) {
                 thinking.innerHTML = `<strong>AI:</strong> Error: ${err.message}`;
+                console.error('Send error:', err);
+            } finally {
+                inputField.disabled = false;
+                inputField.focus();
+                isSending = false;
             }
-            
-            inputField.disabled = false;
-            inputField.focus();
-            isSending = false;
         }
         
         // ========== Mode Toggle ==========
@@ -677,16 +751,6 @@
                 return;
             }
             sealMessage(text);
-        }
-        
-        function showTrace() {
-            console.log('=== Ada‑VELA Trace ===');
-            console.log('Session:', sessionVar.trace());
-            console.log('Chat History:', chatHistory.trace());
-            console.log('API Calls:', assistantOp.getExecutions());
-            console.log('Seal Calls:', sealOp.getExecutions());
-            console.log('VELA Calls:', velaOp.getExecutions());
-            showToast('Trace logged to console (F12)');
         }
         
         // ========== Event Listeners ==========
