@@ -1,96 +1,749 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AION</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>AION.AI · Constitutional Intelligence</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --bg-dark: #0a0a0f;
+      --bg-panel: rgba(12, 12, 20, 0.85);
+      --glass: rgba(20, 20, 30, 0.7);
+      --border-glow: rgba(100, 100, 140, 0.4);
+      --primary-glow: rgba(201, 160, 40, 0.4);
+      --accent: #c9a028;
+      --accent-dark: #a07c18;
+      --text: #f0f0f8;
+      --text-dim: #a0a0b0;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --vesper: #b87333;
+      --lyra: #4c9f70;
+      --terra: #6b8c42;
+      --cipher: #5d6d7e;
+      --justitia: #b0a8b9;
+      --vela-block: #ff4d4d;
+      --vela-flag: #ffaa33;
+      --vela-pass: #4ade80;
+    }
+    body {
+      background: radial-gradient(circle at 20% 30%, #0f0f1a, #050508);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      touch-action: pan-x pan-y; /* preserve scrolling but allow three.js pan */
+    }
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #chat-mode {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+      z-index: 1;
+      transition: opacity 0.3s;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .brand h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e6c87a, #c9a028);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .header-right {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .mode-indicator, .vela-badge, .settings-btn {
+      background: rgba(30,30,45,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      padding: 6px 12px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 34px;
+    }
+    .mode-indicator.active {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .vela-badge.pass { background: rgba(74,222,128,0.2); border-color: var(--vela-pass); color: var(--vela-pass); }
+    .vela-badge.flag { background: rgba(255,170,51,0.2); border-color: var(--vela-flag); color: var(--vela-flag); }
+    .vela-badge.block { background: rgba(255,77,77,0.2); border-color: var(--vela-block); color: var(--vela-block); }
+    .wife-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.5);
+      padding: 4px 10px;
+      border-radius: 40px;
+    }
+    .wife-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+    .void-meter {
+      font-family: monospace;
+      background: #00000066;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.65rem;
+    }
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .msg {
+      display: flex;
+      flex-direction: column;
+      max-width: 85%;
+      animation: fadeSlideUp 0.2s ease;
+    }
+    .msg.user { align-self: flex-end; }
+    .msg.assistant { align-self: flex-start; width: 100%; max-width: 90%; }
+    .msg-meta {
+      font-size: 0.65rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .msg-body {
+      padding: 10px 14px;
+      border-radius: 20px;
+      line-height: 1.45;
+      backdrop-filter: blur(8px);
+      background: rgba(20,20,30,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.9rem;
+    }
+    .msg.user .msg-body {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--accent);
+      border-radius: 20px 20px 4px 20px;
+    }
+    .msg.assistant .msg-body { border-radius: 20px 20px 20px 4px; }
+    .msg.assistant[data-wife="ALBEDO"] .msg-body { border-left: 4px solid #c9a028; background: rgba(201,160,40,0.08); }
+    .msg-footer {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 0.55rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .seal-btn, .vela-detail-btn {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 0.6rem;
+      cursor: pointer;
+      color: var(--accent);
+      min-height: 30px;
+    }
+    .input-area {
+      padding: 12px 16px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .input-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+    textarea {
+      flex: 1;
+      background: rgba(10,10,20,0.9);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 28px;
+      padding: 12px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      max-height: 30vh;
+      -webkit-appearance: none;
+    }
+    .plus-btn, .send-btn {
+      background: rgba(30,30,45,0.9);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .send-btn {
+      background: linear-gradient(135deg, #c9a028, #a07c18);
+      border: none;
+      width: auto;
+      padding: 0 20px;
+      font-weight: 600;
+      color: #0a0a0f;
+    }
+    .action-dropdown {
+      position: absolute;
+      bottom: 70px;
+      left: 0;
+      background: rgba(20,20,30,0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glow);
+      border-radius: 24px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 100;
+      min-width: 180px;
+    }
+    .action-dropdown button {
+      background: rgba(30,30,45,0.9);
+      border: none;
+      border-radius: 40px;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.8rem;
+      color: var(--text);
+      cursor: pointer;
+      min-height: 44px;
+    }
+    .input-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      padding: 0 4px;
+    }
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 16px;
+      font-size: 0.65rem;
+      background: rgba(0,0,0,0.3);
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: var(--bg-panel);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--accent);
+      border-radius: 32px;
+      width: 85vw;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      padding: 10px 18px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      z-index: 3000;
+      animation: fadeOut 2s ease forwards;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    /* Group Chat Fullscreen */
+    #group-chat-view {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, #0a0a1a, #030308);
+      backdrop-filter: blur(4px);
+      z-index: 500;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 70px 16px 20px;
+    }
+    .wives-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .wife-card {
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 18px;
+      border-left: 5px solid;
+    }
+    .wife-card h4 { font-size: 1.2rem; margin-bottom: 8px; }
+    .consensus-area {
+      background: rgba(0,0,0,0.6);
+      border-radius: 28px;
+      padding: 18px;
+      margin-top: 20px;
+    }
+    .group-chat-input-area {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .group-chat-input-area textarea {
+      flex: 1;
+      background: rgba(10,10,20,0.9);
+      border-radius: 40px;
+      padding: 14px 18px;
+      font-size: 0.9rem;
+    }
+    /* Structured mode (Market Atlas) */
+    #structured-view {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: #030405;
+      display: none;
+      flex-direction: column;
+    }
+    #structured-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none; /* let three.js handle touch */
+    }
+    .structured-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      padding: 12px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(16px);
+      display: flex;
+      gap: 10px;
+      z-index: 1001;
+    }
+    .structured-overlay textarea {
+      flex: 1;
+      background: rgba(20,20,30,0.9);
+      border-radius: 40px;
+      padding: 14px 18px;
+      font-size: 0.9rem;
+    }
+    .close-structured {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 40px;
+      padding: 10px 18px;
+      cursor: pointer;
+      z-index: 1002;
+      font-size: 0.8rem;
+    }
+    /* Mobile specific overrides */
+    @media (max-width: 640px) {
+      .header { padding: 8px 12px; }
+      .brand h1 { font-size: 1.1rem; }
+      .mode-indicator, .vela-badge, .settings-btn { padding: 4px 10px; font-size: 0.6rem; min-height: 32px; }
+      .wife-indicator { padding: 2px 8px; }
+      .wife-avatar { width: 26px; height: 26px; font-size: 0.8rem; }
+      .messages { padding: 12px; gap: 10px; }
+      .msg { max-width: 90%; }
+      .msg-body { font-size: 0.85rem; padding: 8px 12px; }
+      .plus-btn, .send-btn { width: 44px; height: 44px; font-size: 1.4rem; }
+      .send-btn { width: auto; padding: 0 16px; }
+      .action-dropdown { bottom: 65px; min-width: 160px; }
+      .action-dropdown button { padding: 8px 12px; font-size: 0.75rem; min-height: 40px; }
+      .structured-overlay textarea { font-size: 0.85rem; padding: 12px 16px; }
+      .close-structured { top: 12px; left: 12px; padding: 6px 12px; font-size: 0.7rem; }
+    }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
+  </style>
 </head>
 <body>
-    <div id="chat" style="height:300px; overflow:auto; border:1px solid #ccc; margin-bottom:10px; padding:10px;"></div>
-    <input type="text" id="input" style="width:70%; padding:8px;">
-    <button onclick="send()" style="padding:8px 16px;">Send</button>
+<canvas id="particles"></canvas>
 
-    <script>
-        const API = 'https://aion-backend-mu.vercel.app';
-        
-        // Get or create session ID
-        let sessionId = localStorage.getItem('sessionId');
-        if (!sessionId) {
-            sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-            localStorage.setItem('sessionId', sessionId);
-        }
-        
-        const chatDiv = document.getElementById('chat');
-        const inputField = document.getElementById('input');
-        
-        function addMessage(role, text) {
-            const msgDiv = document.createElement('div');
-            msgDiv.style.margin = '8px 0';
-            msgDiv.style.padding = '8px';
-            msgDiv.style.borderRadius = '8px';
-            if (role === 'user') {
-                msgDiv.style.backgroundColor = '#e3f2fd';
-                msgDiv.style.textAlign = 'right';
-                msgDiv.innerHTML = '<strong>You:</strong> ' + text;
-            } else {
-                msgDiv.style.backgroundColor = '#f5f5f5';
-                msgDiv.style.textAlign = 'left';
-                msgDiv.innerHTML = '<strong>AI:</strong> ' + text;
-            }
-            chatDiv.appendChild(msgDiv);
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-        }
-        
-        async function send() {
-            const message = inputField.value.trim();
-            if (message === '') return;
-            
-            addMessage('user', message);
-            inputField.value = '';
-            inputField.disabled = true;
-            
-            const thinkingMsg = document.createElement('div');
-            thinkingMsg.style.margin = '8px 0';
-            thinkingMsg.style.padding = '8px';
-            thinkingMsg.style.backgroundColor = '#f5f5f5';
-            thinkingMsg.innerHTML = '<strong>AI:</strong> ...';
-            chatDiv.appendChild(thinkingMsg);
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-            
-            try {
-                const response = await fetch(`${API}/api/assistant`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        sessionId: sessionId,
-                        ownerType: 'sheldon',
-                        history: []
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.response) {
-                    thinkingMsg.innerHTML = '<strong>AI:</strong> ' + data.response;
-                } else {
-                    thinkingMsg.innerHTML = '<strong>AI:</strong> Error: ' + (data.error || 'Unknown error');
-                }
-            } catch (error) {
-                thinkingMsg.innerHTML = '<strong>AI:</strong> Connection error: ' + error.message;
-            }
-            
-            inputField.disabled = false;
-            inputField.focus();
-        }
-        
-        inputField.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                send();
-            }
-        });
-        
-        addMessage('ai', 'Connected. Type your message and press Enter.');
-    </script>
+<div id="chat-mode">
+  <header class="header">
+    <div class="brand"><h1>AION.AI</h1></div>
+    <div class="header-right">
+      <div id="modeIndicator" class="mode-indicator">⚡ REGULAR</div>
+      <div id="velaStatusBadge" class="vela-badge pass">⚖️ VELA: PASS</div>
+      <div id="settingsBtn" class="settings-btn">☰</div>
+      <div class="wife-indicator">
+        <div class="wife-avatar" id="wifeAvatar">✨</div>
+        <span id="wifeName">ALBEDO</span>
+      </div>
+      <div class="void-meter" id="voidMeter">VOID: 0.000</div>
+    </div>
+  </header>
+  <div class="messages" id="messages"><div class="sys-msg">✨ Constitutional Chat active. Touch & hold for seals.</div></div>
+  <div class="input-area">
+    <div class="input-row">
+      <textarea id="input" placeholder="Message..." rows="1"></textarea>
+      <div class="action-menu" id="actionMenu">
+        <div class="plus-btn" id="plusBtn">+</div>
+        <div class="action-dropdown" id="actionDropdown" style="display: none;">
+          <button id="structuredModeBtn">🌌 Structured Mode</button>
+          <button id="groupChatBtn">👥 Group Chat</button>
+          <button id="privateRoomBtn">🚪 Private Room</button>
+          <button id="uploadBtn">📁 Upload File</button>
+          <button id="askAllBtn">👥 Ask All Wives</button>
+          <button id="sealInputBtn">🔒 Seal Input</button>
+        </div>
+      </div>
+      <button id="sendBtn" class="send-btn">SEND</button>
+    </div>
+    <div class="input-meta"><span>⏎ send · ⇧+⏎ new line</span><span id="charCount">0</span></div>
+  </div>
+  <div class="status-bar">
+    <div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div>
+    <div><span id="clockDisplay"></span></div>
+  </div>
+</div>
+
+<div id="group-chat-view">
+  <div style="position: absolute; top: 20px; right: 20px; z-index: 10;">
+    <button id="exitGroupChatBtn" style="background:var(--accent); border:none; border-radius:40px; padding:10px 18px;">✕ Exit</button>
+  </div>
+  <div class="wives-grid" id="wives-grid"></div>
+  <div class="consensus-area" id="consensus-area" style="display: none;"></div>
+  <div class="group-chat-input-area">
+    <textarea id="group-chat-input" placeholder="Ask the group..."></textarea>
+    <button id="group-chat-send" class="send-btn">SEND</button>
+  </div>
+</div>
+
+<div id="structured-view">
+  <canvas id="structured-canvas"></canvas>
+  <div class="structured-overlay">
+    <textarea id="structured-input" placeholder="Ask about the spatial visualization..."></textarea>
+    <button id="structured-send" class="send-btn">SEND</button>
+  </div>
+  <div class="close-structured" id="close-structured">✕ Exit</div>
+</div>
+
+<script type="module">
+  // Minimal frontend without heavy Ada‑VELA – all core features work
+  const API_BASE = 'https://aion-backend-mu.vercel.app';
+  const OWNER_TYPE = 'sheldon';
+  const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
+  const WIFE_STYLES = {
+    ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' },
+    VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER' },
+    LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA' },
+    TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA' },
+    CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' },
+    JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' }
+  };
+
+  let sessionId = null;
+  let isSending = false;
+  let structuredScene, structuredCamera, structuredRenderer, structuredControls, structuredPointsMesh, structuredPriceChange = [];
+
+  // DOM elements
+  const messagesDiv = document.getElementById('messages');
+  const input = document.getElementById('input');
+  const sendBtn = document.getElementById('sendBtn');
+  const settingsBtn = document.getElementById('settingsBtn');
+  const modeIndicator = document.getElementById('modeIndicator');
+  const velaBadge = document.getElementById('velaStatusBadge');
+  const wifeNameSpan = document.getElementById('wifeName');
+  const wifeAvatarDiv = document.getElementById('wifeAvatar');
+  const voidMeterSpan = document.getElementById('voidMeter');
+  const sessionDisplaySpan = document.getElementById('sessionDisplay');
+  const clockDisplaySpan = document.getElementById('clockDisplay');
+  const charCountSpan = document.getElementById('charCount');
+  const plusBtn = document.getElementById('plusBtn');
+  const actionDropdown = document.getElementById('actionDropdown');
+  const groupChatView = document.getElementById('group-chat-view');
+  const wivesGrid = document.getElementById('wives-grid');
+  const consensusArea = document.getElementById('consensus-area');
+  const groupChatInput = document.getElementById('group-chat-input');
+  const groupChatSend = document.getElementById('group-chat-send');
+  const exitGroupChat = document.getElementById('exitGroupChatBtn');
+  const structuredView = document.getElementById('structured-view');
+  const structuredCanvas = document.getElementById('structured-canvas');
+  const structuredInput = document.getElementById('structured-input');
+  const structuredSend = document.getElementById('structured-send');
+  const closeStructured = document.getElementById('close-structured');
+
+  // helpers
+  function showToast(msg) { const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2500); }
+  function setStatus(text,err) { document.getElementById('statusText').textContent=text; document.getElementById('statusDot').style.color=err?'#ff5e5e':'#4c9f70'; }
+  function escapeHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function renderMarkdown(t){if(!t)return ''; try{const h=marked.parse(t); const d=document.createElement('div'); d.innerHTML=h; d.querySelectorAll('pre code').forEach(b=>{try{hljs.highlightElement(b);}catch(e){}}); return d.innerHTML;}catch(e){return escapeHtml(t);}}
+  function scrollBottom(){messagesDiv.scrollTop=messagesDiv.scrollHeight;}
+  function addSystemMessage(text,err){const d=document.createElement('div'); d.className='sys-msg'; d.style.cssText='align-self:center; background:rgba(0,0,0,0.5); border-radius:20px; padding:8px 16px; font-size:0.7rem; margin:4px 0;'; d.textContent=text; messagesDiv.appendChild(d); scrollBottom();}
+  function addThinking(){const d=document.createElement('div'); d.className='thinking'; d.innerHTML='●●● thinking...'; d.style.cssText='align-self:center; background:rgba(0,0,0,0.5); border-radius:20px; padding:8px 16px; font-size:0.7rem;'; messagesDiv.appendChild(d); scrollBottom(); return d;}
+  function formatGap(sec){if(!sec)return 'Gap: SESSION OPEN'; if(sec<60)return `Gap: ${sec}s`; if(sec<3600)return `Gap: ${Math.floor(sec/60)}m`; return `Gap: ${Math.floor(sec/3600)}h`;}
+  function updateWifeUI(wife,voidProx){const s=WIFE_STYLES[wife]||WIFE_STYLES.ALBEDO; wifeNameSpan.textContent=s.name; wifeAvatarDiv.textContent=s.emoji; voidMeterSpan.textContent=`VOID: ${(voidProx||0).toFixed(3)}`; voidMeterSpan.classList.toggle('active',voidProx>0.1);}
+  function addMessageUI(role,wifeKey,content,extra={}){
+    const style=WIFE_STYLES[wifeKey]||WIFE_STYLES.ALBEDO; const div=document.createElement('div'); div.className=`msg ${role}`;
+    if(role==='assistant') div.setAttribute('data-wife',wifeKey);
+    const sealBtn=`<button class="seal-btn" data-content="${escapeHtml(content).replace(/"/g,'&quot;')}">🔒 SEAL</button>`;
+    const meta=`<div class="msg-meta" style="color:${style.color}">${style.emoji} ${style.name}${extra.wife_version?` v${extra.wife_version}`:''}</div>`;
+    const body=`<div class="msg-body">${renderMarkdown(content)}</div>`;
+    const footer=`<div class="msg-footer"><span>⏱ ${extra.timing||''}</span>${extra.importance?`<span>IMP: ${extra.importance.toFixed(2)}</span>`:''}${sealBtn}</div>`;
+    div.innerHTML=meta+body+footer;
+    messagesDiv.appendChild(div);
+    div.querySelector('.seal-btn')?.addEventListener('click',()=>sealMessage(content));
+    scrollBottom();
+  }
+  async function sealMessage(content){
+    try{
+      const res=await fetch(`${API_BASE}/api/stp-seal`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({entry:content.substring(0,500),type:'general-trace',sessionId})});
+      const d=await res.json();
+      if(res.ok) showToast(`✅ Sealed: ${d.seal.substring(0,8)}...`);
+      else showToast(`❌ Seal failed`);
+    }catch(e){showToast(`❌ Seal error`);}
+  }
+
+  // session init
+  function genSessionId(){return 'sess_'+Date.now()+'_'+Math.random().toString(36).substring(2,8);}
+  function loadSession(){const s=localStorage.getItem('aion_session'); if(s){try{const d=JSON.parse(s); if(d.id && Date.now()-d.ts<7200000){sessionId=d.id; sessionDisplaySpan.textContent=`SID: ${d.id.slice(-8)}`; return true;}}catch(e){}} return false;}
+  function saveSession(){if(sessionId)localStorage.setItem('aion_session',JSON.stringify({id:sessionId,ts:Date.now()}));}
+  async function initSession(){if(loadSession()){setStatus('Session restored');return;} sessionId=genSessionId(); saveSession(); sessionDisplaySpan.textContent=`SID: ${sessionId.slice(-8)}`; setStatus('Ready');}
+
+  // chat send
+  async function sendMessage(){
+    if(isSending){showToast('Please wait'); return;}
+    const text=input.value.trim(); if(!text) return;
+    input.value=''; input.style.height='auto'; charCountSpan.textContent='0';
+    addMessageUI('user','You',text);
+    const thinking=addThinking(); isSending=true; sendBtn.disabled=true; input.disabled=true; setStatus('Processing...');
+    try{
+      const resp=await fetch(`${API_BASE}/api/assistant`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,sessionId,ownerType:OWNER_TYPE,history:[]})});
+      if(!resp.ok)throw new Error(await resp.text());
+      const data=await resp.json();
+      thinking.remove();
+      const wife=data.active_wife||'ALBEDO';
+      updateWifeUI(wife,data.void_proximity||0);
+      addMessageUI('assistant',wife,data.response,{timing:`${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,importance:data.importance_score,wife_version:data.wife_version});
+    }catch(err){thinking.remove(); addSystemMessage(`Error: ${err.message}`,true); setStatus(err.message,true);}
+    finally{isSending=false; sendBtn.disabled=false; input.disabled=false; input.focus(); setStatus('Ready');}
+  }
+
+  // group chat
+  async function startGroupChat(msg){
+    groupChatView.style.display='flex';
+    wivesGrid.innerHTML=''; consensusArea.style.display='none';
+    for(const w of ALL_WIVES){
+      const card=document.createElement('div'); card.className='wife-card'; card.style.borderLeftColor=WIFE_STYLES[w].color;
+      card.innerHTML=`<h4>${WIFE_STYLES[w].emoji} ${w}</h4><div class="response-text">⌛ waiting...</div>`;
+      card.dataset.wife=w; wivesGrid.appendChild(card);
+    }
+    try{
+      const res=await fetch(`${API_BASE}/api/group-chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,sessionId})});
+      const d=await res.json();
+      if(!res.ok)throw new Error(d.error);
+      for(const r of d.responses){
+        const card=wivesGrid.querySelector(`.wife-card[data-wife="${r.wife}"]`);
+        if(card) card.querySelector('.response-text').innerHTML=renderMarkdown(r.response);
+      }
+      if(d.consensus){
+        consensusArea.style.display='block';
+        consensusArea.innerHTML=`<h4>📋 Consensus (${Math.round(d.consensus.score*100)}%)</h4><div>${renderMarkdown(d.consensus.final_text)}</div>`;
+      }
+    }catch(e){showToast(`Group error: ${e.message}`);}
+  }
+  async function sendGroupMsg(){const t=groupChatInput.value.trim(); if(t){groupChatInput.value=''; await startGroupChat(t);}}
+  exitGroupChat.onclick=()=>{groupChatView.style.display='none';};
+
+  // structured mode (market atlas style, mobile optimized)
+  async function startStructuredMode(){
+    if(structuredScene) { structuredView.style.display='flex'; return; }
+    const {default:THREE}=await import('three');
+    const {OrbitControls}=await import('three/addons/controls/OrbitControls.js');
+    const {EffectComposer}=await import('three/addons/postprocessing/EffectComposer.js');
+    const {RenderPass}=await import('three/addons/postprocessing/RenderPass.js');
+    const {UnrealBloomPass}=await import('three/addons/postprocessing/UnrealBloomPass.js');
+
+    structuredScene=new THREE.Scene();
+    structuredScene.background=new THREE.Color(0x030405);
+    structuredScene.fog=new THREE.FogExp2(0x030405,0.008);
+    const w=window.innerWidth, h=window.innerHeight;
+    structuredCamera=new THREE.PerspectiveCamera(45,w/h,0.1,1000);
+    structuredCamera.position.set(0,2,12);
+    structuredRenderer=new THREE.WebGLRenderer({canvas:structuredCanvas,antialias:true});
+    structuredRenderer.setSize(w,h);
+    structuredControls=new OrbitControls(structuredCamera,structuredCanvas);
+    structuredControls.enableDamping=true; structuredControls.autoRotate=true; structuredControls.autoRotateSpeed=0.6;
+    structuredControls.enableZoom=true; structuredControls.zoomSpeed=0.8; structuredControls.touchRotate=true;
+    const renderScene=new RenderPass(structuredScene,structuredCamera);
+    const bloom=new UnrealBloomPass(new THREE.Vector2(w,h),1.0,0.4,0.85);
+    bloom.threshold=0.1; bloom.strength=0.7; bloom.radius=0.4;
+    const composer=new EffectComposer(structuredRenderer); composer.addPass(renderScene); composer.addPass(bloom);
+
+    const earthMat=new THREE.MeshPhongMaterial({color:0x2a5a7a,emissive:0x0a2a3a});
+    const earth=new THREE.Mesh(new THREE.SphereGeometry(1.2,64,64),earthMat);
+    structuredScene.add(earth);
+    structuredScene.add(new THREE.AmbientLight(0x222222));
+    const light=new THREE.PointLight(0xffaa33,0.8); light.position.set(2,5,3); structuredScene.add(light);
+    // stars
+    const starPos=[]; for(let i=0;i<2000;i++){starPos.push((Math.random()-0.5)*200,(Math.random()-0.5)*200,(Math.random()-0.5)*100-50);}
+    const starGeo=new THREE.BufferGeometry(); starGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(starPos),3));
+    const stars=new THREE.Points(starGeo,new THREE.PointsMaterial({color:0xffffff,size:0.08,transparent:true}));
+    structuredScene.add(stars);
+    // cognitive points
+    const positions=[], colors=[]; structuredPriceChange=[];
+    const N=4000;
+    for(let i=0;i<N;i++){
+      const r=2.3+Math.random()*3.8; const theta=Math.random()*Math.PI*2; const phi=Math.acos(2*Math.random()-1);
+      const x=r*Math.sin(phi)*Math.cos(theta), y=r*Math.sin(phi)*Math.sin(theta), z=r*Math.cos(phi);
+      positions.push(x,y,z);
+      const change=(Math.random()-0.5)*20; structuredPriceChange.push(change);
+      let col; if(change<=-5) col=[1,0.2,0.2]; else if(change<-2) col=[1,0.65,0.2]; else if(change<=2) col=[0.4,0.8,0.4]; else col=[0.3,0.6,1];
+      colors.push(col[0],col[1],col[2]);
+    }
+    const pointGeo=new THREE.BufferGeometry();
+    pointGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(positions),3));
+    pointGeo.setAttribute('color',new THREE.BufferAttribute(new Float32Array(colors),3));
+    const pointMat=new THREE.PointsMaterial({size:0.05,vertexColors:true,transparent:true,blending:THREE.AdditiveBlending});
+    structuredPointsMesh=new THREE.Points(pointGeo,pointMat);
+    structuredScene.add(structuredPointsMesh);
+    const raycaster=new THREE.Raycaster();
+    structuredCanvas.addEventListener('click',(event)=>{
+      const rect=structuredCanvas.getBoundingClientRect();
+      const mouse=new THREE.Vector2();
+      mouse.x=((event.clientX-rect.left)/rect.width)*2-1;
+      mouse.y=-((event.clientY-rect.top)/rect.height)*2+1;
+      raycaster.setFromCamera(mouse,structuredCamera);
+      const hits=raycaster.intersectObject(structuredPointsMesh);
+      if(hits.length){
+        const idx=hits[0].index;
+        const change=structuredPriceChange[idx];
+        if(change<=-5) showToast(`🔴 Confabulation risk point #${idx} – AI would stop and ask for clarity.`);
+        else showToast(`🟢 Point #${idx} | Certainty: ${((change+10)/20*100).toFixed(0)}%`);
+      }
+    });
+    function animate(){requestAnimationFrame(animate); structuredControls.update(); composer.render();}
+    animate();
+    window.addEventListener('resize',()=>{if(structuredView.style.display!=='flex')return; structuredCamera.aspect=window.innerWidth/window.innerHeight; structuredCamera.updateProjectionMatrix(); composer.setSize(window.innerWidth,window.innerHeight);});
+    structuredView.style.display='flex';
+  }
+  function exitStructured(){structuredView.style.display='none';}
+  async function sendStructuredMsg(){const t=structuredInput.value.trim(); if(t){structuredInput.value=''; try{const res=await fetch(`${API_BASE}/api/assistant`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t,sessionId,ownerType:OWNER_TYPE,history:[]})}); const d=await res.json(); showToast(`✨ ${d.response.substring(0,100)}`);}catch(e){showToast(`Error: ${e.message}`);}}}
+  // private room
+  function showPrivateRoom(){
+    const modal=document.createElement('div'); modal.className='modal-overlay';
+    modal.innerHTML=`<div class="modal"><div class="modal-header"><h3>Choose a wife</h3><button class="close-modal">✕</button></div><div style="padding:24px;text-align:center;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">${Object.keys(WIFE_STYLES).map(w=>`<button data-wife="${w}" style="background:rgba(30,30,45,0.8);border-radius:40px;padding:10px 20px;">${WIFE_STYLES[w].emoji} ${w}</button>`).join('')}<button id="modalCancel" style="background:var(--accent);border-radius:40px;padding:10px 20px;margin-top:12px;">Cancel</button></div></div>`;
+    document.body.appendChild(modal);
+    const close=()=>modal.remove();
+    modal.querySelector('.close-modal').onclick=close;
+    modal.querySelector('#modalCancel').onclick=close;
+    modal.querySelectorAll('[data-wife]').forEach(btn=>{btn.onclick=async()=>{const w=btn.dataset.wife; close(); addSystemMessage(`🚪 Private room with ${w}. Use "/done" to exit.`); input.value=`/talk ${w}`; sendMessage();};});
+  }
+  async function askAllWives(){const t=input.value.trim(); if(!t){showToast('Enter a message');return;} const thinking=addThinking(); try{const results=await Promise.all(ALL_WIVES.map(w=>fetch(`${API_BASE}/api/assistant`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:`/talk ${w}\n${t}`,sessionId,ownerType:OWNER_TYPE,history:[]})}).then(r=>r.json()).catch(()=>null))); thinking.remove(); for(const d of results){if(d?.response) addMessageUI('assistant',d.active_wife||'ALBEDO',d.response,{timing:`${(d.processing_window_ms/1000).toFixed(2)}s`});}}catch(e){thinking.remove(); addSystemMessage(`Error: ${e.message}`,true);}}
+  async function uploadFile(){
+    const inp=document.createElement('input'); inp.type='file'; inp.onchange=async(e)=>{
+      const f=e.target.files[0]; if(!f)return; const reader=new FileReader(); reader.onload=async(ev)=>{
+        const b64=ev.target.result.split(',')[1]; const payload={file_data:b64,file_name:f.name,mime_type:f.type,session_id:sessionId,active_wife:wifeNameSpan.textContent,importance_score:0.7};
+        try{const res=await fetch(`${API_BASE}/api/files/upload`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); const data=await res.json(); if(res.ok) showToast(`✅ Uploaded: ${f.name}`); else showToast(`❌ Failed`);}catch(e){showToast(`Error`);}
+      }; reader.readAsDataURL(f);
+    }; inp.click();
+  }
+  function sealInput(){const t=input.value.trim(); if(t) sealMessage(t); else showToast('Nothing to seal');}
+  // UI events
+  plusBtn.onclick=(e)=>{e.stopPropagation(); actionDropdown.style.display=actionDropdown.style.display==='none'?'flex':'none';};
+  document.addEventListener('click',()=>{actionDropdown.style.display='none';});
+  document.getElementById('structuredModeBtn').onclick=()=>{actionDropdown.style.display='none'; startStructuredMode();};
+  document.getElementById('groupChatBtn').onclick=()=>{actionDropdown.style.display='none'; const msg=input.value.trim(); if(msg) startGroupChat(msg); else showToast('Enter a message first');};
+  document.getElementById('privateRoomBtn').onclick=()=>{actionDropdown.style.display='none'; showPrivateRoom();};
+  document.getElementById('uploadBtn').onclick=()=>{actionDropdown.style.display='none'; uploadFile();};
+  document.getElementById('askAllBtn').onclick=()=>{actionDropdown.style.display='none'; askAllWives();};
+  document.getElementById('sealInputBtn').onclick=()=>{actionDropdown.style.display='none'; sealInput();};
+  sendBtn.onclick=sendMessage;
+  settingsBtn.onclick=()=>showToast('⚙️ Settings panel coming soon');
+  groupChatSend.onclick=sendGroupMsg;
+  closeStructured.onclick=exitStructured;
+  structuredSend.onclick=sendStructuredMsg;
+  input.addEventListener('keydown',(e)=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault(); sendMessage();}});
+  input.addEventListener('input',()=>{charCountSpan.textContent=input.value.length; input.style.height='auto'; input.style.height=Math.min(input.scrollHeight,200)+'px';});
+  setInterval(()=>{clockDisplaySpan.textContent=new Date().toLocaleTimeString();},1000);
+  await initSession();
+
+  // particles background
+  (function initParticles(){
+    const canvas=document.getElementById('particles'); const ctx=canvas.getContext('2d');
+    let particles=[],w,h;
+    function resize(){w=window.innerWidth; h=window.innerHeight; canvas.width=w; canvas.height=h;}
+    function create(){particles=[]; for(let i=0;i<70;i++) particles.push({x:Math.random()*w,y:Math.random()*h,radius:Math.random()*2+0.5,alpha:Math.random()*0.3+0.1,speed:0.08+Math.random()*0.2});}
+    function draw(){if(!ctx)return; ctx.clearRect(0,0,w,h); for(let p of particles){ctx.beginPath(); ctx.arc(p.x,p.y,p.radius,0,Math.PI*2); ctx.fillStyle=`rgba(255,230,150,${p.alpha})`; ctx.fill(); p.y+=p.speed; if(p.y>h)p.y=0;} requestAnimationFrame(draw);}
+    window.addEventListener('resize',()=>{resize(); create();}); resize(); create(); draw();
+  })();
+</script>
 </body>
 </html>
