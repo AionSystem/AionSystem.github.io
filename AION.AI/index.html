@@ -154,44 +154,60 @@
             font-weight: bold;
             width: 44px;
         }
-        .structured-input-area {
-            margin-top: 10px;
-            padding: 12px;
+        /* Structured mode UI */
+        .structured-ui {
             background: #141920;
             border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
             display: none;
         }
-        .structured-input-area.active {
+        .structured-ui.active {
             display: block;
         }
         .itl-fields {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-bottom: 12px;
         }
         .field-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            flex: 1;
+            min-width: 120px;
         }
         .field-group label {
+            display: block;
             font-size: 10px;
             color: #c9a028;
+            margin-bottom: 4px;
         }
-        .field-group select, .field-group input {
+        .field-group select {
+            width: 100%;
             background: #0a0a0f;
             border: 1px solid #2a2a3a;
             border-radius: 6px;
             padding: 6px;
+            color: white;
+            font-size: 12px;
+        }
+        .selected-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
             font-size: 11px;
+        }
+        .selected-value {
+            background: #2a2a3a;
+            padding: 4px 8px;
+            border-radius: 12px;
         }
         .checkpoint-display {
             font-size: 11px;
             padding: 8px;
             background: #0f0f14;
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-top: 8px;
         }
         @keyframes fadeOut {
             0% { opacity: 1; }
@@ -219,8 +235,8 @@
         <button id="sendBtn">SEND</button>
     </div>
     
-    <!-- Structured Mode Input Area (GATE-ITL Form) -->
-    <div id="structuredInputArea" class="structured-input-area">
+    <!-- Structured Mode UI (appears when mode is active) -->
+    <div id="structuredUI" class="structured-ui">
         <div class="itl-fields">
             <div class="field-group">
                 <label>INTENT</label>
@@ -261,11 +277,8 @@
                 </select>
             </div>
         </div>
+        <div class="selected-values" id="selectedValues"></div>
         <div id="checkpointDisplay" class="checkpoint-display"></div>
-        <div class="input-row" style="margin-top: 8px;">
-            <input type="text" id="structuredInput" placeholder="Your structured message...">
-            <button id="structuredSendBtn">SEND</button>
-        </div>
     </div>
     
     <div class="status-bar">
@@ -277,7 +290,7 @@
 
     <script>
         // ============================================================
-        // ADA‑VELA + STP SEAL + VELA VALIDATION + STRUCTURED MODE
+        // ADA‑VELA + STP SEAL + VELA VALIDATION + STRUCTURED MODE (Single Input)
         // ============================================================
         
         const API = 'https://aion-backend-mu.vercel.app';
@@ -352,10 +365,15 @@
         const velaDisplay = document.getElementById('velaDisplay');
         const modeBadge = document.getElementById('modeBadge');
         const lastSealSpan = document.getElementById('lastSeal');
-        const structuredInputArea = document.getElementById('structuredInputArea');
-        const structuredInput = document.getElementById('structuredInput');
-        const structuredSendBtn = document.getElementById('structuredSendBtn');
+        const structuredUI = document.getElementById('structuredUI');
+        const selectedValuesDiv = document.getElementById('selectedValues');
         const checkpointDisplay = document.getElementById('checkpointDisplay');
+        
+        // ITL elements
+        const itlIntent = document.getElementById('itlIntent');
+        const itlDomain = document.getElementById('itlDomain');
+        const itlEmotion = document.getElementById('itlEmotion');
+        const itlTime = document.getElementById('itlTime');
         
         sessionDisplay.textContent = `Session: ${sessionId.slice(-8)}`;
         
@@ -410,14 +428,32 @@
         });
         
         // ========== GATE-ITL: Build Structured Fragment ==========
-        function buildStructuredFragment() {
-            const intent = document.getElementById('itlIntent').value;
-            const domain = document.getElementById('itlDomain').value;
-            const emotion = document.getElementById('itlEmotion').value;
-            const timeSensitivity = document.getElementById('itlTime').value;
-            const message = structuredInput.value.trim();
-            
-            if (!message) return null;
+        function updateSelectedValuesDisplay() {
+            const selected = {
+                intent: itlIntent.options[itlIntent.selectedIndex]?.text,
+                domain: itlDomain.options[itlDomain.selectedIndex]?.text,
+                emotion: itlEmotion.options[itlEmotion.selectedIndex]?.text,
+                time: itlTime.options[itlTime.selectedIndex]?.text
+            };
+            selectedValuesDiv.innerHTML = Object.entries(selected)
+                .map(([key, val]) => `<span class="selected-value">${key}: ${val}</span>`)
+                .join('');
+        }
+        
+        function updateCheckpointDisplay() {
+            const preCleared = currentCheckpoints.preCleared;
+            const open = currentCheckpoints.open;
+            checkpointDisplay.innerHTML = `
+                ✅ Pre-cleared: ${preCleared.map(c => `<span style="color:#4ade80">${c}</span>`).join(', ') || 'none'}<br>
+                🔓 Still open: ${open.map(c => `<span style="color:#ffaa33">${c}</span>`).join(', ') || 'none'}
+            `;
+        }
+        
+        function buildStructuredFragment(message) {
+            const intent = itlIntent.value;
+            const domain = itlDomain.value;
+            const emotion = itlEmotion.value;
+            const timeSensitivity = itlTime.value;
             
             // Pre-cleared checkpoints
             const preCleared = [];
@@ -434,12 +470,7 @@
             if (message.length < 3) open.push('context_missing');
             
             currentCheckpoints = { preCleared, open };
-            
-            // Update display
-            checkpointDisplay.innerHTML = `
-                ✅ Pre-cleared: ${preCleared.map(c => `<span style="color:#4ade80">${c}</span>`).join(', ') || 'none'}<br>
-                🔓 Still open: ${open.map(c => `<span style="color:#ffaa33">${c}</span>`).join(', ') || 'none'}
-            `;
+            updateCheckpointDisplay();
             
             return {
                 id: crypto.randomUUID(),
@@ -537,25 +568,44 @@
             }
         }
         
-        // ========== Structured Mode Send (GATE-ITL + CEP) ==========
-        async function sendStructuredMessage() {
-            const fragment = buildStructuredFragment();
-            if (!fragment) {
-                showToast('Please enter a message', true);
-                return;
+        // ========== Main Send (handles both modes) ==========
+        async function send() {
+            const message = inputField.value.trim();
+            if (!message) return;
+            if (isSending) return;
+            
+            // Clear input field
+            inputField.value = '';
+            inputField.disabled = true;
+            isSending = true;
+            
+            let payload = message;
+            let checkpointsInfo = null;
+            
+            // If structured mode active, build fragment
+            if (structuredModeActive) {
+                const fragment = buildStructuredFragment(message);
+                if (!fragment) {
+                    showToast('Failed to build structured fragment', true);
+                    inputField.disabled = false;
+                    isSending = false;
+                    return;
+                }
+                payload = JSON.stringify(fragment);
+                checkpointsInfo = fragment.checkpoints;
+                
+                // CEP Intercept: if open checkpoints exist and not urgent
+                if (fragment.checkpoints.open.length > 0 && fragment.context.time_sensitivity !== 'now') {
+                    addSystemMessage(`⚠️ **CEP INTERCEPT** – ${fragment.checkpoints.open.length} checkpoint(s) open.\n\nPlease clarify: ${fragment.checkpoints.open.join(', ')}`);
+                    clarificationDepth++;
+                    inputField.disabled = false;
+                    isSending = false;
+                    return;
+                }
             }
             
-            const messageText = structuredInput.value.trim();
-            structuredInput.value = '';
-            
-            addMessage('user', messageText, { checkpoints: fragment.checkpoints });
-            
-            // CEP Intercept: if open checkpoints exist and not urgent
-            if (fragment.checkpoints.open.length > 0 && fragment.context.time_sensitivity !== 'now') {
-                addSystemMessage(`⚠️ **CEP INTERCEPT** – ${fragment.checkpoints.open.length} checkpoint(s) open.\n\nPlease clarify: ${fragment.checkpoints.open.join(', ')}`);
-                clarificationDepth++;
-                return;
-            }
+            // Add user message with checkpoint info if any
+            addMessage('user', message, { checkpoints: checkpointsInfo });
             
             const thinking = document.createElement('div');
             thinking.className = 'message ai';
@@ -564,7 +614,7 @@
             chatDiv.scrollTop = chatDiv.scrollHeight;
             
             try {
-                const { result } = await assistantOp.execute(JSON.stringify(fragment));
+                const { result } = await assistantOp.execute(payload);
                 
                 if (result && result.response) {
                     lastResponse = result.response;
@@ -573,7 +623,6 @@
                     // Auto-validate with VELA
                     const velaResult = await velaOp.execute(result.response);
                     lastVelaResult = velaResult.result;
-                    
                     const v = velaResult.result;
                     const statusClass = v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
                     velaDisplay.className = `vela-badge ${statusClass}`;
@@ -582,50 +631,10 @@
                     addMessage('ai', result.response, { 
                         sealHash: true, 
                         velaResult: v,
-                        checkpoints: fragment.checkpoints 
+                        checkpoints: checkpointsInfo 
                     });
                     
                     clarificationDepth = 0;
-                } else {
-                    thinking.innerHTML = '<strong>AI:</strong> Error: No response';
-                }
-            } catch (err) {
-                thinking.innerHTML = `<strong>AI:</strong> Error: ${err.message}`;
-            }
-        }
-        
-        // ========== Regular Send ==========
-        async function sendRegular() {
-            const message = inputField.value.trim();
-            if (!message) return;
-            if (isSending) return;
-            
-            addMessage('user', message);
-            inputField.value = '';
-            inputField.disabled = true;
-            isSending = true;
-            
-            const thinking = document.createElement('div');
-            thinking.className = 'message ai';
-            thinking.innerHTML = '<strong>AI:</strong> ...';
-            chatDiv.appendChild(thinking);
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-            
-            try {
-                const { result } = await assistantOp.execute(message);
-                
-                if (result && result.response) {
-                    lastResponse = result.response;
-                    thinking.remove();
-                    
-                    const velaResult = await velaOp.execute(result.response);
-                    lastVelaResult = velaResult.result;
-                    const v = velaResult.result;
-                    const statusClass = v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
-                    velaDisplay.className = `vela-badge ${statusClass}`;
-                    velaDisplay.innerHTML = `⚖️ VELA: ${v.status}`;
-                    
-                    addMessage('ai', result.response, { sealHash: true, velaResult: v });
                 } else {
                     thinking.innerHTML = '<strong>AI:</strong> Error: No response';
                 }
@@ -643,25 +652,26 @@
             structuredModeActive = !structuredModeActive;
             
             if (structuredModeActive) {
-                structuredInputArea.classList.add('active');
+                structuredUI.classList.add('active');
                 modeBadge.textContent = '🌌 STRUCTURED';
                 modeBadge.classList.add('structured');
-                inputField.disabled = true;
-                inputField.placeholder = 'Structured mode active. Use the form below.';
-                addSystemMessage('🌌 **STRUCTURED MODE ACTIVE**\n\nGATE-ITL: Fill the form to build structured fragments. Pre-cleared checkpoints are tracked. Open checkpoints trigger CEP clarification.');
+                inputField.placeholder = 'Type your message (will be wrapped in structured fragment)';
+                // Initialize display of selected values
+                updateSelectedValuesDisplay();
+                buildStructuredFragment(''); // initial checkpoint display
+                addSystemMessage('🌌 **STRUCTURED MODE ACTIVE**\n\nGATE-ITL: Use the dropdowns above to set intent, domain, emotion, and time. Your message will be wrapped in a structured fragment. Open checkpoints trigger CEP clarification.');
             } else {
-                structuredInputArea.classList.remove('active');
+                structuredUI.classList.remove('active');
                 modeBadge.textContent = '⚡ REGULAR';
                 modeBadge.classList.remove('structured');
-                inputField.disabled = false;
                 inputField.placeholder = 'Type your message...';
                 inputField.focus();
-                addSystemMessage('⚡ **REGULAR MODE ACTIVE**\n\nStandard chat. Click Structured Mode for GATE-ITL and checkpoint tracking.');
+                addSystemMessage('⚡ **REGULAR MODE ACTIVE**\n\nStandard chat. Click Structured Mode for GATE-ITL.');
             }
         }
         
         function sealInput() {
-            const text = inputField.value.trim() || structuredInput.value.trim();
+            const text = inputField.value.trim();
             if (!text) {
                 showToast('Nothing to seal', true);
                 return;
@@ -680,7 +690,7 @@
         }
         
         // ========== Event Listeners ==========
-        sendBtn.onclick = sendRegular;
+        sendBtn.onclick = send;
         plusBtn.onclick = (e) => {
             e.stopPropagation();
             dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
@@ -704,25 +714,33 @@
             showTrace();
         };
         
-        structuredSendBtn.onclick = sendStructuredMessage;
-        structuredInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendStructuredMessage();
-        });
-        
         inputField.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendRegular();
+            if (e.key === 'Enter') send();
         });
         
-        // Update checkpoint display on form change
-        ['itlIntent', 'itlDomain', 'itlEmotion', 'itlTime', 'structuredInput'].forEach(id => {
-            document.getElementById(id)?.addEventListener('input', () => buildStructuredFragment());
+        // Update selected values display and checkpoint on dropdown change
+        [itlIntent, itlDomain, itlEmotion, itlTime].forEach(el => {
+            el.addEventListener('change', () => {
+                if (structuredModeActive) {
+                    updateSelectedValuesDisplay();
+                    buildStructuredFragment(inputField.value.trim());
+                }
+            });
         });
         
-        // Initial checkpoint display
-        buildStructuredFragment();
+        // Also update when input changes (for checkpoint calculation)
+        inputField.addEventListener('input', () => {
+            if (structuredModeActive) {
+                buildStructuredFragment(inputField.value.trim());
+            }
+        });
+        
+        // Initial checkpoint display (if structured mode becomes active later)
+        updateSelectedValuesDisplay();
+        buildStructuredFragment('');
         
         // Initial message
-        addMessage('ai', 'Ada‑VELA active. Click the + button and select "Structured Mode" to activate GATE-ITL and CEP.');
+        addMessage('ai', 'Ada‑VELA active. Click the + button and select "Structured Mode" to activate GATE-ITL.');
     </script>
 </body>
 </html>
