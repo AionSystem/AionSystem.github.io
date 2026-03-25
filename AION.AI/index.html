@@ -59,6 +59,15 @@
             margin-left: 8px;
             cursor: pointer;
         }
+        .ada-badge {
+            font-size: 9px;
+            background: #1e3a5f;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 8px;
+            cursor: pointer;
+            color: #c9a028;
+        }
         input, button {
             padding: 10px;
             font-size: 14px;
@@ -358,6 +367,13 @@
                 const openCount = extra.receipt.still_open || 0;
                 extraHtml += `<span class="receipt-badge" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 ${extra.receipt.epistemic_weight || 'receipt'} (${openCount} open)</span>`;
             }
+            // ADA loop metadata
+            if (extra.adaLoop) {
+                const loop = extra.adaLoop;
+                const status = loop.converged ? '✅' : '🔄';
+                const text = `${status} ADA: ${loop.rounds} rounds${loop.converged ? '' : ' (unconverged)'}`;
+                extraHtml += `<span class="ada-badge" data-ada='${JSON.stringify(loop).replace(/'/g, "&#39;")}'>${text}</span>`;
+            }
             div.innerHTML = `<strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${escapeHtml(text)}${extraHtml}`;
             chatDiv.appendChild(div);
             chatDiv.scrollTop = chatDiv.scrollHeight;
@@ -366,6 +382,10 @@
             const receiptBadge = div.querySelector('.receipt-badge');
             if (receiptBadge && extra.receipt) {
                 receiptBadge.onclick = () => showModal('Checkpoint Receipt', JSON.stringify(extra.receipt, null, 2));
+            }
+            const adaBadge = div.querySelector('.ada-badge');
+            if (adaBadge && extra.adaLoop) {
+                adaBadge.onclick = () => showModal('ADA Loop Details', JSON.stringify(extra.adaLoop, null, 2));
             }
         }
 
@@ -621,6 +641,7 @@
                     lastResponse = result.response;
                     thinking.remove();
 
+                    // Update VELA badge
                     if (result.pac) {
                         const ppi = result.pac.ppi;
                         const cls = ppi < 30 ? 'vela-block' : (ppi < 70 ? 'vela-flag' : 'vela-pass');
@@ -633,7 +654,9 @@
                         velaDisplay.innerHTML = `⚖️ VELA: ${result.vela_status}`;
                     }
 
-                    addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt });
+                    // ADA loop metadata (if present)
+                    const adaLoop = result.ada_loop;
+                    addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt, adaLoop });
                 } else {
                     thinking.innerHTML = '<strong>AI:</strong> Error: No response';
                 }
