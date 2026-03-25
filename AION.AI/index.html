@@ -143,7 +143,11 @@
             gap: 12px;
             margin-bottom: 12px;
         }
-        .field-group { flex: 1; min-width: 120px; }
+        .field-group {
+            flex: 1;
+            min-width: 120px;
+            position: relative;
+        }
         .field-group label {
             display: block;
             font-size: 10px;
@@ -158,6 +162,15 @@
             padding: 6px;
             color: white;
             font-size: 12px;
+        }
+        .help-icon {
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+            font-size: 10px;
+            color: #888;
+            cursor: help;
+            margin-left: 4px;
         }
         .selected-values {
             display: flex;
@@ -216,6 +229,8 @@
             .itl-fields { flex-direction: column; gap: 8px; }
             .field-group { min-width: auto; }
             .input-row button { padding: 8px 12px; }
+            .plus-btn { width: 40px; font-size: 18px; }
+            .option-btn { padding: 12px; }
         }
     </style>
 </head>
@@ -240,7 +255,7 @@
     <div id="structuredUI" class="structured-ui">
         <div class="itl-fields">
             <div class="field-group">
-                <label>INTENT</label>
+                <label>INTENT <span class="help-icon" title="What do you want to do? (ask, share, request action, etc.)">ⓘ</span></label>
                 <select id="itlIntent">
                     <option value="ask">ask</option>
                     <option value="share">share</option>
@@ -250,7 +265,7 @@
                 </select>
             </div>
             <div class="field-group">
-                <label>DOMAIN</label>
+                <label>DOMAIN <span class="help-icon" title="Subject area (emergence, integrity, healing, security, law, general)">ⓘ</span></label>
                 <select id="itlDomain">
                     <option value="emergence">emergence</option>
                     <option value="integrity">integrity</option>
@@ -261,7 +276,7 @@
                 </select>
             </div>
             <div class="field-group">
-                <label>EMOTION</label>
+                <label>EMOTION <span class="help-icon" title="Your current emotional state">ⓘ</span></label>
                 <select id="itlEmotion">
                     <option value="neutral">neutral</option>
                     <option value="curious">curious</option>
@@ -270,7 +285,7 @@
                 </select>
             </div>
             <div class="field-group">
-                <label>TIME</label>
+                <label>TIME <span class="help-icon" title="How urgent is this?">ⓘ</span></label>
                 <select id="itlTime">
                     <option value="now">now</option>
                     <option value="today">today</option>
@@ -279,6 +294,7 @@
             </div>
         </div>
         <div class="selected-values" id="selectedValues"></div>
+        <button id="resetStructuredBtn" style="background:#2a2a3a; color:#c9a028; margin-top:8px; padding:4px 8px; font-size:11px;">Reset All</button>
     </div>
 
     <div class="status-bar">
@@ -291,11 +307,13 @@
     <script>
         const API = 'https://aion-backend-mu.vercel.app';
         
-        // Session
+        // Session with expiry
         let sessionId = localStorage.getItem('sessionId');
-        if (!sessionId) {
+        let sessionExpiry = localStorage.getItem('sessionExpiry');
+        if (!sessionId || !sessionExpiry || Date.now() > parseInt(sessionExpiry)) {
             sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
             localStorage.setItem('sessionId', sessionId);
+            localStorage.setItem('sessionExpiry', Date.now() + 7*24*60*60*1000);
         }
         document.getElementById('sessionDisplay').textContent = `Session: ${sessionId.slice(-8)}`;
 
@@ -303,8 +321,11 @@
         let lastResponse = null;
         let isSending = false;
         let structuredModeActive = false;
-        let lastFragmentId = null;          // stores the ID of the last sent fragment (for replies)
-        let pendingClarification = null;    // stores intercept data when waiting for clarification
+        let lastFragmentId = null;
+        let pendingClarification = null;     // { originalFragmentId, interceptData, depth }
+        let abortController = null;
+        let clarificationDepth = 0;
+        const MAX_CLARIFICATION_DEPTH = 3;
 
         // DOM elements
         const chatDiv = document.getElementById('chat');
@@ -321,6 +342,7 @@
         const itlDomain = document.getElementById('itlDomain');
         const itlEmotion = document.getElementById('itlEmotion');
         const itlTime = document.getElementById('itlTime');
+        const resetStructuredBtn = document.getElementById('resetStructuredBtn');
 
         // Helper: Add message
         function addMessage(role, text, extra = {}) {
@@ -333,8 +355,8 @@
                 extraHtml += `<span class="vela-badge ${cls}">⚖️ VELA: ${extra.velaResult.status}</span>`;
             }
             if (extra.receipt) {
-                const receiptStr = JSON.stringify(extra.receipt);
-                extraHtml += `<span class="receipt-badge" title="${escapeHtml(receiptStr)}">📋 ${extra.receipt.epistemic_weight || 'receipt'}</span>`;
+                const openCount = extra.receipt.still_open || 0;
+                extraHtml += `<span class="receipt-badge" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 ${extra.receipt.epistemic_weight || 'receipt'} (${openCount} open)</span>`;
             }
             div.innerHTML = `<strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${escapeHtml(text)}${extraHtml}`;
             chatDiv.appendChild(div);
@@ -403,7 +425,12 @@
         }
 
         async function sendClarification(option, replyToId) {
-            // Build a new fragment that replies to the original with the chosen clarification
+            if (clarificationDepth >= MAX_CLARIFICATION_DEPTH) {
+                addSystemMessage(`⚠️ Max clarifications (${MAX_CLARIFICATION_DEPTH}) reached. Please rephrase your original question.`);
+                pendingClarification = null;
+                clarificationDepth = 0;
+                return;
+            }
             const fragment = {
                 id: crypto.randomUUID(),
                 ts: new Date().toISOString(),
@@ -416,7 +443,6 @@
                 content: { summary: `Clarification: ${option.text}`, details: option.text },
                 context: { time_sensitivity: 'now', stage: 4, requires: ['analysis'] }
             };
-            // Send this new fragment to the structured endpoint
             try {
                 const res = await fetch(`${API}/api/structured-mode`, {
                     method: 'POST',
@@ -427,7 +453,8 @@
                 if (result.response) {
                     addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt });
                     lastResponse = result.response;
-                    // Update VELA badge if available
+                    clarificationDepth = 0;
+                    pendingClarification = null;
                     if (result.pac) {
                         const ppi = result.pac.ppi;
                         const cls = ppi < 30 ? 'vela-block' : (ppi < 70 ? 'vela-flag' : 'vela-pass');
@@ -436,7 +463,7 @@
                         velaDisplay.innerHTML = `⚖️ VELA: ${status}`;
                     }
                 } else if (result.status === 'CEP_INTERCEPT') {
-                    // Another intercept – show again (should not happen in a well-formed clarification)
+                    clarificationDepth++;
                     showClarificationModal(result, fragment.id);
                 } else {
                     addSystemMessage(`⚠️ Unexpected response: ${JSON.stringify(result)}`);
@@ -447,7 +474,43 @@
             }
         }
 
-        // API calls
+        // API calls with abort controller and timeout
+        async function callStructuredMode(fragment) {
+            if (abortController) abortController.abort();
+            abortController = new AbortController();
+            const timeoutId = setTimeout(() => abortController.abort(), 30000);
+            try {
+                const res = await fetch(`${API}/api/structured-mode`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(fragment),
+                    signal: abortController.signal
+                });
+                clearTimeout(timeoutId);
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${errText}`);
+                }
+                return await res.json();
+            } catch (err) {
+                clearTimeout(timeoutId);
+                if (err.name === 'AbortError') throw new Error('Request timed out (30s)');
+                throw err;
+            } finally {
+                abortController = null;
+            }
+        }
+
+        async function callAssistant(message) {
+            const res = await fetch(`${API}/api/assistant`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message, sessionId, ownerType: 'sheldon', history: [] })
+            });
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        }
+
         async function sealMessage(content) {
             try {
                 const res = await fetch(`${API}/api/stp-seal`, {
@@ -479,27 +542,7 @@
             } catch (err) { showToast(`Validation failed: ${err.message}`, true); }
         }
 
-        async function callAssistant(message) {
-            const res = await fetch(`${API}/api/assistant`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message, sessionId, ownerType: 'sheldon', history: [] })
-            });
-            if (!res.ok) throw new Error(await res.text());
-            return res.json();
-        }
-
-        async function callStructuredMode(fragment) {
-            const res = await fetch(`${API}/api/structured-mode`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(fragment)
-            });
-            if (!res.ok) throw new Error(await res.text());
-            return res.json();
-        }
-
-        // Build structured fragment from UI
+        // Build structured fragment
         function buildStructuredFragment(rawMessage, replyTo = null) {
             const frag = {
                 id: crypto.randomUUID(),
@@ -525,9 +568,18 @@
             `;
         }
 
+        let lastSendTime = 0;
+        const SEND_DELAY = 300; // ms
         // Main send
         async function send() {
             if (isSending) { showToast('Already sending...'); return; }
+            const now = Date.now();
+            if (now - lastSendTime < SEND_DELAY) {
+                showToast('Please wait a moment before sending again.');
+                return;
+            }
+            lastSendTime = now;
+
             const rawMessage = inputField.value.trim();
             if (!rawMessage) return;
 
@@ -535,7 +587,6 @@
             inputField.disabled = true;
             isSending = true;
 
-            // Add user message immediately
             addMessage('user', rawMessage);
 
             const thinking = document.createElement('div');
@@ -549,12 +600,13 @@
                 if (structuredModeActive) {
                     const fragment = buildStructuredFragment(rawMessage, pendingClarification ? pendingClarification.originalFragmentId : null);
                     result = await callStructuredMode(fragment);
-                    lastFragmentId = fragment.id;  // store for potential replies
+                    lastFragmentId = fragment.id;
                     if (result.status === 'CEP_INTERCEPT') {
                         thinking.remove();
                         pendingClarification = {
                             originalFragmentId: fragment.id,
-                            interceptData: result
+                            interceptData: result,
+                            depth: clarificationDepth
                         };
                         showClarificationModal(result, fragment.id);
                         inputField.disabled = false;
@@ -569,7 +621,6 @@
                     lastResponse = result.response;
                     thinking.remove();
 
-                    // Update VELA badge
                     if (result.pac) {
                         const ppi = result.pac.ppi;
                         const cls = ppi < 30 ? 'vela-block' : (ppi < 70 ? 'vela-flag' : 'vela-pass');
@@ -606,7 +657,8 @@
                 inputField.placeholder = 'Type your message (will be structured)';
                 updateSelectedValues();
                 addSystemMessage('🌌 **STRUCTURED MODE ACTIVE**\n\nSet intent, domain, emotion, time. Your message will be sent as a structured fragment.');
-                pendingClarification = null; // reset any pending intercept
+                pendingClarification = null;
+                clarificationDepth = 0;
             } else {
                 structuredUI.classList.remove('active');
                 modeBadge.textContent = '⚡ REGULAR';
@@ -624,16 +676,25 @@
         }
 
         function showTrace() {
-            // Simple trace – could be expanded with actual operation history from backend
             const traceInfo = {
                 sessionId,
                 structuredModeActive,
                 lastFragmentId,
                 lastResponsePreview: lastResponse?.substring(0, 100),
-                pendingClarification: pendingClarification ? true : false
+                pendingClarification: pendingClarification ? true : false,
+                clarificationDepth
             };
             showModal('Ada‑VELA Trace', JSON.stringify(traceInfo, null, 2));
             console.log('Trace data:', traceInfo);
+        }
+
+        function resetStructuredFields() {
+            itlIntent.selectedIndex = 0;
+            itlDomain.selectedIndex = 5; // general
+            itlEmotion.selectedIndex = 0;
+            itlTime.selectedIndex = 0;
+            updateSelectedValues();
+            addSystemMessage('Structured mode fields reset.');
         }
 
         // Event listeners
@@ -646,6 +707,7 @@
         document.getElementById('traceBtn').onclick = () => { dropdown.style.display = 'none'; showTrace(); };
         inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') send(); });
         [itlIntent, itlDomain, itlEmotion, itlTime].forEach(el => el.addEventListener('change', updateSelectedValues));
+        resetStructuredBtn.onclick = resetStructuredFields;
 
         // Initial message
         addMessage('ai', 'Ada‑VELA ready. Click + → Structured Mode to activate GATE-ITL.');
