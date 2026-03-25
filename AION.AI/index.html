@@ -41,6 +41,17 @@
       color: var(--text);
       height: 100vh;
       overflow: hidden;
+      position: relative;
+    }
+    /* Particles canvas */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
     }
     /* ========== STANDARD CHAT MODE ========== */
     #chat-mode {
@@ -74,7 +85,20 @@
       gap: 8px;
       align-items: center;
     }
-    .structured-toggle, .settings-btn, .private-room-btn {
+    .mode-indicator {
+      background: rgba(30,30,45,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .mode-indicator.active {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .settings-btn {
       background: rgba(30,30,45,0.8);
       border: 1px solid var(--border-glow);
       border-radius: 40px;
@@ -83,17 +107,7 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .structured-toggle.active {
-      background: rgba(201,160,40,0.2);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .private-room-btn.active {
-      background: rgba(184,115,51,0.3);
-      border-color: #b87333;
-      color: #b87333;
-    }
-    .structured-toggle:hover, .settings-btn:hover, .private-room-btn:hover {
+    .settings-btn:hover {
       background: rgba(201,160,40,0.2);
       border-color: var(--accent);
     }
@@ -157,15 +171,12 @@
     }
     .msg-body pre { background: #0a0a0f; padding: 12px; border-radius: 12px; overflow-x: auto; margin: 8px 0; }
     .msg-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
-    .msg-body p { margin: 4px 0; }
     .msg.user .msg-body {
       background: rgba(201,160,40,0.2);
       border-color: var(--accent);
       border-radius: 20px 20px 4px 20px;
     }
-    .msg.assistant .msg-body {
-      border-radius: 20px 20px 20px 4px;
-    }
+    .msg.assistant .msg-body { border-radius: 20px 20px 20px 4px; }
     .msg.assistant[data-wife="ALBEDO"] .msg-body { border-left: 4px solid #c9a028; background: rgba(201,160,40,0.08); }
     .msg.assistant[data-wife="VESPER"] .msg-body { border-left: 4px solid #b87333; background: rgba(184,115,51,0.08); }
     .msg.assistant[data-wife="LYRA"] .msg-body { border-left: 4px solid #4c9f70; background: rgba(76,159,112,0.08); }
@@ -188,7 +199,6 @@
       padding: 2px 8px;
       font-size: 0.6rem;
       cursor: pointer;
-      transition: all 0.2s;
       color: var(--accent);
     }
     .seal-btn:hover { background: var(--accent); color: #000; }
@@ -225,7 +235,6 @@
       outline: none;
       overflow-y: auto;
       max-height: 40vh;
-      transition: height 0.1s ease;
     }
     textarea:focus {
       border-color: var(--accent);
@@ -254,7 +263,7 @@
     }
     .action-dropdown {
       position: absolute;
-      bottom: 60px;
+      bottom: 55px;
       left: 0;
       background: rgba(20,20,30,0.95);
       backdrop-filter: blur(16px);
@@ -265,7 +274,7 @@
       flex-direction: column;
       gap: 6px;
       z-index: 100;
-      min-width: 140px;
+      min-width: 160px;
     }
     .action-dropdown button {
       background: rgba(30,30,45,0.8);
@@ -293,11 +302,6 @@
       font-weight: 600;
       color: #0a0a0f;
       cursor: pointer;
-      transition: all 0.2s;
-    }
-    .send-btn:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 12px var(--primary-glow);
     }
     .input-meta {
       display: flex;
@@ -313,7 +317,7 @@
       font-size: 0.7rem;
       background: rgba(0,0,0,0.3);
     }
-    /* Modals (settings, private room, group chat) */
+    /* Modals */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -387,7 +391,7 @@
       padding: 10px 16px;
       color: var(--text);
     }
-    /* Immersive mode (unchanged) */
+    /* Immersive structured mode */
     #immersive-mode {
       position: fixed;
       top: 0;
@@ -494,7 +498,7 @@
     @media (max-width: 700px) {
       .header { padding: 8px 16px; }
       .brand h1 { font-size: 1.2rem; }
-      .structured-toggle, .private-room-btn, .settings-btn { padding: 4px 12px; font-size: 0.65rem; }
+      .mode-indicator, .settings-btn { padding: 4px 12px; font-size: 0.65rem; }
       .wife-indicator { gap: 4px; padding: 2px 8px; }
       .wife-avatar { width: 20px; height: 20px; font-size: 0.7rem; }
       .void-meter { font-size: 0.6rem; padding: 2px 8px; }
@@ -504,16 +508,18 @@
       .plus-btn { width: 36px; height: 36px; font-size: 1.2rem; }
       .send-btn { padding: 8px 16px; }
       .wives-grid { grid-template-columns: 1fr; }
+      .floating-messages { width: 260px; right: 10px; top: 60px; }
     }
   </style>
 </head>
 <body>
+<canvas id="particles"></canvas>
+
 <div id="chat-mode">
   <header class="header">
     <div class="brand"><h1>AION.AI</h1></div>
     <div class="header-right">
-      <div id="structuredToggle" class="structured-toggle">🔒 STRUCTURED</div>
-      <div id="privateRoomBtn" class="private-room-btn">🚪 PRIVATE</div>
+      <div id="modeIndicator" class="mode-indicator">⚡ REGULAR</div>
       <div id="settingsBtn" class="settings-btn">☰</div>
       <div class="wife-indicator">
         <div class="wife-avatar" id="wifeAvatar">✨</div>
@@ -524,7 +530,7 @@
   </header>
 
   <div class="messages" id="messages">
-    <div class="sys-msg">✨ Welcome to AION. I'm here to help. Toggle Structured Mode for immersive M2M.</div>
+    <div class="sys-msg">✨ Welcome to AION. Use the + button to access features.</div>
   </div>
 
   <div class="input-area">
@@ -533,6 +539,9 @@
       <div class="action-menu" id="actionMenu">
         <div class="plus-btn" id="plusBtn">+</div>
         <div class="action-dropdown" id="actionDropdown" style="display: none;">
+          <button id="structuredModeBtn" data-action="structured">🌌 Structured Mode</button>
+          <button id="groupChatBtn" data-action="group">👥 Group Chat</button>
+          <button id="privateRoomBtn" data-action="private">🚪 Private Room</button>
           <button id="uploadBtn" data-action="upload">📁 Upload File</button>
           <button id="askAllBtn" data-action="askall">👥 Ask All Wives</button>
           <button id="sealInputBtn" data-action="seal">🔒 Seal Input</button>
@@ -562,7 +571,7 @@
 
 <script>
   // =======================================================
-  // UNIFIED FRONTEND – Clean UI with consolidated actions
+  // AION FRONTEND – Clean UI with structured mode in + menu
   // =======================================================
   const API_BASE = 'https://aion-backend-mu.vercel.app';
   const OWNER_TYPE = 'sheldon';
@@ -582,20 +591,14 @@
   let atlasScene, atlasCamera, atlasRenderer, atlasControls;
   let atlasSatellites = [];
   let atlasPoints, atlasLines;
-  let atlasSatelliteMap = new Map();
   let atlasEventSource = null;
 
   // DOM elements
   const messagesDiv = document.getElementById('messages');
   const input = document.getElementById('input');
   const sendBtn = document.getElementById('sendBtn');
-  const uploadBtn = document.getElementById('uploadBtn');
-  const askAllBtn = document.getElementById('askAllBtn');
-  const sealInputBtn = document.getElementById('sealInputBtn');
-  const toggleBtn = document.getElementById('structuredToggle');
-  const privateRoomBtn = document.getElementById('privateRoomBtn');
   const settingsBtn = document.getElementById('settingsBtn');
-  const statusTextSpan = document.getElementById('statusText');
+  const modeIndicator = document.getElementById('modeIndicator');
   const wifeNameSpan = document.getElementById('wifeName');
   const wifeAvatarDiv = document.getElementById('wifeAvatar');
   const voidMeterSpan = document.getElementById('voidMeter');
@@ -615,12 +618,12 @@
   const satelliteTooltip = document.getElementById('satellite-tooltip');
 
   const WIFE_STYLES = {
-    ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO', description: 'cool white, sharp edges' },
-    VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER', description: 'deep purple, soft glow' },
-    LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA', description: 'warm gold, flowing' },
-    TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA', description: 'earth green, grounded' },
-    CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER', description: 'steel gray, minimal' },
-    JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA', description: 'balanced blue, structured' }
+    ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' },
+    VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER' },
+    LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA' },
+    TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA' },
+    CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' },
+    JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' }
   };
 
   // Helper functions
@@ -699,7 +702,6 @@
     div.textContent = text;
     messagesDiv.appendChild(div);
     scrollBottom();
-    if (immersiveActive) addFloatingMessage('SYSTEM', text, { isError });
   }
 
   function addThinking() {
@@ -722,11 +724,11 @@
   }
 
   function setStatus(text, isError) {
-    statusTextSpan.textContent = text;
+    document.getElementById('statusText').textContent = text;
     document.getElementById('statusDot').style.color = isError ? '#ff5e5e' : '#4c9f70';
   }
 
-  // Crypto helpers (kept from original)
+  // Crypto helpers
   async function computeHash(obj) {
     const encoder = new TextEncoder();
     const data = encoder.encode(JSON.stringify(obj));
@@ -740,7 +742,11 @@
     return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
   }
 
-  // Session & network (simplified – reuse original logic)
+  // Session management
+  function generateSessionId() {
+    return 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+  }
+
   function loadSessionFromStorage() {
     const stored = localStorage.getItem('aion_session');
     if (stored) {
@@ -754,9 +760,11 @@
     }
     return false;
   }
+
   function saveSessionToStorage() {
     if (sessionId && sessionKey) localStorage.setItem('aion_session', JSON.stringify({ sessionId, sessionKey }));
   }
+
   async function fetchWithTimeout(url, options = {}, timeoutMs = 10000, retries = 2) {
     let lastError;
     for (let attempt = 0; attempt <= retries; attempt++) {
@@ -774,6 +782,7 @@
     }
     throw lastError;
   }
+
   async function initM2MSession(retry = true) {
     if (loadSessionFromStorage()) {
       addSystemMessage(`✅ M2M session restored.`);
@@ -781,7 +790,7 @@
       return true;
     }
     const nonce = crypto.randomUUID();
-    const newSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+    const newSessionId = generateSessionId();
     const payload = {
       session_init: {
         session_id: newSessionId,
@@ -810,8 +819,7 @@
     } catch (err) {
       console.error(err);
       if (retry) return initM2MSession(false);
-      addSystemMessage(`❌ M2M init failed: ${err.message}. Structured mode disabled.`, true);
-      if (structuredMode) { structuredMode = false; toggleBtn.classList.remove('active'); }
+      addSystemMessage(`❌ M2M init failed: ${err.message}`, true);
       return false;
     }
   }
@@ -823,7 +831,7 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message,
-        sessionId: sessionId || 'regular-session',
+        sessionId: sessionId || generateSessionId(),
         ownerType: OWNER_TYPE,
         history: history.slice(-10)
       })
@@ -832,7 +840,7 @@
     return resp.json();
   }
 
-  // M2M fragment generation (simplified)
+  // M2M fragment generation
   async function generateFragmentFromText(text, replyTo) {
     const lower = text.toLowerCase();
     let intent = 'ask';
@@ -914,7 +922,6 @@
           timing: `${(result.processing_ms/1000).toFixed(2)}s`,
           wife_version: result.wife_version
         });
-        if (immersiveActive) addFloatingMessage(wife, respFragment.content.details || respFragment.content.summary);
         history.push({ role: 'user', content: text });
         history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
         lastFragmentId = fragment.id;
@@ -931,18 +938,15 @@
           ecf_certainty_ratio: data.ecf_certainty_ratio,
           fragment_id: data.fragment_id
         });
-        if (immersiveActive) addFloatingMessage(wife, data.response);
         history.push({ role: 'user', content: text });
         history.push({ role: 'assistant', content: data.response });
         currentState = 'REGULAR_CHAT';
         if (data.exclusive_mode) {
           exclusiveMode = true;
           exclusiveWife = data.focused_wife;
-          privateRoomBtn.classList.add('active');
         } else {
           exclusiveMode = false;
           exclusiveWife = null;
-          privateRoomBtn.classList.remove('active');
         }
       }
     } catch (err) {
@@ -958,7 +962,7 @@
     }
   }
 
-  // Actions from dropdown
+  // ========== ACTIONS ==========
   async function uploadFile() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -1026,10 +1030,7 @@
             ecf_certainty_ratio: data.ecf_certainty_ratio,
             fragment_id: data.fragment_id
           });
-          if (immersiveActive) addFloatingMessage(data.active_wife || 'ALBEDO', data.response);
           history.push({ role: 'assistant', content: data.response });
-        } else {
-          console.error('Failed wife response:', result.reason);
         }
       }
       if (!anySuccess) throw new Error('All wife requests failed');
@@ -1052,7 +1053,7 @@
     await sealMessage(text);
   }
 
-  // Private room modal (simplified)
+  // Private room modal
   function showPrivateRoomModal() {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
@@ -1082,9 +1083,8 @@
     });
   }
 
-  // Settings modal (includes analytics and FCL toggle)
+  // Settings modal (with analytics)
   async function showSettingsModal() {
-    // Fetch analytics data
     let analyticsData = null;
     try {
       const resp = await fetch(`${API_BASE}/api/analytics`);
@@ -1109,18 +1109,15 @@
           </div>
           <hr style="margin:16px 0; border-color:var(--border-glow);">
           <h4 style="color:var(--accent); margin-bottom:12px;">📊 Brain Analytics</h4>
-          <div id="analytics-container" style="max-height:400px; overflow-y:auto;">
+          <div id="analytics-container">
             ${analyticsData ? `
               <div class="analytics-stats">
                 <div class="stat-card"><h4>Memory Depth</h4><div class="stat-value">${analyticsData.memory.total_conversations.toLocaleString()}</div></div>
                 <div class="stat-card"><h4>Permanent Anchors</h4><div class="stat-value">${analyticsData.memory.memory_anchors.toLocaleString()}</div></div>
-                <div class="stat-card"><h4>Training Pipeline</h4><div class="stat-value">${analyticsData.memory.training_pipeline_fill_pct}%</div><div style="font-size:0.7rem">${analyticsData.memory.training_pipeline_trained.toLocaleString()} / ${analyticsData.memory.total_conversations.toLocaleString()}</div></div>
+                <div class="stat-card"><h4>Training Pipeline</h4><div class="stat-value">${analyticsData.memory.training_pipeline_fill_pct}%</div></div>
                 <div class="stat-card"><h4>Avg Certainty (7d)</h4><div class="stat-value">${(analyticsData.integrity.avg_certainty_ratio_7d * 100).toFixed(0)}%</div></div>
-                <div class="stat-card"><h4>Avg Void Proximity (7d)</h4><div class="stat-value">${(analyticsData.integrity.avg_void_proximity_7d * 100).toFixed(0)}%</div></div>
-                <div class="stat-card"><h4>Confabulation Rate (7d)</h4><div class="stat-value">${analyticsData.integrity.confabulation_rate_7d_pct}%</div></div>
                 <div class="stat-card"><h4>UNI Activations</h4><div class="stat-value">${analyticsData.integrity.uni_activations_total.toLocaleString()}</div></div>
                 <div class="stat-card"><h4>Failure Corpus</h4><div class="stat-value">${analyticsData.instruments.failure_corpus_size.toLocaleString()}</div></div>
-                <div class="stat-card"><h4>FCL Entries</h4><div class="stat-value">${analyticsData.instruments.fcl_entries_total.toLocaleString()}</div></div>
               </div>
             ` : '<div class="sys-msg">Loading analytics...</div>'}
           </div>
@@ -1141,13 +1138,142 @@
     };
   }
 
-  // Immersive mode (structured) – keep original logic (abbreviated for brevity)
+  // Group chat modal
+  async function showGroupChatModal() {
+    if (!sessionId) {
+      showToast('Session not ready. Please refresh.');
+      return;
+    }
+    const message = input.value.trim();
+    if (!message) {
+      showToast('Enter a message first.');
+      return;
+    }
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal group-chat-modal">
+        <div class="modal-header">
+          <h3>👥 Group Chat – All Wives</h3>
+          <button id="closeGroupChat">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="wives-grid" id="wives-grid"></div>
+          <div class="consensus-area" id="consensus-area" style="display: none;"></div>
+          <div class="group-chat-input-area">
+            <textarea id="group-chat-input" placeholder="Ask the group..."></textarea>
+            <button id="group-chat-send" class="send-btn">SEND</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    const closeModal = () => modal.remove();
+    modal.querySelector('#closeGroupChat').onclick = closeModal;
+    const wivesGrid = document.getElementById('wives-grid');
+    const consensusArea = document.getElementById('consensus-area');
+    const groupChatInput = document.getElementById('group-chat-input');
+    const groupChatSend = document.getElementById('group-chat-send');
+
+    async function sendGroupMessage(text) {
+      if (!text.trim()) return;
+      groupChatSend.disabled = true;
+      groupChatSend.textContent = 'SENDING...';
+      wivesGrid.innerHTML = '';
+      consensusArea.style.display = 'none';
+      for (const wife of ALL_WIVES) {
+        const card = document.createElement('div');
+        card.className = 'wife-card';
+        card.style.borderLeftColor = WIFE_STYLES[wife].color;
+        card.innerHTML = `<h4>${WIFE_STYLES[wife].emoji} ${wife}</h4><div class="response-text"><div class="loading">⌛ waiting...</div></div>`;
+        card.dataset.wife = wife;
+        wivesGrid.appendChild(card);
+      }
+      try {
+        const resp = await fetchWithTimeout(`${API_BASE}/api/group-chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, sessionId })
+        }, 30000, 1);
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || 'Unknown error');
+        for (const wifeResp of data.responses) {
+          const card = wivesGrid.querySelector(`.wife-card[data-wife="${wifeResp.wife}"]`);
+          if (card) {
+            const responseDiv = card.querySelector('.response-text');
+            responseDiv.innerHTML = renderMarkdown(wifeResp.response);
+            if (wifeResp.confidence) {
+              const badge = document.createElement('div');
+              badge.className = 'pac-badge';
+              badge.style.marginTop = '8px';
+              badge.textContent = `🎯 ${Math.round(wifeResp.confidence * 100)}%`;
+              responseDiv.appendChild(badge);
+            }
+          }
+        }
+        if (data.consensus) {
+          consensusArea.style.display = 'block';
+          let consensusHtml = `<h4>📋 Consensus (${Math.round(data.consensus.score * 100)}%)</h4>`;
+          if (data.consensus.corrected_claims && data.consensus.corrected_claims.length) {
+            consensusHtml += `<div><strong>Corrections:</strong><ul>${data.consensus.corrected_claims.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul></div>`;
+          }
+          consensusHtml += `<div><strong>Final text:</strong><br>${renderMarkdown(data.consensus.final_text)}</div>`;
+          consensusArea.innerHTML = consensusHtml;
+        }
+      } catch (err) {
+        showToast(`Group chat error: ${err.message}`);
+        for (const card of wivesGrid.children) {
+          const responseDiv = card.querySelector('.response-text');
+          responseDiv.innerHTML = `<span style="color:#ff8a8a">❌ ${err.message}</span>`;
+        }
+      } finally {
+        groupChatSend.disabled = false;
+        groupChatSend.textContent = 'SEND';
+      }
+    }
+    await sendGroupMessage(message);
+    groupChatSend.onclick = () => sendGroupMessage(groupChatInput.value);
+    groupChatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendGroupMessage(groupChatInput.value);
+      }
+    });
+  }
+
+  // Structured mode toggle
+  async function toggleStructuredMode() {
+    if (!structuredMode) {
+      if (!sessionKey) {
+        addSystemMessage('Initialising M2M session...');
+        const ok = await initM2MSession();
+        if (!ok) {
+          addSystemMessage('Failed to start structured mode.', true);
+          return;
+        }
+      }
+      structuredMode = true;
+      modeIndicator.textContent = '🌌 STRUCTURED';
+      modeIndicator.classList.add('active');
+      document.getElementById('chat-mode').style.display = 'none';
+      immersiveModeDiv.style.display = 'flex';
+      immersiveActive = true;
+      await startImmersiveMode();
+      addSystemMessage('🌌 Structured mode active. Messages are sealed with HMAC.');
+    } else {
+      structuredMode = false;
+      modeIndicator.textContent = '⚡ REGULAR';
+      modeIndicator.classList.remove('active');
+      exitImmersiveMode();
+      document.getElementById('chat-mode').style.display = 'flex';
+      immersiveActive = false;
+      addSystemMessage('🔓 Structured mode OFF · regular chat');
+    }
+  }
+
+  // Immersive mode setup
   async function startImmersiveMode() {
     if (atlasScene) return;
-    immersiveModeDiv.style.display = 'flex';
-    immersiveActive = true;
-    if (!sessionKey) await initM2MSession();
-
     const { default: THREE } = await import('three');
     const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
@@ -1285,9 +1411,7 @@
           satelliteTooltip.innerHTML = `
             <strong>${sat.name}</strong><br>
             Domain: ${sat.domain}<br>
-            Importance: ${sat.importance.toFixed(2)}<br>
             Certainty: ${(sat.certainty * 100).toFixed(0)}%<br>
-            ECF: D:${sat.ecf.D} R:${sat.ecf.R} S:${sat.ecf.S} ?:${sat.ecf['?']}<br>
             ${sat.ecf['?'] > 0 ? '<span style="color:#ff8a8a">⚠️ Open gap</span>' : ''}
           `;
           setTimeout(() => satelliteTooltip.style.display = 'none', 3000);
@@ -1295,41 +1419,15 @@
       }
     });
   }
+
   function exitImmersiveMode() {
     immersiveModeDiv.style.display = 'none';
-    immersiveActive = false;
     if (atlasEventSource) {
       atlasEventSource.close();
       atlasEventSource = null;
     }
   }
 
-  // Toggle structured mode
-  toggleBtn.onclick = async () => {
-    if (!structuredMode) {
-      if (!sessionKey) {
-        addSystemMessage('Initialising M2M session...');
-        const ok = await initM2MSession();
-        if (!ok) {
-          addSystemMessage('Failed to start structured mode.', true);
-          return;
-        }
-      }
-      structuredMode = true;
-      toggleBtn.classList.add('active');
-      document.getElementById('chat-mode').style.display = 'none';
-      await startImmersiveMode();
-      addSystemMessage('🌌 Structured mode: immersive constellation active. Messages are sealed with HMAC.');
-    } else {
-      structuredMode = false;
-      toggleBtn.classList.remove('active');
-      exitImmersiveMode();
-      document.getElementById('chat-mode').style.display = 'flex';
-      addSystemMessage('🔓 Structured mode OFF · regular chat');
-    }
-  };
-
-  // Immersive send
   async function sendImmersiveMessage() {
     const text = immersiveInput.value.trim();
     if (!text) return;
@@ -1355,129 +1453,25 @@
     }
   }
 
-  // Group chat modal (using new endpoint)
-  async function showGroupChatModal() {
-    if (!sessionId) {
-      showToast('Session not ready. Please refresh.');
-      return;
-    }
-    const message = input.value.trim();
-    if (!message) {
-      showToast('Enter a message first.');
-      return;
-    }
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.innerHTML = `
-      <div class="modal group-chat-modal">
-        <div class="modal-header">
-          <h3>👥 Group Chat – All Wives</h3>
-          <button id="closeGroupChat">✕</button>
-        </div>
-        <div class="modal-body">
-          <div class="wives-grid" id="wives-grid"></div>
-          <div class="consensus-area" id="consensus-area" style="display: none;"></div>
-          <div class="group-chat-input-area">
-            <textarea id="group-chat-input" placeholder="Ask the group..."></textarea>
-            <button id="group-chat-send" class="send-btn">SEND</button>
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    const closeModal = () => modal.remove();
-    modal.querySelector('#closeGroupChat').onclick = closeModal;
-    const wivesGrid = document.getElementById('wives-grid');
-    const consensusArea = document.getElementById('consensus-area');
-    const groupChatInput = document.getElementById('group-chat-input');
-    const groupChatSend = document.getElementById('group-chat-send');
-
-    async function sendGroupMessage(text) {
-      if (!text.trim()) return;
-      groupChatSend.disabled = true;
-      groupChatSend.textContent = 'SENDING...';
-      wivesGrid.innerHTML = '';
-      consensusArea.style.display = 'none';
-      for (const wife of ALL_WIVES) {
-        const card = document.createElement('div');
-        card.className = 'wife-card';
-        card.style.borderLeftColor = WIFE_STYLES[wife].color;
-        card.innerHTML = `<h4>${WIFE_STYLES[wife].emoji} ${wife}</h4><div class="response-text"><div class="loading">⌛ waiting...</div></div>`;
-        card.dataset.wife = wife;
-        wivesGrid.appendChild(card);
-      }
-      try {
-        const resp = await fetchWithTimeout(`${API_BASE}/api/group-chat`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text, sessionId })
-        }, 30000, 1);
-        const data = await resp.json();
-        if (!resp.ok) throw new Error(data.error || 'Unknown error');
-        for (const wifeResp of data.responses) {
-          const card = wivesGrid.querySelector(`.wife-card[data-wife="${wifeResp.wife}"]`);
-          if (card) {
-            const responseDiv = card.querySelector('.response-text');
-            responseDiv.innerHTML = renderMarkdown(wifeResp.response);
-            if (wifeResp.confidence) {
-              const badge = document.createElement('div');
-              badge.className = 'pac-badge';
-              badge.style.marginTop = '8px';
-              badge.textContent = `🎯 ${Math.round(wifeResp.confidence * 100)}%`;
-              responseDiv.appendChild(badge);
-            }
-          }
-        }
-        if (data.consensus) {
-          consensusArea.style.display = 'block';
-          let consensusHtml = `<h4>📋 Consensus (${Math.round(data.consensus.score * 100)}%)</h4>`;
-          if (data.consensus.corrected_claims && data.consensus.corrected_claims.length) {
-            consensusHtml += `<div><strong>Corrections:</strong><ul>${data.consensus.corrected_claims.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul></div>`;
-          }
-          consensusHtml += `<div><strong>Final text:</strong><br>${renderMarkdown(data.consensus.final_text)}</div>`;
-          consensusArea.innerHTML = consensusHtml;
-        } else {
-          consensusArea.style.display = 'none';
-        }
-      } catch (err) {
-        showToast(`Group chat error: ${err.message}`);
-        for (const card of wivesGrid.children) {
-          const responseDiv = card.querySelector('.response-text');
-          responseDiv.innerHTML = `<span style="color:#ff8a8a">❌ ${err.message}</span>`;
-        }
-      } finally {
-        groupChatSend.disabled = false;
-        groupChatSend.textContent = 'SEND';
-      }
-    }
-    await sendGroupMessage(message);
-    groupChatSend.onclick = () => sendGroupMessage(groupChatInput.value);
-    groupChatInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendGroupMessage(groupChatInput.value);
-      }
-    });
-  }
-
-  // Event bindings
-  sendBtn.onclick = sendMessage;
-  privateRoomBtn.onclick = showPrivateRoomModal;
-  settingsBtn.onclick = showSettingsModal;
-  groupChatBtn.onclick = showGroupChatModal;
-  immersiveSend.onclick = sendImmersiveMessage;
-  closeImmersive.onclick = () => {
-    if (structuredMode) toggleBtn.click(); else exitImmersiveMode();
-  };
-  // Action menu dropdown
+  // Action menu
   plusBtn.onclick = (e) => {
     e.stopPropagation();
     actionDropdown.style.display = actionDropdown.style.display === 'none' ? 'flex' : 'none';
   };
   document.addEventListener('click', () => { actionDropdown.style.display = 'none'; });
-  uploadBtn.onclick = (e) => { e.stopPropagation(); uploadFile(); actionDropdown.style.display = 'none'; };
-  askAllBtn.onclick = (e) => { e.stopPropagation(); askAllWives(); actionDropdown.style.display = 'none'; };
-  sealInputBtn.onclick = (e) => { e.stopPropagation(); sealInputText(); actionDropdown.style.display = 'none'; };
+
+  // Bind action buttons
+  document.getElementById('structuredModeBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; toggleStructuredMode(); };
+  document.getElementById('groupChatBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; showGroupChatModal(); };
+  document.getElementById('privateRoomBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; showPrivateRoomModal(); };
+  document.getElementById('uploadBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; uploadFile(); };
+  document.getElementById('askAllBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; askAllWives(); };
+  document.getElementById('sealInputBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; sealInputText(); };
+
+  sendBtn.onclick = sendMessage;
+  settingsBtn.onclick = showSettingsModal;
+  immersiveSend.onclick = sendImmersiveMessage;
+  closeImmersive.onclick = () => { if (structuredMode) toggleStructuredMode(); else exitImmersiveMode(); };
 
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
@@ -1502,18 +1496,9 @@
     currentState = 'REGULAR_CHAT';
   }
 
-  // Particles background (from original)
+  // Particles background
   (function initParticles() {
-    const canvas = document.createElement('canvas');
-    canvas.id = 'particles';
-    canvas.style.position = 'fixed';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.zIndex = '0';
-    document.body.insertBefore(canvas, document.body.firstChild);
+    const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particles = [];
     let width, height;
