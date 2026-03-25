@@ -36,6 +36,12 @@
         .ai {
             background: #1e1e2d;
         }
+        .system {
+            background: #2a2a3a;
+            text-align: center;
+            font-size: 12px;
+            color: #c9a028;
+        }
         .seal-btn {
             background: none;
             border: 1px solid #c9a028;
@@ -55,6 +61,13 @@
         .vela-pass { background: #1e4620; color: #4ade80; }
         .vela-flag { background: #5f3a1a; color: #ffaa33; }
         .vela-block { background: #5f1a1a; color: #ff4d4d; }
+        .checkpoint-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            background: #2a2a3a;
+            margin-left: 8px;
+        }
         input, button {
             padding: 10px;
             font-size: 14px;
@@ -77,6 +90,7 @@
             display: flex;
             gap: 10px;
             margin: 10px 0;
+            position: relative;
         }
         .status-bar {
             display: flex;
@@ -86,17 +100,103 @@
             margin-top: 10px;
             padding: 8px;
             border-top: 1px solid #2a2a3a;
+            flex-wrap: wrap;
         }
         .action-buttons {
             display: flex;
             gap: 8px;
             margin-top: 8px;
+            flex-wrap: wrap;
         }
         .small-btn {
             background: #2a2a3a;
             color: #c9a028;
             padding: 6px 12px;
             font-size: 12px;
+        }
+        .mode-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            background: #2a2a3a;
+        }
+        .mode-indicator.structured {
+            background: #c9a028;
+            color: #0a0a0f;
+        }
+        .dropdown {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            background: #1e1e2d;
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 100;
+            min-width: 150px;
+        }
+        .dropdown button {
+            background: #2a2a3a;
+            color: white;
+            padding: 8px 12px;
+            text-align: left;
+            width: 100%;
+        }
+        .plus-btn {
+            background: #2a2a3a;
+            color: #c9a028;
+            font-size: 20px;
+            font-weight: bold;
+            width: 44px;
+        }
+        .structured-input-area {
+            margin-top: 10px;
+            padding: 12px;
+            background: #141920;
+            border-radius: 12px;
+            display: none;
+        }
+        .structured-input-area.active {
+            display: block;
+        }
+        .itl-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .field-group label {
+            font-size: 10px;
+            color: #c9a028;
+        }
+        .field-group select, .field-group input {
+            background: #0a0a0f;
+            border: 1px solid #2a2a3a;
+            border-radius: 6px;
+            padding: 6px;
+            font-size: 11px;
+        }
+        .checkpoint-display {
+            font-size: 11px;
+            padding: 8px;
+            background: #0f0f14;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
         }
     </style>
 </head>
@@ -107,30 +207,82 @@
     
     <div class="input-row">
         <input type="text" id="input" placeholder="Type your message..." autofocus>
+        <div class="action-menu" style="position: relative;">
+            <button id="plusBtn" class="plus-btn">+</button>
+            <div id="dropdown" class="dropdown">
+                <button id="structuredModeBtn">🌌 Structured Mode</button>
+                <button id="sealInputBtn">🔒 Seal Input</button>
+                <button id="validateBtn">⚖️ Validate Last</button>
+                <button id="traceBtn">📜 Show Trace</button>
+            </div>
+        </div>
         <button id="sendBtn">SEND</button>
     </div>
     
-    <div class="action-buttons">
-        <button id="sealInputBtn" class="small-btn">🔒 SEAL INPUT</button>
-        <button id="validateBtn" class="small-btn">⚖️ VALIDATE LAST</button>
-        <button id="traceBtn" class="small-btn">📜 SHOW TRACE</button>
+    <!-- Structured Mode Input Area (GATE-ITL Form) -->
+    <div id="structuredInputArea" class="structured-input-area">
+        <div class="itl-fields">
+            <div class="field-group">
+                <label>INTENT</label>
+                <select id="itlIntent">
+                    <option value="ask">ask</option>
+                    <option value="share">share</option>
+                    <option value="request_action">request_action</option>
+                    <option value="emotional">emotional</option>
+                    <option value="clarify">clarify</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label>DOMAIN</label>
+                <select id="itlDomain">
+                    <option value="emergence">emergence</option>
+                    <option value="integrity">integrity</option>
+                    <option value="healing">healing</option>
+                    <option value="security">security</option>
+                    <option value="law">law</option>
+                    <option value="general">general</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label>EMOTION</label>
+                <select id="itlEmotion">
+                    <option value="neutral">neutral</option>
+                    <option value="curious">curious</option>
+                    <option value="anxious">anxious</option>
+                    <option value="focused">focused</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label>TIME</label>
+                <select id="itlTime">
+                    <option value="now">now</option>
+                    <option value="today">today</option>
+                    <option value="future">future</option>
+                </select>
+            </div>
+        </div>
+        <div id="checkpointDisplay" class="checkpoint-display"></div>
+        <div class="input-row" style="margin-top: 8px;">
+            <input type="text" id="structuredInput" placeholder="Your structured message...">
+            <button id="structuredSendBtn">SEND</button>
+        </div>
     </div>
     
     <div class="status-bar">
         <span id="sessionDisplay"></span>
+        <span id="modeBadge" class="mode-indicator">⚡ REGULAR</span>
         <span id="velaDisplay" class="vela-badge vela-pass">⚖️ READY</span>
         <span id="lastSeal"></span>
     </div>
 
     <script>
         // ============================================================
-        // ADA‑VELA + STP SEAL + VELA VALIDATION
+        // ADA‑VELA + STP SEAL + VELA VALIDATION + STRUCTURED MODE
         // ============================================================
         
         const API = 'https://aion-backend-mu.vercel.app';
         
         // ========== Ada‑VELA Core ==========
-        
         function tripleTimestamp() {
             const now = new Date();
             return {
@@ -186,20 +338,28 @@
         let lastResponse = null;
         let lastVelaResult = null;
         let isSending = false;
+        let structuredModeActive = false;
+        let clarificationDepth = 0;
+        let currentCheckpoints = { preCleared: [], open: [] };
         
         // DOM elements
         const chatDiv = document.getElementById('chat');
         const inputField = document.getElementById('input');
         const sendBtn = document.getElementById('sendBtn');
+        const plusBtn = document.getElementById('plusBtn');
+        const dropdown = document.getElementById('dropdown');
         const sessionDisplay = document.getElementById('sessionDisplay');
         const velaDisplay = document.getElementById('velaDisplay');
+        const modeBadge = document.getElementById('modeBadge');
         const lastSealSpan = document.getElementById('lastSeal');
+        const structuredInputArea = document.getElementById('structuredInputArea');
+        const structuredInput = document.getElementById('structuredInput');
+        const structuredSendBtn = document.getElementById('structuredSendBtn');
+        const checkpointDisplay = document.getElementById('checkpointDisplay');
         
         sessionDisplay.textContent = `Session: ${sessionId.slice(-8)}`;
         
         // ========== Ada‑VELA Operations ==========
-        
-        // 1. STP Seal Operation
         const sealOp = new AdaOperation('STP_SEAL');
         sealOp.setFunction(async (content) => {
             const res = await fetch(`${API}/api/stp-seal`, {
@@ -216,7 +376,6 @@
             return { seal: data.seal, issueUrl: data.issue_url };
         });
         
-        // 2. VELA Constitutional Validation
         const velaOp = new AdaOperation('VELA_VALIDATE');
         velaOp.setFunction(async (content) => {
             const res = await fetch(`${API}/api/vela-suite`, {
@@ -233,7 +392,6 @@
             return data;
         });
         
-        // 3. Assistant API Call
         const assistantOp = new AdaOperation('ASSISTANT_CALL');
         assistantOp.setFunction(async (message) => {
             const res = await fetch(`${API}/api/assistant`, {
@@ -251,51 +409,92 @@
             return data;
         });
         
-        // ========== UI Functions ==========
+        // ========== GATE-ITL: Build Structured Fragment ==========
+        function buildStructuredFragment() {
+            const intent = document.getElementById('itlIntent').value;
+            const domain = document.getElementById('itlDomain').value;
+            const emotion = document.getElementById('itlEmotion').value;
+            const timeSensitivity = document.getElementById('itlTime').value;
+            const message = structuredInput.value.trim();
+            
+            if (!message) return null;
+            
+            // Pre-cleared checkpoints
+            const preCleared = [];
+            if (intent) preCleared.push('intent');
+            if (domain) preCleared.push('domain');
+            if (emotion) preCleared.push('emotional_state');
+            if (timeSensitivity) preCleared.push('time_sensitivity');
+            if (message) preCleared.push('content');
+            
+            // Open checkpoints
+            const open = [];
+            if (!intent) open.push('intent_ambiguous');
+            if (!domain) open.push('domain_boundary_exceeded');
+            if (message.length < 3) open.push('context_missing');
+            
+            currentCheckpoints = { preCleared, open };
+            
+            // Update display
+            checkpointDisplay.innerHTML = `
+                ✅ Pre-cleared: ${preCleared.map(c => `<span style="color:#4ade80">${c}</span>`).join(', ') || 'none'}<br>
+                🔓 Still open: ${open.map(c => `<span style="color:#ffaa33">${c}</span>`).join(', ') || 'none'}
+            `;
+            
+            return {
+                id: crypto.randomUUID(),
+                ts: new Date().toISOString(),
+                session_id: sessionId,
+                nonce: crypto.randomUUID(),
+                source: 'human',
+                intent: intent,
+                domain: domain,
+                emotional_state: { primary: emotion, intensity: 5 },
+                content: { summary: message.substring(0, 100), details: message },
+                context: { time_sensitivity: timeSensitivity, stage: 4, requires: ['analysis'] },
+                checkpoints: { pre_cleared: preCleared, open: open },
+                meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
+            };
+        }
         
-        function addMessage(role, text, sealHash = null, velaResult = null) {
+        // ========== UI Functions ==========
+        function addMessage(role, text, extra = {}) {
             const msgDiv = document.createElement('div');
             msgDiv.className = `message ${role}`;
             
-            let sealHtml = '';
-            if (role === 'ai' && sealHash) {
-                sealHtml = `<button class="seal-btn" data-text="${escapeHtml(text)}">🔒 SEAL</button>`;
+            let extraHtml = '';
+            if (extra.sealHash && role === 'ai') {
+                extraHtml += `<button class="seal-btn" data-text="${escapeHtml(text)}">🔒 SEAL</button>`;
+            }
+            if (extra.velaResult) {
+                const v = extra.velaResult;
+                const statusClass = v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
+                extraHtml += `<span class="vela-badge ${statusClass}">⚖️ VELA: ${v.status}</span>`;
+            }
+            if (extra.checkpoints) {
+                extraHtml += `<span class="checkpoint-badge">📋 ${extra.checkpoints.preCleared.length}/${extra.checkpoints.preCleared.length + extra.checkpoints.open.length} cleared</span>`;
             }
             
-            let velaHtml = '';
-            if (velaResult) {
-                let statusClass = 'vela-pass';
-                let statusText = 'PASS';
-                if (velaResult.status === 'FLAGGED') { statusClass = 'vela-flag'; statusText = 'FLAGGED'; }
-                if (velaResult.status === 'BLOCKED') { statusClass = 'vela-block'; statusText = 'BLOCKED'; }
-                velaHtml = `<span class="vela-badge ${statusClass}">⚖️ VELA: ${statusText}</span>`;
-            }
-            
-            msgDiv.innerHTML = `
-                <strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${escapeHtml(text)}
-                ${sealHtml}
-                ${velaHtml}
-            `;
+            msgDiv.innerHTML = `<strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${escapeHtml(text)}${extraHtml}`;
             chatDiv.appendChild(msgDiv);
             chatDiv.scrollTop = chatDiv.scrollHeight;
             
-            // Attach seal button event
             const sealBtn = msgDiv.querySelector('.seal-btn');
-            if (sealBtn) {
-                sealBtn.onclick = () => sealMessage(text);
-            }
+            if (sealBtn) sealBtn.onclick = () => sealMessage(text);
             
-            // Store in history
             chatHistory.set([...chatHistory.get(), { role, text, timestamp: tripleTimestamp() }]);
         }
         
+        function addSystemMessage(text) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message system';
+            msgDiv.innerHTML = text;
+            chatDiv.appendChild(msgDiv);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
+        
         function escapeHtml(str) {
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
+            return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
         }
         
         function showToast(msg, isError = false) {
@@ -316,9 +515,6 @@
                 const { result } = await sealOp.execute(content);
                 lastSealSpan.textContent = `🔒 Sealed: ${result.seal.slice(0, 8)}...`;
                 showToast(`✅ Sealed: ${result.seal.slice(0, 8)}...`);
-                if (result.issueUrl) {
-                    console.log('GitHub issue:', result.issueUrl);
-                }
             } catch (err) {
                 showToast(`❌ Seal failed: ${err.message}`, true);
             }
@@ -332,26 +528,74 @@
             try {
                 const { result } = await velaOp.execute(lastResponse);
                 lastVelaResult = result;
-                
-                // Update VELA display
-                if (result.status === 'BLOCKED') {
-                    velaDisplay.className = 'vela-badge vela-block';
-                    velaDisplay.innerHTML = '⚠️ VELA: BLOCKED';
-                } else if (result.status === 'FLAGGED') {
-                    velaDisplay.className = 'vela-badge vela-flag';
-                    velaDisplay.innerHTML = '⚖️ VELA: FLAGGED';
-                } else {
-                    velaDisplay.className = 'vela-badge vela-pass';
-                    velaDisplay.innerHTML = '⚖️ VELA: PASS';
-                }
-                
+                const statusClass = result.status === 'BLOCKED' ? 'vela-block' : (result.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
+                velaDisplay.className = `vela-badge ${statusClass}`;
+                velaDisplay.innerHTML = `⚖️ VELA: ${result.status}`;
                 showToast(`VELA: ${result.status} | Fidelity: ${((result.screen1Result?.fidelity_estimate || 0) * 100).toFixed(0)}%`);
             } catch (err) {
                 showToast(`Validation failed: ${err.message}`, true);
             }
         }
         
-        async function send() {
+        // ========== Structured Mode Send (GATE-ITL + CEP) ==========
+        async function sendStructuredMessage() {
+            const fragment = buildStructuredFragment();
+            if (!fragment) {
+                showToast('Please enter a message', true);
+                return;
+            }
+            
+            const messageText = structuredInput.value.trim();
+            structuredInput.value = '';
+            
+            addMessage('user', messageText, { checkpoints: fragment.checkpoints });
+            
+            // CEP Intercept: if open checkpoints exist and not urgent
+            if (fragment.checkpoints.open.length > 0 && fragment.context.time_sensitivity !== 'now') {
+                addSystemMessage(`⚠️ **CEP INTERCEPT** – ${fragment.checkpoints.open.length} checkpoint(s) open.\n\nPlease clarify: ${fragment.checkpoints.open.join(', ')}`);
+                clarificationDepth++;
+                return;
+            }
+            
+            const thinking = document.createElement('div');
+            thinking.className = 'message ai';
+            thinking.innerHTML = '<strong>AI:</strong> ...';
+            chatDiv.appendChild(thinking);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+            
+            try {
+                const { result } = await assistantOp.execute(JSON.stringify(fragment));
+                
+                if (result && result.response) {
+                    lastResponse = result.response;
+                    thinking.remove();
+                    
+                    // Auto-validate with VELA
+                    const velaResult = await velaOp.execute(result.response);
+                    lastVelaResult = velaResult.result;
+                    
+                    const v = velaResult.result;
+                    const statusClass = v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
+                    velaDisplay.className = `vela-badge ${statusClass}`;
+                    velaDisplay.innerHTML = `⚖️ VELA: ${v.status}`;
+                    
+                    addMessage('ai', result.response, { 
+                        sealHash: true, 
+                        velaResult: v,
+                        checkpoints: fragment.checkpoints 
+                    });
+                    
+                    clarificationDepth = 0;
+                } else {
+                    thinking.innerHTML = '<strong>AI:</strong> Error: No response';
+                }
+            } catch (err) {
+                thinking.innerHTML = `<strong>AI:</strong> Error: ${err.message}`;
+            }
+        }
+        
+        // ========== Regular Send ==========
+        async function sendRegular() {
             const message = inputField.value.trim();
             if (!message) return;
             if (isSending) return;
@@ -373,41 +617,15 @@
                 if (result && result.response) {
                     lastResponse = result.response;
                     thinking.remove();
-                    addMessage('ai', result.response, null, null);
                     
-                    // Auto-validate with VELA
                     const velaResult = await velaOp.execute(result.response);
                     lastVelaResult = velaResult.result;
-                    
-                    // Update VELA display
                     const v = velaResult.result;
-                    if (v.status === 'BLOCKED') {
-                        velaDisplay.className = 'vela-badge vela-block';
-                        velaDisplay.innerHTML = '⚠️ VELA: BLOCKED';
-                    } else if (v.status === 'FLAGGED') {
-                        velaDisplay.className = 'vela-badge vela-flag';
-                        velaDisplay.innerHTML = '⚖️ VELA: FLAGGED';
-                    } else {
-                        velaDisplay.className = 'vela-badge vela-pass';
-                        velaDisplay.innerHTML = '⚖️ VELA: PASS';
-                    }
+                    const statusClass = v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
+                    velaDisplay.className = `vela-badge ${statusClass}`;
+                    velaDisplay.innerHTML = `⚖️ VELA: ${v.status}`;
                     
-                    // Add VELA badge to last message
-                    const lastMsg = chatDiv.lastChild;
-                    if (lastMsg && lastMsg.className === 'message ai') {
-                        const velaSpan = document.createElement('span');
-                        velaSpan.className = `vela-badge ${v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass')}`;
-                        velaSpan.innerHTML = `⚖️ VELA: ${v.status}`;
-                        lastMsg.appendChild(velaSpan);
-                        
-                        // Add seal button
-                        const sealBtn = document.createElement('button');
-                        sealBtn.className = 'seal-btn';
-                        sealBtn.textContent = '🔒 SEAL';
-                        sealBtn.onclick = () => sealMessage(result.response);
-                        lastMsg.appendChild(sealBtn);
-                    }
-                    
+                    addMessage('ai', result.response, { sealHash: true, velaResult: v });
                 } else {
                     thinking.innerHTML = '<strong>AI:</strong> Error: No response';
                 }
@@ -420,6 +638,37 @@
             isSending = false;
         }
         
+        // ========== Mode Toggle ==========
+        function toggleStructuredMode() {
+            structuredModeActive = !structuredModeActive;
+            
+            if (structuredModeActive) {
+                structuredInputArea.classList.add('active');
+                modeBadge.textContent = '🌌 STRUCTURED';
+                modeBadge.classList.add('structured');
+                inputField.disabled = true;
+                inputField.placeholder = 'Structured mode active. Use the form below.';
+                addSystemMessage('🌌 **STRUCTURED MODE ACTIVE**\n\nGATE-ITL: Fill the form to build structured fragments. Pre-cleared checkpoints are tracked. Open checkpoints trigger CEP clarification.');
+            } else {
+                structuredInputArea.classList.remove('active');
+                modeBadge.textContent = '⚡ REGULAR';
+                modeBadge.classList.remove('structured');
+                inputField.disabled = false;
+                inputField.placeholder = 'Type your message...';
+                inputField.focus();
+                addSystemMessage('⚡ **REGULAR MODE ACTIVE**\n\nStandard chat. Click Structured Mode for GATE-ITL and checkpoint tracking.');
+            }
+        }
+        
+        function sealInput() {
+            const text = inputField.value.trim() || structuredInput.value.trim();
+            if (!text) {
+                showToast('Nothing to seal', true);
+                return;
+            }
+            sealMessage(text);
+        }
+        
         function showTrace() {
             console.log('=== Ada‑VELA Trace ===');
             console.log('Session:', sessionVar.trace());
@@ -430,27 +679,50 @@
             showToast('Trace logged to console (F12)');
         }
         
-        function sealInput() {
-            const text = inputField.value.trim();
-            if (!text) {
-                showToast('Nothing to seal', true);
-                return;
-            }
-            sealMessage(text);
-        }
+        // ========== Event Listeners ==========
+        sendBtn.onclick = sendRegular;
+        plusBtn.onclick = (e) => {
+            e.stopPropagation();
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        };
+        document.addEventListener('click', () => { dropdown.style.display = 'none'; });
         
-        // Event listeners
-        sendBtn.onclick = send;
-        document.getElementById('sealInputBtn').onclick = sealInput;
-        document.getElementById('validateBtn').onclick = validateLastMessage;
-        document.getElementById('traceBtn').onclick = showTrace;
+        document.getElementById('structuredModeBtn').onclick = () => {
+            dropdown.style.display = 'none';
+            toggleStructuredMode();
+        };
+        document.getElementById('sealInputBtn').onclick = () => {
+            dropdown.style.display = 'none';
+            sealInput();
+        };
+        document.getElementById('validateBtn').onclick = () => {
+            dropdown.style.display = 'none';
+            validateLastMessage();
+        };
+        document.getElementById('traceBtn').onclick = () => {
+            dropdown.style.display = 'none';
+            showTrace();
+        };
         
-        inputField.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') send();
+        structuredSendBtn.onclick = sendStructuredMessage;
+        structuredInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendStructuredMessage();
         });
         
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendRegular();
+        });
+        
+        // Update checkpoint display on form change
+        ['itlIntent', 'itlDomain', 'itlEmotion', 'itlTime', 'structuredInput'].forEach(id => {
+            document.getElementById(id)?.addEventListener('input', () => buildStructuredFragment());
+        });
+        
+        // Initial checkpoint display
+        buildStructuredFragment();
+        
         // Initial message
-        addMessage('ai', 'Ada‑VELA active. Seal buttons and VELA validation ready. Click 🔒 SEAL on any message to create immutable STP record.');
+        addMessage('ai', 'Ada‑VELA active. Click the + button and select "Structured Mode" to activate GATE-ITL and CEP.');
     </script>
 </body>
 </html>
