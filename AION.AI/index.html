@@ -7,13 +7,16 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            max-width: 800px;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            max-width: 900px;
             margin: 0 auto;
             padding: 20px;
             background: #0a0a0f;
             color: #f0f0f8;
         }
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+        /* Chat container */
         #chat {
             height: 500px;
             overflow-y: auto;
@@ -21,77 +24,227 @@
             margin: 10px 0;
             padding: 10px;
             background: #0f0f14;
-            border-radius: 8px;
+            border-radius: 12px;
+            scroll-behavior: smooth;
         }
+        /* Message styles */
         .message {
-            margin: 8px 0;
-            padding: 10px;
-            border-radius: 8px;
+            margin: 12px 0;
+            padding: 10px 14px;
+            border-radius: 18px;
             word-wrap: break-word;
+            animation: fadeSlideUp 0.2s ease-out;
         }
-        .user { background: #1e3a5f; text-align: right; }
-        .ai { background: #1e1e2d; }
-        .system { background: #2a2a3a; text-align: center; font-size: 12px; color: #c9a028; }
-        .seal-btn {
-            background: none;
-            border: 1px solid #c9a028;
-            color: #c9a028;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            cursor: pointer;
-            margin-left: 8px;
-        }
-        .vela-badge {
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 12px;
-            margin-left: 8px;
-        }
-        .vela-pass { background: #1e4620; color: #4ade80; }
-        .vela-flag { background: #5f3a1a; color: #ffaa33; }
-        .vela-block { background: #5f1a1a; color: #ff4d4d; }
-        .receipt-badge {
-            font-size: 9px;
-            background: #2a2a3a;
-            padding: 2px 6px;
-            border-radius: 12px;
-            margin-left: 8px;
-            cursor: pointer;
-        }
-        .ada-badge {
-            font-size: 9px;
+        .user {
             background: #1e3a5f;
-            padding: 2px 6px;
+            text-align: right;
+            border-bottom-right-radius: 4px;
+        }
+        .ai {
+            background: #1e1e2d;
+            border-bottom-left-radius: 4px;
+        }
+        .system {
+            background: #2a2a3a;
+            text-align: center;
+            font-size: 12px;
+            color: #c9a028;
+            border-radius: 30px;
+            padding: 8px 16px;
+            margin: 8px auto;
+            width: fit-content;
+            max-width: 90%;
+        }
+        /* Markdown elements */
+        .message-body {
+            line-height: 1.5;
+        }
+        .message-body p { margin: 0.5em 0; }
+        .message-body p:first-child { margin-top: 0; }
+        .message-body p:last-child { margin-bottom: 0; }
+        .message-body code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #0a0a0f;
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+        .message-body pre {
+            background: #0a0a0f;
+            padding: 12px;
             border-radius: 12px;
-            margin-left: 8px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+        .message-body pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.85em;
+        }
+        .message-body blockquote {
+            border-left: 3px solid #c9a028;
+            margin: 0.5em 0;
+            padding-left: 1em;
+            color: #ccc;
+            font-style: italic;
+        }
+        .message-body ul, .message-body ol {
+            margin: 0.5em 0;
+            padding-left: 1.5em;
+        }
+        .message-body h1, .message-body h2, .message-body h3 {
+            margin: 0.5em 0;
+            font-weight: 600;
+        }
+        .message-body h1 { font-size: 1.4em; }
+        .message-body h2 { font-size: 1.2em; }
+        .message-body h3 { font-size: 1.1em; }
+        /* Message footer */
+        .message-footer {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+            font-size: 0.6rem;
+            color: var(--text-dim, #a0a0b0);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        /* Badges */
+        .seal-btn, .vela-badge, .receipt-badge, .ada-badge {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #c9a028;
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 0.6rem;
             cursor: pointer;
             color: #c9a028;
+            transition: all 0.1s ease;
         }
-        input, button {
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 8px;
-            border: none;
-        }
-        input {
-            flex: 1;
-            background: #1e1e2d;
-            color: white;
-            border: 1px solid #2a2a3a;
-        }
-        button {
+        .seal-btn:hover, .vela-badge:hover, .receipt-badge:hover, .ada-badge:hover {
             background: #c9a028;
             color: #0a0a0f;
-            font-weight: bold;
-            cursor: pointer;
         }
+        .vela-pass { background: #1e4620; border-color: #4ade80; color: #4ade80; }
+        .vela-flag { background: #5f3a1a; border-color: #ffaa33; color: #ffaa33; }
+        .vela-block { background: #5f1a1a; border-color: #ff4d4d; color: #ff4d4d; }
+        .receipt-badge { background: #2a2a3a; border-color: #888; }
+        .ada-badge { background: #1e3a5f; border-color: #c9a028; }
+        /* Input area */
         .input-row {
             display: flex;
             gap: 10px;
             margin: 10px 0;
             position: relative;
         }
+        input, button {
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 28px;
+            border: none;
+            font-family: inherit;
+        }
+        input {
+            flex: 1;
+            background: #1e1e2d;
+            color: white;
+            border: 1px solid #2a2a3a;
+            transition: border 0.1s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #c9a028;
+        }
+        button {
+            background: #c9a028;
+            color: #0a0a0f;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.05s linear;
+        }
+        button:active { transform: scale(0.97); }
+        .plus-btn {
+            background: #2a2a3a;
+            color: #c9a028;
+            font-size: 20px;
+            width: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .send-btn {
+            min-width: 80px;
+        }
+        /* Dropdown */
+        .dropdown {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            background: #1e1e2d;
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 100;
+            min-width: 150px;
+            backdrop-filter: blur(8px);
+        }
+        .dropdown button {
+            background: #2a2a3a;
+            color: white;
+            padding: 8px 12px;
+            text-align: left;
+            width: 100%;
+            border-radius: 40px;
+        }
+        /* Structured mode UI */
+        .structured-ui {
+            background: #141920;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .structured-ui.active { display: block; }
+        .itl-fields {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .field-group {
+            flex: 1;
+            min-width: 120px;
+        }
+        .field-group label {
+            display: block;
+            font-size: 10px;
+            color: #c9a028;
+            margin-bottom: 4px;
+        }
+        .field-group select {
+            width: 100%;
+            background: #0a0a0f;
+            border: 1px solid #2a2a3a;
+            border-radius: 6px;
+            padding: 6px;
+            color: white;
+            font-size: 12px;
+        }
+        .selected-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+        .selected-value {
+            background: #2a2a3a;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+        /* Status bar */
         .status-bar {
             display: flex;
             gap: 20px;
@@ -112,98 +265,42 @@
             background: #2a2a3a;
         }
         .mode-indicator.structured { background: #c9a028; color: #0a0a0f; }
-        .dropdown {
-            position: absolute;
-            bottom: 50px;
-            left: 0;
-            background: #1e1e2d;
-            border: 1px solid #2a2a3a;
-            border-radius: 12px;
-            padding: 8px;
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            z-index: 100;
-            min-width: 150px;
+        .toggle-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
         }
-        .dropdown button {
-            background: #2a2a3a;
-            color: white;
-            padding: 8px 12px;
-            text-align: left;
-            width: 100%;
-        }
-        .plus-btn {
-            background: #2a2a3a;
-            color: #c9a028;
-            font-size: 20px;
-            width: 44px;
-        }
-        .structured-ui {
-            background: #141920;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: none;
-        }
-        .structured-ui.active { display: block; }
-        .itl-fields {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-        .field-group {
-            flex: 1;
-            min-width: 120px;
-            position: relative;
-        }
-        .field-group label {
-            display: block;
-            font-size: 10px;
-            color: #c9a028;
-            margin-bottom: 4px;
-        }
-        .field-group select {
-            width: 100%;
-            background: #0a0a0f;
-            border: 1px solid #2a2a3a;
-            border-radius: 6px;
-            padding: 6px;
-            color: white;
-            font-size: 12px;
-        }
-        .help-icon {
-            display: inline-block;
+        .toggle-label input {
             width: 16px;
-            text-align: center;
-            font-size: 10px;
-            color: #888;
-            cursor: help;
-            margin-left: 4px;
+            height: 16px;
+            margin: 0;
+            cursor: pointer;
         }
-        .selected-values {
+        /* Thinking indicator */
+        .thinking {
+            align-self: center;
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.7rem;
             display: flex;
-            flex-wrap: wrap;
             gap: 8px;
-            margin-top: 8px;
-            font-size: 11px;
+            width: fit-content;
+            margin: 4px auto;
         }
-        .selected-value {
-            background: #2a2a3a;
-            padding: 4px 8px;
-            border-radius: 12px;
-        }
+        /* Modals */
         .modal-overlay {
             position: fixed; top:0; left:0; right:0; bottom:0;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             display: flex; align-items: center; justify-content: center;
             z-index: 1000;
         }
         .modal {
             background: #1e1e2d;
             border: 1px solid #c9a028;
-            border-radius: 16px;
+            border-radius: 20px;
             max-width: 90%;
             width: 500px;
             max-height: 80%;
@@ -214,45 +311,28 @@
         .modal pre {
             background: #0a0a0f;
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow-x: auto;
             font-size: 12px;
         }
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 16px;
+        /* Animations */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .option-btn {
-            background: #2a2a3a;
-            border: 1px solid #c9a028;
-            color: #c9a028;
-            padding: 8px;
-            border-radius: 8px;
-            text-align: left;
-            cursor: pointer;
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
         }
-        .toggle-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-        .toggle-label input {
-            width: 16px;
-            height: 16px;
-            margin: 0;
-            cursor: pointer;
-        }
-        @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
+        /* Mobile */
         @media (max-width: 600px) {
             body { padding: 12px; }
             .itl-fields { flex-direction: column; gap: 8px; }
             .field-group { min-width: auto; }
-            .input-row button { padding: 8px 12px; }
-            .plus-btn { width: 40px; font-size: 18px; }
-            .option-btn { padding: 12px; }
+            .plus-btn { width: 44px; }
+            .send-btn { padding: 10px 16px; }
+            .message { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -271,7 +351,7 @@
                 <button id="traceBtn">📜 Show Trace</button>
             </div>
         </div>
-        <button id="sendBtn">SEND</button>
+        <button id="sendBtn" class="send-btn">SEND</button>
     </div>
 
     <div id="structuredUI" class="structured-ui">
@@ -343,7 +423,7 @@
         document.getElementById('sessionDisplay').textContent = `Session: ${sessionId.slice(-8)}`;
 
         // ADA Loop toggle
-        let adaLoopEnabled = localStorage.getItem('adaLoopEnabled') !== 'false'; // default true
+        let adaLoopEnabled = localStorage.getItem('adaLoopEnabled') !== 'false';
         const adaLoopToggle = document.getElementById('adaLoopToggle');
         if (adaLoopToggle) {
             adaLoopToggle.checked = adaLoopEnabled;
@@ -359,7 +439,7 @@
         let isSending = false;
         let structuredModeActive = false;
         let lastFragmentId = null;
-        let pendingClarification = null;     // { originalFragmentId, interceptData, depth }
+        let pendingClarification = null;
         let abortController = null;
         let clarificationDepth = 0;
         const MAX_CLARIFICATION_DEPTH = 3;
@@ -395,14 +475,13 @@
                 const openCount = extra.receipt.still_open || 0;
                 extraHtml += `<span class="receipt-badge" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 ${extra.receipt.epistemic_weight || 'receipt'} (${openCount} open)</span>`;
             }
-            // ADA loop metadata
             if (extra.adaLoop) {
                 const loop = extra.adaLoop;
                 const status = loop.converged ? '✅' : '🔄';
                 const text = `${status} ADA: ${loop.rounds} rounds${loop.converged ? '' : ' (unconverged)'}`;
                 extraHtml += `<span class="ada-badge" data-ada='${JSON.stringify(loop).replace(/'/g, "&#39;")}'>${text}</span>`;
             }
-            div.innerHTML = `<strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${escapeHtml(text)}${extraHtml}`;
+            div.innerHTML = `<div class="message-body">${renderMarkdown(text)}</div><div class="message-footer">${extraHtml}</div>`;
             chatDiv.appendChild(div);
             chatDiv.scrollTop = chatDiv.scrollHeight;
             const sealBtn = div.querySelector('.seal-btn');
@@ -414,6 +493,21 @@
             const adaBadge = div.querySelector('.ada-badge');
             if (adaBadge && extra.adaLoop) {
                 adaBadge.onclick = () => showModal('ADA Loop Details', JSON.stringify(extra.adaLoop, null, 2));
+            }
+        }
+
+        function renderMarkdown(text) {
+            if (!text) return '';
+            try {
+                const rawHtml = marked.parse(text);
+                const temp = document.createElement('div');
+                temp.innerHTML = rawHtml;
+                temp.querySelectorAll('pre code').forEach(block => {
+                    try { hljs.highlightElement(block); } catch(e) {}
+                });
+                return temp.innerHTML;
+            } catch(e) {
+                return escapeHtml(text);
             }
         }
 
@@ -455,7 +549,7 @@
                 <div class="modal">
                     <h3>📋 Clarification Required</h3>
                     <p>${escapeHtml(interceptData.message)}</p>
-                    <div class="options-list">${optsHtml || '<p>No options provided.</p>'}</div>
+                    <div class="options-list" style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">${optsHtml || '<p>No options provided.</p>'}</div>
                     <button id="closeClarificationModal" style="margin-top:16px;">Cancel</button>
                 </div>
             `;
@@ -490,7 +584,7 @@
                 emotional_state: { primary: 'neutral', intensity: 5 },
                 content: { summary: `Clarification: ${option.text}`, details: option.text },
                 context: { time_sensitivity: 'now', stage: 4, requires: ['analysis'] },
-                adaLoopEnabled   // Pass the current toggle state
+                adaLoopEnabled
             };
             try {
                 const res = await fetch(`${API}/api/structured-mode`, {
@@ -523,7 +617,7 @@
             }
         }
 
-        // API calls with abort controller and timeout
+        // API calls
         async function callStructuredMode(fragment) {
             if (abortController) abortController.abort();
             abortController = new AbortController();
@@ -554,13 +648,7 @@
             const res = await fetch(`${API}/api/assistant`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    message, 
-                    sessionId, 
-                    ownerType: 'sheldon', 
-                    history: [],
-                    adaLoopEnabled   // Pass the current toggle state
-                })
+                body: JSON.stringify({ message, sessionId, ownerType: 'sheldon', history: [], adaLoopEnabled })
             });
             if (!res.ok) throw new Error(await res.text());
             return res.json();
@@ -599,7 +687,7 @@
 
         // Build structured fragment
         function buildStructuredFragment(rawMessage, replyTo = null) {
-            const frag = {
+            return {
                 id: crypto.randomUUID(),
                 ts: new Date().toISOString(),
                 session_id: sessionId,
@@ -609,10 +697,9 @@
                 emotional_state: { primary: itlEmotion.value, intensity: 5 },
                 content: { summary: rawMessage.substring(0,100), details: rawMessage },
                 context: { time_sensitivity: itlTime.value, stage: 4, requires: ['analysis'] },
-                adaLoopEnabled   // Pass the toggle state
+                adaLoopEnabled,
+                in_reply_to: replyTo || undefined
             };
-            if (replyTo) frag.in_reply_to = replyTo;
-            return frag;
         }
 
         function updateSelectedValues() {
@@ -625,7 +712,8 @@
         }
 
         let lastSendTime = 0;
-        const SEND_DELAY = 300; // ms
+        const SEND_DELAY = 300;
+
         // Main send
         async function send() {
             if (isSending) { showToast('Already sending...'); return; }
@@ -646,7 +734,7 @@
             addMessage('user', rawMessage);
 
             const thinking = document.createElement('div');
-            thinking.className = 'message ai';
+            thinking.className = 'thinking';
             thinking.innerHTML = '<strong>AI:</strong> ...';
             chatDiv.appendChild(thinking);
             chatDiv.scrollTop = chatDiv.scrollHeight;
@@ -654,7 +742,7 @@
             try {
                 let result;
                 if (structuredModeActive) {
-                    const fragment = buildStructuredFragment(rawMessage, pendingClarification ? pendingClarification.originalFragmentId : null);
+                    const fragment = buildStructuredFragment(rawMessage, pendingClarification?.originalFragmentId);
                     result = await callStructuredMode(fragment);
                     lastFragmentId = fragment.id;
                     if (result.status === 'CEP_INTERCEPT') {
@@ -690,7 +778,6 @@
                         velaDisplay.innerHTML = `⚖️ VELA: ${result.vela_status}`;
                     }
 
-                    // ADA loop metadata (if present)
                     const adaLoop = result.ada_loop;
                     addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt, adaLoop });
                 } else {
@@ -707,6 +794,7 @@
             }
         }
 
+        // Toggle structured mode
         function toggleStructuredMode() {
             structuredModeActive = !structuredModeActive;
             if (structuredModeActive) {
@@ -740,7 +828,7 @@
                 structuredModeActive,
                 lastFragmentId,
                 lastResponsePreview: lastResponse?.substring(0, 100),
-                pendingClarification: pendingClarification ? true : false,
+                pendingClarification: !!pendingClarification,
                 clarificationDepth,
                 adaLoopEnabled
             };
