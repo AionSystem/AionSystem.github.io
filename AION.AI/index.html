@@ -5,759 +5,452 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>AION · Structured Mode (GATE-ITL + CEP)</title>
+    <title>AION · Ada‑VELA</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
-            font-family: system-ui, -apple-system, 'Inter', sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
             background: #0a0a0f;
             color: #f0f0f8;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
         }
-        
-        /* Mode Toggle */
-        .mode-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 20px;
-            background: #141920;
-            border-bottom: 1px solid #2a2a3a;
-        }
-        .mode-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #c9a028;
-        }
-        .mode-toggle {
-            background: #2a2a3a;
-            border: none;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .mode-toggle.active {
-            background: #c9a028;
-            color: #0a0a0f;
-        }
-        
-        /* Main Layout */
-        .main-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-        
-        /* Regular Chat Panel */
-        .chat-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-        .chat-panel.structured {
-            display: none;
-        }
-        
-        /* Structured Mode Panel */
-        .structured-panel {
-            flex: 1;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            background: #030405;
-        }
-        .structured-panel.active {
-            display: flex;
-        }
-        
-        /* ITL Form (Structured Input) */
-        .itl-form {
-            padding: 16px;
-            background: #141920;
-            border-bottom: 1px solid #2a2a3a;
-        }
-        .itl-fields {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .field-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .field-group label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #c9a028;
-        }
-        .field-group select, .field-group input, .field-group textarea {
-            background: #0a0a0f;
+        #chat {
+            height: 500px;
+            overflow: auto;
             border: 1px solid #2a2a3a;
-            border-radius: 8px;
-            padding: 8px 12px;
-            color: white;
-            font-size: 12px;
-        }
-        .field-group textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-        
-        /* Checkpoint Display */
-        .checkpoints {
+            margin: 10px 0;
+            padding: 10px;
             background: #0f0f14;
-            padding: 12px;
             border-radius: 8px;
-            margin-bottom: 12px;
-            font-size: 11px;
-        }
-        .checkpoint-item {
-            display: inline-block;
-            padding: 4px 8px;
-            margin: 4px;
-            border-radius: 12px;
-            font-size: 10px;
-        }
-        .checkpoint-cleared {
-            background: #1e4620;
-            color: #4ade80;
-        }
-        .checkpoint-open {
-            background: #5f3a1a;
-            color: #ffaa33;
-        }
-        
-        /* Messages */
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
         }
         .message {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 18px;
-            line-height: 1.4;
-            font-size: 14px;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
         }
         .user {
             background: #1e3a5f;
-            align-self: flex-end;
+            text-align: right;
         }
         .ai {
             background: #1e1e2d;
-            align-self: flex-start;
         }
-        .checkpoint-receipt {
+        .seal-btn {
+            background: none;
+            border: 1px solid #c9a028;
+            color: #c9a028;
+            padding: 2px 8px;
+            border-radius: 12px;
             font-size: 10px;
-            color: #888;
-            margin-top: 6px;
-            padding-top: 6px;
-            border-top: 1px solid #2a2a3a;
+            cursor: pointer;
+            margin-left: 8px;
         }
-        
-        /* Input Area */
-        .input-area {
-            padding: 16px;
-            background: #141920;
-            border-top: 1px solid #2a2a3a;
+        .vela-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+        .vela-pass { background: #1e4620; color: #4ade80; }
+        .vela-flag { background: #5f3a1a; color: #ffaa33; }
+        .vela-block { background: #5f1a1a; color: #ff4d4d; }
+        input, button {
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: none;
+        }
+        input {
+            flex: 1;
+            background: #1e1e2d;
+            color: white;
+            border: 1px solid #2a2a3a;
+        }
+        button {
+            background: #c9a028;
+            color: #0a0a0f;
+            font-weight: bold;
+            cursor: pointer;
         }
         .input-row {
             display: flex;
             gap: 10px;
+            margin: 10px 0;
         }
-        input, textarea {
-            flex: 1;
-            background: #0a0a0f;
-            border: 1px solid #2a2a3a;
-            border-radius: 24px;
-            padding: 12px 16px;
-            color: white;
-            font-family: inherit;
-            font-size: 14px;
-            resize: none;
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+            padding: 8px;
+            border-top: 1px solid #2a2a3a;
         }
-        button {
-            background: #c9a028;
-            border: none;
-            border-radius: 24px;
-            padding: 12px 24px;
-            font-weight: bold;
-            cursor: pointer;
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
         }
         .small-btn {
             background: #2a2a3a;
             color: #c9a028;
             padding: 6px 12px;
-            font-size: 11px;
-        }
-        .status-bar {
-            padding: 8px 16px;
-            font-size: 11px;
-            background: #0f0f14;
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid #2a2a3a;
-        }
-        
-        /* 3D Canvas */
-        #structured-canvas {
-            flex: 1;
-            width: 100%;
-            background: #030405;
-        }
-        .structured-input-area {
-            padding: 12px;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid #2a2a3a;
-            display: flex;
-            gap: 10px;
-        }
-        .structured-input-area input {
-            flex: 1;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-
-<div class="mode-bar">
-    <div class="mode-title">AION · GATE Protocol</div>
-    <button id="modeToggle" class="mode-toggle">🌌 Structured Mode</button>
-</div>
-
-<div class="main-container">
-    <!-- Regular Chat Panel -->
-    <div id="regularPanel" class="chat-panel">
-        <div id="regularMessages" class="messages">
-            <div class="message ai">✨ Regular mode. Type a message to start.</div>
-        </div>
-        <div class="input-area">
-            <div class="input-row">
-                <input type="text" id="regularInput" placeholder="Type your message..." autofocus>
-                <button id="regularSend">SEND</button>
-            </div>
-        </div>
+    <h2>AION · Ada‑VELA</h2>
+    
+    <div id="chat"></div>
+    
+    <div class="input-row">
+        <input type="text" id="input" placeholder="Type your message..." autofocus>
+        <button id="sendBtn">SEND</button>
+    </div>
+    
+    <div class="action-buttons">
+        <button id="sealInputBtn" class="small-btn">🔒 SEAL INPUT</button>
+        <button id="validateBtn" class="small-btn">⚖️ VALIDATE LAST</button>
+        <button id="traceBtn" class="small-btn">📜 SHOW TRACE</button>
+    </div>
+    
+    <div class="status-bar">
+        <span id="sessionDisplay"></span>
+        <span id="velaDisplay" class="vela-badge vela-pass">⚖️ READY</span>
+        <span id="lastSeal"></span>
     </div>
 
-    <!-- Structured Mode Panel (GATE-ITL + CEP + 3D) -->
-    <div id="structuredPanel" class="structured-panel">
-        <!-- ITL Form -->
-        <div class="itl-form">
-            <div class="itl-fields">
-                <div class="field-group">
-                    <label>INTENT</label>
-                    <select id="itlIntent">
-                        <option value="ask">ask</option>
-                        <option value="share">share</option>
-                        <option value="request_action">request_action</option>
-                        <option value="emotional">emotional</option>
-                        <option value="clarify">clarify</option>
-                    </select>
-                </div>
-                <div class="field-group">
-                    <label>DOMAIN</label>
-                    <select id="itlDomain">
-                        <option value="emergence">emergence</option>
-                        <option value="integrity">integrity</option>
-                        <option value="healing">healing</option>
-                        <option value="security">security</option>
-                        <option value="law">law</option>
-                        <option value="general">general</option>
-                    </select>
-                </div>
-                <div class="field-group">
-                    <label>EMOTIONAL STATE</label>
-                    <select id="itlEmotion">
-                        <option value="neutral">neutral</option>
-                        <option value="curious">curious</option>
-                        <option value="anxious">anxious</option>
-                        <option value="focused">focused</option>
-                        <option value="vulnerable">vulnerable</option>
-                    </select>
-                </div>
-                <div class="field-group">
-                    <label>TIME SENSITIVITY</label>
-                    <select id="itlTimeSensitivity">
-                        <option value="now">now (immediate)</option>
-                        <option value="today">today</option>
-                        <option value="future">future</option>
-                    </select>
-                </div>
-            </div>
-            <div class="field-group">
-                <label>YOUR MESSAGE</label>
-                <textarea id="itlMessage" rows="2" placeholder="What would you like to say?"></textarea>
-            </div>
-            <div id="checkpointDisplay" class="checkpoints"></div>
-            <button id="structuredSendBtn">✧ SEND STRUCTURED FRAGMENT ✧</button>
-        </div>
+    <script>
+        // ============================================================
+        // ADA‑VELA + STP SEAL + VELA VALIDATION
+        // ============================================================
         
-        <!-- 3D Visualization Canvas -->
-        <canvas id="structured-canvas"></canvas>
+        const API = 'https://aion-backend-mu.vercel.app';
         
-        <!-- Structured Input (for clarification loops) -->
-        <div class="structured-input-area">
-            <input type="text" id="structuredInput" placeholder="Clarification or follow-up...">
-            <button id="structuredChatSend" class="small-btn">SEND</button>
-        </div>
-    </div>
-</div>
-
-<div class="status-bar">
-    <span id="sessionDisplay"></span>
-    <span id="velaDisplay">⚖️ VELA: READY</span>
-    <span id="checkpointStatus">📋 Checkpoints: 0 open</span>
-</div>
-
-<script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
-        }
-    }
-</script>
-
-<script type="module">
-    import * as THREE from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-
-    // ============================================================
-    // CONFIGURATION
-    // ============================================================
-    const API = 'https://aion-backend-mu.vercel.app';
-    
-    let sessionId = localStorage.getItem('sessionId');
-    if (!sessionId) {
-        sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-        localStorage.setItem('sessionId', sessionId);
-    }
-    document.getElementById('sessionDisplay').textContent = `Session: ${sessionId.slice(-8)}`;
-    
-    let structuredMode = false;
-    let currentCheckpoints = { preCleared: [], open: [] };
-    let clarificationDepth = 0;
-    let lastFragmentId = null;
-    
-    // 3D Variables
-    let scene, camera, renderer, controls, composer, pointsMesh;
-    let satellites = [];
-    let raycaster;
-    
-    // DOM Elements
-    const regularPanel = document.getElementById('regularPanel');
-    const structuredPanel = document.getElementById('structuredPanel');
-    const modeToggle = document.getElementById('modeToggle');
-    const regularInput = document.getElementById('regularInput');
-    const regularSend = document.getElementById('regularSend');
-    const regularMessages = document.getElementById('regularMessages');
-    const structuredMessages = document.getElementById('structuredMessages');
-    const itlMessage = document.getElementById('itlMessage');
-    const structuredSendBtn = document.getElementById('structuredSendBtn');
-    const structuredInput = document.getElementById('structuredInput');
-    const structuredChatSend = document.getElementById('structuredChatSend');
-    const checkpointDisplay = document.getElementById('checkpointDisplay');
-    const checkpointStatus = document.getElementById('checkpointStatus');
-    const velaDisplay = document.getElementById('velaDisplay');
-    const structuredCanvas = document.getElementById('structured-canvas');
-    
-    // ============================================================
-    // GATE-ITL: Build Structured Fragment with Pre-cleared Checkpoints
-    // ============================================================
-    function buildStructuredFragment() {
-        const intent = document.getElementById('itlIntent').value;
-        const domain = document.getElementById('itlDomain').value;
-        const emotion = document.getElementById('itlEmotion').value;
-        const timeSensitivity = document.getElementById('itlTimeSensitivity').value;
-        const message = itlMessage.value.trim();
+        // ========== Ada‑VELA Core ==========
         
-        if (!message) {
-            alert('Please enter a message');
-            return null;
+        function tripleTimestamp() {
+            const now = new Date();
+            return {
+                gregorian: now.toISOString(),
+                unix: Math.floor(now.getTime() / 1000)
+            };
         }
         
-        // Pre-cleared checkpoints based on filled fields
-        const preCleared = [];
-        if (intent) preCleared.push('intent');
-        if (domain) preCleared.push('domain');
-        if (emotion) preCleared.push('emotional_state');
-        if (timeSensitivity) preCleared.push('time_sensitivity');
-        if (message) preCleared.push('content');
-        
-        // Open checkpoints (what's missing)
-        const open = [];
-        if (!intent) open.push('intent_ambiguous');
-        if (!domain) open.push('domain_boundary_exceeded');
-        if (message.length < 5) open.push('context_missing');
-        
-        currentCheckpoints = { preCleared, open };
-        updateCheckpointDisplay();
-        
-        const fragment = {
-            id: crypto.randomUUID(),
-            ts: new Date().toISOString(),
-            session_id: sessionId,
-            nonce: crypto.randomUUID(),
-            source: 'human',
-            intent: intent,
-            domain: domain,
-            emotional_state: { primary: emotion, intensity: 5 },
-            content: { summary: message.substring(0, 100), details: message, attachments: [] },
-            context: { time_sensitivity: timeSensitivity, stage: 4, requires: ['analysis'] },
-            checkpoints: { pre_cleared: preCleared, open: open, receipt: null },
-            meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
-        };
-        
-        return fragment;
-    }
-    
-    function updateCheckpointDisplay() {
-        const html = `
-            <strong>📋 GATE CHECKPOINTS</strong><br>
-            ✅ Pre-cleared: ${currentCheckpoints.preCleared.map(c => `<span class="checkpoint-item checkpoint-cleared">${c}</span>`).join('') || 'none'}<br>
-            🔓 Still open: ${currentCheckpoints.open.map(c => `<span class="checkpoint-item checkpoint-open">${c}</span>`).join('') || 'none'}
-        `;
-        checkpointDisplay.innerHTML = html;
-        checkpointStatus.innerHTML = `📋 Checkpoints: ${currentCheckpoints.open.length} open`;
-    }
-    
-    // ============================================================
-    // CEP: Handle clarification when checkpoints are open
-    // ============================================================
-    async function sendStructuredFragment() {
-        const fragment = buildStructuredFragment();
-        if (!fragment) return;
-        
-        addMessageToPanel('structured', 'user', fragment.content.summary, { fragmentId: fragment.id });
-        itlMessage.value = '';
-        
-        // If there are open checkpoints, CEP intercepts and asks for clarification
-        if (currentCheckpoints.open.length > 0 && fragment.context.time_sensitivity !== 'now') {
-            const clarificationMsg = `⚠️ **CEP INTERCEPT** – ${currentCheckpoints.open.length} checkpoint(s) open before processing.\n\nPlease clarify:\n${currentCheckpoints.open.map(c => `• ${c}`).join('\n')}`;
-            addMessageToPanel('structured', 'ai', clarificationMsg, { isCheckpoint: true });
-            return;
+        class AdaVariable {
+            constructor(name, initialValue) {
+                this.name = name;
+                this.value = initialValue;
+                this.history = [{ timestamp: tripleTimestamp(), value: initialValue, op: 'INIT' }];
+            }
+            get() { return this.value; }
+            set(newValue, op = 'SET') {
+                this.history.push({ timestamp: tripleTimestamp(), from: this.value, to: newValue, op });
+                this.value = newValue;
+                return this;
+            }
+            trace() { return this.history; }
         }
         
-        // Process the fragment through AI
-        addMessageToPanel('structured', 'ai', '⌛ Processing structured fragment...');
+        class AdaOperation {
+            constructor(name) {
+                this.name = name;
+                this.executions = [];
+                this.fn = null;
+            }
+            setFunction(fn) { this.fn = fn; return this; }
+            async execute(input) {
+                const start = tripleTimestamp();
+                let result = null, error = null;
+                try { result = await this.fn(input); }
+                catch (e) { error = e.message; }
+                const exec = { id: Date.now() + '_' + Math.random(), name: this.name, start, end: tripleTimestamp(), input, result, error };
+                this.executions.push(exec);
+                if (error) throw new Error(error);
+                return { result, execution: exec };
+            }
+            getExecutions() { return this.executions; }
+        }
         
-        try {
-            const response = await fetch(`${API}/api/assistant`, {
+        // ========== Session ==========
+        let sessionId = localStorage.getItem('sessionId');
+        if (!sessionId) {
+            sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            localStorage.setItem('sessionId', sessionId);
+        }
+        
+        let sessionVar = new AdaVariable('session', sessionId);
+        let chatHistory = new AdaVariable('chatHistory', []);
+        let lastResponse = null;
+        let lastVelaResult = null;
+        let isSending = false;
+        
+        // DOM elements
+        const chatDiv = document.getElementById('chat');
+        const inputField = document.getElementById('input');
+        const sendBtn = document.getElementById('sendBtn');
+        const sessionDisplay = document.getElementById('sessionDisplay');
+        const velaDisplay = document.getElementById('velaDisplay');
+        const lastSealSpan = document.getElementById('lastSeal');
+        
+        sessionDisplay.textContent = `Session: ${sessionId.slice(-8)}`;
+        
+        // ========== Ada‑VELA Operations ==========
+        
+        // 1. STP Seal Operation
+        const sealOp = new AdaOperation('STP_SEAL');
+        sealOp.setFunction(async (content) => {
+            const res = await fetch(`${API}/api/stp-seal`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: JSON.stringify(fragment),
-                    sessionId: sessionId,
-                    ownerType: 'sheldon',
-                    history: []
+                    entry: content.substring(0, 500),
+                    type: 'general-trace',
+                    sessionId: sessionId
                 })
             });
-            const data = await response.json();
-            
-            // Update last message with response
-            const lastMsg = structuredPanel.querySelector('.messages .ai:last-child');
-            if (lastMsg) lastMsg.innerHTML = data.response || 'No response';
-            
-            // Update VELA badge
-            if (data.pac) {
-                const ppi = data.pac.ppi;
-                if (ppi < 30) velaDisplay.innerHTML = '⚠️ VELA: BLOCKED';
-                else if (ppi < 70) velaDisplay.innerHTML = '⚖️ VELA: FLAGGED';
-                else velaDisplay.innerHTML = '⚖️ VELA: PASS';
-            }
-            
-            // Add checkpoint receipt
-            const receiptHtml = `<div class="checkpoint-receipt">📋 Checkpoint Receipt | Pre-cleared: ${currentCheckpoints.preCleared.length} | Open: ${currentCheckpoints.open.length} | Epistemic weight: ${currentCheckpoints.preCleared.length}/${currentCheckpoints.preCleared.length + currentCheckpoints.open.length}</div>`;
-            if (lastMsg) lastMsg.insertAdjacentHTML('beforeend', receiptHtml);
-            
-        } catch (err) {
-            const lastMsg = structuredPanel.querySelector('.messages .ai:last-child');
-            if (lastMsg) lastMsg.innerHTML = `❌ Error: ${err.message}`;
-        }
-    }
-    
-    // ============================================================
-    // Add message to panel (regular or structured)
-    // ============================================================
-    function addMessageToPanel(panel, role, text, meta = {}) {
-        const container = panel === 'regular' ? regularMessages : document.querySelector('#structuredPanel .messages');
-        if (!container) {
-            // Create messages container if it doesn't exist
-            if (panel === 'structured') {
-                const panelDiv = document.querySelector('#structuredPanel');
-                const msgContainer = document.createElement('div');
-                msgContainer.className = 'messages';
-                msgContainer.id = 'structuredMessages';
-                panelDiv.insertBefore(msgContainer, panelDiv.querySelector('.structured-input-area'));
-                container = msgContainer;
-            }
-        }
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Seal failed');
+            return { seal: data.seal, issueUrl: data.issue_url };
+        });
         
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${role}`;
-        msgDiv.innerHTML = text;
-        container.appendChild(msgDiv);
-        container.scrollTop = container.scrollHeight;
-        return msgDiv;
-    }
-    
-    // ============================================================
-    // Regular Chat (simple)
-    // ============================================================
-    async function sendRegular() {
-        const text = regularInput.value.trim();
-        if (!text) return;
+        // 2. VELA Constitutional Validation
+        const velaOp = new AdaOperation('VELA_VALIDATE');
+        velaOp.setFunction(async (content) => {
+            const res = await fetch(`${API}/api/vela-suite`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fragment: content,
+                    sessionId: sessionId,
+                    options: { domain: 'general' }
+                })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'VELA unavailable');
+            return data;
+        });
         
-        addMessageToPanel('regular', 'user', text);
-        regularInput.value = '';
-        
-        const thinking = addMessageToPanel('regular', 'ai', '...');
-        
-        try {
+        // 3. Assistant API Call
+        const assistantOp = new AdaOperation('ASSISTANT_CALL');
+        assistantOp.setFunction(async (message) => {
             const res = await fetch(`${API}/api/assistant`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: text,
+                    message: message,
                     sessionId: sessionId,
                     ownerType: 'sheldon',
                     history: []
                 })
             });
             const data = await res.json();
-            if (thinking) thinking.innerHTML = data.response || 'No response';
-        } catch (err) {
-            if (thinking) thinking.innerHTML = `❌ Error: ${err.message}`;
-        }
-    }
-    
-    // ============================================================
-    // 3D Structured Mode Visualization (Market Atlas style)
-    // ============================================================
-    async function init3D() {
-        if (scene) return;
+            if (!res.ok) throw new Error(data.error || 'API error');
+            return data;
+        });
         
-        const width = structuredCanvas.clientWidth;
-        const height = structuredCanvas.clientHeight;
+        // ========== UI Functions ==========
         
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x030405);
-        scene.fog = new THREE.FogExp2(0x030405, 0.008);
-        
-        camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-        camera.position.set(0, 2, 12);
-        
-        renderer = new THREE.WebGLRenderer({ canvas: structuredCanvas, antialias: true });
-        renderer.setSize(width, height);
-        
-        controls = new OrbitControls(camera, structuredCanvas);
-        controls.enableDamping = true;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.5;
-        controls.enableZoom = true;
-        
-        // Bloom effect
-        const renderScene = new RenderPass(scene, camera);
-        const bloomPass = new UnrealBloomPass(new THREE.Vector2(width, height), 1.0, 0.4, 0.85);
-        bloomPass.threshold = 0.1;
-        bloomPass.strength = 0.6;
-        bloomPass.radius = 0.5;
-        const effectComposer = new EffectComposer(renderer);
-        effectComposer.addPass(renderScene);
-        effectComposer.addPass(bloomPass);
-        
-        // Earth
-        const earthMat = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a });
-        const earth = new THREE.Mesh(new THREE.SphereGeometry(1.2, 64, 64), earthMat);
-        scene.add(earth);
-        
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x222222);
-        scene.add(ambientLight);
-        const pointLight = new THREE.PointLight(0xffaa33, 0.8);
-        pointLight.position.set(2, 5, 3);
-        scene.add(pointLight);
-        
-        // Stars
-        const starPositions = [];
-        for (let i = 0; i < 3000; i++) {
-            starPositions.push((Math.random() - 0.5) * 200);
-            starPositions.push((Math.random() - 0.5) * 200);
-            starPositions.push((Math.random() - 0.5) * 100 - 50);
-        }
-        const starGeo = new THREE.BufferGeometry();
-        starGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(starPositions), 3));
-        const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.08 }));
-        scene.add(stars);
-        
-        // Cognitive points (representing checkpoints, confabulation risk)
-        const positions = [];
-        const colors = [];
-        const pointCount = 3000;
-        
-        for (let i = 0; i < pointCount; i++) {
-            const r = 2.2 + Math.random() * 3.8;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos(2 * Math.random() - 1);
-            const x = r * Math.sin(phi) * Math.cos(theta);
-            const y = r * Math.sin(phi) * Math.sin(theta);
-            const z = r * Math.cos(phi);
-            positions.push(x, y, z);
+        function addMessage(role, text, sealHash = null, velaResult = null) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${role}`;
             
-            // Color based on checkpoint status (red = high risk/open checkpoint)
-            const isOpen = Math.random() < 0.15; // Simulate 15% open checkpoints
-            if (isOpen) {
-                colors.push(1.0, 0.2, 0.2); // Red = open checkpoint (confabulation risk)
-            } else {
-                colors.push(0.3, 0.7, 0.4); // Green = cleared checkpoint
+            let sealHtml = '';
+            if (role === 'ai' && sealHash) {
+                sealHtml = `<button class="seal-btn" data-text="${escapeHtml(text)}">🔒 SEAL</button>`;
             }
+            
+            let velaHtml = '';
+            if (velaResult) {
+                let statusClass = 'vela-pass';
+                let statusText = 'PASS';
+                if (velaResult.status === 'FLAGGED') { statusClass = 'vela-flag'; statusText = 'FLAGGED'; }
+                if (velaResult.status === 'BLOCKED') { statusClass = 'vela-block'; statusText = 'BLOCKED'; }
+                velaHtml = `<span class="vela-badge ${statusClass}">⚖️ VELA: ${statusText}</span>`;
+            }
+            
+            msgDiv.innerHTML = `
+                <strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${escapeHtml(text)}
+                ${sealHtml}
+                ${velaHtml}
+            `;
+            chatDiv.appendChild(msgDiv);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+            
+            // Attach seal button event
+            const sealBtn = msgDiv.querySelector('.seal-btn');
+            if (sealBtn) {
+                sealBtn.onclick = () => sealMessage(text);
+            }
+            
+            // Store in history
+            chatHistory.set([...chatHistory.get(), { role, text, timestamp: tripleTimestamp() }]);
         }
         
-        const pointGeo = new THREE.BufferGeometry();
-        pointGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
-        pointGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
-        const pointMat = new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending });
-        pointsMesh = new THREE.Points(pointGeo, pointMat);
-        scene.add(pointsMesh);
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
         
-        // Raycaster for point selection
-        raycaster = new THREE.Raycaster();
-        structuredCanvas.addEventListener('click', (event) => {
-            const rect = structuredCanvas.getBoundingClientRect();
-            const mouse = new THREE.Vector2();
-            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObject(pointsMesh);
-            if (intersects.length) {
-                const idx = intersects[0].index;
-                const isOpen = colors[idx * 3] > 0.9; // Red = open
-                if (isOpen) {
-                    alert('⚠️ CEP INTERCEPT: Open checkpoint detected. Clarification needed before processing.');
-                    checkpointStatus.innerHTML = '⚠️ Open checkpoint – clarification required';
-                } else {
-                    checkpointStatus.innerHTML = '✅ Checkpoint cleared – ready for processing';
+        function showToast(msg, isError = false) {
+            const toast = document.createElement('div');
+            toast.textContent = msg;
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                background: ${isError ? '#5f1a1a' : '#1e4620'}; color: white;
+                padding: 8px 16px; border-radius: 20px; font-size: 12px;
+                z-index: 1000; animation: fadeOut 2s forwards;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
+        async function sealMessage(content) {
+            try {
+                const { result } = await sealOp.execute(content);
+                lastSealSpan.textContent = `🔒 Sealed: ${result.seal.slice(0, 8)}...`;
+                showToast(`✅ Sealed: ${result.seal.slice(0, 8)}...`);
+                if (result.issueUrl) {
+                    console.log('GitHub issue:', result.issueUrl);
                 }
+            } catch (err) {
+                showToast(`❌ Seal failed: ${err.message}`, true);
             }
-        });
-        
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            effectComposer.render();
         }
-        animate();
         
-        window.addEventListener('resize', () => {
-            const w = structuredCanvas.clientWidth;
-            const h = structuredCanvas.clientHeight;
-            camera.aspect = w / h;
-            camera.updateProjectionMatrix();
-            effectComposer.setSize(w, h);
-        });
-    }
-    
-    // ============================================================
-    // Mode Toggle
-    // ============================================================
-    async function toggleMode() {
-        structuredMode = !structuredMode;
-        
-        if (structuredMode) {
-            regularPanel.classList.add('structured');
-            structuredPanel.classList.add('active');
-            modeToggle.textContent = '⚡ Regular Mode';
-            modeToggle.classList.add('active');
-            
-            // Initialize 3D
-            await init3D();
-            
-            // Add structured messages container
-            if (!document.querySelector('#structuredPanel .messages')) {
-                const msgContainer = document.createElement('div');
-                msgContainer.className = 'messages';
-                msgContainer.id = 'structuredMessages';
-                structuredPanel.insertBefore(msgContainer, structuredPanel.querySelector('.structured-input-area'));
+        async function validateLastMessage() {
+            if (!lastResponse) {
+                showToast('No message to validate', true);
+                return;
             }
-            addMessageToPanel('structured', 'ai', '🌌 **STRUCTURED MODE ACTIVE**\n\nGATE-ITL: Fill the form to build structured fragments. Pre-cleared checkpoints are green. Open checkpoints (red in 3D) will trigger CEP clarification before processing.');
-        } else {
-            regularPanel.classList.remove('structured');
-            structuredPanel.classList.remove('active');
-            modeToggle.textContent = '🌌 Structured Mode';
-            modeToggle.classList.remove('active');
+            try {
+                const { result } = await velaOp.execute(lastResponse);
+                lastVelaResult = result;
+                
+                // Update VELA display
+                if (result.status === 'BLOCKED') {
+                    velaDisplay.className = 'vela-badge vela-block';
+                    velaDisplay.innerHTML = '⚠️ VELA: BLOCKED';
+                } else if (result.status === 'FLAGGED') {
+                    velaDisplay.className = 'vela-badge vela-flag';
+                    velaDisplay.innerHTML = '⚖️ VELA: FLAGGED';
+                } else {
+                    velaDisplay.className = 'vela-badge vela-pass';
+                    velaDisplay.innerHTML = '⚖️ VELA: PASS';
+                }
+                
+                showToast(`VELA: ${result.status} | Fidelity: ${((result.screen1Result?.fidelity_estimate || 0) * 100).toFixed(0)}%`);
+            } catch (err) {
+                showToast(`Validation failed: ${err.message}`, true);
+            }
         }
-    }
-    
-    // ============================================================
-    // Event Listeners
-    // ============================================================
-    modeToggle.onclick = toggleMode;
-    regularSend.onclick = sendRegular;
-    structuredSendBtn.onclick = sendStructuredFragment;
-    structuredChatSend.onclick = async () => {
-        const text = structuredInput.value.trim();
-        if (!text) return;
-        addMessageToPanel('structured', 'user', text);
-        structuredInput.value = '';
         
-        const thinking = addMessageToPanel('structured', 'ai', '...');
-        try {
-            const res = await fetch(`${API}/api/assistant`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: text,
-                    sessionId: sessionId,
-                    ownerType: 'sheldon',
-                    history: []
-                })
-            });
-            const data = await res.json();
-            if (thinking) thinking.innerHTML = data.response || 'No response';
-        } catch (err) {
-            if (thinking) thinking.innerHTML = `❌ Error: ${err.message}`;
+        async function send() {
+            const message = inputField.value.trim();
+            if (!message) return;
+            if (isSending) return;
+            
+            addMessage('user', message);
+            inputField.value = '';
+            inputField.disabled = true;
+            isSending = true;
+            
+            const thinking = document.createElement('div');
+            thinking.className = 'message ai';
+            thinking.innerHTML = '<strong>AI:</strong> ...';
+            chatDiv.appendChild(thinking);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+            
+            try {
+                const { result } = await assistantOp.execute(message);
+                
+                if (result && result.response) {
+                    lastResponse = result.response;
+                    thinking.remove();
+                    addMessage('ai', result.response, null, null);
+                    
+                    // Auto-validate with VELA
+                    const velaResult = await velaOp.execute(result.response);
+                    lastVelaResult = velaResult.result;
+                    
+                    // Update VELA display
+                    const v = velaResult.result;
+                    if (v.status === 'BLOCKED') {
+                        velaDisplay.className = 'vela-badge vela-block';
+                        velaDisplay.innerHTML = '⚠️ VELA: BLOCKED';
+                    } else if (v.status === 'FLAGGED') {
+                        velaDisplay.className = 'vela-badge vela-flag';
+                        velaDisplay.innerHTML = '⚖️ VELA: FLAGGED';
+                    } else {
+                        velaDisplay.className = 'vela-badge vela-pass';
+                        velaDisplay.innerHTML = '⚖️ VELA: PASS';
+                    }
+                    
+                    // Add VELA badge to last message
+                    const lastMsg = chatDiv.lastChild;
+                    if (lastMsg && lastMsg.className === 'message ai') {
+                        const velaSpan = document.createElement('span');
+                        velaSpan.className = `vela-badge ${v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass')}`;
+                        velaSpan.innerHTML = `⚖️ VELA: ${v.status}`;
+                        lastMsg.appendChild(velaSpan);
+                        
+                        // Add seal button
+                        const sealBtn = document.createElement('button');
+                        sealBtn.className = 'seal-btn';
+                        sealBtn.textContent = '🔒 SEAL';
+                        sealBtn.onclick = () => sealMessage(result.response);
+                        lastMsg.appendChild(sealBtn);
+                    }
+                    
+                } else {
+                    thinking.innerHTML = '<strong>AI:</strong> Error: No response';
+                }
+            } catch (err) {
+                thinking.innerHTML = `<strong>AI:</strong> Error: ${err.message}`;
+            }
+            
+            inputField.disabled = false;
+            inputField.focus();
+            isSending = false;
         }
-    };
-    
-    regularInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendRegular();
-    });
-    structuredInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') structuredChatSend.click();
-    });
-    
-    // Update checkpoint display on form change
-    ['itlIntent', 'itlDomain', 'itlEmotion', 'itlTimeSensitivity', 'itlMessage'].forEach(id => {
-        document.getElementById(id)?.addEventListener('input', () => {
-            buildStructuredFragment();
+        
+        function showTrace() {
+            console.log('=== Ada‑VELA Trace ===');
+            console.log('Session:', sessionVar.trace());
+            console.log('Chat History:', chatHistory.trace());
+            console.log('API Calls:', assistantOp.getExecutions());
+            console.log('Seal Calls:', sealOp.getExecutions());
+            console.log('VELA Calls:', velaOp.getExecutions());
+            showToast('Trace logged to console (F12)');
+        }
+        
+        function sealInput() {
+            const text = inputField.value.trim();
+            if (!text) {
+                showToast('Nothing to seal', true);
+                return;
+            }
+            sealMessage(text);
+        }
+        
+        // Event listeners
+        sendBtn.onclick = send;
+        document.getElementById('sealInputBtn').onclick = sealInput;
+        document.getElementById('validateBtn').onclick = validateLastMessage;
+        document.getElementById('traceBtn').onclick = showTrace;
+        
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') send();
         });
-    });
-    
-    // Initial checkpoint display
-    buildStructuredFragment();
-    
-    console.log('Structured Mode ready. GATE-ITL + CEP + 3D Visualization active.');
-</script>
+        
+        // Initial message
+        addMessage('ai', 'Ada‑VELA active. Seal buttons and VELA validation ready. Click 🔒 SEAL on any message to create immutable STP record.');
+    </script>
 </body>
 </html>
