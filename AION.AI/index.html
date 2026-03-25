@@ -51,6 +51,14 @@
         .vela-pass { background: #1e4620; color: #4ade80; }
         .vela-flag { background: #5f3a1a; color: #ffaa33; }
         .vela-block { background: #5f1a1a; color: #ff4d4d; }
+        .receipt-badge {
+            font-size: 9px;
+            background: #2a2a3a;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
         input, button {
             padding: 10px;
             font-size: 14px;
@@ -187,7 +195,28 @@
             overflow-x: auto;
             font-size: 12px;
         }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        .option-btn {
+            background: #2a2a3a;
+            border: 1px solid #c9a028;
+            color: #c9a028;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+        }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            .itl-fields { flex-direction: column; gap: 8px; }
+            .field-group { min-width: auto; }
+            .input-row button { padding: 8px 12px; }
+        }
     </style>
 </head>
 <body>
@@ -274,6 +303,8 @@
         let lastResponse = null;
         let isSending = false;
         let structuredModeActive = false;
+        let lastFragmentId = null;          // stores the ID of the last sent fragment (for replies)
+        let pendingClarification = null;    // stores intercept data when waiting for clarification
 
         // DOM elements
         const chatDiv = document.getElementById('chat');
@@ -301,11 +332,19 @@
                 const cls = extra.velaResult.status === 'BLOCKED' ? 'vela-block' : (extra.velaResult.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
                 extraHtml += `<span class="vela-badge ${cls}">⚖️ VELA: ${extra.velaResult.status}</span>`;
             }
+            if (extra.receipt) {
+                const receiptStr = JSON.stringify(extra.receipt);
+                extraHtml += `<span class="receipt-badge" title="${escapeHtml(receiptStr)}">📋 ${extra.receipt.epistemic_weight || 'receipt'}</span>`;
+            }
             div.innerHTML = `<strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${escapeHtml(text)}${extraHtml}`;
             chatDiv.appendChild(div);
             chatDiv.scrollTop = chatDiv.scrollHeight;
             const sealBtn = div.querySelector('.seal-btn');
             if (sealBtn) sealBtn.onclick = () => sealMessage(text);
+            const receiptBadge = div.querySelector('.receipt-badge');
+            if (receiptBadge && extra.receipt) {
+                receiptBadge.onclick = () => showModal('Checkpoint Receipt', JSON.stringify(extra.receipt, null, 2));
+            }
         }
 
         function addSystemMessage(text) {
@@ -335,6 +374,77 @@
             document.body.appendChild(overlay);
             overlay.querySelector('#closeModalBtn').onclick = () => overlay.remove();
             overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+        }
+
+        function showClarificationModal(interceptData, originalFragmentId) {
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            const opts = interceptData.clarification_options || [];
+            const optsHtml = opts.map(opt => `<button class="option-btn" data-option='${JSON.stringify(opt)}'>${escapeHtml(opt.text)}</button>`).join('');
+            overlay.innerHTML = `
+                <div class="modal">
+                    <h3>📋 Clarification Required</h3>
+                    <p>${escapeHtml(interceptData.message)}</p>
+                    <div class="options-list">${optsHtml || '<p>No options provided.</p>'}</div>
+                    <button id="closeClarificationModal" style="margin-top:16px;">Cancel</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            const close = () => overlay.remove();
+            overlay.querySelector('#closeClarificationModal').onclick = close;
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+            overlay.querySelectorAll('.option-btn').forEach(btn => {
+                btn.onclick = () => {
+                    const opt = JSON.parse(btn.dataset.option);
+                    close();
+                    sendClarification(opt, originalFragmentId);
+                };
+            });
+        }
+
+        async function sendClarification(option, replyToId) {
+            // Build a new fragment that replies to the original with the chosen clarification
+            const fragment = {
+                id: crypto.randomUUID(),
+                ts: new Date().toISOString(),
+                session_id: sessionId,
+                in_reply_to: replyToId,
+                source: 'human',
+                intent: 'clarify',
+                domain: 'general',
+                emotional_state: { primary: 'neutral', intensity: 5 },
+                content: { summary: `Clarification: ${option.text}`, details: option.text },
+                context: { time_sensitivity: 'now', stage: 4, requires: ['analysis'] }
+            };
+            // Send this new fragment to the structured endpoint
+            try {
+                const res = await fetch(`${API}/api/structured-mode`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(fragment)
+                });
+                const result = await res.json();
+                if (result.response) {
+                    addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt });
+                    lastResponse = result.response;
+                    // Update VELA badge if available
+                    if (result.pac) {
+                        const ppi = result.pac.ppi;
+                        const cls = ppi < 30 ? 'vela-block' : (ppi < 70 ? 'vela-flag' : 'vela-pass');
+                        const status = ppi < 30 ? 'BLOCKED' : (ppi < 70 ? 'FLAGGED' : 'PASS');
+                        velaDisplay.className = `vela-badge ${cls}`;
+                        velaDisplay.innerHTML = `⚖️ VELA: ${status}`;
+                    }
+                } else if (result.status === 'CEP_INTERCEPT') {
+                    // Another intercept – show again (should not happen in a well-formed clarification)
+                    showClarificationModal(result, fragment.id);
+                } else {
+                    addSystemMessage(`⚠️ Unexpected response: ${JSON.stringify(result)}`);
+                }
+            } catch (err) {
+                addSystemMessage(`❌ Error sending clarification: ${err.message}`, true);
+                showToast(err.message, true);
+            }
         }
 
         // API calls
@@ -390,8 +500,8 @@
         }
 
         // Build structured fragment from UI
-        function buildStructuredFragment(rawMessage) {
-            return {
+        function buildStructuredFragment(rawMessage, replyTo = null) {
+            const frag = {
                 id: crypto.randomUUID(),
                 ts: new Date().toISOString(),
                 session_id: sessionId,
@@ -402,6 +512,8 @@
                 content: { summary: rawMessage.substring(0,100), details: rawMessage },
                 context: { time_sensitivity: itlTime.value, stage: 4, requires: ['analysis'] }
             };
+            if (replyTo) frag.in_reply_to = replyTo;
+            return frag;
         }
 
         function updateSelectedValues() {
@@ -435,8 +547,20 @@
             try {
                 let result;
                 if (structuredModeActive) {
-                    const fragment = buildStructuredFragment(rawMessage);
+                    const fragment = buildStructuredFragment(rawMessage, pendingClarification ? pendingClarification.originalFragmentId : null);
                     result = await callStructuredMode(fragment);
+                    lastFragmentId = fragment.id;  // store for potential replies
+                    if (result.status === 'CEP_INTERCEPT') {
+                        thinking.remove();
+                        pendingClarification = {
+                            originalFragmentId: fragment.id,
+                            interceptData: result
+                        };
+                        showClarificationModal(result, fragment.id);
+                        inputField.disabled = false;
+                        isSending = false;
+                        return;
+                    }
                 } else {
                     result = await callAssistant(rawMessage);
                 }
@@ -458,13 +582,14 @@
                         velaDisplay.innerHTML = `⚖️ VELA: ${result.vela_status}`;
                     }
 
-                    addMessage('ai', result.response, { sealHash: true });
+                    addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt });
                 } else {
                     thinking.innerHTML = '<strong>AI:</strong> Error: No response';
                 }
             } catch (err) {
                 thinking.innerHTML = `<strong>AI:</strong> Error: ${err.message}`;
                 console.error(err);
+                showToast(err.message, true);
             } finally {
                 inputField.disabled = false;
                 inputField.focus();
@@ -481,6 +606,7 @@
                 inputField.placeholder = 'Type your message (will be structured)';
                 updateSelectedValues();
                 addSystemMessage('🌌 **STRUCTURED MODE ACTIVE**\n\nSet intent, domain, emotion, time. Your message will be sent as a structured fragment.');
+                pendingClarification = null; // reset any pending intercept
             } else {
                 structuredUI.classList.remove('active');
                 modeBadge.textContent = '⚡ REGULAR';
@@ -498,10 +624,16 @@
         }
 
         function showTrace() {
-            showModal('Ada‑VELA Trace', 'Trace data logged to console. Open DevTools (F12) to view.');
-            console.log('=== Ada‑VELA Trace ===');
-            console.log('Session ID:', sessionId);
-            console.log('Structured Mode:', structuredModeActive);
+            // Simple trace – could be expanded with actual operation history from backend
+            const traceInfo = {
+                sessionId,
+                structuredModeActive,
+                lastFragmentId,
+                lastResponsePreview: lastResponse?.substring(0, 100),
+                pendingClarification: pendingClarification ? true : false
+            };
+            showModal('Ada‑VELA Trace', JSON.stringify(traceInfo, null, 2));
+            console.log('Trace data:', traceInfo);
         }
 
         // Event listeners
