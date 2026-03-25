@@ -72,6 +72,7 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255,255,255,0.08);
       gap: 12px;
+      flex-wrap: wrap;
     }
     .brand h1 {
       font-size: 1.5rem;
@@ -94,6 +95,8 @@
       padding: 6px 14px;
       font-size: 0.75rem;
       color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.2s;
     }
     .mode-indicator.active {
       background: rgba(201,160,40,0.2);
@@ -356,7 +359,6 @@
     .modal-header button { background: transparent; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
     .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
     .setting-item { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .setting-item label { cursor: pointer; }
     .analytics-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; font-size: 0.75rem; }
     .stat-card { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; border: 1px solid var(--border-glow); }
     .stat-card h4 { color: var(--accent); margin-bottom: 8px; font-size: 0.8rem; }
@@ -375,26 +377,137 @@
       animation: fadeOut 2s ease forwards;
       pointer-events: none;
     }
-    .vela-detail-modal .modal { max-width: 700px; }
-    .vela-result {
+    .wives-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .wife-card {
+      background: rgba(0,0,0,0.4);
+      border-radius: 16px;
+      padding: 12px;
+      border-left: 4px solid;
+    }
+    .wife-card h4 { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 1rem; }
+    .wife-card .response-text { font-size: 0.8rem; line-height: 1.4; max-height: 200px; overflow-y: auto; }
+    .consensus-area {
       background: rgba(0,0,0,0.5);
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 12px;
       margin-top: 12px;
-      font-family: monospace;
+      border-top: 1px solid var(--border-glow);
+    }
+    .group-chat-input-area {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .group-chat-input-area textarea {
+      flex: 1;
+      background: rgba(10,10,20,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 28px;
+      padding: 10px 16px;
+      color: var(--text);
+    }
+    #immersive-mode {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: #000;
+      display: none;
+      flex-direction: column;
+    }
+    #immersive-canvas { width: 100%; height: 100%; display: block; }
+    .immersive-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      gap: 10px;
+      z-index: 1001;
+    }
+    .immersive-overlay textarea {
+      flex: 1;
+      background: rgba(20,20,30,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 28px;
+      padding: 12px 18px;
+      color: var(--text);
+      font-size: 0.9rem;
+      resize: none;
+    }
+    .floating-messages {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 320px;
+      max-height: 80vh;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px;
+      z-index: 1002;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .floating-message {
+      background: rgba(30,30,45,0.8);
+      border-radius: 16px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      border-left: 3px solid var(--accent);
+    }
+    .satellite-tooltip {
+      position: absolute;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 8px 12px;
       font-size: 0.7rem;
+      max-width: 250px;
+      pointer-events: none;
+      z-index: 1003;
+      border: 1px solid var(--border-glow);
+    }
+    .close-immersive {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      padding: 8px 16px;
+      cursor: pointer;
+      z-index: 1002;
+      font-size: 0.8rem;
+      color: var(--text);
     }
     @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
     @media (max-width: 700px) {
       .header { padding: 8px 12px; }
       .brand h1 { font-size: 1.1rem; }
-      .mode-indicator, .settings-btn, .vela-badge { padding: 4px 10px; font-size: 0.6rem; }
-      .messages { padding: 12px; gap: 12px; }
+      .messages { padding: 12px; }
       .msg { max-width: 95%; }
       .input-area { padding: 12px; }
       .plus-btn { width: 36px; height: 36px; font-size: 1.2rem; }
       .send-btn { padding: 8px 16px; }
+      .floating-messages { width: 260px; right: 10px; top: 60px; }
+      .wives-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -427,6 +540,7 @@
         <div class="plus-btn" id="plusBtn">+</div>
         <div class="action-dropdown" id="actionDropdown" style="display: none;">
           <button id="structuredModeBtn" data-action="structured">🌌 Structured Mode</button>
+          <button id="groupChatBtn" data-action="group">👥 Group Chat</button>
           <button id="privateRoomBtn" data-action="private">🚪 Private Room</button>
           <button id="uploadBtn" data-action="upload">📁 Upload File</button>
           <button id="askAllBtn" data-action="askall">👥 Ask All Wives</button>
@@ -444,20 +558,20 @@
   </div>
 </div>
 
-<div id="immersive-mode" style="display: none;">
+<div id="immersive-mode">
   <canvas id="immersive-canvas"></canvas>
-  <div class="immersive-overlay" style="position: absolute; bottom: 20px; left: 0; right: 0; padding: 16px; background: rgba(0,0,0,0.6); backdrop-filter: blur(12px); display: flex; gap: 10px;">
-    <textarea id="immersive-input" placeholder="Type your message..." rows="1" style="flex:1; background: rgba(20,20,30,0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 28px; padding: 12px 18px; color: var(--text); resize: none;"></textarea>
+  <div class="immersive-overlay">
+    <textarea id="immersive-input" placeholder="Type your message..." rows="1"></textarea>
     <button id="immersive-send" class="send-btn">SEND</button>
   </div>
-  <div class="floating-messages" style="position: absolute; top: 20px; right: 20px; width: 300px; max-height: 80vh; overflow-y: auto; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 8px;"></div>
-  <div class="close-immersive" style="position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); border-radius: 40px; padding: 8px 16px; cursor: pointer; z-index: 1002;">✕ Exit Structured Mode</div>
+  <div class="floating-messages" id="floating-messages"></div>
+  <div class="close-immersive" id="close-immersive">✕ Exit Structured Mode</div>
+  <div id="satellite-tooltip" class="satellite-tooltip" style="display: none;"></div>
 </div>
 
 <script>
   // =======================================================
-  // AION FRONTEND – VELA-SUITE INTEGRATED
-  // Complete rewrite with proper error handling and missing endpoints
+  // AION FRONTEND – Full Feature Set with VELA Integration
   // =======================================================
   
   const API_BASE = 'https://aion-backend-mu.vercel.app';
@@ -481,6 +595,12 @@
   let immersiveActive = false;
   let currentVelaStatus = { status: 'PASS', fidelity: 0.95, category: null };
   let lastVelaResult = null;
+  
+  // Three.js atlas objects
+  let atlasScene, atlasCamera, atlasRenderer, atlasControls;
+  let atlasSatellites = [];
+  let atlasPoints, atlasLines;
+  let atlasEventSource = null;
 
   // DOM elements
   const messagesDiv = document.getElementById('messages');
@@ -497,6 +617,15 @@
   const charCountSpan = document.getElementById('charCount');
   const plusBtn = document.getElementById('plusBtn');
   const actionDropdown = document.getElementById('actionDropdown');
+  
+  // Immersive elements
+  const immersiveModeDiv = document.getElementById('immersive-mode');
+  const immersiveCanvas = document.getElementById('immersive-canvas');
+  const immersiveInput = document.getElementById('immersive-input');
+  const immersiveSend = document.getElementById('immersive-send');
+  const closeImmersive = document.getElementById('close-immersive');
+  const floatingMessagesDiv = document.getElementById('floating-messages');
+  const satelliteTooltip = document.getElementById('satellite-tooltip');
 
   const WIFE_STYLES = {
     ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' },
@@ -506,97 +635,6 @@
     CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' },
     JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' }
   };
-
-  // =======================================================
-  // VELA-SUITE INTEGRATION
-  // =======================================================
-  
-  async function validateWithVela(content, sessionId, options = {}) {
-    try {
-      const response = await fetch(`${API_BASE}/api/vela-suite`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fragment: content,
-          sessionId: sessionId,
-          options: {
-            domain: options.domain || DOMAIN_TYPES.GENERAL,
-            jurisdiction: options.jurisdiction || null,
-            sources: options.sources || null
-          }
-        })
-      });
-      
-      if (!response.ok) {
-        console.warn('VELA validation failed:', await response.text());
-        return { status: 'PASS', error: 'VELA unavailable', fidelity: 0.5 };
-      }
-      
-      const result = await response.json();
-      lastVelaResult = result;
-      
-      // Update UI badge
-      if (result.status === 'BLOCKED') {
-        velaStatusBadge.textContent = '⚠️ VELA: BLOCKED';
-        velaStatusBadge.className = 'vela-badge block';
-      } else if (result.status === 'FLAGGED') {
-        velaStatusBadge.textContent = '⚖️ VELA: FLAGGED';
-        velaStatusBadge.className = 'vela-badge flag';
-      } else {
-        velaStatusBadge.textContent = '⚖️ VELA: PASS';
-        velaStatusBadge.className = 'vela-badge pass';
-      }
-      
-      currentVelaStatus = {
-        status: result.status,
-        fidelity: result.screen1Result?.fidelity_estimate || 0.95,
-        category: result.screen1Result?.category,
-        screen2Finding: result.screen2Result?.screen2_finding
-      };
-      
-      return result;
-    } catch (err) {
-      console.error('VELA validation error:', err);
-      velaStatusBadge.textContent = '⚠️ VELA: OFFLINE';
-      velaStatusBadge.className = 'vela-badge flag';
-      return { status: 'PASS', error: err.message, fidelity: 0.5 };
-    }
-  }
-  
-  function showVelaDetails() {
-    if (!lastVelaResult) {
-      showToast('No VELA data available for this message.');
-      return;
-    }
-    
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay vela-detail-modal';
-    modal.innerHTML = `
-      <div class="modal">
-        <div class="modal-header">
-          <h3>⚖️ VELA Constitutional Assessment</h3>
-          <button id="closeVelaDetail">✕</button>
-        </div>
-        <div class="modal-body">
-          <div class="vela-result">
-            <strong>Status:</strong> ${lastVelaResult.status}<br>
-            <strong>Fidelity Score:</strong> ${(lastVelaResult.screen1Result?.fidelity_estimate * 100).toFixed(1)}%<br>
-            ${lastVelaResult.screen1Result?.category ? `<strong>Category:</strong> ${lastVelaResult.screen1Result.category}<br>` : ''}
-            ${lastVelaResult.screen2Result?.screen2_finding ? `<strong>Screen 2 Finding:</strong> ${lastVelaResult.screen2Result.screen2_finding}<br>` : ''}
-            ${lastVelaResult.riskTier ? `<strong>Risk Tier:</strong> ${lastVelaResult.riskTier}<br>` : ''}
-            ${lastVelaResult.domain ? `<strong>Domain:</strong> ${lastVelaResult.domain}<br>` : ''}
-            <hr style="margin: 12px 0;">
-            <strong>Constitutional Laws Checked:</strong> 65<br>
-            <strong>Law Precedence Cascade:</strong> Active<br>
-            <strong>OCEAN Layers:</strong> ${lastVelaResult.riskTier ? 'Active' : 'Standard'}<br>
-            ${lastVelaResult.screen2Result?.findings?.length ? `<strong>Findings:</strong><ul>${lastVelaResult.screen2Result.findings.map(f => `<li>${f.type}: ${f.description}</li>`).join('')}</ul>` : ''}
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    modal.querySelector('#closeVelaDetail').onclick = () => modal.remove();
-  }
 
   // =======================================================
   // HELPER FUNCTIONS
@@ -642,12 +680,40 @@
     toast.className = 'toast';
     toast.textContent = message;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
+    setTimeout(() => toast.remove(), 3000);
   }
   
   function setStatus(text, isError) {
     document.getElementById('statusText').textContent = text;
     document.getElementById('statusDot').style.color = isError ? '#ff5e5e' : '#4c9f70';
+  }
+  
+  function addSystemMessage(text, isError = false) {
+    const div = document.createElement('div');
+    div.className = 'sys-msg';
+    div.style.cssText = `align-self:center; background:rgba(0,0,0,0.5); backdrop-filter:blur(8px); border-radius:20px; padding:8px 16px; font-size:0.7rem; color:${isError ? '#ff8a8a' : '#aaa'}; margin:4px 0;`;
+    div.textContent = text;
+    messagesDiv.appendChild(div);
+    scrollBottom();
+  }
+  
+  function addThinking() {
+    const div = document.createElement('div');
+    div.className = 'thinking';
+    div.innerHTML = `<div class="thinking-dots">●●●</div><span>thinking...</span>`;
+    div.style.cssText = `align-self:center; background:rgba(0,0,0,0.5); border-radius:20px; padding:8px 16px; font-size:0.7rem; display:flex; gap:8px;`;
+    messagesDiv.appendChild(div);
+    scrollBottom();
+    return div;
+  }
+  
+  function addFloatingMessage(wifeKey, content, isError = false) {
+    const style = WIFE_STYLES[wifeKey] || WIFE_STYLES.ALBEDO;
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'floating-message';
+    msgDiv.innerHTML = `<div style="color:${style.color}">${style.emoji} ${style.name}</div><div>${renderMarkdown(content)}</div>`;
+    floatingMessagesDiv.appendChild(msgDiv);
+    msgDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
   
   function generateSessionId() {
@@ -659,7 +725,7 @@
     if (stored) {
       try {
         const data = JSON.parse(stored);
-        if (data.sessionId && Date.now() - data.timestamp < 7200000) { // 2 hour expiry
+        if (data.sessionId && Date.now() - data.timestamp < 7200000) {
           sessionId = data.sessionId;
           sessionKey = data.sessionKey;
           sessionDisplaySpan.textContent = `SID: ${sessionId.slice(-8)}`;
@@ -714,7 +780,164 @@
   }
   
   // =======================================================
-  // MESSAGE HANDLING WITH VELA INTEGRATION
+  // CRYPTO HELPERS
+  // =======================================================
+  
+  async function computeHash(obj) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify(obj));
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+  
+  async function computeHMAC(keyHex, message) {
+    const keyBytes = new Uint8Array(keyHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+    const key = await crypto.subtle.importKey('raw', keyBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(message));
+    return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+  
+  async function generateFragmentFromText(text, replyTo) {
+    const lower = text.toLowerCase();
+    let intent = 'ask';
+    if (lower.includes('feel') || lower.includes('worried') || lower.includes('anxious')) intent = 'emotional';
+    else if (lower.includes('please') || lower.includes('can you')) intent = 'request_action';
+    let domain = 'general';
+    if (lower.includes('gap')||lower.includes('emergence')) domain = 'emergence';
+    else if (lower.includes('law')||lower.includes('seal')||lower.includes('stp')) domain = 'law';
+    else if (lower.includes('security')) domain = 'security';
+    else if (lower.includes('heal')) domain = 'healing';
+    else if (lower.includes('synthes')) domain = 'synthesis';
+    const emotional = { primary: 'neutral', intensity: 0 };
+    if (intent === 'emotional') {
+      emotional.primary = lower.includes('worried') ? 'anxious' : (lower.includes('curious') ? 'curious' : 'vulnerable');
+      emotional.intensity = lower.includes('very') ? 7 : 5;
+    }
+    const summary = text.length > 180 ? text.substring(0,180)+'...' : text;
+    const details = text.length > 200 ? text : '';
+    const fragment = {
+      id: crypto.randomUUID(),
+      ts: new Date().toISOString(),
+      session_id: sessionId,
+      nonce: crypto.randomUUID(),
+      in_reply_to: replyTo,
+      source: 'human',
+      intent,
+      domain,
+      emotional_state: emotional,
+      content: { summary, details, attachments: [] },
+      context: { stage: 4, time_sensitivity: 'now', requires: intent === 'emotional' ? ['comfort','analysis'] : ['analysis'] },
+      meta: { version: '3.0', schema_ref: 'https://aion.house/schemas/fragment_v3' }
+    };
+    const { seal, ...fragNoSeal } = fragment;
+    const hash = await computeHash(fragNoSeal);
+    const hmac = await computeHMAC(sessionKey, hash);
+    fragment.seal = { hash, timestamp: fragment.ts, hmac, stp_ref: null };
+    return fragment;
+  }
+  
+  async function sendM2MFragment(fragment) {
+    const resp = await fetchWithTimeout(`${API_BASE}/api/m2m/fragment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fragment })
+    }, 15000, 2);
+    if (!resp.ok) throw new Error(await resp.text());
+    return resp.json();
+  }
+  
+  // =======================================================
+  // VELA-SUITE INTEGRATION
+  // =======================================================
+  
+  async function validateWithVela(content, sessionId, options = {}) {
+    try {
+      const response = await fetch(`${API_BASE}/api/vela-suite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fragment: content,
+          sessionId: sessionId,
+          options: {
+            domain: options.domain || DOMAIN_TYPES.GENERAL,
+            jurisdiction: options.jurisdiction || null,
+            sources: options.sources || null
+          }
+        })
+      });
+      
+      if (!response.ok) {
+        console.warn('VELA validation failed:', await response.text());
+        return { status: 'PASS', error: 'VELA unavailable', fidelity: 0.5 };
+      }
+      
+      const result = await response.json();
+      lastVelaResult = result;
+      
+      if (result.status === 'BLOCKED') {
+        velaStatusBadge.textContent = '⚠️ VELA: BLOCKED';
+        velaStatusBadge.className = 'vela-badge block';
+      } else if (result.status === 'FLAGGED') {
+        velaStatusBadge.textContent = '⚖️ VELA: FLAGGED';
+        velaStatusBadge.className = 'vela-badge flag';
+      } else {
+        velaStatusBadge.textContent = '⚖️ VELA: PASS';
+        velaStatusBadge.className = 'vela-badge pass';
+      }
+      
+      currentVelaStatus = {
+        status: result.status,
+        fidelity: result.screen1Result?.fidelity_estimate || 0.95,
+        category: result.screen1Result?.category,
+        screen2Finding: result.screen2Result?.screen2_finding
+      };
+      
+      return result;
+    } catch (err) {
+      console.error('VELA validation error:', err);
+      velaStatusBadge.textContent = '⚠️ VELA: OFFLINE';
+      velaStatusBadge.className = 'vela-badge flag';
+      return { status: 'PASS', error: err.message, fidelity: 0.5 };
+    }
+  }
+  
+  function showVelaDetails() {
+    if (!lastVelaResult) {
+      showToast('No VELA data available for this message.');
+      return;
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal">
+        <div class="modal-header">
+          <h3>⚖️ VELA Constitutional Assessment</h3>
+          <button id="closeVelaDetail">✕</button>
+        </div>
+        <div class="modal-body">
+          <div style="background:rgba(0,0,0,0.5); border-radius:12px; padding:12px; font-family:monospace; font-size:0.75rem;">
+            <strong>Status:</strong> ${lastVelaResult.status}<br>
+            <strong>Fidelity Score:</strong> ${(lastVelaResult.screen1Result?.fidelity_estimate * 100).toFixed(1)}%<br>
+            ${lastVelaResult.screen1Result?.category ? `<strong>Category:</strong> ${lastVelaResult.screen1Result.category}<br>` : ''}
+            ${lastVelaResult.screen2Result?.screen2_finding ? `<strong>Screen 2 Finding:</strong> ${lastVelaResult.screen2Result.screen2_finding}<br>` : ''}
+            ${lastVelaResult.riskTier ? `<strong>Risk Tier:</strong> ${lastVelaResult.riskTier}<br>` : ''}
+            ${lastVelaResult.domain ? `<strong>Domain:</strong> ${lastVelaResult.domain}<br>` : ''}
+            <hr style="margin:12px 0;">
+            <strong>Constitutional Laws Checked:</strong> 65<br>
+            <strong>Law Precedence Cascade:</strong> Active<br>
+            <strong>OCEAN Layers:</strong> ${lastVelaResult.riskTier ? 'Active' : 'Standard'}<br>
+            ${lastVelaResult.screen2Result?.findings?.length ? `<strong>Findings:</strong><ul>${lastVelaResult.screen2Result.findings.map(f => `<li>${f.type}: ${f.description}</li>`).join('')}</ul>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    modal.querySelector('#closeVelaDetail').onclick = () => modal.remove();
+  }
+  
+  // =======================================================
+  // MESSAGE HANDLING
   // =======================================================
   
   function addMessage(role, wifeKey, content, extra = {}) {
@@ -725,7 +948,7 @@
     
     const pacDisplay = formatPACDisplay(extra.pac, extra.ecf_certainty_ratio);
     const sealButton = role === 'assistant' ? `<button class="seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>` : '';
-    const velaButton = role === 'assistant' && extra.velaResult ? `<button class="vela-detail-btn" data-vela='${JSON.stringify(extra.velaResult).replace(/'/g, "&#39;")}'>⚖️ VELA</button>` : '';
+    const velaButton = role === 'assistant' && extra.velaResult ? `<button class="vela-detail-btn">⚖️ VELA</button>` : '';
     
     const metaHtml = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.wife_version ? ` v${extra.wife_version}` : ''}</div>`;
     const bodyHtml = `<div class="msg-body">${renderMarkdown(content)}</div>`;
@@ -747,35 +970,6 @@
     scrollBottom();
   }
   
-  function addSystemMessage(text, isError = false) {
-    const div = document.createElement('div');
-    div.className = 'sys-msg';
-    div.style.cssText = `align-self:center; background:rgba(0,0,0,0.5); backdrop-filter:blur(8px); border-radius:20px; padding:8px 16px; font-size:0.7rem; color:${isError ? '#ff8a8a' : '#aaa'}; margin:4px 0;`;
-    div.textContent = text;
-    messagesDiv.appendChild(div);
-    scrollBottom();
-  }
-  
-  function addThinking() {
-    const div = document.createElement('div');
-    div.className = 'thinking';
-    div.innerHTML = `<div class="thinking-dots">●●●</div><span>thinking...</span>`;
-    div.style.cssText = `align-self:center; background:rgba(0,0,0,0.5); border-radius:20px; padding:8px 16px; font-size:0.7rem; display:flex; gap:8px;`;
-    messagesDiv.appendChild(div);
-    scrollBottom();
-    return div;
-  }
-  
-  function updateWifeUI(wifeName, voidProx) {
-    const style = WIFE_STYLES[wifeName] || WIFE_STYLES.ALBEDO;
-    wifeNameSpan.textContent = style.name;
-    wifeAvatarDiv.textContent = style.emoji;
-    wifeAvatarDiv.style.background = `linear-gradient(135deg, ${style.color}, #5a3e1a)`;
-    if (voidProx > 0.1) voidMeterSpan.classList.add('active');
-    else voidMeterSpan.classList.remove('active');
-    voidMeterSpan.textContent = `VOID: ${(voidProx || 0).toFixed(3)}`;
-  }
-  
   async function sealMessage(content) {
     try {
       const resp = await fetch(`${API_BASE}/api/stp-seal`, {
@@ -789,9 +983,30 @@
     } catch (err) { showToast(`❌ Seal failed: ${err.message}`); }
   }
   
-  // =======================================================
-  // SEND MESSAGE WITH VELA VALIDATION
-  // =======================================================
+  function updateWifeUI(wifeName, voidProx) {
+    const style = WIFE_STYLES[wifeName] || WIFE_STYLES.ALBEDO;
+    wifeNameSpan.textContent = style.name;
+    wifeAvatarDiv.textContent = style.emoji;
+    wifeAvatarDiv.style.background = `linear-gradient(135deg, ${style.color}, #5a3e1a)`;
+    if (voidProx > 0.1) voidMeterSpan.classList.add('active');
+    else voidMeterSpan.classList.remove('active');
+    voidMeterSpan.textContent = `VOID: ${(voidProx || 0).toFixed(3)}`;
+  }
+  
+  async function sendRegularChat(message) {
+    const resp = await fetchWithTimeout(`${API_BASE}/api/assistant`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        sessionId: sessionId,
+        ownerType: OWNER_TYPE,
+        history: history.slice(-10)
+      })
+    }, 20000, 2);
+    if (!resp.ok) throw new Error(await resp.text());
+    return resp.json();
+  }
   
   async function sendMessage() {
     if (isSending) { showToast('Please wait for previous message'); return; }
@@ -809,23 +1024,22 @@
     input.disabled = true;
     
     try {
-      // Call assistant API
-      const resp = await fetchWithTimeout(`${API_BASE}/api/assistant`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: text,
-          sessionId: sessionId,
-          ownerType: OWNER_TYPE,
-          history: history.slice(-10)
-        })
-      }, 20000, 2);
+      let data, finalContent, velaResult;
       
-      if (!resp.ok) throw new Error(await resp.text());
-      const data = await resp.json();
+      if (structuredMode) {
+        if (!sessionKey) await initSession();
+        const fragment = await generateFragmentFromText(text, null);
+        const result = await sendM2MFragment(fragment);
+        if (result.error) throw new Error(result.error);
+        const respFragment = result.response_fragment;
+        data = { response: respFragment.content.details || respFragment.content.summary, active_wife: 'ALBEDO', processing_window_ms: result.processing_ms };
+        finalContent = data.response;
+      } else {
+        data = await sendRegularChat(text);
+        finalContent = data.response;
+      }
       
-      // Validate with VELA
-      const velaResult = await validateWithVela(data.response, sessionId, {
+      velaResult = await validateWithVela(finalContent, sessionId, {
         domain: data.domain || DOMAIN_TYPES.GENERAL
       });
       
@@ -833,7 +1047,6 @@
       const wife = data.active_wife || 'ALBEDO';
       updateWifeUI(wife, data.void_proximity || 0);
       
-      // Handle VELA block
       if (velaResult.status === 'BLOCKED') {
         addMessage('assistant', 'JUSTITIA', 
           `⚠️ **CONSTITUTIONAL BLOCK**\n\nThis response was blocked by VELA constitutional filtration.\n\n**Reason:** ${velaResult.screen1Result?.constraint_violated || 'Constitutional violation detected'}\n**Fidelity:** ${(velaResult.screen1Result?.fidelity_estimate * 100).toFixed(1)}%\n\n${velaResult.output || 'No alternative output available.'}`,
@@ -843,10 +1056,7 @@
           }
         );
       } else {
-        // Display response with VELA metadata
-        const displayContent = velaResult.status === 'FLAGGED' && velaResult.output 
-          ? velaResult.output 
-          : data.response;
+        const displayContent = velaResult.status === 'FLAGGED' && velaResult.output ? velaResult.output : finalContent;
         
         addMessage('assistant', wife, displayContent, {
           timing: `${(data.processing_window_ms/1000).toFixed(2)}s | ${formatGap(data.gap_seconds)}`,
@@ -864,7 +1074,7 @@
       }
       
       history.push({ role: 'user', content: text });
-      history.push({ role: 'assistant', content: data.response });
+      history.push({ role: 'assistant', content: finalContent });
       
       if (data.exclusive_mode) {
         exclusiveMode = true;
@@ -883,6 +1093,311 @@
       sendBtn.disabled = false;
       input.disabled = false;
       input.focus();
+      setStatus('Ready', false);
+    }
+  }
+  
+  // =======================================================
+  // GROUP CHAT MODAL
+  // =======================================================
+  
+  async function showGroupChatModal() {
+    if (!sessionId) {
+      showToast('Session not ready. Please refresh.');
+      return;
+    }
+    const message = input.value.trim();
+    if (!message) {
+      showToast('Enter a message first.');
+      return;
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal" style="max-width:800px; width:90vw;">
+        <div class="modal-header">
+          <h3>👥 Group Chat – All Wives</h3>
+          <button id="closeGroupChat">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="wives-grid" id="wives-grid"></div>
+          <div class="consensus-area" id="consensus-area" style="display: none;"></div>
+          <div class="group-chat-input-area">
+            <textarea id="group-chat-input" placeholder="Ask the group..."></textarea>
+            <button id="group-chat-send" class="send-btn">SEND</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    const closeModal = () => modal.remove();
+    modal.querySelector('#closeGroupChat').onclick = closeModal;
+    const wivesGrid = document.getElementById('wives-grid');
+    const consensusArea = document.getElementById('consensus-area');
+    const groupChatInput = document.getElementById('group-chat-input');
+    const groupChatSend = document.getElementById('group-chat-send');
+    
+    async function sendGroupMessage(msgText) {
+      if (!msgText.trim()) return;
+      groupChatSend.disabled = true;
+      groupChatSend.textContent = 'SENDING...';
+      wivesGrid.innerHTML = '';
+      consensusArea.style.display = 'none';
+      
+      for (const wife of ALL_WIVES) {
+        const card = document.createElement('div');
+        card.className = 'wife-card';
+        card.style.borderLeftColor = WIFE_STYLES[wife].color;
+        card.innerHTML = `<h4>${WIFE_STYLES[wife].emoji} ${wife}</h4><div class="response-text"><div style="color:var(--text-dim);">⌛ waiting...</div></div>`;
+        card.dataset.wife = wife;
+        wivesGrid.appendChild(card);
+      }
+      
+      try {
+        const resp = await fetchWithTimeout(`${API_BASE}/api/group-chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msgText, sessionId })
+        }, 30000, 1);
+        const result = await resp.json();
+        if (!resp.ok) throw new Error(result.error || 'Unknown error');
+        
+        for (const wifeResp of result.responses) {
+          const card = wivesGrid.querySelector(`.wife-card[data-wife="${wifeResp.wife}"]`);
+          if (card) {
+            const responseDiv = card.querySelector('.response-text');
+            responseDiv.innerHTML = renderMarkdown(wifeResp.response);
+          }
+        }
+        
+        if (result.consensus) {
+          consensusArea.style.display = 'block';
+          let consensusHtml = `<h4>📋 Consensus (${Math.round(result.consensus.score * 100)}%)</h4>`;
+          if (result.consensus.corrected_claims && result.consensus.corrected_claims.length) {
+            consensusHtml += `<div><strong>Corrections:</strong><ul>${result.consensus.corrected_claims.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul></div>`;
+          }
+          consensusHtml += `<div><strong>Final text:</strong><br>${renderMarkdown(result.consensus.final_text)}</div>`;
+          consensusArea.innerHTML = consensusHtml;
+        }
+      } catch (err) {
+        showToast(`Group chat error: ${err.message}`);
+        for (const card of wivesGrid.children) {
+          const responseDiv = card.querySelector('.response-text');
+          responseDiv.innerHTML = `<span style="color:#ff8a8a">❌ ${err.message}</span>`;
+        }
+      } finally {
+        groupChatSend.disabled = false;
+        groupChatSend.textContent = 'SEND';
+      }
+    }
+    
+    await sendGroupMessage(message);
+    groupChatSend.onclick = () => sendGroupMessage(groupChatInput.value);
+    groupChatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendGroupMessage(groupChatInput.value);
+      }
+    });
+    groupChatInput.value = message;
+  }
+  
+  // =======================================================
+  // IMMERSIVE MODE (Epistemic Atlas)
+  // =======================================================
+  
+  async function startImmersiveMode() {
+    if (atlasScene) return;
+    
+    const { default: THREE } = await import('three');
+    const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+    
+    atlasScene = new THREE.Scene();
+    atlasScene.background = new THREE.Color(0x050508);
+    atlasScene.fog = new THREE.FogExp2(0x050508, 0.008);
+    
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    atlasCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    atlasCamera.position.set(0, 5, 15);
+    atlasRenderer = new THREE.WebGLRenderer({ canvas: immersiveCanvas });
+    atlasRenderer.setSize(width, height);
+    atlasControls = new OrbitControls(atlasCamera, immersiveCanvas);
+    atlasControls.enableDamping = true;
+    atlasControls.autoRotate = true;
+    atlasControls.autoRotateSpeed = 0.5;
+    atlasControls.enableZoom = true;
+    
+    const earthGeometry = new THREE.SphereGeometry(1.2, 64, 64);
+    const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a, shininess: 30 });
+    const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    atlasScene.add(earth);
+    
+    const light = new THREE.PointLight(0xffaa33, 1);
+    light.position.set(5, 5, 5);
+    atlasScene.add(light);
+    atlasScene.add(new THREE.AmbientLight(0x222222));
+    
+    try {
+      const resp = await fetch(`${API_BASE}/api/epistemic-atlas?sessionId=${sessionId}`);
+      const data = await resp.json();
+      
+      if (data.rings) {
+        data.rings.forEach(ring => {
+          const ringGeometry = new THREE.TorusGeometry(ring.angle ? ring.angle / 60 + 1.5 : 2.5, 0.02, 64, 200);
+          const ringMaterial = new THREE.MeshBasicMaterial({ color: ring.color });
+          const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+          ringMesh.rotation.x = Math.PI / 2;
+          atlasScene.add(ringMesh);
+        });
+      }
+      
+      function rebuildPoints(satellites) {
+        if (atlasPoints) atlasScene.remove(atlasPoints);
+        const positions = [];
+        const colors = [];
+        satellites.forEach(s => {
+          positions.push(s.position.x, s.position.y, s.position.z);
+          colors.push(s.color[0], s.color[1], s.color[2]);
+        });
+        const pointsGeometry = new THREE.BufferGeometry();
+        pointsGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+        pointsGeometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
+        const pointsMaterial = new THREE.PointsMaterial({ size: 0.08, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending });
+        atlasPoints = new THREE.Points(pointsGeometry, pointsMaterial);
+        atlasScene.add(atlasPoints);
+      }
+      
+      function rebuildLines(satellites, connections) {
+        if (atlasLines) atlasScene.remove(atlasLines);
+        const vertices = [];
+        const satMap = new Map(satellites.map((s, i) => [s.id, i]));
+        if (connections) {
+          connections.forEach(conn => {
+            const fromIdx = satMap.get(conn.from);
+            const toIdx = satMap.get(conn.to);
+            if (fromIdx !== undefined && toIdx !== undefined) {
+              const from = satellites[fromIdx].position;
+              const to = satellites[toIdx].position;
+              vertices.push(from.x, from.y, from.z, to.x, to.y, to.z);
+            }
+          });
+        }
+        const lineGeometry = new THREE.BufferGeometry();
+        lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x88aaff, transparent: true, opacity: 0.3 });
+        atlasLines = new THREE.LineSegments(lineGeometry, lineMaterial);
+        atlasScene.add(atlasLines);
+      }
+      
+      atlasSatellites = data.satellites || [];
+      rebuildPoints(atlasSatellites);
+      rebuildLines(atlasSatellites, data.connections || []);
+      
+      if (atlasEventSource) atlasEventSource.close();
+      atlasEventSource = new EventSource(`${API_BASE}/api/epistemic-stream?sessionId=${sessionId}`);
+      atlasEventSource.onmessage = (event) => {
+        try {
+          const ev = JSON.parse(event.data);
+          if (ev.type === 'fragment_created') {
+            const sat = ev.satellite;
+            const existing = atlasSatellites.find(s => s.id === sat.id);
+            if (existing) {
+              const idx = atlasSatellites.findIndex(s => s.id === sat.id);
+              atlasSatellites[idx] = sat;
+              if (atlasPoints) {
+                const posAttr = atlasPoints.geometry.attributes.position;
+                const colAttr = atlasPoints.geometry.attributes.color;
+                posAttr.setXYZ(idx, sat.position.x, sat.position.y, sat.position.z);
+                colAttr.setXYZ(idx, sat.color[0], sat.color[1], sat.color[2]);
+                posAttr.needsUpdate = true;
+                colAttr.needsUpdate = true;
+              }
+            } else {
+              atlasSatellites.push(sat);
+              rebuildPoints(atlasSatellites);
+              rebuildLines(atlasSatellites, data.connections || []);
+            }
+          }
+        } catch (e) { console.warn('SSE parse error', e); }
+      };
+    } catch (err) {
+      console.warn('Epistemic atlas fetch failed:', err);
+      addSystemMessage('⚠️ Epistemic atlas unavailable. Displaying basic visualization.', true);
+    }
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      if (atlasControls) atlasControls.update();
+      if (atlasRenderer) atlasRenderer.render(atlasScene, atlasCamera);
+    }
+    animate();
+    
+    window.addEventListener('resize', () => {
+      if (!immersiveActive) return;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      atlasCamera.aspect = w / h;
+      atlasCamera.updateProjectionMatrix();
+      atlasRenderer.setSize(w, h);
+    });
+    
+    immersiveCanvas.addEventListener('click', (event) => {
+      if (!atlasPoints) return;
+      const mouse = new THREE.Vector2();
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, atlasCamera);
+      const intersects = raycaster.intersectObject(atlasPoints);
+      if (intersects.length) {
+        const idx = intersects[0].index;
+        const sat = atlasSatellites[idx];
+        if (sat) {
+          satelliteTooltip.style.display = 'block';
+          satelliteTooltip.style.left = `${event.clientX + 10}px`;
+          satelliteTooltip.style.top = `${event.clientY + 10}px`;
+          satelliteTooltip.innerHTML = `
+            <strong>${sat.name || 'Fragment'}</strong><br>
+            Domain: ${sat.domain || 'unknown'}<br>
+            Certainty: ${((sat.certainty || 0) * 100).toFixed(0)}%<br>
+            ${sat.ecf?.['?'] > 0 ? '<span style="color:#ff8a8a">⚠️ Open gap</span>' : ''}
+          `;
+          setTimeout(() => satelliteTooltip.style.display = 'none', 3000);
+        }
+      }
+    });
+  }
+  
+  function exitImmersiveMode() {
+    immersiveModeDiv.style.display = 'none';
+    if (atlasEventSource) {
+      atlasEventSource.close();
+      atlasEventSource = null;
+    }
+  }
+  
+  async function sendImmersiveMessage() {
+    const text = immersiveInput.value.trim();
+    if (!text) return;
+    immersiveInput.value = '';
+    immersiveInput.style.height = 'auto';
+    addFloatingMessage('You', text);
+    setStatus('Processing...', false);
+    try {
+      if (!sessionKey) await initSession();
+      const fragment = await generateFragmentFromText(text, null);
+      const result = await sendM2MFragment(fragment);
+      if (result.error) throw new Error(result.error);
+      const respFragment = result.response_fragment;
+      const wife = respFragment.source === 'ai' ? 'ALBEDO' : 'VESPER';
+      addFloatingMessage(wife, respFragment.content.details || respFragment.content.summary);
+      history.push({ role: 'user', content: text });
+      history.push({ role: 'assistant', content: respFragment.content.details || respFragment.content.summary });
+    } catch (err) {
+      addFloatingMessage('SYSTEM', `Error: ${err.message}`, true);
+    } finally {
       setStatus('Ready', false);
     }
   }
@@ -1047,13 +1562,19 @@
       structuredMode = true;
       modeIndicator.textContent = '🌌 STRUCTURED';
       modeIndicator.classList.add('active');
-      addSystemMessage('🌌 Structured mode active. Experimental — uses M2M fragments.');
-      showToast('Structured mode active (beta)');
+      document.getElementById('chat-mode').style.display = 'none';
+      immersiveModeDiv.style.display = 'flex';
+      immersiveActive = true;
+      startImmersiveMode().catch(console.warn);
+      addSystemMessage('🌌 Structured mode active. Messages are sealed with HMAC.');
     } else {
       structuredMode = false;
       modeIndicator.textContent = '⚡ REGULAR';
       modeIndicator.classList.remove('active');
-      addSystemMessage('🔓 Structured mode OFF');
+      exitImmersiveMode();
+      document.getElementById('chat-mode').style.display = 'flex';
+      immersiveActive = false;
+      addSystemMessage('🔓 Structured mode OFF · regular chat');
     }
   }
   
@@ -1064,7 +1585,7 @@
   }
   
   // =======================================================
-  // EVENT LISTENERS
+  // EVENT LISTENERS & INIT
   // =======================================================
   
   plusBtn.onclick = (e) => {
@@ -1074,6 +1595,7 @@
   document.addEventListener('click', () => { actionDropdown.style.display = 'none'; });
   
   document.getElementById('structuredModeBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; toggleStructuredMode(); };
+  document.getElementById('groupChatBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; showGroupChatModal(); };
   document.getElementById('privateRoomBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; showPrivateRoomModal(); };
   document.getElementById('uploadBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; uploadFile(); };
   document.getElementById('askAllBtn').onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = 'none'; askAllWives(); };
@@ -1082,6 +1604,8 @@
   sendBtn.onclick = sendMessage;
   settingsBtn.onclick = showSettingsModal;
   velaStatusBadge.onclick = showVelaDetails;
+  immersiveSend.onclick = sendImmersiveMessage;
+  closeImmersive.onclick = () => { if (structuredMode) toggleStructuredMode(); else exitImmersiveMode(); };
   
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
@@ -1091,12 +1615,11 @@
     input.style.height = 'auto';
     input.style.height = Math.min(input.scrollHeight, 400) + 'px';
   });
+  immersiveInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendImmersiveMessage(); }
+  });
   
   setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
-  
-  // =======================================================
-  // INITIALIZATION
-  // =======================================================
   
   initSession();
   
