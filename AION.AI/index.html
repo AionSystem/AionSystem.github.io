@@ -6,29 +6,131 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>AION · Ada‑VELA</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0a0a0f;
+            color: #f0f0f8;
+        }
+        #chat {
+            height: 500px;
+            overflow: auto;
+            border: 1px solid #2a2a3a;
+            margin: 10px 0;
+            padding: 10px;
+            background: #0f0f14;
+            border-radius: 8px;
+        }
+        .message {
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .user {
+            background: #1e3a5f;
+            text-align: right;
+        }
+        .ai {
+            background: #1e1e2d;
+        }
+        .seal-btn {
+            background: none;
+            border: 1px solid #c9a028;
+            color: #c9a028;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .vela-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+        .vela-pass { background: #1e4620; color: #4ade80; }
+        .vela-flag { background: #5f3a1a; color: #ffaa33; }
+        .vela-block { background: #5f1a1a; color: #ff4d4d; }
+        input, button {
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: none;
+        }
+        input {
+            flex: 1;
+            background: #1e1e2d;
+            color: white;
+            border: 1px solid #2a2a3a;
+        }
+        button {
+            background: #c9a028;
+            color: #0a0a0f;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+            padding: 8px;
+            border-top: 1px solid #2a2a3a;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .small-btn {
+            background: #2a2a3a;
+            color: #c9a028;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
-    <div id="chat" style="height:400px; overflow:auto; border:1px solid #ccc; margin:10px; padding:10px;"></div>
-    <div style="margin:10px;">
-        <input type="text" id="input" style="width:70%; padding:10px;">
-        <button onclick="send()" style="padding:10px 20px;">Send</button>
+    <h2>AION · Ada‑VELA</h2>
+    
+    <div id="chat"></div>
+    
+    <div class="input-row">
+        <input type="text" id="input" placeholder="Type your message..." autofocus>
+        <button id="sendBtn">SEND</button>
     </div>
-    <div style="margin:10px; font-size:12px; color:#666;">
-        <span id="sessionDisplay"></span> | 
-        <span id="velaDisplay">⚖️ VELA: ready</span>
+    
+    <div class="action-buttons">
+        <button id="sealInputBtn" class="small-btn">🔒 SEAL INPUT</button>
+        <button id="validateBtn" class="small-btn">⚖️ VALIDATE LAST</button>
+        <button id="traceBtn" class="small-btn">📜 SHOW TRACE</button>
+    </div>
+    
+    <div class="status-bar">
+        <span id="sessionDisplay"></span>
+        <span id="velaDisplay" class="vela-badge vela-pass">⚖️ READY</span>
+        <span id="lastSeal"></span>
     </div>
 
     <script>
         // ============================================================
-        // ADA‑VELA v1.0 – Lightweight frontend implementation
-        // Features: State tracking, Operation recording
+        // ADA‑VELA + STP SEAL + VELA VALIDATION
         // ============================================================
         
         const API = 'https://aion-backend-mu.vercel.app';
         
-        // ========== Ada‑VELA Core Classes ==========
+        // ========== Ada‑VELA Core ==========
         
-        // Triple timestamp (simplified for browser)
         function tripleTimestamp() {
             const now = new Date();
             return {
@@ -37,119 +139,104 @@
             };
         }
         
-        // AdaVariable – tracks state with history
         class AdaVariable {
             constructor(name, initialValue) {
                 this.name = name;
                 this.value = initialValue;
-                this.history = [{
-                    timestamp: tripleTimestamp(),
-                    value: initialValue,
-                    operation: 'INIT'
-                }];
+                this.history = [{ timestamp: tripleTimestamp(), value: initialValue, op: 'INIT' }];
             }
-            
-            get() {
-                return this.value;
-            }
-            
-            set(newValue, operation = 'SET') {
-                this.history.push({
-                    timestamp: tripleTimestamp(),
-                    from: this.value,
-                    to: newValue,
-                    operation: operation
-                });
+            get() { return this.value; }
+            set(newValue, op = 'SET') {
+                this.history.push({ timestamp: tripleTimestamp(), from: this.value, to: newValue, op });
                 this.value = newValue;
                 return this;
             }
-            
-            trace() {
-                return this.history;
-            }
+            trace() { return this.history; }
         }
         
-        // AdaOperation – records execution
         class AdaOperation {
-            constructor(name, description) {
+            constructor(name) {
                 this.name = name;
-                this.description = description;
                 this.executions = [];
                 this.fn = null;
             }
-            
-            setFunction(fn) {
-                this.fn = fn;
-                return this;
-            }
-            
+            setFunction(fn) { this.fn = fn; return this; }
             async execute(input) {
-                if (!this.fn) throw new Error(`Operation ${this.name} has no function`);
-                
-                const startTime = tripleTimestamp();
-                let result = null;
-                let error = null;
-                
-                try {
-                    result = await this.fn(input);
-                } catch (err) {
-                    error = { message: err.message };
-                }
-                
-                const endTime = tripleTimestamp();
-                const execution = {
-                    id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + '_' + Math.random(),
-                    name: this.name,
-                    startTime,
-                    endTime,
-                    duration: endTime.unix - startTime.unix,
-                    input,
-                    result: result,
-                    error: error
-                };
-                
-                this.executions.push(execution);
-                
-                if (error) throw new Error(error.message);
-                return { result, execution };
+                const start = tripleTimestamp();
+                let result = null, error = null;
+                try { result = await this.fn(input); }
+                catch (e) { error = e.message; }
+                const exec = { id: Date.now() + '_' + Math.random(), name: this.name, start, end: tripleTimestamp(), input, result, error };
+                this.executions.push(exec);
+                if (error) throw new Error(error);
+                return { result, execution: exec };
             }
-            
-            getExecutions() {
-                return this.executions;
-            }
+            getExecutions() { return this.executions; }
         }
         
-        // ========== Application State ==========
-        
-        // Session state with AdaVariable
-        let sessionVar = new AdaVariable('session', null);
+        // ========== Session ==========
         let sessionId = localStorage.getItem('sessionId');
         if (!sessionId) {
             sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
             localStorage.setItem('sessionId', sessionId);
         }
-        sessionVar.set(sessionId, 'SESSION_LOADED');
         
-        // Chat history with AdaVariable
+        let sessionVar = new AdaVariable('session', sessionId);
         let chatHistory = new AdaVariable('chatHistory', []);
-        
-        // UI state
+        let lastResponse = null;
+        let lastVelaResult = null;
         let isSending = false;
         
         // DOM elements
         const chatDiv = document.getElementById('chat');
         const inputField = document.getElementById('input');
+        const sendBtn = document.getElementById('sendBtn');
         const sessionDisplay = document.getElementById('sessionDisplay');
         const velaDisplay = document.getElementById('velaDisplay');
+        const lastSealSpan = document.getElementById('lastSeal');
         
         sessionDisplay.textContent = `Session: ${sessionId.slice(-8)}`;
         
         // ========== Ada‑VELA Operations ==========
         
-        // API Call Operation
-        const assistantOp = new AdaOperation('ASSISTANT_CALL', 'Calls the AION assistant API');
+        // 1. STP Seal Operation
+        const sealOp = new AdaOperation('STP_SEAL');
+        sealOp.setFunction(async (content) => {
+            const res = await fetch(`${API}/api/stp-seal`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    entry: content.substring(0, 500),
+                    type: 'general-trace',
+                    sessionId: sessionId
+                })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Seal failed');
+            return { seal: data.seal, issueUrl: data.issue_url };
+        });
+        
+        // 2. VELA Constitutional Validation
+        const velaOp = new AdaOperation('VELA_VALIDATE');
+        velaOp.setFunction(async (content) => {
+            const res = await fetch(`${API}/api/vela-suite`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fragment: content,
+                    sessionId: sessionId,
+                    options: { domain: 'general' }
+                })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'VELA unavailable');
+            return data;
+        });
+        
+        // 3. Assistant API Call
+        const assistantOp = new AdaOperation('ASSISTANT_CALL');
         assistantOp.setFunction(async (message) => {
-            const response = await fetch(`${API}/api/assistant`, {
+            const res = await fetch(`${API}/api/assistant`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -159,36 +246,109 @@
                     history: []
                 })
             });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'API error');
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'API error');
             return data;
         });
         
-        // ========== Helper Functions ==========
+        // ========== UI Functions ==========
         
-        function addMessage(role, text, metadata = {}) {
+        function addMessage(role, text, sealHash = null, velaResult = null) {
             const msgDiv = document.createElement('div');
-            msgDiv.style.margin = '8px 0';
-            msgDiv.style.padding = '8px';
+            msgDiv.className = `message ${role}`;
             
-            if (role === 'user') {
-                msgDiv.style.backgroundColor = '#e3f2fd';
-                msgDiv.style.textAlign = 'right';
-                msgDiv.innerHTML = `<b>You:</b> ${text}`;
-            } else {
-                msgDiv.style.backgroundColor = '#f5f5f5';
-                let metaHtml = '';
-                if (metadata.vela) {
-                    metaHtml = `<span style="font-size:10px; color:#888; margin-left:8px;">⚖️ VELA: ${metadata.vela}</span>`;
-                }
-                msgDiv.innerHTML = `<b>AI:</b> ${text}${metaHtml}`;
+            let sealHtml = '';
+            if (role === 'ai' && sealHash) {
+                sealHtml = `<button class="seal-btn" data-text="${escapeHtml(text)}">🔒 SEAL</button>`;
             }
             
+            let velaHtml = '';
+            if (velaResult) {
+                let statusClass = 'vela-pass';
+                let statusText = 'PASS';
+                if (velaResult.status === 'FLAGGED') { statusClass = 'vela-flag'; statusText = 'FLAGGED'; }
+                if (velaResult.status === 'BLOCKED') { statusClass = 'vela-block'; statusText = 'BLOCKED'; }
+                velaHtml = `<span class="vela-badge ${statusClass}">⚖️ VELA: ${statusText}</span>`;
+            }
+            
+            msgDiv.innerHTML = `
+                <strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${escapeHtml(text)}
+                ${sealHtml}
+                ${velaHtml}
+            `;
             chatDiv.appendChild(msgDiv);
             chatDiv.scrollTop = chatDiv.scrollHeight;
             
-            // Record in chat history
-            chatHistory.set([...chatHistory.get(), { role, text, timestamp: tripleTimestamp() }], `ADD_MESSAGE_${role}`);
+            // Attach seal button event
+            const sealBtn = msgDiv.querySelector('.seal-btn');
+            if (sealBtn) {
+                sealBtn.onclick = () => sealMessage(text);
+            }
+            
+            // Store in history
+            chatHistory.set([...chatHistory.get(), { role, text, timestamp: tripleTimestamp() }]);
+        }
+        
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        function showToast(msg, isError = false) {
+            const toast = document.createElement('div');
+            toast.textContent = msg;
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                background: ${isError ? '#5f1a1a' : '#1e4620'}; color: white;
+                padding: 8px 16px; border-radius: 20px; font-size: 12px;
+                z-index: 1000; animation: fadeOut 2s forwards;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
+        async function sealMessage(content) {
+            try {
+                const { result } = await sealOp.execute(content);
+                lastSealSpan.textContent = `🔒 Sealed: ${result.seal.slice(0, 8)}...`;
+                showToast(`✅ Sealed: ${result.seal.slice(0, 8)}...`);
+                if (result.issueUrl) {
+                    console.log('GitHub issue:', result.issueUrl);
+                }
+            } catch (err) {
+                showToast(`❌ Seal failed: ${err.message}`, true);
+            }
+        }
+        
+        async function validateLastMessage() {
+            if (!lastResponse) {
+                showToast('No message to validate', true);
+                return;
+            }
+            try {
+                const { result } = await velaOp.execute(lastResponse);
+                lastVelaResult = result;
+                
+                // Update VELA display
+                if (result.status === 'BLOCKED') {
+                    velaDisplay.className = 'vela-badge vela-block';
+                    velaDisplay.innerHTML = '⚠️ VELA: BLOCKED';
+                } else if (result.status === 'FLAGGED') {
+                    velaDisplay.className = 'vela-badge vela-flag';
+                    velaDisplay.innerHTML = '⚖️ VELA: FLAGGED';
+                } else {
+                    velaDisplay.className = 'vela-badge vela-pass';
+                    velaDisplay.innerHTML = '⚖️ VELA: PASS';
+                }
+                
+                showToast(`VELA: ${result.status} | Fidelity: ${((result.screen1Result?.fidelity_estimate || 0) * 100).toFixed(0)}%`);
+            } catch (err) {
+                showToast(`Validation failed: ${err.message}`, true);
+            }
         }
         
         async function send() {
@@ -202,51 +362,57 @@
             isSending = true;
             
             const thinking = document.createElement('div');
-            thinking.style.margin = '8px 0';
-            thinking.style.padding = '8px';
-            thinking.style.backgroundColor = '#f5f5f5';
-            thinking.innerHTML = '<b>AI:</b> ...';
+            thinking.className = 'message ai';
+            thinking.innerHTML = '<strong>AI:</strong> ...';
             chatDiv.appendChild(thinking);
             chatDiv.scrollTop = chatDiv.scrollHeight;
             
             try {
-                // Execute the operation with Ada‑VELA tracking
-                const { result, execution } = await assistantOp.execute(message);
+                const { result } = await assistantOp.execute(message);
                 
                 if (result && result.response) {
-                    thinking.innerHTML = `<b>AI:</b> ${result.response}`;
+                    lastResponse = result.response;
+                    thinking.remove();
+                    addMessage('ai', result.response, null, null);
                     
-                    // Update VELA display if PAC data available
-                    if (result.pac) {
-                        const ppi = result.pac.ppi;
-                        if (ppi < 30) velaDisplay.innerHTML = '⚠️ VELA: BLOCKED';
-                        else if (ppi < 70) velaDisplay.innerHTML = '⚖️ VELA: FLAGGED';
-                        else velaDisplay.innerHTML = '⚖️ VELA: PASS';
+                    // Auto-validate with VELA
+                    const velaResult = await velaOp.execute(result.response);
+                    lastVelaResult = velaResult.result;
+                    
+                    // Update VELA display
+                    const v = velaResult.result;
+                    if (v.status === 'BLOCKED') {
+                        velaDisplay.className = 'vela-badge vela-block';
+                        velaDisplay.innerHTML = '⚠️ VELA: BLOCKED';
+                    } else if (v.status === 'FLAGGED') {
+                        velaDisplay.className = 'vela-badge vela-flag';
+                        velaDisplay.innerHTML = '⚖️ VELA: FLAGGED';
                     } else {
-                        velaDisplay.innerHTML = '⚖️ VELA: active';
+                        velaDisplay.className = 'vela-badge vela-pass';
+                        velaDisplay.innerHTML = '⚖️ VELA: PASS';
                     }
                     
-                    // Add metadata to the message
+                    // Add VELA badge to last message
                     const lastMsg = chatDiv.lastChild;
-                    if (lastMsg && lastMsg !== thinking) {
-                        // Already added, but we can add VELA badge to thinking
-                        const velaBadge = document.createElement('span');
-                        velaBadge.style.fontSize = '10px';
-                        velaBadge.style.color = '#888';
-                        velaBadge.style.marginLeft = '8px';
-                        velaBadge.textContent = result.pac ? ` ⚖️ PPI:${result.pac.ppi}` : '';
-                        thinking.appendChild(velaBadge);
+                    if (lastMsg && lastMsg.className === 'message ai') {
+                        const velaSpan = document.createElement('span');
+                        velaSpan.className = `vela-badge ${v.status === 'BLOCKED' ? 'vela-block' : (v.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass')}`;
+                        velaSpan.innerHTML = `⚖️ VELA: ${v.status}`;
+                        lastMsg.appendChild(velaSpan);
+                        
+                        // Add seal button
+                        const sealBtn = document.createElement('button');
+                        sealBtn.className = 'seal-btn';
+                        sealBtn.textContent = '🔒 SEAL';
+                        sealBtn.onclick = () => sealMessage(result.response);
+                        lastMsg.appendChild(sealBtn);
                     }
+                    
                 } else {
-                    thinking.innerHTML = `<b>AI:</b> Error: No response`;
+                    thinking.innerHTML = '<strong>AI:</strong> Error: No response';
                 }
-                
-                // Log execution trace (view in console)
-                console.log('[Ada‑VELA] Operation execution:', execution);
-                
             } catch (err) {
-                thinking.innerHTML = `<b>AI:</b> Error: ${err.message}`;
-                velaDisplay.innerHTML = '⚠️ VELA: error';
+                thinking.innerHTML = `<strong>AI:</strong> Error: ${err.message}`;
             }
             
             inputField.disabled = false;
@@ -254,21 +420,37 @@
             isSending = false;
         }
         
-        // View trace in console (for debugging)
         function showTrace() {
-            console.log('=== Ada‑VELA Session Trace ===');
+            console.log('=== Ada‑VELA Trace ===');
             console.log('Session:', sessionVar.trace());
             console.log('Chat History:', chatHistory.trace());
             console.log('API Calls:', assistantOp.getExecutions());
+            console.log('Seal Calls:', sealOp.getExecutions());
+            console.log('VELA Calls:', velaOp.getExecutions());
+            showToast('Trace logged to console (F12)');
         }
+        
+        function sealInput() {
+            const text = inputField.value.trim();
+            if (!text) {
+                showToast('Nothing to seal', true);
+                return;
+            }
+            sealMessage(text);
+        }
+        
+        // Event listeners
+        sendBtn.onclick = send;
+        document.getElementById('sealInputBtn').onclick = sealInput;
+        document.getElementById('validateBtn').onclick = validateLastMessage;
+        document.getElementById('traceBtn').onclick = showTrace;
         
         inputField.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') send();
         });
         
         // Initial message
-        addMessage('ai', 'Ada‑VELA active. State is tracked. Open console to see traces (F12).');
-        console.log('Ada‑VELA initialized. Session:', sessionId);
+        addMessage('ai', 'Ada‑VELA active. Seal buttons and VELA validation ready. Click 🔒 SEAL on any message to create immutable STP record.');
     </script>
 </body>
 </html>
