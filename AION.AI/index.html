@@ -5,7 +5,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>AION</title>
+    <title>AION · Ada‑VELA</title>
 </head>
 <body>
     <div id="chat" style="height:400px; overflow:auto; border:1px solid #ccc; margin:10px; padding:10px;"></div>
@@ -13,42 +13,193 @@
         <input type="text" id="input" style="width:70%; padding:10px;">
         <button onclick="send()" style="padding:10px 20px;">Send</button>
     </div>
+    <div style="margin:10px; font-size:12px; color:#666;">
+        <span id="sessionDisplay"></span> | 
+        <span id="velaDisplay">⚖️ VELA: ready</span>
+    </div>
 
     <script>
+        // ============================================================
+        // ADA‑VELA v1.0 – Lightweight frontend implementation
+        // Features: State tracking, Operation recording
+        // ============================================================
+        
         const API = 'https://aion-backend-mu.vercel.app';
         
+        // ========== Ada‑VELA Core Classes ==========
+        
+        // Triple timestamp (simplified for browser)
+        function tripleTimestamp() {
+            const now = new Date();
+            return {
+                gregorian: now.toISOString(),
+                unix: Math.floor(now.getTime() / 1000)
+            };
+        }
+        
+        // AdaVariable – tracks state with history
+        class AdaVariable {
+            constructor(name, initialValue) {
+                this.name = name;
+                this.value = initialValue;
+                this.history = [{
+                    timestamp: tripleTimestamp(),
+                    value: initialValue,
+                    operation: 'INIT'
+                }];
+            }
+            
+            get() {
+                return this.value;
+            }
+            
+            set(newValue, operation = 'SET') {
+                this.history.push({
+                    timestamp: tripleTimestamp(),
+                    from: this.value,
+                    to: newValue,
+                    operation: operation
+                });
+                this.value = newValue;
+                return this;
+            }
+            
+            trace() {
+                return this.history;
+            }
+        }
+        
+        // AdaOperation – records execution
+        class AdaOperation {
+            constructor(name, description) {
+                this.name = name;
+                this.description = description;
+                this.executions = [];
+                this.fn = null;
+            }
+            
+            setFunction(fn) {
+                this.fn = fn;
+                return this;
+            }
+            
+            async execute(input) {
+                if (!this.fn) throw new Error(`Operation ${this.name} has no function`);
+                
+                const startTime = tripleTimestamp();
+                let result = null;
+                let error = null;
+                
+                try {
+                    result = await this.fn(input);
+                } catch (err) {
+                    error = { message: err.message };
+                }
+                
+                const endTime = tripleTimestamp();
+                const execution = {
+                    id: crypto.randomUUID ? crypto.randomUUID() : Date.now() + '_' + Math.random(),
+                    name: this.name,
+                    startTime,
+                    endTime,
+                    duration: endTime.unix - startTime.unix,
+                    input,
+                    result: result,
+                    error: error
+                };
+                
+                this.executions.push(execution);
+                
+                if (error) throw new Error(error.message);
+                return { result, execution };
+            }
+            
+            getExecutions() {
+                return this.executions;
+            }
+        }
+        
+        // ========== Application State ==========
+        
+        // Session state with AdaVariable
+        let sessionVar = new AdaVariable('session', null);
         let sessionId = localStorage.getItem('sessionId');
         if (!sessionId) {
             sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
             localStorage.setItem('sessionId', sessionId);
         }
+        sessionVar.set(sessionId, 'SESSION_LOADED');
         
+        // Chat history with AdaVariable
+        let chatHistory = new AdaVariable('chatHistory', []);
+        
+        // UI state
+        let isSending = false;
+        
+        // DOM elements
         const chatDiv = document.getElementById('chat');
         const inputField = document.getElementById('input');
+        const sessionDisplay = document.getElementById('sessionDisplay');
+        const velaDisplay = document.getElementById('velaDisplay');
         
-        function addMessage(role, text) {
+        sessionDisplay.textContent = `Session: ${sessionId.slice(-8)}`;
+        
+        // ========== Ada‑VELA Operations ==========
+        
+        // API Call Operation
+        const assistantOp = new AdaOperation('ASSISTANT_CALL', 'Calls the AION assistant API');
+        assistantOp.setFunction(async (message) => {
+            const response = await fetch(`${API}/api/assistant`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: message,
+                    sessionId: sessionId,
+                    ownerType: 'sheldon',
+                    history: []
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'API error');
+            return data;
+        });
+        
+        // ========== Helper Functions ==========
+        
+        function addMessage(role, text, metadata = {}) {
             const msgDiv = document.createElement('div');
             msgDiv.style.margin = '8px 0';
             msgDiv.style.padding = '8px';
+            
             if (role === 'user') {
                 msgDiv.style.backgroundColor = '#e3f2fd';
                 msgDiv.style.textAlign = 'right';
-                msgDiv.innerHTML = '<b>You:</b> ' + text;
+                msgDiv.innerHTML = `<b>You:</b> ${text}`;
             } else {
                 msgDiv.style.backgroundColor = '#f5f5f5';
-                msgDiv.innerHTML = '<b>AI:</b> ' + text;
+                let metaHtml = '';
+                if (metadata.vela) {
+                    metaHtml = `<span style="font-size:10px; color:#888; margin-left:8px;">⚖️ VELA: ${metadata.vela}</span>`;
+                }
+                msgDiv.innerHTML = `<b>AI:</b> ${text}${metaHtml}`;
             }
+            
             chatDiv.appendChild(msgDiv);
             chatDiv.scrollTop = chatDiv.scrollHeight;
+            
+            // Record in chat history
+            chatHistory.set([...chatHistory.get(), { role, text, timestamp: tripleTimestamp() }], `ADD_MESSAGE_${role}`);
         }
         
         async function send() {
             const message = inputField.value.trim();
             if (!message) return;
+            if (isSending) return;
             
             addMessage('user', message);
             inputField.value = '';
             inputField.disabled = true;
+            isSending = true;
             
             const thinking = document.createElement('div');
             thinking.style.margin = '8px 0';
@@ -59,37 +210,65 @@
             chatDiv.scrollTop = chatDiv.scrollHeight;
             
             try {
-                const res = await fetch(`${API}/api/assistant`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: message,
-                        sessionId: sessionId,
-                        ownerType: 'sheldon',
-                        history: []
-                    })
-                });
+                // Execute the operation with Ada‑VELA tracking
+                const { result, execution } = await assistantOp.execute(message);
                 
-                const data = await res.json();
-                
-                if (res.ok && data.response) {
-                    thinking.innerHTML = '<b>AI:</b> ' + data.response;
+                if (result && result.response) {
+                    thinking.innerHTML = `<b>AI:</b> ${result.response}`;
+                    
+                    // Update VELA display if PAC data available
+                    if (result.pac) {
+                        const ppi = result.pac.ppi;
+                        if (ppi < 30) velaDisplay.innerHTML = '⚠️ VELA: BLOCKED';
+                        else if (ppi < 70) velaDisplay.innerHTML = '⚖️ VELA: FLAGGED';
+                        else velaDisplay.innerHTML = '⚖️ VELA: PASS';
+                    } else {
+                        velaDisplay.innerHTML = '⚖️ VELA: active';
+                    }
+                    
+                    // Add metadata to the message
+                    const lastMsg = chatDiv.lastChild;
+                    if (lastMsg && lastMsg !== thinking) {
+                        // Already added, but we can add VELA badge to thinking
+                        const velaBadge = document.createElement('span');
+                        velaBadge.style.fontSize = '10px';
+                        velaBadge.style.color = '#888';
+                        velaBadge.style.marginLeft = '8px';
+                        velaBadge.textContent = result.pac ? ` ⚖️ PPI:${result.pac.ppi}` : '';
+                        thinking.appendChild(velaBadge);
+                    }
                 } else {
-                    thinking.innerHTML = '<b>AI:</b> Error: ' + (data.error || 'Unknown');
+                    thinking.innerHTML = `<b>AI:</b> Error: No response`;
                 }
+                
+                // Log execution trace (view in console)
+                console.log('[Ada‑VELA] Operation execution:', execution);
+                
             } catch (err) {
-                thinking.innerHTML = '<b>AI:</b> Connection error: ' + err.message;
+                thinking.innerHTML = `<b>AI:</b> Error: ${err.message}`;
+                velaDisplay.innerHTML = '⚠️ VELA: error';
             }
             
             inputField.disabled = false;
             inputField.focus();
+            isSending = false;
+        }
+        
+        // View trace in console (for debugging)
+        function showTrace() {
+            console.log('=== Ada‑VELA Session Trace ===');
+            console.log('Session:', sessionVar.trace());
+            console.log('Chat History:', chatHistory.trace());
+            console.log('API Calls:', assistantOp.getExecutions());
         }
         
         inputField.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') send();
         });
         
-        addMessage('ai', 'Connected. Type a message.');
+        // Initial message
+        addMessage('ai', 'Ada‑VELA active. State is tracked. Open console to see traces (F12).');
+        console.log('Ada‑VELA initialized. Session:', sessionId);
     </script>
 </body>
 </html>
