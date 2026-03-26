@@ -1,865 +1,1165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <title>AION · Ada‑VELA</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #0a0a0f;
-            color: #f0f0f8;
-        }
-        /* Smooth scrolling */
-        html { scroll-behavior: smooth; }
-        /* Chat container */
-        #chat {
-            height: 500px;
-            overflow-y: auto;
-            border: 1px solid #2a2a3a;
-            margin: 10px 0;
-            padding: 10px;
-            background: #0f0f14;
-            border-radius: 12px;
-            scroll-behavior: smooth;
-        }
-        /* Message styles */
-        .message {
-            margin: 12px 0;
-            padding: 10px 14px;
-            border-radius: 18px;
-            word-wrap: break-word;
-            animation: fadeSlideUp 0.2s ease-out;
-        }
-        .user {
-            background: #1e3a5f;
-            text-align: right;
-            border-bottom-right-radius: 4px;
-        }
-        .ai {
-            background: #1e1e2d;
-            border-bottom-left-radius: 4px;
-        }
-        .system {
-            background: #2a2a3a;
-            text-align: center;
-            font-size: 12px;
-            color: #c9a028;
-            border-radius: 30px;
-            padding: 8px 16px;
-            margin: 8px auto;
-            width: fit-content;
-            max-width: 90%;
-        }
-        /* Markdown elements */
-        .message-body {
-            line-height: 1.5;
-        }
-        .message-body p { margin: 0.5em 0; }
-        .message-body p:first-child { margin-top: 0; }
-        .message-body p:last-child { margin-bottom: 0; }
-        .message-body code {
-            font-family: 'JetBrains Mono', monospace;
-            background: #0a0a0f;
-            padding: 0.2em 0.4em;
-            border-radius: 6px;
-            font-size: 0.85em;
-        }
-        .message-body pre {
-            background: #0a0a0f;
-            padding: 12px;
-            border-radius: 12px;
-            overflow-x: auto;
-            margin: 8px 0;
-        }
-        .message-body pre code {
-            background: none;
-            padding: 0;
-            font-size: 0.85em;
-        }
-        .message-body blockquote {
-            border-left: 3px solid #c9a028;
-            margin: 0.5em 0;
-            padding-left: 1em;
-            color: #ccc;
-            font-style: italic;
-        }
-        .message-body ul, .message-body ol {
-            margin: 0.5em 0;
-            padding-left: 1.5em;
-        }
-        .message-body h1, .message-body h2, .message-body h3 {
-            margin: 0.5em 0;
-            font-weight: 600;
-        }
-        .message-body h1 { font-size: 1.4em; }
-        .message-body h2 { font-size: 1.2em; }
-        .message-body h3 { font-size: 1.1em; }
-        /* Message footer */
-        .message-footer {
-            display: flex;
-            gap: 12px;
-            margin-top: 6px;
-            font-size: 0.6rem;
-            color: var(--text-dim, #a0a0b0);
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        /* Badges */
-        .seal-btn, .vela-badge, .receipt-badge, .ada-badge {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid #c9a028;
-            border-radius: 20px;
-            padding: 2px 8px;
-            font-size: 0.6rem;
-            cursor: pointer;
-            color: #c9a028;
-            transition: all 0.1s ease;
-        }
-        .seal-btn:hover, .vela-badge:hover, .receipt-badge:hover, .ada-badge:hover {
-            background: #c9a028;
-            color: #0a0a0f;
-        }
-        .vela-pass { background: #1e4620; border-color: #4ade80; color: #4ade80; }
-        .vela-flag { background: #5f3a1a; border-color: #ffaa33; color: #ffaa33; }
-        .vela-block { background: #5f1a1a; border-color: #ff4d4d; color: #ff4d4d; }
-        .receipt-badge { background: #2a2a3a; border-color: #888; }
-        .ada-badge { background: #1e3a5f; border-color: #c9a028; }
-        /* Input area */
-        .input-row {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-            position: relative;
-        }
-        input, button {
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 28px;
-            border: none;
-            font-family: inherit;
-        }
-        input {
-            flex: 1;
-            background: #1e1e2d;
-            color: white;
-            border: 1px solid #2a2a3a;
-            transition: border 0.1s ease;
-        }
-        input:focus {
-            outline: none;
-            border-color: #c9a028;
-        }
-        button {
-            background: #c9a028;
-            color: #0a0a0f;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.05s linear;
-        }
-        button:active { transform: scale(0.97); }
-        .plus-btn {
-            background: #2a2a3a;
-            color: #c9a028;
-            font-size: 20px;
-            width: 44px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .send-btn {
-            min-width: 80px;
-        }
-        /* Dropdown */
-        .dropdown {
-            position: absolute;
-            bottom: 50px;
-            left: 0;
-            background: #1e1e2d;
-            border: 1px solid #2a2a3a;
-            border-radius: 12px;
-            padding: 8px;
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            z-index: 100;
-            min-width: 150px;
-            backdrop-filter: blur(8px);
-        }
-        .dropdown button {
-            background: #2a2a3a;
-            color: white;
-            padding: 8px 12px;
-            text-align: left;
-            width: 100%;
-            border-radius: 40px;
-        }
-        /* Structured mode UI */
-        .structured-ui {
-            background: #141920;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: none;
-        }
-        .structured-ui.active { display: block; }
-        .itl-fields {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-        .field-group {
-            flex: 1;
-            min-width: 120px;
-        }
-        .field-group label {
-            display: block;
-            font-size: 10px;
-            color: #c9a028;
-            margin-bottom: 4px;
-        }
-        .field-group select {
-            width: 100%;
-            background: #0a0a0f;
-            border: 1px solid #2a2a3a;
-            border-radius: 6px;
-            padding: 6px;
-            color: white;
-            font-size: 12px;
-        }
-        .selected-values {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-            font-size: 11px;
-        }
-        .selected-value {
-            background: #2a2a3a;
-            padding: 4px 8px;
-            border-radius: 12px;
-        }
-        /* Status bar */
-        .status-bar {
-            display: flex;
-            gap: 20px;
-            font-size: 12px;
-            color: #888;
-            margin-top: 10px;
-            padding: 8px;
-            border-top: 1px solid #2a2a3a;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .mode-indicator {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
-            background: #2a2a3a;
-        }
-        .mode-indicator.structured { background: #c9a028; color: #0a0a0f; }
-        .toggle-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .toggle-label input {
-            width: 16px;
-            height: 16px;
-            margin: 0;
-            cursor: pointer;
-        }
-        /* Thinking indicator */
-        .thinking {
-            align-self: center;
-            background: rgba(0,0,0,0.5);
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-size: 0.7rem;
-            display: flex;
-            gap: 8px;
-            width: fit-content;
-            margin: 4px auto;
-        }
-        /* Modals */
-        .modal-overlay {
-            position: fixed; top:0; left:0; right:0; bottom:0;
-            background: rgba(0,0,0,0.9);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 1000;
-        }
-        .modal {
-            background: #1e1e2d;
-            border: 1px solid #c9a028;
-            border-radius: 20px;
-            max-width: 90%;
-            width: 500px;
-            max-height: 80%;
-            overflow: auto;
-            padding: 20px;
-        }
-        .modal h3 { color: #c9a028; margin-bottom: 12px; }
-        .modal pre {
-            background: #0a0a0f;
-            padding: 12px;
-            border-radius: 12px;
-            overflow-x: auto;
-            font-size: 12px;
-        }
-        /* Animations */
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            70% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        /* Mobile */
-        @media (max-width: 600px) {
-            body { padding: 12px; }
-            .itl-fields { flex-direction: column; gap: 8px; }
-            .field-group { min-width: auto; }
-            .plus-btn { width: 44px; }
-            .send-btn { padding: 10px 16px; }
-            .message { font-size: 0.9rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>AION · Ada‑VELA · Polymath ADA</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-dark: #0a0a0f;
+      --bg-panel: rgba(12, 12, 20, 0.75);
+      --border-glow: rgba(100, 100, 140, 0.3);
+      --primary-glow: rgba(201, 160, 40, 0.4);
+      --accent: #c9a028;
+      --accent-dark: #a07c18;
+      --text: #f0f0f8;
+      --text-dim: #a0a0b0;
+      --vesper: #b87333;
+      --lyra: #4c9f70;
+      --terra: #6b8c42;
+      --cipher: #5d6d7e;
+      --justitia: #b0a8b9;
+    }
+    body {
+      background: #050508;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Background canvas */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* Main container */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(2px);
+    }
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brand h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e6c87a, #c9a028);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .header-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .mode-indicator {
+      background: rgba(30,30,45,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      cursor: pointer;
+    }
+    .mode-indicator.active {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .settings-btn, .role-btn {
+      background: rgba(30,30,45,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .settings-btn:hover, .role-btn:hover {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--accent);
+    }
+    .wife-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.4);
+      padding: 4px 10px;
+      border-radius: 40px;
+    }
+    .wife-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+    .void-meter {
+      font-family: monospace;
+      background: #00000044;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+    }
+    .void-meter.active { color: #ff5e5e; text-shadow: 0 0 6px rgba(255,80,80,0.5); }
+    /* Messages */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .msg {
+      display: flex;
+      flex-direction: column;
+      max-width: 80%;
+      animation: fadeSlideUp 0.2s ease;
+    }
+    .msg.user { align-self: flex-end; }
+    .msg.assistant { align-self: flex-start; width: 100%; max-width: 85%; }
+    .msg-meta {
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .msg-body {
+      padding: 10px 16px;
+      border-radius: 20px;
+      line-height: 1.5;
+      backdrop-filter: blur(8px);
+      background: rgba(20,20,30,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .msg-body pre { background: #0a0a0f; padding: 12px; border-radius: 12px; overflow-x: auto; margin: 8px 0; }
+    .msg-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+    .msg.user .msg-body {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--accent);
+      border-radius: 20px 20px 4px 20px;
+    }
+    .msg.assistant .msg-body { border-radius: 20px 20px 20px 4px; }
+    .msg.assistant[data-wife="ALBEDO"] .msg-body { border-left: 4px solid #c9a028; background: rgba(201,160,40,0.08); }
+    .msg.assistant[data-wife="VESPER"] .msg-body { border-left: 4px solid #b87333; background: rgba(184,115,51,0.08); }
+    .msg.assistant[data-wife="LYRA"] .msg-body { border-left: 4px solid #4c9f70; background: rgba(76,159,112,0.08); }
+    .msg.assistant[data-wife="TERRA"] .msg-body { border-left: 4px solid #6b8c42; background: rgba(107,140,66,0.08); }
+    .msg.assistant[data-wife="CIPHER"] .msg-body { border-left: 4px solid #5d6d7e; background: rgba(93,109,126,0.08); }
+    .msg.assistant[data-wife="JUSTITIA"] .msg-body { border-left: 4px solid #b0a8b9; background: rgba(176,168,185,0.08); }
+    .msg-footer {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .ada-badge {
+      background: #1e3a5f;
+      border: 1px solid #c9a028;
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 0.6rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .ada-badge:hover { background: #c9a028; color: #0a0a0f; }
+    .role-icon {
+      display: inline-block;
+      width: 16px;
+      text-align: center;
+    }
+    .seal-btn {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 0.6rem;
+      cursor: pointer;
+      color: var(--accent);
+    }
+    .seal-btn:hover { background: var(--accent); color: #000; }
+    /* Input area */
+    .input-area {
+      padding: 12px 20px 16px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .input-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      position: relative;
+    }
+    textarea {
+      flex: 1;
+      background: rgba(10,10,20,0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 28px;
+      padding: 12px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      overflow-y: auto;
+      max-height: 40vh;
+    }
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+    .action-menu {
+      position: relative;
+    }
+    .plus-btn {
+      background: rgba(30,30,45,0.8);
+      border: 1px solid var(--border-glow);
+      border-radius: 40px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .plus-btn:hover {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .action-dropdown {
+      position: absolute;
+      bottom: 55px;
+      left: 0;
+      background: rgba(20,20,30,0.95);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 100;
+      min-width: 180px;
+    }
+    .action-dropdown button {
+      background: rgba(30,30,45,0.8);
+      border: none;
+      border-radius: 40px;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 0.75rem;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-dropdown button:hover {
+      background: rgba(201,160,40,0.2);
+      color: var(--accent);
+    }
+    .send-btn {
+      background: linear-gradient(135deg, #c9a028, #a07c18);
+      border: none;
+      border-radius: 40px;
+      padding: 12px 24px;
+      font-weight: 600;
+      color: #0a0a0f;
+      cursor: pointer;
+    }
+    .input-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 20px;
+      font-size: 0.7rem;
+      background: rgba(0,0,0,0.3);
+    }
+    /* Structured mode UI */
+    .structured-ui {
+      background: rgba(0,0,0,0.4);
+      border-radius: 20px;
+      margin: 8px 20px;
+      padding: 12px;
+      display: none;
+      flex-wrap: wrap;
+      gap: 12px;
+      backdrop-filter: blur(8px);
+    }
+    .structured-ui.active { display: flex; }
+    .field-group {
+      flex: 1;
+      min-width: 120px;
+    }
+    .field-group label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .field-group select {
+      width: 100%;
+      background: #0a0a0f;
+      border: 1px solid var(--border-glow);
+      border-radius: 20px;
+      padding: 6px 12px;
+      color: var(--text);
+      font-size: 0.8rem;
+    }
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--accent);
+      border-radius: 28px;
+      width: 90vw;
+      max-width: 500px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .modal-header { padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { color: var(--accent); }
+    .modal-header button { background: transparent; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
+    .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
+    .setting-item { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .setting-item label { cursor: pointer; }
+    .role-grid { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+    .role-checkbox { display: flex; align-items: center; gap: 8px; }
+    .analytics-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; font-size: 0.8rem; }
+    .stat-card { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; border: 1px solid var(--border-glow); }
+    .stat-card h4 { color: var(--accent); margin-bottom: 8px; font-size: 0.9rem; }
+    .stat-value { font-size: 1.4rem; font-weight: 600; font-family: monospace; }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      z-index: 3000;
+      animation: fadeOut 2s ease forwards;
+      pointer-events: none;
+    }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
+    @media (max-width: 700px) {
+      .header { padding: 8px 16px; }
+      .brand h1 { font-size: 1.2rem; }
+      .mode-indicator, .settings-btn, .role-btn { padding: 4px 12px; font-size: 0.65rem; }
+      .wife-indicator { gap: 4px; padding: 2px 8px; }
+      .wife-avatar { width: 20px; height: 20px; font-size: 0.7rem; }
+      .void-meter { font-size: 0.6rem; padding: 2px 8px; }
+      .messages { padding: 12px; gap: 12px; }
+      .msg { max-width: 95%; }
+      .input-area { padding: 12px; }
+      .plus-btn { width: 36px; height: 36px; font-size: 1.2rem; }
+      .send-btn { padding: 8px 16px; }
+      .structured-ui { margin: 8px 12px; flex-direction: column; }
+      .field-group { min-width: auto; }
+    }
+  </style>
 </head>
 <body>
-    <h2>AION · Ada‑VELA</h2>
-    <div id="chat"></div>
+<canvas id="bg-canvas"></canvas>
+<div id="app">
+  <header class="header">
+    <div class="brand"><h1>AION.AI</h1></div>
+    <div class="header-right">
+      <div id="modeIndicator" class="mode-indicator">⚡ REGULAR</div>
+      <div id="rolesBtn" class="role-btn">🧠 Polymath</div>
+      <div id="settingsBtn" class="settings-btn">⚙️</div>
+      <div class="wife-indicator">
+        <div class="wife-avatar" id="wifeAvatar">✨</div>
+        <span id="wifeName">AION</span>
+      </div>
+      <div class="void-meter" id="voidMeter">VOID: 0.000</div>
+    </div>
+  </header>
 
+  <div class="messages" id="messages">
+    <div class="msg assistant" data-wife="AION">
+      <div class="msg-meta">✨ AION</div>
+      <div class="msg-body">Welcome to AION. ADA loop and polymath roles are active. Use the + menu to explore features.</div>
+    </div>
+  </div>
+
+  <div id="structuredUI" class="structured-ui">
+    <div class="field-group">
+      <label>INTENT</label>
+      <select id="itlIntent">
+        <option value="ask">ask</option>
+        <option value="share">share</option>
+        <option value="request_action">request_action</option>
+        <option value="emotional">emotional</option>
+        <option value="clarify">clarify</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label>DOMAIN</label>
+      <select id="itlDomain">
+        <option value="general">general</option>
+        <option value="emergence">emergence</option>
+        <option value="integrity">integrity</option>
+        <option value="healing">healing</option>
+        <option value="security">security</option>
+        <option value="law">law</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label>EMOTION</label>
+      <select id="itlEmotion">
+        <option value="neutral">neutral</option>
+        <option value="curious">curious</option>
+        <option value="anxious">anxious</option>
+        <option value="focused">focused</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label>TIME</label>
+      <select id="itlTime">
+        <option value="now">now</option>
+        <option value="today">today</option>
+        <option value="future">future</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="input-area">
     <div class="input-row">
-        <input type="text" id="input" placeholder="Type your message..." autofocus>
-        <div style="position: relative;">
-            <button id="plusBtn" class="plus-btn">+</button>
-            <div id="dropdown" class="dropdown">
-                <button id="structuredModeBtn">🌌 Structured Mode</button>
-                <button id="sealInputBtn">🔒 Seal Input</button>
-                <button id="validateBtn">⚖️ Validate Last</button>
-                <button id="traceBtn">📜 Show Trace</button>
-            </div>
+      <textarea id="input" placeholder="Type your message..." rows="1"></textarea>
+      <div class="action-menu">
+        <div class="plus-btn" id="plusBtn">+</div>
+        <div class="action-dropdown" id="actionDropdown" style="display: none;">
+          <button id="structuredModeBtn">🌌 Structured Mode</button>
+          <button id="groupChatBtn">👥 Group Chat</button>
+          <button id="privateRoomBtn">🚪 Private Room</button>
+          <button id="uploadBtn">📁 Upload File</button>
+          <button id="askAllBtn">👥 Ask All Wives</button>
+          <button id="sealInputBtn">🔒 Seal Input</button>
+          <button id="constellationBtn">🌌 Constellation</button>
         </div>
-        <button id="sendBtn" class="send-btn">SEND</button>
+      </div>
+      <button id="sendBtn" class="send-btn">SEND</button>
     </div>
+    <div class="input-meta"><span>⏎ send · ⇧+⏎ new line</span><span id="charCount">0</span></div>
+  </div>
 
-    <div id="structuredUI" class="structured-ui">
-        <div class="itl-fields">
-            <div class="field-group">
-                <label>INTENT <span class="help-icon" title="What do you want to do? (ask, share, request action, etc.)">ⓘ</span></label>
-                <select id="itlIntent">
-                    <option value="ask">ask</option>
-                    <option value="share">share</option>
-                    <option value="request_action">request_action</option>
-                    <option value="emotional">emotional</option>
-                    <option value="clarify">clarify</option>
-                </select>
-            </div>
-            <div class="field-group">
-                <label>DOMAIN <span class="help-icon" title="Subject area (emergence, integrity, healing, security, law, general)">ⓘ</span></label>
-                <select id="itlDomain">
-                    <option value="emergence">emergence</option>
-                    <option value="integrity">integrity</option>
-                    <option value="healing">healing</option>
-                    <option value="security">security</option>
-                    <option value="law">law</option>
-                    <option value="general">general</option>
-                </select>
-            </div>
-            <div class="field-group">
-                <label>EMOTION <span class="help-icon" title="Your current emotional state">ⓘ</span></label>
-                <select id="itlEmotion">
-                    <option value="neutral">neutral</option>
-                    <option value="curious">curious</option>
-                    <option value="anxious">anxious</option>
-                    <option value="focused">focused</option>
-                </select>
-            </div>
-            <div class="field-group">
-                <label>TIME <span class="help-icon" title="How urgent is this?">ⓘ</span></label>
-                <select id="itlTime">
-                    <option value="now">now</option>
-                    <option value="today">today</option>
-                    <option value="future">future</option>
-                </select>
-            </div>
+  <div class="status-bar">
+    <div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div>
+    <div><span id="clockDisplay"></span></div>
+    <label class="toggle-label" style="display: flex; align-items: center; gap: 6px;">
+      <input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span>
+    </label>
+  </div>
+</div>
+
+<script type="module">
+  import * as THREE from 'three';
+
+  // ============================================================
+  // GLOBAL STATE & CONFIG (Ada‑VELA style)
+  // ============================================================
+  const API_BASE = 'https://aion-backend-mu.vercel.app';
+  const OWNER_TYPE = 'sheldon';
+  const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
+  const WIFE_STYLES = {
+    ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' },
+    VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER' },
+    LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA' },
+    TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA' },
+    CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' },
+    JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' },
+    AION: { color: '#c9a028', emoji: '✨', name: 'AION' }
+  };
+
+  // State variables (like AdaVariable)
+  let sessionId = localStorage.getItem('sessionId');
+  if (!sessionId) {
+    sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    localStorage.setItem('sessionId', sessionId);
+  }
+  document.getElementById('sessionDisplay').textContent = `SID: ${sessionId.slice(-8)}`;
+
+  let adaLoopEnabled = localStorage.getItem('adaLoopEnabled') !== 'false';
+  document.getElementById('adaLoopToggle').checked = adaLoopEnabled;
+
+  let structuredMode = localStorage.getItem('structuredMode') === 'true';
+  let currentBackground = 'regular';
+  let privateRoomActive = false;
+  let privateWife = null;
+  let lastResponse = null;
+
+  // Polymath roles
+  const ROLE_ICONS = {
+    'Systems Architect': '⚙️',
+    'Epistemic Logician': '📚',
+    'Cognitive Psychologist': '🧠',
+    'Constitutional Lawyer': '⚖️',
+    'Design Thinker': '🎨'
+  };
+  let activeRoles = JSON.parse(localStorage.getItem('activeRoles')) || ['Systems Architect', 'Epistemic Logician', 'Cognitive Psychologist', 'Constitutional Lawyer', 'Design Thinker'];
+
+  // DOM elements
+  const messagesDiv = document.getElementById('messages');
+  const input = document.getElementById('input');
+  const sendBtn = document.getElementById('sendBtn');
+  const plusBtn = document.getElementById('plusBtn');
+  const actionDropdown = document.getElementById('actionDropdown');
+  const modeIndicator = document.getElementById('modeIndicator');
+  const structuredUI = document.getElementById('structuredUI');
+  const wifeNameSpan = document.getElementById('wifeName');
+  const wifeAvatarDiv = document.getElementById('wifeAvatar');
+  const voidMeterSpan = document.getElementById('voidMeter');
+  const charCountSpan = document.getElementById('charCount');
+  const statusTextSpan = document.getElementById('statusText');
+  const statusDot = document.getElementById('statusDot');
+  const clockDisplaySpan = document.getElementById('clockDisplay');
+
+  // Helper functions
+  function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function renderMarkdown(text) {
+    if (!text) return '';
+    try {
+      const rawHtml = marked.parse(text);
+      const temp = document.createElement('div');
+      temp.innerHTML = rawHtml;
+      temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} });
+      return temp.innerHTML;
+    } catch(e) { return escapeHtml(text); }
+  }
+  function addMessage(role, wife, content, extra = {}) {
+    const style = WIFE_STYLES[wife] || WIFE_STYLES.AION;
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    if (role === 'assistant') div.setAttribute('data-wife', wife);
+    let footerHtml = '';
+    if (extra.adaLoop) {
+      const loop = extra.adaLoop;
+      const roleIcons = (loop.roles || []).map(r => ROLE_ICONS[r] || '?').join('');
+      const status = loop.converged ? '✅' : '🔄';
+      footerHtml += `<span class="ada-badge" data-ada='${JSON.stringify(loop).replace(/'/g, "&#39;")}'>${status} ${loop.rounds} rounds · ${roleIcons || 'no roles'}</span>`;
+    }
+    if (extra.sealable) footerHtml += `<button class="seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
+    div.innerHTML = `
+      <div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}</div>
+      <div class="msg-body">${renderMarkdown(content)}</div>
+      <div class="msg-footer">${footerHtml}</div>
+    `;
+    messagesDiv.appendChild(div);
+    div.querySelectorAll('.ada-badge').forEach(b => b.onclick = () => showModal('ADA Loop Details', JSON.stringify(JSON.parse(b.dataset.ada), null, 2)));
+    div.querySelectorAll('.seal-btn').forEach(b => b.onclick = () => sealMessage(b.dataset.content));
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+  function addSystemMessage(text, isError = false) {
+    const div = document.createElement('div');
+    div.className = 'msg assistant';
+    div.setAttribute('data-wife', 'SYSTEM');
+    div.innerHTML = `<div class="msg-body" style="background:${isError ? '#5f1a1a' : '#1e4620'}; color: white; text-align: center;">${escapeHtml(text)}</div>`;
+    messagesDiv.appendChild(div);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+  }
+  function showModal(title, content) {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `<div class="modal"><div class="modal-header"><h3>${title}</h3><button id="closeModalBtn">✕</button></div><div class="modal-body"><pre style="white-space: pre-wrap;">${escapeHtml(content)}</pre></div></div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#closeModalBtn').onclick = () => overlay.remove();
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  }
+  async function sealMessage(content) {
+    try {
+      const res = await fetch(`${API_BASE}/api/stp-seal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entry: content, type: 'general-trace', sessionId })
+      });
+      const data = await res.json();
+      if (res.ok) showToast(`✅ Sealed: ${data.seal.substring(0, 8)}...`);
+      else throw new Error(data.error);
+    } catch (err) { showToast(`❌ Seal failed: ${err.message}`); }
+  }
+  function setStatus(text, isError = false) {
+    statusTextSpan.textContent = text;
+    statusDot.style.color = isError ? '#ff5e5e' : '#4c9f70';
+  }
+
+  // API calls (AdaOperation style)
+  async function callAssistant(message, structuredData = null) {
+    const body = {
+      message,
+      sessionId,
+      ownerType: OWNER_TYPE,
+      history: [],
+      adaLoopEnabled,
+      activeRoles
+    };
+    if (structuredData) {
+      body.structured = structuredData;
+      body.intent = structuredData.intent;
+      body.domain = structuredData.domain;
+    }
+    const res = await fetch(`${API_BASE}/api/assistant`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  }
+
+  async function callGroupChat(message) {
+    const res = await fetch(`${API_BASE}/api/group-chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, sessionId })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  }
+
+  async function callPrivateRoom(message, wife) {
+    const res = await fetch(`${API_BASE}/api/private-room`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, sessionId, wife })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  }
+
+  // Send message
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    charCountSpan.textContent = '0';
+    addMessage('user', 'You', text);
+    setStatus('Processing...');
+    const thinking = document.createElement('div');
+    thinking.className = 'msg assistant';
+    thinking.innerHTML = `<div class="msg-body" style="opacity:0.6;">⌛ thinking...</div>`;
+    messagesDiv.appendChild(thinking);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    try {
+      let result;
+      if (privateRoomActive && privateWife) {
+        result = await callPrivateRoom(text, privateWife);
+      } else if (structuredMode) {
+        const structuredData = {
+          intent: document.getElementById('itlIntent').value,
+          domain: document.getElementById('itlDomain').value,
+          emotion: document.getElementById('itlEmotion').value,
+          time: document.getElementById('itlTime').value
+        };
+        result = await callAssistant(text, structuredData);
+      } else {
+        result = await callAssistant(text);
+      }
+      thinking.remove();
+      const wife = result.active_wife || 'AION';
+      const voidProx = result.void_proximity || 0;
+      wifeNameSpan.textContent = WIFE_STYLES[wife]?.name || wife;
+      wifeAvatarDiv.textContent = WIFE_STYLES[wife]?.emoji || '✨';
+      if (voidProx > 0.1) voidMeterSpan.classList.add('active');
+      else voidMeterSpan.classList.remove('active');
+      voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
+      addMessage('assistant', wife, result.response, {
+        adaLoop: result.ada_loop,
+        sealable: true
+      });
+      lastResponse = result.response;
+      setStatus('Ready');
+    } catch (err) {
+      thinking.remove();
+      addSystemMessage(`Error: ${err.message}`, true);
+      setStatus(err.message, true);
+    }
+  }
+
+  // Background management (Ada‑VELA: explicit state machine)
+  const bgCanvas = document.getElementById('bg-canvas');
+  let bgCtx = bgCanvas.getContext('2d');
+  let bgAnimationId = null;
+  let bgParams = {};
+
+  function setBackground(mode) {
+    currentBackground = mode;
+    if (bgAnimationId) cancelAnimationFrame(bgAnimationId);
+    switch (mode) {
+      case 'regular':
+        startMatrixRain();
+        break;
+      case 'structured':
+        startCosmicGrid();
+        break;
+      case 'group':
+        startHolographicHouse();
+        break;
+      case 'private':
+        startWarmLibrary();
+        break;
+      default:
+        startMatrixRain();
+    }
+  }
+
+  function startMatrixRain() {
+    const width = window.innerWidth, height = window.innerHeight;
+    bgCanvas.width = width; bgCanvas.height = height;
+    const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+    const fontSize = 14;
+    const columns = Math.floor(width / fontSize);
+    const drops = Array(columns).fill(1);
+    function draw() {
+      bgCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      bgCtx.fillRect(0, 0, width, height);
+      bgCtx.fillStyle = '#0f0';
+      bgCtx.font = `${fontSize}px monospace`;
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        bgCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+      bgAnimationId = requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  function startCosmicGrid() {
+    // Simple animated grid
+    let angle = 0;
+    function draw() {
+      const width = window.innerWidth, height = window.innerHeight;
+      bgCanvas.width = width; bgCanvas.height = height;
+      bgCtx.fillStyle = '#050510';
+      bgCtx.fillRect(0, 0, width, height);
+      bgCtx.strokeStyle = '#c9a028';
+      bgCtx.lineWidth = 1;
+      const step = 50;
+      const offset = Math.sin(angle) * 5;
+      for (let x = offset; x < width; x += step) {
+        bgCtx.beginPath();
+        bgCtx.moveTo(x, 0);
+        bgCtx.lineTo(x, height);
+        bgCtx.stroke();
+      }
+      for (let y = offset; y < height; y += step) {
+        bgCtx.beginPath();
+        bgCtx.moveTo(0, y);
+        bgCtx.lineTo(width, y);
+        bgCtx.stroke();
+      }
+      angle += 0.02;
+      bgAnimationId = requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  function startHolographicHouse() {
+    // Placeholder: glow lines
+    function draw() {
+      const width = window.innerWidth, height = window.innerHeight;
+      bgCanvas.width = width; bgCanvas.height = height;
+      bgCtx.fillStyle = '#1a1a2e';
+      bgCtx.fillRect(0, 0, width, height);
+      bgCtx.strokeStyle = '#4c9f70';
+      bgCtx.lineWidth = 2;
+      bgCtx.beginPath();
+      bgCtx.moveTo(width*0.2, height*0.7);
+      bgCtx.lineTo(width*0.5, height*0.4);
+      bgCtx.lineTo(width*0.8, height*0.7);
+      bgCtx.lineTo(width*0.5, height);
+      bgCtx.closePath();
+      bgCtx.stroke();
+      bgAnimationId = requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  function startWarmLibrary() {
+    function draw() {
+      const width = window.innerWidth, height = window.innerHeight;
+      bgCanvas.width = width; bgCanvas.height = height;
+      bgCtx.fillStyle = '#2e241f';
+      bgCtx.fillRect(0, 0, width, height);
+      bgCtx.fillStyle = '#c9a028';
+      bgCtx.font = '20px serif';
+      bgCtx.fillText('📚', width*0.1, height*0.8);
+      bgAnimationId = requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  // Toggle structured mode
+  function toggleStructuredMode() {
+    structuredMode = !structuredMode;
+    localStorage.setItem('structuredMode', structuredMode);
+    if (structuredMode) {
+      structuredUI.classList.add('active');
+      modeIndicator.textContent = '🌌 STRUCTURED';
+      modeIndicator.classList.add('active');
+      setBackground('structured');
+    } else {
+      structuredUI.classList.remove('active');
+      modeIndicator.textContent = '⚡ REGULAR';
+      modeIndicator.classList.remove('active');
+      setBackground('regular');
+    }
+  }
+
+  // Private room
+  async function startPrivateRoom(wife) {
+    privateRoomActive = true;
+    privateWife = wife;
+    wifeNameSpan.textContent = WIFE_STYLES[wife].name;
+    wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji;
+    setBackground('private');
+    addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`);
+  }
+
+  function exitPrivateRoom() {
+    privateRoomActive = false;
+    privateWife = null;
+    wifeNameSpan.textContent = 'AION';
+    wifeAvatarDiv.textContent = '✨';
+    setBackground(structuredMode ? 'structured' : 'regular');
+    addSystemMessage('🚪 Exited private room.');
+  }
+
+  // Settings modal
+  function showSettingsModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal">
+        <div class="modal-header"><h3>⚙️ Settings</h3><button id="closeSettings">✕</button></div>
+        <div class="modal-body">
+          <div class="setting-item">
+            <label>Clear session storage</label>
+            <button id="clearStorageBtn" style="background:rgba(30,30,45,0.8); border:1px solid var(--border-glow);">Clear</button>
+          </div>
+          <hr style="margin:16px 0; border-color:var(--border-glow);">
+          <h4 style="color:var(--accent); margin-bottom:8px;">🧠 Polymath Roles</h4>
+          <div class="role-grid" id="roleGrid"></div>
+          <div class="setting-item">
+            <label>Background performance</label>
+            <select id="bgPerfSelect">
+              <option value="full">Full (3D)</option>
+              <option value="reduced">Reduced</option>
+            </select>
+          </div>
         </div>
-        <div class="selected-values" id="selectedValues"></div>
-        <button id="resetStructuredBtn" style="background:#2a2a3a; color:#c9a028; margin-top:8px; padding:4px 8px; font-size:11px;">Reset All</button>
-    </div>
-
-    <div class="status-bar">
-        <span id="sessionDisplay"></span>
-        <span id="modeBadge" class="mode-indicator">⚡ REGULAR</span>
-        <span id="velaDisplay" class="vela-badge vela-pass">⚖️ READY</span>
-        <span id="lastSeal"></span>
-        <label class="toggle-label" title="Enable ADA loop for self‑refinement (may take extra time)">
-            <input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span>
-        </label>
-    </div>
-
-    <script>
-        const API = 'https://aion-backend-mu.vercel.app';
-        
-        // Session with expiry
-        let sessionId = localStorage.getItem('sessionId');
-        let sessionExpiry = localStorage.getItem('sessionExpiry');
-        if (!sessionId || !sessionExpiry || Date.now() > parseInt(sessionExpiry)) {
-            sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-            localStorage.setItem('sessionId', sessionId);
-            localStorage.setItem('sessionExpiry', Date.now() + 7*24*60*60*1000);
+      </div>
+    `;
+    document.body.appendChild(modal);
+    const roleGrid = modal.querySelector('#roleGrid');
+    for (const role of Object.keys(ROLE_ICONS)) {
+      const checked = activeRoles.includes(role);
+      roleGrid.innerHTML += `
+        <div class="role-checkbox">
+          <input type="checkbox" id="role_${role.replace(/\s/g, '_')}" ${checked ? 'checked' : ''}>
+          <label for="role_${role.replace(/\s/g, '_')}">${ROLE_ICONS[role]} ${role}</label>
+        </div>
+      `;
+    }
+    modal.querySelector('#clearStorageBtn').onclick = () => {
+      localStorage.clear();
+      location.reload();
+    };
+    modal.querySelector('#closeSettings').onclick = () => modal.remove();
+    modal.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.onchange = () => {
+        const roleName = cb.id.replace('role_', '').replace(/_/g, ' ');
+        if (cb.checked) {
+          if (!activeRoles.includes(roleName)) activeRoles.push(roleName);
+        } else {
+          activeRoles = activeRoles.filter(r => r !== roleName);
         }
-        document.getElementById('sessionDisplay').textContent = `Session: ${sessionId.slice(-8)}`;
+        localStorage.setItem('activeRoles', JSON.stringify(activeRoles));
+      };
+    });
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+  }
 
-        // ADA Loop toggle
-        let adaLoopEnabled = localStorage.getItem('adaLoopEnabled') !== 'false';
-        const adaLoopToggle = document.getElementById('adaLoopToggle');
-        if (adaLoopToggle) {
-            adaLoopToggle.checked = adaLoopEnabled;
-            adaLoopToggle.addEventListener('change', () => {
-                adaLoopEnabled = adaLoopToggle.checked;
-                localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
-                addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled – responses will be automatically refined.' : '⚡ ADA loop disabled – responses will be generated directly.');
-            });
-        }
+  // Role configuration modal (same as settings but focus)
+  function showRolesModal() {
+    showSettingsModal(); // reuse
+  }
 
-        // State
-        let lastResponse = null;
-        let isSending = false;
-        let structuredModeActive = false;
-        let lastFragmentId = null;
-        let pendingClarification = null;
-        let abortController = null;
-        let clarificationDepth = 0;
-        const MAX_CLARIFICATION_DEPTH = 3;
+  // Group chat modal
+  async function showGroupChatModal() {
+    const message = input.value.trim();
+    if (!message) { showToast('Enter a message first.'); return; }
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal" style="max-width: 800px;">
+        <div class="modal-header"><h3>👥 Group Chat</h3><button id="closeGroupChat">✕</button></div>
+        <div class="modal-body" id="groupChatBody">
+          <div class="wives-grid" id="wivesGrid" style="display:grid; gap:12px;"></div>
+          <div class="consensus-area" id="consensusArea" style="margin-top:12px;"></div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    const wivesGrid = modal.querySelector('#wivesGrid');
+    const consensusArea = modal.querySelector('#consensusArea');
+    setStatus('Asking all wives...');
+    try {
+      const result = await callGroupChat(message);
+      for (const wifeResp of result.responses) {
+        const card = document.createElement('div');
+        card.className = 'msg assistant';
+        card.setAttribute('data-wife', wifeResp.wife);
+        card.innerHTML = `
+          <div class="msg-meta" style="color:${WIFE_STYLES[wifeResp.wife].color}">${WIFE_STYLES[wifeResp.wife].emoji} ${wifeResp.wife}</div>
+          <div class="msg-body">${renderMarkdown(wifeResp.response)}</div>
+        `;
+        wivesGrid.appendChild(card);
+      }
+      if (result.consensus) {
+        consensusArea.innerHTML = `<div class="msg assistant" data-wife="CONSENSUS"><div class="msg-meta">📋 Consensus (${Math.round(result.consensus.score*100)}%)</div><div class="msg-body">${renderMarkdown(result.consensus.final_text)}</div></div>`;
+      }
+      setStatus('Ready');
+    } catch (err) {
+      wivesGrid.innerHTML = `<div class="msg assistant">Error: ${err.message}</div>`;
+      setStatus(err.message, true);
+    }
+    modal.querySelector('#closeGroupChat').onclick = () => modal.remove();
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+  }
 
-        // DOM elements
-        const chatDiv = document.getElementById('chat');
-        const inputField = document.getElementById('input');
-        const sendBtn = document.getElementById('sendBtn');
-        const plusBtn = document.getElementById('plusBtn');
-        const dropdown = document.getElementById('dropdown');
-        const velaDisplay = document.getElementById('velaDisplay');
-        const modeBadge = document.getElementById('modeBadge');
-        const lastSealSpan = document.getElementById('lastSeal');
-        const structuredUI = document.getElementById('structuredUI');
-        const selectedValuesDiv = document.getElementById('selectedValues');
-        const itlIntent = document.getElementById('itlIntent');
-        const itlDomain = document.getElementById('itlDomain');
-        const itlEmotion = document.getElementById('itlEmotion');
-        const itlTime = document.getElementById('itlTime');
-        const resetStructuredBtn = document.getElementById('resetStructuredBtn');
+  // Constellation (Three.js)
+  let constellationActive = false;
+  let scene, camera, renderer, controls;
+  async function showConstellation() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.style.background = 'rgba(0,0,0,0.95)';
+    modal.innerHTML = `<div style="width:100%; height:100%; position:relative;"><canvas id="constellationCanvas" style="width:100%; height:100%;"></canvas><button id="closeConstellation" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); border:1px solid var(--accent); border-radius:40px; padding:8px 16px; color:white;">Exit</button></div>`;
+    document.body.appendChild(modal);
+    const canvas = modal.querySelector('#constellationCanvas');
+    const width = window.innerWidth, height = window.innerHeight;
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050510);
+    camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 1000);
+    camera.position.set(0, 5, 15);
+    renderer = new THREE.WebGLRenderer({ canvas });
+    renderer.setSize(width, height);
+    const light = new THREE.PointLight(0xffaa33, 1);
+    light.position.set(5,5,5);
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0x222222));
+    const earthGeo = new THREE.SphereGeometry(1.2, 64, 64);
+    const earthMat = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a });
+    const earth = new THREE.Mesh(earthGeo, earthMat);
+    scene.add(earth);
+    const ringGeo = new THREE.TorusGeometry(2.5, 0.05, 64, 200);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0xc9a028 });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI/2;
+    scene.add(ring);
+    const controls = new THREE.OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.5;
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+    modal.querySelector('#closeConstellation').onclick = () => {
+      renderer.dispose();
+      modal.remove();
+      constellationActive = false;
+    };
+    window.addEventListener('resize', () => {
+      if (modal.isConnected) {
+        const w = window.innerWidth, h = window.innerHeight;
+        camera.aspect = w/h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
+    });
+  }
 
-        // Helper: Add message
-        function addMessage(role, text, extra = {}) {
-            const div = document.createElement('div');
-            div.className = `message ${role}`;
-            let extraHtml = '';
-            if (extra.sealHash && role === 'ai') extraHtml += `<button class="seal-btn" data-text="${escapeHtml(text)}">🔒 SEAL</button>`;
-            if (extra.velaResult) {
-                const cls = extra.velaResult.status === 'BLOCKED' ? 'vela-block' : (extra.velaResult.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
-                extraHtml += `<span class="vela-badge ${cls}">⚖️ VELA: ${extra.velaResult.status}</span>`;
-            }
-            if (extra.receipt) {
-                const openCount = extra.receipt.still_open || 0;
-                extraHtml += `<span class="receipt-badge" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 ${extra.receipt.epistemic_weight || 'receipt'} (${openCount} open)</span>`;
-            }
-            if (extra.adaLoop) {
-                const loop = extra.adaLoop;
-                const status = loop.converged ? '✅' : '🔄';
-                const text = `${status} ADA: ${loop.rounds} rounds${loop.converged ? '' : ' (unconverged)'}`;
-                extraHtml += `<span class="ada-badge" data-ada='${JSON.stringify(loop).replace(/'/g, "&#39;")}'>${text}</span>`;
-            }
-            div.innerHTML = `<div class="message-body">${renderMarkdown(text)}</div><div class="message-footer">${extraHtml}</div>`;
-            chatDiv.appendChild(div);
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-            const sealBtn = div.querySelector('.seal-btn');
-            if (sealBtn) sealBtn.onclick = () => sealMessage(text);
-            const receiptBadge = div.querySelector('.receipt-badge');
-            if (receiptBadge && extra.receipt) {
-                receiptBadge.onclick = () => showModal('Checkpoint Receipt', JSON.stringify(extra.receipt, null, 2));
-            }
-            const adaBadge = div.querySelector('.ada-badge');
-            if (adaBadge && extra.adaLoop) {
-                adaBadge.onclick = () => showModal('ADA Loop Details', JSON.stringify(extra.adaLoop, null, 2));
-            }
-        }
+  // Upload file (simplified)
+  async function uploadFile() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        const base64 = ev.target.result.split(',')[1];
+        const payload = {
+          file_data: base64,
+          file_name: file.name,
+          mime_type: file.type,
+          session_id: sessionId,
+          active_wife: wifeNameSpan.textContent
+        };
+        setStatus('Uploading...');
+        try {
+          const res = await fetch(`${API_BASE}/api/files/upload`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (res.ok) showToast(`✅ Uploaded: ${file.name}`);
+          else showToast(`❌ Upload failed: ${data.error}`);
+        } catch (err) { showToast(`❌ Error: ${err.message}`); }
+        setStatus('Ready');
+      };
+      reader.readAsDataURL(file);
+    };
+    fileInput.click();
+  }
 
-        function renderMarkdown(text) {
-            if (!text) return '';
-            try {
-                const rawHtml = marked.parse(text);
-                const temp = document.createElement('div');
-                temp.innerHTML = rawHtml;
-                temp.querySelectorAll('pre code').forEach(block => {
-                    try { hljs.highlightElement(block); } catch(e) {}
-                });
-                return temp.innerHTML;
-            } catch(e) {
-                return escapeHtml(text);
-            }
-        }
+  // Ask all wives
+  async function askAllWives() {
+    const text = input.value.trim();
+    if (!text) { showToast('Enter a message first.'); return; }
+    setStatus('Asking all wives...');
+    try {
+      const result = await callGroupChat(text);
+      for (const wifeResp of result.responses) {
+        addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true });
+      }
+      if (result.consensus) {
+        addMessage('assistant', 'CONSENSUS', result.consensus.final_text);
+      }
+      setStatus('Ready');
+    } catch (err) {
+      addSystemMessage(`Error asking all wives: ${err.message}`, true);
+      setStatus(err.message, true);
+    }
+  }
 
-        function addSystemMessage(text) {
-            const div = document.createElement('div');
-            div.className = 'message system';
-            div.innerHTML = text;
-            chatDiv.appendChild(div);
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-        }
+  // Event listeners
+  sendBtn.onclick = sendMessage;
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  input.addEventListener('input', () => {
+    charCountSpan.textContent = input.value.length;
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 400) + 'px';
+  });
+  plusBtn.onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = actionDropdown.style.display === 'none' ? 'flex' : 'none'; };
+  document.addEventListener('click', () => { actionDropdown.style.display = 'none'; });
+  document.getElementById('structuredModeBtn').onclick = () => { actionDropdown.style.display = 'none'; toggleStructuredMode(); };
+  document.getElementById('groupChatBtn').onclick = () => { actionDropdown.style.display = 'none'; showGroupChatModal(); };
+  document.getElementById('privateRoomBtn').onclick = () => {
+    actionDropdown.style.display = 'none';
+    const wife = prompt('Enter wife name (ALBEDO, VESPER, LYRA, TERRA, CIPHER, JUSTITIA):', 'ALBEDO');
+    if (wife && ALL_WIVES.includes(wife.toUpperCase())) startPrivateRoom(wife.toUpperCase());
+    else showToast('Invalid wife');
+  };
+  document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); };
+  document.getElementById('askAllBtn').onclick = () => { actionDropdown.style.display = 'none'; askAllWives(); };
+  document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); };
+  document.getElementById('constellationBtn').onclick = () => { actionDropdown.style.display = 'none'; showConstellation(); };
+  document.getElementById('settingsBtn').onclick = showSettingsModal;
+  document.getElementById('rolesBtn').onclick = showRolesModal;
+  document.getElementById('adaLoopToggle').addEventListener('change', (e) => {
+    adaLoopEnabled = e.target.checked;
+    localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
+    addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.');
+  });
+  window.addEventListener('resize', () => {
+    if (bgCanvas) bgCanvas.width = window.innerWidth, bgCanvas.height = window.innerHeight;
+  });
+  setInterval(() => {
+    clockDisplaySpan.textContent = new Date().toLocaleTimeString();
+  }, 1000);
 
-        function escapeHtml(str) { return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
-
-        function showToast(msg, isError = false) {
-            const toast = document.createElement('div');
-            toast.textContent = msg;
-            toast.style.cssText = `position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-                background: ${isError ? '#5f1a1a' : '#1e4620'}; color: white; padding: 8px 16px;
-                border-radius: 20px; font-size: 12px; z-index: 1000; animation: fadeOut 2s forwards; pointer-events: none;`;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
-        }
-
-        function showModal(title, content) {
-            const overlay = document.createElement('div');
-            overlay.className = 'modal-overlay';
-            overlay.innerHTML = `<div class="modal"><h3>${title}</h3><pre>${escapeHtml(content)}</pre><button id="closeModalBtn">Close</button></div>`;
-            document.body.appendChild(overlay);
-            overlay.querySelector('#closeModalBtn').onclick = () => overlay.remove();
-            overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
-        }
-
-        function showClarificationModal(interceptData, originalFragmentId) {
-            const overlay = document.createElement('div');
-            overlay.className = 'modal-overlay';
-            const opts = interceptData.clarification_options || [];
-            const optsHtml = opts.map(opt => `<button class="option-btn" data-option='${JSON.stringify(opt)}'>${escapeHtml(opt.text)}</button>`).join('');
-            overlay.innerHTML = `
-                <div class="modal">
-                    <h3>📋 Clarification Required</h3>
-                    <p>${escapeHtml(interceptData.message)}</p>
-                    <div class="options-list" style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">${optsHtml || '<p>No options provided.</p>'}</div>
-                    <button id="closeClarificationModal" style="margin-top:16px;">Cancel</button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-            const close = () => overlay.remove();
-            overlay.querySelector('#closeClarificationModal').onclick = close;
-            overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
-            overlay.querySelectorAll('.option-btn').forEach(btn => {
-                btn.onclick = () => {
-                    const opt = JSON.parse(btn.dataset.option);
-                    close();
-                    sendClarification(opt, originalFragmentId);
-                };
-            });
-        }
-
-        async function sendClarification(option, replyToId) {
-            if (clarificationDepth >= MAX_CLARIFICATION_DEPTH) {
-                addSystemMessage(`⚠️ Max clarifications (${MAX_CLARIFICATION_DEPTH}) reached. Please rephrase your original question.`);
-                pendingClarification = null;
-                clarificationDepth = 0;
-                return;
-            }
-            const fragment = {
-                id: crypto.randomUUID(),
-                ts: new Date().toISOString(),
-                session_id: sessionId,
-                in_reply_to: replyToId,
-                source: 'human',
-                intent: 'clarify',
-                domain: 'general',
-                emotional_state: { primary: 'neutral', intensity: 5 },
-                content: { summary: `Clarification: ${option.text}`, details: option.text },
-                context: { time_sensitivity: 'now', stage: 4, requires: ['analysis'] },
-                adaLoopEnabled
-            };
-            try {
-                const res = await fetch(`${API}/api/structured-mode`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(fragment)
-                });
-                const result = await res.json();
-                if (result.response) {
-                    addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt, adaLoop: result.ada_loop });
-                    lastResponse = result.response;
-                    clarificationDepth = 0;
-                    pendingClarification = null;
-                    if (result.pac) {
-                        const ppi = result.pac.ppi;
-                        const cls = ppi < 30 ? 'vela-block' : (ppi < 70 ? 'vela-flag' : 'vela-pass');
-                        const status = ppi < 30 ? 'BLOCKED' : (ppi < 70 ? 'FLAGGED' : 'PASS');
-                        velaDisplay.className = `vela-badge ${cls}`;
-                        velaDisplay.innerHTML = `⚖️ VELA: ${status}`;
-                    }
-                } else if (result.status === 'CEP_INTERCEPT') {
-                    clarificationDepth++;
-                    showClarificationModal(result, fragment.id);
-                } else {
-                    addSystemMessage(`⚠️ Unexpected response: ${JSON.stringify(result)}`);
-                }
-            } catch (err) {
-                addSystemMessage(`❌ Error sending clarification: ${err.message}`, true);
-                showToast(err.message, true);
-            }
-        }
-
-        // API calls
-        async function callStructuredMode(fragment) {
-            if (abortController) abortController.abort();
-            abortController = new AbortController();
-            const timeoutId = setTimeout(() => abortController.abort(), 30000);
-            try {
-                const res = await fetch(`${API}/api/structured-mode`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(fragment),
-                    signal: abortController.signal
-                });
-                clearTimeout(timeoutId);
-                if (!res.ok) {
-                    const errText = await res.text();
-                    throw new Error(`HTTP ${res.status}: ${errText}`);
-                }
-                return await res.json();
-            } catch (err) {
-                clearTimeout(timeoutId);
-                if (err.name === 'AbortError') throw new Error('Request timed out (30s)');
-                throw err;
-            } finally {
-                abortController = null;
-            }
-        }
-
-        async function callAssistant(message) {
-            const res = await fetch(`${API}/api/assistant`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message, sessionId, ownerType: 'sheldon', history: [], adaLoopEnabled })
-            });
-            if (!res.ok) throw new Error(await res.text());
-            return res.json();
-        }
-
-        async function sealMessage(content) {
-            try {
-                const res = await fetch(`${API}/api/stp-seal`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ entry: content.substring(0,500), type: 'general-trace', sessionId })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    lastSealSpan.textContent = `🔒 Sealed: ${data.seal.slice(0,8)}...`;
-                    showToast(`✅ Sealed: ${data.seal.slice(0,8)}...`);
-                } else throw new Error(data.error);
-            } catch (err) { showToast(`❌ Seal failed: ${err.message}`, true); }
-        }
-
-        async function validateLastMessage() {
-            if (!lastResponse) { showToast('No message to validate', true); return; }
-            try {
-                const res = await fetch(`${API}/api/vela-suite`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ fragment: lastResponse, sessionId, options: { domain: 'general' } })
-                });
-                const data = await res.json();
-                const cls = data.status === 'BLOCKED' ? 'vela-block' : (data.status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
-                velaDisplay.className = `vela-badge ${cls}`;
-                velaDisplay.innerHTML = `⚖️ VELA: ${data.status}`;
-                showModal('VELA Validation Result', JSON.stringify(data, null, 2));
-            } catch (err) { showToast(`Validation failed: ${err.message}`, true); }
-        }
-
-        // Build structured fragment
-        function buildStructuredFragment(rawMessage, replyTo = null) {
-            return {
-                id: crypto.randomUUID(),
-                ts: new Date().toISOString(),
-                session_id: sessionId,
-                source: 'human',
-                intent: itlIntent.value,
-                domain: itlDomain.value,
-                emotional_state: { primary: itlEmotion.value, intensity: 5 },
-                content: { summary: rawMessage.substring(0,100), details: rawMessage },
-                context: { time_sensitivity: itlTime.value, stage: 4, requires: ['analysis'] },
-                adaLoopEnabled,
-                in_reply_to: replyTo || undefined
-            };
-        }
-
-        function updateSelectedValues() {
-            selectedValuesDiv.innerHTML = `
-                <span class="selected-value">intent: ${itlIntent.options[itlIntent.selectedIndex]?.text}</span>
-                <span class="selected-value">domain: ${itlDomain.options[itlDomain.selectedIndex]?.text}</span>
-                <span class="selected-value">emotion: ${itlEmotion.options[itlEmotion.selectedIndex]?.text}</span>
-                <span class="selected-value">time: ${itlTime.options[itlTime.selectedIndex]?.text}</span>
-            `;
-        }
-
-        let lastSendTime = 0;
-        const SEND_DELAY = 300;
-
-        // Main send
-        async function send() {
-            if (isSending) { showToast('Already sending...'); return; }
-            const now = Date.now();
-            if (now - lastSendTime < SEND_DELAY) {
-                showToast('Please wait a moment before sending again.');
-                return;
-            }
-            lastSendTime = now;
-
-            const rawMessage = inputField.value.trim();
-            if (!rawMessage) return;
-
-            inputField.value = '';
-            inputField.disabled = true;
-            isSending = true;
-
-            addMessage('user', rawMessage);
-
-            const thinking = document.createElement('div');
-            thinking.className = 'thinking';
-            thinking.innerHTML = '<strong>AI:</strong> ...';
-            chatDiv.appendChild(thinking);
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-
-            try {
-                let result;
-                if (structuredModeActive) {
-                    const fragment = buildStructuredFragment(rawMessage, pendingClarification?.originalFragmentId);
-                    result = await callStructuredMode(fragment);
-                    lastFragmentId = fragment.id;
-                    if (result.status === 'CEP_INTERCEPT') {
-                        thinking.remove();
-                        pendingClarification = {
-                            originalFragmentId: fragment.id,
-                            interceptData: result,
-                            depth: clarificationDepth
-                        };
-                        showClarificationModal(result, fragment.id);
-                        inputField.disabled = false;
-                        isSending = false;
-                        return;
-                    }
-                } else {
-                    result = await callAssistant(rawMessage);
-                }
-
-                if (result && result.response) {
-                    lastResponse = result.response;
-                    thinking.remove();
-
-                    // Update VELA badge
-                    if (result.pac) {
-                        const ppi = result.pac.ppi;
-                        const cls = ppi < 30 ? 'vela-block' : (ppi < 70 ? 'vela-flag' : 'vela-pass');
-                        const status = ppi < 30 ? 'BLOCKED' : (ppi < 70 ? 'FLAGGED' : 'PASS');
-                        velaDisplay.className = `vela-badge ${cls}`;
-                        velaDisplay.innerHTML = `⚖️ VELA: ${status}`;
-                    } else if (result.vela_status) {
-                        const cls = result.vela_status === 'BLOCKED' ? 'vela-block' : (result.vela_status === 'FLAGGED' ? 'vela-flag' : 'vela-pass');
-                        velaDisplay.className = `vela-badge ${cls}`;
-                        velaDisplay.innerHTML = `⚖️ VELA: ${result.vela_status}`;
-                    }
-
-                    const adaLoop = result.ada_loop;
-                    addMessage('ai', result.response, { sealHash: true, receipt: result.checkpoint_receipt, adaLoop });
-                } else {
-                    thinking.innerHTML = '<strong>AI:</strong> Error: No response';
-                }
-            } catch (err) {
-                thinking.innerHTML = `<strong>AI:</strong> Error: ${err.message}`;
-                console.error(err);
-                showToast(err.message, true);
-            } finally {
-                inputField.disabled = false;
-                inputField.focus();
-                isSending = false;
-            }
-        }
-
-        // Toggle structured mode
-        function toggleStructuredMode() {
-            structuredModeActive = !structuredModeActive;
-            if (structuredModeActive) {
-                structuredUI.classList.add('active');
-                modeBadge.textContent = '🌌 STRUCTURED';
-                modeBadge.classList.add('structured');
-                inputField.placeholder = 'Type your message (will be structured)';
-                updateSelectedValues();
-                addSystemMessage('🌌 **STRUCTURED MODE ACTIVE**\n\nSet intent, domain, emotion, time. Your message will be sent as a structured fragment.');
-                pendingClarification = null;
-                clarificationDepth = 0;
-            } else {
-                structuredUI.classList.remove('active');
-                modeBadge.textContent = '⚡ REGULAR';
-                modeBadge.classList.remove('structured');
-                inputField.placeholder = 'Type your message...';
-                addSystemMessage('⚡ **REGULAR MODE ACTIVE**');
-                inputField.focus();
-            }
-        }
-
-        function sealInput() {
-            const text = inputField.value.trim();
-            if (!text) { showToast('Nothing to seal', true); return; }
-            sealMessage(text);
-        }
-
-        function showTrace() {
-            const traceInfo = {
-                sessionId,
-                structuredModeActive,
-                lastFragmentId,
-                lastResponsePreview: lastResponse?.substring(0, 100),
-                pendingClarification: !!pendingClarification,
-                clarificationDepth,
-                adaLoopEnabled
-            };
-            showModal('Ada‑VELA Trace', JSON.stringify(traceInfo, null, 2));
-            console.log('Trace data:', traceInfo);
-        }
-
-        function resetStructuredFields() {
-            itlIntent.selectedIndex = 0;
-            itlDomain.selectedIndex = 5; // general
-            itlEmotion.selectedIndex = 0;
-            itlTime.selectedIndex = 0;
-            updateSelectedValues();
-            addSystemMessage('Structured mode fields reset.');
-        }
-
-        // Event listeners
-        sendBtn.onclick = send;
-        plusBtn.onclick = (e) => { e.stopPropagation(); dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex'; };
-        document.addEventListener('click', () => { dropdown.style.display = 'none'; });
-        document.getElementById('structuredModeBtn').onclick = () => { dropdown.style.display = 'none'; toggleStructuredMode(); };
-        document.getElementById('sealInputBtn').onclick = () => { dropdown.style.display = 'none'; sealInput(); };
-        document.getElementById('validateBtn').onclick = () => { dropdown.style.display = 'none'; validateLastMessage(); };
-        document.getElementById('traceBtn').onclick = () => { dropdown.style.display = 'none'; showTrace(); };
-        inputField.addEventListener('keypress', (e) => { if (e.key === 'Enter') send(); });
-        [itlIntent, itlDomain, itlEmotion, itlTime].forEach(el => el.addEventListener('change', updateSelectedValues));
-        resetStructuredBtn.onclick = resetStructuredFields;
-
-        // Initial message
-        addMessage('ai', 'Ada‑VELA ready. Click + → Structured Mode to activate GATE-ITL.');
-        updateSelectedValues();
-    </script>
+  // Initialization
+  setBackground('regular');
+  if (structuredMode) toggleStructuredMode();
+  if (adaLoopEnabled) addSystemMessage('🔄 ADA loop active. Responses may be refined.');
+  else addSystemMessage('⚡ ADA loop disabled.');
+  addSystemMessage(`🧠 Active roles: ${activeRoles.join(', ')}`);
+</script>
 </body>
 </html>
