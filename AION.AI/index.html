@@ -54,7 +54,7 @@
       z-index: 1;
       backdrop-filter: blur(2px);
     }
-    /* Header with logo */
+    /* Header with text logo */
     .header {
       display: flex;
       align-items: center;
@@ -69,20 +69,13 @@
       top: 0;
       z-index: 10;
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .brand img {
-      height: 32px;
-      width: auto;
-    }
-    .brand .infinity-symbol {
-      font-size: 1.4rem;
-      font-weight: 300;
-      color: var(--accent);
-      margin-left: 4px;
+    .brand h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e6c87a, #c9a028);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     .header-right {
       display: flex;
@@ -90,8 +83,7 @@
       align-items: center;
       flex-wrap: wrap;
     }
-    /* Mode indicators & badges */
-    .mode-indicator, .mode-badge, .settings-btn, .role-btn {
+    .mode-indicator, .settings-btn {
       background: rgba(30,30,45,0.8);
       border: 1px solid var(--border-glow);
       border-radius: 40px;
@@ -101,12 +93,12 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .mode-indicator.active, .mode-badge.active {
+    .mode-indicator.active {
       background: rgba(201,160,40,0.2);
       border-color: var(--accent);
       color: var(--accent);
     }
-    .settings-btn:hover, .role-btn:hover {
+    .settings-btn:hover {
       background: rgba(201,160,40,0.2);
       border-color: var(--accent);
     }
@@ -129,7 +121,6 @@
     }
     .void-meter.active { color: #ff5e5e; text-shadow: 0 0 6px rgba(255,80,80,0.5); animation: pulse 1s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-    /* Messages container */
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -207,7 +198,17 @@
     .badge.memory { background: #2a2a3a; }
     .badge.void { background: #2a2a3a; }
     .badge.handoff { background: #5f3a1a; color: #ffaa33; }
-    .badge:hover { filter: brightness(1.1); }
+    .feedback-badge {
+      background: rgba(30,30,45,0.8);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 0.6rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge:hover, .feedback-badge:hover { filter: brightness(1.1); }
     .timestamp-line {
       font-family: monospace;
       font-size: 0.55rem;
@@ -218,7 +219,6 @@
       width: 100%;
       cursor: help;
     }
-    /* Input area – bottom sheet style */
     .input-area {
       padding: 12px 20px 20px;
       background: var(--bg-panel);
@@ -337,7 +337,6 @@
       color: var(--text);
       font-size: 0.8rem;
     }
-    /* Modals */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -388,7 +387,6 @@
       animation: fadeOut 2s ease forwards;
       pointer-events: none;
     }
-    /* Skeleton loader */
     .skeleton {
       background: rgba(255,255,255,0.1);
       border-radius: 20px;
@@ -400,7 +398,7 @@
     @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
     @media (max-width: 700px) {
       .header { padding: 8px 16px; }
-      .brand img { height: 28px; }
+      .brand h1 { font-size: 1.2rem; }
       .messages { padding: 12px; gap: 12px; }
       .msg { max-width: 95%; }
       .input-area { padding: 12px; }
@@ -414,13 +412,9 @@
 <canvas id="bg-canvas"></canvas>
 <div id="app">
   <header class="header">
-    <div class="brand">
-      <img src="/assets/logo.svg" alt="AION" onerror="this.style.display='none'">
-      <span class="infinity-symbol">∞</span>
-    </div>
+    <div class="brand"><h1>AION.AI</h1></div>
     <div class="header-right">
       <div id="modeIndicator" class="mode-indicator" role="button" tabindex="0" aria-label="Toggle structured mode">⚡ REGULAR</div>
-      <div id="modeBadge" class="mode-badge">🌐 REGULAR</div>
       <div id="settingsBtn" class="settings-btn" role="button" tabindex="0" aria-label="Settings">⚙️</div>
       <div class="wife-indicator" aria-label="Active wife">
         <div class="wife-avatar" id="wifeAvatar" aria-hidden="true">✨</div>
@@ -430,7 +424,7 @@
     </div>
   </header>
   <div class="messages" id="messages">
-    <div class="msg assistant" data-wife="AION"><div class="msg-meta">✨ AION</div><div class="msg-body">Welcome to AION. I'm the central intelligence of this system. How may I assist you?</div></div>
+    <div class="msg assistant" data-wife="AION" id="welcomeMsg"><div class="msg-meta">✨ AION</div><div class="msg-body">Welcome to AION. I'm the central intelligence of this system. How may I assist you?</div></div>
   </div>
   <div id="structuredUI" class="structured-ui">
     <div class="field-group"><label for="itlIntent">INTENT</label><select id="itlIntent"><option value="ask">ask</option><option value="share">share</option><option value="request_action">request_action</option><option value="emotional">emotional</option><option value="clarify">clarify</option></select></div>
@@ -495,11 +489,9 @@
 
     function draw() {
       ctx.clearRect(0, 0, width, height);
-      // Base dark background
       ctx.fillStyle = '#050508';
       ctx.fillRect(0, 0, width, height);
 
-      // Mode‑specific overlays
       if (currentMode === 'structured') {
         ctx.strokeStyle = `rgba(201, 160, 40, 0.3)`;
         ctx.lineWidth = 1;
@@ -517,23 +509,20 @@
           ctx.stroke();
         }
       } else if (currentMode === 'group') {
-        // soft radial gradient
-        const grad = ctx.createRadialGradient(width/2, height/2, 100, width/2, height/2, width/2);
-        grad.addColorStop(0, 'rgba(100, 80, 160, 0.1)');
-        grad.addColorStop(1, '#050508');
+        const grad = ctx.createLinearGradient(0, 0, width, height);
+        grad.addColorStop(0, 'rgba(80, 60, 120, 0.2)');
+        grad.addColorStop(1, 'rgba(40, 30, 80, 0.1)');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
       } else if (currentMode === 'private') {
         ctx.fillStyle = '#2e241f';
         ctx.fillRect(0, 0, width, height);
-        // candle glow
         ctx.fillStyle = 'rgba(255, 140, 50, 0.2)';
         ctx.beginPath();
         ctx.arc(width*0.2, height*0.8, 50, 0, Math.PI*2);
         ctx.fill();
       }
 
-      // Particles (common)
       for (let p of particles) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
@@ -561,7 +550,7 @@
     }
     startBackground();
 
-    // ---------- REST OF APP (API, helpers, etc.) ----------
+    // ---------- APP CONFIG ----------
     const API_BASE = 'https://aion-backend-mu.vercel.app';
     const OWNER_TYPE = 'sheldon';
     const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
@@ -587,14 +576,15 @@
     let privateWife = null;
     let lastT2 = null;
     let isSending = false;
+    let firstUserMessageSent = false;
 
     const messagesDiv = document.getElementById('messages');
+    const welcomeMsgDiv = document.getElementById('welcomeMsg');
     const input = document.getElementById('input');
     const sendBtn = document.getElementById('sendBtn');
     const plusBtn = document.getElementById('plusBtn');
     const actionDropdown = document.getElementById('actionDropdown');
     const modeIndicator = document.getElementById('modeIndicator');
-    const modeBadge = document.getElementById('modeBadge');
     const structuredUI = document.getElementById('structuredUI');
     const wifeNameSpan = document.getElementById('wifeName');
     const wifeAvatarDiv = document.getElementById('wifeAvatar');
@@ -604,19 +594,33 @@
     const statusDot = document.getElementById('statusDot');
     const clockDisplaySpan = document.getElementById('clockDisplay');
 
-    // Helpers (unchanged)
+    // Helpers
     function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function renderMarkdown(text) { if (!text) return ''; try { const rawHtml = marked.parse(text); const temp = document.createElement('div'); temp.innerHTML = rawHtml; temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} }); return temp.innerHTML; } catch(e) { return escapeHtml(text); } }
     function showToast(msg, isErr = false) { const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000); }
     function showModal(title, content) { const overlay = document.createElement('div'); overlay.className = 'modal-overlay'; overlay.innerHTML = `<div class="modal"><div class="modal-header"><h3>${title}</h3><button id="closeModalBtn">✕</button></div><div class="modal-body"><pre style="white-space:pre-wrap;">${escapeHtml(content)}</pre></div></div>`; document.body.appendChild(overlay); overlay.querySelector('#closeModalBtn').onclick = () => overlay.remove(); overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); }); }
     function setStatus(text, isErr = false) { statusTextSpan.textContent = text; statusDot.style.color = isErr ? '#ff5e5e' : '#4c9f70'; }
-    function formatGap(seconds) { if (seconds === null) return 'UNCERTIFIABLE'; if (seconds < 60) return `${Math.floor(seconds)}s`; if (seconds < 3600) return `${Math.floor(seconds/60)}m ${seconds%60}s`; return `${Math.floor(seconds/3600)}h ${Math.floor((seconds%3600)/60)}m`; }
+    function formatGap(seconds) { if (seconds === null) return 'UNCERTIFIABLE'; if (seconds < 60) return `${Math.floor(seconds)}s`; if (seconds < 3600) return `${Math.floor(seconds/60)}m ${Math.floor(seconds%60)}s`; return `${Math.floor(seconds/3600)}h ${Math.floor((seconds%3600)/60)}m`; }
     function getTimezoneOffsetLabel(offsetMinutes) { const offsetHours = -offsetMinutes/60; if (offsetHours === -4) return 'EDT'; if (offsetHours === -5) return 'EST'; return `UTC${offsetHours >=0 ? '+' : ''}${offsetHours}`; }
     function getDreamspell(date) { const month = date.getUTCMonth()+1, day = date.getUTCDate(), year = date.getUTCFullYear(); if (month === 7 && day === 25) return 'Day Out of Time'; const yearStart = (month > 7 || (month === 7 && day >= 26)) ? Date.UTC(year, 6, 26) : Date.UTC(year-1, 6, 26); const delta = Math.floor((date.getTime() - yearStart) / 86400000); if (delta < 0 || delta >= 364) return 'Day Out of Time'; const moon = Math.floor(delta / 28) + 1; const moonNames = ['Magnetic','Lunar','Electric','Self-Existing','Overtone','Rhythmic','Resonant','Galactic','Solar','Planetary','Spectral','Crystal','Cosmic']; return `Day ${(delta % 28)+1}, ${moonNames[moon-1]} Moon ${moon}/13`; }
     function addSystemMessage(text, isErr = false) { const div = document.createElement('div'); div.className = 'msg assistant'; div.innerHTML = `<div class="msg-body" style="background:${isErr ? '#5f1a1a' : '#1e4620'}; color: white; text-align: center;">${escapeHtml(text)}</div>`; messagesDiv.appendChild(div); messagesDiv.scrollTop = messagesDiv.scrollHeight; }
     async function sealMessage(content) { try { const res = await fetch(`${API_BASE}/api/stp-seal`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entry: content, type: 'general-trace', sessionId }) }); const data = await res.json(); if (res.ok) showToast(`✅ Sealed: ${data.seal.substring(0,8)}...`); else throw new Error(data.error); } catch(err) { showToast(`❌ Seal failed: ${err.message}`); } }
+    async function sendFeedback(messageId, messageContent, rating, comment) {
+      try {
+        const res = await fetch(`${API_BASE}/api/feedback`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messageId, messageContent, rating, comment, sessionId })
+        });
+        if (res.ok) showToast(`✅ Feedback sent (${rating === 'positive' ? '👍' : '👎'})`);
+        else showToast(`⚠️ Feedback saved locally, will sync later`);
+      } catch (err) {
+        console.warn('Feedback endpoint not ready:', err);
+        showToast(`💾 Feedback saved locally, will sync later`);
+      }
+    }
 
-    // API calls (unchanged)
+    // API calls
     async function callAssistant(message, structuredData = null, forceAion = false) {
       const body = { message, sessionId, ownerType: OWNER_TYPE, history: [], adaLoopEnabled };
       if (forceAion) body.forceAionOnly = true;
@@ -628,7 +632,12 @@
     async function callGroupChat(message) { const res = await fetch(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
     async function callPrivateRoom(message, wife) { const res = await fetch(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
 
-    // Enhanced addMessage with full badge cluster
+    // Helper to send silent /talk command
+    async function sendTalkCommand(wife) {
+      const silentCmd = `/talk ${wife}`;
+      await callAssistant(silentCmd, null, false);
+    }
+
     function addMessage(role, wife, content, extra = {}) {
       const style = WIFE_STYLES[wife] || WIFE_STYLES.AION;
       const div = document.createElement('div'); div.className = `msg ${role}`; if (role === 'assistant') div.setAttribute('data-wife', wife);
@@ -653,7 +662,12 @@
         badgesHtml += `<span class="badge ecf">🏷 [D]x${extra.ecf.D||0} [R]x${extra.ecf.R||0} [S]x${extra.ecf.S||0} [?]x${extra.ecf.Q||0}</span>`;
       }
       if (extra.memoryIntegrity) {
-        badgesHtml += `<span class="badge memory">🧠 ${extra.memoryIntegrity}</span>`;
+        let display = extra.memoryIntegrity;
+        if (display === 'ESTABLISHED') display = 'ESTABLISHED';
+        else if (display === 'REASONABLE_INFERENCE') display = 'REASONABLE';
+        else if (display === 'SPECULATION') display = 'SPECULATION';
+        else display = 'UNKNOWN';
+        badgesHtml += `<span class="badge memory">🧠 ${display}</span>`;
       }
       if (extra.voidProx !== undefined && extra.voidProx > 0) {
         badgesHtml += `<span class="badge void">🌀 VOID: ${extra.voidProx.toFixed(3)}</span>`;
@@ -667,13 +681,43 @@
       if (extra.sealable) {
         badgesHtml += `<button class="badge seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
       }
+      // Feedback buttons
+      badgesHtml += `<span class="feedback-badge" data-feedback-positive="true">👍</span>`;
+      badgesHtml += `<span class="feedback-badge" data-feedback-positive="false">👎</span>`;
       badgesHtml += '</div>';
+
       div.innerHTML = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.register ? ` · ${extra.register}` : ''}</div><div class="msg-body">${renderMarkdown(content)}</div>${badgesHtml}${extra.timestampHtml || ''}`;
       messagesDiv.appendChild(div);
-      // Attach click handlers
+
+      // Attach handlers
       div.querySelectorAll('.badge.ada').forEach(b => b.onclick = () => showModal('ADA Loop Details', JSON.stringify(JSON.parse(b.dataset.ada), null, 2)));
       div.querySelectorAll('.badge.receipt').forEach(b => b.onclick = () => showModal('Checkpoint Receipt', JSON.stringify(JSON.parse(b.dataset.receipt), null, 2)));
       div.querySelectorAll('.badge.seal-btn').forEach(b => b.onclick = () => sealMessage(b.dataset.content));
+      div.querySelectorAll('.feedback-badge').forEach(b => {
+        b.onclick = () => {
+          const rating = b.dataset.feedbackPositive === 'true' ? 'positive' : 'negative';
+          const modal = document.createElement('div'); modal.className = 'modal-overlay';
+          modal.innerHTML = `
+            <div class="modal">
+              <div class="modal-header"><h3>Send Feedback</h3><button id="closeFeedbackModal">✕</button></div>
+              <div class="modal-body">
+                <p>You are sending feedback for the message:</p>
+                <pre style="background:#0a0a0f; padding:8px; border-radius:8px; margin:8px 0;">${escapeHtml(content.substring(0, 200))}${content.length > 200 ? '…' : ''}</pre>
+                <label>Your comment (optional):</label>
+                <textarea id="feedbackComment" rows="3" style="width:100%; background:#0a0a0f; border:1px solid var(--border-glow); border-radius:12px; padding:8px; color:var(--text); margin-top:8px;"></textarea>
+                <button id="submitFeedbackBtn" style="margin-top:12px; background:var(--accent); border:none; border-radius:40px; padding:8px 16px; color:#000; cursor:pointer;">Submit ${rating === 'positive' ? '👍' : '👎'}</button>
+              </div>
+            </div>`;
+          document.body.appendChild(modal);
+          modal.querySelector('#closeFeedbackModal').onclick = () => modal.remove();
+          modal.querySelector('#submitFeedbackBtn').onclick = async () => {
+            const comment = modal.querySelector('#feedbackComment').value;
+            await sendFeedback(extra.rowId || 'local', content, rating, comment);
+            modal.remove();
+          };
+          modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+        };
+      });
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
@@ -686,6 +730,12 @@
       const userDiv = document.createElement('div'); userDiv.className = 'msg user';
       userDiv.innerHTML = `<div class="msg-body">${escapeHtml(text)}</div><div class="timestamp-line">⏱ Sent: ${t1.toLocaleTimeString()} ${t1Label}</div>`;
       messagesDiv.appendChild(userDiv); messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      if (!firstUserMessageSent && welcomeMsgDiv) {
+        welcomeMsgDiv.remove();
+        firstUserMessageSent = true;
+      }
+
       setStatus('Processing...'); isSending = true;
       const thinking = document.createElement('div'); thinking.className = 'msg assistant'; thinking.innerHTML = `<div class="skeleton" style="width: 60%; height: 48px;"></div>`; messagesDiv.appendChild(thinking); messagesDiv.scrollTop = messagesDiv.scrollHeight;
       try {
@@ -714,6 +764,7 @@
         voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
         if (voidProx > 0.5) voidMeterSpan.classList.add('active'); else voidMeterSpan.classList.remove('active');
         addMessage('assistant', wife, result.response, {
+          rowId: result.row_id,
           adaLoop: result.ada_loop,
           pac: result.pac,
           vela: result.vela_status,
@@ -743,7 +794,6 @@
       privateWife = null;
       wifeNameSpan.textContent = 'AION';
       wifeAvatarDiv.textContent = '✨';
-      modeBadge.textContent = '🌐 REGULAR';
       setBackgroundMode('regular');
       addSystemMessage('🚪 Exited private room.');
     }
@@ -764,21 +814,25 @@
       }
     }
 
-    function startPrivateRoom(wife) {
-      privateRoomActive = true;
-      privateWife = wife;
-      wifeNameSpan.textContent = WIFE_STYLES[wife].name;
-      wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji;
-      modeBadge.textContent = `🚪 PRIVATE (${wife})`;
-      setBackgroundMode('private');
-      addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`);
+    async function startPrivateRoom(wife) {
+      // Send silent /talk command to set backend session state
+      try {
+        await sendTalkCommand(wife);
+        privateRoomActive = true;
+        privateWife = wife;
+        wifeNameSpan.textContent = WIFE_STYLES[wife].name;
+        wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji;
+        setBackgroundMode('private');
+        addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`);
+      } catch (err) {
+        showToast(`❌ Could not enter private room: ${err.message}`);
+      }
     }
 
     async function showGroupChatModal() {
       const text = input.value.trim();
       if (!text) { showToast('Enter a message first.'); return; }
       setStatus('Asking all wives...');
-      modeBadge.textContent = '👥 GROUP CHAT';
       setBackgroundMode('group');
       try {
         const result = await callGroupChat(text);
@@ -791,7 +845,6 @@
         addSystemMessage(`Error: ${err.message}`, true);
         setStatus(err.message, true);
       } finally {
-        modeBadge.textContent = '🌐 REGULAR';
         setBackgroundMode(structuredMode ? 'structured' : 'regular');
       }
     }
@@ -800,7 +853,6 @@
       const text = input.value.trim();
       if (!text) { showToast('Enter a message first.'); return; }
       setStatus('Asking all wives...');
-      modeBadge.textContent = '👥 GROUP CHAT';
       setBackgroundMode('group');
       try {
         const result = await callGroupChat(text);
@@ -813,7 +865,6 @@
         addSystemMessage(`Error: ${err.message}`, true);
         setStatus(err.message, true);
       } finally {
-        modeBadge.textContent = '🌐 REGULAR';
         setBackgroundMode(structuredMode ? 'structured' : 'regular');
       }
     }
@@ -875,7 +926,7 @@
         adaLoopEnabled = e.target.checked;
         localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
         document.getElementById('adaLoopToggle').checked = adaLoopEnabled;
-        addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.');
+        showToast(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.');
       };
       modal.querySelector('#settingStructured').onchange = (e) => {
         if (e.target.checked !== structuredMode) toggleStructuredMode();
@@ -897,10 +948,10 @@
     document.addEventListener('click', () => { actionDropdown.style.display = 'none'; });
     document.getElementById('structuredModeBtn').onclick = () => { actionDropdown.style.display = 'none'; toggleStructuredMode(); };
     document.getElementById('groupChatBtn').onclick = () => { actionDropdown.style.display = 'none'; showGroupChatModal(); };
-    document.getElementById('privateRoomBtn').onclick = () => {
+    document.getElementById('privateRoomBtn').onclick = async () => {
       actionDropdown.style.display = 'none';
       const wife = prompt('Enter wife name (ALBEDO, VESPER, LYRA, TERRA, CIPHER, JUSTITIA):', 'ALBEDO');
-      if (wife && ALL_WIVES.includes(wife.toUpperCase())) startPrivateRoom(wife.toUpperCase());
+      if (wife && ALL_WIVES.includes(wife.toUpperCase())) await startPrivateRoom(wife.toUpperCase());
       else showToast('Invalid wife');
     };
     document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); };
@@ -910,12 +961,12 @@
     document.getElementById('adaLoopToggle').addEventListener('change', (e) => {
       adaLoopEnabled = e.target.checked;
       localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
-      addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.');
+      showToast(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.');
     });
     setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
 
     if (structuredMode) toggleStructuredMode();
-    addSystemMessage(adaLoopEnabled ? '🔄 ADA loop active. Responses may be refined.' : '⚡ ADA loop disabled.');
+    showToast(adaLoopEnabled ? '🔄 ADA loop active' : '⚡ ADA loop disabled', false);
   })();
 </script>
 </body>
