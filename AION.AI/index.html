@@ -200,6 +200,7 @@
       transition: all 0.1s;
     }
     .badge.ada { background: #1e3a5f; border: 1px solid #c9a028; }
+    .badge.ada-vela { background: #1e3a5f; border: 1px solid #c9a028; }
     .badge.vela.pass { background: #1e4620; color: #4ade80; }
     .badge.vela.flag { background: #5f3a1a; color: #ffaa33; }
     .badge.vela.block { background: #5f1a1a; color: #ff8a8a; }
@@ -741,6 +742,57 @@
       modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
 
+    // Ada‑VELA: fetch execution details and show modal
+    async function fetchAdaVelaExecution(executionId) {
+      try {
+        const res = await fetch(`${API_BASE}/api/ada-vela/execution/${executionId}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+      } catch (err) {
+        console.warn('Ada‑VELA execution fetch failed:', err);
+        return null;
+      }
+    }
+
+    async function showAdaVelaModal(executionId) {
+      const loadingMsg = 'Loading Ada‑VELA execution details...';
+      const modal = document.createElement('div'); modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal">
+          <div class="modal-header"><h3>📋 Ada‑VELA Execution</h3><button id="closeAdaVelaModal">✕</button></div>
+          <div class="modal-body" id="adaVelaModalBody">
+            <div class="skeleton" style="height: 200px;"></div>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+      const bodyDiv = modal.querySelector('#adaVelaModalBody');
+      modal.querySelector('#closeAdaVelaModal').onclick = () => modal.remove();
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+
+      const data = await fetchAdaVelaExecution(executionId);
+      if (data) {
+        bodyDiv.innerHTML = `
+          <div style="font-family:monospace;">
+            <p><strong>Execution ID:</strong> ${escapeHtml(data.id || executionId)}</p>
+            <p><strong>Operation:</strong> ${escapeHtml(data.name || '?')}</p>
+            <p><strong>Description:</strong> ${escapeHtml(data.description || '')}</p>
+            <p><strong>Start:</strong> ${data.startTime?.gregorian || '?'}</p>
+            <p><strong>End:</strong> ${data.endTime?.gregorian || '?'}</p>
+            <p><strong>Duration:</strong> ${data.duration ?? '?'}s</p>
+            <p><strong>Risk Tier:</strong> ${escapeHtml(data.riskTier || '?')}</p>
+            <p><strong>Domain:</strong> ${escapeHtml(data.domain || '?')}</p>
+            <p><strong>Inputs:</strong> <pre style="background:#0a0a0f; padding:8px; border-radius:8px;">${escapeHtml(JSON.stringify(data.input, null, 2))}</pre></p>
+            <p><strong>Outputs:</strong> <pre style="background:#0a0a0f; padding:8px; border-radius:8px;">${escapeHtml(JSON.stringify(data.output, null, 2))}</pre></p>
+            ${data.intermediates ? `<p><strong>Intermediate steps:</strong> <pre>${escapeHtml(JSON.stringify(data.intermediates, null, 2))}</pre></p>` : ''}
+            ${data.error ? `<p><strong>Error:</strong> ${escapeHtml(data.error.message)}</p>` : ''}
+            <p><strong>STP Seal:</strong> <code>${escapeHtml(data.seal || '')}</code></p>
+          </div>
+        `;
+      } else {
+        bodyDiv.innerHTML = `<p>⚠️ Execution record not found. This feature will be fully available once the backend provides Ada‑VELA execution tracking.</p>`;
+      }
+    }
+
     function addMessage(role, wife, content, extra = {}) {
       const style = WIFE_STYLES[wife] || WIFE_STYLES.AION;
       const div = document.createElement('div'); div.className = `msg ${role}`; if (role === 'assistant') div.setAttribute('data-wife', wife);
@@ -784,6 +836,11 @@
       if (extra.sealable) {
         badgesHtml += `<button class="badge seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
       }
+      // Ada‑VELA badge (if execution data present)
+      if (extra.adaVela) {
+        const execId = extra.adaVela.execution_id || extra.adaVela.id;
+        badgesHtml += `<span class="badge ada-vela" data-execution-id="${escapeHtml(execId)}">📋 Ada‑VELA</span>`;
+      }
       badgesHtml += `<span class="feedback-badge" data-feedback-positive="true">👍</span>`;
       badgesHtml += `<span class="feedback-badge" data-feedback-positive="false">👎</span>`;
       badgesHtml += '</div>';
@@ -794,6 +851,14 @@
       div.querySelectorAll('.badge.ada').forEach(b => b.onclick = () => showModal('ADA Loop Details', JSON.stringify(JSON.parse(b.dataset.ada), null, 2)));
       div.querySelectorAll('.badge.receipt').forEach(b => b.onclick = () => showModal('Checkpoint Receipt', JSON.stringify(JSON.parse(b.dataset.receipt), null, 2)));
       div.querySelectorAll('.badge.seal-btn').forEach(b => b.onclick = () => sealMessage(b.dataset.content));
+      div.querySelectorAll('.badge.ada-vela').forEach(b => {
+        const execId = b.dataset.executionId;
+        if (execId) {
+          b.onclick = () => showAdaVelaModal(execId);
+        } else {
+          b.onclick = () => showModal('Ada‑VELA', 'Execution ID not available.');
+        }
+      });
       div.querySelectorAll('.feedback-badge').forEach(b => {
         b.onclick = () => {
           const rating = b.dataset.feedbackPositive === 'true' ? 'positive' : 'negative';
@@ -876,7 +941,8 @@
           receipt: result.checkpoint_receipt,
           sealable: true,
           register: result.register,
-          timestampHtml
+          timestampHtml,
+          adaVela: result.ada_vela // will be populated when backend supports it
         });
         setStatus('Ready');
       } catch (err) {
