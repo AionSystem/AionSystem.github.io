@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0f">
   <title>AION · Ada‑VELA</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
@@ -26,7 +27,6 @@
       overflow: hidden;
       position: relative;
     }
-    /* Background canvas */
     #bg-canvas {
       position: fixed;
       top: 0;
@@ -44,6 +44,7 @@
       z-index: 1;
       backdrop-filter: blur(2px);
     }
+    /* header, etc. (same as before) */
     .header {
       display: flex;
       align-items: center;
@@ -397,6 +398,13 @@
       .plus-btn { width: 36px; height: 36px; font-size: 1.2rem; }
       .send-btn { padding: 8px 16px; }
       .structured-ui { margin: 8px 12px; flex-direction: column; }
+      .ada-badge, .pac-badge, .vela-badge, .receipt-badge, .seal-btn {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+      }
+      .plus-btn, .send-btn {
+        min-height: 44px;
+      }
     }
   </style>
 </head>
@@ -406,30 +414,47 @@
   <header class="header">
     <div class="brand"><h1>AION.AI</h1></div>
     <div class="header-right">
-      <div id="modeIndicator" class="mode-indicator">⚡ REGULAR</div>
-      <div id="settingsBtn" class="settings-btn">⚙️</div>
-      <div class="wife-indicator"><div class="wife-avatar" id="wifeAvatar">✨</div><span id="wifeName">AION</span></div>
-      <div class="void-meter" id="voidMeter">VOID: 0.000</div>
+      <div id="modeIndicator" class="mode-indicator" role="button" tabindex="0" aria-label="Toggle structured mode">⚡ REGULAR</div>
+      <div id="settingsBtn" class="settings-btn" role="button" tabindex="0" aria-label="Settings">⚙️</div>
+      <div class="wife-indicator" aria-label="Active wife">
+        <div class="wife-avatar" id="wifeAvatar" aria-hidden="true">✨</div>
+        <span id="wifeName">AION</span>
+      </div>
+      <div class="void-meter" id="voidMeter" aria-label="Void proximity">VOID: 0.000</div>
     </div>
   </header>
   <div class="messages" id="messages">
     <div class="msg assistant" data-wife="AION"><div class="msg-meta">✨ AION</div><div class="msg-body">Welcome to AION. I'm the central intelligence of this system. How may I assist you?</div></div>
   </div>
   <div id="structuredUI" class="structured-ui">
-    <div class="field-group"><label>INTENT</label><select id="itlIntent"><option value="ask">ask</option><option value="share">share</option><option value="request_action">request_action</option><option value="emotional">emotional</option><option value="clarify">clarify</option></select></div>
-    <div class="field-group"><label>DOMAIN</label><select id="itlDomain"><option value="general">general</option><option value="emergence">emergence</option><option value="integrity">integrity</option><option value="healing">healing</option><option value="security">security</option><option value="law">law</option></select></div>
-    <div class="field-group"><label>EMOTION</label><select id="itlEmotion"><option value="neutral">neutral</option><option value="curious">curious</option><option value="anxious">anxious</option><option value="focused">focused</option></select></div>
-    <div class="field-group"><label>TIME</label><select id="itlTime"><option value="now">now</option><option value="today">today</option><option value="future">future</option></select></div>
+    <div class="field-group"><label for="itlIntent">INTENT</label><select id="itlIntent" aria-label="Intent"><option value="ask">ask</option><option value="share">share</option><option value="request_action">request_action</option><option value="emotional">emotional</option><option value="clarify">clarify</option></select></div>
+    <div class="field-group"><label for="itlDomain">DOMAIN</label><select id="itlDomain" aria-label="Domain"><option value="general">general</option><option value="emergence">emergence</option><option value="integrity">integrity</option><option value="healing">healing</option><option value="security">security</option><option value="law">law</option></select></div>
+    <div class="field-group"><label for="itlEmotion">EMOTION</label><select id="itlEmotion" aria-label="Emotion"><option value="neutral">neutral</option><option value="curious">curious</option><option value="anxious">anxious</option><option value="focused">focused</option></select></div>
+    <div class="field-group"><label for="itlTime">TIME</label><select id="itlTime" aria-label="Time"><option value="now">now</option><option value="today">today</option><option value="future">future</option></select></div>
   </div>
   <div class="input-area">
     <div class="input-row">
-      <textarea id="input" placeholder="Type your message..." rows="1"></textarea>
-      <div class="action-menu"><div class="plus-btn" id="plusBtn">+</div><div class="action-dropdown" id="actionDropdown" style="display: none;"><button id="structuredModeBtn">🌌 Structured Mode</button><button id="groupChatBtn">👥 Group Chat</button><button id="privateRoomBtn">🚪 Private Room</button><button id="uploadBtn">📁 Upload File</button><button id="askAllBtn">👥 Ask All Wives</button><button id="sealInputBtn">🔒 Seal Input</button></div></div>
-      <button id="sendBtn" class="send-btn">SEND</button>
+      <textarea id="input" placeholder="Type your message..." rows="1" aria-label="Message input"></textarea>
+      <div class="action-menu">
+        <div class="plus-btn" id="plusBtn" role="button" tabindex="0" aria-label="More actions">+</div>
+        <div class="action-dropdown" id="actionDropdown" style="display: none;">
+          <button id="structuredModeBtn" aria-label="Toggle structured mode">🌌 Structured Mode</button>
+          <button id="groupChatBtn" aria-label="Group chat">👥 Group Chat</button>
+          <button id="privateRoomBtn" aria-label="Private room">🚪 Private Room</button>
+          <button id="uploadBtn" aria-label="Upload file">📁 Upload File</button>
+          <button id="askAllBtn" aria-label="Ask all wives">👥 Ask All Wives</button>
+          <button id="sealInputBtn" aria-label="Seal input">🔒 Seal Input</button>
+        </div>
+      </div>
+      <button id="sendBtn" class="send-btn" aria-label="Send message">SEND</button>
     </div>
     <div class="input-meta"><span>⏎ send · ⇧+⏎ new line</span><span id="charCount">0</span></div>
   </div>
-  <div class="status-bar"><div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div><div><span id="clockDisplay"></span></div><label style="display: flex; align-items: center; gap: 6px;"><input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span></label></div>
+  <div class="status-bar">
+    <div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div>
+    <div><span id="clockDisplay"></span></div>
+    <label style="display: flex; align-items: center; gap: 6px;"><input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span></label>
+  </div>
 </div>
 
 <script>
@@ -439,10 +464,9 @@
     const ctx = canvas.getContext('2d');
     let width, height;
     let animationFrameId = null;
-    let currentBackground = 'regular'; // regular | group | private
+    let currentBackground = 'regular';
     let particles = [];
     const PARTICLE_COUNT = 120;
-    let houseGlow = 0;
     let libraryCandle = { x: 0, y: 0, flicker: 0 };
 
     function resizeCanvas() {
@@ -452,7 +476,6 @@
       canvas.height = height;
     }
 
-    // Regular: falling particles
     function initRegular() {
       particles = [];
       for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -478,16 +501,10 @@
         if (p.y > height) p.y = 0;
       }
     }
-
-    // Group chat: holographic house
-    function initGroup() {
-      // nothing special
-    }
     function drawGroup() {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#0a1030';
       ctx.fillRect(0, 0, width, height);
-      // draw glowing house outline
       const houseW = Math.min(width * 0.4, 300);
       const houseH = houseW * 0.8;
       const houseX = width/2 - houseW/2;
@@ -500,27 +517,19 @@
       ctx.lineTo(width/2, houseY - houseH*0.3);
       ctx.lineTo(houseX + houseW, houseY);
       ctx.stroke();
-      // windows
       ctx.fillStyle = 'rgba(201, 160, 40, 0.3)';
       ctx.fillRect(houseX + houseW*0.2, houseY + houseH*0.3, houseW*0.2, houseW*0.2);
       ctx.fillRect(houseX + houseW*0.6, houseY + houseH*0.3, houseW*0.2, houseW*0.2);
       ctx.fillRect(houseX + houseW*0.4, houseY + houseH*0.6, houseW*0.2, houseW*0.2);
     }
-
-    // Private room: warm library
-    function initPrivate() {
-      libraryCandle = { x: width*0.2, y: height*0.8, flicker: 0 };
-    }
     function drawPrivate() {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#2e241f';
       ctx.fillRect(0, 0, width, height);
-      // bookshelves
       ctx.fillStyle = '#5a3e2e';
       for (let i = 0; i < 3; i++) {
         ctx.fillRect(width*0.1 + i*width*0.25, height*0.2, width*0.2, height*0.6);
       }
-      // candle
       libraryCandle.flicker = 0.8 + Math.random() * 0.4;
       ctx.fillStyle = `rgba(255, 140, 50, ${0.5 + libraryCandle.flicker*0.2})`;
       ctx.beginPath();
@@ -531,22 +540,19 @@
       ctx.arc(libraryCandle.x, libraryCandle.y, 6, 0, Math.PI*2);
       ctx.fill();
     }
-
     function animateBackground() {
       if (currentBackground === 'regular') drawRegular();
       else if (currentBackground === 'group') drawGroup();
       else if (currentBackground === 'private') drawPrivate();
       animationFrameId = requestAnimationFrame(animateBackground);
     }
-
     function setBackground(mode) {
       if (mode === currentBackground) return;
       currentBackground = mode;
       if (mode === 'regular') initRegular();
-      else if (mode === 'group') initGroup();
-      else if (mode === 'private') initPrivate();
+      else if (mode === 'group') {}
+      else if (mode === 'private') { libraryCandle.x = width*0.2; libraryCandle.y = height*0.8; }
     }
-
     function startBackground() {
       resizeCanvas();
       setBackground('regular');
@@ -554,13 +560,134 @@
       window.addEventListener('resize', () => {
         resizeCanvas();
         if (currentBackground === 'regular') initRegular();
-        else if (currentBackground === 'group') initGroup();
-        else if (currentBackground === 'private') initPrivate();
+        else if (currentBackground === 'private') libraryCandle.x = width*0.2, libraryCandle.y = height*0.8;
       });
     }
     startBackground();
 
-    // ---------- CONFIG ----------
+    // ---------- OFFLINE QUEUE (IndexedDB) ----------
+    const DB_NAME = 'AION_OfflineQueue';
+    const DB_VERSION = 1;
+    let db = null;
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => { db = request.result; resolve(db); };
+        request.onupgradeneeded = (ev) => {
+          const db = ev.target.result;
+          if (!db.objectStoreNames.contains('messages')) {
+            db.createObjectStore('messages', { autoIncrement: true });
+          }
+        };
+      });
+    }
+    async function queueMessage(message, metadata) {
+      if (!db) await openDB();
+      const tx = db.transaction(['messages'], 'readwrite');
+      const store = tx.objectStore('messages');
+      store.add({ message, metadata, timestamp: Date.now() });
+      return tx.complete;
+    }
+    async function flushQueue() {
+      if (!db) await openDB();
+      const tx = db.transaction(['messages'], 'readonly');
+      const store = tx.objectStore('messages');
+      const items = await new Promise((resolve) => {
+        const req = store.getAll();
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => resolve([]);
+      });
+      if (items.length === 0) return;
+      const retryTx = db.transaction(['messages'], 'readwrite');
+      const retryStore = retryTx.objectStore('messages');
+      for (const item of items) {
+        try {
+          // simulate send – in real app would call API with offline support
+          console.log('Retrying message:', item.message);
+          // TODO: call actual API and update retryStore.delete(item.id) on success
+          retryStore.delete(item.id);
+        } catch (err) {
+          console.warn('Retry failed', err);
+        }
+      }
+    }
+    window.addEventListener('online', () => flushQueue());
+
+    // ---------- PWA: generate manifest and service worker on the fly ----------
+    function createManifest() {
+      const manifest = {
+        name: "AION AI",
+        short_name: "AION",
+        start_url: "/",
+        display: "standalone",
+        background_color: "#0a0a0f",
+        theme_color: "#c9a028",
+        icons: []
+      };
+      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = url;
+      document.head.appendChild(link);
+    }
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        // Simple service worker that caches the app shell (placeholder)
+        const swScript = `
+          self.addEventListener('install', event => {
+            event.waitUntil(
+              caches.open('aion-v1').then(cache => {
+                return cache.addAll([
+                  '/',
+                  '/index.html',
+                  '/manifest.json'
+                ]);
+              })
+            );
+          });
+          self.addEventListener('fetch', event => {
+            event.respondWith(
+              caches.match(event.request).then(response => {
+                return response || fetch(event.request);
+              })
+            );
+          });
+        `;
+        const blob = new Blob([swScript], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl).catch(err => console.warn('SW registration failed', err));
+      }
+    }
+    createManifest();
+    registerServiceWorker();
+
+    // ---------- WEBSOCKET STREAMING (stub) ----------
+    let ws = null;
+    function connectWebSocket() {
+      // Replace with your actual WebSocket endpoint
+      ws = new WebSocket('wss://your-backend/stream');
+      ws.onopen = () => console.log('WebSocket connected');
+      ws.onmessage = (event) => {
+        // Handle streaming tokens – for now just log
+        console.log('Stream:', event.data);
+      };
+      ws.onclose = () => setTimeout(connectWebSocket, 5000);
+    }
+    // Uncomment when backend supports WebSocket
+    // connectWebSocket();
+
+    // ---------- VIRTUAL SCROLLING (simple version) ----------
+    // Keep all messages in DOM, but we add a simple lazy‑loading for large history:
+    // This could be expanded, but for now we just keep the existing behavior.
+    // In production, you'd integrate a library like 'virtual-scroller'.
+    // We'll keep it simple and just ensure the container scrolls.
+
+    // ---------- RETRY BUTTONS ----------
+    // We'll modify the error display to include a retry button.
+
+    // ---------- REST OF THE ORIGINAL SCRIPT (with ARIA and touch improvements) ----------
     const API_BASE = 'https://aion-backend-mu.vercel.app';
     const OWNER_TYPE = 'sheldon';
     const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
@@ -584,9 +711,9 @@
     let structuredMode = localStorage.getItem('structuredMode') === 'true';
     let privateRoomActive = false;
     let privateWife = null;
-    let lastT2 = null; // store last response T2 for gap calculation
+    let lastT2 = null;
     let isSending = false;
-    // DOM elements
+
     const messagesDiv = document.getElementById('messages');
     const input = document.getElementById('input');
     const sendBtn = document.getElementById('sendBtn');
@@ -602,7 +729,7 @@
     const statusDot = document.getElementById('statusDot');
     const clockDisplaySpan = document.getElementById('clockDisplay');
 
-    // Helpers
+    // Helpers (unchanged)
     function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function renderMarkdown(text) { if (!text) return ''; try { const rawHtml = marked.parse(text); const temp = document.createElement('div'); temp.innerHTML = rawHtml; temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} }); return temp.innerHTML; } catch(e) { return escapeHtml(text); } }
     function showToast(msg, isErr = false) { const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000); }
@@ -614,7 +741,7 @@
     function addSystemMessage(text, isErr = false) { const div = document.createElement('div'); div.className = 'msg assistant'; div.innerHTML = `<div class="msg-body" style="background:${isErr ? '#5f1a1a' : '#1e4620'}; color: white; text-align: center;">${escapeHtml(text)}</div>`; messagesDiv.appendChild(div); messagesDiv.scrollTop = messagesDiv.scrollHeight; }
     async function sealMessage(content) { try { const res = await fetch(`${API_BASE}/api/stp-seal`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entry: content, type: 'general-trace', sessionId }) }); const data = await res.json(); if (res.ok) showToast(`✅ Sealed: ${data.seal.substring(0,8)}...`); else throw new Error(data.error); } catch(err) { showToast(`❌ Seal failed: ${err.message}`); } }
 
-    // API calls
+    // API calls (unchanged)
     async function callAssistant(message, structuredData = null, forceAion = false) {
       const body = { message, sessionId, ownerType: OWNER_TYPE, history: [], adaLoopEnabled };
       if (forceAion) body.forceAionOnly = true;
@@ -644,14 +771,12 @@
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    // Send message
     async function sendMessage() {
       if (isSending) { showToast('Already sending...'); return; }
       const text = input.value.trim(); if (!text) return;
       if (privateRoomActive && (text === '/done' || text === '/exit')) { exitPrivateRoom(); input.value = ''; return; }
       input.value = ''; charCountSpan.textContent = '0';
       const t1 = new Date(); const t1Offset = -t1.getTimezoneOffset(); const t1Label = getTimezoneOffsetLabel(t1Offset);
-      // User message: no avatar, just "You"
       const userDiv = document.createElement('div'); userDiv.className = 'msg user';
       userDiv.innerHTML = `<div class="msg-body">${escapeHtml(text)}</div><div class="timestamp-line">⏱ Sent: ${t1.toLocaleTimeString()} ${t1Label}</div>`;
       messagesDiv.appendChild(userDiv); messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -664,7 +789,6 @@
         } else if (structuredMode) {
           result = await callAssistant(text, { intent: document.getElementById('itlIntent').value, domain: document.getElementById('itlDomain').value, emotion: document.getElementById('itlEmotion').value, time: document.getElementById('itlTime').value }, false);
         } else {
-          // Regular mode: force AION only
           result = await callAssistant(text, null, true);
         }
         const t2 = new Date(); const t2Offset = -t2.getTimezoneOffset(); const t2Label = getTimezoneOffsetLabel(t2Offset);
@@ -696,12 +820,12 @@
         setStatus('Ready');
       } catch (err) {
         thinking.remove();
-        // Special handling for CIPHER error
-        if (err.message.includes('400') || err.message.includes('OpenRouter')) {
-          addSystemMessage(`❌ Private room error: ${err.message}. CIPHER's model may be misconfigured. Please try again later or contact support.`, true);
-        } else {
-          addSystemMessage(`Error: ${err.message}`, true);
-        }
+        // Enhanced error with retry button
+        const errorDiv = document.createElement('div'); errorDiv.className = 'msg assistant';
+        const retryHtml = `<button class="retry-btn" data-message="${escapeHtml(text)}" style="background:rgba(0,0,0,0.5); border:1px solid var(--accent); border-radius:20px; padding:4px 12px; margin-left:8px;">Retry</button>`;
+        errorDiv.innerHTML = `<div class="msg-body" style="background:#5f1a1a; color:#ff8a8a;">Error: ${escapeHtml(err.message)}${retryHtml}</div>`;
+        messagesDiv.appendChild(errorDiv);
+        errorDiv.querySelector('.retry-btn')?.addEventListener('click', () => sendMessage());
         setStatus(err.message, true);
       } finally { isSending = false; input.focus(); }
     }
@@ -806,7 +930,6 @@
       fileInput.click();
     }
 
-    // Settings modal (Claude-like with expanded sections)
     function showSettingsModal() {
       const modal = document.createElement('div'); modal.className = 'modal-overlay';
       modal.innerHTML = `
@@ -864,7 +987,6 @@
     });
     setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
 
-    // Initialization
     if (structuredMode) toggleStructuredMode();
     addSystemMessage(adaLoopEnabled ? '🔄 ADA loop active. Responses may be refined.' : '⚡ ADA loop disabled.');
   })();
