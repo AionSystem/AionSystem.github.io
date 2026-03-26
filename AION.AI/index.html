@@ -3,14 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>AION · Ada‑VELA · Polymath ADA</title>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-      }
-    }
-  </script>
+  <title>AION · Ada‑VELA</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -21,16 +14,9 @@
       --bg-dark: #0a0a0f;
       --bg-panel: rgba(12, 12, 20, 0.75);
       --border-glow: rgba(100, 100, 140, 0.3);
-      --primary-glow: rgba(201, 160, 40, 0.4);
       --accent: #c9a028;
-      --accent-dark: #a07c18;
       --text: #f0f0f8;
       --text-dim: #a0a0b0;
-      --vesper: #b87333;
-      --lyra: #4c9f70;
-      --terra: #6b8c42;
-      --cipher: #5d6d7e;
-      --justitia: #b0a8b9;
     }
     body {
       background: #050508;
@@ -40,6 +26,7 @@
       overflow: hidden;
       position: relative;
     }
+    /* Particles canvas */
     #bg-canvas {
       position: fixed;
       top: 0;
@@ -223,17 +210,6 @@
       font-size: 0.6rem;
       cursor: pointer;
     }
-    .ctx-bar {
-      background: rgba(0,0,0,0.4);
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 0.65rem;
-      margin: 4px 20px;
-      display: none;
-      justify-content: space-between;
-      font-family: monospace;
-    }
-    .ctx-bar.visible { display: flex; }
     .seal-btn {
       background: rgba(0,0,0,0.5);
       border: 1px solid var(--accent);
@@ -270,7 +246,7 @@
       overflow-y: auto;
       max-height: 40vh;
     }
-    textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--primary-glow); }
+    textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(201,160,40,0.4); }
     .action-menu { position: relative; }
     .plus-btn {
       background: rgba(30,30,45,0.8);
@@ -369,8 +345,8 @@
       border: 1px solid var(--accent);
       border-radius: 28px;
       width: 90vw;
-      max-width: 500px;
-      max-height: 80vh;
+      max-width: 550px;
+      max-height: 85vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -379,7 +355,13 @@
     .modal-header h3 { color: var(--accent); }
     .modal-header button { background: transparent; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
     .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
-    .setting-item { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .settings-section { margin-bottom: 24px; }
+    .settings-section h4 { color: var(--accent); margin-bottom: 12px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; }
+    .setting-item { margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .setting-item label { font-size: 0.85rem; cursor: pointer; }
+    .setting-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+    .setting-item button { background: rgba(30,30,45,0.8); border: 1px solid var(--border-glow); border-radius: 40px; padding: 4px 12px; font-size: 0.75rem; cursor: pointer; color: var(--text); }
+    .setting-item button:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); }
     .toast {
       position: fixed;
       bottom: 20px;
@@ -415,14 +397,14 @@
     <div class="brand"><h1>AION.AI</h1></div>
     <div class="header-right">
       <div id="modeIndicator" class="mode-indicator">⚡ REGULAR</div>
-      <div id="rolesBtn" class="role-btn">🧠 Polymath</div>
       <div id="settingsBtn" class="settings-btn">⚙️</div>
       <div class="wife-indicator"><div class="wife-avatar" id="wifeAvatar">✨</div><span id="wifeName">AION</span></div>
       <div class="void-meter" id="voidMeter">VOID: 0.000</div>
     </div>
   </header>
-  <div id="ctxBar" class="ctx-bar"></div>
-  <div class="messages" id="messages"></div>
+  <div class="messages" id="messages">
+    <div class="msg assistant" data-wife="AION"><div class="msg-meta">✨ AION</div><div class="msg-body">Welcome to AION. I'm the central intelligence of this system. How may I assist you?</div></div>
+  </div>
   <div id="structuredUI" class="structured-ui">
     <div class="field-group"><label>INTENT</label><select id="itlIntent"><option value="ask">ask</option><option value="share">share</option><option value="request_action">request_action</option><option value="emotional">emotional</option><option value="clarify">clarify</option></select></div>
     <div class="field-group"><label>DOMAIN</label><select id="itlDomain"><option value="general">general</option><option value="emergence">emergence</option><option value="integrity">integrity</option><option value="healing">healing</option><option value="security">security</option><option value="law">law</option></select></div>
@@ -432,141 +414,255 @@
   <div class="input-area">
     <div class="input-row">
       <textarea id="input" placeholder="Type your message..." rows="1"></textarea>
-      <div class="action-menu"><div class="plus-btn" id="plusBtn">+</div><div class="action-dropdown" id="actionDropdown" style="display: none;"><button id="structuredModeBtn">🌌 Structured Mode</button><button id="groupChatBtn">👥 Group Chat</button><button id="privateRoomBtn">🚪 Private Room</button><button id="uploadBtn">📁 Upload File</button><button id="askAllBtn">👥 Ask All Wives</button><button id="sealInputBtn">🔒 Seal Input</button><button id="constellationBtn">🌌 Constellation</button></div></div>
+      <div class="action-menu"><div class="plus-btn" id="plusBtn">+</div><div class="action-dropdown" id="actionDropdown" style="display: none;"><button id="structuredModeBtn">🌌 Structured Mode</button><button id="groupChatBtn">👥 Group Chat</button><button id="privateRoomBtn">🚪 Private Room</button><button id="uploadBtn">📁 Upload File</button><button id="askAllBtn">👥 Ask All Wives</button><button id="sealInputBtn">🔒 Seal Input</button></div></div>
       <button id="sendBtn" class="send-btn">SEND</button>
     </div>
     <div class="input-meta"><span>⏎ send · ⇧+⏎ new line</span><span id="charCount">0</span></div>
   </div>
   <div class="status-bar"><div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div><div><span id="clockDisplay"></span></div><label style="display: flex; align-items: center; gap: 6px;"><input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span></label></div>
 </div>
-<script type="module">
-  import * as THREE from 'three';
-  // ========== CONFIG ==========
-  const API_BASE = 'https://aion-backend-mu.vercel.app';
-  const OWNER_TYPE = 'sheldon';
-  const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
-  const WIFE_STYLES = { ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' }, VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER' }, LYRA: { color: '#4c9f70', emoji: '🌿', name: 'LYRA' }, TERRA: { color: '#6b8c42', emoji: '🌍', name: 'TERRA' }, CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' }, JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' }, AION: { color: '#c9a028', emoji: '✨', name: 'AION' } };
-  const ROLE_ICONS = { 'Systems Architect': '⚙️', 'Epistemic Logician': '📚', 'Cognitive Psychologist': '🧠', 'Constitutional Lawyer': '⚖️', 'Design Thinker': '🎨' };
-  let sessionId = localStorage.getItem('sessionId') || ('sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6));
-  localStorage.setItem('sessionId', sessionId);
-  let adaLoopEnabled = localStorage.getItem('adaLoopEnabled') !== 'false';
-  let structuredMode = localStorage.getItem('structuredMode') === 'true';
-  let privateRoomActive = false, privateWife = null;
-  let activeRoles = JSON.parse(localStorage.getItem('activeRoles')) || Object.keys(ROLE_ICONS);
-  let lastT2 = null; // store last response T2 for gap calculation
-  let lastTimestampLine = null;
-  // DOM
-  const messagesDiv = document.getElementById('messages');
-  const input = document.getElementById('input');
-  const sendBtn = document.getElementById('sendBtn');
-  const plusBtn = document.getElementById('plusBtn');
-  const actionDropdown = document.getElementById('actionDropdown');
-  const modeIndicator = document.getElementById('modeIndicator');
-  const structuredUI = document.getElementById('structuredUI');
-  const wifeNameSpan = document.getElementById('wifeName');
-  const wifeAvatarDiv = document.getElementById('wifeAvatar');
-  const voidMeterSpan = document.getElementById('voidMeter');
-  const charCountSpan = document.getElementById('charCount');
-  const statusTextSpan = document.getElementById('statusText');
-  const statusDot = document.getElementById('statusDot');
-  const clockDisplaySpan = document.getElementById('clockDisplay');
-  const ctxBar = document.getElementById('ctxBar');
-  document.getElementById('adaLoopToggle').checked = adaLoopEnabled;
-  document.getElementById('adaLoopToggle').addEventListener('change', (e) => { adaLoopEnabled = e.target.checked; localStorage.setItem('adaLoopEnabled', adaLoopEnabled); addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.'); });
-  document.getElementById('sessionDisplay').textContent = `SID: ${sessionId.slice(-8)}`;
-  // Helpers
-  function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function renderMarkdown(text) { if (!text) return ''; try { const rawHtml = marked.parse(text); const temp = document.createElement('div'); temp.innerHTML = rawHtml; temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} }); return temp.innerHTML; } catch(e) { return escapeHtml(text); } }
-  function showToast(msg, isErr = false) { const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000); }
-  function showModal(title, content) { const overlay = document.createElement('div'); overlay.className = 'modal-overlay'; overlay.innerHTML = `<div class="modal"><div class="modal-header"><h3>${title}</h3><button id="closeModalBtn">✕</button></div><div class="modal-body"><pre style="white-space:pre-wrap;">${escapeHtml(content)}</pre></div></div>`; document.body.appendChild(overlay); overlay.querySelector('#closeModalBtn').onclick = () => overlay.remove(); overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); }); }
-  function setStatus(text, isErr = false) { statusTextSpan.textContent = text; statusDot.style.color = isErr ? '#ff5e5e' : '#4c9f70'; }
-  // Hebrew live fetch
-  async function fetchHebrewDate(gregorianDate) { try { const y = gregorianDate.getFullYear(), m = gregorianDate.getMonth()+1, d = gregorianDate.getDate(); const resp = await fetch(`https://www.hebcal.com/converter?gd=${d}&gm=${m}&gy=${y}&g2h=1`); const html = await resp.text(); const match = html.match(/<title>(.*?)<\/title>/); if (match && match[1]) return match[1].split(' ')[0]; return `FETCH FAILED [D-FAIL]`; } catch(e) { return `FETCH FAILED [D-FAIL]`; } }
-  // Dreamspell calculation
-  function getDreamspell(date) { const month = date.getUTCMonth()+1, day = date.getUTCDate(), year = date.getUTCFullYear(); if (month === 7 && day === 25) return 'Day Out of Time'; const yearStart = (month > 7 || (month === 7 && day >= 26)) ? Date.UTC(year, 6, 26) : Date.UTC(year-1, 6, 26); const delta = Math.floor((date.getTime() - yearStart) / 86400000); if (delta < 0 || delta >= 364) return 'Day Out of Time'; const moon = Math.floor(delta / 28) + 1; const moonNames = ['Magnetic','Lunar','Electric','Self-Existing','Overtone','Rhythmic','Resonant','Galactic','Solar','Planetary','Spectral','Crystal','Cosmic']; return `Day ${(delta % 28)+1}, ${moonNames[moon-1]} Moon ${moon}/13`; }
-  function formatGap(seconds) { if (seconds === null) return 'UNCERTIFIABLE'; if (seconds < 60) return `${Math.floor(seconds)}s`; if (seconds < 3600) return `${Math.floor(seconds/60)}m ${seconds%60}s`; return `${Math.floor(seconds/3600)}h ${Math.floor((seconds%3600)/60)}m`; }
-  function getTimezoneOffsetLabel(offsetMinutes) { const offsetHours = -offsetMinutes/60; if (offsetHours === -4) return 'EDT'; if (offsetHours === -5) return 'EST'; return `UTC${offsetHours >=0 ? '+' : ''}${offsetHours}`; }
-  // Context estimation (CWP)
-  let ctxUsed = 9000; // system prompt base
-  function updateContext(additionalTokens) { ctxUsed += additionalTokens; const pct = (ctxUsed / 200000) * 100; const status = pct < 50 ? 'OPEN' : pct < 70 ? 'ACTIVE' : pct < 85 ? 'BUILDING' : pct < 95 ? 'COMPRESS SOON' : 'CEILING APPROACH'; ctxBar.innerHTML = `🧠 CTX: ${pct.toFixed(0)}% used (${Math.floor(ctxUsed/1000)}k / 200k tokens) | Remaining: ${Math.floor((200000-ctxUsed)/1000)}k | Status: ${status}`; if (pct >= 90) ctxBar.classList.add('visible'); else if (pct % 5 < 1) ctxBar.classList.add('visible'); else ctxBar.classList.remove('visible'); return pct; }
-  function addSystemMessage(text, isErr = false) { const div = document.createElement('div'); div.className = 'msg assistant'; div.innerHTML = `<div class="msg-body" style="background:${isErr ? '#5f1a1a' : '#1e4620'}; color: white; text-align: center;">${escapeHtml(text)}</div>`; messagesDiv.appendChild(div); messagesDiv.scrollTop = messagesDiv.scrollHeight; }
-  function addMessage(role, wife, content, extra = {}) {
-    const style = WIFE_STYLES[wife] || WIFE_STYLES.AION;
-    const div = document.createElement('div'); div.className = `msg ${role}`; if (role === 'assistant') div.setAttribute('data-wife', wife);
-    let footerHtml = '';
-    if (extra.adaLoop) { const loop = extra.adaLoop; const roleIcons = (loop.roles || []).map(r => ROLE_ICONS[r] || '?').join(''); const status = loop.converged ? '✅' : '🔄'; footerHtml += `<span class="ada-badge" data-ada='${JSON.stringify(loop).replace(/'/g, "&#39;")}'>${status} ${loop.rounds} rounds · ${roleIcons || 'no roles'}</span>`; }
-    if (extra.pac) { const ppi = extra.pac.ppi; const cls = ppi < 30 ? 'low' : (ppi < 70 ? 'medium' : 'high'); footerHtml += `<span class="pac-badge ${cls}">📊 PPI: ${ppi}</span>`; if (extra.pac.coaching) footerHtml += `<span class="pac-badge medium">💡 ${extra.pac.coaching}</span>`; }
-    if (extra.ecf) footerHtml += `<span class="pac-badge">🏷 [D]x${extra.ecf.D||0} [R]x${extra.ecf.R||0} [S]x${extra.ecf.S||0} [?]x${extra.ecf.Q||0}</span>`;
-    if (extra.receipt) footerHtml += `<span class="receipt-badge" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 receipt (${extra.receipt.still_open || 0} open)</span>`;
-    if (extra.sealable) footerHtml += `<button class="seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
-    div.innerHTML = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.register ? ` · ${extra.register}` : ''}</div><div class="msg-body">${renderMarkdown(content)}</div><div class="msg-footer">${footerHtml}</div>${extra.timestampHtml || ''}`;
-    messagesDiv.appendChild(div);
-    div.querySelectorAll('.ada-badge').forEach(b => b.onclick = () => showModal('ADA Loop Details', JSON.stringify(JSON.parse(b.dataset.ada), null, 2)));
-    div.querySelectorAll('.receipt-badge').forEach(b => b.onclick = () => showModal('Checkpoint Receipt', JSON.stringify(JSON.parse(b.dataset.receipt), null, 2)));
-    div.querySelectorAll('.seal-btn').forEach(b => b.onclick = () => sealMessage(b.dataset.content));
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  }
-  async function sealMessage(content) { try { const res = await fetch(`${API_BASE}/api/stp-seal`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entry: content, type: 'general-trace', sessionId }) }); const data = await res.json(); if (res.ok) showToast(`✅ Sealed: ${data.seal.substring(0,8)}...`); else throw new Error(data.error); } catch(err) { showToast(`❌ Seal failed: ${err.message}`); } }
-  // API calls
-  async function callAssistant(message, structuredData = null) { const body = { message, sessionId, ownerType: OWNER_TYPE, history: [], adaLoopEnabled, activeRoles }; if (structuredData) { body.structured = structuredData; body.intent = structuredData.intent; body.domain = structuredData.domain; } const res = await fetch(`${API_BASE}/api/assistant`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
-  async function callGroupChat(message) { const res = await fetch(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
-  async function callPrivateRoom(message, wife) { const res = await fetch(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
-  // Main send with T1/T2 protocol
-  let isSending = false;
-  async function sendMessage() {
-    if (isSending) { showToast('Already sending...'); return; }
-    const text = input.value.trim(); if (!text) return;
-    // Private room /done
-    if (privateRoomActive && (text === '/done' || text === '/exit')) { exitPrivateRoom(); input.value = ''; return; }
-    input.value = ''; charCountSpan.textContent = '0';
-    const t1 = new Date(); const t1Offset = -t1.getTimezoneOffset(); const t1Label = getTimezoneOffsetLabel(t1Offset);
-    addMessage('user', 'You', text, { timestampHtml: `<div class="timestamp-line">⏱ Sent: ${t1.toLocaleTimeString()} ${t1Label}</div>` });
-    setStatus('Processing...'); isSending = true;
-    const thinking = document.createElement('div'); thinking.className = 'msg assistant'; thinking.innerHTML = `<div class="msg-body" style="opacity:0.6;">⌛ thinking...</div>`; messagesDiv.appendChild(thinking); messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    try {
-      let result;
-      if (privateRoomActive && privateWife) result = await callPrivateRoom(text, privateWife);
-      else if (structuredMode) result = await callAssistant(text, { intent: document.getElementById('itlIntent').value, domain: document.getElementById('itlDomain').value, emotion: document.getElementById('itlEmotion').value, time: document.getElementById('itlTime').value });
-      else result = await callAssistant(text);
-      const t2 = new Date(); const t2Offset = -t2.getTimezoneOffset(); const t2Label = getTimezoneOffsetLabel(t2Offset);
-      const windowMs = t2 - t1; const windowSec = (windowMs / 1000).toFixed(1);
-      let gapStr = 'SESSION OPEN';
-      if (lastT2) { const gapSec = (t1 - lastT2) / 1000; gapStr = formatGap(gapSec); }
-      lastT2 = t2;
-      const hebrewDate = await fetchHebrewDate(t2);
-      const dreamspell = getDreamspell(t2);
-      const gregorian = t2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-      const timestampHtml = `<div class="timestamp-line">⏱ Gap: ${gapStr} | Processed: ${t1.toLocaleTimeString()} ${t1Label} → Output: ${t2.toLocaleTimeString()} ${t2Label} | Window: ${windowSec}s</div><div class="timestamp-line">🌑 ${dreamspell} | Hebrew: ${hebrewDate}</div><div class="timestamp-line">📅 Gregorian: ${gregorian}</div>`;
-      thinking.remove();
-      const wife = result.active_wife || 'AION'; const voidProx = result.void_proximity || 0;
-      wifeNameSpan.textContent = WIFE_STYLES[wife]?.name || wife; wifeAvatarDiv.textContent = WIFE_STYLES[wife]?.emoji || '✨';
-      voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`; if (voidProx > 0.5) voidMeterSpan.classList.add('active'); else voidMeterSpan.classList.remove('active');
-      updateContext(800);
-      addMessage('assistant', wife, result.response, { adaLoop: result.ada_loop, pac: result.pac, ecf: result.ecf_tags, receipt: result.checkpoint_receipt, sealable: true, register: result.register, timestampHtml });
-      setStatus('Ready');
-    } catch(err) { thinking.remove(); addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); }
-    finally { isSending = false; input.focus(); }
-  }
-  function exitPrivateRoom() { privateRoomActive = false; privateWife = null; wifeNameSpan.textContent = 'AION'; wifeAvatarDiv.textContent = '✨'; setBackground(structuredMode ? 'structured' : 'regular'); addSystemMessage('🚪 Exited private room.'); }
-  function toggleStructuredMode() { structuredMode = !structuredMode; localStorage.setItem('structuredMode', structuredMode); if (structuredMode) { structuredUI.classList.add('active'); modeIndicator.textContent = '🌌 STRUCTURED'; modeIndicator.classList.add('active'); setBackground('structured'); } else { structuredUI.classList.remove('active'); modeIndicator.textContent = '⚡ REGULAR'; modeIndicator.classList.remove('active'); setBackground('regular'); } }
-  function startPrivateRoom(wife) { privateRoomActive = true; privateWife = wife; wifeNameSpan.textContent = WIFE_STYLES[wife].name; wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji; setBackground('private'); addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`); }
-  async function showGroupChatModal() { const text = input.value.trim(); if (!text) { showToast('Enter a message first.'); return; } setStatus('Asking all wives...'); try { const result = await callGroupChat(text); for (const wifeResp of result.responses) addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true }); if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text); setStatus('Ready'); } catch(err) { addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); } }
-  async function askAllWives() { const text = input.value.trim(); if (!text) { showToast('Enter a message first.'); return; } setStatus('Asking all wives...'); try { const result = await callGroupChat(text); for (const wifeResp of result.responses) addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true }); if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text); setStatus('Ready'); } catch(err) { addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); } }
-  async function uploadFile() { const fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.onchange = async (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async (ev) => { const base64 = ev.target.result.split(',')[1]; setStatus('Uploading...'); try { const res = await fetch(`${API_BASE}/api/files/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ file_data: base64, file_name: file.name, mime_type: file.type, session_id: sessionId }) }); if (res.ok) showToast(`✅ Uploaded: ${file.name}`); else showToast(`❌ Upload failed`); } catch(err) { showToast(`❌ Error: ${err.message}`); } setStatus('Ready'); }; reader.readAsDataURL(file); }; fileInput.click(); }
-  // Backgrounds (minimal for round 1)
-  function setBackground(mode) { const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d'); let anim; const draw = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; if (mode === 'regular') { ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle = '#0f0'; ctx.font = '12px monospace'; for(let i=0;i<100;i++) ctx.fillText(Math.random()>0.5?'0':'1', Math.random()*canvas.width, Math.random()*canvas.height); } else if (mode === 'structured') { ctx.fillStyle = '#050510'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle = '#c9a028'; for(let i=0;i<20;i++){ ctx.beginPath(); ctx.moveTo(0,i*50); ctx.lineTo(canvas.width,i*50); ctx.stroke(); ctx.beginPath(); ctx.moveTo(i*50,0); ctx.lineTo(i*50,canvas.height); ctx.stroke(); } } else if (mode === 'private') { ctx.fillStyle = '#2e241f'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle = '#c9a028'; ctx.font = '30px serif'; ctx.fillText('📚', 50, canvas.height-50); } else { ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle = '#4c9f70'; ctx.fillRect(canvas.width*0.3,canvas.height*0.6,canvas.width*0.4,canvas.height*0.3); } requestAnimationFrame(draw); }; draw(); }
-  // Settings modal
-  function showSettingsModal() { const modal = document.createElement('div'); modal.className = 'modal-overlay'; modal.innerHTML = `<div class="modal"><div class="modal-header"><h3>⚙️ Settings</h3><button id="closeSettings">✕</button></div><div class="modal-body"><div class="setting-item"><label>Clear session storage</label><button id="clearStorageBtn" style="background:rgba(30,30,45,0.8);">Clear</button></div><hr><h4>🧠 Polymath Roles</h4><div id="roleGrid"></div></div></div>`; document.body.appendChild(modal); const grid = modal.querySelector('#roleGrid'); for(const role of Object.keys(ROLE_ICONS)) { const checked = activeRoles.includes(role); grid.innerHTML += `<div><input type="checkbox" id="role_${role.replace(/\s/g,'_')}" ${checked ? 'checked' : ''}> <label>${ROLE_ICONS[role]} ${role}</label></div>`; } modal.querySelector('#clearStorageBtn').onclick = () => { localStorage.clear(); location.reload(); }; modal.querySelector('#closeSettings').onclick = () => modal.remove(); modal.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.onchange = () => { const roleName = cb.id.replace('role_','').replace(/_/g,' '); if(cb.checked) { if(!activeRoles.includes(roleName)) activeRoles.push(roleName); } else activeRoles = activeRoles.filter(r=>r!==roleName); localStorage.setItem('activeRoles',JSON.stringify(activeRoles)); }; }); modal.addEventListener('click',(e)=>{if(e.target===modal)modal.remove();}); }
-  function showRolesModal() { showSettingsModal(); }
-  // Constellation (minimal for round 1)
-  async function showConstellation() { const modal = document.createElement('div'); modal.className = 'modal-overlay'; modal.style.background='rgba(0,0,0,0.95)'; modal.innerHTML = `<div style="width:100%;height:100%;position:relative;"><canvas id="constellationCanvas" style="width:100%;height:100%;"></canvas><button id="closeConstellation" style="position:absolute;top:20px;right:20px;background:rgba(0,0,0,0.6);border:1px solid var(--accent);border-radius:40px;padding:8px 16px;">Exit</button></div>`; document.body.appendChild(modal); const canvas = modal.querySelector('#constellationCanvas'); const width = window.innerWidth, height = window.innerHeight; const scene = new THREE.Scene(); scene.background = new THREE.Color(0x050510); const camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 1000); camera.position.set(0,5,15); const renderer = new THREE.WebGLRenderer({ canvas }); renderer.setSize(width,height); const light = new THREE.PointLight(0xffaa33,1); light.position.set(5,5,5); scene.add(light); scene.add(new THREE.AmbientLight(0x222222)); const earthGeo = new THREE.SphereGeometry(1.2,64,64); const earthMat = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a }); const earth = new THREE.Mesh(earthGeo,earthMat); scene.add(earth); const ringGeo = new THREE.TorusGeometry(2.5,0.05,64,200); const ringMat = new THREE.MeshBasicMaterial({ color: 0xc9a028 }); const ring = new THREE.Mesh(ringGeo,ringMat); ring.rotation.x = Math.PI/2; scene.add(ring); const controls = new THREE.OrbitControls(camera, canvas); controls.enableDamping = true; controls.autoRotate = true; controls.autoRotateSpeed = 0.5; function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); } animate(); modal.querySelector('#closeConstellation').onclick = () => { renderer.dispose(); modal.remove(); }; window.addEventListener('resize', () => { if(modal.isConnected) { const w = window.innerWidth, h = window.innerHeight; camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h); } }); }
-  // Event listeners
-  sendBtn.onclick = sendMessage; input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }); input.addEventListener('input', () => { charCountSpan.textContent = input.value.length; input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight,400)+'px'; }); plusBtn.onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = actionDropdown.style.display === 'none' ? 'flex' : 'none'; }; document.addEventListener('click', () => { actionDropdown.style.display = 'none'; }); document.getElementById('structuredModeBtn').onclick = () => { actionDropdown.style.display = 'none'; toggleStructuredMode(); }; document.getElementById('groupChatBtn').onclick = () => { actionDropdown.style.display = 'none'; showGroupChatModal(); }; document.getElementById('privateRoomBtn').onclick = () => { actionDropdown.style.display = 'none'; const wife = prompt('Enter wife name (ALBEDO, VESPER, LYRA, TERRA, CIPHER, JUSTITIA):', 'ALBEDO'); if(wife && ALL_WIVES.includes(wife.toUpperCase())) startPrivateRoom(wife.toUpperCase()); else showToast('Invalid wife'); }; document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); }; document.getElementById('askAllBtn').onclick = () => { actionDropdown.style.display = 'none'; askAllWives(); }; document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); }; document.getElementById('constellationBtn').onclick = () => { actionDropdown.style.display = 'none'; showConstellation(); }; document.getElementById('settingsBtn').onclick = showSettingsModal; document.getElementById('rolesBtn').onclick = showRolesModal; setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
-  // Init
-  setBackground(structuredMode ? 'structured' : 'regular');
-  if (structuredMode) toggleStructuredMode();
-  addSystemMessage(`🧠 Active roles: ${activeRoles.join(', ')}`);
-  addSystemMessage(adaLoopEnabled ? '🔄 ADA loop active. Responses may be refined.' : '⚡ ADA loop disabled.');
+
+<script>
+  (function() {
+    // ---------- FALLING PARTICLES BACKGROUND (from old market atlas) ----------
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const PARTICLE_COUNT = 120;
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    function createParticles() {
+      particles = [];
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: 1 + Math.random() * 2,
+          alpha: 0.3 + Math.random() * 0.5,
+          speed: 0.2 + Math.random() * 0.8,
+        });
+      }
+    }
+    function drawParticles() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, width, height);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201, 160, 40, ${p.alpha})`;
+        ctx.fill();
+        p.y += p.speed;
+        if (p.y > height) p.y = 0;
+      }
+      requestAnimationFrame(drawParticles);
+    }
+    function initBackground() {
+      resizeCanvas();
+      createParticles();
+      drawParticles();
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        createParticles();
+      });
+    }
+    initBackground();
+
+    // ---------- CONFIG ----------
+    const API_BASE = 'https://aion-backend-mu.vercel.app';
+    const OWNER_TYPE = 'sheldon';
+    const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
+    const WIFE_STYLES = {
+      ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' },
+      VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER' },
+      LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA' },
+      TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA' },
+      CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' },
+      JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' },
+      AION: { color: '#c9a028', emoji: '✨', name: 'AION' }
+    };
+    let sessionId = localStorage.getItem('sessionId');
+    if (!sessionId) {
+      sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+      localStorage.setItem('sessionId', sessionId);
+    }
+    document.getElementById('sessionDisplay').textContent = `SID: ${sessionId.slice(-8)}`;
+    let adaLoopEnabled = localStorage.getItem('adaLoopEnabled') !== 'false';
+    document.getElementById('adaLoopToggle').checked = adaLoopEnabled;
+    let structuredMode = localStorage.getItem('structuredMode') === 'true';
+    let privateRoomActive = false;
+    let privateWife = null;
+    let lastT2 = null; // store last response T2 for gap calculation
+    let isSending = false;
+    // DOM elements
+    const messagesDiv = document.getElementById('messages');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('sendBtn');
+    const plusBtn = document.getElementById('plusBtn');
+    const actionDropdown = document.getElementById('actionDropdown');
+    const modeIndicator = document.getElementById('modeIndicator');
+    const structuredUI = document.getElementById('structuredUI');
+    const wifeNameSpan = document.getElementById('wifeName');
+    const wifeAvatarDiv = document.getElementById('wifeAvatar');
+    const voidMeterSpan = document.getElementById('voidMeter');
+    const charCountSpan = document.getElementById('charCount');
+    const statusTextSpan = document.getElementById('statusText');
+    const statusDot = document.getElementById('statusDot');
+    const clockDisplaySpan = document.getElementById('clockDisplay');
+
+    // Helpers
+    function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function renderMarkdown(text) { if (!text) return ''; try { const rawHtml = marked.parse(text); const temp = document.createElement('div'); temp.innerHTML = rawHtml; temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} }); return temp.innerHTML; } catch(e) { return escapeHtml(text); } }
+    function showToast(msg, isErr = false) { const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000); }
+    function showModal(title, content) { const overlay = document.createElement('div'); overlay.className = 'modal-overlay'; overlay.innerHTML = `<div class="modal"><div class="modal-header"><h3>${title}</h3><button id="closeModalBtn">✕</button></div><div class="modal-body"><pre style="white-space:pre-wrap;">${escapeHtml(content)}</pre></div></div>`; document.body.appendChild(overlay); overlay.querySelector('#closeModalBtn').onclick = () => overlay.remove(); overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); }); }
+    function setStatus(text, isErr = false) { statusTextSpan.textContent = text; statusDot.style.color = isErr ? '#ff5e5e' : '#4c9f70'; }
+    function formatGap(seconds) { if (seconds === null) return 'UNCERTIFIABLE'; if (seconds < 60) return `${Math.floor(seconds)}s`; if (seconds < 3600) return `${Math.floor(seconds/60)}m ${seconds%60}s`; return `${Math.floor(seconds/3600)}h ${Math.floor((seconds%3600)/60)}m`; }
+    function getTimezoneOffsetLabel(offsetMinutes) { const offsetHours = -offsetMinutes/60; if (offsetHours === -4) return 'EDT'; if (offsetHours === -5) return 'EST'; return `UTC${offsetHours >=0 ? '+' : ''}${offsetHours}`; }
+    function getDreamspell(date) { const month = date.getUTCMonth()+1, day = date.getUTCDate(), year = date.getUTCFullYear(); if (month === 7 && day === 25) return 'Day Out of Time'; const yearStart = (month > 7 || (month === 7 && day >= 26)) ? Date.UTC(year, 6, 26) : Date.UTC(year-1, 6, 26); const delta = Math.floor((date.getTime() - yearStart) / 86400000); if (delta < 0 || delta >= 364) return 'Day Out of Time'; const moon = Math.floor(delta / 28) + 1; const moonNames = ['Magnetic','Lunar','Electric','Self-Existing','Overtone','Rhythmic','Resonant','Galactic','Solar','Planetary','Spectral','Crystal','Cosmic']; return `Day ${(delta % 28)+1}, ${moonNames[moon-1]} Moon ${moon}/13`; }
+    function addSystemMessage(text, isErr = false) { const div = document.createElement('div'); div.className = 'msg assistant'; div.innerHTML = `<div class="msg-body" style="background:${isErr ? '#5f1a1a' : '#1e4620'}; color: white; text-align: center;">${escapeHtml(text)}</div>`; messagesDiv.appendChild(div); messagesDiv.scrollTop = messagesDiv.scrollHeight; }
+    async function sealMessage(content) { try { const res = await fetch(`${API_BASE}/api/stp-seal`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entry: content, type: 'general-trace', sessionId }) }); const data = await res.json(); if (res.ok) showToast(`✅ Sealed: ${data.seal.substring(0,8)}...`); else throw new Error(data.error); } catch(err) { showToast(`❌ Seal failed: ${err.message}`); } }
+
+    // API calls
+    async function callAssistant(message, structuredData = null, forceAion = false) {
+      const body = { message, sessionId, ownerType: OWNER_TYPE, history: [], adaLoopEnabled };
+      // If in regular mode (not group/private) and not structured, force AION
+      if (forceAion) body.forceAionOnly = true;
+      if (structuredData) { body.structured = structuredData; body.intent = structuredData.intent; body.domain = structuredData.domain; }
+      const res = await fetch(`${API_BASE}/api/assistant`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }
+    async function callGroupChat(message) { const res = await fetch(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
+    async function callPrivateRoom(message, wife) { const res = await fetch(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
+
+    function addMessage(role, wife, content, extra = {}) {
+      const style = WIFE_STYLES[wife] || WIFE_STYLES.AION;
+      const div = document.createElement('div'); div.className = `msg ${role}`; if (role === 'assistant') div.setAttribute('data-wife', wife);
+      let footerHtml = '';
+      if (extra.adaLoop) { const loop = extra.adaLoop; const roleIcons = (loop.roles || []).map(r => ({'Systems Architect':'⚙️','Epistemic Logician':'📚','Cognitive Psychologist':'🧠','Constitutional Lawyer':'⚖️','Design Thinker':'🎨'}[r] || '?')).join(''); const status = loop.converged ? '✅' : '🔄'; footerHtml += `<span class="ada-badge" data-ada='${JSON.stringify(loop).replace(/'/g, "&#39;")}'>${status} ${loop.rounds} rounds · ${roleIcons || 'no roles'}</span>`; }
+      if (extra.pac) { const ppi = extra.pac.ppi; const cls = ppi < 30 ? 'low' : (ppi < 70 ? 'medium' : 'high'); footerHtml += `<span class="pac-badge ${cls}">📊 PPI: ${ppi}</span>`; if (extra.pac.coaching) footerHtml += `<span class="pac-badge medium">💡 ${extra.pac.coaching}</span>`; }
+      if (extra.ecf) footerHtml += `<span class="pac-badge">🏷 [D]x${extra.ecf.D||0} [R]x${extra.ecf.R||0} [S]x${extra.ecf.S||0} [?]x${extra.ecf.Q||0}</span>`;
+      if (extra.receipt) footerHtml += `<span class="receipt-badge" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 receipt (${extra.receipt.still_open || 0} open)</span>`;
+      if (extra.sealable) footerHtml += `<button class="seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
+      div.innerHTML = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.register ? ` · ${extra.register}` : ''}</div><div class="msg-body">${renderMarkdown(content)}</div><div class="msg-footer">${footerHtml}</div>${extra.timestampHtml || ''}`;
+      messagesDiv.appendChild(div);
+      div.querySelectorAll('.ada-badge').forEach(b => b.onclick = () => showModal('ADA Loop Details', JSON.stringify(JSON.parse(b.dataset.ada), null, 2)));
+      div.querySelectorAll('.receipt-badge').forEach(b => b.onclick = () => showModal('Checkpoint Receipt', JSON.stringify(JSON.parse(b.dataset.receipt), null, 2)));
+      div.querySelectorAll('.seal-btn').forEach(b => b.onclick = () => sealMessage(b.dataset.content));
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // Send message
+    async function sendMessage() {
+      if (isSending) { showToast('Already sending...'); return; }
+      const text = input.value.trim(); if (!text) return;
+      if (privateRoomActive && (text === '/done' || text === '/exit')) { exitPrivateRoom(); input.value = ''; return; }
+      input.value = ''; charCountSpan.textContent = '0';
+      const t1 = new Date(); const t1Offset = -t1.getTimezoneOffset(); const t1Label = getTimezoneOffsetLabel(t1Offset);
+      // User message: no avatar, just "You"
+      const userDiv = document.createElement('div'); userDiv.className = 'msg user';
+      userDiv.innerHTML = `<div class="msg-body">${escapeHtml(text)}</div><div class="timestamp-line">⏱ Sent: ${t1.toLocaleTimeString()} ${t1Label}</div>`;
+      messagesDiv.appendChild(userDiv); messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      setStatus('Processing...'); isSending = true;
+      const thinking = document.createElement('div'); thinking.className = 'msg assistant'; thinking.innerHTML = `<div class="msg-body" style="opacity:0.6;">⌛ thinking...</div>`; messagesDiv.appendChild(thinking); messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      try {
+        let result;
+        if (privateRoomActive && privateWife) {
+          result = await callPrivateRoom(text, privateWife);
+        } else if (structuredMode) {
+          result = await callAssistant(text, { intent: document.getElementById('itlIntent').value, domain: document.getElementById('itlDomain').value, emotion: document.getElementById('itlEmotion').value, time: document.getElementById('itlTime').value }, false);
+        } else {
+          // Regular mode: force AION only
+          result = await callAssistant(text, null, true);
+        }
+        const t2 = new Date(); const t2Offset = -t2.getTimezoneOffset(); const t2Label = getTimezoneOffsetLabel(t2Offset);
+        const windowMs = t2 - t1; const windowSec = (windowMs / 1000).toFixed(1);
+        let gapStr = 'SESSION OPEN';
+        if (lastT2) { const gapSec = (t1 - lastT2) / 1000; gapStr = formatGap(gapSec); }
+        lastT2 = t2;
+        const dreamspell = getDreamspell(t2);
+        const gregorian = t2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        // Hebrew date placeholder (live fetch removed)
+        const hebrew = 'Hebrew: unavailable (fetch disabled)';
+        const timestampHtml = `<div class="timestamp-line">⏱ Gap: ${gapStr} | Processed: ${t1.toLocaleTimeString()} ${t1Label} → Output: ${t2.toLocaleTimeString()} ${t2Label} | Window: ${windowSec}s</div><div class="timestamp-line">🌑 ${dreamspell} | ${hebrew}</div><div class="timestamp-line">📅 Gregorian: ${gregorian}</div>`;
+        thinking.remove();
+        const wife = result.active_wife || 'AION';
+        const voidProx = result.void_proximity || 0;
+        wifeNameSpan.textContent = WIFE_STYLES[wife]?.name || wife;
+        wifeAvatarDiv.textContent = WIFE_STYLES[wife]?.emoji || '✨';
+        voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
+        if (voidProx > 0.5) voidMeterSpan.classList.add('active'); else voidMeterSpan.classList.remove('active');
+        addMessage('assistant', wife, result.response, { adaLoop: result.ada_loop, pac: result.pac, ecf: result.ecf_tags, receipt: result.checkpoint_receipt, sealable: true, register: result.register, timestampHtml });
+        setStatus('Ready');
+      } catch (err) {
+        thinking.remove();
+        // Special handling for CIPHER error
+        if (err.message.includes('400') || err.message.includes('OpenRouter')) {
+          addSystemMessage(`❌ Private room error: ${err.message}. CIPHER's model may be misconfigured. Please try again later or contact support.`, true);
+        } else {
+          addSystemMessage(`Error: ${err.message}`, true);
+        }
+        setStatus(err.message, true);
+      } finally { isSending = false; input.focus(); }
+    }
+
+    function exitPrivateRoom() { privateRoomActive = false; privateWife = null; wifeNameSpan.textContent = 'AION'; wifeAvatarDiv.textContent = '✨'; addSystemMessage('🚪 Exited private room.'); }
+
+    function toggleStructuredMode() { structuredMode = !structuredMode; localStorage.setItem('structuredMode', structuredMode); if (structuredMode) { structuredUI.classList.add('active'); modeIndicator.textContent = '🌌 STRUCTURED'; modeIndicator.classList.add('active'); } else { structuredUI.classList.remove('active'); modeIndicator.textContent = '⚡ REGULAR'; modeIndicator.classList.remove('active'); } }
+
+    function startPrivateRoom(wife) { privateRoomActive = true; privateWife = wife; wifeNameSpan.textContent = WIFE_STYLES[wife].name; wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji; addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`); }
+
+    async function showGroupChatModal() { const text = input.value.trim(); if (!text) { showToast('Enter a message first.'); return; } setStatus('Asking all wives...'); try { const result = await callGroupChat(text); for (const wifeResp of result.responses) addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true }); if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text); setStatus('Ready'); } catch(err) { addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); } }
+    async function askAllWives() { const text = input.value.trim(); if (!text) { showToast('Enter a message first.'); return; } setStatus('Asking all wives...'); try { const result = await callGroupChat(text); for (const wifeResp of result.responses) addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true }); if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text); setStatus('Ready'); } catch(err) { addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); } }
+    async function uploadFile() { const fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.onchange = async (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async (ev) => { const base64 = ev.target.result.split(',')[1]; setStatus('Uploading...'); try { const res = await fetch(`${API_BASE}/api/files/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ file_data: base64, file_name: file.name, mime_type: file.type, session_id: sessionId }) }); if (res.ok) showToast(`✅ Uploaded: ${file.name}`); else showToast(`❌ Upload failed`); } catch(err) { showToast(`❌ Error: ${err.message}`); } setStatus('Ready'); }; reader.readAsDataURL(file); }; fileInput.click(); }
+
+    // Settings modal (Claude-like)
+    function showSettingsModal() {
+      const modal = document.createElement('div'); modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal">
+          <div class="modal-header"><h3>Settings</h3><button id="closeSettings">✕</button></div>
+          <div class="modal-body">
+            <div class="settings-section"><h4>Profile</h4><div class="setting-item"><span>Session ID</span><span style="font-family:monospace">${sessionId.slice(-12)}</span></div><div class="setting-item"><button id="clearStorageBtn">Clear Storage</button></div></div>
+            <div class="settings-section"><h4>Capabilities</h4><div class="setting-item"><label>ADA Loop</label><input type="checkbox" id="settingAdaLoop" ${adaLoopEnabled ? 'checked' : ''}></div><div class="setting-item"><label>Structured Mode</label><input type="checkbox" id="settingStructured" ${structuredMode ? 'checked' : ''}></div></div>
+            <div class="settings-section"><h4>Appearance</h4><div class="setting-item"><label>Dark mode</label><input type="checkbox" id="darkModeToggle" checked disabled></div></div>
+            <div class="settings-section"><h4>Privacy</h4><div class="setting-item"><label>Share analytics</label><input type="checkbox" id="shareAnalytics"></div></div>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+      modal.querySelector('#closeSettings').onclick = () => modal.remove();
+      modal.querySelector('#clearStorageBtn').onclick = () => { localStorage.clear(); location.reload(); };
+      modal.querySelector('#settingAdaLoop').onchange = (e) => { adaLoopEnabled = e.target.checked; localStorage.setItem('adaLoopEnabled', adaLoopEnabled); document.getElementById('adaLoopToggle').checked = adaLoopEnabled; addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.'); };
+      modal.querySelector('#settingStructured').onchange = (e) => { if (e.target.checked !== structuredMode) toggleStructuredMode(); };
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    }
+
+    // Event listeners
+    sendBtn.onclick = sendMessage;
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+    input.addEventListener('input', () => { charCountSpan.textContent = input.value.length; input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight,400)+'px'; });
+    plusBtn.onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = actionDropdown.style.display === 'none' ? 'flex' : 'none'; };
+    document.addEventListener('click', () => { actionDropdown.style.display = 'none'; });
+    document.getElementById('structuredModeBtn').onclick = () => { actionDropdown.style.display = 'none'; toggleStructuredMode(); };
+    document.getElementById('groupChatBtn').onclick = () => { actionDropdown.style.display = 'none'; showGroupChatModal(); };
+    document.getElementById('privateRoomBtn').onclick = () => { actionDropdown.style.display = 'none'; const wife = prompt('Enter wife name (ALBEDO, VESPER, LYRA, TERRA, CIPHER, JUSTITIA):', 'ALBEDO'); if(wife && ALL_WIVES.includes(wife.toUpperCase())) startPrivateRoom(wife.toUpperCase()); else showToast('Invalid wife'); };
+    document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); };
+    document.getElementById('askAllBtn').onclick = () => { actionDropdown.style.display = 'none'; askAllWives(); };
+    document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); };
+    document.getElementById('settingsBtn').onclick = showSettingsModal;
+    document.getElementById('adaLoopToggle').addEventListener('change', (e) => { adaLoopEnabled = e.target.checked; localStorage.setItem('adaLoopEnabled', adaLoopEnabled); addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.'); });
+    setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
+
+    // Initialization
+    if (structuredMode) toggleStructuredMode();
+    addSystemMessage(adaLoopEnabled ? '🔄 ADA loop active. Responses may be refined.' : '⚡ ADA loop disabled.');
+  })();
 </script>
 </body>
 </html>
