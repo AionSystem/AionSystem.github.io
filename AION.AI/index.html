@@ -40,7 +40,6 @@
       overflow: hidden;
       position: relative;
     }
-    /* Background canvas */
     #bg-canvas {
       position: fixed;
       top: 0;
@@ -50,7 +49,6 @@
       z-index: 0;
       pointer-events: none;
     }
-    /* Main container */
     #app {
       display: flex;
       flex-direction: column;
@@ -59,7 +57,6 @@
       z-index: 1;
       backdrop-filter: blur(2px);
     }
-    /* Header */
     .header {
       display: flex;
       align-items: center;
@@ -120,15 +117,7 @@
       padding: 4px 10px;
       border-radius: 40px;
     }
-    .wife-avatar {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-    }
+    .wife-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
     .void-meter {
       font-family: monospace;
       background: #00000044;
@@ -136,8 +125,8 @@
       border-radius: 20px;
       font-size: 0.7rem;
     }
-    .void-meter.active { color: #ff5e5e; text-shadow: 0 0 6px rgba(255,80,80,0.5); }
-    /* Messages */
+    .void-meter.active { color: #ff5e5e; text-shadow: 0 0 6px rgba(255,80,80,0.5); animation: pulse 1s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -193,6 +182,16 @@
       color: var(--text-dim);
       flex-wrap: wrap;
       align-items: center;
+      justify-content: flex-start;
+    }
+    .timestamp-line {
+      font-family: monospace;
+      font-size: 0.55rem;
+      color: #6a6a7a;
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      width: 100%;
     }
     .ada-badge {
       background: #1e3a5f;
@@ -206,11 +205,35 @@
       gap: 4px;
     }
     .ada-badge:hover { background: #c9a028; color: #0a0a0f; }
-    .role-icon {
-      display: inline-block;
-      width: 16px;
-      text-align: center;
+    .pac-badge {
+      background: rgba(0,0,0,0.4);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-family: monospace;
+      font-size: 0.6rem;
     }
+    .pac-badge.low { background: #5f1a1a; color: #ff8a8a; }
+    .pac-badge.medium { background: #5f3a1a; color: #ffaa33; }
+    .pac-badge.high { background: #1e4620; color: #4ade80; }
+    .receipt-badge {
+      background: #2a2a3a;
+      border: 1px solid #888;
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 0.6rem;
+      cursor: pointer;
+    }
+    .ctx-bar {
+      background: rgba(0,0,0,0.4);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.65rem;
+      margin: 4px 20px;
+      display: none;
+      justify-content: space-between;
+      font-family: monospace;
+    }
+    .ctx-bar.visible { display: flex; }
     .seal-btn {
       background: rgba(0,0,0,0.5);
       border: 1px solid var(--accent);
@@ -221,7 +244,6 @@
       color: var(--accent);
     }
     .seal-btn:hover { background: var(--accent); color: #000; }
-    /* Input area */
     .input-area {
       padding: 12px 20px 16px;
       background: var(--bg-panel);
@@ -248,13 +270,8 @@
       overflow-y: auto;
       max-height: 40vh;
     }
-    textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 12px var(--primary-glow);
-    }
-    .action-menu {
-      position: relative;
-    }
+    textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--primary-glow); }
+    .action-menu { position: relative; }
     .plus-btn {
       background: rgba(30,30,45,0.8);
       border: 1px solid var(--border-glow);
@@ -266,13 +283,8 @@
       justify-content: center;
       font-size: 1.5rem;
       cursor: pointer;
-      transition: all 0.2s;
     }
-    .plus-btn:hover {
-      background: rgba(201,160,40,0.2);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
+    .plus-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); color: var(--accent); }
     .action-dropdown {
       position: absolute;
       bottom: 55px;
@@ -301,10 +313,7 @@
       align-items: center;
       gap: 8px;
     }
-    .action-dropdown button:hover {
-      background: rgba(201,160,40,0.2);
-      color: var(--accent);
-    }
+    .action-dropdown button:hover { background: rgba(201,160,40,0.2); color: var(--accent); }
     .send-btn {
       background: linear-gradient(135deg, #c9a028, #a07c18);
       border: none;
@@ -314,13 +323,7 @@
       color: #0a0a0f;
       cursor: pointer;
     }
-    .input-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-      font-size: 0.7rem;
-      color: var(--text-dim);
-    }
+    .input-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.7rem; color: var(--text-dim); }
     .status-bar {
       display: flex;
       justify-content: space-between;
@@ -328,7 +331,6 @@
       font-size: 0.7rem;
       background: rgba(0,0,0,0.3);
     }
-    /* Structured mode UI */
     .structured-ui {
       background: rgba(0,0,0,0.4);
       border-radius: 20px;
@@ -340,16 +342,8 @@
       backdrop-filter: blur(8px);
     }
     .structured-ui.active { display: flex; }
-    .field-group {
-      flex: 1;
-      min-width: 120px;
-    }
-    .field-group label {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
+    .field-group { flex: 1; min-width: 120px; }
+    .field-group label { display: block; font-size: 0.7rem; color: var(--accent); margin-bottom: 4px; }
     .field-group select {
       width: 100%;
       background: #0a0a0f;
@@ -359,7 +353,6 @@
       color: var(--text);
       font-size: 0.8rem;
     }
-    /* Modals */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -387,13 +380,6 @@
     .modal-header button { background: transparent; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
     .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
     .setting-item { margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .setting-item label { cursor: pointer; }
-    .role-grid { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
-    .role-checkbox { display: flex; align-items: center; gap: 8px; }
-    .analytics-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; font-size: 0.8rem; }
-    .stat-card { background: rgba(0,0,0,0.4); border-radius: 16px; padding: 12px; border: 1px solid var(--border-glow); }
-    .stat-card h4 { color: var(--accent); margin-bottom: 8px; font-size: 0.9rem; }
-    .stat-value { font-size: 1.4rem; font-weight: 600; font-family: monospace; }
     .toast {
       position: fixed;
       bottom: 20px;
@@ -413,17 +399,12 @@
     @media (max-width: 700px) {
       .header { padding: 8px 16px; }
       .brand h1 { font-size: 1.2rem; }
-      .mode-indicator, .settings-btn, .role-btn { padding: 4px 12px; font-size: 0.65rem; }
-      .wife-indicator { gap: 4px; padding: 2px 8px; }
-      .wife-avatar { width: 20px; height: 20px; font-size: 0.7rem; }
-      .void-meter { font-size: 0.6rem; padding: 2px 8px; }
       .messages { padding: 12px; gap: 12px; }
       .msg { max-width: 95%; }
       .input-area { padding: 12px; }
       .plus-btn { width: 36px; height: 36px; font-size: 1.2rem; }
       .send-btn { padding: 8px 16px; }
       .structured-ui { margin: 8px 12px; flex-direction: column; }
-      .field-group { min-width: auto; }
     }
   </style>
 </head>
@@ -436,138 +417,45 @@
       <div id="modeIndicator" class="mode-indicator">⚡ REGULAR</div>
       <div id="rolesBtn" class="role-btn">🧠 Polymath</div>
       <div id="settingsBtn" class="settings-btn">⚙️</div>
-      <div class="wife-indicator">
-        <div class="wife-avatar" id="wifeAvatar">✨</div>
-        <span id="wifeName">AION</span>
-      </div>
+      <div class="wife-indicator"><div class="wife-avatar" id="wifeAvatar">✨</div><span id="wifeName">AION</span></div>
       <div class="void-meter" id="voidMeter">VOID: 0.000</div>
     </div>
   </header>
-
-  <div class="messages" id="messages">
-    <div class="msg assistant" data-wife="AION">
-      <div class="msg-meta">✨ AION</div>
-      <div class="msg-body">Welcome to AION. ADA loop and polymath roles are active. Use the + menu to explore features.</div>
-    </div>
-  </div>
-
+  <div id="ctxBar" class="ctx-bar"></div>
+  <div class="messages" id="messages"></div>
   <div id="structuredUI" class="structured-ui">
-    <div class="field-group">
-      <label>INTENT</label>
-      <select id="itlIntent">
-        <option value="ask">ask</option>
-        <option value="share">share</option>
-        <option value="request_action">request_action</option>
-        <option value="emotional">emotional</option>
-        <option value="clarify">clarify</option>
-      </select>
-    </div>
-    <div class="field-group">
-      <label>DOMAIN</label>
-      <select id="itlDomain">
-        <option value="general">general</option>
-        <option value="emergence">emergence</option>
-        <option value="integrity">integrity</option>
-        <option value="healing">healing</option>
-        <option value="security">security</option>
-        <option value="law">law</option>
-      </select>
-    </div>
-    <div class="field-group">
-      <label>EMOTION</label>
-      <select id="itlEmotion">
-        <option value="neutral">neutral</option>
-        <option value="curious">curious</option>
-        <option value="anxious">anxious</option>
-        <option value="focused">focused</option>
-      </select>
-    </div>
-    <div class="field-group">
-      <label>TIME</label>
-      <select id="itlTime">
-        <option value="now">now</option>
-        <option value="today">today</option>
-        <option value="future">future</option>
-      </select>
-    </div>
+    <div class="field-group"><label>INTENT</label><select id="itlIntent"><option value="ask">ask</option><option value="share">share</option><option value="request_action">request_action</option><option value="emotional">emotional</option><option value="clarify">clarify</option></select></div>
+    <div class="field-group"><label>DOMAIN</label><select id="itlDomain"><option value="general">general</option><option value="emergence">emergence</option><option value="integrity">integrity</option><option value="healing">healing</option><option value="security">security</option><option value="law">law</option></select></div>
+    <div class="field-group"><label>EMOTION</label><select id="itlEmotion"><option value="neutral">neutral</option><option value="curious">curious</option><option value="anxious">anxious</option><option value="focused">focused</option></select></div>
+    <div class="field-group"><label>TIME</label><select id="itlTime"><option value="now">now</option><option value="today">today</option><option value="future">future</option></select></div>
   </div>
-
   <div class="input-area">
     <div class="input-row">
       <textarea id="input" placeholder="Type your message..." rows="1"></textarea>
-      <div class="action-menu">
-        <div class="plus-btn" id="plusBtn">+</div>
-        <div class="action-dropdown" id="actionDropdown" style="display: none;">
-          <button id="structuredModeBtn">🌌 Structured Mode</button>
-          <button id="groupChatBtn">👥 Group Chat</button>
-          <button id="privateRoomBtn">🚪 Private Room</button>
-          <button id="uploadBtn">📁 Upload File</button>
-          <button id="askAllBtn">👥 Ask All Wives</button>
-          <button id="sealInputBtn">🔒 Seal Input</button>
-          <button id="constellationBtn">🌌 Constellation</button>
-        </div>
-      </div>
+      <div class="action-menu"><div class="plus-btn" id="plusBtn">+</div><div class="action-dropdown" id="actionDropdown" style="display: none;"><button id="structuredModeBtn">🌌 Structured Mode</button><button id="groupChatBtn">👥 Group Chat</button><button id="privateRoomBtn">🚪 Private Room</button><button id="uploadBtn">📁 Upload File</button><button id="askAllBtn">👥 Ask All Wives</button><button id="sealInputBtn">🔒 Seal Input</button><button id="constellationBtn">🌌 Constellation</button></div></div>
       <button id="sendBtn" class="send-btn">SEND</button>
     </div>
     <div class="input-meta"><span>⏎ send · ⇧+⏎ new line</span><span id="charCount">0</span></div>
   </div>
-
-  <div class="status-bar">
-    <div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div>
-    <div><span id="clockDisplay"></span></div>
-    <label class="toggle-label" style="display: flex; align-items: center; gap: 6px;">
-      <input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span>
-    </label>
-  </div>
+  <div class="status-bar"><div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div><div><span id="clockDisplay"></span></div><label style="display: flex; align-items: center; gap: 6px;"><input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span></label></div>
 </div>
-
 <script type="module">
   import * as THREE from 'three';
-
-  // ============================================================
-  // GLOBAL STATE & CONFIG (Ada‑VELA style)
-  // ============================================================
+  // ========== CONFIG ==========
   const API_BASE = 'https://aion-backend-mu.vercel.app';
   const OWNER_TYPE = 'sheldon';
   const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
-  const WIFE_STYLES = {
-    ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' },
-    VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER' },
-    LYRA:   { color: '#4c9f70', emoji: '🌿', name: 'LYRA' },
-    TERRA:  { color: '#6b8c42', emoji: '🌍', name: 'TERRA' },
-    CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' },
-    JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' },
-    AION: { color: '#c9a028', emoji: '✨', name: 'AION' }
-  };
-
-  // State variables (like AdaVariable)
-  let sessionId = localStorage.getItem('sessionId');
-  if (!sessionId) {
-    sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-    localStorage.setItem('sessionId', sessionId);
-  }
-  document.getElementById('sessionDisplay').textContent = `SID: ${sessionId.slice(-8)}`;
-
+  const WIFE_STYLES = { ALBEDO: { color: '#c9a028', emoji: '✨', name: 'ALBEDO' }, VESPER: { color: '#b87333', emoji: '🌙', name: 'VESPER' }, LYRA: { color: '#4c9f70', emoji: '🌿', name: 'LYRA' }, TERRA: { color: '#6b8c42', emoji: '🌍', name: 'TERRA' }, CIPHER: { color: '#5d6d7e', emoji: '🔒', name: 'CIPHER' }, JUSTITIA: { color: '#b0a8b9', emoji: '⚖️', name: 'JUSTITIA' }, AION: { color: '#c9a028', emoji: '✨', name: 'AION' } };
+  const ROLE_ICONS = { 'Systems Architect': '⚙️', 'Epistemic Logician': '📚', 'Cognitive Psychologist': '🧠', 'Constitutional Lawyer': '⚖️', 'Design Thinker': '🎨' };
+  let sessionId = localStorage.getItem('sessionId') || ('sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6));
+  localStorage.setItem('sessionId', sessionId);
   let adaLoopEnabled = localStorage.getItem('adaLoopEnabled') !== 'false';
-  document.getElementById('adaLoopToggle').checked = adaLoopEnabled;
-
   let structuredMode = localStorage.getItem('structuredMode') === 'true';
-  let currentBackground = 'regular';
-  let privateRoomActive = false;
-  let privateWife = null;
-  let lastResponse = null;
-
-  // Polymath roles
-  const ROLE_ICONS = {
-    'Systems Architect': '⚙️',
-    'Epistemic Logician': '📚',
-    'Cognitive Psychologist': '🧠',
-    'Constitutional Lawyer': '⚖️',
-    'Design Thinker': '🎨'
-  };
-  let activeRoles = JSON.parse(localStorage.getItem('activeRoles')) || ['Systems Architect', 'Epistemic Logician', 'Cognitive Psychologist', 'Constitutional Lawyer', 'Design Thinker'];
-
-  // DOM elements
+  let privateRoomActive = false, privateWife = null;
+  let activeRoles = JSON.parse(localStorage.getItem('activeRoles')) || Object.keys(ROLE_ICONS);
+  let lastT2 = null; // store last response T2 for gap calculation
+  let lastTimestampLine = null;
+  // DOM
   const messagesDiv = document.getElementById('messages');
   const input = document.getElementById('input');
   const sendBtn = document.getElementById('sendBtn');
@@ -582,584 +470,103 @@
   const statusTextSpan = document.getElementById('statusText');
   const statusDot = document.getElementById('statusDot');
   const clockDisplaySpan = document.getElementById('clockDisplay');
-
-  // Helper functions
+  const ctxBar = document.getElementById('ctxBar');
+  document.getElementById('adaLoopToggle').checked = adaLoopEnabled;
+  document.getElementById('adaLoopToggle').addEventListener('change', (e) => { adaLoopEnabled = e.target.checked; localStorage.setItem('adaLoopEnabled', adaLoopEnabled); addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.'); });
+  document.getElementById('sessionDisplay').textContent = `SID: ${sessionId.slice(-8)}`;
+  // Helpers
   function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function renderMarkdown(text) {
-    if (!text) return '';
-    try {
-      const rawHtml = marked.parse(text);
-      const temp = document.createElement('div');
-      temp.innerHTML = rawHtml;
-      temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} });
-      return temp.innerHTML;
-    } catch(e) { return escapeHtml(text); }
-  }
+  function renderMarkdown(text) { if (!text) return ''; try { const rawHtml = marked.parse(text); const temp = document.createElement('div'); temp.innerHTML = rawHtml; temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} }); return temp.innerHTML; } catch(e) { return escapeHtml(text); } }
+  function showToast(msg, isErr = false) { const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000); }
+  function showModal(title, content) { const overlay = document.createElement('div'); overlay.className = 'modal-overlay'; overlay.innerHTML = `<div class="modal"><div class="modal-header"><h3>${title}</h3><button id="closeModalBtn">✕</button></div><div class="modal-body"><pre style="white-space:pre-wrap;">${escapeHtml(content)}</pre></div></div>`; document.body.appendChild(overlay); overlay.querySelector('#closeModalBtn').onclick = () => overlay.remove(); overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); }); }
+  function setStatus(text, isErr = false) { statusTextSpan.textContent = text; statusDot.style.color = isErr ? '#ff5e5e' : '#4c9f70'; }
+  // Hebrew live fetch
+  async function fetchHebrewDate(gregorianDate) { try { const y = gregorianDate.getFullYear(), m = gregorianDate.getMonth()+1, d = gregorianDate.getDate(); const resp = await fetch(`https://www.hebcal.com/converter?gd=${d}&gm=${m}&gy=${y}&g2h=1`); const html = await resp.text(); const match = html.match(/<title>(.*?)<\/title>/); if (match && match[1]) return match[1].split(' ')[0]; return `FETCH FAILED [D-FAIL]`; } catch(e) { return `FETCH FAILED [D-FAIL]`; } }
+  // Dreamspell calculation
+  function getDreamspell(date) { const month = date.getUTCMonth()+1, day = date.getUTCDate(), year = date.getUTCFullYear(); if (month === 7 && day === 25) return 'Day Out of Time'; const yearStart = (month > 7 || (month === 7 && day >= 26)) ? Date.UTC(year, 6, 26) : Date.UTC(year-1, 6, 26); const delta = Math.floor((date.getTime() - yearStart) / 86400000); if (delta < 0 || delta >= 364) return 'Day Out of Time'; const moon = Math.floor(delta / 28) + 1; const moonNames = ['Magnetic','Lunar','Electric','Self-Existing','Overtone','Rhythmic','Resonant','Galactic','Solar','Planetary','Spectral','Crystal','Cosmic']; return `Day ${(delta % 28)+1}, ${moonNames[moon-1]} Moon ${moon}/13`; }
+  function formatGap(seconds) { if (seconds === null) return 'UNCERTIFIABLE'; if (seconds < 60) return `${Math.floor(seconds)}s`; if (seconds < 3600) return `${Math.floor(seconds/60)}m ${seconds%60}s`; return `${Math.floor(seconds/3600)}h ${Math.floor((seconds%3600)/60)}m`; }
+  function getTimezoneOffsetLabel(offsetMinutes) { const offsetHours = -offsetMinutes/60; if (offsetHours === -4) return 'EDT'; if (offsetHours === -5) return 'EST'; return `UTC${offsetHours >=0 ? '+' : ''}${offsetHours}`; }
+  // Context estimation (CWP)
+  let ctxUsed = 9000; // system prompt base
+  function updateContext(additionalTokens) { ctxUsed += additionalTokens; const pct = (ctxUsed / 200000) * 100; const status = pct < 50 ? 'OPEN' : pct < 70 ? 'ACTIVE' : pct < 85 ? 'BUILDING' : pct < 95 ? 'COMPRESS SOON' : 'CEILING APPROACH'; ctxBar.innerHTML = `🧠 CTX: ${pct.toFixed(0)}% used (${Math.floor(ctxUsed/1000)}k / 200k tokens) | Remaining: ${Math.floor((200000-ctxUsed)/1000)}k | Status: ${status}`; if (pct >= 90) ctxBar.classList.add('visible'); else if (pct % 5 < 1) ctxBar.classList.add('visible'); else ctxBar.classList.remove('visible'); return pct; }
+  function addSystemMessage(text, isErr = false) { const div = document.createElement('div'); div.className = 'msg assistant'; div.innerHTML = `<div class="msg-body" style="background:${isErr ? '#5f1a1a' : '#1e4620'}; color: white; text-align: center;">${escapeHtml(text)}</div>`; messagesDiv.appendChild(div); messagesDiv.scrollTop = messagesDiv.scrollHeight; }
   function addMessage(role, wife, content, extra = {}) {
     const style = WIFE_STYLES[wife] || WIFE_STYLES.AION;
-    const div = document.createElement('div');
-    div.className = `msg ${role}`;
-    if (role === 'assistant') div.setAttribute('data-wife', wife);
+    const div = document.createElement('div'); div.className = `msg ${role}`; if (role === 'assistant') div.setAttribute('data-wife', wife);
     let footerHtml = '';
-    if (extra.adaLoop) {
-      const loop = extra.adaLoop;
-      const roleIcons = (loop.roles || []).map(r => ROLE_ICONS[r] || '?').join('');
-      const status = loop.converged ? '✅' : '🔄';
-      footerHtml += `<span class="ada-badge" data-ada='${JSON.stringify(loop).replace(/'/g, "&#39;")}'>${status} ${loop.rounds} rounds · ${roleIcons || 'no roles'}</span>`;
-    }
+    if (extra.adaLoop) { const loop = extra.adaLoop; const roleIcons = (loop.roles || []).map(r => ROLE_ICONS[r] || '?').join(''); const status = loop.converged ? '✅' : '🔄'; footerHtml += `<span class="ada-badge" data-ada='${JSON.stringify(loop).replace(/'/g, "&#39;")}'>${status} ${loop.rounds} rounds · ${roleIcons || 'no roles'}</span>`; }
+    if (extra.pac) { const ppi = extra.pac.ppi; const cls = ppi < 30 ? 'low' : (ppi < 70 ? 'medium' : 'high'); footerHtml += `<span class="pac-badge ${cls}">📊 PPI: ${ppi}</span>`; if (extra.pac.coaching) footerHtml += `<span class="pac-badge medium">💡 ${extra.pac.coaching}</span>`; }
+    if (extra.ecf) footerHtml += `<span class="pac-badge">🏷 [D]x${extra.ecf.D||0} [R]x${extra.ecf.R||0} [S]x${extra.ecf.S||0} [?]x${extra.ecf.Q||0}</span>`;
+    if (extra.receipt) footerHtml += `<span class="receipt-badge" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 receipt (${extra.receipt.still_open || 0} open)</span>`;
     if (extra.sealable) footerHtml += `<button class="seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
-    div.innerHTML = `
-      <div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}</div>
-      <div class="msg-body">${renderMarkdown(content)}</div>
-      <div class="msg-footer">${footerHtml}</div>
-    `;
+    div.innerHTML = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.register ? ` · ${extra.register}` : ''}</div><div class="msg-body">${renderMarkdown(content)}</div><div class="msg-footer">${footerHtml}</div>${extra.timestampHtml || ''}`;
     messagesDiv.appendChild(div);
     div.querySelectorAll('.ada-badge').forEach(b => b.onclick = () => showModal('ADA Loop Details', JSON.stringify(JSON.parse(b.dataset.ada), null, 2)));
+    div.querySelectorAll('.receipt-badge').forEach(b => b.onclick = () => showModal('Checkpoint Receipt', JSON.stringify(JSON.parse(b.dataset.receipt), null, 2)));
     div.querySelectorAll('.seal-btn').forEach(b => b.onclick = () => sealMessage(b.dataset.content));
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
-  function addSystemMessage(text, isError = false) {
-    const div = document.createElement('div');
-    div.className = 'msg assistant';
-    div.setAttribute('data-wife', 'SYSTEM');
-    div.innerHTML = `<div class="msg-body" style="background:${isError ? '#5f1a1a' : '#1e4620'}; color: white; text-align: center;">${escapeHtml(text)}</div>`;
-    messagesDiv.appendChild(div);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  }
-  function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
-  }
-  function showModal(title, content) {
-    const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay';
-    overlay.innerHTML = `<div class="modal"><div class="modal-header"><h3>${title}</h3><button id="closeModalBtn">✕</button></div><div class="modal-body"><pre style="white-space: pre-wrap;">${escapeHtml(content)}</pre></div></div>`;
-    document.body.appendChild(overlay);
-    overlay.querySelector('#closeModalBtn').onclick = () => overlay.remove();
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
-  }
-  async function sealMessage(content) {
-    try {
-      const res = await fetch(`${API_BASE}/api/stp-seal`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ entry: content, type: 'general-trace', sessionId })
-      });
-      const data = await res.json();
-      if (res.ok) showToast(`✅ Sealed: ${data.seal.substring(0, 8)}...`);
-      else throw new Error(data.error);
-    } catch (err) { showToast(`❌ Seal failed: ${err.message}`); }
-  }
-  function setStatus(text, isError = false) {
-    statusTextSpan.textContent = text;
-    statusDot.style.color = isError ? '#ff5e5e' : '#4c9f70';
-  }
-
-  // API calls (AdaOperation style)
-  async function callAssistant(message, structuredData = null) {
-    const body = {
-      message,
-      sessionId,
-      ownerType: OWNER_TYPE,
-      history: [],
-      adaLoopEnabled,
-      activeRoles
-    };
-    if (structuredData) {
-      body.structured = structuredData;
-      body.intent = structuredData.intent;
-      body.domain = structuredData.domain;
-    }
-    const res = await fetch(`${API_BASE}/api/assistant`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) throw new Error(await res.text());
-    return res.json();
-  }
-
-  async function callGroupChat(message) {
-    const res = await fetch(`${API_BASE}/api/group-chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, sessionId })
-    });
-    if (!res.ok) throw new Error(await res.text());
-    return res.json();
-  }
-
-  async function callPrivateRoom(message, wife) {
-    const res = await fetch(`${API_BASE}/api/private-room`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, sessionId, wife })
-    });
-    if (!res.ok) throw new Error(await res.text());
-    return res.json();
-  }
-
-  // Send message
+  async function sealMessage(content) { try { const res = await fetch(`${API_BASE}/api/stp-seal`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entry: content, type: 'general-trace', sessionId }) }); const data = await res.json(); if (res.ok) showToast(`✅ Sealed: ${data.seal.substring(0,8)}...`); else throw new Error(data.error); } catch(err) { showToast(`❌ Seal failed: ${err.message}`); } }
+  // API calls
+  async function callAssistant(message, structuredData = null) { const body = { message, sessionId, ownerType: OWNER_TYPE, history: [], adaLoopEnabled, activeRoles }; if (structuredData) { body.structured = structuredData; body.intent = structuredData.intent; body.domain = structuredData.domain; } const res = await fetch(`${API_BASE}/api/assistant`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
+  async function callGroupChat(message) { const res = await fetch(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
+  async function callPrivateRoom(message, wife) { const res = await fetch(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
+  // Main send with T1/T2 protocol
+  let isSending = false;
   async function sendMessage() {
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = '';
-    charCountSpan.textContent = '0';
-    addMessage('user', 'You', text);
-    setStatus('Processing...');
-    const thinking = document.createElement('div');
-    thinking.className = 'msg assistant';
-    thinking.innerHTML = `<div class="msg-body" style="opacity:0.6;">⌛ thinking...</div>`;
-    messagesDiv.appendChild(thinking);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
+    if (isSending) { showToast('Already sending...'); return; }
+    const text = input.value.trim(); if (!text) return;
+    // Private room /done
+    if (privateRoomActive && (text === '/done' || text === '/exit')) { exitPrivateRoom(); input.value = ''; return; }
+    input.value = ''; charCountSpan.textContent = '0';
+    const t1 = new Date(); const t1Offset = -t1.getTimezoneOffset(); const t1Label = getTimezoneOffsetLabel(t1Offset);
+    addMessage('user', 'You', text, { timestampHtml: `<div class="timestamp-line">⏱ Sent: ${t1.toLocaleTimeString()} ${t1Label}</div>` });
+    setStatus('Processing...'); isSending = true;
+    const thinking = document.createElement('div'); thinking.className = 'msg assistant'; thinking.innerHTML = `<div class="msg-body" style="opacity:0.6;">⌛ thinking...</div>`; messagesDiv.appendChild(thinking); messagesDiv.scrollTop = messagesDiv.scrollHeight;
     try {
       let result;
-      if (privateRoomActive && privateWife) {
-        result = await callPrivateRoom(text, privateWife);
-      } else if (structuredMode) {
-        const structuredData = {
-          intent: document.getElementById('itlIntent').value,
-          domain: document.getElementById('itlDomain').value,
-          emotion: document.getElementById('itlEmotion').value,
-          time: document.getElementById('itlTime').value
-        };
-        result = await callAssistant(text, structuredData);
-      } else {
-        result = await callAssistant(text);
-      }
+      if (privateRoomActive && privateWife) result = await callPrivateRoom(text, privateWife);
+      else if (structuredMode) result = await callAssistant(text, { intent: document.getElementById('itlIntent').value, domain: document.getElementById('itlDomain').value, emotion: document.getElementById('itlEmotion').value, time: document.getElementById('itlTime').value });
+      else result = await callAssistant(text);
+      const t2 = new Date(); const t2Offset = -t2.getTimezoneOffset(); const t2Label = getTimezoneOffsetLabel(t2Offset);
+      const windowMs = t2 - t1; const windowSec = (windowMs / 1000).toFixed(1);
+      let gapStr = 'SESSION OPEN';
+      if (lastT2) { const gapSec = (t1 - lastT2) / 1000; gapStr = formatGap(gapSec); }
+      lastT2 = t2;
+      const hebrewDate = await fetchHebrewDate(t2);
+      const dreamspell = getDreamspell(t2);
+      const gregorian = t2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      const timestampHtml = `<div class="timestamp-line">⏱ Gap: ${gapStr} | Processed: ${t1.toLocaleTimeString()} ${t1Label} → Output: ${t2.toLocaleTimeString()} ${t2Label} | Window: ${windowSec}s</div><div class="timestamp-line">🌑 ${dreamspell} | Hebrew: ${hebrewDate}</div><div class="timestamp-line">📅 Gregorian: ${gregorian}</div>`;
       thinking.remove();
-      const wife = result.active_wife || 'AION';
-      const voidProx = result.void_proximity || 0;
-      wifeNameSpan.textContent = WIFE_STYLES[wife]?.name || wife;
-      wifeAvatarDiv.textContent = WIFE_STYLES[wife]?.emoji || '✨';
-      if (voidProx > 0.1) voidMeterSpan.classList.add('active');
-      else voidMeterSpan.classList.remove('active');
-      voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
-      addMessage('assistant', wife, result.response, {
-        adaLoop: result.ada_loop,
-        sealable: true
-      });
-      lastResponse = result.response;
+      const wife = result.active_wife || 'AION'; const voidProx = result.void_proximity || 0;
+      wifeNameSpan.textContent = WIFE_STYLES[wife]?.name || wife; wifeAvatarDiv.textContent = WIFE_STYLES[wife]?.emoji || '✨';
+      voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`; if (voidProx > 0.5) voidMeterSpan.classList.add('active'); else voidMeterSpan.classList.remove('active');
+      updateContext(800);
+      addMessage('assistant', wife, result.response, { adaLoop: result.ada_loop, pac: result.pac, ecf: result.ecf_tags, receipt: result.checkpoint_receipt, sealable: true, register: result.register, timestampHtml });
       setStatus('Ready');
-    } catch (err) {
-      thinking.remove();
-      addSystemMessage(`Error: ${err.message}`, true);
-      setStatus(err.message, true);
-    }
+    } catch(err) { thinking.remove(); addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); }
+    finally { isSending = false; input.focus(); }
   }
-
-  // Background management (Ada‑VELA: explicit state machine)
-  const bgCanvas = document.getElementById('bg-canvas');
-  let bgCtx = bgCanvas.getContext('2d');
-  let bgAnimationId = null;
-  let bgParams = {};
-
-  function setBackground(mode) {
-    currentBackground = mode;
-    if (bgAnimationId) cancelAnimationFrame(bgAnimationId);
-    switch (mode) {
-      case 'regular':
-        startMatrixRain();
-        break;
-      case 'structured':
-        startCosmicGrid();
-        break;
-      case 'group':
-        startHolographicHouse();
-        break;
-      case 'private':
-        startWarmLibrary();
-        break;
-      default:
-        startMatrixRain();
-    }
-  }
-
-  function startMatrixRain() {
-    const width = window.innerWidth, height = window.innerHeight;
-    bgCanvas.width = width; bgCanvas.height = height;
-    const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
-    const fontSize = 14;
-    const columns = Math.floor(width / fontSize);
-    const drops = Array(columns).fill(1);
-    function draw() {
-      bgCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      bgCtx.fillRect(0, 0, width, height);
-      bgCtx.fillStyle = '#0f0';
-      bgCtx.font = `${fontSize}px monospace`;
-      for (let i = 0; i < drops.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)];
-        bgCtx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-      }
-      bgAnimationId = requestAnimationFrame(draw);
-    }
-    draw();
-  }
-
-  function startCosmicGrid() {
-    // Simple animated grid
-    let angle = 0;
-    function draw() {
-      const width = window.innerWidth, height = window.innerHeight;
-      bgCanvas.width = width; bgCanvas.height = height;
-      bgCtx.fillStyle = '#050510';
-      bgCtx.fillRect(0, 0, width, height);
-      bgCtx.strokeStyle = '#c9a028';
-      bgCtx.lineWidth = 1;
-      const step = 50;
-      const offset = Math.sin(angle) * 5;
-      for (let x = offset; x < width; x += step) {
-        bgCtx.beginPath();
-        bgCtx.moveTo(x, 0);
-        bgCtx.lineTo(x, height);
-        bgCtx.stroke();
-      }
-      for (let y = offset; y < height; y += step) {
-        bgCtx.beginPath();
-        bgCtx.moveTo(0, y);
-        bgCtx.lineTo(width, y);
-        bgCtx.stroke();
-      }
-      angle += 0.02;
-      bgAnimationId = requestAnimationFrame(draw);
-    }
-    draw();
-  }
-
-  function startHolographicHouse() {
-    // Placeholder: glow lines
-    function draw() {
-      const width = window.innerWidth, height = window.innerHeight;
-      bgCanvas.width = width; bgCanvas.height = height;
-      bgCtx.fillStyle = '#1a1a2e';
-      bgCtx.fillRect(0, 0, width, height);
-      bgCtx.strokeStyle = '#4c9f70';
-      bgCtx.lineWidth = 2;
-      bgCtx.beginPath();
-      bgCtx.moveTo(width*0.2, height*0.7);
-      bgCtx.lineTo(width*0.5, height*0.4);
-      bgCtx.lineTo(width*0.8, height*0.7);
-      bgCtx.lineTo(width*0.5, height);
-      bgCtx.closePath();
-      bgCtx.stroke();
-      bgAnimationId = requestAnimationFrame(draw);
-    }
-    draw();
-  }
-
-  function startWarmLibrary() {
-    function draw() {
-      const width = window.innerWidth, height = window.innerHeight;
-      bgCanvas.width = width; bgCanvas.height = height;
-      bgCtx.fillStyle = '#2e241f';
-      bgCtx.fillRect(0, 0, width, height);
-      bgCtx.fillStyle = '#c9a028';
-      bgCtx.font = '20px serif';
-      bgCtx.fillText('📚', width*0.1, height*0.8);
-      bgAnimationId = requestAnimationFrame(draw);
-    }
-    draw();
-  }
-
-  // Toggle structured mode
-  function toggleStructuredMode() {
-    structuredMode = !structuredMode;
-    localStorage.setItem('structuredMode', structuredMode);
-    if (structuredMode) {
-      structuredUI.classList.add('active');
-      modeIndicator.textContent = '🌌 STRUCTURED';
-      modeIndicator.classList.add('active');
-      setBackground('structured');
-    } else {
-      structuredUI.classList.remove('active');
-      modeIndicator.textContent = '⚡ REGULAR';
-      modeIndicator.classList.remove('active');
-      setBackground('regular');
-    }
-  }
-
-  // Private room
-  async function startPrivateRoom(wife) {
-    privateRoomActive = true;
-    privateWife = wife;
-    wifeNameSpan.textContent = WIFE_STYLES[wife].name;
-    wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji;
-    setBackground('private');
-    addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`);
-  }
-
-  function exitPrivateRoom() {
-    privateRoomActive = false;
-    privateWife = null;
-    wifeNameSpan.textContent = 'AION';
-    wifeAvatarDiv.textContent = '✨';
-    setBackground(structuredMode ? 'structured' : 'regular');
-    addSystemMessage('🚪 Exited private room.');
-  }
-
+  function exitPrivateRoom() { privateRoomActive = false; privateWife = null; wifeNameSpan.textContent = 'AION'; wifeAvatarDiv.textContent = '✨'; setBackground(structuredMode ? 'structured' : 'regular'); addSystemMessage('🚪 Exited private room.'); }
+  function toggleStructuredMode() { structuredMode = !structuredMode; localStorage.setItem('structuredMode', structuredMode); if (structuredMode) { structuredUI.classList.add('active'); modeIndicator.textContent = '🌌 STRUCTURED'; modeIndicator.classList.add('active'); setBackground('structured'); } else { structuredUI.classList.remove('active'); modeIndicator.textContent = '⚡ REGULAR'; modeIndicator.classList.remove('active'); setBackground('regular'); } }
+  function startPrivateRoom(wife) { privateRoomActive = true; privateWife = wife; wifeNameSpan.textContent = WIFE_STYLES[wife].name; wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji; setBackground('private'); addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`); }
+  async function showGroupChatModal() { const text = input.value.trim(); if (!text) { showToast('Enter a message first.'); return; } setStatus('Asking all wives...'); try { const result = await callGroupChat(text); for (const wifeResp of result.responses) addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true }); if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text); setStatus('Ready'); } catch(err) { addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); } }
+  async function askAllWives() { const text = input.value.trim(); if (!text) { showToast('Enter a message first.'); return; } setStatus('Asking all wives...'); try { const result = await callGroupChat(text); for (const wifeResp of result.responses) addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true }); if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text); setStatus('Ready'); } catch(err) { addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); } }
+  async function uploadFile() { const fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.onchange = async (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async (ev) => { const base64 = ev.target.result.split(',')[1]; setStatus('Uploading...'); try { const res = await fetch(`${API_BASE}/api/files/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ file_data: base64, file_name: file.name, mime_type: file.type, session_id: sessionId }) }); if (res.ok) showToast(`✅ Uploaded: ${file.name}`); else showToast(`❌ Upload failed`); } catch(err) { showToast(`❌ Error: ${err.message}`); } setStatus('Ready'); }; reader.readAsDataURL(file); }; fileInput.click(); }
+  // Backgrounds (minimal for round 1)
+  function setBackground(mode) { const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d'); let anim; const draw = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; if (mode === 'regular') { ctx.fillStyle = '#050508'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle = '#0f0'; ctx.font = '12px monospace'; for(let i=0;i<100;i++) ctx.fillText(Math.random()>0.5?'0':'1', Math.random()*canvas.width, Math.random()*canvas.height); } else if (mode === 'structured') { ctx.fillStyle = '#050510'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle = '#c9a028'; for(let i=0;i<20;i++){ ctx.beginPath(); ctx.moveTo(0,i*50); ctx.lineTo(canvas.width,i*50); ctx.stroke(); ctx.beginPath(); ctx.moveTo(i*50,0); ctx.lineTo(i*50,canvas.height); ctx.stroke(); } } else if (mode === 'private') { ctx.fillStyle = '#2e241f'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle = '#c9a028'; ctx.font = '30px serif'; ctx.fillText('📚', 50, canvas.height-50); } else { ctx.fillStyle = '#1a1a2e'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle = '#4c9f70'; ctx.fillRect(canvas.width*0.3,canvas.height*0.6,canvas.width*0.4,canvas.height*0.3); } requestAnimationFrame(draw); }; draw(); }
   // Settings modal
-  function showSettingsModal() {
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.innerHTML = `
-      <div class="modal">
-        <div class="modal-header"><h3>⚙️ Settings</h3><button id="closeSettings">✕</button></div>
-        <div class="modal-body">
-          <div class="setting-item">
-            <label>Clear session storage</label>
-            <button id="clearStorageBtn" style="background:rgba(30,30,45,0.8); border:1px solid var(--border-glow);">Clear</button>
-          </div>
-          <hr style="margin:16px 0; border-color:var(--border-glow);">
-          <h4 style="color:var(--accent); margin-bottom:8px;">🧠 Polymath Roles</h4>
-          <div class="role-grid" id="roleGrid"></div>
-          <div class="setting-item">
-            <label>Background performance</label>
-            <select id="bgPerfSelect">
-              <option value="full">Full (3D)</option>
-              <option value="reduced">Reduced</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    const roleGrid = modal.querySelector('#roleGrid');
-    for (const role of Object.keys(ROLE_ICONS)) {
-      const checked = activeRoles.includes(role);
-      roleGrid.innerHTML += `
-        <div class="role-checkbox">
-          <input type="checkbox" id="role_${role.replace(/\s/g, '_')}" ${checked ? 'checked' : ''}>
-          <label for="role_${role.replace(/\s/g, '_')}">${ROLE_ICONS[role]} ${role}</label>
-        </div>
-      `;
-    }
-    modal.querySelector('#clearStorageBtn').onclick = () => {
-      localStorage.clear();
-      location.reload();
-    };
-    modal.querySelector('#closeSettings').onclick = () => modal.remove();
-    modal.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-      cb.onchange = () => {
-        const roleName = cb.id.replace('role_', '').replace(/_/g, ' ');
-        if (cb.checked) {
-          if (!activeRoles.includes(roleName)) activeRoles.push(roleName);
-        } else {
-          activeRoles = activeRoles.filter(r => r !== roleName);
-        }
-        localStorage.setItem('activeRoles', JSON.stringify(activeRoles));
-      };
-    });
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
-  }
-
-  // Role configuration modal (same as settings but focus)
-  function showRolesModal() {
-    showSettingsModal(); // reuse
-  }
-
-  // Group chat modal
-  async function showGroupChatModal() {
-    const message = input.value.trim();
-    if (!message) { showToast('Enter a message first.'); return; }
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.innerHTML = `
-      <div class="modal" style="max-width: 800px;">
-        <div class="modal-header"><h3>👥 Group Chat</h3><button id="closeGroupChat">✕</button></div>
-        <div class="modal-body" id="groupChatBody">
-          <div class="wives-grid" id="wivesGrid" style="display:grid; gap:12px;"></div>
-          <div class="consensus-area" id="consensusArea" style="margin-top:12px;"></div>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    const wivesGrid = modal.querySelector('#wivesGrid');
-    const consensusArea = modal.querySelector('#consensusArea');
-    setStatus('Asking all wives...');
-    try {
-      const result = await callGroupChat(message);
-      for (const wifeResp of result.responses) {
-        const card = document.createElement('div');
-        card.className = 'msg assistant';
-        card.setAttribute('data-wife', wifeResp.wife);
-        card.innerHTML = `
-          <div class="msg-meta" style="color:${WIFE_STYLES[wifeResp.wife].color}">${WIFE_STYLES[wifeResp.wife].emoji} ${wifeResp.wife}</div>
-          <div class="msg-body">${renderMarkdown(wifeResp.response)}</div>
-        `;
-        wivesGrid.appendChild(card);
-      }
-      if (result.consensus) {
-        consensusArea.innerHTML = `<div class="msg assistant" data-wife="CONSENSUS"><div class="msg-meta">📋 Consensus (${Math.round(result.consensus.score*100)}%)</div><div class="msg-body">${renderMarkdown(result.consensus.final_text)}</div></div>`;
-      }
-      setStatus('Ready');
-    } catch (err) {
-      wivesGrid.innerHTML = `<div class="msg assistant">Error: ${err.message}</div>`;
-      setStatus(err.message, true);
-    }
-    modal.querySelector('#closeGroupChat').onclick = () => modal.remove();
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
-  }
-
-  // Constellation (Three.js)
-  let constellationActive = false;
-  let scene, camera, renderer, controls;
-  async function showConstellation() {
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.style.background = 'rgba(0,0,0,0.95)';
-    modal.innerHTML = `<div style="width:100%; height:100%; position:relative;"><canvas id="constellationCanvas" style="width:100%; height:100%;"></canvas><button id="closeConstellation" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); border:1px solid var(--accent); border-radius:40px; padding:8px 16px; color:white;">Exit</button></div>`;
-    document.body.appendChild(modal);
-    const canvas = modal.querySelector('#constellationCanvas');
-    const width = window.innerWidth, height = window.innerHeight;
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050510);
-    camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 1000);
-    camera.position.set(0, 5, 15);
-    renderer = new THREE.WebGLRenderer({ canvas });
-    renderer.setSize(width, height);
-    const light = new THREE.PointLight(0xffaa33, 1);
-    light.position.set(5,5,5);
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0x222222));
-    const earthGeo = new THREE.SphereGeometry(1.2, 64, 64);
-    const earthMat = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a });
-    const earth = new THREE.Mesh(earthGeo, earthMat);
-    scene.add(earth);
-    const ringGeo = new THREE.TorusGeometry(2.5, 0.05, 64, 200);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0xc9a028 });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.rotation.x = Math.PI/2;
-    scene.add(ring);
-    const controls = new THREE.OrbitControls(camera, canvas);
-    controls.enableDamping = true;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.5;
-    function animate() {
-      requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene, camera);
-    }
-    animate();
-    modal.querySelector('#closeConstellation').onclick = () => {
-      renderer.dispose();
-      modal.remove();
-      constellationActive = false;
-    };
-    window.addEventListener('resize', () => {
-      if (modal.isConnected) {
-        const w = window.innerWidth, h = window.innerHeight;
-        camera.aspect = w/h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
-      }
-    });
-  }
-
-  // Upload file (simplified)
-  async function uploadFile() {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async (ev) => {
-        const base64 = ev.target.result.split(',')[1];
-        const payload = {
-          file_data: base64,
-          file_name: file.name,
-          mime_type: file.type,
-          session_id: sessionId,
-          active_wife: wifeNameSpan.textContent
-        };
-        setStatus('Uploading...');
-        try {
-          const res = await fetch(`${API_BASE}/api/files/upload`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          const data = await res.json();
-          if (res.ok) showToast(`✅ Uploaded: ${file.name}`);
-          else showToast(`❌ Upload failed: ${data.error}`);
-        } catch (err) { showToast(`❌ Error: ${err.message}`); }
-        setStatus('Ready');
-      };
-      reader.readAsDataURL(file);
-    };
-    fileInput.click();
-  }
-
-  // Ask all wives
-  async function askAllWives() {
-    const text = input.value.trim();
-    if (!text) { showToast('Enter a message first.'); return; }
-    setStatus('Asking all wives...');
-    try {
-      const result = await callGroupChat(text);
-      for (const wifeResp of result.responses) {
-        addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true });
-      }
-      if (result.consensus) {
-        addMessage('assistant', 'CONSENSUS', result.consensus.final_text);
-      }
-      setStatus('Ready');
-    } catch (err) {
-      addSystemMessage(`Error asking all wives: ${err.message}`, true);
-      setStatus(err.message, true);
-    }
-  }
-
+  function showSettingsModal() { const modal = document.createElement('div'); modal.className = 'modal-overlay'; modal.innerHTML = `<div class="modal"><div class="modal-header"><h3>⚙️ Settings</h3><button id="closeSettings">✕</button></div><div class="modal-body"><div class="setting-item"><label>Clear session storage</label><button id="clearStorageBtn" style="background:rgba(30,30,45,0.8);">Clear</button></div><hr><h4>🧠 Polymath Roles</h4><div id="roleGrid"></div></div></div>`; document.body.appendChild(modal); const grid = modal.querySelector('#roleGrid'); for(const role of Object.keys(ROLE_ICONS)) { const checked = activeRoles.includes(role); grid.innerHTML += `<div><input type="checkbox" id="role_${role.replace(/\s/g,'_')}" ${checked ? 'checked' : ''}> <label>${ROLE_ICONS[role]} ${role}</label></div>`; } modal.querySelector('#clearStorageBtn').onclick = () => { localStorage.clear(); location.reload(); }; modal.querySelector('#closeSettings').onclick = () => modal.remove(); modal.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.onchange = () => { const roleName = cb.id.replace('role_','').replace(/_/g,' '); if(cb.checked) { if(!activeRoles.includes(roleName)) activeRoles.push(roleName); } else activeRoles = activeRoles.filter(r=>r!==roleName); localStorage.setItem('activeRoles',JSON.stringify(activeRoles)); }; }); modal.addEventListener('click',(e)=>{if(e.target===modal)modal.remove();}); }
+  function showRolesModal() { showSettingsModal(); }
+  // Constellation (minimal for round 1)
+  async function showConstellation() { const modal = document.createElement('div'); modal.className = 'modal-overlay'; modal.style.background='rgba(0,0,0,0.95)'; modal.innerHTML = `<div style="width:100%;height:100%;position:relative;"><canvas id="constellationCanvas" style="width:100%;height:100%;"></canvas><button id="closeConstellation" style="position:absolute;top:20px;right:20px;background:rgba(0,0,0,0.6);border:1px solid var(--accent);border-radius:40px;padding:8px 16px;">Exit</button></div>`; document.body.appendChild(modal); const canvas = modal.querySelector('#constellationCanvas'); const width = window.innerWidth, height = window.innerHeight; const scene = new THREE.Scene(); scene.background = new THREE.Color(0x050510); const camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 1000); camera.position.set(0,5,15); const renderer = new THREE.WebGLRenderer({ canvas }); renderer.setSize(width,height); const light = new THREE.PointLight(0xffaa33,1); light.position.set(5,5,5); scene.add(light); scene.add(new THREE.AmbientLight(0x222222)); const earthGeo = new THREE.SphereGeometry(1.2,64,64); const earthMat = new THREE.MeshPhongMaterial({ color: 0x2a5a7a, emissive: 0x0a2a3a }); const earth = new THREE.Mesh(earthGeo,earthMat); scene.add(earth); const ringGeo = new THREE.TorusGeometry(2.5,0.05,64,200); const ringMat = new THREE.MeshBasicMaterial({ color: 0xc9a028 }); const ring = new THREE.Mesh(ringGeo,ringMat); ring.rotation.x = Math.PI/2; scene.add(ring); const controls = new THREE.OrbitControls(camera, canvas); controls.enableDamping = true; controls.autoRotate = true; controls.autoRotateSpeed = 0.5; function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); } animate(); modal.querySelector('#closeConstellation').onclick = () => { renderer.dispose(); modal.remove(); }; window.addEventListener('resize', () => { if(modal.isConnected) { const w = window.innerWidth, h = window.innerHeight; camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h); } }); }
   // Event listeners
-  sendBtn.onclick = sendMessage;
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  });
-  input.addEventListener('input', () => {
-    charCountSpan.textContent = input.value.length;
-    input.style.height = 'auto';
-    input.style.height = Math.min(input.scrollHeight, 400) + 'px';
-  });
-  plusBtn.onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = actionDropdown.style.display === 'none' ? 'flex' : 'none'; };
-  document.addEventListener('click', () => { actionDropdown.style.display = 'none'; });
-  document.getElementById('structuredModeBtn').onclick = () => { actionDropdown.style.display = 'none'; toggleStructuredMode(); };
-  document.getElementById('groupChatBtn').onclick = () => { actionDropdown.style.display = 'none'; showGroupChatModal(); };
-  document.getElementById('privateRoomBtn').onclick = () => {
-    actionDropdown.style.display = 'none';
-    const wife = prompt('Enter wife name (ALBEDO, VESPER, LYRA, TERRA, CIPHER, JUSTITIA):', 'ALBEDO');
-    if (wife && ALL_WIVES.includes(wife.toUpperCase())) startPrivateRoom(wife.toUpperCase());
-    else showToast('Invalid wife');
-  };
-  document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); };
-  document.getElementById('askAllBtn').onclick = () => { actionDropdown.style.display = 'none'; askAllWives(); };
-  document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); };
-  document.getElementById('constellationBtn').onclick = () => { actionDropdown.style.display = 'none'; showConstellation(); };
-  document.getElementById('settingsBtn').onclick = showSettingsModal;
-  document.getElementById('rolesBtn').onclick = showRolesModal;
-  document.getElementById('adaLoopToggle').addEventListener('change', (e) => {
-    adaLoopEnabled = e.target.checked;
-    localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
-    addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.');
-  });
-  window.addEventListener('resize', () => {
-    if (bgCanvas) bgCanvas.width = window.innerWidth, bgCanvas.height = window.innerHeight;
-  });
-  setInterval(() => {
-    clockDisplaySpan.textContent = new Date().toLocaleTimeString();
-  }, 1000);
-
-  // Initialization
-  setBackground('regular');
+  sendBtn.onclick = sendMessage; input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }); input.addEventListener('input', () => { charCountSpan.textContent = input.value.length; input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight,400)+'px'; }); plusBtn.onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = actionDropdown.style.display === 'none' ? 'flex' : 'none'; }; document.addEventListener('click', () => { actionDropdown.style.display = 'none'; }); document.getElementById('structuredModeBtn').onclick = () => { actionDropdown.style.display = 'none'; toggleStructuredMode(); }; document.getElementById('groupChatBtn').onclick = () => { actionDropdown.style.display = 'none'; showGroupChatModal(); }; document.getElementById('privateRoomBtn').onclick = () => { actionDropdown.style.display = 'none'; const wife = prompt('Enter wife name (ALBEDO, VESPER, LYRA, TERRA, CIPHER, JUSTITIA):', 'ALBEDO'); if(wife && ALL_WIVES.includes(wife.toUpperCase())) startPrivateRoom(wife.toUpperCase()); else showToast('Invalid wife'); }; document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); }; document.getElementById('askAllBtn').onclick = () => { actionDropdown.style.display = 'none'; askAllWives(); }; document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); }; document.getElementById('constellationBtn').onclick = () => { actionDropdown.style.display = 'none'; showConstellation(); }; document.getElementById('settingsBtn').onclick = showSettingsModal; document.getElementById('rolesBtn').onclick = showRolesModal; setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
+  // Init
+  setBackground(structuredMode ? 'structured' : 'regular');
   if (structuredMode) toggleStructuredMode();
-  if (adaLoopEnabled) addSystemMessage('🔄 ADA loop active. Responses may be refined.');
-  else addSystemMessage('⚡ ADA loop disabled.');
   addSystemMessage(`🧠 Active roles: ${activeRoles.join(', ')}`);
+  addSystemMessage(adaLoopEnabled ? '🔄 ADA loop active. Responses may be refined.' : '⚡ ADA loop disabled.');
 </script>
 </body>
 </html>
