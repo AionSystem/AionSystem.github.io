@@ -23,7 +23,7 @@
       background: #050508;
       font-family: 'Inter', sans-serif;
       color: var(--text);
-      height: 100vh;
+      height: 100dvh;
       overflow: hidden;
       position: relative;
     }
@@ -39,12 +39,11 @@
     #app {
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      height: 100dvh;
       position: relative;
       z-index: 1;
       backdrop-filter: blur(2px);
     }
-    /* header, etc. (same as before) */
     .header {
       display: flex;
       align-items: center;
@@ -82,6 +81,15 @@
     .mode-indicator.active {
       background: rgba(201,160,40,0.2);
       border-color: var(--accent);
+      color: var(--accent);
+    }
+    .mode-badge {
+      background: rgba(30,30,45,0.8);
+      border: 1px solid var(--accent);
+      border-radius: 40px;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      font-weight: 500;
       color: var(--accent);
     }
     .settings-btn, .role-btn {
@@ -122,6 +130,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
+      min-height: 0;
     }
     .msg {
       display: flex;
@@ -191,6 +200,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      touch-action: manipulation;
     }
     .ada-badge:hover { background: #c9a028; color: #0a0a0f; }
     .pac-badge {
@@ -229,6 +239,7 @@
       font-size: 0.6rem;
       cursor: pointer;
       color: var(--accent);
+      touch-action: manipulation;
     }
     .seal-btn:hover { background: var(--accent); color: #000; }
     .input-area {
@@ -236,6 +247,7 @@
       background: var(--bg-panel);
       backdrop-filter: blur(12px);
       border-top: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
     }
     .input-row {
       display: flex;
@@ -256,6 +268,7 @@
       outline: none;
       overflow-y: auto;
       max-height: 40vh;
+      min-height: 44px;
     }
     textarea:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(201,160,40,0.4); }
     .action-menu { position: relative; }
@@ -270,6 +283,7 @@
       justify-content: center;
       font-size: 1.5rem;
       cursor: pointer;
+      touch-action: manipulation;
     }
     .plus-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--accent); color: var(--accent); }
     .action-dropdown {
@@ -299,6 +313,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      touch-action: manipulation;
     }
     .action-dropdown button:hover { background: rgba(201,160,40,0.2); color: var(--accent); }
     .send-btn {
@@ -309,6 +324,7 @@
       font-weight: 600;
       color: #0a0a0f;
       cursor: pointer;
+      touch-action: manipulation;
     }
     .input-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.7rem; color: var(--text-dim); }
     .status-bar {
@@ -395,14 +411,14 @@
       .messages { padding: 12px; gap: 12px; }
       .msg { max-width: 95%; }
       .input-area { padding: 12px; }
-      .plus-btn { width: 36px; height: 36px; font-size: 1.2rem; }
+      .plus-btn { width: 44px; height: 44px; font-size: 1.2rem; }
       .send-btn { padding: 8px 16px; }
       .structured-ui { margin: 8px 12px; flex-direction: column; }
       .ada-badge, .pac-badge, .vela-badge, .receipt-badge, .seal-btn {
         padding: 4px 10px;
         font-size: 0.7rem;
       }
-      .plus-btn, .send-btn {
+      .plus-btn, .send-btn, .seal-btn {
         min-height: 44px;
       }
     }
@@ -415,6 +431,7 @@
     <div class="brand"><h1>AION.AI</h1></div>
     <div class="header-right">
       <div id="modeIndicator" class="mode-indicator" role="button" tabindex="0" aria-label="Toggle structured mode">⚡ REGULAR</div>
+      <div id="modeBadge" class="mode-badge">🌐 REGULAR</div>
       <div id="settingsBtn" class="settings-btn" role="button" tabindex="0" aria-label="Settings">⚙️</div>
       <div class="wife-indicator" aria-label="Active wife">
         <div class="wife-avatar" id="wifeAvatar" aria-hidden="true">✨</div>
@@ -459,15 +476,13 @@
 
 <script>
   (function() {
-    // ---------- ENTERPRISE BACKGROUND MANAGER ----------
+    // ---------- SIMPLE FALLING PARTICLES BACKGROUND (unified) ----------
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
     let animationFrameId = null;
-    let currentBackground = 'regular';
     let particles = [];
     const PARTICLE_COUNT = 120;
-    let libraryCandle = { x: 0, y: 0, flicker: 0 };
 
     function resizeCanvas() {
       width = window.innerWidth;
@@ -476,7 +491,7 @@
       canvas.height = height;
     }
 
-    function initRegular() {
+    function initParticles() {
       particles = [];
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         particles.push({
@@ -488,7 +503,8 @@
         });
       }
     }
-    function drawRegular() {
+
+    function draw() {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#050508';
       ctx.fillRect(0, 0, width, height);
@@ -500,194 +516,21 @@
         p.y += p.speed;
         if (p.y > height) p.y = 0;
       }
+      animationFrameId = requestAnimationFrame(draw);
     }
-    function drawGroup() {
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = '#0a1030';
-      ctx.fillRect(0, 0, width, height);
-      const houseW = Math.min(width * 0.4, 300);
-      const houseH = houseW * 0.8;
-      const houseX = width/2 - houseW/2;
-      const houseY = height/2 - houseH/2;
-      ctx.strokeStyle = `rgba(76, 159, 112, ${0.5 + Math.sin(Date.now()/2000)*0.2})`;
-      ctx.lineWidth = 3;
-      ctx.strokeRect(houseX, houseY, houseW, houseH);
-      ctx.beginPath();
-      ctx.moveTo(houseX, houseY);
-      ctx.lineTo(width/2, houseY - houseH*0.3);
-      ctx.lineTo(houseX + houseW, houseY);
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(201, 160, 40, 0.3)';
-      ctx.fillRect(houseX + houseW*0.2, houseY + houseH*0.3, houseW*0.2, houseW*0.2);
-      ctx.fillRect(houseX + houseW*0.6, houseY + houseH*0.3, houseW*0.2, houseW*0.2);
-      ctx.fillRect(houseX + houseW*0.4, houseY + houseH*0.6, houseW*0.2, houseW*0.2);
-    }
-    function drawPrivate() {
-      ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = '#2e241f';
-      ctx.fillRect(0, 0, width, height);
-      ctx.fillStyle = '#5a3e2e';
-      for (let i = 0; i < 3; i++) {
-        ctx.fillRect(width*0.1 + i*width*0.25, height*0.2, width*0.2, height*0.6);
-      }
-      libraryCandle.flicker = 0.8 + Math.random() * 0.4;
-      ctx.fillStyle = `rgba(255, 140, 50, ${0.5 + libraryCandle.flicker*0.2})`;
-      ctx.beginPath();
-      ctx.arc(libraryCandle.x, libraryCandle.y, 12, 0, Math.PI*2);
-      ctx.fill();
-      ctx.fillStyle = `rgba(255, 200, 100, ${0.7 + libraryCandle.flicker*0.2})`;
-      ctx.beginPath();
-      ctx.arc(libraryCandle.x, libraryCandle.y, 6, 0, Math.PI*2);
-      ctx.fill();
-    }
-    function animateBackground() {
-      if (currentBackground === 'regular') drawRegular();
-      else if (currentBackground === 'group') drawGroup();
-      else if (currentBackground === 'private') drawPrivate();
-      animationFrameId = requestAnimationFrame(animateBackground);
-    }
-    function setBackground(mode) {
-      if (mode === currentBackground) return;
-      currentBackground = mode;
-      if (mode === 'regular') initRegular();
-      else if (mode === 'group') {}
-      else if (mode === 'private') { libraryCandle.x = width*0.2; libraryCandle.y = height*0.8; }
-    }
+
     function startBackground() {
       resizeCanvas();
-      setBackground('regular');
-      animateBackground();
+      initParticles();
+      draw();
       window.addEventListener('resize', () => {
         resizeCanvas();
-        if (currentBackground === 'regular') initRegular();
-        else if (currentBackground === 'private') libraryCandle.x = width*0.2, libraryCandle.y = height*0.8;
+        initParticles();
       });
     }
     startBackground();
 
-    // ---------- OFFLINE QUEUE (IndexedDB) ----------
-    const DB_NAME = 'AION_OfflineQueue';
-    const DB_VERSION = 1;
-    let db = null;
-    function openDB() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, DB_VERSION);
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => { db = request.result; resolve(db); };
-        request.onupgradeneeded = (ev) => {
-          const db = ev.target.result;
-          if (!db.objectStoreNames.contains('messages')) {
-            db.createObjectStore('messages', { autoIncrement: true });
-          }
-        };
-      });
-    }
-    async function queueMessage(message, metadata) {
-      if (!db) await openDB();
-      const tx = db.transaction(['messages'], 'readwrite');
-      const store = tx.objectStore('messages');
-      store.add({ message, metadata, timestamp: Date.now() });
-      return tx.complete;
-    }
-    async function flushQueue() {
-      if (!db) await openDB();
-      const tx = db.transaction(['messages'], 'readonly');
-      const store = tx.objectStore('messages');
-      const items = await new Promise((resolve) => {
-        const req = store.getAll();
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => resolve([]);
-      });
-      if (items.length === 0) return;
-      const retryTx = db.transaction(['messages'], 'readwrite');
-      const retryStore = retryTx.objectStore('messages');
-      for (const item of items) {
-        try {
-          // simulate send – in real app would call API with offline support
-          console.log('Retrying message:', item.message);
-          // TODO: call actual API and update retryStore.delete(item.id) on success
-          retryStore.delete(item.id);
-        } catch (err) {
-          console.warn('Retry failed', err);
-        }
-      }
-    }
-    window.addEventListener('online', () => flushQueue());
-
-    // ---------- PWA: generate manifest and service worker on the fly ----------
-    function createManifest() {
-      const manifest = {
-        name: "AION AI",
-        short_name: "AION",
-        start_url: "/",
-        display: "standalone",
-        background_color: "#0a0a0f",
-        theme_color: "#c9a028",
-        icons: []
-      };
-      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('link');
-      link.rel = 'manifest';
-      link.href = url;
-      document.head.appendChild(link);
-    }
-    function registerServiceWorker() {
-      if ('serviceWorker' in navigator) {
-        // Simple service worker that caches the app shell (placeholder)
-        const swScript = `
-          self.addEventListener('install', event => {
-            event.waitUntil(
-              caches.open('aion-v1').then(cache => {
-                return cache.addAll([
-                  '/',
-                  '/index.html',
-                  '/manifest.json'
-                ]);
-              })
-            );
-          });
-          self.addEventListener('fetch', event => {
-            event.respondWith(
-              caches.match(event.request).then(response => {
-                return response || fetch(event.request);
-              })
-            );
-          });
-        `;
-        const blob = new Blob([swScript], { type: 'application/javascript' });
-        const swUrl = URL.createObjectURL(blob);
-        navigator.serviceWorker.register(swUrl).catch(err => console.warn('SW registration failed', err));
-      }
-    }
-    createManifest();
-    registerServiceWorker();
-
-    // ---------- WEBSOCKET STREAMING (stub) ----------
-    let ws = null;
-    function connectWebSocket() {
-      // Replace with your actual WebSocket endpoint
-      ws = new WebSocket('wss://your-backend/stream');
-      ws.onopen = () => console.log('WebSocket connected');
-      ws.onmessage = (event) => {
-        // Handle streaming tokens – for now just log
-        console.log('Stream:', event.data);
-      };
-      ws.onclose = () => setTimeout(connectWebSocket, 5000);
-    }
-    // Uncomment when backend supports WebSocket
-    // connectWebSocket();
-
-    // ---------- VIRTUAL SCROLLING (simple version) ----------
-    // Keep all messages in DOM, but we add a simple lazy‑loading for large history:
-    // This could be expanded, but for now we just keep the existing behavior.
-    // In production, you'd integrate a library like 'virtual-scroller'.
-    // We'll keep it simple and just ensure the container scrolls.
-
-    // ---------- RETRY BUTTONS ----------
-    // We'll modify the error display to include a retry button.
-
-    // ---------- REST OF THE ORIGINAL SCRIPT (with ARIA and touch improvements) ----------
+    // ---------- CONFIG ----------
     const API_BASE = 'https://aion-backend-mu.vercel.app';
     const OWNER_TYPE = 'sheldon';
     const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
@@ -720,6 +563,7 @@
     const plusBtn = document.getElementById('plusBtn');
     const actionDropdown = document.getElementById('actionDropdown');
     const modeIndicator = document.getElementById('modeIndicator');
+    const modeBadge = document.getElementById('modeBadge');
     const structuredUI = document.getElementById('structuredUI');
     const wifeNameSpan = document.getElementById('wifeName');
     const wifeAvatarDiv = document.getElementById('wifeAvatar');
@@ -729,7 +573,7 @@
     const statusDot = document.getElementById('statusDot');
     const clockDisplaySpan = document.getElementById('clockDisplay');
 
-    // Helpers (unchanged)
+    // Helpers
     function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function renderMarkdown(text) { if (!text) return ''; try { const rawHtml = marked.parse(text); const temp = document.createElement('div'); temp.innerHTML = rawHtml; temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} }); return temp.innerHTML; } catch(e) { return escapeHtml(text); } }
     function showToast(msg, isErr = false) { const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000); }
@@ -741,7 +585,7 @@
     function addSystemMessage(text, isErr = false) { const div = document.createElement('div'); div.className = 'msg assistant'; div.innerHTML = `<div class="msg-body" style="background:${isErr ? '#5f1a1a' : '#1e4620'}; color: white; text-align: center;">${escapeHtml(text)}</div>`; messagesDiv.appendChild(div); messagesDiv.scrollTop = messagesDiv.scrollHeight; }
     async function sealMessage(content) { try { const res = await fetch(`${API_BASE}/api/stp-seal`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entry: content, type: 'general-trace', sessionId }) }); const data = await res.json(); if (res.ok) showToast(`✅ Sealed: ${data.seal.substring(0,8)}...`); else throw new Error(data.error); } catch(err) { showToast(`❌ Seal failed: ${err.message}`); } }
 
-    // API calls (unchanged)
+    // API calls
     async function callAssistant(message, structuredData = null, forceAion = false) {
       const body = { message, sessionId, ownerType: OWNER_TYPE, history: [], adaLoopEnabled };
       if (forceAion) body.forceAionOnly = true;
@@ -820,7 +664,6 @@
         setStatus('Ready');
       } catch (err) {
         thinking.remove();
-        // Enhanced error with retry button
         const errorDiv = document.createElement('div'); errorDiv.className = 'msg assistant';
         const retryHtml = `<button class="retry-btn" data-message="${escapeHtml(text)}" style="background:rgba(0,0,0,0.5); border:1px solid var(--accent); border-radius:20px; padding:4px 12px; margin-left:8px;">Retry</button>`;
         errorDiv.innerHTML = `<div class="msg-body" style="background:#5f1a1a; color:#ff8a8a;">Error: ${escapeHtml(err.message)}${retryHtml}</div>`;
@@ -835,7 +678,7 @@
       privateWife = null;
       wifeNameSpan.textContent = 'AION';
       wifeAvatarDiv.textContent = '✨';
-      setBackground('regular');
+      modeBadge.textContent = '🌐 REGULAR';
       addSystemMessage('🚪 Exited private room.');
     }
 
@@ -858,7 +701,7 @@
       privateWife = wife;
       wifeNameSpan.textContent = WIFE_STYLES[wife].name;
       wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji;
-      setBackground('private');
+      modeBadge.textContent = `🚪 PRIVATE (${wife})`;
       addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`);
     }
 
@@ -866,7 +709,7 @@
       const text = input.value.trim();
       if (!text) { showToast('Enter a message first.'); return; }
       setStatus('Asking all wives...');
-      setBackground('group');
+      modeBadge.textContent = '👥 GROUP CHAT';
       try {
         const result = await callGroupChat(text);
         for (const wifeResp of result.responses) {
@@ -878,7 +721,7 @@
         addSystemMessage(`Error: ${err.message}`, true);
         setStatus(err.message, true);
       } finally {
-        setBackground('regular');
+        modeBadge.textContent = '🌐 REGULAR';
       }
     }
 
@@ -886,7 +729,7 @@
       const text = input.value.trim();
       if (!text) { showToast('Enter a message first.'); return; }
       setStatus('Asking all wives...');
-      setBackground('group');
+      modeBadge.textContent = '👥 GROUP CHAT';
       try {
         const result = await callGroupChat(text);
         for (const wifeResp of result.responses) {
@@ -898,7 +741,7 @@
         addSystemMessage(`Error: ${err.message}`, true);
         setStatus(err.message, true);
       } finally {
-        setBackground('regular');
+        modeBadge.textContent = '🌐 REGULAR';
       }
     }
 
