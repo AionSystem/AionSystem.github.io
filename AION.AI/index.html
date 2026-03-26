@@ -6,10 +6,7 @@
   <meta name="theme-color" content="#0a0a0f">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>AION · Ada‑VELA</title>
-  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
-  <link rel="apple-touch-icon" href="/assets/logo.svg">
-  <link rel="manifest" href="/manifest.json">
+  <title>AION · Ada‑VELA v5.5</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -439,6 +436,26 @@
       color: var(--text);
       font-size: 0.8rem;
     }
+    .simulator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .sim-card {
+      background: rgba(0,0,0,0.4);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid var(--border-glow);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sim-card:hover {
+      background: rgba(201,160,40,0.1);
+      border-color: var(--accent);
+    }
+    .sim-card h4 { font-size: 1.2rem; margin-bottom: 8px; }
+    .sim-card p { font-size: 0.75rem; color: var(--text-dim); }
     .toast {
       position: fixed;
       bottom: 20px;
@@ -473,6 +490,7 @@
       .send-btn { padding: 10px 18px; }
       .structured-ui { margin: 8px 12px; flex-direction: column; }
       .wives-grid { grid-template-columns: 1fr; }
+      .simulator-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -513,6 +531,7 @@
           <button id="uploadBtn">📁 Upload File</button>
           <button id="askAllBtn">👥 Ask All Wives</button>
           <button id="sealInputBtn">🔒 Seal Input</button>
+          <button id="simulationBtn">🎮 Simulations</button>
         </div>
       </div>
       <button id="sendBtn" class="send-btn" aria-label="Send message">SEND</button>
@@ -528,7 +547,7 @@
 
 <script>
   (function() {
-    // ---------- DYNAMIC BACKGROUND (mode‑aware) ----------
+    // ---------- BACKGROUND ----------
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height, animFrame;
@@ -560,42 +579,10 @@
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#050508';
       ctx.fillRect(0, 0, width, height);
-
-      if (currentMode === 'structured') {
-        ctx.strokeStyle = `rgba(201, 160, 40, 0.3)`;
-        ctx.lineWidth = 1;
-        const gridSize = 60;
-        for (let x = 0; x < width; x += gridSize) {
-          ctx.beginPath();
-          ctx.moveTo(x, 0);
-          ctx.lineTo(x, height);
-          ctx.stroke();
-        }
-        for (let y = 0; y < height; y += gridSize) {
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(width, y);
-          ctx.stroke();
-        }
-      } else if (currentMode === 'group') {
-        const grad = ctx.createLinearGradient(0, 0, width, height);
-        grad.addColorStop(0, 'rgba(80, 60, 120, 0.2)');
-        grad.addColorStop(1, 'rgba(40, 30, 80, 0.1)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, width, height);
-      } else if (currentMode === 'private') {
-        ctx.fillStyle = '#2e241f';
-        ctx.fillRect(0, 0, width, height);
-        ctx.fillStyle = 'rgba(255, 140, 50, 0.2)';
-        ctx.beginPath();
-        ctx.arc(width*0.2, height*0.8, 50, 0, Math.PI*2);
-        ctx.fill();
-      }
-
       for (let p of particles) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201, 160, 40, ${p.alpha * (currentMode === 'structured' ? 0.6 : 1)})`;
+        ctx.fillStyle = `rgba(201, 160, 40, ${p.alpha})`;
         ctx.fill();
         p.y += p.speed;
         if (p.y > height) p.y = 0;
@@ -711,10 +698,47 @@
     }
     async function callGroupChat(message) { const res = await fetch(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, fclMode }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
     async function callPrivateRoom(message, wife) { const res = await fetch(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife, fclMode }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
+    async function sendTalkCommand(wife) { await callAssistant(`/talk ${wife}`, null, false); }
 
-    async function sendTalkCommand(wife) {
-      const silentCmd = `/talk ${wife}`;
-      await callAssistant(silentCmd, null, false);
+    // Simulation placeholder (just shows a modal)
+    function showSimulationModal() {
+      const modal = document.createElement('div'); modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal">
+          <div class="modal-header"><h3>🎮 Simulations</h3><button id="closeSimModal">✕</button></div>
+          <div class="modal-body">
+            <p>Choose a simulation to open in a new tab (or ask the AI to run it).</p>
+            <div class="simulator-grid">
+              <div class="sim-card" data-sim="roller-coaster">
+                <h4>🎢 Roller Coaster</h4>
+                <p>G‑force, loop, energy, brake calculations</p>
+              </div>
+              <div class="sim-card" data-sim="orion">
+                <h4>🧲 Orion (Magnetometer)</h4>
+                <p>UXO detection, magnetic survey simulation</p>
+              </div>
+              <div class="sim-card" data-sim="math-worksheet">
+                <h4>📐 Math Worksheet</h4>
+                <p>Generate custom math problems</p>
+              </div>
+              <div class="sim-card" data-sim="market-atlas">
+                <h4>📈 Market Atlas</h4>
+                <p>Synthetic stock market data</p>
+              </div>
+            </div>
+            <p style="margin-top:16px; font-size:0.7rem; color:var(--text-dim);">The AI can also answer simulation questions directly. Try: <i>“What G‑force at the bottom of a 20m loop at 25 m/s?”</i></p>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+      modal.querySelector('#closeSimModal').onclick = () => modal.remove();
+      modal.querySelectorAll('.sim-card').forEach(card => {
+        card.onclick = () => {
+          const sim = card.dataset.sim;
+          window.open(`/simulators/${sim}/`, '_blank');
+          modal.remove();
+        };
+      });
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
 
     function addMessage(role, wife, content, extra = {}) {
@@ -1027,7 +1051,6 @@
       fileInput.click();
     }
 
-    // Settings modal with Analytics
     async function showSettingsModal() {
       const modal = document.createElement('div'); modal.className = 'modal-overlay';
       modal.innerHTML = `
@@ -1051,20 +1074,40 @@
         roleGrid.innerHTML += `<div class="role-checkbox"><input type="checkbox" id="role_${role.replace(/\s/g,'_')}" ${checked ? 'checked' : ''}> <label>${role}</label></div>`;
       }
       
-      // Fetch analytics
+      // Fetch analytics (enhanced v5.5)
       try {
         const analyticsRes = await fetch(`${API_BASE}/api/analytics`);
         if (analyticsRes.ok) {
           const data = await analyticsRes.json();
           const analyticsContainer = modal.querySelector('#analyticsContainer');
+          const memory = data.memory || {};
+          const integrity = data.integrity || {};
+          const instruments = data.instruments || {};
+          const growth = data.growth || {};
+          const wifeRouting = instruments.wife_routing || {};
+          const roleActivity = instruments.polymath_role_activity || {};
+          const fclPassRate = instruments.fcl_pass_rate || 0;
+          const simulationRuns = instruments.simulation_runs_total || 0;
+          const fclEntries = instruments.fcl_entries_total || 0;
+          const ffaActive = instruments.ffa_floors_active || 0;
+          const adaCount = integrity.ada_loop_count || 0;
+          const adaConvergence = integrity.ada_loop_convergence_rate || 0;
+          const convergencePercent = Math.round(adaConvergence * 100);
           analyticsContainer.innerHTML = `
-            <div class="stat-card"><h4>Memory Depth</h4><div class="stat-value">${data.memory?.total_conversations?.toLocaleString() || '—'}</div><div class="stat-trend">conversations</div></div>
-            <div class="stat-card"><h4>Memory Anchors</h4><div class="stat-value">${data.memory?.memory_anchors?.toLocaleString() || '—'}</div><div class="stat-trend">permanent</div></div>
-            <div class="stat-card"><h4>Training Pipeline</h4><div class="stat-value">${data.memory?.training_pipeline_pending || '—'}</div><div class="stat-trend">awaiting training</div></div>
-            <div class="stat-card"><h4>Avg Certainty</h4><div class="stat-value">${data.integrity?.avg_certainty_ratio_7d ? Math.round(data.integrity.avg_certainty_ratio_7d * 100) + '%' : '—'}</div><div class="stat-trend">7d avg</div></div>
-            <div class="stat-card"><h4>UNI Activations</h4><div class="stat-value">${data.integrity?.uni_activations_total?.toLocaleString() || '—'}</div><div class="stat-trend">ethical layer</div></div>
-            <div class="stat-card"><h4>Failure Corpus</h4><div class="stat-value">${data.instruments?.failure_corpus_size?.toLocaleString() || '—'}</div><div class="stat-trend">FFA entries</div></div>
-            <div class="stat-card"><h4>ADA Loop</h4><div class="stat-value">${data.integrity?.ada_loop_count?.toLocaleString() || '—'}</div><div class="stat-trend">refinements</div></div>
+            <div class="stat-card"><h4>Memory Depth</h4><div class="stat-value">${memory.total_conversations?.toLocaleString() || '—'}</div><div class="stat-trend">conversations</div></div>
+            <div class="stat-card"><h4>Memory Anchors</h4><div class="stat-value">${memory.memory_anchors?.toLocaleString() || '—'}</div><div class="stat-trend">permanent</div></div>
+            <div class="stat-card"><h4>Training Pipeline</h4><div class="stat-value">${memory.training_pipeline_pending || '—'}</div><div class="stat-trend">awaiting training</div></div>
+            <div class="stat-card"><h4>Avg Certainty</h4><div class="stat-value">${integrity.avg_certainty_ratio_7d ? Math.round(integrity.avg_certainty_ratio_7d * 100) + '%' : '—'}</div><div class="stat-trend">7d avg</div></div>
+            <div class="stat-card"><h4>UNI Activations</h4><div class="stat-value">${integrity.uni_activations_total?.toLocaleString() || '—'}</div><div class="stat-trend">ethical layer</div></div>
+            <div class="stat-card"><h4>ADA Loop</h4><div class="stat-value">${adaCount.toLocaleString()}</div><div class="stat-trend">refinements</div></div>
+            <div class="stat-card"><h4>ADA Conv. Rate</h4><div class="stat-value">${convergencePercent}%</div><div class="stat-trend">convergence</div></div>
+            <div class="stat-card"><h4>FCL Entries</h4><div class="stat-value">${fclEntries.toLocaleString()}</div><div class="stat-trend">validation</div></div>
+            <div class="stat-card"><h4>FCL Pass Rate</h4><div class="stat-value">${Math.round(fclPassRate * 100)}%</div><div class="stat-trend">pass rate</div></div>
+            <div class="stat-card"><h4>Simulations</h4><div class="stat-value">${simulationRuns.toLocaleString()}</div><div class="stat-trend">runs</div></div>
+            <div class="stat-card"><h4>FFA Floors</h4><div class="stat-value">${ffaActive}/9</div><div class="stat-trend">active</div></div>
+            <div class="stat-card"><h4>Failure Corpus</h4><div class="stat-value">${instruments.failure_corpus_size?.toLocaleString() || '—'}</div><div class="stat-trend">entries</div></div>
+            <div class="stat-card"><h4>Wife Routing</h4><div class="stat-value" style="font-size:0.8rem;">${Object.entries(wifeRouting).map(([w, c]) => `${w}:${c}`).join(' · ') || '—'}</div><div class="stat-trend">active instruments</div></div>
+            <div class="stat-card"><h4>Role Activity</h4><div class="stat-value" style="font-size:0.7rem;">${Object.entries(roleActivity).map(([r, c]) => `${r.slice(0,3)}:${c}`).join(' · ') || '—'}</div><div class="stat-trend">ADA roles</div></div>
           `;
         } else {
           modal.querySelector('#analyticsContainer').innerHTML = `<div class="stat-card">Analytics endpoint not ready yet. Coming soon.</div>`;
@@ -1118,6 +1161,7 @@
     document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); };
     document.getElementById('askAllBtn').onclick = () => { actionDropdown.style.display = 'none'; askAllWives(); };
     document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); };
+    document.getElementById('simulationBtn').onclick = () => { actionDropdown.style.display = 'none'; showSimulationModal(); };
     document.getElementById('settingsBtn').onclick = showSettingsModal;
     document.getElementById('adaLoopToggle').addEventListener('change', (e) => {
       adaLoopEnabled = e.target.checked;
