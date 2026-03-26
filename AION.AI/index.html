@@ -26,7 +26,7 @@
       overflow: hidden;
       position: relative;
     }
-    /* Particles canvas */
+    /* Background canvas */
     #bg-canvas {
       position: fixed;
       top: 0;
@@ -202,6 +202,16 @@
     .pac-badge.low { background: #5f1a1a; color: #ff8a8a; }
     .pac-badge.medium { background: #5f3a1a; color: #ffaa33; }
     .pac-badge.high { background: #1e4620; color: #4ade80; }
+    .vela-badge {
+      background: rgba(0,0,0,0.4);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-family: monospace;
+      font-size: 0.6rem;
+    }
+    .vela-badge.pass { background: #1e4620; color: #4ade80; }
+    .vela-badge.flag { background: #5f3a1a; color: #ffaa33; }
+    .vela-badge.block { background: #5f1a1a; color: #ff8a8a; }
     .receipt-badge {
       background: #2a2a3a;
       border: 1px solid #888;
@@ -424,19 +434,26 @@
 
 <script>
   (function() {
-    // ---------- FALLING PARTICLES BACKGROUND (from old market atlas) ----------
+    // ---------- ENTERPRISE BACKGROUND MANAGER ----------
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
+    let animationFrameId = null;
+    let currentBackground = 'regular'; // regular | group | private
     let particles = [];
     const PARTICLE_COUNT = 120;
+    let houseGlow = 0;
+    let libraryCandle = { x: 0, y: 0, flicker: 0 };
+
     function resizeCanvas() {
       width = window.innerWidth;
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
     }
-    function createParticles() {
+
+    // Regular: falling particles
+    function initRegular() {
       particles = [];
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         particles.push({
@@ -448,8 +465,7 @@
         });
       }
     }
-    function drawParticles() {
-      if (!ctx) return;
+    function drawRegular() {
       ctx.clearRect(0, 0, width, height);
       ctx.fillStyle = '#050508';
       ctx.fillRect(0, 0, width, height);
@@ -461,18 +477,88 @@
         p.y += p.speed;
         if (p.y > height) p.y = 0;
       }
-      requestAnimationFrame(drawParticles);
     }
-    function initBackground() {
+
+    // Group chat: holographic house
+    function initGroup() {
+      // nothing special
+    }
+    function drawGroup() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#0a1030';
+      ctx.fillRect(0, 0, width, height);
+      // draw glowing house outline
+      const houseW = Math.min(width * 0.4, 300);
+      const houseH = houseW * 0.8;
+      const houseX = width/2 - houseW/2;
+      const houseY = height/2 - houseH/2;
+      ctx.strokeStyle = `rgba(76, 159, 112, ${0.5 + Math.sin(Date.now()/2000)*0.2})`;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(houseX, houseY, houseW, houseH);
+      ctx.beginPath();
+      ctx.moveTo(houseX, houseY);
+      ctx.lineTo(width/2, houseY - houseH*0.3);
+      ctx.lineTo(houseX + houseW, houseY);
+      ctx.stroke();
+      // windows
+      ctx.fillStyle = 'rgba(201, 160, 40, 0.3)';
+      ctx.fillRect(houseX + houseW*0.2, houseY + houseH*0.3, houseW*0.2, houseW*0.2);
+      ctx.fillRect(houseX + houseW*0.6, houseY + houseH*0.3, houseW*0.2, houseW*0.2);
+      ctx.fillRect(houseX + houseW*0.4, houseY + houseH*0.6, houseW*0.2, houseW*0.2);
+    }
+
+    // Private room: warm library
+    function initPrivate() {
+      libraryCandle = { x: width*0.2, y: height*0.8, flicker: 0 };
+    }
+    function drawPrivate() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#2e241f';
+      ctx.fillRect(0, 0, width, height);
+      // bookshelves
+      ctx.fillStyle = '#5a3e2e';
+      for (let i = 0; i < 3; i++) {
+        ctx.fillRect(width*0.1 + i*width*0.25, height*0.2, width*0.2, height*0.6);
+      }
+      // candle
+      libraryCandle.flicker = 0.8 + Math.random() * 0.4;
+      ctx.fillStyle = `rgba(255, 140, 50, ${0.5 + libraryCandle.flicker*0.2})`;
+      ctx.beginPath();
+      ctx.arc(libraryCandle.x, libraryCandle.y, 12, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = `rgba(255, 200, 100, ${0.7 + libraryCandle.flicker*0.2})`;
+      ctx.beginPath();
+      ctx.arc(libraryCandle.x, libraryCandle.y, 6, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    function animateBackground() {
+      if (currentBackground === 'regular') drawRegular();
+      else if (currentBackground === 'group') drawGroup();
+      else if (currentBackground === 'private') drawPrivate();
+      animationFrameId = requestAnimationFrame(animateBackground);
+    }
+
+    function setBackground(mode) {
+      if (mode === currentBackground) return;
+      currentBackground = mode;
+      if (mode === 'regular') initRegular();
+      else if (mode === 'group') initGroup();
+      else if (mode === 'private') initPrivate();
+    }
+
+    function startBackground() {
       resizeCanvas();
-      createParticles();
-      drawParticles();
+      setBackground('regular');
+      animateBackground();
       window.addEventListener('resize', () => {
         resizeCanvas();
-        createParticles();
+        if (currentBackground === 'regular') initRegular();
+        else if (currentBackground === 'group') initGroup();
+        else if (currentBackground === 'private') initPrivate();
       });
     }
-    initBackground();
+    startBackground();
 
     // ---------- CONFIG ----------
     const API_BASE = 'https://aion-backend-mu.vercel.app';
@@ -531,7 +617,6 @@
     // API calls
     async function callAssistant(message, structuredData = null, forceAion = false) {
       const body = { message, sessionId, ownerType: OWNER_TYPE, history: [], adaLoopEnabled };
-      // If in regular mode (not group/private) and not structured, force AION
       if (forceAion) body.forceAionOnly = true;
       if (structuredData) { body.structured = structuredData; body.intent = structuredData.intent; body.domain = structuredData.domain; }
       const res = await fetch(`${API_BASE}/api/assistant`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -547,6 +632,7 @@
       let footerHtml = '';
       if (extra.adaLoop) { const loop = extra.adaLoop; const roleIcons = (loop.roles || []).map(r => ({'Systems Architect':'⚙️','Epistemic Logician':'📚','Cognitive Psychologist':'🧠','Constitutional Lawyer':'⚖️','Design Thinker':'🎨'}[r] || '?')).join(''); const status = loop.converged ? '✅' : '🔄'; footerHtml += `<span class="ada-badge" data-ada='${JSON.stringify(loop).replace(/'/g, "&#39;")}'>${status} ${loop.rounds} rounds · ${roleIcons || 'no roles'}</span>`; }
       if (extra.pac) { const ppi = extra.pac.ppi; const cls = ppi < 30 ? 'low' : (ppi < 70 ? 'medium' : 'high'); footerHtml += `<span class="pac-badge ${cls}">📊 PPI: ${ppi}</span>`; if (extra.pac.coaching) footerHtml += `<span class="pac-badge medium">💡 ${extra.pac.coaching}</span>`; }
+      if (extra.vela) { const cls = extra.vela === 'PASS' ? 'pass' : (extra.vela === 'FLAGGED' ? 'flag' : 'block'); footerHtml += `<span class="vela-badge ${cls}">⚖️ VELA: ${extra.vela}</span>`; }
       if (extra.ecf) footerHtml += `<span class="pac-badge">🏷 [D]x${extra.ecf.D||0} [R]x${extra.ecf.R||0} [S]x${extra.ecf.S||0} [?]x${extra.ecf.Q||0}</span>`;
       if (extra.receipt) footerHtml += `<span class="receipt-badge" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 receipt (${extra.receipt.still_open || 0} open)</span>`;
       if (extra.sealable) footerHtml += `<button class="seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
@@ -588,8 +674,7 @@
         lastT2 = t2;
         const dreamspell = getDreamspell(t2);
         const gregorian = t2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        // Hebrew date placeholder (live fetch removed)
-        const hebrew = 'Hebrew: unavailable (fetch disabled)';
+        const hebrew = result.hebrew_date || 'Hebrew: unavailable';
         const timestampHtml = `<div class="timestamp-line">⏱ Gap: ${gapStr} | Processed: ${t1.toLocaleTimeString()} ${t1Label} → Output: ${t2.toLocaleTimeString()} ${t2Label} | Window: ${windowSec}s</div><div class="timestamp-line">🌑 ${dreamspell} | ${hebrew}</div><div class="timestamp-line">📅 Gregorian: ${gregorian}</div>`;
         thinking.remove();
         const wife = result.active_wife || 'AION';
@@ -598,7 +683,16 @@
         wifeAvatarDiv.textContent = WIFE_STYLES[wife]?.emoji || '✨';
         voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
         if (voidProx > 0.5) voidMeterSpan.classList.add('active'); else voidMeterSpan.classList.remove('active');
-        addMessage('assistant', wife, result.response, { adaLoop: result.ada_loop, pac: result.pac, ecf: result.ecf_tags, receipt: result.checkpoint_receipt, sealable: true, register: result.register, timestampHtml });
+        addMessage('assistant', wife, result.response, {
+          adaLoop: result.ada_loop,
+          pac: result.pac,
+          vela: result.vela_status,
+          ecf: result.ecf_tags,
+          receipt: result.checkpoint_receipt,
+          sealable: true,
+          register: result.register,
+          timestampHtml
+        });
         setStatus('Ready');
       } catch (err) {
         thinking.remove();
@@ -612,17 +706,107 @@
       } finally { isSending = false; input.focus(); }
     }
 
-    function exitPrivateRoom() { privateRoomActive = false; privateWife = null; wifeNameSpan.textContent = 'AION'; wifeAvatarDiv.textContent = '✨'; addSystemMessage('🚪 Exited private room.'); }
+    function exitPrivateRoom() {
+      privateRoomActive = false;
+      privateWife = null;
+      wifeNameSpan.textContent = 'AION';
+      wifeAvatarDiv.textContent = '✨';
+      setBackground('regular');
+      addSystemMessage('🚪 Exited private room.');
+    }
 
-    function toggleStructuredMode() { structuredMode = !structuredMode; localStorage.setItem('structuredMode', structuredMode); if (structuredMode) { structuredUI.classList.add('active'); modeIndicator.textContent = '🌌 STRUCTURED'; modeIndicator.classList.add('active'); } else { structuredUI.classList.remove('active'); modeIndicator.textContent = '⚡ REGULAR'; modeIndicator.classList.remove('active'); } }
+    function toggleStructuredMode() {
+      structuredMode = !structuredMode;
+      localStorage.setItem('structuredMode', structuredMode);
+      if (structuredMode) {
+        structuredUI.classList.add('active');
+        modeIndicator.textContent = '🌌 STRUCTURED';
+        modeIndicator.classList.add('active');
+      } else {
+        structuredUI.classList.remove('active');
+        modeIndicator.textContent = '⚡ REGULAR';
+        modeIndicator.classList.remove('active');
+      }
+    }
 
-    function startPrivateRoom(wife) { privateRoomActive = true; privateWife = wife; wifeNameSpan.textContent = WIFE_STYLES[wife].name; wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji; addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`); }
+    function startPrivateRoom(wife) {
+      privateRoomActive = true;
+      privateWife = wife;
+      wifeNameSpan.textContent = WIFE_STYLES[wife].name;
+      wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji;
+      setBackground('private');
+      addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`);
+    }
 
-    async function showGroupChatModal() { const text = input.value.trim(); if (!text) { showToast('Enter a message first.'); return; } setStatus('Asking all wives...'); try { const result = await callGroupChat(text); for (const wifeResp of result.responses) addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true }); if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text); setStatus('Ready'); } catch(err) { addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); } }
-    async function askAllWives() { const text = input.value.trim(); if (!text) { showToast('Enter a message first.'); return; } setStatus('Asking all wives...'); try { const result = await callGroupChat(text); for (const wifeResp of result.responses) addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true }); if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text); setStatus('Ready'); } catch(err) { addSystemMessage(`Error: ${err.message}`, true); setStatus(err.message, true); } }
-    async function uploadFile() { const fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.onchange = async (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async (ev) => { const base64 = ev.target.result.split(',')[1]; setStatus('Uploading...'); try { const res = await fetch(`${API_BASE}/api/files/upload`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ file_data: base64, file_name: file.name, mime_type: file.type, session_id: sessionId }) }); if (res.ok) showToast(`✅ Uploaded: ${file.name}`); else showToast(`❌ Upload failed`); } catch(err) { showToast(`❌ Error: ${err.message}`); } setStatus('Ready'); }; reader.readAsDataURL(file); }; fileInput.click(); }
+    async function showGroupChatModal() {
+      const text = input.value.trim();
+      if (!text) { showToast('Enter a message first.'); return; }
+      setStatus('Asking all wives...');
+      setBackground('group');
+      try {
+        const result = await callGroupChat(text);
+        for (const wifeResp of result.responses) {
+          addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true, vela: wifeResp.vela_status });
+        }
+        if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text);
+        setStatus('Ready');
+      } catch(err) {
+        addSystemMessage(`Error: ${err.message}`, true);
+        setStatus(err.message, true);
+      } finally {
+        setBackground('regular');
+      }
+    }
 
-    // Settings modal (Claude-like)
+    async function askAllWives() {
+      const text = input.value.trim();
+      if (!text) { showToast('Enter a message first.'); return; }
+      setStatus('Asking all wives...');
+      setBackground('group');
+      try {
+        const result = await callGroupChat(text);
+        for (const wifeResp of result.responses) {
+          addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true, vela: wifeResp.vela_status });
+        }
+        if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text);
+        setStatus('Ready');
+      } catch(err) {
+        addSystemMessage(`Error: ${err.message}`, true);
+        setStatus(err.message, true);
+      } finally {
+        setBackground('regular');
+      }
+    }
+
+    async function uploadFile() {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          const base64 = ev.target.result.split(',')[1];
+          setStatus('Uploading...');
+          try {
+            const res = await fetch(`${API_BASE}/api/files/upload`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ file_data: base64, file_name: file.name, mime_type: file.type, session_id: sessionId })
+            });
+            if (res.ok) showToast(`✅ Uploaded: ${file.name}`);
+            else showToast(`❌ Upload failed`);
+          } catch(err) {
+            showToast(`❌ Error: ${err.message}`);
+          }
+          setStatus('Ready');
+        };
+        reader.readAsDataURL(file);
+      };
+      fileInput.click();
+    }
+
+    // Settings modal (Claude-like with expanded sections)
     function showSettingsModal() {
       const modal = document.createElement('div'); modal.className = 'modal-overlay';
       modal.innerHTML = `
@@ -631,15 +815,27 @@
           <div class="modal-body">
             <div class="settings-section"><h4>Profile</h4><div class="setting-item"><span>Session ID</span><span style="font-family:monospace">${sessionId.slice(-12)}</span></div><div class="setting-item"><button id="clearStorageBtn">Clear Storage</button></div></div>
             <div class="settings-section"><h4>Capabilities</h4><div class="setting-item"><label>ADA Loop</label><input type="checkbox" id="settingAdaLoop" ${adaLoopEnabled ? 'checked' : ''}></div><div class="setting-item"><label>Structured Mode</label><input type="checkbox" id="settingStructured" ${structuredMode ? 'checked' : ''}></div></div>
+            <div class="settings-section"><h4>Connectors</h4><div class="setting-item"><label>GitHub Sync</label><input type="checkbox" id="githubSync" checked disabled></div></div>
+            <div class="settings-section"><h4>Permissions</h4><div class="setting-item"><label>Allow file uploads</label><input type="checkbox" id="allowUploads" checked disabled></div></div>
             <div class="settings-section"><h4>Appearance</h4><div class="setting-item"><label>Dark mode</label><input type="checkbox" id="darkModeToggle" checked disabled></div></div>
+            <div class="settings-section"><h4>Speech</h4><div class="setting-item"><label>Voice output</label><input type="checkbox" id="voiceOutput"></div></div>
+            <div class="settings-section"><h4>Haptics</h4><div class="setting-item"><label>Vibration feedback</label><input type="checkbox" id="haptics"></div></div>
             <div class="settings-section"><h4>Privacy</h4><div class="setting-item"><label>Share analytics</label><input type="checkbox" id="shareAnalytics"></div></div>
+            <div class="settings-section"><h4>Shared Links</h4><div class="setting-item"><label>Allow public sharing</label><input type="checkbox" id="sharedLinks"></div></div>
           </div>
         </div>`;
       document.body.appendChild(modal);
       modal.querySelector('#closeSettings').onclick = () => modal.remove();
       modal.querySelector('#clearStorageBtn').onclick = () => { localStorage.clear(); location.reload(); };
-      modal.querySelector('#settingAdaLoop').onchange = (e) => { adaLoopEnabled = e.target.checked; localStorage.setItem('adaLoopEnabled', adaLoopEnabled); document.getElementById('adaLoopToggle').checked = adaLoopEnabled; addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.'); };
-      modal.querySelector('#settingStructured').onchange = (e) => { if (e.target.checked !== structuredMode) toggleStructuredMode(); };
+      modal.querySelector('#settingAdaLoop').onchange = (e) => {
+        adaLoopEnabled = e.target.checked;
+        localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
+        document.getElementById('adaLoopToggle').checked = adaLoopEnabled;
+        addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.');
+      };
+      modal.querySelector('#settingStructured').onchange = (e) => {
+        if (e.target.checked !== structuredMode) toggleStructuredMode();
+      };
       modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
 
@@ -651,12 +847,21 @@
     document.addEventListener('click', () => { actionDropdown.style.display = 'none'; });
     document.getElementById('structuredModeBtn').onclick = () => { actionDropdown.style.display = 'none'; toggleStructuredMode(); };
     document.getElementById('groupChatBtn').onclick = () => { actionDropdown.style.display = 'none'; showGroupChatModal(); };
-    document.getElementById('privateRoomBtn').onclick = () => { actionDropdown.style.display = 'none'; const wife = prompt('Enter wife name (ALBEDO, VESPER, LYRA, TERRA, CIPHER, JUSTITIA):', 'ALBEDO'); if(wife && ALL_WIVES.includes(wife.toUpperCase())) startPrivateRoom(wife.toUpperCase()); else showToast('Invalid wife'); };
+    document.getElementById('privateRoomBtn').onclick = () => {
+      actionDropdown.style.display = 'none';
+      const wife = prompt('Enter wife name (ALBEDO, VESPER, LYRA, TERRA, CIPHER, JUSTITIA):', 'ALBEDO');
+      if (wife && ALL_WIVES.includes(wife.toUpperCase())) startPrivateRoom(wife.toUpperCase());
+      else showToast('Invalid wife');
+    };
     document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); };
     document.getElementById('askAllBtn').onclick = () => { actionDropdown.style.display = 'none'; askAllWives(); };
     document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); };
     document.getElementById('settingsBtn').onclick = showSettingsModal;
-    document.getElementById('adaLoopToggle').addEventListener('change', (e) => { adaLoopEnabled = e.target.checked; localStorage.setItem('adaLoopEnabled', adaLoopEnabled); addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.'); });
+    document.getElementById('adaLoopToggle').addEventListener('change', (e) => {
+      adaLoopEnabled = e.target.checked;
+      localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
+      addSystemMessage(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.');
+    });
     setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
 
     // Initialization
