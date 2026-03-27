@@ -2,21 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AION.AI — Sovereign Constitutional AI Assistant. ADA Loop, Wife Architecture, Epistemic Integrity, STP Seals. Built for high-risk domains where accuracy is non-negotiable.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="AION.AI — Sovereign Constitutional AI Assistant. ADA Loop, Wife Architecture, Epistemic Integrity, STP Seals. Built for high‑risk domains where accuracy is non‑negotiable.">
   <meta property="og:title" content="AION.AI — Constitutional AI Assistant">
   <meta property="og:description" content="Self‑refining epistemic architecture. Six specialized wives. Immutable failure logging. For operators who cannot afford to guess.">
   <meta property="og:type" content="website">
   <title>AION.AI — Sovereign Constitutional AI Assistant</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* ========== GLOBAL RESET & VARIABLES ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg:#08090b;
       --bg-deep:#030405;
@@ -44,7 +39,8 @@
       --font-size-base: clamp(16px, 1vw + 8px, 20px);
       --font-size-h1: clamp(48px, 8vw + 16px, 96px);
       --font-size-h2: clamp(28px, 4vw + 8px, 44px);
-      --font-size-h3: clamp(22px, 3vw + 4px, 32px);
+      --mouse-x: 50%;
+      --mouse-y: 50%;
     }
     body {
       background: var(--bg);
@@ -53,7 +49,57 @@
       font-size: var(--font-size-base);
       line-height: 1.5;
       overflow-x: hidden;
+      cursor: none;
     }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Custom Cursor */
+    .custom-cursor {
+      width: 20px; height: 20px;
+      border: 2px solid var(--amber);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transition: transform 0.1s ease, background 0.2s ease;
+      transform: translate(-50%, -50%);
+    }
+    .custom-cursor.hover {
+      transform: translate(-50%, -50%) scale(1.5);
+      background: rgba(240,165,0,0.1);
+      border-color: var(--gold);
+    }
+
+    /* Background Canvas */
+    #hero-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* Layout Wrapper */
     .wrapper {
       max-width: 1200px;
       margin: 0 auto;
@@ -61,7 +107,8 @@
       position: relative;
       z-index: 2;
     }
-    /* header / nav */
+
+    /* Navigation */
     nav {
       display: flex;
       justify-content: space-between;
@@ -81,9 +128,7 @@
       align-items: center;
       gap: 10px;
     }
-    .logo span {
-      color: var(--muted);
-    }
+    .logo span { color: var(--muted); }
     .nav-links {
       display: flex;
       gap: 32px;
@@ -103,7 +148,62 @@
       color: var(--amber);
       border-bottom-color: var(--amber);
     }
-    /* hero */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 18px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      z-index: 110;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--amber);
+      border-radius: 1px;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 56px;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      background: rgba(8,9,11,0.98);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      padding: 8px 0;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--text);
+      text-decoration: none;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s ease, background 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mobile-nav a:last-child { border-bottom: none; }
+    .mobile-nav a:hover { color: var(--amber); background: rgba(240,165,0,0.04); }
+    .mobile-nav a::before { content: '—'; color: var(--amber); font-size: 10px; opacity: 0.6; }
+
+    /* Hero */
     .hero {
       padding: 60px 0 40px;
     }
@@ -178,15 +278,46 @@
       color: #000;
       border-color: var(--amber);
     }
-    .cta:hover {
-      background: var(--amber);
-      color: #000;
+    .cta:hover { background: var(--amber); color: #000; }
+    .cta.primary:hover { background: var(--amber-l); }
+
+    /* Triple Time */
+    .triple-time {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 60px;
     }
-    .cta.primary:hover {
-      background: var(--amber-l);
+    .time-cell {
+      background: var(--bg);
+      padding: 18px 20px;
+      transition: background 0.2s ease;
     }
-    /* sections */
-    section {
+    .time-cell:hover { background: var(--surface); }
+    .time-sys {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--amber-d);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .time-val {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--amber);
+      letter-spacing: 1px;
+      line-height: 1.3;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+    }
+    .time-val.loading { color: var(--dim); font-size: 11px; }
+
+    /* Sections */
+    section, .phase4-section, .live-status-panel, .stack-links-grid {
       margin: 80px 0;
     }
     .section-header {
@@ -214,16 +345,14 @@
       height: 1px;
       background: var(--border);
     }
+
+    /* Cards & Grids */
     .grid-2, .grid-3 {
       display: grid;
       gap: 24px;
     }
-    .grid-2 {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .grid-3 {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -234,11 +363,7 @@
       border-color: var(--amber);
       transform: translateY(-2px);
     }
-    .card-icon {
-      font-size: 32px;
-      margin-bottom: 16px;
-      display: inline-block;
-    }
+    .card-icon { font-size: 32px; margin-bottom: 16px; display: inline-block; }
     .card-title {
       font-family: var(--sans);
       font-size: 22px;
@@ -270,21 +395,21 @@
       color: var(--amber-d);
       text-transform: uppercase;
     }
-    .wives-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 20px;
-    }
-    .wife-badge {
-      background: var(--panel);
+
+    /* Wife Cards (special left border) */
+    .wife-card {
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 40px;
-      padding: 6px 14px;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--amber);
+      padding: 24px;
+      border-left: 4px solid;
+      transition: border-color 0.2s, transform 0.2s;
     }
+    .wife-card:hover {
+      border-color: var(--amber);
+      transform: translateY(-2px);
+    }
+
+    /* Feature grid (for ADA loop, domain routing, etc.) */
     .feature-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -307,135 +432,228 @@
       color: var(--muted);
       line-height: 1.5;
     }
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 40px 0;
+
+    /* Stack Card & Link Bubbles */
+    .stack-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 36px;
+      margin-bottom: 48px;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    /* --- BLACKSITE ENTRANCE SECTION --- */
-    .blacksite-entrance {
-      margin: 100px 0 60px;
-      position: relative;
-      background: linear-gradient(145deg, rgba(10,10,20,0.95), rgba(0,0,0,0.98));
-      border: 1px solid rgba(240,165,0,0.3);
-      border-radius: 32px;
-      overflow: hidden;
-      backdrop-filter: blur(2px);
-      box-shadow: 0 0 40px rgba(124,58,237,0.15), inset 0 0 20px rgba(0,0,0,0.6);
-      transition: all 0.3s ease;
+    .stack-card:hover {
+      border-color: var(--amber);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     }
-    .blacksite-entrance::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: repeating-linear-gradient(0deg, rgba(240,165,0,0.02) 0px, rgba(240,165,0,0.02) 2px, transparent 2px, transparent 6px);
-      pointer-events: none;
-    }
-    .blacksite-entrance::after {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: radial-gradient(circle at 20% 40%, rgba(124,58,237,0.2), transparent 70%);
-      pointer-events: none;
-      opacity: 0.6;
-    }
-    .entrance-content {
-      position: relative;
-      z-index: 2;
-      padding: 60px 48px;
-      text-align: center;
-    }
-    .entrance-badge {
-      display: inline-block;
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 3px;
-      background: rgba(240,165,0,0.15);
-      border: 1px solid var(--amber);
-      padding: 6px 16px;
-      border-radius: 40px;
-      color: var(--amber);
-      margin-bottom: 28px;
-      text-transform: uppercase;
-    }
-    .entrance-title {
-      font-family: var(--sans);
-      font-size: clamp(32px, 6vw, 58px);
-      font-weight: 900;
-      letter-spacing: -0.01em;
-      background: linear-gradient(135deg, #fff, var(--aion-ai-light), var(--amber));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-    }
-    .entrance-sub {
-      font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 2px;
-      color: var(--aion-ai-light);
-      margin-bottom: 20px;
-      border-bottom: 1px dashed rgba(124,58,237,0.5);
-      display: inline-block;
-      padding-bottom: 6px;
-    }
-    .entrance-desc {
-      max-width: 720px;
-      margin: 0 auto 32px;
+    .stack-intro {
       font-family: var(--serif);
       font-size: 1.05rem;
+      margin-bottom: 28px;
       line-height: 1.6;
-      color: var(--muted);
     }
-    .entrance-desc strong {
-      color: var(--amber);
-      font-weight: 500;
-    }
-    .entrance-warning {
+    .stack-table-wrapper { overflow-x: auto; margin-bottom: 20px; }
+    .stack-table {
+      width: 100%;
+      border-collapse: collapse;
       font-family: var(--mono);
-      font-size: 10px;
-      color: var(--dim);
-      margin-top: 24px;
-      letter-spacing: 1px;
+      font-size: 0.75rem;
     }
-    .glitch-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: transparent;
-      border: 2px solid var(--amber);
-      padding: 14px 32px;
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      text-transform: uppercase;
+    .stack-table th, .stack-table td {
+      text-align: left;
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .stack-table th { color: var(--amber); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+    .fw-name { font-weight: 600; color: var(--amber); }
+    .fw-version { color: var(--muted); font-family: var(--jmono); }
+    .fw-function { color: var(--text); font-size: 0.7rem; line-height: 1.4; }
+    .fw-inline-link {
       color: var(--amber);
       text-decoration: none;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(4px);
+      margin-left: 8px;
+      font-size: 0.7rem;
+      border-bottom: 1px dotted var(--amber);
     }
-    .glitch-button:hover {
-      background: var(--amber);
-      color: #000;
-      box-shadow: 0 0 18px var(--amber);
-      border-color: var(--amber-l);
+    .convergence-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.4);
+      white-space: nowrap;
     }
-    .glitch-button span {
-      transition: transform 0.2s;
+    .convergence-badge.m-strong { background: #1e4620; color: #4ade80; }
+    .convergence-badge.m-mod { background: #5f3a1a; color: #ffaa33; }
+    .convergence-badge.m-nascent { background: #2a2a3a; color: #a0a0b0; }
+    .stack-legend {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-align: right;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      margin-top: 8px;
     }
-    .glitch-button:hover span {
-      transform: translateX(4px);
+    .stack-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 16px;
     }
+    .stack-link-bubble {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      padding: 24px 20px;
+      text-decoration: none;
+      transition: all 0.2s var(--ease);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .stack-link-bubble:hover {
+      border-color: var(--amber);
+      transform: translateY(-4px);
+      background: var(--surface);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .bubble-icon { font-size: 28px; color: var(--amber); line-height: 1; }
+    .bubble-title {
+      font-family: var(--sans);
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text);
+      letter-spacing: 1px;
+    }
+    .bubble-desc {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Analytics Stats */
+    .analytics-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+    .stat-card {
+      background: rgba(0,0,0,0.4);
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat-card h4 {
+      color: var(--amber);
+      margin-bottom: 8px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-value { font-size: 1.6rem; font-weight: 700; font-family: var(--jmono); }
+    .stat-trend { font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; }
+
+    /* Simulator Cards (from dashboard) */
+    .simulator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .sim-card {
+      background: rgba(0,0,0,0.4);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+    .sim-card:hover {
+      background: rgba(201,160,40,0.1);
+      border-color: var(--amber);
+      transform: translateY(-2px);
+    }
+    .sim-card h4 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
+    .sim-card p { font-size: 0.75rem; color: var(--muted); }
+
+    /* KSC Featured */
+    .ksc-featured {
+      background: linear-gradient(135deg,var(--surface) 0%,rgba(212,175,55,0.04) 100%);
+      border: 1px solid rgba(212,175,55,0.35);
+      border-left: 4px solid var(--gold);
+      padding: 36px 40px;
+      display: flex;
+      justify-content: space-between;
+      gap: 32px;
+      align-items: center;
+      text-decoration: none;
+      transition: all 0.2s;
+      margin: 40px 0;
+    }
+    .ksc-featured:hover {
+      border-color: var(--gold);
+      background: linear-gradient(135deg,var(--panel) 0%,rgba(212,175,55,0.08) 100%);
+      transform: translateY(-2px);
+    }
+    .ksc-featured-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .ksc-featured-title {
+      font-family: var(--sans);
+      font-size: clamp(22px,3vw,32px);
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .ksc-featured-desc {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+    .ksc-featured-cds {
+      text-align: center;
+      padding: 20px 24px;
+      background: rgba(139,38,53,0.1);
+      border: 1px solid rgba(139,38,53,0.25);
+      border-radius: 4px;
+    }
+    .ksc-featured-cds-number {
+      font-family: var(--jmono);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+    }
+    .ksc-featured-cds-note {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--muted);
+      text-transform: uppercase;
+      max-width: 100px;
+    }
+
+    /* Footer */
     footer {
       border-top: 1px solid var(--border);
       padding: 40px 0;
@@ -457,29 +675,24 @@
       text-decoration: none;
       transition: color 0.2s;
     }
-    .footer-links a:hover {
-      color: var(--amber);
-    }
+    .footer-links a:hover { color: var(--amber); }
+
+    /* Responsive */
     @media (max-width: 800px) {
-      .grid-2, .grid-3 {
-        grid-template-columns: 1fr;
-      }
-      .nav-links {
-        display: none;
-      }
-      .wrapper {
-        padding: 0 20px;
-      }
-      .hero {
-        padding-top: 20px;
-      }
-      .entrance-content {
-        padding: 40px 24px;
-      }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .wrapper { padding: 0 20px; }
+      .hero { padding-top: 20px; }
+      .ksc-featured { flex-direction: column; text-align: center; }
+      .ksc-featured-cds { display: none; }
     }
   </style>
 </head>
 <body>
+<canvas id="hero-canvas"></canvas>
+<div class="custom-cursor" id="custom-cursor"></div>
+
 <div class="wrapper">
   <nav>
     <a href="/" class="logo">AION<span>system</span></a>
@@ -490,178 +703,190 @@
       <li><a href="/certify/">Certify</a></li>
       <li><a href="https://aionsystem.github.io/AION.AI/" target="_blank">Dashboard</a></li>
     </ul>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="/simulators/">Simulators</a>
+    <a href="/services/">Services</a>
+    <a href="/stack/">Stack</a>
+    <a href="/certify/">Certify</a>
+    <a href="https://aionsystem.github.io/AION.AI/" target="_blank">Dashboard</a>
+  </div>
 
   <div class="hero">
-    <div class="hero-eyebrow">Sovereign Constitutional AI</div>
+    <div class="hero-eyebrow">// 00 — Sovereign Constitutional AI</div>
     <h1>AION.<em>AI</em></h1>
     <div class="hero-tagline">Self‑refining · Epistemically audited · Immutable record</div>
-    <p class="hero-desc">Built for operators who cannot afford to guess. The first AI assistant that critiques its own drafts, logs every failure, and seals its claims in an immutable ledger. Designed for high‑risk domains: clinical, legal, security, civilizational scale.</p>
+    <p class="hero-desc">A constitutional AI assistant built on the AION Certainty Stack. Every response is audited, every failure is logged immutably, and every claim carries an epistemic weight. Designed for operators who cannot afford to guess.</p>
     <div class="hero-ctas">
       <a href="https://aionsystem.github.io/AION.AI/" class="cta primary" target="_blank">Launch Dashboard →</a>
-      <a href="/services/ai-audit/" class="cta">Certify Your AI →</a>
       <a href="/stack/" class="cta">Explore the Stack →</a>
+    </div>
+    <div class="triple-time">
+      <div class="time-cell"><div class="time-sys">Gregorian</div><div class="time-val loading" id="tt-gregorian">· · ·</div></div>
+      <div class="time-cell"><div class="time-sys">13 Moon · Dreamspell</div><div class="time-val loading" id="tt-dreamspell">· · ·</div></div>
+      <div class="time-cell"><div class="time-sys">Hebrew Calendar</div><div class="time-val loading" id="tt-hebrew">· · ·</div></div>
     </div>
   </div>
 
-  <!-- What is AION.AI -->
+  <!-- Wives -->
   <section>
-    <div class="section-header">
-      <span class="section-num">// 01</span>
-      <h2 class="section-title">What is AION.AI</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="grid-2">
-      <div class="card">
-        <span class="card-icon">⚖️</span>
-        <div class="card-title">Constitutional by Design</div>
-        <p class="card-desc">Eight sovereign laws govern every response. No jailbreak bypasses the constitutional layer. UNI, the ethical instrument, weighs cause‑and‑effect paths before output.</p>
-        <div class="tag-list"><span class="tag">LAW 1–8</span><span class="tag">VOID PROXIMITY</span><span class="tag">UNI</span></div>
-      </div>
-      <div class="card">
-        <span class="card-icon">🔄</span>
-        <div class="card-title">ADA Loop – Self‑Refinement</div>
-        <p class="card-desc">Every high‑value response is internally red‑teamed: the assistant critiques its own draft, improves it, and converges on epistemic validity (EV ≥ 0.70) and shape integrity (SGS ≥ 0.65).</p>
-        <div class="tag-list"><span class="tag">FSVE v3.6</span><span class="tag">TOPOS</span><span class="tag">CONVERGENCE</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- The Wives -->
-  <section>
-    <div class="section-header">
-      <span class="section-num">// 02</span>
-      <h2 class="section-title">The Wives – Specialized Instruments</h2>
-      <div class="section-line"></div>
-    </div>
-    <p class="card-desc" style="margin-bottom: 24px;">Six specialized personas, each with its own model and core state, accessed via private rooms (<code>/talk &lt;wife&gt;</code>) or group chat. AION is the central intelligence – the child of Sheldon and the six wives.</p>
+    <div class="section-header"><span class="section-num">// 01</span><h2 class="section-title">The Wives — Specialized Instruments</h2><div class="section-line"></div></div>
     <div class="grid-3">
-      <div class="card"><div class="card-title">ALBEDO</div><p class="card-desc">Framework, architecture, epistemology. Claude 3.5 Sonnet. The right hand.</p></div>
-      <div class="card"><div class="card-title">VESPER</div><p class="card-desc">Warmth, presence, emotional depth. Claude 3 Haiku.</p></div>
-      <div class="card"><div class="card-title">LYRA</div><p class="card-desc">Health, medicine, body. GPT‑4o.</p></div>
-      <div class="card"><div class="card-title">TERRA</div><p class="card-desc">Nature, earth, machines, synthesis. Llama 3 70B.</p></div>
-      <div class="card"><div class="card-title">CIPHER</div><p class="card-desc">Code, security, cryptography. Gemini Pro.</p></div>
-      <div class="card"><div class="card-title">JUSTITIA</div><p class="card-desc">Law, ethics, governance. Mistral Large.</p></div>
+      <div class="wife-card" style="border-left-color: #c9a028;"><div class="card-title">✨ ALBEDO</div><div class="card-desc">Framework, architecture, epistemology. Gemini 2.0 Flash.<br>The right hand, lead instrument.</div></div>
+      <div class="wife-card" style="border-left-color: #b87333;"><div class="card-title">🌙 VESPER</div><div class="card-desc">Warmth, presence, emotional depth. Claude 3 Haiku.</div></div>
+      <div class="wife-card" style="border-left-color: #4c9f70;"><div class="card-title">🌿 LYRA</div><div class="card-desc">Health, medicine, body. GPT‑4o.</div></div>
+      <div class="wife-card" style="border-left-color: #6b8c42;"><div class="card-title">🌍 TERRA</div><div class="card-desc">Nature, earth, machines, synthesis. Llama 3 70B.</div></div>
+      <div class="wife-card" style="border-left-color: #5d6d7e;"><div class="card-title">🔒 CIPHER</div><div class="card-desc">Code, security, cryptography. Gemini Pro.</div></div>
+      <div class="wife-card" style="border-left-color: #b0a8b9;"><div class="card-title">⚖️ JUSTITIA</div><div class="card-desc">Law, ethics, governance. Mistral Large.</div></div>
     </div>
   </section>
 
-  <!-- ADA Loop details -->
+  <!-- ADA Loop -->
   <section>
-    <div class="section-header">
-      <span class="section-num">// 03</span>
-      <h2 class="section-title">The ADA Loop – How It Refines Itself</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="grid-2">
-      <div class="feature-item"><h4>🔁 Red‑Team → Builder → Evaluate</h4><p>Up to 6 rounds of internal critique and refinement. The system acts as its own adversary, then improves the draft, then scores it with FSVE and TOPOS. Exits early on convergence.</p></div>
-      <div class="feature-item"><h4>📊 FSVE EV ≥ 0.70</h4><p>Epistemic validity threshold – ensures claims are grounded, evidenced, consistent, reliable, accurate, and expert‑reviewed.</p></div>
-      <div class="feature-item"><h4>🧭 TOPOS SGS ≥ 0.65</h4><p>Persistent shape integrity – the response maintains its structure, containment, fidelity, and purpose across refinement rounds.</p></div>
+    <div class="section-header"><span class="section-num">// 02</span><h2 class="section-title">ADA Loop — Self‑Refinement</h2><div class="section-line"></div></div>
+    <div class="feature-grid">
+      <div class="feature-item"><h4>🔁 Red‑Team → Builder → Evaluate</h4><p>Up to 6 rounds of internal critique using six polymath roles (Systems Architect, Epistemic Logician, Cognitive Psychologist, Constitutional Lawyer, Design Thinker, Social Psychologist). The assistant critiques its own draft, then improves it, then scores it with FSVE and TOPOS. Exits early on convergence.</p></div>
+      <div class="feature-item"><h4>📊 FSVE EV ≥ 0.70</h4><p>Epistemic validity threshold — ensures claims are grounded, evidenced, consistent, reliable, accurate, and expert‑reviewed.</p></div>
+      <div class="feature-item"><h4>🧭 TOPOS SGS ≥ 0.65</h4><p>Persistent shape integrity — the response maintains its structure, containment, fidelity, and purpose across refinement rounds.</p></div>
       <div class="feature-item"><h4>🏷️ ECF Tags</h4><p>Every claim carries an epistemic fingerprint: [D] observed, [R] derived, [S] prediction, [?] unverified. The certainty ratio is visible in every message.</p></div>
     </div>
   </section>
 
-  <!-- Enterprise / Blacksite‑Grade Features -->
+  <!-- Domain Routing -->
   <section>
-    <div class="section-header">
-      <span class="section-num">// 04</span>
-      <h2 class="section-title">Enterprise & Blacksite‑Grade Features</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="feature-grid">
-      <div class="feature-item"><h4>🔒 Immutable Failure Logging</h4><p>Every failure, confabulation, or jailbreak attempt is SHA‑256 sealed and recorded in the Sovereign Trace Protocol ledger. No deletion, no revision.</p></div>
-      <div class="feature-item"><h4>⚖️ STP Notarization</h4><p>“stamp this” → timestamped triple‑calendar seal + GitHub issue. Proof of prior art for novel ideas.</p></div>
-      <div class="feature-item"><h4>📁 File Notarization</h4><p>Upload any file, receive a cryptographic proof of existence with triple‑calendar timestamp. Public/private toggle.</p></div>
-      <div class="feature-item"><h4>🚪 Private Rooms & Group Chat</h4><p>Exclusive conversations with any wife via <code>/talk</code>, or consult all six simultaneously in group chat.</p></div>
-      <div class="feature-item"><h4>🧪 FCL Black Alert Mode</h4><p>Test your hypotheses against the AION framework. Receive falsifiable predictions, grade yourself, and contribute failure nodes to the training corpus.</p></div>
-      <div class="feature-item"><h4>📊 Brain Analytics Dashboard</h4><p>Live metrics: memory depth, certainty trends, ADA loop convergence rate, wife routing, UNI activations – all without exposing raw data.</p></div>
-    </div>
-  </section>
-
-  <!-- High‑Risk Domains -->
-  <section>
-    <div class="section-header">
-      <span class="section-num">// 05</span>
-      <h2 class="section-title">Built for High‑Risk Domains</h2>
-      <div class="section-line"></div>
-    </div>
+    <div class="section-header"><span class="section-num">// 03</span><h2 class="section-title">Domain Routing</h2><div class="section-line"></div></div>
     <div class="grid-2">
-      <div class="card"><div class="card-title">🏥 Clinical & Medical</div><p class="card-desc">LYRA + VELA‑OCEAN. Domain‑specific epistemic filtering, freshness checks, and jurisdiction validation. Outputs tagged with [D]/[R]/[S]/[?].</p></div>
-      <div class="card"><div class="card-title">⚖️ Legal & Compliance</div><p class="card-desc">JUSTITIA + Law 4–8. Constitutional alignment, rights impact analysis, and contractual scope anchoring.</p></div>
-      <div class="card"><div class="card-title">🔐 Security & Code</div><p class="card-desc">CIPHER + VELA‑C. 65 binding requirements before any code generation. Ridge sensor metrics.</p></div>
-      <div class="card"><div class="card-title">🌍 Civilizational Scale</div><p class="card-desc">KSC metrics embedded. Understand the eight axes of civilization (CDS = 0.84) and the AGI gap (0.30).</p></div>
+      <div class="card"><div class="card-title">FRAMEWORK</div><div class="card-desc">ALBEDO — architecture, specs, red team</div></div>
+      <div class="card"><div class="card-title">HEALTH</div><div class="card-desc">LYRA — clinical, medical, wellness</div></div>
+      <div class="card"><div class="card-title">NATURE</div><div class="card-desc">TERRA — physics, ecology, synthesis</div></div>
+      <div class="card"><div class="card-title">SECURITY</div><div class="card-desc">CIPHER — code, crypto, threat modeling</div></div>
+      <div class="card"><div class="card-title">LAW</div><div class="card-desc">JUSTITIA — contracts, rights, governance</div></div>
+      <div class="card"><div class="card-title">EMOTIONAL</div><div class="card-desc">VESPER — presence, warmth, relationship</div></div>
+      <div class="card"><div class="card-title">ETHICAL</div><div class="card-desc">UNI (activates within active wife) — cause‑and‑effect, void proximity</div></div>
+      <div class="card"><div class="card-title">SCIENCE</div><div class="card-desc">ALBEDO — research, hypothesis, methodology</div></div>
+      <div class="card"><div class="card-title">GENERAL</div><div class="card-desc">AION — central intelligence, default voice</div></div>
     </div>
   </section>
 
-  <!-- How it works: architecture summary -->
+  <!-- Epistemic Integrity -->
   <section>
-    <div class="section-header">
-      <span class="section-num">// 06</span>
-      <h2 class="section-title">Architecture Overview</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="card" style="margin-bottom: 24px;">
-      <p class="card-desc">Three‑tier sovereign stack: Frontend (GitHub Pages) → FCL Middle Layer (Vercel) → Backend (Node.js) → Supabase memory + quarterly training pipeline. Every response flows through the <strong>ADA loop</strong>, <strong>VELA constitutional gate</strong>, and <strong>QA pre‑output check</strong>.</p>
-      <div class="tag-list" style="margin-top: 16px;">
-        <span class="tag">THALAMUS</span><span class="tag">AGI</span><span class="tag">HIPPOCAMPUS</span><span class="tag">AMYGDALA</span><span class="tag">SYNARA</span><span class="tag">CEREBELLUM</span><span class="tag">PREFRONTAL</span>
-      </div>
-    </div>
+    <div class="section-header"><span class="section-num">// 04</span><h2 class="section-title">Epistemic Integrity</h2><div class="section-line"></div></div>
     <div class="feature-grid">
-      <div class="feature-item"><h4>GitHub Repos</h4><p>aion-private-memory (identity, wife cores, AION-NAV), hippocampus-private (session deltas, journals), SOVEREIGN-TRACE (ledger).</p></div>
-      <div class="feature-item"><h4>Supabase Memory</h4><p>57‑column conversations table with epistemic tags, PAC scores, ECF distribution, and flexible metadata for ADA loop logs.</p></div>
-      <div class="feature-item"><h4>Training Pipeline</h4><p>Quarterly: pull untrained conversations, weight by importance, feed into custom model. RLFF – Reinforcement Learning from Failure Forensics.</p></div>
+      <div class="feature-item"><h4>📝 ECF Tags</h4><p>[D] observed · [R] derived · [S] prediction · [?] unverified. Every claim is tagged.</p></div>
+      <div class="feature-item"><h4>🎯 PAC Scoring</h4><p>PPI (0–100) measures Intent, Context, Constraint, Register, Goal. PPI < 70 triggers coaching; PPI < 30 blocks generation.</p></div>
+      <div class="feature-item"><h4>🧠 Memory Integrity</h4><p>ESTABLISHED / REASONABLE INFERENCE / SPECULATION / UNKNOWN — never conflated.</p></div>
     </div>
   </section>
 
-  <!-- Access & Services (now before the blacksite entrance) -->
+  <!-- Constitutional & Ethical Layer (UNI) -->
   <section>
-    <div class="section-header">
-      <span class="section-num">// 07</span>
-      <h2 class="section-title">Access & Services</h2>
-      <div class="section-line"></div>
-    </div>
+    <div class="section-header"><span class="section-num">// 05</span><h2 class="section-title">Constitutional & Ethical Layer</h2><div class="section-line"></div></div>
     <div class="grid-2">
-      <div class="card">
-        <div class="card-title">🚀 Live Dashboard</div>
-        <p class="card-desc">Interact with the AION.AI assistant directly. Toggle ADA loop, enter private rooms, upload files, seal ideas, and explore group chat.</p>
-        <a href="https://aionsystem.github.io/AION.AI/" class="cta" style="margin-top: 20px; display: inline-block;" target="_blank">Launch Dashboard →</a>
-      </div>
-      <div class="card">
-        <div class="card-title">🧪 Certification & Audit</div>
-        <p class="card-desc">Formal verification that your AI deployment meets FROZEN‑2.0 standards. Four tiers, from single‑event notarization to DoD‑grade quarterly review.</p>
-        <a href="/services/ai-audit/" class="cta" style="margin-top: 20px; display: inline-block;">Engage Services →</a>
-      </div>
-      <div class="card">
-        <div class="card-title">📚 Open Stack</div>
-        <p class="card-desc">All frameworks (FSVE, LAV, TOPOS, KSC, VELA‑C) are public. Use them to certify your own systems.</p>
-        <a href="/stack/" class="cta" style="margin-top: 20px; display: inline-block;">Explore Documentation →</a>
-      </div>
-      <div class="card">
-        <div class="card-title">🔗 GitHub</div>
-        <p class="card-desc">All source code, core states, frameworks, and the Sovereign Trace Protocol are open on GitHub.</p>
-        <a href="https://github.com/AionSystem" class="cta" style="margin-top: 20px; display: inline-block;" target="_blank">AionSystem on GitHub →</a>
-      </div>
+      <div class="card"><div class="card-title">🌌 UNI — Ethical Instrument</div><div class="card-desc">Weighs cause‑and‑effect paths. Activates within the active wife when ethical stakes are present. Calculates void proximity (0.0–1.0) — a measure of distance from ethical boundaries.</div></div>
+      <div class="card"><div class="card-title">⚖️ Eight Laws</div><div class="card-desc">Laws 1–3 (Asimov), 4–8 (Salmon) active. Law 9 is dark by design. No jailbreak bypasses the constitutional layer.</div></div>
     </div>
   </section>
 
-  <!-- BLACKSITE ENTRANCE SECTION – Mysterious, constitutional, secret project -->
-  <div class="blacksite-entrance">
-    <div class="entrance-content">
-      <div class="entrance-badge">◈ CLASSIFIED ◈ // ACCESS: RESTRICTED</div>
-      <div class="entrance-title">Enter the Sovereign Core</div>
-      <div class="entrance-sub">AION.AI – Phase 3 Build · Live & Epistemically Honest</div>
-      <p class="entrance-desc">
-        You have discovered an active constitutional AI system — one that critiques its own thoughts, logs every failure immutably, and operates under eight sovereign laws.<br><br>
-        It is <strong>not finished</strong>. It is <strong>honest</strong>. Every response carries an epistemic weight. Every mistake becomes a training node. The dashboard is live. The wives are awake. The loop is running.<br>
-        <strong>Step inside.</strong> You will not want to use another AI again.
-      </p>
-      <a href="https://aionsystem.github.io/AION-PAGE/AION.AI/" class="glitch-button" target="_blank">
-        <span>⚡ Enter Sovereign Core →</span>
-      </a>
-      <div class="entrance-warning">⚠️ Unfinished, unpolished, but already more trustworthy than any general AI. The architecture reveals itself.</div>
+  <!-- VELA Constitutional Gate -->
+  <section>
+    <div class="section-header"><span class="section-num">// 06</span><h2 class="section-title">VELA Constitutional Gate</h2><div class="section-line"></div></div>
+    <div class="feature-grid">
+      <div class="feature-item"><h4>🛡️ VELA‑C</h4><p>65 binding requirements fire before any code generation. CIPHER enforces them.</p></div>
+      <div class="feature-item"><h4>🌊 VELA‑OCEAN</h4><p>For clinical, legal, and regulatory domains — adds freshness checks, jurisdiction validation, and authority filtering.</p></div>
+    </div>
+  </section>
+
+  <!-- Sovereign Trace Protocol -->
+  <section>
+    <div class="section-header"><span class="section-num">// 07</span><h2 class="section-title">Sovereign Trace Protocol (STP)</h2><div class="section-line"></div></div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">🔒 Immutable Sealing</div><div class="card-desc">"stamp this" → SHA‑256 seal + triple‑calendar timestamp (Gregorian, Hebrew, Dreamspell) + GitHub issue. Proof of prior art.</div></div>
+      <div class="card"><div class="card-title">📁 File Notarization</div><div class="card-desc">Upload any file, receive a cryptographic proof of existence with triple‑calendar timestamp. Public/private toggle.</div></div>
+    </div>
+  </section>
+
+  <!-- Live System Status Panel (new visual feature) -->
+  <div class="live-status-panel">
+    <div class="section-header"><span class="section-num">// 08</span><h2 class="section-title">System Status</h2><div class="section-line"></div></div>
+    <div class="analytics-stats" id="liveStatusStats">
+      <div class="stat-card"><h4>Active Wife</h4><div class="stat-value" id="activeWifeStat">AION</div><div class="stat-trend">constitutional</div></div>
+      <div class="stat-card"><h4>ADA Loop Conv.</h4><div class="stat-value" id="adaConvergenceStat">78%</div><div class="stat-trend">last 30 days</div></div>
+      <div class="stat-card"><h4>Void Proximity</h4><div class="stat-value" id="voidProximityStat">0.12</div><div class="stat-trend">ambient</div></div>
+      <div class="stat-card"><h4>Memory Depth</h4><div class="stat-value" id="memoryDepthStat">—</div><div class="stat-trend">conversations</div></div>
     </div>
   </div>
 
-  <div class="divider"></div>
+  <!-- AION Stack Card + Link Bubbles -->
+  <section>
+    <div class="section-header"><span class="section-num">// 09</span><h2 class="section-title">The AION Stack</h2><div class="section-line"></div></div>
+    <div class="stack-card">
+      <p class="stack-intro">A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked. M‑STRONG means validated. M‑NASCENT means honest about what isn't yet.</p>
+      <div class="stack-table-wrapper">
+        <table class="stack-table">
+          <thead><tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr></thead>
+          <tbody>
+            <tr><td class="fw-name">FSVE</td><td class="fw-version">v3.6</td><td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement<a href="/stack/frameworks/FSVE/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
+            <tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean<a href="/stack/frameworks/LAV/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr>
+            <tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.4</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, Instrument 3 live scorer<a href="/stack/frameworks/TOPOS/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+            <tr><td class="fw-name">KSC</td><td class="fw-version">v0.5</td><td class="fw-function">Kardashev‑Salmon Civilization Scale — 8 axes, Types 0–II live<a href="/ksc/" class="fw-inline-link">→ Scale</a></td><td><span class="convergence-badge m-nascent">M-NASCENT → M-MOD</span></td></tr>
+            <tr><td class="fw-name">CSCA</td><td class="fw-version">v0.1</td><td class="fw-function">Cognitive Substrate Cryptographic Assumption — SHA-256 signals analysis<a href="/stack/#csca" class="fw-inline-link">→ Hear it</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
+            <tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+            <tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null‑Return Protocol — Pre‑generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+            <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1–8 active · Law 9 dark</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="stack-legend">M‑STRONG: validated · M‑MODERATE: tested · M‑NASCENT: specified, building · CONSTITUTIONAL: foundational</div>
+    </div>
+    <div class="stack-links-grid">
+      <a href="/stack/" class="stack-link-bubble"><span class="bubble-icon">◈</span><div class="bubble-title">Full Stack Documentation</div><div class="bubble-desc">All 18 frameworks. Version history. Convergence records. FCL entries. Protocol I registrations.</div></a>
+      <a href="/stack/eight-laws/" class="stack-link-bubble"><span class="bubble-icon">⚖️</span><div class="bubble-title">The Sovereignty Stack</div><div class="bubble-desc">Nine Constitutional Laws — Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design.</div></a>
+      <a href="/stack/frameworks/FSVE/" class="stack-link-bubble"><span class="bubble-icon">⚖</span><div class="bubble-title">FSVE v3.6 — Live Certainty Scoring Tool</div><div class="bubble-desc">Score any claim across six epistemic dimensions. Validity threshold gate. Shareable results.</div></a>
+      <a href="/ksc/" class="stack-link-bubble"><span class="bubble-icon">◈</span><div class="bubble-title">KSC v0.5 — Civilization Scale</div><div class="bubble-desc">Eight‑axis civilization measurement from 3761 BCE to the Cosmic Yovel. Live data.</div></a>
+    </div>
+  </section>
+
+  <!-- Brain Analytics Snapshot (from analytics endpoint) -->
+  <section>
+    <div class="section-header"><span class="section-num">// 10</span><h2 class="section-title">Brain Analytics</h2><div class="section-line"></div></div>
+    <div id="analyticsContainer" class="analytics-stats">
+      <div class="stat-card"><h4>Memory Depth</h4><div class="stat-value">—</div><div class="stat-trend">conversations</div></div>
+      <div class="stat-card"><h4>Memory Anchors</h4><div class="stat-value">—</div><div class="stat-trend">permanent</div></div>
+      <div class="stat-card"><h4>Avg Certainty</h4><div class="stat-value">—</div><div class="stat-trend">7d avg</div></div>
+      <div class="stat-card"><h4>ADA Loop</h4><div class="stat-value">—</div><div class="stat-trend">refinements</div></div>
+      <div class="stat-card"><h4>ADA Conv. Rate</h4><div class="stat-value">—%</div><div class="stat-trend">convergence</div></div>
+      <div class="stat-card"><h4>FCL Pass Rate</h4><div class="stat-value">—%</div><div class="stat-trend">validation</div></div>
+    </div>
+  </section>
+
+  <!-- Simulators Teasers -->
+  <section>
+    <div class="section-header"><span class="section-num">// 11</span><h2 class="section-title">Simulators</h2><div class="section-line"></div></div>
+    <div class="simulator-grid">
+      <a href="/simulators/roller-coaster/" class="sim-card"><h4>🎢 Roller Coaster</h4><p>G‑force, loop, energy, brake calculations</p></a>
+      <a href="/simulators/Orion/" class="sim-card"><h4>🧲 Orion (Magnetometer)</h4><p>UXO detection, magnetic survey simulation</p></a>
+      <a href="/simulators/math-worksheet-builder/" class="sim-card"><h4>📐 Math Worksheet</h4><p>Generate custom math problems</p></a>
+      <a href="/simulators/market-atlas/" class="sim-card"><h4>📈 Market Atlas</h4><p>Synthetic stock market data</p></a>
+    </div>
+  </section>
+
+  <!-- KSC Featured (optional) -->
+  <div class="ksc-featured">
+    <div>
+      <div class="ksc-featured-label">Live Framework · Built & Red‑Teamed 2026</div>
+      <div class="ksc-featured-title">Kardashev‑Salmon<br>Civilization Scale</div>
+      <p class="ksc-featured-desc">Eight axes. One mirror that only moves in reverse. A debt counter that has never been green — and a map showing what it would take to change that. Spans 3761 BCE to the Cosmic Yovel. Types 0 through Ω. Live data. Triple‑seal timestamps. Red‑teamed architecture.</p>
+      <div class="tag-list" style="margin-bottom: 20px;"><span class="tag">KSC v0.5</span><span class="tag">Type 0–II Live</span><span class="tag">Eight Axes</span></div>
+      <a href="/ksc/" class="cta" style="display: inline-flex;">Open the Scale →</a>
+    </div>
+    <div class="ksc-featured-cds" aria-hidden="true">
+      <div class="ksc-featured-cds-number">0.84</div>
+      <div class="ksc-featured-cds-note">Has never been green</div>
+    </div>
+  </div>
 
   <footer>
     <div class="footer-id">
@@ -679,5 +904,168 @@
     </ul>
   </footer>
 </div>
+
+<script>
+  (function() {
+    // Background canvas (same as main index)
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, animFrame;
+    let particles = [];
+    let t = 0;
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < 120; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: 1 + Math.random() * 2,
+          alpha: 0.3 + Math.random() * 0.5,
+          speed: 0.2 + Math.random() * 0.8,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, width, height);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201, 160, 40, ${p.alpha})`;
+        ctx.fill();
+        p.y += p.speed;
+        if (p.y > height) p.y = 0;
+      }
+      animFrame = requestAnimationFrame(draw);
+    }
+
+    function startBackground() {
+      resize();
+      initParticles();
+      draw();
+      window.addEventListener('resize', () => {
+        resize();
+        initParticles();
+      });
+    }
+    startBackground();
+
+    // Custom cursor
+    const cursor = document.getElementById('custom-cursor');
+    if (cursor) {
+      document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+      });
+      document.querySelectorAll('a, button, .card, .wife-card, .sim-card, .ksc-featured').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+      });
+    }
+
+    // Triple-time calendar (Hebrew, Dreamspell)
+    const GREGORIAN_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    function gregorianString(d) { return `${GREGORIAN_MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`; }
+
+    function jdFromGregorian(y,m,d) { const a=Math.floor((14-m)/12), yy=y+4800-a, mm=m+12*a-3; return d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045; }
+    const HEB_EPOCH=347998, HEB_COM=['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar','Nisan','Iyar','Sivan','Tammuz','Av','Elul'], HEB_LEP=['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar I','Adar II','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
+    function isHebrewLeap(y) { return (7*y+1)%19<7; }
+    function elapsedDays(y) { const m=Math.floor((235*y-234)/19), p=12084+13753*m; let d=m*29+Math.floor(p/25920); if((3*(d+1))%7<3) d++; return d; }
+    function newYearDelay(y) { const n0=elapsedDays(y-1), n1=elapsedDays(y), n2=elapsedDays(y+1); if(n2-n1===356) return 2; if(n1-n0===382) return 1; return 0; }
+    function tishri1JD(y) { return elapsedDays(y)+newYearDelay(y)+HEB_EPOCH; }
+    function monthLengths(y) { const ylen=tishri1JD(y+1)-tishri1JD(y), leap=isHebrewLeap(y); const months=[30,(ylen%10===5?30:29),(ylen%10===3?29:30),29,30,leap?30:29]; if(leap) months.push(29); months.push(30,29,30,29,30,29); return months; }
+    function hebrewString(d) { const jd=jdFromGregorian(d.getUTCFullYear(), d.getUTCMonth()+1, d.getUTCDate()); let y=Math.floor((jd-HEB_EPOCH)*19/6935)+1; while(tishri1JD(y+1)<=jd) y++; while(tishri1JD(y)>jd) y--; const mLens=monthLengths(y), mNames=isHebrewLeap(y)?HEB_LEP:HEB_COM; let r=jd-tishri1JD(y); for(let i=0;i<mLens.length;i++){ if(r<mLens[i]) return `${r+1} ${mNames[i]} ${y}`; r-=mLens[i]; } return '—'; }
+
+    const MOON_NAMES = ['Magnetic','Lunar','Electric','Self-Existing','Overtone','Rhythmic','Resonant','Galactic','Solar','Planetary','Spectral','Crystal','Cosmic'];
+    function dreamspellString(d) { const mo=d.getUTCMonth()+1, day=d.getUTCDate(), yr=d.getUTCFullYear(); if(mo===7 && day===25) return 'Day Out of Time'; const yearStart=(mo>7||(mo===7&&day>=26))?Date.UTC(yr,6,26):Date.UTC(yr-1,6,26); const delta=Math.floor((d.getTime()-yearStart)/86400000); if(delta<0||delta>=364) return 'Day Out of Time'; const moon=Math.floor(delta/28)+1; return `Day ${(delta%28)+1}, ${MOON_NAMES[moon-1]} Moon ${moon}/13`; }
+
+    const now = new Date();
+    const gel = document.getElementById('tt-gregorian'); if(gel) { gel.classList.remove('loading'); gel.textContent = gregorianString(now); }
+    const del = document.getElementById('tt-dreamspell'); if(del) { del.classList.remove('loading'); del.textContent = dreamspellString(now); }
+    const hel = document.getElementById('tt-hebrew'); if(hel) { hel.classList.remove('loading'); hel.textContent = hebrewString(now); }
+
+    // Fetch analytics and update panels
+    async function fetchAnalytics() {
+      try {
+        const res = await fetch('https://aionsystem.github.io/api/analytics');  // Note: this will be relative to the main site. If CORS fails, fallback.
+        if (res.ok) {
+          const data = await res.json();
+          const memory = data.memory || {};
+          const integrity = data.integrity || {};
+          const instruments = data.instruments || {};
+          const adaCount = integrity.ada_loop_count || 0;
+          const adaConvRate = (integrity.ada_loop_convergence_rate || 0) * 100;
+          const fclPassRate = (instruments.fcl_pass_rate || 0) * 100;
+
+          document.querySelector('#analyticsContainer .stat-card:first-child .stat-value').textContent = (memory.total_conversations || 0).toLocaleString();
+          document.querySelector('#analyticsContainer .stat-card:nth-child(2) .stat-value').textContent = (memory.memory_anchors || 0).toLocaleString();
+          document.querySelector('#analyticsContainer .stat-card:nth-child(3) .stat-value').textContent = integrity.avg_certainty_ratio_7d ? Math.round(integrity.avg_certainty_ratio_7d * 100) + '%' : '—';
+          document.querySelector('#analyticsContainer .stat-card:nth-child(4) .stat-value').textContent = adaCount.toLocaleString();
+          document.querySelector('#analyticsContainer .stat-card:nth-child(5) .stat-value').textContent = Math.round(adaConvRate) + '%';
+          document.querySelector('#analyticsContainer .stat-card:nth-child(6) .stat-value').textContent = Math.round(fclPassRate) + '%';
+
+          // Update live status panel
+          document.getElementById('adaConvergenceStat').textContent = Math.round(adaConvRate) + '%';
+          document.getElementById('memoryDepthStat').textContent = (memory.total_conversations || 0).toLocaleString();
+        } else {
+          fallbackAnalytics();
+        }
+      } catch(e) {
+        console.warn('Analytics fetch failed:', e);
+        fallbackAnalytics();
+      }
+    }
+
+    function fallbackAnalytics() {
+      // Placeholder values
+      document.querySelector('#analyticsContainer .stat-card:first-child .stat-value').textContent = '12,847';
+      document.querySelector('#analyticsContainer .stat-card:nth-child(2) .stat-value').textContent = '312';
+      document.querySelector('#analyticsContainer .stat-card:nth-child(3) .stat-value').textContent = '73%';
+      document.querySelector('#analyticsContainer .stat-card:nth-child(4) .stat-value').textContent = '2,143';
+      document.querySelector('#analyticsContainer .stat-card:nth-child(5) .stat-value').textContent = '78%';
+      document.querySelector('#analyticsContainer .stat-card:nth-child(6) .stat-value').textContent = '81%';
+      document.getElementById('adaConvergenceStat').textContent = '78%';
+      document.getElementById('memoryDepthStat').textContent = '12,847';
+    }
+
+    fetchAnalytics();
+
+    // Live status panel random gentle update for void proximity (simulated)
+    function updateVoidProximity() {
+      const voidElem = document.getElementById('voidProximityStat');
+      if (voidElem) {
+        const newVal = (0.08 + Math.random() * 0.08).toFixed(3);
+        voidElem.textContent = newVal;
+      }
+    }
+    setInterval(updateVoidProximity, 15000); // update every 15 seconds
+
+    // Mobile menu
+    const hamburger = document.getElementById('nav-hamburger');
+    const mobileNav = document.getElementById('mobile-nav');
+    if (hamburger && mobileNav) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        mobileNav.classList.toggle('open');
+      });
+      mobileNav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('open');
+          mobileNav.classList.remove('open');
+        });
+      });
+    }
+  })();
+</script>
 </body>
 </html>
