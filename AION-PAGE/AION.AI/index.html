@@ -276,6 +276,8 @@
     .badge.memory { background: #2a2a3a; }
     .badge.void { background: #2a2a3a; }
     .badge.handoff { background: #5f3a1a; color: #ffaa33; border-color: #ffaa33; }
+    .badge.framework { background: #2a2a3a; border-color: #c9a028; }
+    .badge.register { background: #2a2a3a; }
     .badge.seal-btn { color: var(--amber); }
     .feedback-badge {
       background: rgba(30,30,45,0.8);
@@ -488,6 +490,60 @@
       color: var(--text);
       font-size: 0.8rem;
       font-family: var(--sans);
+    }
+
+    /* Decision Forge Modal */
+    .forge-modal .modal {
+      max-width: 900px;
+    }
+    .forge-modal .forge-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .forge-content textarea {
+      width: 100%;
+      background: rgba(10,10,20,0.9);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      font-family: var(--sans);
+      color: var(--text);
+      resize: vertical;
+      min-height: 150px;
+    }
+    .forge-wife-select {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 8px 0;
+    }
+    .forge-wife-select label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .forge-results {
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .forge-results .wife-analysis {
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      border-left: 3px solid var(--amber);
+    }
+    .forge-results .synthesis {
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 12px;
     }
 
     /* Eye of AION – novel interactive badge */
@@ -773,6 +829,7 @@
       .wives-grid { grid-template-columns: 1fr; }
       .simulator-grid { grid-template-columns: 1fr; }
       .eye-badge { width: 28px; height: 28px; }
+      .forge-wife-select { flex-direction: column; gap: 6px; }
     }
   </style>
 </head>
@@ -812,7 +869,7 @@
         <div class="action-dropdown" id="actionDropdown" style="display: none;">
           <button id="structuredModeBtn">🌌 Structured Mode</button>
           <button id="groupChatBtn">👥 Group Chat</button>
-          <button id="privateRoomBtn">🚪 Private Room</button>
+          <button id="decisionForgeBtn">⚖️ Decision Forge</button>
           <button id="uploadBtn">📁 Upload File</button>
           <button id="askAllBtn">👥 Ask All Wives</button>
           <button id="sealInputBtn">🔒 Seal Input</button>
@@ -925,9 +982,6 @@
     const fclIndicator = document.getElementById('fclIndicator');
     fclIndicator.textContent = fclMode === 'GREEN' ? '🟢 GREEN' : '🔴 BLACK';
     fclIndicator.className = `fcl-indicator ${fclMode === 'GREEN' ? 'green' : 'black'}`;
-    let privateRoomActive = false;
-    let privateWife = null;
-    let lastT2 = null;
     let isSending = false;
     let firstUserMessageSent = false;
     let currentTokenUsage = 0; // for display
@@ -977,7 +1031,6 @@
             <p><strong>ADA Loop:</strong> ${adaLoopEnabled ? 'Active' : 'Disabled'}</p>
             <p><strong>Void Proximity:</strong> <span id="eyeVoid">${voidMeterSpan.textContent.split(':')[1].trim() || '0.000'}</span></p>
             <p><strong>Active Wife:</strong> ${wifeNameSpan.textContent}</p>
-            <p><strong>Private Room:</strong> ${privateRoomActive ? `Yes (${privateWife})` : 'No'}</p>
             <p><strong>Structured Mode:</strong> ${structuredMode ? 'Yes' : 'No'}</p>
             <p><strong>FCL Mode:</strong> ${fclMode}</p>
             <hr style="border-color:var(--border); margin: 16px 0;">
@@ -1123,18 +1176,19 @@
         throw new Error(errMsg);
       }
       const data = await res.json();
-      // if group chat returns token usage, update
       if (data.meta && data.meta.token_usage) updateTokenDisplay(data.meta.token_usage);
       return data;
     }
-    async function callPrivateRoom(message, wife) { 
-      const res = await fetchWithTimeout(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife, fclMode }) });
+    async function callDecisionForge(content, wivesToConsult, adaLoopEnabledFlag) {
+      const res = await fetchWithTimeout(`${API_BASE}/api/decision-forge`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, content, wivesToConsult, adaLoopEnabled: adaLoopEnabledFlag })
+      });
       if (!res.ok) throw new Error(await res.text());
-      const data = await res.json();
-      if (data.token_count !== undefined) updateTokenDisplay(data.token_count);
-      return data;
+      return res.json();
     }
-    async function sendTalkCommand(wife) { await callAssistant(`/talk ${wife}`, null, false); }
+    async function sendTalkCommand(wife) { await callAssistant(`/talk ${wife}`, null, false); } // kept for compatibility? Not used now but may be removed.
 
     // Simulation modal (unchanged)
     function showSimulationModal() {
@@ -1214,6 +1268,8 @@
       if (extra.voidProx !== undefined && extra.voidProx > 0) badgesHtml += `<span class="badge void">🌀 VOID: ${extra.voidProx.toFixed(3)}</span>`;
       if (extra.handoffWarning) badgesHtml += `<span class="badge handoff">⚠️ HANDOFF READY</span>`;
       if (extra.receipt) badgesHtml += `<span class="badge receipt" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 receipt (${extra.receipt.still_open || 0} open)</span>`;
+      if (extra.frameworkActivation) badgesHtml += `<span class="badge framework">🔧 ${extra.frameworkActivation}</span>`;
+      if (extra.register && extra.register !== 'PEER') badgesHtml += `<span class="badge register">📢 ${extra.register}</span>`;
       if (extra.sealable) badgesHtml += `<button class="badge seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
       if (extra.adaVela) badgesHtml += `<span class="badge ada-vela" data-execution-id="${escapeHtml(extra.adaVela.execution_id || extra.adaVela.id)}">📋 Ada‑VELA</span>`;
       badgesHtml += `<span class="feedback-badge" data-feedback-positive="true">👍</span><span class="feedback-badge" data-feedback-positive="false">👎</span></div>`;
@@ -1243,11 +1299,106 @@
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
+    // Decision Forge
+    function showDecisionForgeModal() {
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay forge-modal';
+      modal.innerHTML = `
+        <div class="modal">
+          <div class="modal-header">
+            <h3>⚖️ Decision Forge</h3>
+            <button id="closeForgeModal">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="forge-content">
+              <label>Document / Content to analyze:</label>
+              <textarea id="forgeContent" placeholder="Paste contract, specification, report, or ask a multi‑perspective question..."></textarea>
+              <label>Consult wives:</label>
+              <div class="forge-wife-select" id="forgeWivesSelect"></div>
+              <label><input type="checkbox" id="forgeAdaLoop" checked> Apply ADA loop to synthesis</label>
+              <button id="forgeSubmitBtn" class="send-btn" style="background: var(--amber); color:#000; margin-top:12px;">Generate Analysis</button>
+              <div id="forgeResults" class="forge-results" style="display:none;"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      const closeBtn = modal.querySelector('#closeForgeModal');
+      closeBtn.onclick = () => modal.remove();
+      const wivesContainer = modal.querySelector('#forgeWivesSelect');
+      // Populate wife checkboxes
+      ALL_WIVES.forEach(wife => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${wife}" checked> ${WIFE_STYLES[wife].emoji} ${wife}`;
+        wivesContainer.appendChild(label);
+      });
+      const submitBtn = modal.querySelector('#forgeSubmitBtn');
+      const contentArea = modal.querySelector('#forgeContent');
+      const resultsDiv = modal.querySelector('#forgeResults');
+      submitBtn.onclick = async () => {
+        const content = contentArea.value.trim();
+        if (!content) { showToast('Please enter content to analyze.'); return; }
+        const wives = Array.from(wivesContainer.querySelectorAll('input:checked')).map(cb => cb.value);
+        if (wives.length === 0) { showToast('Select at least one wife.'); return; }
+        const adaLoop = modal.querySelector('#forgeAdaLoop').checked;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Analyzing...';
+        resultsDiv.style.display = 'none';
+        try {
+          const result = await callDecisionForge(content, wives, adaLoop);
+          resultsDiv.style.display = 'block';
+          resultsDiv.innerHTML = '';
+          // Analyses per wife
+          if (result.analyses && result.analyses.length) {
+            for (const a of result.analyses) {
+              const analysisDiv = document.createElement('div');
+              analysisDiv.className = 'wife-analysis';
+              const ecfCounts = a.ecf ? `🏷 [D]x${a.ecf.D||0} [R]x${a.ecf.R||0} [S]x${a.ecf.S||0} [?]x${a.ecf.Q||0}` : '';
+              analysisDiv.innerHTML = `
+                <h4>${WIFE_STYLES[a.wife]?.emoji} ${a.wife}</h4>
+                <div style="margin:8px 0; white-space:pre-wrap;">${renderMarkdown(a.response)}</div>
+                <div class="badge-cluster">
+                  <span class="badge">🎯 Conf: ${Math.round(a.confidence*100)}%</span>
+                  <span class="badge vela ${a.vela_status === 'PASS' ? 'pass' : (a.vela_status === 'FLAGGED' ? 'flag' : 'block')}">⚖️ VELA: ${a.vela_status}</span>
+                  ${ecfCounts ? `<span class="badge ecf">${ecfCounts}</span>` : ''}
+                  ${a.fallback_used ? '<span class="badge">⚠️ Fallback model used</span>' : ''}
+                </div>
+              `;
+              resultsDiv.appendChild(analysisDiv);
+            }
+          }
+          // Synthesis
+          if (result.synthesis && result.synthesis.final_text) {
+            const synthesisDiv = document.createElement('div');
+            synthesisDiv.className = 'synthesis';
+            synthesisDiv.innerHTML = `
+              <h4>📋 Synthesis (Score: ${Math.round(result.synthesis.score * 100)}%)</h4>
+              <div style="margin:8px 0; white-space:pre-wrap;">${renderMarkdown(result.synthesis.final_text)}</div>
+              ${result.synthesis.ada_loop.applied ? `<div class="badge ada">🔄 ADA refined</div>` : ''}
+            `;
+            resultsDiv.appendChild(synthesisDiv);
+          }
+          if (result.failed_wives && result.failed_wives.length) {
+            const warnDiv = document.createElement('div');
+            warnDiv.className = 'sys-msg';
+            warnDiv.textContent = `⚠️ Some wives failed: ${result.failed_wives.map(w => w.wife).join(', ')}`;
+            resultsDiv.appendChild(warnDiv);
+          }
+        } catch (err) {
+          showToast(`Error: ${err.message}`, true);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Generate Analysis';
+        }
+      };
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    }
+
     async function sendMessage(retryMessage = null) {
       if (isSending) { showToast('Already sending...'); return; }
       const text = (retryMessage !== null) ? retryMessage : input.value.trim();
       if (!text) return;
-      if (privateRoomActive && (text === '/done' || text === '/exit')) { exitPrivateRoom(); if (!retryMessage) input.value = ''; return; }
+      // Private room commands removed – no special handling
       if (!retryMessage) input.value = '';
       charCountSpan.textContent = '0';
       const t1 = new Date(); const t1Offset = -t1.getTimezoneOffset(); const t1Label = getTimezoneOffsetLabel(t1Offset);
@@ -1262,9 +1413,7 @@
       const thinking = document.createElement('div'); thinking.className = 'msg assistant'; thinking.innerHTML = `<div class="skeleton" style="width: 60%; height: 48px;"></div>`; messagesDiv.appendChild(thinking); messagesDiv.scrollTop = messagesDiv.scrollHeight;
       try {
         let result;
-        if (privateRoomActive && privateWife) {
-          result = await callPrivateRoom(text, privateWife);
-        } else if (structuredMode) {
+        if (structuredMode) {
           const structuredData = {
             intent: document.getElementById('itlIntent').value,
             domain: document.getElementById('itlDomain').value,
@@ -1278,8 +1427,7 @@
         const t2 = new Date(); const t2Offset = -t2.getTimezoneOffset(); const t2Label = getTimezoneOffsetLabel(t2Offset);
         const windowMs = t2 - t1; const windowSec = (windowMs / 1000).toFixed(1);
         let gapStr = 'SESSION OPEN';
-        if (lastT2) { const gapSec = (t1 - lastT2) / 1000; gapStr = formatGap(gapSec); }
-        lastT2 = t2;
+        // No lastT2 stored now – we could keep a variable but it's not critical
         const dreamspell = getDreamspell(t2);
         const gregorian = t2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
         const hebrew = result.hebrew_date || 'Hebrew: unavailable';
@@ -1297,7 +1445,7 @@
           voidMeterSpan.classList.remove('active');
           setEyeState('idle');
         }
-        // after response, if ADA loop was active, set eye to refining momentarily? We can use a short timeout
+        // If ADA loop was active, set eye to refining momentarily
         if (result.ada_loop && result.ada_loop.rounds > 0) {
           setEyeState('refining');
           setTimeout(() => { if (voidProx <= 0.5 && eyeState === 'refining') setEyeState('idle'); }, 800);
@@ -1316,6 +1464,8 @@
           handoffWarning: !!result.handoff,
           receipt: result.checkpoint_receipt,
           sealable: true,
+          frameworkActivation: result.framework_activation, // optional
+          register: result.register,
           timestampHtml,
           adaVela: result.ada_vela
         });
@@ -1332,19 +1482,10 @@
       } finally { isSending = false; sendBtn.disabled = false; if (!retryMessage) input.focus(); }
     }
 
-    // ---- Group Chat & Private Room Functions ----
-    function exitPrivateRoom() {
-      privateRoomActive = false;
-      privateWife = null;
-      wifeNameSpan.textContent = 'AION';
-      wifeAvatarDiv.textContent = '✨';
-      setBackgroundMode('regular');
-      addSystemMessage('🚪 Exited private room.');
-    }
-
     function setBackgroundMode(mode) {
-      if (mode === 'private') {
-        document.documentElement.style.setProperty('--bg', '#030405');
+      // only used for structured mode now; keep it simple
+      if (mode === 'structured') {
+        document.documentElement.style.setProperty('--bg', '#0a0a0f');
       } else {
         document.documentElement.style.setProperty('--bg', '#08090b');
       }
@@ -1356,25 +1497,13 @@
       if (structuredMode) {
         modeIndicator.textContent = '🌌 STRUCTURED';
         modeIndicator.classList.add('active');
+        setBackgroundMode('structured');
       } else {
         modeIndicator.textContent = '⚡ REGULAR';
         modeIndicator.classList.remove('active');
+        setBackgroundMode('regular');
       }
       updateStructuredBadge();
-    }
-
-    async function startPrivateRoom(wife) {
-      try {
-        await sendTalkCommand(wife);
-        privateRoomActive = true;
-        privateWife = wife;
-        wifeNameSpan.textContent = WIFE_STYLES[wife].name;
-        wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji;
-        setBackgroundMode('private');
-        addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`);
-      } catch (err) {
-        showToast(`❌ Could not enter private room: ${err.message}`);
-      }
     }
 
     async function showGroupChatModal() {
@@ -1424,6 +1553,7 @@
             if (card) {
               const responseDiv = card.querySelector('.response-text');
               responseDiv.innerHTML = renderMarkdown(wifeResp.response);
+              // optional: show ecf_tags, framework activation, etc.
               if (wifeResp.vela_status) {
                 const velaBadge = document.createElement('div');
                 velaBadge.className = 'badge vela ' + (wifeResp.vela_status === 'PASS' ? 'pass' : (wifeResp.vela_status === 'FLAGGED' ? 'flag' : 'block'));
@@ -1618,12 +1748,7 @@
     document.addEventListener('click', () => { actionDropdown.style.display = 'none'; });
     document.getElementById('structuredModeBtn').onclick = () => { actionDropdown.style.display = 'none'; toggleStructuredMode(); };
     document.getElementById('groupChatBtn').onclick = () => { actionDropdown.style.display = 'none'; showGroupChatModal(); };
-    document.getElementById('privateRoomBtn').onclick = async () => {
-      actionDropdown.style.display = 'none';
-      const wife = prompt('Enter wife name (ALBEDO, VESPER, LYRA, TERRA, CIPHER, JUSTITIA):', 'ALBEDO');
-      if (wife && ALL_WIVES.includes(wife.toUpperCase())) await startPrivateRoom(wife.toUpperCase());
-      else showToast('Invalid wife');
-    };
+    document.getElementById('decisionForgeBtn').onclick = () => { actionDropdown.style.display = 'none'; showDecisionForgeModal(); };
     document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); };
     document.getElementById('askAllBtn').onclick = () => { actionDropdown.style.display = 'none'; askAllWives(); };
     document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); };
