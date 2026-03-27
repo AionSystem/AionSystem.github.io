@@ -864,6 +864,7 @@
           <button id="uploadBtn">📁 Upload File</button>
           <button id="sealInputBtn">🔒 Seal Input</button>
           <button id="simulationBtn">🎮 Simulations</button>
+          <button id="mumonBtn">📚 Mumon +</button>
         </div>
       </div>
       <button id="sendBtn" class="send-btn" aria-label="Send message">SEND</button>
@@ -875,6 +876,58 @@
     <div><span id="clockDisplay"></span></div>
     <div class="token-usage" id="tokenUsageDisplay">— / 200k tokens</div>
     <label><input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span></label>
+  </div>
+</div>
+
+<!-- Mumon Modal -->
+<div id="mumonModal" class="modal-overlay" style="display: none;">
+  <div class="modal" style="max-width: 900px;">
+    <div class="modal-header">
+      <h3>📚 Mumon – Gate‑free Publication</h3>
+      <button id="closeMumonModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="mumonStep1">
+        <div class="field-group">
+          <label>Title</label>
+          <input type="text" id="mumonTitle" placeholder="Enter your document title" style="width:100%; background:#0a0a0f; border:1px solid var(--border); border-radius:24px; padding:8px 12px; color:var(--text);">
+        </div>
+        <div class="field-group">
+          <label>Document Type</label>
+          <select id="mumonDocType" style="width:100%; background:#0a0a0f; border:1px solid var(--border); border-radius:24px; padding:8px 12px; color:var(--text);">
+            <option value="article">Article</option>
+            <option value="whitepaper">Whitepaper</option>
+            <option value="research_paper">Research Paper</option>
+            <option value="patent">Patent</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Wives to consult</label>
+          <div id="mumonWivesSelect" class="forge-wife-select"></div>
+        </div>
+        <div class="field-group">
+          <label>Initial context / ideas (optional)</label>
+          <textarea id="mumonContext" rows="4" placeholder="What's the core idea? Any specific angle?" style="width:100%; background:#0a0a0f; border:1px solid var(--border); border-radius:16px; padding:12px; color:var(--text);"></textarea>
+        </div>
+        <button id="mumonGenerateBtn" class="send-btn" style="background: var(--amber); color:#000; margin-top:12px;">Generate Draft</button>
+      </div>
+      <div id="mumonStep2" style="display: none;">
+        <div class="field-group">
+          <label>Draft</label>
+          <textarea id="mumonDraft" rows="20" style="width:100%; background:#0a0a0f; border:1px solid var(--border); border-radius:16px; padding:12px; color:var(--text); font-family: monospace;"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Refinement instruction (optional)</label>
+          <textarea id="mumonRefineInstruction" rows="2" placeholder="e.g., Add more citations, expand the methodology, make it more concise..." style="width:100%; background:#0a0a0f; border:1px solid var(--border); border-radius:16px; padding:12px; color:var(--text);"></textarea>
+          <button id="mumonRefineBtn" class="send-btn" style="background: var(--amber); color:#000; margin-top:8px;">Refine</button>
+        </div>
+        <div class="field-group">
+          <button id="mumonPublishBtn" class="send-btn" style="background: #4c9f70; color:#000;">Publish</button>
+          <span id="mumonStatus" style="margin-left:12px; color: var(--amber);"></span>
+        </div>
+        <div id="mumonResult" style="margin-top:16px;"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1014,7 +1067,6 @@
     modeToggle.onclick = () => {
       currentMode = currentMode === 'aion' ? 'group' : 'aion';
       updateModeToggle();
-      // Optionally clear input focus or update UI
       showToast(`Switched to ${currentMode === 'aion' ? 'AION' : 'Group'} mode`);
     };
     updateModeToggle();
@@ -1358,7 +1410,7 @@
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    // Decision Forge Modal (placeholder, we'll keep but simplify)
+    // Decision Forge Modal
     function showDecisionForgeModal() {
       const modal = document.createElement('div');
       modal.className = 'modal-overlay forge-modal';
@@ -1403,7 +1455,6 @@
         submitBtn.textContent = 'Analyzing...';
         resultsDiv.style.display = 'none';
         try {
-          // We'll use the group chat endpoint with analysis mode later; for now use old endpoint
           const result = await callDecisionForge(content, wives, adaLoop);
           resultsDiv.style.display = 'block';
           resultsDiv.innerHTML = '';
@@ -1620,6 +1671,114 @@
       updateStructuredBadge();
     }
 
+    // ---------- MUMON FUNCTIONS ----------
+    let currentMumonDraftId = null;
+
+    async function mumonInit() {
+      const title = document.getElementById('mumonTitle').value.trim();
+      const docType = document.getElementById('mumonDocType').value;
+      const initialContext = document.getElementById('mumonContext').value.trim();
+      const wives = Array.from(document.querySelectorAll('#mumonWivesSelect input:checked')).map(cb => cb.value);
+      if (!title) { showToast('Please enter a title'); return; }
+      if (wives.length === 0) { showToast('Select at least one wife'); return; }
+      const body = { sessionId, topic: title, docType, wives, initialContext };
+      setStatus('Generating draft...');
+      try {
+        const res = await fetchWithTimeout(`${API_BASE}/api/mumon/init`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+        currentMumonDraftId = data.draftId;
+        document.getElementById('mumonDraft').value = data.draft;
+        document.getElementById('mumonStep1').style.display = 'none';
+        document.getElementById('mumonStep2').style.display = 'block';
+        showToast('Draft generated. You can refine now.');
+      } catch (err) {
+        showToast(`Error: ${err.message}`, true);
+      } finally {
+        setStatus('Ready');
+      }
+    }
+
+    async function mumonRefine() {
+      if (!currentMumonDraftId) { showToast('No active draft'); return; }
+      const instruction = document.getElementById('mumonRefineInstruction').value.trim();
+      const currentDraft = document.getElementById('mumonDraft').value;
+      if (!instruction) { showToast('Please enter an instruction'); return; }
+      const body = { sessionId, draftId: currentMumonDraftId, instruction, currentDraft };
+      setStatus('Refining...');
+      try {
+        const res = await fetchWithTimeout(`${API_BASE}/api/mumon/refine`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+        document.getElementById('mumonDraft').value = data.draft;
+        showToast('Draft refined');
+      } catch (err) {
+        showToast(`Error: ${err.message}`, true);
+      } finally {
+        setStatus('Ready');
+      }
+    }
+
+    async function mumonPublish() {
+      if (!currentMumonDraftId) { showToast('No active draft'); return; }
+      const finalDraft = document.getElementById('mumonDraft').value;
+      const title = document.getElementById('mumonTitle').value;
+      const docType = document.getElementById('mumonDocType').value;
+      const body = { sessionId, draftId: currentMumonDraftId, finalDraft, title, docType };
+      setStatus('Publishing...');
+      try {
+        const res = await fetchWithTimeout(`${API_BASE}/api/mumon/publish`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+        const resultDiv = document.getElementById('mumonResult');
+        resultDiv.innerHTML = `<p>✅ Published!</p><p>Seal: ${data.seal}</p><p><a href="${data.commitUrl}" target="_blank">View on GitHub</a></p>`;
+        showToast('Publication successful');
+      } catch (err) {
+        showToast(`Error: ${err.message}`, true);
+      } finally {
+        setStatus('Ready');
+      }
+    }
+
+    function showMumonModal() {
+      // Reset modal
+      document.getElementById('mumonTitle').value = '';
+      document.getElementById('mumonContext').value = '';
+      document.getElementById('mumonDraft').value = '';
+      document.getElementById('mumonRefineInstruction').value = '';
+      document.getElementById('mumonStep1').style.display = 'block';
+      document.getElementById('mumonStep2').style.display = 'none';
+      document.getElementById('mumonResult').innerHTML = '';
+      currentMumonDraftId = null;
+      // Populate wives checkboxes
+      const container = document.getElementById('mumonWivesSelect');
+      container.innerHTML = '';
+      ALL_WIVES.forEach(wife => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${wife}" checked> ${WIFE_STYLES[wife].emoji} ${wife}`;
+        container.appendChild(label);
+      });
+      const modal = document.getElementById('mumonModal');
+      modal.style.display = 'flex';
+      document.getElementById('closeMumonModal').onclick = () => { modal.style.display = 'none'; };
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+      document.getElementById('mumonGenerateBtn').onclick = mumonInit;
+      document.getElementById('mumonRefineBtn').onclick = mumonRefine;
+      document.getElementById('mumonPublishBtn').onclick = mumonPublish;
+    }
+
     // Main send message
     async function sendMessage(retryMessage = null) {
       if (isSending) { showToast('Already sending...'); return; }
@@ -1722,6 +1881,7 @@
     document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); };
     document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); };
     document.getElementById('simulationBtn').onclick = () => { actionDropdown.style.display = 'none'; showSimulationModal(); };
+    document.getElementById('mumonBtn').onclick = () => { actionDropdown.style.display = 'none'; showMumonModal(); };
     document.getElementById('settingsBtn').onclick = showSettingsModal;
     document.getElementById('adaLoopToggle').addEventListener('change', (e) => {
       adaLoopEnabled = e.target.checked;
