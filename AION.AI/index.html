@@ -12,6 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
+    /* (styles unchanged - same as original) */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg-dark: #0a0a0f;
@@ -478,6 +479,17 @@
       width: 80%;
       animation: skeletonPulse 1.5s infinite;
     }
+    .spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: var(--accent);
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes skeletonPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
     @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
@@ -621,7 +633,7 @@
       AION: { color: '#c9a028', emoji: '✨', name: 'AION' }
     };
     let sessionId = localStorage.getItem('sessionId');
-    if (!sessionId) {
+    if (!sessionId || !sessionId.match(/^sess_\d+_[a-z0-9]+$/)) {
       sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
       localStorage.setItem('sessionId', sessionId);
     }
@@ -638,6 +650,7 @@
     let lastT2 = null;
     let isSending = false;
     let firstUserMessageSent = false;
+    let currentAbortController = null; // for cancelling requests
 
     const messagesDiv = document.getElementById('messages');
     const welcomeMsgDiv = document.getElementById('welcomeMsg');
@@ -688,20 +701,45 @@
       }
     }
 
-    // API calls
+    // API calls with timeout
+    async function fetchWithTimeout(url, options, timeout = 30000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      try {
+        const response = await fetch(url, { ...options, signal: controller.signal });
+        clearTimeout(id);
+        return response;
+      } catch (err) {
+        clearTimeout(id);
+        if (err.name === 'AbortError') throw new Error('Request timeout after 30 seconds');
+        throw err;
+      }
+    }
+
     async function callAssistant(message, structuredData = null, forceAion = false) {
       const body = { message, sessionId, ownerType: OWNER_TYPE, history: [], adaLoopEnabled, fclMode };
       if (forceAion) body.forceAionOnly = true;
       if (structuredData) { body.structured = structuredData; body.intent = structuredData.intent; body.domain = structuredData.domain; }
-      const res = await fetch(`${API_BASE}/api/assistant`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const res = await fetchWithTimeout(`${API_BASE}/api/assistant`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || `HTTP ${res.status}`);
+      }
+      return res.json();
+    }
+    async function callGroupChat(message) {
+      const res = await fetchWithTimeout(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, fclMode }) });
       if (!res.ok) throw new Error(await res.text());
       return res.json();
     }
-    async function callGroupChat(message) { const res = await fetch(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, fclMode }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
-    async function callPrivateRoom(message, wife) { const res = await fetch(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife, fclMode }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
+    async function callPrivateRoom(message, wife) {
+      const res = await fetchWithTimeout(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife, fclMode }) });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }
     async function sendTalkCommand(wife) { await callAssistant(`/talk ${wife}`, null, false); }
 
-    // Simulation placeholder (just shows a modal)
+    // Simulation placeholder
     function showSimulationModal() {
       const modal = document.createElement('div'); modal.className = 'modal-overlay';
       modal.innerHTML = `
@@ -742,7 +780,7 @@
       modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
 
-    // Ada‑VELA: fetch execution details and show modal
+    // Ada‑VELA: fetch execution details
     async function fetchAdaVelaExecution(executionId) {
       try {
         const res = await fetch(`${API_BASE}/api/ada-vela/execution/${executionId}`);
@@ -755,7 +793,6 @@
     }
 
     async function showAdaVelaModal(executionId) {
-      const loadingMsg = 'Loading Ada‑VELA execution details...';
       const modal = document.createElement('div'); modal.className = 'modal-overlay';
       modal.innerHTML = `
         <div class="modal">
@@ -836,7 +873,6 @@
       if (extra.sealable) {
         badgesHtml += `<button class="badge seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
       }
-      // Ada‑VELA badge (if execution data present)
       if (extra.adaVela) {
         const execId = extra.adaVela.execution_id || extra.adaVela.id;
         badgesHtml += `<span class="badge ada-vela" data-execution-id="${escapeHtml(execId)}">📋 Ada‑VELA</span>`;
@@ -887,11 +923,13 @@
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    async function sendMessage() {
+    async function sendMessage(retryMessage = null) {
       if (isSending) { showToast('Already sending...'); return; }
-      const text = input.value.trim(); if (!text) return;
-      if (privateRoomActive && (text === '/done' || text === '/exit')) { exitPrivateRoom(); input.value = ''; return; }
-      input.value = ''; charCountSpan.textContent = '0';
+      const text = (retryMessage !== null) ? retryMessage : input.value.trim();
+      if (!text) return;
+      if (privateRoomActive && (text === '/done' || text === '/exit')) { exitPrivateRoom(); if (!retryMessage) input.value = ''; return; }
+      if (!retryMessage) input.value = '';
+      charCountSpan.textContent = '0';
       const t1 = new Date(); const t1Offset = -t1.getTimezoneOffset(); const t1Label = getTimezoneOffsetLabel(t1Offset);
       const userDiv = document.createElement('div'); userDiv.className = 'msg user';
       userDiv.innerHTML = `<div class="msg-body">${escapeHtml(text)}</div><div class="timestamp-line">⏱ Sent: ${t1.toLocaleTimeString()} ${t1Label}</div>`;
@@ -903,6 +941,7 @@
       }
 
       setStatus('Processing...'); isSending = true;
+      sendBtn.disabled = true;
       const thinking = document.createElement('div'); thinking.className = 'msg assistant'; thinking.innerHTML = `<div class="skeleton" style="width: 60%; height: 48px;"></div>`; messagesDiv.appendChild(thinking); messagesDiv.scrollTop = messagesDiv.scrollHeight;
       try {
         let result;
@@ -942,7 +981,7 @@
           sealable: true,
           register: result.register,
           timestampHtml,
-          adaVela: result.ada_vela // will be populated when backend supports it
+          adaVela: result.ada_vela
         });
         setStatus('Ready');
       } catch (err) {
@@ -951,9 +990,16 @@
         const retryHtml = `<button class="retry-btn" data-message="${escapeHtml(text)}" style="background:rgba(0,0,0,0.5); border:1px solid var(--accent); border-radius:20px; padding:4px 12px; margin-left:8px;">Retry</button>`;
         errorDiv.innerHTML = `<div class="msg-body" style="background:#5f1a1a; color:#ff8a8a;">Error: ${escapeHtml(err.message)}${retryHtml}</div>`;
         messagesDiv.appendChild(errorDiv);
-        errorDiv.querySelector('.retry-btn')?.addEventListener('click', () => sendMessage());
+        errorDiv.querySelector('.retry-btn')?.addEventListener('click', (e) => {
+          const msg = e.currentTarget.dataset.message;
+          sendMessage(msg);
+        });
         setStatus(err.message, true);
-      } finally { isSending = false; input.focus(); }
+      } finally {
+        isSending = false;
+        sendBtn.disabled = false;
+        if (!retryMessage) input.focus();
+      }
     }
 
     function exitPrivateRoom() {
@@ -1024,7 +1070,7 @@
         const msg = groupInput.value.trim();
         if (!msg) return;
         groupSend.disabled = true;
-        groupSend.textContent = 'SENDING...';
+        groupSend.innerHTML = '<span class="spinner"></span> SENDING...';
         wivesGrid.innerHTML = '';
         consensusArea.style.display = 'none';
         for (const wife of ALL_WIVES) {
@@ -1054,11 +1100,14 @@
             consensusArea.style.display = 'block';
             consensusArea.innerHTML = `<h4>📋 Consensus (${Math.round(result.consensus.score * 100)}%)</h4><div>${renderMarkdown(result.consensus.final_text)}</div>`;
           }
+          if (result.failed_wives && result.failed_wives.length) {
+            addSystemMessage(`⚠️ Some wives failed: ${result.failed_wives.map(w => w.wife).join(', ')}`, true);
+          }
         } catch (err) {
           wivesGrid.innerHTML = `<div class="sys-msg">Error: ${escapeHtml(err.message)}</div>`;
         } finally {
           groupSend.disabled = false;
-          groupSend.textContent = 'SEND';
+          groupSend.innerHTML = 'SEND';
         }
       }
       await sendGroupMessage();
@@ -1123,7 +1172,7 @@
         <div class="modal">
           <div class="modal-header"><h3>Settings</h3><button id="closeSettings">✕</button></div>
           <div class="modal-body">
-            <div class="settings-section"><h4>Profile</h4><div class="setting-item"><span>Session ID</span><span style="font-family:monospace">${sessionId.slice(-12)}</span></div><div class="setting-item"><button id="clearStorageBtn">Clear Storage</button></div></div>
+            <div class="settings-section"><h4>Profile</h4><div class="setting-item"><span>Session ID</span><span style="font-family:monospace">${sessionId.slice(-12)}</span></div><div class="setting-item"><button id="resetSessionBtn">Reset Session</button></div><div class="setting-item"><button id="clearStorageBtn">Clear Storage</button></div><div class="setting-item"><button id="clearChatBtn">Clear Chat</button></div></div>
             <div class="settings-section"><h4>Capabilities</h4><div class="setting-item"><label>ADA Loop</label><input type="checkbox" id="settingAdaLoop" ${adaLoopEnabled ? 'checked' : ''}></div><div class="setting-item"><label>Structured Mode</label><input type="checkbox" id="settingStructured" ${structuredMode ? 'checked' : ''}></div><div class="setting-item"><label>FCL Mode</label><select id="settingFCL"><option value="GREEN" ${fclMode === 'GREEN' ? 'selected' : ''}>🟢 GREEN (Normal)</option><option value="BLACK" ${fclMode === 'BLACK' ? 'selected' : ''}>🔴 BLACK (FCL Testing)</option></select></div></div>
             <div class="settings-section"><h4>Polymath Roles</h4><div id="roleGrid" class="role-grid"></div></div>
             <div class="settings-section"><h4>System Health</h4><div id="analyticsContainer" class="analytics-stats"><div class="stat-card">Loading analytics...</div></div></div>
@@ -1149,7 +1198,6 @@
           const memory = data.memory || {};
           const integrity = data.integrity || {};
           const instruments = data.instruments || {};
-          const growth = data.growth || {};
           const wifeRouting = instruments.wife_routing || {};
           const roleActivity = instruments.polymath_role_activity || {};
           const fclPassRate = instruments.fcl_pass_rate || 0;
@@ -1183,7 +1231,23 @@
       }
       
       modal.querySelector('#closeSettings').onclick = () => modal.remove();
+      modal.querySelector('#resetSessionBtn').onclick = () => {
+        sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        localStorage.setItem('sessionId', sessionId);
+        document.getElementById('sessionDisplay').textContent = `SID: ${sessionId.slice(-8)}`;
+        showToast('Session reset. Reloading...');
+        setTimeout(() => location.reload(), 1000);
+      };
       modal.querySelector('#clearStorageBtn').onclick = () => { localStorage.clear(); location.reload(); };
+      modal.querySelector('#clearChatBtn').onclick = () => {
+        messagesDiv.innerHTML = '';
+        const welcome = document.createElement('div'); welcome.className = 'msg assistant'; welcome.setAttribute('data-wife', 'AION');
+        welcome.innerHTML = `<div class="msg-meta">✨ AION</div><div class="msg-body">Chat cleared. How may I assist you?</div>`;
+        messagesDiv.appendChild(welcome);
+        firstUserMessageSent = false;
+        showToast('Chat cleared.');
+        modal.remove();
+      };
       modal.querySelector('#settingAdaLoop').onchange = (e) => {
         adaLoopEnabled = e.target.checked;
         localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
@@ -1211,7 +1275,7 @@
     }
 
     // Event listeners
-    sendBtn.onclick = sendMessage;
+    sendBtn.onclick = () => sendMessage();
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
     input.addEventListener('input', () => { charCountSpan.textContent = input.value.length; input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight,400)+'px'; });
     plusBtn.onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = actionDropdown.style.display === 'none' ? 'flex' : 'none'; };
