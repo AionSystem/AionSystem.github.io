@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+/* existing styles (unchanged, but we will add new styles at the end) */
 :root {
   --bg:#08090b;
   --bg-deep:#030405;
@@ -341,6 +342,138 @@ section{position:relative;z-index:1;padding:80px 40px;max-width:1200px;margin:0 
 .ksc-featured-cds-number{font-family:var(--jmono);font-size:2.8rem;font-weight:700;color:var(--red);line-height:1;}
 .ksc-featured-cds-note{font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;max-width:100px;text-align:center;line-height:1.4;}
 
+/* STACK CARD REDESIGN */
+.stack-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 32px 36px;
+  margin-bottom: 48px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.stack-card:hover {
+  border-color: var(--amber);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.stack-intro {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+.stack-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+.stack-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+.stack-table th,
+.stack-table td {
+  text-align: left;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.stack-table th {
+  color: var(--amber);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.fw-name {
+  font-weight: 600;
+  color: var(--amber);
+}
+.fw-version {
+  color: var(--muted);
+  font-family: var(--jmono);
+}
+.fw-function {
+  color: var(--text);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+.fw-inline-link {
+  color: var(--amber);
+  text-decoration: none;
+  margin-left: 8px;
+  font-size: 0.7rem;
+  border-bottom: 1px dotted var(--amber);
+}
+.fw-inline-link:hover {
+  color: var(--amber-l);
+}
+.convergence-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.4);
+  white-space: nowrap;
+}
+.convergence-badge.m-strong { background: #1e4620; color: #4ade80; }
+.convergence-badge.m-mod { background: #5f3a1a; color: #ffaa33; }
+.convergence-badge.m-nascent { background: #2a2a3a; color: #a0a0b0; }
+.stack-legend {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-align: right;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-top: 8px;
+}
+.stack-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 16px;
+}
+.stack-link-bubble {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  padding: 24px 20px;
+  text-decoration: none;
+  transition: all 0.2s var(--ease);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.stack-link-bubble:hover {
+  border-color: var(--amber);
+  transform: translateY(-4px);
+  background: var(--surface);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+.bubble-icon {
+  font-size: 28px;
+  color: var(--amber);
+  line-height: 1;
+}
+.bubble-title {
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+.bubble-desc {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
 .footer-id{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;letter-spacing:1px;}
 .footer-id strong{color:var(--amber);}
@@ -488,8 +621,59 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 <!-- KSC FEATURED SECTION -->
 <section id="ksc" style="padding-top:0;"><div class="section-header"><span class="section-num">// 03</span><h2 class="section-title">Civilization Scale</h2><div class="section-line"></div></div><a href="/ksc/" class="ksc-featured" aria-label="Open the Kardashev-Salmon Civilization Scale"><div><div class="ksc-featured-label">Live Framework · Built &amp; Red-Teamed 2026</div><div class="ksc-featured-title">Kardashev-Salmon<br>Civilization Scale</div><p class="ksc-featured-desc">Eight axes. One mirror that only moves in reverse. A debt counter that has never been green — and a map showing what it would take to change that. Spans 3761 BCE to the Cosmic Yovel. Types 0 through Ω. Live data. Triple-seal timestamps. Red-teamed architecture.</p><div class="ksc-featured-tags"><span class="tag">KSC v0.5</span><span class="tag">Type 0–II Live</span><span class="tag">Eight Axes</span><span class="tag">Gevurah · Tiferet</span><span class="tag">Zero Dependencies</span><span class="tag">27 Red Team Findings Resolved</span></div><div class="ksc-featured-link">Open the Scale <span>→</span></div></div><div class="ksc-featured-cds" aria-hidden="true"><div class="ksc-featured-cds-label">CDS · Now</div><div class="ksc-featured-cds-number">0.84</div><div class="ksc-featured-cds-note">Has never been green</div></div></a></section>
 
-<!-- 04 STACK (unchanged) -->
-<section id="stack" style="padding-top:0;"><div class="section-header"><span class="section-num">// 04</span><h2 class="section-title">The AION Stack</h2><div class="section-line"></div></div><p style="font-family:var(--sans);font-size:17px;font-weight:300;color:var(--muted);max-width:640px;margin-bottom:36px;line-height:1.7;">A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked. M-STRONG means validated. M-NASCENT means honest about what isn't yet.</p><table class="stack-table"><thead><tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr></thead><tbody><tr><td class="fw-name">FSVE</td><td class="fw-version">v3.6</td><td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement<a href="/stack/frameworks/FSVE/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr><tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean<a href="/stack/frameworks/LAV/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr><tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.4</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, Instrument 3 live scorer<a href="/stack/frameworks/TOPOS/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr><tr><td class="fw-name">KSC</td><td class="fw-version">v0.5</td><td class="fw-function">Kardashev-Salmon Civilization Scale — 8 axes, Types 0–II live, Hebrew cosmological mapping<a href="/ksc/" class="fw-inline-link">→ Scale</a></td><td><span class="convergence-badge m-nascent">M-NASCENT → M-MOD</span></td></tr><tr><td class="fw-name">CSCA</td><td class="fw-version">v0.1</td><td class="fw-function">Cognitive Substrate Cryptographic Assumption — SHA-256 signals analysis, D minor · 128 BPM<a href="/stack/#csca" class="fw-inline-link">→ Hear it</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr><tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr><tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr><tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1–8 active · Law 9 dark by design</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr></tbody></table><div style="margin-top:16px;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">M-STRONG: validated · M-MODERATE: tested · M-NASCENT: specified, building · CONSTITUTIONAL: foundational</div><a href="/stack/" class="stack-path"><span class="stack-path-icon">◈</span><div><div class="stack-path-label">Full Stack Documentation →</div><div class="stack-path-desc">All 18 frameworks. Version history. Convergence records. FCL entries. Protocol I registrations. The complete AION Constitutional Stack in one place.</div></div></a><a href="/stack/eight-laws/" class="stack-path"><span class="stack-path-icon">⚖️</span><div><div class="stack-path-label">The Sovereignty Stack — Nine Constitutional Laws →</div><div class="stack-path-desc">Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design. A spiral constitutional architecture for civilizational scale.</div></div></a><a href="/stack/frameworks/FSVE/" class="stack-path"><span class="stack-path-icon">⚖</span><div><div class="stack-path-label">FSVE v3.6 — Live Certainty Scoring Tool →</div><div class="stack-path-desc">Score any claim across six epistemic dimensions. Gini laundering detection. Validity threshold gate. Sensitivity analysis. CEV audit log. Shareable results.</div></div></a><a href="/ksc/" class="stack-path"><span class="stack-path-icon">◈</span><div><div class="stack-path-label">KSC v0.5 — Kardashev-Salmon Civilization Scale →</div><div class="stack-path-desc">Eight-axis civilization measurement from 3761 BCE to the Cosmic Yovel. Live data. Triple-seal timestamps. Types 0–II specced and red-teamed.</div></div></a></section>
+<!-- 04 STACK (redesigned as beautiful card with link bubbles) -->
+<section id="stack" style="padding-top:0;">
+  <div class="section-header">
+    <span class="section-num">// 04</span>
+    <h2 class="section-title">The AION Stack</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="stack-card">
+    <p class="stack-intro">A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked. M‑STRONG means validated. M‑NASCENT means honest about what isn't yet.</p>
+    <div class="stack-table-wrapper">
+      <table class="stack-table">
+        <thead>
+          <tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="fw-name">FSVE</td><td class="fw-version">v3.6</td><td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement<a href="/stack/frameworks/FSVE/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
+          <tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean<a href="/stack/frameworks/LAV/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr>
+          <tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.4</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, Instrument 3 live scorer<a href="/stack/frameworks/TOPOS/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+          <tr><td class="fw-name">KSC</td><td class="fw-version">v0.5</td><td class="fw-function">Kardashev-Salmon Civilization Scale — 8 axes, Types 0–II live, Hebrew cosmological mapping<a href="/ksc/" class="fw-inline-link">→ Scale</a></td><td><span class="convergence-badge m-nascent">M-NASCENT → M-MOD</span></td></tr>
+          <tr><td class="fw-name">CSCA</td><td class="fw-version">v0.1</td><td class="fw-function">Cognitive Substrate Cryptographic Assumption — SHA-256 signals analysis, D minor · 128 BPM<a href="/stack/#csca" class="fw-inline-link">→ Hear it</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
+          <tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+          <tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+          <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1–8 active · Law 9 dark by design</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="stack-legend">M‑STRONG: validated · M‑MODERATE: tested · M‑NASCENT: specified, building · CONSTITUTIONAL: foundational</div>
+  </div>
+
+  <div class="stack-links-grid">
+    <a href="/stack/" class="stack-link-bubble">
+      <span class="bubble-icon">◈</span>
+      <div class="bubble-title">Full Stack Documentation</div>
+      <div class="bubble-desc">All 18 frameworks. Version history. Convergence records. FCL entries. Protocol I registrations.</div>
+    </a>
+    <a href="/stack/eight-laws/" class="stack-link-bubble">
+      <span class="bubble-icon">⚖️</span>
+      <div class="bubble-title">The Sovereignty Stack</div>
+      <div class="bubble-desc">Nine Constitutional Laws — Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design.</div>
+    </a>
+    <a href="/stack/frameworks/FSVE/" class="stack-link-bubble">
+      <span class="bubble-icon">⚖</span>
+      <div class="bubble-title">FSVE v3.6 — Live Certainty Scoring Tool</div>
+      <div class="bubble-desc">Score any claim across six epistemic dimensions. Validity threshold gate. Shareable results.</div>
+    </a>
+    <a href="/ksc/" class="stack-link-bubble">
+      <span class="bubble-icon">◈</span>
+      <div class="bubble-title">KSC v0.5 — Civilization Scale</div>
+      <div class="bubble-desc">Eight‑axis civilization measurement from 3761 BCE to the Cosmic Yovel. Live data.</div>
+    </a>
+  </div>
+</section>
 
 <!-- 05 CERTIFICATION -->
 <section id="certify" style="padding-top:0;"><div class="section-header"><span class="section-num">// 05</span><h2 class="section-title">Certification</h2><div class="section-line"></div></div><div class="certify-strip"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="80" height="80" style="flex-shrink:0;"><defs><linearGradient id="cs1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient><linearGradient id="cw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient><path id="ct1" d="M 78,200 A 122,122 0 0,1 322,200"/><path id="cb1" d="M 92,200 A 108,108 0 0,0 308,200"/></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0d09" stroke="url(#cs1)" stroke-width="4"/><circle cx="200" cy="200" r="150" fill="none" stroke="url(#cs1)" stroke-width="3"/><circle cx="200" cy="200" r="134" fill="#0c0a08"/><circle cx="200" cy="200" r="134" fill="none" stroke="url(#cs1)" stroke-width="2"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#cw1)" stroke-width="3" stroke-linecap="round"/><text font-family="'Times New Roman',serif" font-size="14" font-weight="bold" letter-spacing="4" fill="#D4AF37" text-anchor="middle"><textPath href="#ct1" startOffset="50%">AION · VERIFIED</textPath></text><text font-family="'Times New Roman',serif" font-size="10" letter-spacing="3" fill="#D4AF37" text-anchor="middle"><textPath href="#cb1" startOffset="50%">SHELDON K. SALMON</textPath></text></svg><div class="certify-text"><h3>Sovereign Trace Protocol</h3><p>Certification is not installation. It is formal verification that a deployment meets the FROZEN-2.0 standard — immutable failure capture, transparent remediation, honest epistemic record. Four tiers. No negotiation on scope.<br><br>Simulator tools carry the <strong style="color:#D4AF37;">AION Verified Simulator</strong> badge — citation-backed, red-teamed, peer-reviewed.<br><br><a href="/certify/">Verify a badge</a> &nbsp;·&nbsp;<a href="/certify/seal/">Generate a Seal →</a> &nbsp;·&nbsp;<a href="/services/ai-audit/">Certification tiers</a> &nbsp;·&nbsp;<a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/blob/main/CERTIFICATION.md" target="_blank" rel="noopener">Full methodology ↗</a></p></div></div></section>
@@ -519,6 +703,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 </footer>
 
 <script>
+// [existing JavaScript unchanged]
 (function(){
 'use strict';
 const cursor=document.getElementById('custom-cursor');
