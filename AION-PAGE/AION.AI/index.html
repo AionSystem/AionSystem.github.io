@@ -865,6 +865,7 @@
           <button id="sealInputBtn">🔒 Seal Input</button>
           <button id="simulationBtn">🎮 Simulations</button>
           <button id="mumonBtn">📚 Mumon +</button>
+          <button id="debuggerBtn">🐛 Bloodhound Debugger</button>
         </div>
       </div>
       <button id="sendBtn" class="send-btn" aria-label="Send message">SEND</button>
@@ -926,6 +927,56 @@
           <span id="mumonStatus" style="margin-left:12px; color: var(--amber);"></span>
         </div>
         <div id="mumonResult" style="margin-top:16px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bloodhound Debugger Modal -->
+<div id="debuggerModal" class="modal-overlay" style="display: none;">
+  <div class="modal" style="max-width: 900px;">
+    <div class="modal-header">
+      <h3>🐛 Bloodhound Debugger – ADA‑Powered Forensic Analysis</h3>
+      <button id="closeDebuggerModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label>Language</label>
+        <select id="debuggerLang">
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="python">Python</option>
+          <option value="rust">Rust</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Code to analyze</label>
+        <textarea id="debuggerCode" rows="12" placeholder="Paste your code here..."></textarea>
+      </div>
+      <div class="field-group">
+        <label>Domain (optional)</label>
+        <select id="debuggerDomain">
+          <option value="code">General Code</option>
+          <option value="security">Security Critical</option>
+          <option value="financial">Financial</option>
+          <option value="medical">Medical</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Tier</label>
+        <select id="debuggerTier">
+          <option value="CORE">CORE ADA (faster, minimal)</option>
+          <option value="FULL" selected>FULL ADA (deep analysis, historical patterns)</option>
+        </select>
+      </div>
+      <button id="debuggerAnalyzeBtn" class="send-btn" style="background: var(--amber); color:#000;">Analyze</button>
+      <div id="debuggerResults" style="margin-top: 20px; display: none;">
+        <h4>Results</h4>
+        <div id="debuggerFindings"></div>
+        <div id="debuggerRefinedCode"></div>
+        <div id="debuggerTimeline"></div>
+        <div id="debuggerScores"></div>
+        <button id="debuggerCopyBtn" class="send-btn" style="background: #4c9f70; margin-top: 10px;">Copy Refined Code</button>
       </div>
     </div>
   </div>
@@ -1034,6 +1085,7 @@
     let activeWives = JSON.parse(localStorage.getItem('activeWives')) || [...ALL_WIVES]; // default all
     let aionHistory = []; // for AION mode
     let groupHistory = []; // for group mode, stores { role, content } for context
+    const MAX_HISTORY = 150; // keep last 150 messages to avoid huge payloads
 
     const messagesDiv = document.getElementById('messages');
     const welcomeMsgDiv = document.getElementById('welcomeMsg');
@@ -1077,6 +1129,11 @@
         currentTokenUsage = tokens;
         tokenUsageSpan.textContent = `${currentTokenUsage.toLocaleString()} / 200,000 tokens`;
       }
+    }
+
+    // Helper to trim history arrays
+    function trimHistory(arr) {
+      while (arr.length > MAX_HISTORY) arr.shift();
     }
 
     // Eye badge state management
@@ -1779,6 +1836,83 @@
       document.getElementById('mumonPublishBtn').onclick = mumonPublish;
     }
 
+    // ---------- BLOODHOUND DEBUGGER FUNCTIONS ----------
+    let currentDebuggerResult = null;
+
+    async function runDebugger() {
+      const code = document.getElementById('debuggerCode').value.trim();
+      if (!code) { showToast('Please enter code to analyze'); return; }
+      const language = document.getElementById('debuggerLang').value;
+      const domain = document.getElementById('debuggerDomain').value;
+      const tier = document.getElementById('debuggerTier').value;
+
+      const body = { sessionId, code, language, domain, tier };
+      setStatus('Debugger analyzing...');
+      try {
+        const res = await fetchWithTimeout(`${API_BASE}/api/debugger`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+        currentDebuggerResult = data;
+
+        // Display findings
+        const findingsDiv = document.getElementById('debuggerFindings');
+        findingsDiv.innerHTML = '<h4>🔍 Findings</h4>';
+        if (data.findings && data.findings.length) {
+          for (const f of data.findings) {
+            if (f.patternName) {
+              findingsDiv.innerHTML += `<div class="wife-analysis"><strong>${f.patternName}</strong> (${f.severity})<br/>${f.suggestion || f.text}</div>`;
+            } else {
+              findingsDiv.innerHTML += `<div class="wife-analysis">${f.text}</div>`;
+            }
+          }
+        } else {
+          findingsDiv.innerHTML += '<p>No known patterns detected.</p>';
+        }
+
+        // Refined code
+        const refinedDiv = document.getElementById('debuggerRefinedCode');
+        refinedDiv.innerHTML = `<h4>✅ Refined Code</h4><pre style="background:#0a0a0f; padding:12px; border-radius:8px; overflow-x:auto;">${escapeHtml(data.refinedCode)}</pre>`;
+
+        // Timeline
+        const timelineDiv = document.getElementById('debuggerTimeline');
+        timelineDiv.innerHTML = `<h4>📅 Forensic Timeline</h4><ul>${data.forensicTimeline.map(step => `<li>${step}</li>`).join('')}</ul>`;
+
+        // Scores
+        const scoresDiv = document.getElementById('debuggerScores');
+        scoresDiv.innerHTML = `<h4>📊 Convergence</h4><p>FSVE EV: ${data.fsve_ev.toFixed(2)} | TOPOS SGS: ${data.topos_sgs.toFixed(2)} | Rounds: ${data.rounds} | Converged: ${data.converged ? '✅' : '🔄'}</p>`;
+
+        document.getElementById('debuggerResults').style.display = 'block';
+        showToast('Analysis complete');
+      } catch (err) {
+        showToast(`Error: ${err.message}`, true);
+      } finally {
+        setStatus('Ready');
+      }
+    }
+
+    function copyRefinedCode() {
+      if (currentDebuggerResult && currentDebuggerResult.refinedCode) {
+        navigator.clipboard.writeText(currentDebuggerResult.refinedCode);
+        showToast('Code copied to clipboard');
+      }
+    }
+
+    function showDebuggerModal() {
+      document.getElementById('debuggerCode').value = '';
+      document.getElementById('debuggerResults').style.display = 'none';
+      currentDebuggerResult = null;
+      const modal = document.getElementById('debuggerModal');
+      modal.style.display = 'flex';
+      document.getElementById('closeDebuggerModal').onclick = () => { modal.style.display = 'none'; };
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+      document.getElementById('debuggerAnalyzeBtn').onclick = runDebugger;
+      document.getElementById('debuggerCopyBtn').onclick = copyRefinedCode;
+    }
+
     // Main send message
     async function sendMessage(retryMessage = null) {
       if (isSending) { showToast('Already sending...'); return; }
@@ -1840,6 +1974,7 @@
           });
           aionHistory.push({ role: 'user', content: text });
           aionHistory.push({ role: 'assistant', content: result.response });
+          trimHistory(aionHistory);
           setStatus('Ready');
         } else {
           // Group mode
@@ -1854,6 +1989,7 @@
           // Update group history
           groupHistory.push({ role: 'user', content: text });
           groupHistory.push({ role: 'assistant', content: result.consensus.final_text });
+          trimHistory(groupHistory);
           // Render group message
           renderGroupMessage(result.consensus.final_text, result.responses, result.meta, timestampHtml);
           setStatus('Ready');
@@ -1882,6 +2018,7 @@
     document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); };
     document.getElementById('simulationBtn').onclick = () => { actionDropdown.style.display = 'none'; showSimulationModal(); };
     document.getElementById('mumonBtn').onclick = () => { actionDropdown.style.display = 'none'; showMumonModal(); };
+    document.getElementById('debuggerBtn').onclick = () => { actionDropdown.style.display = 'none'; showDebuggerModal(); };
     document.getElementById('settingsBtn').onclick = showSettingsModal;
     document.getElementById('adaLoopToggle').addEventListener('change', (e) => {
       adaLoopEnabled = e.target.checked;
