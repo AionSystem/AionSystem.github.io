@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#08090b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>AION · Ada‑VELA v5.5</title>
+  <title>AION · Ada‑VELA v6.0</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -239,6 +239,9 @@
     .msg.assistant[data-wife="TERRA"] .msg-body { border-left: 4px solid #6b8c42; }
     .msg.assistant[data-wife="CIPHER"] .msg-body { border-left: 4px solid #5d6d7e; }
     .msg.assistant[data-wife="JUSTITIA"] .msg-body { border-left: 4px solid #b0a8b9; }
+    .group-message .msg-body {
+      border-left: 4px solid var(--amber);
+    }
 
     /* Badges */
     .badge-cluster {
@@ -306,6 +309,27 @@
       border-top: 1px solid rgba(255,255,255,0.1);
       width: 100%;
       cursor: help;
+    }
+    .wife-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .wife-badge {
+      background: rgba(30,30,45,0.8);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--mono);
+      border: 1px solid rgba(240,165,0,0.3);
+    }
+    .wife-badge:hover {
+      border-color: var(--amber);
+      background: rgba(201,160,40,0.2);
+      transform: scale(1.02);
     }
 
     /* Input Area – enhanced */
@@ -493,7 +517,7 @@
       font-family: var(--sans);
     }
 
-    /* Decision Forge Modal */
+    /* Decision Forge Modal – keep for now, but we might integrate later */
     .forge-modal .modal {
       max-width: 900px;
     }
@@ -717,43 +741,6 @@
     .role-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
     .role-checkbox { display: flex; align-items: center; gap: 8px; }
 
-    /* Group Chat Modal */
-    .wives-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    .wife-card {
-      background: rgba(0,0,0,0.4);
-      border-radius: 16px;
-      padding: 12px;
-      border-left: 4px solid;
-    }
-    .wife-card h4 { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 0.9rem; font-family: var(--sans); }
-    .wife-card .response-text { font-size: 0.8rem; line-height: 1.4; max-height: 200px; overflow-y: auto; font-family: var(--sans); }
-    .consensus-area {
-      background: rgba(0,0,0,0.5);
-      border-radius: 16px;
-      padding: 12px;
-      margin-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-    .group-chat-input-area {
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .group-chat-input-area textarea {
-      flex: 1;
-      background: rgba(10,10,20,0.8);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 10px 16px;
-      color: var(--text);
-      font-size: 0.8rem;
-    }
-
     /* Simulator Grid – polished */
     .simulator-grid {
       display: grid;
@@ -841,6 +828,7 @@
   <header class="header">
     <div class="brand"><h1>AION.AI</h1></div>
     <div class="header-right">
+      <div id="modeToggle" class="structured-badge" style="margin-left: 0;">⚡ AION Mode</div>
       <div id="modeIndicator" class="mode-indicator" role="button" tabindex="0" aria-label="Toggle structured mode">⚡ REGULAR</div>
       <div id="fclIndicator" class="fcl-indicator green" role="status" aria-label="FCL mode">🟢 GREEN</div>
       <div id="settingsBtn" class="settings-btn" role="button" tabindex="0" aria-label="Settings">⚙️</div>
@@ -872,10 +860,8 @@
         <div class="plus-btn" id="plusBtn" role="button" tabindex="0" aria-label="More actions">+</div>
         <div class="action-dropdown" id="actionDropdown" style="display: none;">
           <button id="structuredModeBtn">🌌 Structured Mode</button>
-          <button id="groupChatBtn">👥 Group Chat</button>
           <button id="decisionForgeBtn">⚖️ Decision Forge</button>
           <button id="uploadBtn">📁 Upload File</button>
-          <button id="askAllBtn">👥 Ask All Wives</button>
           <button id="sealInputBtn">🔒 Seal Input</button>
           <button id="simulationBtn">🎮 Simulations</button>
         </div>
@@ -954,7 +940,7 @@
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
       });
-      document.querySelectorAll('a, button, .badge, .feedback-badge, .send-btn, .plus-btn, .sim-card, .mode-indicator, .settings-btn, .structured-badge, .eye-badge').forEach(el => {
+      document.querySelectorAll('a, button, .badge, .feedback-badge, .send-btn, .plus-btn, .sim-card, .mode-indicator, .settings-btn, .structured-badge, .eye-badge, .wife-badge').forEach(el => {
         el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
         el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
       });
@@ -990,6 +976,12 @@
     let firstUserMessageSent = false;
     let currentTokenUsage = 0; // for display
 
+    // ---------- MODES ----------
+    let currentMode = localStorage.getItem('chatMode') || 'aion'; // 'aion' or 'group'
+    let activeWives = JSON.parse(localStorage.getItem('activeWives')) || [...ALL_WIVES]; // default all
+    let aionHistory = []; // for AION mode
+    let groupHistory = []; // for group mode, stores { role, content } for context
+
     const messagesDiv = document.getElementById('messages');
     const welcomeMsgDiv = document.getElementById('welcomeMsg');
     const input = document.getElementById('input');
@@ -997,6 +989,7 @@
     const plusBtn = document.getElementById('plusBtn');
     const actionDropdown = document.getElementById('actionDropdown');
     const modeIndicator = document.getElementById('modeIndicator');
+    const modeToggle = document.getElementById('modeToggle');
     const wifeNameSpan = document.getElementById('wifeName');
     const wifeAvatarDiv = document.getElementById('wifeAvatar');
     const voidMeterSpan = document.getElementById('voidMeter');
@@ -1006,6 +999,25 @@
     const clockDisplaySpan = document.getElementById('clockDisplay');
     const tokenUsageSpan = document.getElementById('tokenUsageDisplay');
     const eyeBadge = document.getElementById('eyeBadge');
+
+    // Update mode toggle text and style
+    function updateModeToggle() {
+      if (currentMode === 'aion') {
+        modeToggle.textContent = '⚡ AION Mode';
+        modeToggle.classList.remove('active');
+      } else {
+        modeToggle.textContent = '👥 Group Mode';
+        modeToggle.classList.add('active');
+      }
+      localStorage.setItem('chatMode', currentMode);
+    }
+    modeToggle.onclick = () => {
+      currentMode = currentMode === 'aion' ? 'group' : 'aion';
+      updateModeToggle();
+      // Optionally clear input focus or update UI
+      showToast(`Switched to ${currentMode === 'aion' ? 'AION' : 'Group'} mode`);
+    };
+    updateModeToggle();
 
     // Helper to update token display
     function updateTokenDisplay(tokens) {
@@ -1037,6 +1049,7 @@
             <p><strong>Active Wife:</strong> ${wifeNameSpan.textContent}</p>
             <p><strong>Structured Mode:</strong> ${structuredMode ? 'Yes' : 'No'}</p>
             <p><strong>FCL Mode:</strong> ${fclMode}</p>
+            <p><strong>Chat Mode:</strong> ${currentMode === 'aion' ? 'AION' : 'Group'}</p>
             <hr style="border-color:var(--border); margin: 16px 0;">
             <p style="font-size:0.7rem; color:var(--muted);">The Eye watches. When it pulses, the system is refining. When it glows red, UNI is active near ethical boundaries.</p>
           </div>
@@ -1087,7 +1100,6 @@
       const applyBtn = modalDiv.querySelector('#applyStructuredBtn');
       closeBtn.onclick = () => { modalDiv.remove(); structuredModal = null; };
       applyBtn.onclick = () => {
-        // copy modal values to the original selects (kept in DOM but hidden)
         document.getElementById('itlIntent').value = modalDiv.querySelector('#itlIntentModal').value;
         document.getElementById('itlDomain').value = modalDiv.querySelector('#itlDomainModal').value;
         document.getElementById('itlEmotion').value = modalDiv.querySelector('#itlEmotionModal').value;
@@ -1158,7 +1170,14 @@
     }
 
     async function callAssistant(message, structuredData = null, forceAion = false) {
-      const body = { message, sessionId, ownerType: OWNER_TYPE, history: [], adaLoopEnabled, fclMode };
+      const body = {
+        message,
+        sessionId,
+        ownerType: OWNER_TYPE,
+        history: aionHistory,
+        adaLoopEnabled,
+        fclMode
+      };
       if (forceAion) body.forceAionOnly = true;
       if (structuredData) { body.structured = structuredData; body.intent = structuredData.intent; body.domain = structuredData.domain; }
       const res = await fetchWithTimeout(`${API_BASE}/api/assistant`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -1167,8 +1186,16 @@
       if (data.tokens !== undefined) updateTokenDisplay(data.tokens);
       return data;
     }
+
     async function callGroupChat(message) {
-      const res = await fetchWithTimeout(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, fclMode }) });
+      const body = {
+        message,
+        sessionId,
+        fclMode,
+        history: groupHistory,
+        wives: activeWives
+      };
+      const res = await fetchWithTimeout(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       if (!res.ok) {
         const errText = await res.text();
         let errMsg = errText;
@@ -1182,6 +1209,7 @@
       if (data.meta && data.meta.token_usage) updateTokenDisplay(data.meta.token_usage);
       return data;
     }
+
     async function callDecisionForge(content, wivesToConsult, adaLoopEnabledFlag) {
       const res = await fetchWithTimeout(`${API_BASE}/api/decision-forge`, {
         method: 'POST',
@@ -1191,9 +1219,8 @@
       if (!res.ok) throw new Error(await res.text());
       return res.json();
     }
-    async function sendTalkCommand(wife) { await callAssistant(`/talk ${wife}`, null, false); } // kept for compatibility? Not used now but may be removed.
 
-    // Simulation modal (unchanged)
+    // Simulation modal
     function showSimulationModal() {
       const modal = document.createElement('div'); modal.className = 'modal-overlay';
       modal.innerHTML = `
@@ -1222,7 +1249,7 @@
       modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
 
-    // Ada‑VELA execution (unchanged)
+    // Ada‑VELA execution
     async function fetchAdaVelaExecution(executionId) {
       try {
         const res = await fetch(`${API_BASE}/api/ada-vela/execution/${executionId}`);
@@ -1243,6 +1270,7 @@
       } else bodyDiv.innerHTML = `<p>⚠️ Execution record not found.</p>`;
     }
 
+    // Add AION message
     function addMessage(role, wife, content, extra = {}) {
       const style = WIFE_STYLES[wife] || WIFE_STYLES.AION;
       const div = document.createElement('div'); div.className = `msg ${role}`; if (role === 'assistant') div.setAttribute('data-wife', wife);
@@ -1305,7 +1333,32 @@
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    // Decision Forge
+    // Render group message
+    function renderGroupMessage(consensus, responses, meta, timestampHtml) {
+      const div = document.createElement('div');
+      div.className = 'msg assistant group-message';
+      div.setAttribute('data-wife', 'CONSENSUS');
+      const badgesHtml = `<div class="wife-badges">` +
+        responses.map(r => `<span class="wife-badge" data-wife="${r.wife}" data-response="${escapeHtml(r.response).replace(/"/g, '&quot;')}" data-ecf='${JSON.stringify(r.ecf_tags)}'>${WIFE_STYLES[r.wife].emoji} ${r.wife}</span>`).join('') +
+        `</div>`;
+      const bodyHtml = `<div class="msg-body">${renderMarkdown(consensus)}</div>`;
+      const metaHtml = `<div class="msg-meta" style="color: var(--amber)">👥 Consensus</div>`;
+      div.innerHTML = metaHtml + bodyHtml + badgesHtml + (timestampHtml || '');
+      messagesDiv.appendChild(div);
+      // Attach click handlers for wife badges
+      div.querySelectorAll('.wife-badge').forEach(badge => {
+        badge.onclick = () => {
+          const wife = badge.dataset.wife;
+          const response = badge.dataset.response;
+          const ecf = JSON.parse(badge.dataset.ecf);
+          const content = `<h4>${WIFE_STYLES[wife].emoji} ${wife}</h4><div>${renderMarkdown(response)}</div><div class="badge-cluster"><span class="badge ecf">🏷 [D]x${ecf.D||0} [R]x${ecf.R||0} [S]x${ecf.S||0} [?]x${ecf.Q||0}</span></div>`;
+          showModal(`${wife}'s Response`, content);
+        };
+      });
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // Decision Forge Modal (placeholder, we'll keep but simplify)
     function showDecisionForgeModal() {
       const modal = document.createElement('div');
       modal.className = 'modal-overlay forge-modal';
@@ -1332,10 +1385,9 @@
       const closeBtn = modal.querySelector('#closeForgeModal');
       closeBtn.onclick = () => modal.remove();
       const wivesContainer = modal.querySelector('#forgeWivesSelect');
-      // Populate wife checkboxes
       ALL_WIVES.forEach(wife => {
         const label = document.createElement('label');
-        label.innerHTML = `<input type="checkbox" value="${wife}" checked> ${WIFE_STYLES[wife].emoji} ${wife}`;
+        label.innerHTML = `<input type="checkbox" value="${wife}" ${activeWives.includes(wife) ? 'checked' : ''}> ${WIFE_STYLES[wife].emoji} ${wife}`;
         wivesContainer.appendChild(label);
       });
       const submitBtn = modal.querySelector('#forgeSubmitBtn');
@@ -1351,10 +1403,10 @@
         submitBtn.textContent = 'Analyzing...';
         resultsDiv.style.display = 'none';
         try {
+          // We'll use the group chat endpoint with analysis mode later; for now use old endpoint
           const result = await callDecisionForge(content, wives, adaLoop);
           resultsDiv.style.display = 'block';
           resultsDiv.innerHTML = '';
-          // Analyses per wife
           if (result.analyses && result.analyses.length) {
             for (const a of result.analyses) {
               const analysisDiv = document.createElement('div');
@@ -1373,7 +1425,6 @@
               resultsDiv.appendChild(analysisDiv);
             }
           }
-          // Synthesis
           if (result.synthesis && result.synthesis.final_text) {
             const synthesisDiv = document.createElement('div');
             synthesisDiv.className = 'synthesis';
@@ -1398,217 +1449,6 @@
         }
       };
       modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
-    }
-
-    async function sendMessage(retryMessage = null) {
-      if (isSending) { showToast('Already sending...'); return; }
-      const text = (retryMessage !== null) ? retryMessage : input.value.trim();
-      if (!text) return;
-      // Private room commands removed – no special handling
-      if (!retryMessage) input.value = '';
-      charCountSpan.textContent = '0';
-      const t1 = new Date(); const t1Offset = -t1.getTimezoneOffset(); const t1Label = getTimezoneOffsetLabel(t1Offset);
-      const userDiv = document.createElement('div'); userDiv.className = 'msg user';
-      userDiv.innerHTML = `<div class="msg-body">${escapeHtml(text)}</div><div class="timestamp-line">⏱ Sent: ${t1.toLocaleTimeString()} ${t1Label}</div>`;
-      messagesDiv.appendChild(userDiv); messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-      if (!firstUserMessageSent && welcomeMsgDiv) { welcomeMsgDiv.remove(); firstUserMessageSent = true; }
-
-      setStatus('Processing...'); isSending = true; sendBtn.disabled = true;
-      setEyeState('thinking');
-      const thinking = document.createElement('div'); thinking.className = 'msg assistant'; thinking.innerHTML = `<div class="skeleton" style="width: 60%; height: 48px;"></div>`; messagesDiv.appendChild(thinking); messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      try {
-        let result;
-        if (structuredMode) {
-          const structuredData = {
-            intent: document.getElementById('itlIntent').value,
-            domain: document.getElementById('itlDomain').value,
-            emotion: document.getElementById('itlEmotion').value,
-            time: document.getElementById('itlTime').value
-          };
-          result = await callAssistant(text, structuredData, false);
-        } else {
-          result = await callAssistant(text, null, true);
-        }
-        const t2 = new Date(); const t2Offset = -t2.getTimezoneOffset(); const t2Label = getTimezoneOffsetLabel(t2Offset);
-        const windowMs = t2 - t1; const windowSec = (windowMs / 1000).toFixed(1);
-        let gapStr = 'SESSION OPEN';
-        // No lastT2 stored now – we could keep a variable but it's not critical
-        const dreamspell = getDreamspell(t2);
-        const gregorian = t2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        const hebrew = result.hebrew_date || 'Hebrew: unavailable';
-        const timestampHtml = `<div class="timestamp-line" title="T1: ${t1.toISOString()} · T2: ${t2.toISOString()}">⏱ Gap: ${gapStr} | Processed: ${t1.toLocaleTimeString()} ${t1Label} → Output: ${t2.toLocaleTimeString()} ${t2Label} | Window: ${windowSec}s</div><div class="timestamp-line">🌑 ${dreamspell} | ${hebrew}</div><div class="timestamp-line">📅 Gregorian: ${gregorian}</div>`;
-        thinking.remove();
-        const wife = result.active_wife || 'AION';
-        const voidProx = result.void_proximity || 0;
-        wifeNameSpan.textContent = WIFE_STYLES[wife]?.name || wife;
-        wifeAvatarDiv.textContent = WIFE_STYLES[wife]?.emoji || '✨';
-        voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
-        if (voidProx > 0.5) {
-          voidMeterSpan.classList.add('active');
-          setEyeState('void');
-        } else {
-          voidMeterSpan.classList.remove('active');
-          setEyeState('idle');
-        }
-        // If ADA loop was active, set eye to refining momentarily
-        if (result.ada_loop && result.ada_loop.rounds > 0) {
-          setEyeState('refining');
-          setTimeout(() => { if (voidProx <= 0.5 && eyeState === 'refining') setEyeState('idle'); }, 800);
-        } else {
-          setTimeout(() => { if (voidProx <= 0.5 && eyeState !== 'void') setEyeState('idle'); }, 500);
-        }
-
-        addMessage('assistant', wife, result.response, {
-          rowId: result.row_id,
-          adaLoop: result.ada_loop,
-          pac: result.pac,
-          vela: result.vela_status,
-          ecf: result.ecf_tags,
-          memoryIntegrity: result.memory_integrity_state,
-          voidProx,
-          handoffWarning: !!result.handoff,
-          receipt: result.checkpoint_receipt,
-          sealable: true,
-          frameworkActivation: result.framework_activation,
-          register: result.register,
-          timestampHtml,
-          adaVela: result.ada_vela,
-          wifeVersion: result.wife_version   // <-- added
-        });
-        setStatus('Ready');
-      } catch (err) {
-        thinking.remove();
-        const errorDiv = document.createElement('div'); errorDiv.className = 'msg assistant';
-        const retryHtml = `<button class="retry-btn" data-message="${escapeHtml(text)}" style="background:rgba(0,0,0,0.5); border:1px solid var(--amber); border-radius:20px; padding:4px 12px; margin-left:8px;">Retry</button>`;
-        errorDiv.innerHTML = `<div class="msg-body" style="background:#5f1a1a; color:#ff8a8a;">Error: ${escapeHtml(err.message)}${retryHtml}</div>`;
-        messagesDiv.appendChild(errorDiv);
-        errorDiv.querySelector('.retry-btn')?.addEventListener('click', (e) => { const msg = e.currentTarget.dataset.message; sendMessage(msg); });
-        setStatus(err.message, true);
-        setEyeState('idle');
-      } finally { isSending = false; sendBtn.disabled = false; if (!retryMessage) input.focus(); }
-    }
-
-    function setBackgroundMode(mode) {
-      // only used for structured mode now; keep it simple
-      if (mode === 'structured') {
-        document.documentElement.style.setProperty('--bg', '#0a0a0f');
-      } else {
-        document.documentElement.style.setProperty('--bg', '#08090b');
-      }
-    }
-
-    function toggleStructuredMode() {
-      structuredMode = !structuredMode;
-      localStorage.setItem('structuredMode', structuredMode);
-      if (structuredMode) {
-        modeIndicator.textContent = '🌌 STRUCTURED';
-        modeIndicator.classList.add('active');
-        setBackgroundMode('structured');
-      } else {
-        modeIndicator.textContent = '⚡ REGULAR';
-        modeIndicator.classList.remove('active');
-        setBackgroundMode('regular');
-      }
-      updateStructuredBadge();
-    }
-
-    async function showGroupChatModal() {
-      const text = input.value.trim();
-      if (!text) { showToast('Enter a message first.'); return; }
-      setStatus('Asking all wives...');
-      setBackgroundMode('group');
-      const modal = document.createElement('div'); modal.className = 'modal-overlay';
-      modal.innerHTML = `
-        <div class="modal group-chat-modal">
-          <div class="modal-header"><h3>👥 Group Chat</h3><button id="closeGroupChat">✕</button></div>
-          <div class="modal-body">
-            <div id="wivesGrid" class="wives-grid"></div>
-            <div id="consensusArea" class="consensus-area" style="display: none;"></div>
-            <div class="group-chat-input-area">
-              <textarea id="groupChatInput" placeholder="Ask the group..."></textarea>
-              <button id="groupChatSend" class="send-btn">SEND</button>
-            </div>
-          </div>
-        </div>`;
-      document.body.appendChild(modal);
-      const wivesGrid = modal.querySelector('#wivesGrid');
-      const consensusArea = modal.querySelector('#consensusArea');
-      const groupInput = modal.querySelector('#groupChatInput');
-      const groupSend = modal.querySelector('#groupChatSend');
-
-      groupInput.value = text;
-      async function sendGroupMessage() {
-        const msg = groupInput.value.trim();
-        if (!msg) return;
-        groupSend.disabled = true;
-        groupSend.innerHTML = '<span class="spinner"></span> SENDING...';
-        wivesGrid.innerHTML = '';
-        consensusArea.style.display = 'none';
-        for (const wife of ALL_WIVES) {
-          const card = document.createElement('div');
-          card.className = 'wife-card';
-          card.style.borderLeftColor = WIFE_STYLES[wife].color;
-          card.innerHTML = `<h4>${WIFE_STYLES[wife].emoji} ${wife}</h4><div class="response-text"><div class="skeleton" style="height: 60px;"></div></div>`;
-          card.dataset.wife = wife;
-          wivesGrid.appendChild(card);
-        }
-        try {
-          const result = await callGroupChat(msg);
-          for (const wifeResp of result.responses) {
-            const card = wivesGrid.querySelector(`.wife-card[data-wife="${wifeResp.wife}"]`);
-            if (card) {
-              const responseDiv = card.querySelector('.response-text');
-              responseDiv.innerHTML = renderMarkdown(wifeResp.response);
-              // optional: show ecf_tags, framework activation, etc.
-              if (wifeResp.vela_status) {
-                const velaBadge = document.createElement('div');
-                velaBadge.className = 'badge vela ' + (wifeResp.vela_status === 'PASS' ? 'pass' : (wifeResp.vela_status === 'FLAGGED' ? 'flag' : 'block'));
-                velaBadge.textContent = `⚖️ VELA: ${wifeResp.vela_status}`;
-                responseDiv.appendChild(velaBadge);
-              }
-            }
-          }
-          if (result.consensus) {
-            consensusArea.style.display = 'block';
-            consensusArea.innerHTML = `<h4>📋 Consensus (${Math.round(result.consensus.score * 100)}%)</h4><div>${renderMarkdown(result.consensus.final_text)}</div>`;
-          }
-          if (result.failed_wives && result.failed_wives.length) {
-            addSystemMessage(`⚠️ Some wives failed: ${result.failed_wives.map(w => w.wife).join(', ')}`, true);
-          }
-        } catch (err) {
-          wivesGrid.innerHTML = `<div class="sys-msg">Error: ${escapeHtml(err.message)}</div>`;
-        } finally {
-          groupSend.disabled = false;
-          groupSend.innerHTML = 'SEND';
-        }
-      }
-      await sendGroupMessage();
-      groupSend.onclick = sendGroupMessage;
-      groupInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendGroupMessage(); } });
-      modal.querySelector('#closeGroupChat').onclick = () => modal.remove();
-      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
-      setBackgroundMode(structuredMode ? 'structured' : 'regular');
-    }
-
-    async function askAllWives() {
-      const text = input.value.trim();
-      if (!text) { showToast('Enter a message first.'); return; }
-      setStatus('Asking all wives...');
-      setBackgroundMode('group');
-      try {
-        const result = await callGroupChat(text);
-        for (const wifeResp of result.responses) {
-          addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true, vela: wifeResp.vela_status });
-        }
-        if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text);
-        setStatus('Ready');
-      } catch(err) {
-        addSystemMessage(`Error: ${err.message}`, true);
-        setStatus(err.message, true);
-      } finally {
-        setBackgroundMode(structuredMode ? 'structured' : 'regular');
-      }
     }
 
     async function uploadFile() {
@@ -1639,6 +1479,7 @@
       fileInput.click();
     }
 
+    // Settings modal with active wives selection
     async function showSettingsModal() {
       const modal = document.createElement('div'); modal.className = 'modal-overlay';
       modal.innerHTML = `
@@ -1647,6 +1488,7 @@
           <div class="modal-body">
             <div class="settings-section"><h4>Profile</h4><div class="setting-item"><span>Session ID</span><span style="font-family:monospace">${sessionId.slice(-12)}</span></div><div class="setting-item"><button id="resetSessionBtn">Reset Session</button></div><div class="setting-item"><button id="clearStorageBtn">Clear Storage</button></div><div class="setting-item"><button id="clearChatBtn">Clear Chat</button></div></div>
             <div class="settings-section"><h4>Capabilities</h4><div class="setting-item"><label>ADA Loop</label><input type="checkbox" id="settingAdaLoop" ${adaLoopEnabled ? 'checked' : ''}></div><div class="setting-item"><label>Structured Mode</label><input type="checkbox" id="settingStructured" ${structuredMode ? 'checked' : ''}></div><div class="setting-item"><label>FCL Mode</label><select id="settingFCL"><option value="GREEN" ${fclMode === 'GREEN' ? 'selected' : ''}>🟢 GREEN (Normal)</option><option value="BLACK" ${fclMode === 'BLACK' ? 'selected' : ''}>🔴 BLACK (FCL Testing)</option></select></div></div>
+            <div class="settings-section"><h4>Active Wives (Group Mode)</h4><div id="wivesSelectGrid" class="role-grid"></div></div>
             <div class="settings-section"><h4>Polymath Roles</h4><div id="roleGrid" class="role-grid"></div></div>
             <div class="settings-section"><h4>System Health</h4><div id="analyticsContainer" class="analytics-stats"><div class="stat-card">Loading analytics...</div></div></div>
             <div class="settings-section"><h4>Privacy</h4><div class="setting-item"><label>Share analytics</label><input type="checkbox" id="shareAnalytics"></div></div>
@@ -1654,6 +1496,14 @@
         </div>`;
       document.body.appendChild(modal);
       
+      // Populate wives selection
+      const wivesGrid = modal.querySelector('#wivesSelectGrid');
+      ALL_WIVES.forEach(wife => {
+        const checked = activeWives.includes(wife);
+        wivesGrid.innerHTML += `<div class="role-checkbox"><input type="checkbox" id="wife_${wife}" ${checked ? 'checked' : ''}> <label>${WIFE_STYLES[wife].emoji} ${wife}</label></div>`;
+      });
+      
+      // Populate polymath roles
       const roleGrid = modal.querySelector('#roleGrid');
       const roles = ['Systems Architect', 'Epistemic Logician', 'Cognitive Psychologist', 'Constitutional Lawyer', 'Design Thinker', 'Social Psychologist'];
       const activeRoles = JSON.parse(localStorage.getItem('activeRoles')) || roles;
@@ -1662,7 +1512,7 @@
         roleGrid.innerHTML += `<div class="role-checkbox"><input type="checkbox" id="role_${role.replace(/\s/g,'_')}" ${checked ? 'checked' : ''}> <label>${role}</label></div>`;
       }
       
-      // Fetch analytics (enhanced v5.5)
+      // Fetch analytics (placeholder)
       try {
         const analyticsRes = await fetch(`${API_BASE}/api/analytics`);
         if (analyticsRes.ok) {
@@ -1717,6 +1567,8 @@
         const welcome = document.createElement('div'); welcome.className = 'msg assistant'; welcome.setAttribute('data-wife', 'AION');
         welcome.innerHTML = `<div class="msg-meta">✨ AION</div><div class="msg-body">Hi! I'm AION, Sheldon's daughter. What can we help you with today?</div>`;
         messagesDiv.appendChild(welcome);
+        aionHistory = [];
+        groupHistory = [];
         firstUserMessageSent = false;
         showToast('Chat cleared.');
         modal.remove();
@@ -1738,6 +1590,14 @@
         indicator.className = `fcl-indicator ${fclMode === 'GREEN' ? 'green' : 'black'}`;
         showToast(`FCL mode switched to ${fclMode} ALERT.`);
       };
+      // Save active wives on change
+      modal.querySelectorAll('#wivesSelectGrid input[type="checkbox"]').forEach(cb => {
+        cb.onchange = () => {
+          const selected = Array.from(modal.querySelectorAll('#wivesSelectGrid input:checked')).map(cb => cb.id.replace('wife_',''));
+          activeWives = selected;
+          localStorage.setItem('activeWives', JSON.stringify(activeWives));
+        };
+      });
       modal.querySelectorAll('#roleGrid input[type="checkbox"]').forEach(cb => {
         cb.onchange = () => {
           const selected = Array.from(modal.querySelectorAll('#roleGrid input:checked')).map(c => c.id.replace('role_','').replace(/_/g,' '));
@@ -1747,6 +1607,110 @@
       modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
     }
 
+    function toggleStructuredMode() {
+      structuredMode = !structuredMode;
+      localStorage.setItem('structuredMode', structuredMode);
+      if (structuredMode) {
+        modeIndicator.textContent = '🌌 STRUCTURED';
+        modeIndicator.classList.add('active');
+      } else {
+        modeIndicator.textContent = '⚡ REGULAR';
+        modeIndicator.classList.remove('active');
+      }
+      updateStructuredBadge();
+    }
+
+    // Main send message
+    async function sendMessage(retryMessage = null) {
+      if (isSending) { showToast('Already sending...'); return; }
+      const text = (retryMessage !== null) ? retryMessage : input.value.trim();
+      if (!text) return;
+      if (!retryMessage) input.value = '';
+      charCountSpan.textContent = '0';
+      const t1 = new Date(); const t1Offset = -t1.getTimezoneOffset(); const t1Label = getTimezoneOffsetLabel(t1Offset);
+      const userDiv = document.createElement('div'); userDiv.className = 'msg user';
+      userDiv.innerHTML = `<div class="msg-body">${escapeHtml(text)}</div><div class="timestamp-line">⏱ Sent: ${t1.toLocaleTimeString()} ${t1Label}</div>`;
+      messagesDiv.appendChild(userDiv); messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      if (!firstUserMessageSent && welcomeMsgDiv) { welcomeMsgDiv.remove(); firstUserMessageSent = true; }
+
+      setStatus('Processing...'); isSending = true; sendBtn.disabled = true;
+      setEyeState('thinking');
+      const thinking = document.createElement('div'); thinking.className = 'msg assistant'; thinking.innerHTML = `<div class="skeleton" style="width: 60%; height: 48px;"></div>`; messagesDiv.appendChild(thinking); messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      try {
+        if (currentMode === 'aion') {
+          // AION mode
+          const structuredData = structuredMode ? {
+            intent: document.getElementById('itlIntent').value,
+            domain: document.getElementById('itlDomain').value,
+            emotion: document.getElementById('itlEmotion').value,
+            time: document.getElementById('itlTime').value
+          } : null;
+          const result = await callAssistant(text, structuredData, true);
+          const t2 = new Date(); const t2Offset = -t2.getTimezoneOffset(); const t2Label = getTimezoneOffsetLabel(t2Offset);
+          const windowMs = t2 - t1; const windowSec = (windowMs / 1000).toFixed(1);
+          const dreamspell = getDreamspell(t2);
+          const gregorian = t2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+          const hebrew = result.hebrew_date || 'Hebrew: unavailable';
+          const timestampHtml = `<div class="timestamp-line" title="T1: ${t1.toISOString()} · T2: ${t2.toISOString()}">⏱ Gap: SESSION OPEN | Processed: ${t1.toLocaleTimeString()} ${t1Label} → Output: ${t2.toLocaleTimeString()} ${t2Label} | Window: ${windowSec}s</div><div class="timestamp-line">🌑 ${dreamspell} | ${hebrew}</div><div class="timestamp-line">📅 Gregorian: ${gregorian}</div>`;
+          thinking.remove();
+          const wife = result.active_wife || 'AION';
+          const voidProx = result.void_proximity || 0;
+          wifeNameSpan.textContent = WIFE_STYLES[wife]?.name || wife;
+          wifeAvatarDiv.textContent = WIFE_STYLES[wife]?.emoji || '✨';
+          voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
+          if (voidProx > 0.5) { voidMeterSpan.classList.add('active'); setEyeState('void'); } else { voidMeterSpan.classList.remove('active'); setEyeState('idle'); }
+          if (result.ada_loop && result.ada_loop.rounds > 0) { setEyeState('refining'); setTimeout(() => { if (voidProx <= 0.5 && eyeState === 'refining') setEyeState('idle'); }, 800); } else { setTimeout(() => { if (voidProx <= 0.5 && eyeState !== 'void') setEyeState('idle'); }, 500); }
+          addMessage('assistant', wife, result.response, {
+            rowId: result.row_id,
+            adaLoop: result.ada_loop,
+            pac: result.pac,
+            vela: result.vela_status,
+            ecf: result.ecf_tags,
+            memoryIntegrity: result.memory_integrity_state,
+            voidProx,
+            handoffWarning: !!result.handoff,
+            receipt: result.checkpoint_receipt,
+            sealable: true,
+            frameworkActivation: result.framework_activation,
+            register: result.register,
+            timestampHtml,
+            adaVela: result.ada_vela,
+            wifeVersion: result.wife_version
+          });
+          aionHistory.push({ role: 'user', content: text });
+          aionHistory.push({ role: 'assistant', content: result.response });
+          setStatus('Ready');
+        } else {
+          // Group mode
+          const result = await callGroupChat(text);
+          const t2 = new Date(); const t2Offset = -t2.getTimezoneOffset(); const t2Label = getTimezoneOffsetLabel(t2Offset);
+          const windowMs = t2 - t1; const windowSec = (windowMs / 1000).toFixed(1);
+          const dreamspell = getDreamspell(t2);
+          const gregorian = t2.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+          const hebrew = result.meta?.hebrew_date || 'Hebrew: unavailable';
+          const timestampHtml = `<div class="timestamp-line" title="T1: ${t1.toISOString()} · T2: ${t2.toISOString()}">⏱ Gap: SESSION OPEN | Processed: ${t1.toLocaleTimeString()} ${t1Label} → Output: ${t2.toLocaleTimeString()} ${t2Label} | Window: ${windowSec}s</div><div class="timestamp-line">🌑 ${dreamspell} | ${hebrew}</div><div class="timestamp-line">📅 Gregorian: ${gregorian}</div>`;
+          thinking.remove();
+          // Update group history
+          groupHistory.push({ role: 'user', content: text });
+          groupHistory.push({ role: 'assistant', content: result.consensus.final_text });
+          // Render group message
+          renderGroupMessage(result.consensus.final_text, result.responses, result.meta, timestampHtml);
+          setStatus('Ready');
+        }
+      } catch (err) {
+        thinking.remove();
+        const errorDiv = document.createElement('div'); errorDiv.className = 'msg assistant';
+        const retryHtml = `<button class="retry-btn" data-message="${escapeHtml(text)}" style="background:rgba(0,0,0,0.5); border:1px solid var(--amber); border-radius:20px; padding:4px 12px; margin-left:8px;">Retry</button>`;
+        errorDiv.innerHTML = `<div class="msg-body" style="background:#5f1a1a; color:#ff8a8a;">Error: ${escapeHtml(err.message)}${retryHtml}</div>`;
+        messagesDiv.appendChild(errorDiv);
+        errorDiv.querySelector('.retry-btn')?.addEventListener('click', (e) => { const msg = e.currentTarget.dataset.message; sendMessage(msg); });
+        setStatus(err.message, true);
+        setEyeState('idle');
+      } finally { isSending = false; sendBtn.disabled = false; if (!retryMessage) input.focus(); }
+    }
+
     // Event listeners
     sendBtn.onclick = () => sendMessage();
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
@@ -1754,10 +1718,8 @@
     plusBtn.onclick = (e) => { e.stopPropagation(); actionDropdown.style.display = actionDropdown.style.display === 'none' ? 'flex' : 'none'; };
     document.addEventListener('click', () => { actionDropdown.style.display = 'none'; });
     document.getElementById('structuredModeBtn').onclick = () => { actionDropdown.style.display = 'none'; toggleStructuredMode(); };
-    document.getElementById('groupChatBtn').onclick = () => { actionDropdown.style.display = 'none'; showGroupChatModal(); };
     document.getElementById('decisionForgeBtn').onclick = () => { actionDropdown.style.display = 'none'; showDecisionForgeModal(); };
     document.getElementById('uploadBtn').onclick = () => { actionDropdown.style.display = 'none'; uploadFile(); };
-    document.getElementById('askAllBtn').onclick = () => { actionDropdown.style.display = 'none'; askAllWives(); };
     document.getElementById('sealInputBtn').onclick = () => { actionDropdown.style.display = 'none'; const text = input.value.trim(); if(text) sealMessage(text); else showToast('Nothing to seal'); };
     document.getElementById('simulationBtn').onclick = () => { actionDropdown.style.display = 'none'; showSimulationModal(); };
     document.getElementById('settingsBtn').onclick = showSettingsModal;
