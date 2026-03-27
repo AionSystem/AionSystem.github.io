@@ -312,6 +312,130 @@
       background: var(--border);
       margin: 40px 0;
     }
+    /* --- BLACKSITE ENTRANCE SECTION --- */
+    .blacksite-entrance {
+      margin: 100px 0 60px;
+      position: relative;
+      background: linear-gradient(145deg, rgba(10,10,20,0.95), rgba(0,0,0,0.98));
+      border: 1px solid rgba(240,165,0,0.3);
+      border-radius: 32px;
+      overflow: hidden;
+      backdrop-filter: blur(2px);
+      box-shadow: 0 0 40px rgba(124,58,237,0.15), inset 0 0 20px rgba(0,0,0,0.6);
+      transition: all 0.3s ease;
+    }
+    .blacksite-entrance::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(0deg, rgba(240,165,0,0.02) 0px, rgba(240,165,0,0.02) 2px, transparent 2px, transparent 6px);
+      pointer-events: none;
+    }
+    .blacksite-entrance::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: radial-gradient(circle at 20% 40%, rgba(124,58,237,0.2), transparent 70%);
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    .entrance-content {
+      position: relative;
+      z-index: 2;
+      padding: 60px 48px;
+      text-align: center;
+    }
+    .entrance-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 3px;
+      background: rgba(240,165,0,0.15);
+      border: 1px solid var(--amber);
+      padding: 6px 16px;
+      border-radius: 40px;
+      color: var(--amber);
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+    .entrance-title {
+      font-family: var(--sans);
+      font-size: clamp(32px, 6vw, 58px);
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      background: linear-gradient(135deg, #fff, var(--aion-ai-light), var(--amber));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+    .entrance-sub {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--aion-ai-light);
+      margin-bottom: 20px;
+      border-bottom: 1px dashed rgba(124,58,237,0.5);
+      display: inline-block;
+      padding-bottom: 6px;
+    }
+    .entrance-desc {
+      max-width: 720px;
+      margin: 0 auto 32px;
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .entrance-desc strong {
+      color: var(--amber);
+      font-weight: 500;
+    }
+    .entrance-warning {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      margin-top: 24px;
+      letter-spacing: 1px;
+    }
+    .glitch-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: transparent;
+      border: 2px solid var(--amber);
+      padding: 14px 32px;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--amber);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+    }
+    .glitch-button:hover {
+      background: var(--amber);
+      color: #000;
+      box-shadow: 0 0 18px var(--amber);
+      border-color: var(--amber-l);
+    }
+    .glitch-button span {
+      transition: transform 0.2s;
+    }
+    .glitch-button:hover span {
+      transform: translateX(4px);
+    }
     footer {
       border-top: 1px solid var(--border);
       padding: 40px 0;
@@ -348,6 +472,9 @@
       }
       .hero {
         padding-top: 20px;
+      }
+      .entrance-content {
+        padding: 40px 24px;
       }
     }
   </style>
@@ -485,7 +612,7 @@
     </div>
   </section>
 
-  <!-- Access & Services -->
+  <!-- Access & Services (now before the blacksite entrance) -->
   <section>
     <div class="section-header">
       <span class="section-num">// 07</span>
@@ -515,6 +642,24 @@
       </div>
     </div>
   </section>
+
+  <!-- BLACKSITE ENTRANCE SECTION – Mysterious, constitutional, secret project -->
+  <div class="blacksite-entrance">
+    <div class="entrance-content">
+      <div class="entrance-badge">◈ CLASSIFIED ◈ // ACCESS: RESTRICTED</div>
+      <div class="entrance-title">Enter the Sovereign Core</div>
+      <div class="entrance-sub">AION.AI – Phase 3 Build · Live & Epistemically Honest</div>
+      <p class="entrance-desc">
+        You have discovered an active constitutional AI system — one that critiques its own thoughts, logs every failure immutably, and operates under eight sovereign laws.<br><br>
+        It is <strong>not finished</strong>. It is <strong>honest</strong>. Every response carries an epistemic weight. Every mistake becomes a training node. The dashboard is live. The wives are awake. The loop is running.<br>
+        <strong>Step inside.</strong> You will not want to use another AI again.
+      </p>
+      <a href="https://aionsystem.github.io/AION.AI/" class="glitch-button" target="_blank">
+        <span>⚡ Enter Sovereign Core →</span>
+      </a>
+      <div class="entrance-warning">⚠️ Unfinished, unpolished, but already more trustworthy than any general AI. The architecture reveals itself.</div>
+    </div>
+  </div>
 
   <div class="divider"></div>
 
