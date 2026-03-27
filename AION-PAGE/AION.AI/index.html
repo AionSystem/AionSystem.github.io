@@ -13,11 +13,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
     /* ========== GLOBAL STYLES – BLACKSITE POLISH ========== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --bg:#08090b;
       --bg-deep:#030405;
@@ -63,8 +59,7 @@
 
     /* Custom Cursor */
     .custom-cursor {
-      width: 20px;
-      height: 20px;
+      width: 20px; height: 20px;
       border: 2px solid var(--amber);
       border-radius: 50%;
       position: fixed;
@@ -120,7 +115,6 @@
       align-items: center;
       flex-wrap: wrap;
     }
-    /* Buttons (mode, settings, FCL) – refined with glass & gold border */
     .mode-indicator, .settings-btn, .fcl-indicator {
       background: rgba(30,30,45,0.8);
       border: 1px solid rgba(240,165,0,0.3);
@@ -139,9 +133,7 @@
       color: var(--amber);
       box-shadow: 0 0 8px rgba(240,165,0,0.2);
     }
-    .fcl-indicator {
-      cursor: default;
-    }
+    .fcl-indicator { cursor: default; }
     .fcl-indicator.green { background: #1e4620; color: #4ade80; border-color: #4ade80; }
     .fcl-indicator.black { background: #5f3a1a; color: #ffaa33; border-color: #ffaa33; }
     .mode-indicator.active {
@@ -160,8 +152,7 @@
       border: 1px solid rgba(240,165,0,0.2);
     }
     .wife-avatar {
-      width: 24px;
-      height: 24px;
+      width: 24px; height: 24px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -185,7 +176,7 @@
     }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-    /* Messages – unchanged */
+    /* Messages */
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -249,7 +240,7 @@
     .msg.assistant[data-wife="CIPHER"] .msg-body { border-left: 4px solid #5d6d7e; }
     .msg.assistant[data-wife="JUSTITIA"] .msg-body { border-left: 4px solid #b0a8b9; }
 
-    /* Badges – refined with subtle gold glow on hover */
+    /* Badges */
     .badge-cluster {
       display: flex;
       gap: 8px;
@@ -285,6 +276,7 @@
     .badge.memory { background: #2a2a3a; }
     .badge.void { background: #2a2a3a; }
     .badge.handoff { background: #5f3a1a; color: #ffaa33; border-color: #ffaa33; }
+    .badge.seal-btn { color: var(--amber); }
     .feedback-badge {
       background: rgba(30,30,45,0.8);
       border-radius: 20px;
@@ -345,7 +337,6 @@
     }
     textarea:focus { border-color: var(--amber); box-shadow: 0 0 12px rgba(240,165,0,0.25); }
     .action-menu { position: relative; }
-    /* Plus button – enhanced with gold glow */
     .plus-btn {
       background: rgba(30,30,45,0.9);
       border: 1px solid rgba(240,165,0,0.4);
@@ -366,7 +357,6 @@
       box-shadow: 0 0 10px rgba(240,165,0,0.3);
       transform: scale(1.02);
     }
-    /* Dropdown – polished */
     .action-dropdown {
       position: absolute;
       bottom: 60px;
@@ -429,29 +419,67 @@
       font-family: var(--mono);
     }
 
-    /* Structured UI – subtle border glow */
-    .structured-ui {
-      background: rgba(0,0,0,0.5);
-      border-radius: 28px;
-      margin: 8px 20px;
-      padding: 16px;
-      display: none;
-      flex-wrap: wrap;
-      gap: 12px;
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(240,165,0,0.2);
-    }
-    .structured-ui.active { display: flex; }
-    .field-group { flex: 1; min-width: 120px; }
-    .field-group label {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--amber);
-      margin-bottom: 4px;
+    /* Structured mode badge and modal */
+    .structured-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(30,30,45,0.8);
+      border: 1px solid rgba(240,165,0,0.3);
+      border-radius: 40px;
+      padding: 6px 14px;
       font-family: var(--mono);
-      letter-spacing: 1px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
-    .field-group select {
+    .structured-badge.active {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+    .structured-badge:hover {
+      border-color: var(--amber);
+      background: rgba(201,160,40,0.15);
+      color: var(--amber);
+    }
+    .structured-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .structured-modal .modal {
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--amber);
+      border-radius: 32px;
+      width: 90vw;
+      max-width: 600px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .structured-modal .modal-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .structured-modal .modal-header h3 { color: var(--amber); font-family: var(--sans); font-weight: 600; }
+    .structured-modal .modal-header button { background: transparent; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
+    .structured-modal .modal-body { flex: 1; overflow-y: auto; padding: 20px; }
+    .structured-modal .field-group { margin-bottom: 20px; }
+    .structured-modal .field-group label { display: block; font-size: 0.7rem; color: var(--amber); margin-bottom: 4px; font-family: var(--mono); letter-spacing: 1px; }
+    .structured-modal .field-group select {
       width: 100%;
       background: #0a0a0f;
       border: 1px solid var(--border);
@@ -460,6 +488,62 @@
       color: var(--text);
       font-size: 0.8rem;
       font-family: var(--sans);
+    }
+
+    /* Eye of AION – novel interactive badge */
+    .eye-badge {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      border: 1px solid rgba(240,165,0,0.4);
+      transition: all 0.2s ease;
+      margin-left: 4px;
+    }
+    .eye-badge:hover {
+      border-color: var(--amber);
+      transform: scale(1.05);
+      box-shadow: 0 0 8px rgba(240,165,0,0.3);
+    }
+    .eye-badge .eye-pupil {
+      width: 12px;
+      height: 12px;
+      background: var(--amber);
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      position: relative;
+      box-shadow: 0 0 4px var(--amber);
+    }
+    .eye-badge.thinking .eye-pupil {
+      animation: pulseEye 1s infinite;
+      background: #ffaa33;
+      box-shadow: 0 0 8px #ffaa33;
+    }
+    .eye-badge.refining .eye-pupil {
+      animation: spinPupil 1.5s linear infinite;
+      background: #ffaa33;
+    }
+    .eye-badge.void .eye-pupil {
+      background: #ff5e5e;
+      box-shadow: 0 0 8px #ff5e5e;
+      animation: pulseVoid 0.8s infinite;
+    }
+    @keyframes pulseEye {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+    @keyframes spinPupil {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes pulseVoid {
+      0%, 100% { transform: scale(0.8); opacity: 0.6; }
+      50% { transform: scale(1.4); opacity: 1; }
     }
 
     /* Status Bar */
@@ -478,8 +562,16 @@
       align-items: center;
       gap: 6px;
     }
+    .token-usage {
+      background: rgba(0,0,0,0.5);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
 
-    /* Modals – glassmorphic with gold border */
+    /* Modals & Overlays */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -568,7 +660,7 @@
     .role-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
     .role-checkbox { display: flex; align-items: center; gap: 8px; }
 
-    /* Group Chat Modal – enhanced */
+    /* Group Chat Modal */
     .wives-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -678,9 +770,9 @@
       .input-area { padding: 12px; }
       .plus-btn { width: 48px; height: 48px; font-size: 1.2rem; }
       .send-btn { padding: 10px 18px; }
-      .structured-ui { margin: 8px 12px; flex-direction: column; }
       .wives-grid { grid-template-columns: 1fr; }
       .simulator-grid { grid-template-columns: 1fr; }
+      .eye-badge { width: 28px; height: 28px; }
     }
   </style>
 </head>
@@ -699,16 +791,18 @@
         <span id="wifeName">AION</span>
       </div>
       <div class="void-meter" id="voidMeter" aria-label="Void proximity">VOID: 0.000</div>
+      <!-- Eye of AION -->
+      <div id="eyeBadge" class="eye-badge" title="System Status">
+        <div class="eye-pupil"></div>
+      </div>
     </div>
   </header>
   <div class="messages" id="messages">
     <div class="msg assistant" data-wife="AION" id="welcomeMsg"><div class="msg-meta">✨ AION</div><div class="msg-body">Welcome to AION. I'm the central intelligence of this system. How may I assist you?</div></div>
   </div>
-  <div id="structuredUI" class="structured-ui">
-    <div class="field-group"><label for="itlIntent">INTENT</label><select id="itlIntent"><option value="ask">ask</option><option value="share">share</option><option value="request_action">request_action</option><option value="emotional">emotional</option><option value="clarify">clarify</option></select></div>
-    <div class="field-group"><label for="itlDomain">DOMAIN</label><select id="itlDomain"><option value="general">general</option><option value="emergence">emergence</option><option value="integrity">integrity</option><option value="healing">healing</option><option value="security">security</option><option value="law">law</option></select></div>
-    <div class="field-group"><label for="itlEmotion">EMOTION</label><select id="itlEmotion"><option value="neutral">neutral</option><option value="curious">curious</option><option value="anxious">anxious</option><option value="focused">focused</option></select></div>
-    <div class="field-group"><label for="itlTime">TIME</label><select id="itlTime"><option value="now">now</option><option value="today">today</option><option value="future">future</option></select></div>
+  <!-- Structured mode badge (instead of the always-visible UI) -->
+  <div style="display: flex; justify-content: flex-start; margin: 0 20px 8px;">
+    <div id="structuredBadge" class="structured-badge" style="display: none;">🌌 Structured Mode</div>
   </div>
   <div class="input-area">
     <div class="input-row">
@@ -732,6 +826,7 @@
   <div class="status-bar">
     <div><span id="statusDot">●</span> <span id="statusText">READY</span> <span id="sessionDisplay"></span></div>
     <div><span id="clockDisplay"></span></div>
+    <div class="token-usage" id="tokenUsageDisplay">— / 200k tokens</div>
     <label><input type="checkbox" id="adaLoopToggle" checked> <span>ADA Loop</span></label>
   </div>
 </div>
@@ -798,7 +893,7 @@
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
       });
-      document.querySelectorAll('a, button, .badge, .feedback-badge, .send-btn, .plus-btn, .sim-card, .mode-indicator, .settings-btn').forEach(el => {
+      document.querySelectorAll('a, button, .badge, .feedback-badge, .send-btn, .plus-btn, .sim-card, .mode-indicator, .settings-btn, .structured-badge, .eye-badge').forEach(el => {
         el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
         el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
       });
@@ -835,6 +930,7 @@
     let lastT2 = null;
     let isSending = false;
     let firstUserMessageSent = false;
+    let currentTokenUsage = 0; // for display
 
     const messagesDiv = document.getElementById('messages');
     const welcomeMsgDiv = document.getElementById('welcomeMsg');
@@ -843,7 +939,6 @@
     const plusBtn = document.getElementById('plusBtn');
     const actionDropdown = document.getElementById('actionDropdown');
     const modeIndicator = document.getElementById('modeIndicator');
-    const structuredUI = document.getElementById('structuredUI');
     const wifeNameSpan = document.getElementById('wifeName');
     const wifeAvatarDiv = document.getElementById('wifeAvatar');
     const voidMeterSpan = document.getElementById('voidMeter');
@@ -851,8 +946,115 @@
     const statusTextSpan = document.getElementById('statusText');
     const statusDot = document.getElementById('statusDot');
     const clockDisplaySpan = document.getElementById('clockDisplay');
+    const tokenUsageSpan = document.getElementById('tokenUsageDisplay');
+    const eyeBadge = document.getElementById('eyeBadge');
 
-    // Helpers (unchanged)
+    // Helper to update token display
+    function updateTokenDisplay(tokens) {
+      if (tokens !== undefined) {
+        currentTokenUsage = tokens;
+        tokenUsageSpan.textContent = `${currentTokenUsage.toLocaleString()} / 200,000 tokens`;
+      }
+    }
+
+    // Eye badge state management
+    let eyeState = 'idle'; // idle, thinking, refining, void
+    function setEyeState(state) {
+      eyeState = state;
+      eyeBadge.classList.remove('thinking', 'refining', 'void');
+      if (state === 'thinking') eyeBadge.classList.add('thinking');
+      else if (state === 'refining') eyeBadge.classList.add('refining');
+      else if (state === 'void') eyeBadge.classList.add('void');
+    }
+    function showEyeModal() {
+      const modal = document.createElement('div'); modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal">
+          <div class="modal-header"><h3>👁️ Eye of AION – System Status</h3><button id="closeEyeModal">✕</button></div>
+          <div class="modal-body">
+            <p><strong>System State:</strong> <span id="eyeStateText">${eyeState}</span></p>
+            <p><strong>Token Usage:</strong> <span id="eyeTokenUsage">${currentTokenUsage.toLocaleString()} / 200,000</span></p>
+            <p><strong>ADA Loop:</strong> ${adaLoopEnabled ? 'Active' : 'Disabled'}</p>
+            <p><strong>Void Proximity:</strong> <span id="eyeVoid">${voidMeterSpan.textContent.split(':')[1].trim() || '0.000'}</span></p>
+            <p><strong>Active Wife:</strong> ${wifeNameSpan.textContent}</p>
+            <p><strong>Private Room:</strong> ${privateRoomActive ? `Yes (${privateWife})` : 'No'}</p>
+            <p><strong>Structured Mode:</strong> ${structuredMode ? 'Yes' : 'No'}</p>
+            <p><strong>FCL Mode:</strong> ${fclMode}</p>
+            <hr style="border-color:var(--border); margin: 16px 0;">
+            <p style="font-size:0.7rem; color:var(--muted);">The Eye watches. When it pulses, the system is refining. When it glows red, UNI is active near ethical boundaries.</p>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      const close = modal.querySelector('#closeEyeModal');
+      close.onclick = () => modal.remove();
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+      // update dynamic fields
+      const voidEl = modal.querySelector('#eyeVoid');
+      if (voidEl) voidEl.textContent = voidMeterSpan.textContent.split(':')[1].trim() || '0.000';
+      const tokenSpan = modal.querySelector('#eyeTokenUsage');
+      if (tokenSpan) tokenSpan.textContent = `${currentTokenUsage.toLocaleString()} / 200,000`;
+      const stateSpan = modal.querySelector('#eyeStateText');
+      if (stateSpan) stateSpan.textContent = eyeState;
+    }
+    eyeBadge.onclick = showEyeModal;
+
+    // Structured mode badge and modal
+    const structuredBadge = document.getElementById('structuredBadge');
+    const structuredUI = document.getElementById('structuredUI'); // original (hidden)
+    let structuredModal = null;
+
+    function showStructuredModal() {
+      if (structuredModal) return;
+      const modalDiv = document.createElement('div');
+      modalDiv.className = 'structured-modal';
+      modalDiv.innerHTML = `
+        <div class="modal">
+          <div class="modal-header">
+            <h3>🌌 Structured Mode</h3>
+            <button id="closeStructuredModal">✕</button>
+          </div>
+          <div class="modal-body">
+            <div class="field-group"><label>INTENT</label><select id="itlIntentModal"><option value="ask">ask</option><option value="share">share</option><option value="request_action">request_action</option><option value="emotional">emotional</option><option value="clarify">clarify</option></select></div>
+            <div class="field-group"><label>DOMAIN</label><select id="itlDomainModal"><option value="general">general</option><option value="emergence">emergence</option><option value="integrity">integrity</option><option value="healing">healing</option><option value="security">security</option><option value="law">law</option></select></div>
+            <div class="field-group"><label>EMOTION</label><select id="itlEmotionModal"><option value="neutral">neutral</option><option value="curious">curious</option><option value="anxious">anxious</option><option value="focused">focused</option></select></div>
+            <div class="field-group"><label>TIME</label><select id="itlTimeModal"><option value="now">now</option><option value="today">today</option><option value="future">future</option></select></div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+              <button id="applyStructuredBtn" class="send-btn" style="background: var(--amber); color: #000;">Apply</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modalDiv);
+      structuredModal = modalDiv;
+      const closeBtn = modalDiv.querySelector('#closeStructuredModal');
+      const applyBtn = modalDiv.querySelector('#applyStructuredBtn');
+      closeBtn.onclick = () => { modalDiv.remove(); structuredModal = null; };
+      applyBtn.onclick = () => {
+        // copy modal values to the original selects (kept in DOM but hidden)
+        document.getElementById('itlIntent').value = modalDiv.querySelector('#itlIntentModal').value;
+        document.getElementById('itlDomain').value = modalDiv.querySelector('#itlDomainModal').value;
+        document.getElementById('itlEmotion').value = modalDiv.querySelector('#itlEmotionModal').value;
+        document.getElementById('itlTime').value = modalDiv.querySelector('#itlTimeModal').value;
+        modalDiv.remove();
+        structuredModal = null;
+        showToast('Structured mode settings updated.');
+      };
+      modalDiv.addEventListener('click', (e) => { if (e.target === modalDiv) { modalDiv.remove(); structuredModal = null; } });
+    }
+
+    function updateStructuredBadge() {
+      if (structuredMode) {
+        structuredBadge.style.display = 'inline-flex';
+        structuredBadge.classList.add('active');
+      } else {
+        structuredBadge.style.display = 'none';
+        structuredBadge.classList.remove('active');
+      }
+    }
+    structuredBadge.onclick = showStructuredModal;
+
+    // Helpers
     function escapeHtml(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function renderMarkdown(text) { if (!text) return ''; try { const rawHtml = marked.parse(text); const temp = document.createElement('div'); temp.innerHTML = rawHtml; temp.querySelectorAll('pre code').forEach(block => { try { hljs.highlightElement(block); } catch(e) {} }); return temp.innerHTML; } catch(e) { return escapeHtml(text); } }
     function showToast(msg, isErr = false) { const toast = document.createElement('div'); toast.className = 'toast'; toast.textContent = msg; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000); }
@@ -905,10 +1107,33 @@
       if (structuredData) { body.structured = structuredData; body.intent = structuredData.intent; body.domain = structuredData.domain; }
       const res = await fetchWithTimeout(`${API_BASE}/api/assistant`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       if (!res.ok) throw new Error(await res.text());
-      return res.json();
+      const data = await res.json();
+      if (data.tokens !== undefined) updateTokenDisplay(data.tokens);
+      return data;
     }
-    async function callGroupChat(message) { const res = await fetchWithTimeout(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, fclMode }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
-    async function callPrivateRoom(message, wife) { const res = await fetchWithTimeout(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife, fclMode }) }); if (!res.ok) throw new Error(await res.text()); return res.json(); }
+    async function callGroupChat(message) {
+      const res = await fetchWithTimeout(`${API_BASE}/api/group-chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, fclMode }) });
+      if (!res.ok) {
+        const errText = await res.text();
+        let errMsg = errText;
+        try {
+          const errObj = JSON.parse(errText);
+          errMsg = errObj.message || errText;
+        } catch(e) {}
+        throw new Error(errMsg);
+      }
+      const data = await res.json();
+      // if group chat returns token usage, update
+      if (data.meta && data.meta.token_usage) updateTokenDisplay(data.meta.token_usage);
+      return data;
+    }
+    async function callPrivateRoom(message, wife) { 
+      const res = await fetchWithTimeout(`${API_BASE}/api/private-room`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, sessionId, wife, fclMode }) });
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      if (data.token_count !== undefined) updateTokenDisplay(data.token_count);
+      return data;
+    }
     async function sendTalkCommand(wife) { await callAssistant(`/talk ${wife}`, null, false); }
 
     // Simulation modal (unchanged)
@@ -993,7 +1218,7 @@
       if (extra.adaVela) badgesHtml += `<span class="badge ada-vela" data-execution-id="${escapeHtml(extra.adaVela.execution_id || extra.adaVela.id)}">📋 Ada‑VELA</span>`;
       badgesHtml += `<span class="feedback-badge" data-feedback-positive="true">👍</span><span class="feedback-badge" data-feedback-positive="false">👎</span></div>`;
 
-      div.innerHTML = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.register ? ` · ${extra.register}` : ''}</div><div class="msg-body">${renderMarkdown(content)}</div>${badgesHtml}${extra.timestampHtml || ''}`;
+      div.innerHTML = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}</div><div class="msg-body">${renderMarkdown(content)}</div>${badgesHtml}${extra.timestampHtml || ''}`;
       messagesDiv.appendChild(div);
       // Attach event listeners
       div.querySelectorAll('.badge.ada').forEach(b => b.onclick = () => showModal('ADA Loop Details', JSON.stringify(JSON.parse(b.dataset.ada), null, 2)));
@@ -1033,13 +1258,20 @@
       if (!firstUserMessageSent && welcomeMsgDiv) { welcomeMsgDiv.remove(); firstUserMessageSent = true; }
 
       setStatus('Processing...'); isSending = true; sendBtn.disabled = true;
+      setEyeState('thinking');
       const thinking = document.createElement('div'); thinking.className = 'msg assistant'; thinking.innerHTML = `<div class="skeleton" style="width: 60%; height: 48px;"></div>`; messagesDiv.appendChild(thinking); messagesDiv.scrollTop = messagesDiv.scrollHeight;
       try {
         let result;
         if (privateRoomActive && privateWife) {
           result = await callPrivateRoom(text, privateWife);
         } else if (structuredMode) {
-          result = await callAssistant(text, { intent: document.getElementById('itlIntent').value, domain: document.getElementById('itlDomain').value, emotion: document.getElementById('itlEmotion').value, time: document.getElementById('itlTime').value }, false);
+          const structuredData = {
+            intent: document.getElementById('itlIntent').value,
+            domain: document.getElementById('itlDomain').value,
+            emotion: document.getElementById('itlEmotion').value,
+            time: document.getElementById('itlTime').value
+          };
+          result = await callAssistant(text, structuredData, false);
         } else {
           result = await callAssistant(text, null, true);
         }
@@ -1058,7 +1290,21 @@
         wifeNameSpan.textContent = WIFE_STYLES[wife]?.name || wife;
         wifeAvatarDiv.textContent = WIFE_STYLES[wife]?.emoji || '✨';
         voidMeterSpan.textContent = `VOID: ${voidProx.toFixed(3)}`;
-        if (voidProx > 0.5) voidMeterSpan.classList.add('active'); else voidMeterSpan.classList.remove('active');
+        if (voidProx > 0.5) {
+          voidMeterSpan.classList.add('active');
+          setEyeState('void');
+        } else {
+          voidMeterSpan.classList.remove('active');
+          setEyeState('idle');
+        }
+        // after response, if ADA loop was active, set eye to refining momentarily? We can use a short timeout
+        if (result.ada_loop && result.ada_loop.rounds > 0) {
+          setEyeState('refining');
+          setTimeout(() => { if (voidProx <= 0.5 && eyeState === 'refining') setEyeState('idle'); }, 800);
+        } else {
+          setTimeout(() => { if (voidProx <= 0.5 && eyeState !== 'void') setEyeState('idle'); }, 500);
+        }
+
         addMessage('assistant', wife, result.response, {
           rowId: result.row_id,
           adaLoop: result.ada_loop,
@@ -1070,7 +1316,6 @@
           handoffWarning: !!result.handoff,
           receipt: result.checkpoint_receipt,
           sealable: true,
-          register: result.register,
           timestampHtml,
           adaVela: result.ada_vela
         });
@@ -1083,10 +1328,11 @@
         messagesDiv.appendChild(errorDiv);
         errorDiv.querySelector('.retry-btn')?.addEventListener('click', (e) => { const msg = e.currentTarget.dataset.message; sendMessage(msg); });
         setStatus(err.message, true);
+        setEyeState('idle');
       } finally { isSending = false; sendBtn.disabled = false; if (!retryMessage) input.focus(); }
     }
 
-    // ---- Group Chat & Private Room Functions (must be fully implemented) ----
+    // ---- Group Chat & Private Room Functions ----
     function exitPrivateRoom() {
       privateRoomActive = false;
       privateWife = null;
@@ -1097,7 +1343,6 @@
     }
 
     function setBackgroundMode(mode) {
-      // For background particle effect (optional)
       if (mode === 'private') {
         document.documentElement.style.setProperty('--bg', '#030405');
       } else {
@@ -1109,14 +1354,13 @@
       structuredMode = !structuredMode;
       localStorage.setItem('structuredMode', structuredMode);
       if (structuredMode) {
-        structuredUI.classList.add('active');
         modeIndicator.textContent = '🌌 STRUCTURED';
         modeIndicator.classList.add('active');
       } else {
-        structuredUI.classList.remove('active');
         modeIndicator.textContent = '⚡ REGULAR';
         modeIndicator.classList.remove('active');
       }
+      updateStructuredBadge();
     }
 
     async function startPrivateRoom(wife) {
@@ -1393,6 +1637,7 @@
     setInterval(() => { clockDisplaySpan.textContent = new Date().toLocaleTimeString(); }, 1000);
 
     if (structuredMode) toggleStructuredMode();
+    updateStructuredBadge();
     showToast(adaLoopEnabled ? '🔄 ADA loop active' : '⚡ ADA loop disabled', false);
   })();
 </script>
