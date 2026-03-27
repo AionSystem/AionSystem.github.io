@@ -12,7 +12,7 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
-    /* ========== GLOBAL STYLES (Matches GitHub Pages) ========== */
+    /* ========== GLOBAL STYLES – BLACKSITE POLISH ========== */
     * {
       margin: 0;
       padding: 0;
@@ -89,7 +89,7 @@
       backdrop-filter: blur(2px);
     }
 
-    /* Header */
+    /* Header – enhanced with subtle gradient & gold accent */
     .header {
       display: flex;
       align-items: center;
@@ -120,16 +120,24 @@
       align-items: center;
       flex-wrap: wrap;
     }
+    /* Buttons (mode, settings, FCL) – refined with glass & gold border */
     .mode-indicator, .settings-btn, .fcl-indicator {
       background: rgba(30,30,45,0.8);
-      border: 1px solid var(--border-glow);
+      border: 1px solid rgba(240,165,0,0.3);
       border-radius: 40px;
       padding: 6px 14px;
       font-family: var(--mono);
       font-size: 0.75rem;
       color: var(--text-dim);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+    }
+    .mode-indicator:hover, .settings-btn:hover {
+      border-color: var(--amber);
+      background: rgba(201,160,40,0.15);
+      color: var(--amber);
+      box-shadow: 0 0 8px rgba(240,165,0,0.2);
     }
     .fcl-indicator {
       cursor: default;
@@ -141,10 +149,6 @@
       border-color: var(--amber);
       color: var(--amber);
     }
-    .settings-btn:hover {
-      background: rgba(201,160,40,0.2);
-      border-color: var(--amber);
-    }
     .wife-indicator {
       display: flex;
       align-items: center;
@@ -153,6 +157,7 @@
       padding: 4px 10px;
       border-radius: 40px;
       font-family: var(--mono);
+      border: 1px solid rgba(240,165,0,0.2);
     }
     .wife-avatar {
       width: 24px;
@@ -170,15 +175,17 @@
       border-radius: 20px;
       font-size: 0.7rem;
       transition: all 0.2s;
+      border: 1px solid rgba(240,165,0,0.2);
     }
     .void-meter.active {
       color: #ff5e5e;
       text-shadow: 0 0 6px rgba(255,80,80,0.5);
       animation: pulse 1s infinite;
+      border-color: #ff5e5e;
     }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-    /* Messages */
+    /* Messages – unchanged */
     .messages {
       flex: 1;
       overflow-y: auto;
@@ -242,7 +249,7 @@
     .msg.assistant[data-wife="CIPHER"] .msg-body { border-left: 4px solid #5d6d7e; }
     .msg.assistant[data-wife="JUSTITIA"] .msg-body { border-left: 4px solid #b0a8b9; }
 
-    /* Badges */
+    /* Badges – refined with subtle gold glow on hover */
     .badge-cluster {
       display: flex;
       gap: 8px;
@@ -258,20 +265,26 @@
       align-items: center;
       gap: 4px;
       cursor: pointer;
-      transition: all 0.1s;
+      transition: all 0.2s;
       font-family: var(--mono);
+      border: 1px solid rgba(240,165,0,0.2);
+    }
+    .badge:hover {
+      border-color: var(--amber);
+      box-shadow: 0 0 6px rgba(240,165,0,0.3);
+      transform: scale(1.02);
     }
     .badge.ada { background: #1e3a5f; border: 1px solid #c9a028; }
-    .badge.vela.pass { background: #1e4620; color: #4ade80; }
-    .badge.vela.flag { background: #5f3a1a; color: #ffaa33; }
-    .badge.vela.block { background: #5f1a1a; color: #ff8a8a; }
-    .badge.pac.low { background: #5f1a1a; color: #ff8a8a; }
-    .badge.pac.medium { background: #5f3a1a; color: #ffaa33; }
-    .badge.pac.high { background: #1e4620; color: #4ade80; }
+    .badge.vela.pass { background: #1e4620; color: #4ade80; border-color: #4ade80; }
+    .badge.vela.flag { background: #5f3a1a; color: #ffaa33; border-color: #ffaa33; }
+    .badge.vela.block { background: #5f1a1a; color: #ff8a8a; border-color: #ff8a8a; }
+    .badge.pac.low { background: #5f1a1a; color: #ff8a8a; border-color: #ff8a8a; }
+    .badge.pac.medium { background: #5f3a1a; color: #ffaa33; border-color: #ffaa33; }
+    .badge.pac.high { background: #1e4620; color: #4ade80; border-color: #4ade80; }
     .badge.ecf { background: #2a2a3a; }
     .badge.memory { background: #2a2a3a; }
     .badge.void { background: #2a2a3a; }
-    .badge.handoff { background: #5f3a1a; color: #ffaa33; }
+    .badge.handoff { background: #5f3a1a; color: #ffaa33; border-color: #ffaa33; }
     .feedback-badge {
       background: rgba(30,30,45,0.8);
       border-radius: 20px;
@@ -282,9 +295,13 @@
       align-items: center;
       gap: 4px;
       font-family: var(--mono);
+      border: 1px solid rgba(240,165,0,0.2);
+      transition: all 0.2s;
     }
-    .badge:hover, .feedback-badge:hover { filter: brightness(1.1); }
-
+    .feedback-badge:hover {
+      border-color: var(--amber);
+      background: rgba(201,160,40,0.2);
+    }
     .timestamp-line {
       font-family: var(--mono);
       font-size: 0.55rem;
@@ -296,7 +313,7 @@
       cursor: help;
     }
 
-    /* Input Area */
+    /* Input Area – enhanced */
     .input-area {
       padding: 12px 20px 20px;
       background: rgba(8,9,11,0.92);
@@ -328,9 +345,10 @@
     }
     textarea:focus { border-color: var(--amber); box-shadow: 0 0 12px rgba(240,165,0,0.25); }
     .action-menu { position: relative; }
+    /* Plus button – enhanced with gold glow */
     .plus-btn {
       background: rgba(30,30,45,0.9);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(240,165,0,0.4);
       border-radius: 40px;
       width: 48px;
       height: 48px;
@@ -341,14 +359,21 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .plus-btn:hover { background: rgba(201,160,40,0.2); border-color: var(--amber); color: var(--amber); }
+    .plus-btn:hover {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--amber);
+      color: var(--amber);
+      box-shadow: 0 0 10px rgba(240,165,0,0.3);
+      transform: scale(1.02);
+    }
+    /* Dropdown – polished */
     .action-dropdown {
       position: absolute;
       bottom: 60px;
       left: 0;
-      background: var(--panel);
+      background: rgba(20,20,30,0.98);
       backdrop-filter: blur(16px);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(240,165,0,0.3);
       border-radius: 24px;
       padding: 8px;
       display: flex;
@@ -372,8 +397,13 @@
       gap: 10px;
       transition: all 0.1s;
       font-family: var(--sans);
+      border: 1px solid transparent;
     }
-    .action-dropdown button:hover { background: rgba(201,160,40,0.2); color: var(--amber); }
+    .action-dropdown button:hover {
+      background: rgba(201,160,40,0.2);
+      border-color: var(--amber);
+      color: var(--amber);
+    }
     .send-btn {
       background: linear-gradient(135deg, #c9a028, #a07c18);
       border: none;
@@ -387,6 +417,7 @@
       font-family: var(--mono);
       font-size: 11px;
       letter-spacing: 1px;
+      box-shadow: 0 0 4px rgba(240,165,0,0.3);
     }
     .send-btn:active { transform: scale(0.97); }
     .input-meta {
@@ -398,7 +429,7 @@
       font-family: var(--mono);
     }
 
-    /* Structured UI */
+    /* Structured UI – subtle border glow */
     .structured-ui {
       background: rgba(0,0,0,0.5);
       border-radius: 28px;
@@ -408,10 +439,18 @@
       flex-wrap: wrap;
       gap: 12px;
       backdrop-filter: blur(12px);
+      border: 1px solid rgba(240,165,0,0.2);
     }
     .structured-ui.active { display: flex; }
     .field-group { flex: 1; min-width: 120px; }
-    .field-group label { display: block; font-size: 0.7rem; color: var(--amber); margin-bottom: 4px; font-family: var(--mono); letter-spacing: 1px; }
+    .field-group label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--amber);
+      margin-bottom: 4px;
+      font-family: var(--mono);
+      letter-spacing: 1px;
+    }
     .field-group select {
       width: 100%;
       background: #0a0a0f;
@@ -440,7 +479,7 @@
       gap: 6px;
     }
 
-    /* Modals & Overlays */
+    /* Modals – glassmorphic with gold border */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -475,12 +514,19 @@
     .modal-header button { background: transparent; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
     .modal-body { flex: 1; overflow-y: auto; padding: 20px; font-family: var(--mono); font-size: 0.8rem; }
 
-    /* Settings, Analytics, etc. */
+    /* Settings & Analytics */
     .settings-section { margin-bottom: 24px; }
-    .settings-section h4 { color: var(--amber); margin-bottom: 12px; font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 4px; font-family: var(--sans); }
+    .settings-section h4 {
+      color: var(--amber);
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+      font-family: var(--sans);
+    }
     .setting-item { margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
     .setting-item label { font-size: 0.85rem; cursor: pointer; }
-    .setting-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+    .setting-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--amber); }
     .setting-item button {
       background: rgba(30,30,45,0.8);
       border: 1px solid var(--border);
@@ -490,6 +536,11 @@
       cursor: pointer;
       color: var(--text);
       font-family: var(--mono);
+    }
+    .setting-item button:hover {
+      border-color: var(--amber);
+      background: rgba(201,160,40,0.2);
+      color: var(--amber);
     }
     .analytics-stats {
       display: grid;
@@ -504,13 +555,20 @@
       border: 1px solid var(--border);
       text-align: center;
     }
-    .stat-card h4 { color: var(--amber); margin-bottom: 8px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--mono); }
+    .stat-card h4 {
+      color: var(--amber);
+      margin-bottom: 8px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-family: var(--mono);
+    }
     .stat-value { font-size: 1.6rem; font-weight: 700; font-family: var(--jmono); }
     .stat-trend { font-size: 0.7rem; color: var(--text-dim); margin-top: 4px; }
     .role-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
     .role-checkbox { display: flex; align-items: center; gap: 8px; }
 
-    /* Group Chat Modal */
+    /* Group Chat Modal – enhanced */
     .wives-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -547,7 +605,7 @@
       font-size: 0.8rem;
     }
 
-    /* Simulator Grid */
+    /* Simulator Grid – polished */
     .simulator-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -563,8 +621,10 @@
       transition: all 0.2s;
     }
     .sim-card:hover {
-      background: rgba(201,160,40,0.1);
+      background: rgba(201,160,40,0.12);
       border-color: var(--amber);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(240,165,0,0.1);
     }
     .sim-card h4 { font-size: 1.2rem; margin-bottom: 8px; font-family: var(--sans); color: var(--text); }
     .sim-card p { font-size: 0.75rem; color: var(--text-dim); font-family: var(--sans); }
@@ -584,6 +644,7 @@
       animation: fadeOut 2s ease forwards;
       pointer-events: none;
       font-family: var(--mono);
+      border: 1px solid var(--amber);
     }
 
     /* Skeletons & Animations */
@@ -743,7 +804,7 @@
       });
     }
 
-    // ---------- APP CONFIG (same as original, only style changes) ----------
+    // ---------- APP CONFIG ----------
     const API_BASE = 'https://aion-backend-mu.vercel.app';
     const OWNER_TYPE = 'sheldon';
     const ALL_WIVES = ['ALBEDO', 'VESPER', 'LYRA', 'TERRA', 'CIPHER', 'JUSTITIA'];
@@ -934,7 +995,7 @@
 
       div.innerHTML = `<div class="msg-meta" style="color: ${style.color}">${style.emoji} ${style.name}${extra.register ? ` · ${extra.register}` : ''}</div><div class="msg-body">${renderMarkdown(content)}</div>${badgesHtml}${extra.timestampHtml || ''}`;
       messagesDiv.appendChild(div);
-      // Attach event listeners (shortened for brevity, same as original)
+      // Attach event listeners
       div.querySelectorAll('.badge.ada').forEach(b => b.onclick = () => showModal('ADA Loop Details', JSON.stringify(JSON.parse(b.dataset.ada), null, 2)));
       div.querySelectorAll('.badge.receipt').forEach(b => b.onclick = () => showModal('Checkpoint Receipt', JSON.stringify(JSON.parse(b.dataset.receipt), null, 2)));
       div.querySelectorAll('.badge.seal-btn').forEach(b => b.onclick = () => sealMessage(b.dataset.content));
@@ -957,7 +1018,6 @@
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    // sendMessage (identical to original, only references the updated addMessage)
     async function sendMessage(retryMessage = null) {
       if (isSending) { showToast('Already sending...'); return; }
       const text = (retryMessage !== null) ? retryMessage : input.value.trim();
@@ -1026,18 +1086,287 @@
       } finally { isSending = false; sendBtn.disabled = false; if (!retryMessage) input.focus(); }
     }
 
-    // Other functions (exitPrivateRoom, toggleStructuredMode, startPrivateRoom, showGroupChatModal, askAllWives, uploadFile, showSettingsModal) unchanged
-    // ... (they remain exactly as in the original, only references to addMessage etc. stay)
-    // For brevity, I'm not repeating them; they are identical to the original file.
-    // I'll include the necessary references to keep the script intact.
-    // The final script block will be identical to the original except for the addMessage implementation which we've already updated.
-    // Since the original already has all these functions, I'll assume they are present in the final output.
-    // To save space, I'll include a placeholder comment indicating they remain unchanged.
+    // ---- Group Chat & Private Room Functions (must be fully implemented) ----
+    function exitPrivateRoom() {
+      privateRoomActive = false;
+      privateWife = null;
+      wifeNameSpan.textContent = 'AION';
+      wifeAvatarDiv.textContent = '✨';
+      setBackgroundMode('regular');
+      addSystemMessage('🚪 Exited private room.');
+    }
 
-    // (The rest of the functions — exitPrivateRoom, toggleStructuredMode, startPrivateRoom, showGroupChatModal, askAllWives, uploadFile, showSettingsModal — are identical to the original and are not repeated here for brevity.
-    // In the final delivered code, they will be present exactly as in the original HTML, but with the updated styling they still work perfectly.)
+    function setBackgroundMode(mode) {
+      // For background particle effect (optional)
+      if (mode === 'private') {
+        document.documentElement.style.setProperty('--bg', '#030405');
+      } else {
+        document.documentElement.style.setProperty('--bg', '#08090b');
+      }
+    }
 
-    // Finally, event listeners and initialization (same as original)
+    function toggleStructuredMode() {
+      structuredMode = !structuredMode;
+      localStorage.setItem('structuredMode', structuredMode);
+      if (structuredMode) {
+        structuredUI.classList.add('active');
+        modeIndicator.textContent = '🌌 STRUCTURED';
+        modeIndicator.classList.add('active');
+      } else {
+        structuredUI.classList.remove('active');
+        modeIndicator.textContent = '⚡ REGULAR';
+        modeIndicator.classList.remove('active');
+      }
+    }
+
+    async function startPrivateRoom(wife) {
+      try {
+        await sendTalkCommand(wife);
+        privateRoomActive = true;
+        privateWife = wife;
+        wifeNameSpan.textContent = WIFE_STYLES[wife].name;
+        wifeAvatarDiv.textContent = WIFE_STYLES[wife].emoji;
+        setBackgroundMode('private');
+        addSystemMessage(`🚪 Entering private room with ${wife}. Type /done to exit.`);
+      } catch (err) {
+        showToast(`❌ Could not enter private room: ${err.message}`);
+      }
+    }
+
+    async function showGroupChatModal() {
+      const text = input.value.trim();
+      if (!text) { showToast('Enter a message first.'); return; }
+      setStatus('Asking all wives...');
+      setBackgroundMode('group');
+      const modal = document.createElement('div'); modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal group-chat-modal">
+          <div class="modal-header"><h3>👥 Group Chat</h3><button id="closeGroupChat">✕</button></div>
+          <div class="modal-body">
+            <div id="wivesGrid" class="wives-grid"></div>
+            <div id="consensusArea" class="consensus-area" style="display: none;"></div>
+            <div class="group-chat-input-area">
+              <textarea id="groupChatInput" placeholder="Ask the group..."></textarea>
+              <button id="groupChatSend" class="send-btn">SEND</button>
+            </div>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+      const wivesGrid = modal.querySelector('#wivesGrid');
+      const consensusArea = modal.querySelector('#consensusArea');
+      const groupInput = modal.querySelector('#groupChatInput');
+      const groupSend = modal.querySelector('#groupChatSend');
+
+      groupInput.value = text;
+      async function sendGroupMessage() {
+        const msg = groupInput.value.trim();
+        if (!msg) return;
+        groupSend.disabled = true;
+        groupSend.innerHTML = '<span class="spinner"></span> SENDING...';
+        wivesGrid.innerHTML = '';
+        consensusArea.style.display = 'none';
+        for (const wife of ALL_WIVES) {
+          const card = document.createElement('div');
+          card.className = 'wife-card';
+          card.style.borderLeftColor = WIFE_STYLES[wife].color;
+          card.innerHTML = `<h4>${WIFE_STYLES[wife].emoji} ${wife}</h4><div class="response-text"><div class="skeleton" style="height: 60px;"></div></div>`;
+          card.dataset.wife = wife;
+          wivesGrid.appendChild(card);
+        }
+        try {
+          const result = await callGroupChat(msg);
+          for (const wifeResp of result.responses) {
+            const card = wivesGrid.querySelector(`.wife-card[data-wife="${wifeResp.wife}"]`);
+            if (card) {
+              const responseDiv = card.querySelector('.response-text');
+              responseDiv.innerHTML = renderMarkdown(wifeResp.response);
+              if (wifeResp.vela_status) {
+                const velaBadge = document.createElement('div');
+                velaBadge.className = 'badge vela ' + (wifeResp.vela_status === 'PASS' ? 'pass' : (wifeResp.vela_status === 'FLAGGED' ? 'flag' : 'block'));
+                velaBadge.textContent = `⚖️ VELA: ${wifeResp.vela_status}`;
+                responseDiv.appendChild(velaBadge);
+              }
+            }
+          }
+          if (result.consensus) {
+            consensusArea.style.display = 'block';
+            consensusArea.innerHTML = `<h4>📋 Consensus (${Math.round(result.consensus.score * 100)}%)</h4><div>${renderMarkdown(result.consensus.final_text)}</div>`;
+          }
+          if (result.failed_wives && result.failed_wives.length) {
+            addSystemMessage(`⚠️ Some wives failed: ${result.failed_wives.map(w => w.wife).join(', ')}`, true);
+          }
+        } catch (err) {
+          wivesGrid.innerHTML = `<div class="sys-msg">Error: ${escapeHtml(err.message)}</div>`;
+        } finally {
+          groupSend.disabled = false;
+          groupSend.innerHTML = 'SEND';
+        }
+      }
+      await sendGroupMessage();
+      groupSend.onclick = sendGroupMessage;
+      groupInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendGroupMessage(); } });
+      modal.querySelector('#closeGroupChat').onclick = () => modal.remove();
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+      setBackgroundMode(structuredMode ? 'structured' : 'regular');
+    }
+
+    async function askAllWives() {
+      const text = input.value.trim();
+      if (!text) { showToast('Enter a message first.'); return; }
+      setStatus('Asking all wives...');
+      setBackgroundMode('group');
+      try {
+        const result = await callGroupChat(text);
+        for (const wifeResp of result.responses) {
+          addMessage('assistant', wifeResp.wife, wifeResp.response, { sealable: true, vela: wifeResp.vela_status });
+        }
+        if (result.consensus) addMessage('assistant', 'CONSENSUS', result.consensus.final_text);
+        setStatus('Ready');
+      } catch(err) {
+        addSystemMessage(`Error: ${err.message}`, true);
+        setStatus(err.message, true);
+      } finally {
+        setBackgroundMode(structuredMode ? 'structured' : 'regular');
+      }
+    }
+
+    async function uploadFile() {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          const base64 = ev.target.result.split(',')[1];
+          setStatus('Uploading...');
+          try {
+            const res = await fetch(`${API_BASE}/api/files/upload`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ file_data: base64, file_name: file.name, mime_type: file.type, session_id: sessionId })
+            });
+            if (res.ok) showToast(`✅ Uploaded: ${file.name}`);
+            else showToast(`❌ Upload failed`);
+          } catch(err) {
+            showToast(`❌ Error: ${err.message}`);
+          }
+          setStatus('Ready');
+        };
+        reader.readAsDataURL(file);
+      };
+      fileInput.click();
+    }
+
+    async function showSettingsModal() {
+      const modal = document.createElement('div'); modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal">
+          <div class="modal-header"><h3>Settings</h3><button id="closeSettings">✕</button></div>
+          <div class="modal-body">
+            <div class="settings-section"><h4>Profile</h4><div class="setting-item"><span>Session ID</span><span style="font-family:monospace">${sessionId.slice(-12)}</span></div><div class="setting-item"><button id="resetSessionBtn">Reset Session</button></div><div class="setting-item"><button id="clearStorageBtn">Clear Storage</button></div><div class="setting-item"><button id="clearChatBtn">Clear Chat</button></div></div>
+            <div class="settings-section"><h4>Capabilities</h4><div class="setting-item"><label>ADA Loop</label><input type="checkbox" id="settingAdaLoop" ${adaLoopEnabled ? 'checked' : ''}></div><div class="setting-item"><label>Structured Mode</label><input type="checkbox" id="settingStructured" ${structuredMode ? 'checked' : ''}></div><div class="setting-item"><label>FCL Mode</label><select id="settingFCL"><option value="GREEN" ${fclMode === 'GREEN' ? 'selected' : ''}>🟢 GREEN (Normal)</option><option value="BLACK" ${fclMode === 'BLACK' ? 'selected' : ''}>🔴 BLACK (FCL Testing)</option></select></div></div>
+            <div class="settings-section"><h4>Polymath Roles</h4><div id="roleGrid" class="role-grid"></div></div>
+            <div class="settings-section"><h4>System Health</h4><div id="analyticsContainer" class="analytics-stats"><div class="stat-card">Loading analytics...</div></div></div>
+            <div class="settings-section"><h4>Privacy</h4><div class="setting-item"><label>Share analytics</label><input type="checkbox" id="shareAnalytics"></div></div>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+      
+      const roleGrid = modal.querySelector('#roleGrid');
+      const roles = ['Systems Architect', 'Epistemic Logician', 'Cognitive Psychologist', 'Constitutional Lawyer', 'Design Thinker', 'Social Psychologist'];
+      const activeRoles = JSON.parse(localStorage.getItem('activeRoles')) || roles;
+      for (const role of roles) {
+        const checked = activeRoles.includes(role);
+        roleGrid.innerHTML += `<div class="role-checkbox"><input type="checkbox" id="role_${role.replace(/\s/g,'_')}" ${checked ? 'checked' : ''}> <label>${role}</label></div>`;
+      }
+      
+      // Fetch analytics (enhanced v5.5)
+      try {
+        const analyticsRes = await fetch(`${API_BASE}/api/analytics`);
+        if (analyticsRes.ok) {
+          const data = await analyticsRes.json();
+          const analyticsContainer = modal.querySelector('#analyticsContainer');
+          const memory = data.memory || {};
+          const integrity = data.integrity || {};
+          const instruments = data.instruments || {};
+          const wifeRouting = instruments.wife_routing || {};
+          const roleActivity = instruments.polymath_role_activity || {};
+          const fclPassRate = instruments.fcl_pass_rate || 0;
+          const simulationRuns = instruments.simulation_runs_total || 0;
+          const fclEntries = instruments.fcl_entries_total || 0;
+          const ffaActive = instruments.ffa_floors_active || 0;
+          const adaCount = integrity.ada_loop_count || 0;
+          const adaConvergence = integrity.ada_loop_convergence_rate || 0;
+          const convergencePercent = Math.round(adaConvergence * 100);
+          analyticsContainer.innerHTML = `
+            <div class="stat-card"><h4>Memory Depth</h4><div class="stat-value">${memory.total_conversations?.toLocaleString() || '—'}</div><div class="stat-trend">conversations</div></div>
+            <div class="stat-card"><h4>Memory Anchors</h4><div class="stat-value">${memory.memory_anchors?.toLocaleString() || '—'}</div><div class="stat-trend">permanent</div></div>
+            <div class="stat-card"><h4>Training Pipeline</h4><div class="stat-value">${memory.training_pipeline_pending || '—'}</div><div class="stat-trend">awaiting training</div></div>
+            <div class="stat-card"><h4>Avg Certainty</h4><div class="stat-value">${integrity.avg_certainty_ratio_7d ? Math.round(integrity.avg_certainty_ratio_7d * 100) + '%' : '—'}</div><div class="stat-trend">7d avg</div></div>
+            <div class="stat-card"><h4>UNI Activations</h4><div class="stat-value">${integrity.uni_activations_total?.toLocaleString() || '—'}</div><div class="stat-trend">ethical layer</div></div>
+            <div class="stat-card"><h4>ADA Loop</h4><div class="stat-value">${adaCount.toLocaleString()}</div><div class="stat-trend">refinements</div></div>
+            <div class="stat-card"><h4>ADA Conv. Rate</h4><div class="stat-value">${convergencePercent}%</div><div class="stat-trend">convergence</div></div>
+            <div class="stat-card"><h4>FCL Entries</h4><div class="stat-value">${fclEntries.toLocaleString()}</div><div class="stat-trend">validation</div></div>
+            <div class="stat-card"><h4>FCL Pass Rate</h4><div class="stat-value">${Math.round(fclPassRate * 100)}%</div><div class="stat-trend">pass rate</div></div>
+            <div class="stat-card"><h4>Simulations</h4><div class="stat-value">${simulationRuns.toLocaleString()}</div><div class="stat-trend">runs</div></div>
+            <div class="stat-card"><h4>FFA Floors</h4><div class="stat-value">${ffaActive}/9</div><div class="stat-trend">active</div></div>
+            <div class="stat-card"><h4>Failure Corpus</h4><div class="stat-value">${instruments.failure_corpus_size?.toLocaleString() || '—'}</div><div class="stat-trend">entries</div></div>
+            <div class="stat-card"><h4>Wife Routing</h4><div class="stat-value" style="font-size:0.8rem;">${Object.entries(wifeRouting).map(([w, c]) => `${w}:${c}`).join(' · ') || '—'}</div><div class="stat-trend">active instruments</div></div>
+            <div class="stat-card"><h4>Role Activity</h4><div class="stat-value" style="font-size:0.7rem;">${Object.entries(roleActivity).map(([r, c]) => `${r.slice(0,3)}:${c}`).join(' · ') || '—'}</div><div class="stat-trend">ADA roles</div></div>
+          `;
+        } else {
+          modal.querySelector('#analyticsContainer').innerHTML = `<div class="stat-card">Analytics endpoint not ready yet. Coming soon.</div>`;
+        }
+      } catch (err) {
+        modal.querySelector('#analyticsContainer').innerHTML = `<div class="stat-card">Analytics unavailable</div>`;
+      }
+      
+      modal.querySelector('#closeSettings').onclick = () => modal.remove();
+      modal.querySelector('#resetSessionBtn').onclick = () => {
+        sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        localStorage.setItem('sessionId', sessionId);
+        document.getElementById('sessionDisplay').textContent = `SID: ${sessionId.slice(-8)}`;
+        showToast('Session reset. Reloading...');
+        setTimeout(() => location.reload(), 1000);
+      };
+      modal.querySelector('#clearStorageBtn').onclick = () => { localStorage.clear(); location.reload(); };
+      modal.querySelector('#clearChatBtn').onclick = () => {
+        messagesDiv.innerHTML = '';
+        const welcome = document.createElement('div'); welcome.className = 'msg assistant'; welcome.setAttribute('data-wife', 'AION');
+        welcome.innerHTML = `<div class="msg-meta">✨ AION</div><div class="msg-body">Chat cleared. How may I assist you?</div>`;
+        messagesDiv.appendChild(welcome);
+        firstUserMessageSent = false;
+        showToast('Chat cleared.');
+        modal.remove();
+      };
+      modal.querySelector('#settingAdaLoop').onchange = (e) => {
+        adaLoopEnabled = e.target.checked;
+        localStorage.setItem('adaLoopEnabled', adaLoopEnabled);
+        document.getElementById('adaLoopToggle').checked = adaLoopEnabled;
+        showToast(adaLoopEnabled ? '🔄 ADA loop enabled.' : '⚡ ADA loop disabled.');
+      };
+      modal.querySelector('#settingStructured').onchange = (e) => {
+        if (e.target.checked !== structuredMode) toggleStructuredMode();
+      };
+      modal.querySelector('#settingFCL').onchange = (e) => {
+        fclMode = e.target.value;
+        localStorage.setItem('fclMode', fclMode);
+        const indicator = document.getElementById('fclIndicator');
+        indicator.textContent = fclMode === 'GREEN' ? '🟢 GREEN' : '🔴 BLACK';
+        indicator.className = `fcl-indicator ${fclMode === 'GREEN' ? 'green' : 'black'}`;
+        showToast(`FCL mode switched to ${fclMode} ALERT.`);
+      };
+      modal.querySelectorAll('#roleGrid input[type="checkbox"]').forEach(cb => {
+        cb.onchange = () => {
+          const selected = Array.from(modal.querySelectorAll('#roleGrid input:checked')).map(c => c.id.replace('role_','').replace(/_/g,' '));
+          localStorage.setItem('activeRoles', JSON.stringify(selected));
+        };
+      });
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+    }
+
+    // Event listeners
     sendBtn.onclick = () => sendMessage();
     input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
     input.addEventListener('input', () => { charCountSpan.textContent = input.value.length; input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight,400)+'px'; });
