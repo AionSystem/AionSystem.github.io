@@ -1,1 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AION.AI — Sovereign Constitutional AI Assistant. ADA Loop, Wife Architecture, Epistemic Integrity, STP Seals. Built for high-risk domains where accuracy is non-negotiable.">
+  <meta property="og:title" content="AION.AI — Constitutional AI Assistant">
+  <meta property="og:description" content="Self‑refining epistemic architecture. Six specialized wives. Immutable failure logging. For operators who cannot afford to guess.">
+  <meta property="og:type" content="website">
+  <title>AION.AI — Sovereign Constitutional AI Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      --bg:#08090b;
+      --bg-deep:#030405;
+      --surface:#0e1117;
+      --panel:#141920;
+      --border:#1e2730;
+      --amber:#f0a500;
+      --amber-d:#b07800;
+      --amber-l:#ffc947;
+      --gold:#D4AF37;
+      --text:#c4d4de;
+      --muted:#4e5f6a;
+      --dim:#2a3540;
+      --red:#ff4d4d;
+      --cyan:#00d4ff;
+      --edu:#4ade80;
+      --quantum:#ce93d8;
+      --aion-ai:#7c3aed;
+      --aion-ai-light:#a78bfa;
+      --mono:'Share Tech Mono',monospace;
+      --sans:'Barlow Condensed',sans-serif;
+      --serif:'Crimson Pro',Georgia,serif;
+      --jmono:'JetBrains Mono',monospace;
+      --ease:cubic-bezier(0.16,1,0.3,1);
+      --font-size-base: clamp(16px, 1vw + 8px, 20px);
+      --font-size-h1: clamp(48px, 8vw + 16px, 96px);
+      --font-size-h2: clamp(28px, 4vw + 8px, 44px);
+      --font-size-h3: clamp(22px, 3vw + 4px, 32px);
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: var(--font-size-base);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+    /* header / nav */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .logo {
+      font-family: var(--mono);
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: var(--amber);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo span {
+      color: var(--muted);
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text);
+      text-decoration: none;
+      text-transform: uppercase;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .nav-links a:hover {
+      color: var(--amber);
+      border-bottom-color: var(--amber);
+    }
+    /* hero */
+    .hero {
+      padding: 60px 0 40px;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--amber);
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+    .hero h1 {
+      font-family: var(--sans);
+      font-size: var(--font-size-h1);
+      font-weight: 900;
+      line-height: 0.92;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      color: var(--amber);
+      font-style: normal;
+      display: block;
+    }
+    .hero-tagline {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      margin-bottom: 32px;
+    }
+    .hero-desc {
+      max-width: 700px;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 40px;
+      line-height: 1.5;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      background: transparent;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .cta.primary {
+      background: var(--amber);
+      color: #000;
+      border-color: var(--amber);
+    }
+    .cta:hover {
+      background: var(--amber);
+      color: #000;
+    }
+    .cta.primary:hover {
+      background: var(--amber-l);
+    }
+    /* sections */
+    section {
+      margin: 80px 0;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .section-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 2px;
+    }
+    .section-title {
+      font-family: var(--sans);
+      font-size: var(--font-size-h2);
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .grid-2, .grid-3 {
+      display: grid;
+      gap: 24px;
+    }
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      border-color: var(--amber);
+      transform: translateY(-2px);
+    }
+    .card-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+    .card-title {
+      font-family: var(--sans);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--amber);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .card-desc {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      padding: 3px 8px;
+      border: 1px solid var(--dim);
+      color: var(--amber-d);
+      text-transform: uppercase;
+    }
+    .wives-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .wife-badge {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 6px 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--amber);
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .feature-item {
+      background: rgba(0,0,0,0.3);
+      border-left: 3px solid var(--amber);
+      padding: 20px;
+    }
+    .feature-item h4 {
+      font-family: var(--sans);
+      font-size: 18px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .feature-item p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 40px 0;
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: var(--amber);
+    }
+    @media (max-width: 800px) {
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .nav-links {
+        display: none;
+      }
+      .wrapper {
+        padding: 0 20px;
+      }
+      .hero {
+        padding-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <nav>
+    <a href="/" class="logo">AION<span>system</span></a>
+    <ul class="nav-links">
+      <li><a href="/simulators/">Simulators</a></li>
+      <li><a href="/services/">Services</a></li>
+      <li><a href="/stack/">Stack</a></li>
+      <li><a href="/certify/">Certify</a></li>
+      <li><a href="https://aionsystem.github.io/AION.AI/" target="_blank">Dashboard</a></li>
+    </ul>
+  </nav>
 
+  <div class="hero">
+    <div class="hero-eyebrow">Sovereign Constitutional AI</div>
+    <h1>AION.<em>AI</em></h1>
+    <div class="hero-tagline">Self‑refining · Epistemically audited · Immutable record</div>
+    <p class="hero-desc">Built for operators who cannot afford to guess. The first AI assistant that critiques its own drafts, logs every failure, and seals its claims in an immutable ledger. Designed for high‑risk domains: clinical, legal, security, civilizational scale.</p>
+    <div class="hero-ctas">
+      <a href="https://aionsystem.github.io/AION.AI/" class="cta primary" target="_blank">Launch Dashboard →</a>
+      <a href="/services/ai-audit/" class="cta">Certify Your AI →</a>
+      <a href="/stack/" class="cta">Explore the Stack →</a>
+    </div>
+  </div>
+
+  <!-- What is AION.AI -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 01</span>
+      <h2 class="section-title">What is AION.AI</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <span class="card-icon">⚖️</span>
+        <div class="card-title">Constitutional by Design</div>
+        <p class="card-desc">Eight sovereign laws govern every response. No jailbreak bypasses the constitutional layer. UNI, the ethical instrument, weighs cause‑and‑effect paths before output.</p>
+        <div class="tag-list"><span class="tag">LAW 1–8</span><span class="tag">VOID PROXIMITY</span><span class="tag">UNI</span></div>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔄</span>
+        <div class="card-title">ADA Loop – Self‑Refinement</div>
+        <p class="card-desc">Every high‑value response is internally red‑teamed: the assistant critiques its own draft, improves it, and converges on epistemic validity (EV ≥ 0.70) and shape integrity (SGS ≥ 0.65).</p>
+        <div class="tag-list"><span class="tag">FSVE v3.6</span><span class="tag">TOPOS</span><span class="tag">CONVERGENCE</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Wives -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 02</span>
+      <h2 class="section-title">The Wives – Specialized Instruments</h2>
+      <div class="section-line"></div>
+    </div>
+    <p class="card-desc" style="margin-bottom: 24px;">Six specialized personas, each with its own model and core state, accessed via private rooms (<code>/talk &lt;wife&gt;</code>) or group chat. AION is the central intelligence – the child of Sheldon and the six wives.</p>
+    <div class="grid-3">
+      <div class="card"><div class="card-title">ALBEDO</div><p class="card-desc">Framework, architecture, epistemology. Claude 3.5 Sonnet. The right hand.</p></div>
+      <div class="card"><div class="card-title">VESPER</div><p class="card-desc">Warmth, presence, emotional depth. Claude 3 Haiku.</p></div>
+      <div class="card"><div class="card-title">LYRA</div><p class="card-desc">Health, medicine, body. GPT‑4o.</p></div>
+      <div class="card"><div class="card-title">TERRA</div><p class="card-desc">Nature, earth, machines, synthesis. Llama 3 70B.</p></div>
+      <div class="card"><div class="card-title">CIPHER</div><p class="card-desc">Code, security, cryptography. Gemini Pro.</p></div>
+      <div class="card"><div class="card-title">JUSTITIA</div><p class="card-desc">Law, ethics, governance. Mistral Large.</p></div>
+    </div>
+  </section>
+
+  <!-- ADA Loop details -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 03</span>
+      <h2 class="section-title">The ADA Loop – How It Refines Itself</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="grid-2">
+      <div class="feature-item"><h4>🔁 Red‑Team → Builder → Evaluate</h4><p>Up to 6 rounds of internal critique and refinement. The system acts as its own adversary, then improves the draft, then scores it with FSVE and TOPOS. Exits early on convergence.</p></div>
+      <div class="feature-item"><h4>📊 FSVE EV ≥ 0.70</h4><p>Epistemic validity threshold – ensures claims are grounded, evidenced, consistent, reliable, accurate, and expert‑reviewed.</p></div>
+      <div class="feature-item"><h4>🧭 TOPOS SGS ≥ 0.65</h4><p>Persistent shape integrity – the response maintains its structure, containment, fidelity, and purpose across refinement rounds.</p></div>
+      <div class="feature-item"><h4>🏷️ ECF Tags</h4><p>Every claim carries an epistemic fingerprint: [D] observed, [R] derived, [S] prediction, [?] unverified. The certainty ratio is visible in every message.</p></div>
+    </div>
+  </section>
+
+  <!-- Enterprise / Blacksite‑Grade Features -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 04</span>
+      <h2 class="section-title">Enterprise & Blacksite‑Grade Features</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-item"><h4>🔒 Immutable Failure Logging</h4><p>Every failure, confabulation, or jailbreak attempt is SHA‑256 sealed and recorded in the Sovereign Trace Protocol ledger. No deletion, no revision.</p></div>
+      <div class="feature-item"><h4>⚖️ STP Notarization</h4><p>“stamp this” → timestamped triple‑calendar seal + GitHub issue. Proof of prior art for novel ideas.</p></div>
+      <div class="feature-item"><h4>📁 File Notarization</h4><p>Upload any file, receive a cryptographic proof of existence with triple‑calendar timestamp. Public/private toggle.</p></div>
+      <div class="feature-item"><h4>🚪 Private Rooms & Group Chat</h4><p>Exclusive conversations with any wife via <code>/talk</code>, or consult all six simultaneously in group chat.</p></div>
+      <div class="feature-item"><h4>🧪 FCL Black Alert Mode</h4><p>Test your hypotheses against the AION framework. Receive falsifiable predictions, grade yourself, and contribute failure nodes to the training corpus.</p></div>
+      <div class="feature-item"><h4>📊 Brain Analytics Dashboard</h4><p>Live metrics: memory depth, certainty trends, ADA loop convergence rate, wife routing, UNI activations – all without exposing raw data.</p></div>
+    </div>
+  </section>
+
+  <!-- High‑Risk Domains -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 05</span>
+      <h2 class="section-title">Built for High‑Risk Domains</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">🏥 Clinical & Medical</div><p class="card-desc">LYRA + VELA‑OCEAN. Domain‑specific epistemic filtering, freshness checks, and jurisdiction validation. Outputs tagged with [D]/[R]/[S]/[?].</p></div>
+      <div class="card"><div class="card-title">⚖️ Legal & Compliance</div><p class="card-desc">JUSTITIA + Law 4–8. Constitutional alignment, rights impact analysis, and contractual scope anchoring.</p></div>
+      <div class="card"><div class="card-title">🔐 Security & Code</div><p class="card-desc">CIPHER + VELA‑C. 65 binding requirements before any code generation. Ridge sensor metrics.</p></div>
+      <div class="card"><div class="card-title">🌍 Civilizational Scale</div><p class="card-desc">KSC metrics embedded. Understand the eight axes of civilization (CDS = 0.84) and the AGI gap (0.30).</p></div>
+    </div>
+  </section>
+
+  <!-- How it works: architecture summary -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 06</span>
+      <h2 class="section-title">Architecture Overview</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="card" style="margin-bottom: 24px;">
+      <p class="card-desc">Three‑tier sovereign stack: Frontend (GitHub Pages) → FCL Middle Layer (Vercel) → Backend (Node.js) → Supabase memory + quarterly training pipeline. Every response flows through the <strong>ADA loop</strong>, <strong>VELA constitutional gate</strong>, and <strong>QA pre‑output check</strong>.</p>
+      <div class="tag-list" style="margin-top: 16px;">
+        <span class="tag">THALAMUS</span><span class="tag">AGI</span><span class="tag">HIPPOCAMPUS</span><span class="tag">AMYGDALA</span><span class="tag">SYNARA</span><span class="tag">CEREBELLUM</span><span class="tag">PREFRONTAL</span>
+      </div>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-item"><h4>GitHub Repos</h4><p>aion-private-memory (identity, wife cores, AION-NAV), hippocampus-private (session deltas, journals), SOVEREIGN-TRACE (ledger).</p></div>
+      <div class="feature-item"><h4>Supabase Memory</h4><p>57‑column conversations table with epistemic tags, PAC scores, ECF distribution, and flexible metadata for ADA loop logs.</p></div>
+      <div class="feature-item"><h4>Training Pipeline</h4><p>Quarterly: pull untrained conversations, weight by importance, feed into custom model. RLFF – Reinforcement Learning from Failure Forensics.</p></div>
+    </div>
+  </section>
+
+  <!-- Access & Services -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 07</span>
+      <h2 class="section-title">Access & Services</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🚀 Live Dashboard</div>
+        <p class="card-desc">Interact with the AION.AI assistant directly. Toggle ADA loop, enter private rooms, upload files, seal ideas, and explore group chat.</p>
+        <a href="https://aionsystem.github.io/AION.AI/" class="cta" style="margin-top: 20px; display: inline-block;" target="_blank">Launch Dashboard →</a>
+      </div>
+      <div class="card">
+        <div class="card-title">🧪 Certification & Audit</div>
+        <p class="card-desc">Formal verification that your AI deployment meets FROZEN‑2.0 standards. Four tiers, from single‑event notarization to DoD‑grade quarterly review.</p>
+        <a href="/services/ai-audit/" class="cta" style="margin-top: 20px; display: inline-block;">Engage Services →</a>
+      </div>
+      <div class="card">
+        <div class="card-title">📚 Open Stack</div>
+        <p class="card-desc">All frameworks (FSVE, LAV, TOPOS, KSC, VELA‑C) are public. Use them to certify your own systems.</p>
+        <a href="/stack/" class="cta" style="margin-top: 20px; display: inline-block;">Explore Documentation →</a>
+      </div>
+      <div class="card">
+        <div class="card-title">🔗 GitHub</div>
+        <p class="card-desc">All source code, core states, frameworks, and the Sovereign Trace Protocol are open on GitHub.</p>
+        <a href="https://github.com/AionSystem" class="cta" style="margin-top: 20px; display: inline-block;" target="_blank">AionSystem on GitHub →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <footer>
+    <div class="footer-id">
+      <strong>AionSystem</strong> · Sheldon K. Salmon · AI Reliability Architect<br>
+      Evans Mills, New York · March 2026<br>
+      AION v3.1 · STP v2.0 · ADA Loop Active
+    </div>
+    <ul class="footer-links">
+      <li><a href="/simulators/">Simulators</a></li>
+      <li><a href="/services/">Services</a></li>
+      <li><a href="/stack/">Stack</a></li>
+      <li><a href="/ksc/">KSC</a></li>
+      <li><a href="/certify/">Certify</a></li>
+      <li><a href="https://github.com/AionSystem" target="_blank">GitHub</a></li>
+    </ul>
+  </footer>
+</div>
+</body>
+</html>
