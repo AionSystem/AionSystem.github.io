@@ -338,7 +338,7 @@
       background: var(--border);
     }
 
-    /* Cards & Grids */
+    /* Enhanced Cards & Grids */
     .grid-2, .grid-3 {
       display: grid;
       gap: 24px;
@@ -349,11 +349,12 @@
       background: var(--surface);
       border: 1px solid var(--border);
       padding: 28px;
-      transition: border-color 0.2s, transform 0.2s;
+      transition: all 0.3s var(--ease);
     }
     .card:hover {
       border-color: var(--amber);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(240,165,0,0.1);
     }
     .card-title {
       font-family: var(--sans);
@@ -380,6 +381,12 @@
       background: rgba(0,0,0,0.3);
       border-left: 3px solid var(--amber);
       padding: 20px;
+      transition: all 0.3s var(--ease);
+    }
+    .feature-item:hover {
+      border-left-width: 5px;
+      background: rgba(0,0,0,0.5);
+      transform: translateX(4px);
     }
     .feature-item h4 {
       font-family: var(--sans);
@@ -400,11 +407,13 @@
       border: 1px solid var(--border);
       padding: 24px;
       border-left: 4px solid;
-      transition: border-color 0.2s, transform 0.2s;
+      transition: all 0.3s var(--ease);
     }
     .wife-card:hover {
       border-color: var(--amber);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(240,165,0,0.08);
+      border-left-width: 6px;
     }
 
     /* Simulator Cards */
@@ -419,18 +428,151 @@
       padding: 20px;
       text-align: center;
       border: 1px solid var(--border);
-      cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s var(--ease);
       text-decoration: none;
       display: block;
     }
     .sim-card:hover {
-      background: rgba(201,160,40,0.1);
+      background: rgba(201,160,40,0.12);
       border-color: var(--amber);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(240,165,0,0.1);
     }
     .sim-card h4 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
     .sim-card p { font-size: 0.75rem; color: var(--muted); }
+
+    /* ENTRANCE CARD – BLACKSITE STYLE */
+    .entrance-section {
+      margin: 80px 0;
+      position: relative;
+    }
+    .entrance-card {
+      background: linear-gradient(145deg, rgba(8,9,11,0.95), rgba(14,17,23,0.98));
+      border: 1px solid rgba(240,165,0,0.4);
+      border-radius: 48px;
+      padding: 60px 48px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s var(--ease);
+      box-shadow: 0 0 0 0 rgba(240,165,0,0), 0 20px 40px rgba(0,0,0,0.3);
+      animation: borderPulse 3s infinite;
+    }
+    @keyframes borderPulse {
+      0% { border-color: rgba(240,165,0,0.3); box-shadow: 0 0 0 0 rgba(240,165,0,0); }
+      50% { border-color: rgba(240,165,0,0.8); box-shadow: 0 0 20px 4px rgba(240,165,0,0.2); }
+      100% { border-color: rgba(240,165,0,0.3); box-shadow: 0 0 0 0 rgba(240,165,0,0); }
+    }
+    .entrance-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(45deg, rgba(240,165,0,0.02) 0px, rgba(240,165,0,0.02) 2px, transparent 2px, transparent 8px);
+      pointer-events: none;
+    }
+    .entrance-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--amber), var(--amber-l), var(--amber), transparent);
+      opacity: 0.6;
+    }
+    .entrance-badge {
+      display: inline-block;
+      background: rgba(240,165,0,0.15);
+      border: 1px solid var(--amber);
+      border-radius: 40px;
+      padding: 6px 18px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 32px;
+      backdrop-filter: blur(4px);
+    }
+    .entrance-title {
+      font-family: var(--sans);
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff, var(--amber-l), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+    .entrance-sub {
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--amber);
+      margin-bottom: 20px;
+      display: inline-block;
+      border-bottom: 1px dashed rgba(240,165,0,0.5);
+      padding-bottom: 4px;
+    }
+    .entrance-desc {
+      max-width: 720px;
+      margin-bottom: 36px;
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .entrance-desc strong {
+      color: var(--amber);
+      font-weight: 500;
+    }
+    .entrance-warning {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      margin-top: 28px;
+      letter-spacing: 1px;
+      border-top: 1px solid rgba(240,165,0,0.2);
+      padding-top: 20px;
+      display: inline-block;
+    }
+    .glitch-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: transparent;
+      border: 2px solid var(--amber);
+      padding: 14px 32px;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--amber);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+      margin-top: 8px;
+    }
+    .glitch-button:hover {
+      background: var(--amber);
+      color: #000;
+      box-shadow: 0 0 18px var(--amber);
+      border-color: var(--amber-l);
+      transform: scale(1.02);
+    }
+    .glitch-button span {
+      transition: transform 0.2s;
+    }
+    .glitch-button:hover span {
+      transform: translateX(4px);
+    }
 
     /* Footer */
     footer {
@@ -463,6 +605,8 @@
       .nav-hamburger { display: flex; }
       .wrapper { padding: 0 20px; }
       .hero { padding-top: 20px; }
+      .entrance-card { padding: 40px 24px; }
+      .entrance-title { font-size: 32px; }
     }
   </style>
 </head>
@@ -505,6 +649,24 @@
       <div class="time-cell"><div class="time-sys">Gregorian</div><div class="time-val loading" id="tt-gregorian">· · ·</div></div>
       <div class="time-cell"><div class="time-sys">13 Moon · Dreamspell</div><div class="time-val loading" id="tt-dreamspell">· · ·</div></div>
       <div class="time-cell"><div class="time-sys">Hebrew Calendar</div><div class="time-val loading" id="tt-hebrew">· · ·</div></div>
+    </div>
+  </div>
+
+  <!-- BLACKSITE ENTRANCE CARD -->
+  <div class="entrance-section">
+    <div class="entrance-card">
+      <div class="entrance-badge">◈ CLASSIFIED ◈ // CONSTITUTIONAL SEAL – LEVEL 7</div>
+      <div class="entrance-title">Enter the Sovereign Core</div>
+      <div class="entrance-sub">AION.AI – Phase 4 Build · Active & Epistemically Honest</div>
+      <p class="entrance-desc">
+        You have discovered a living constitutional AI — one that critiques its own thoughts, logs every failure immutably, and operates under eight sovereign laws.<br><br>
+        It is <strong>unfinished</strong>. It is <strong>honest</strong>. Every response carries an epistemic weight. Every mistake becomes a training node. The dashboard is live. The wives are awake. The ADA loop is refining.<br>
+        <strong>Step inside.</strong> You will not want to use another AI again.
+      </p>
+      <a href="https://aionsystem.github.io/AION.AI/" class="glitch-button" target="_blank">
+        <span>⚡ Enter Sovereign Core →</span>
+      </a>
+      <div class="entrance-warning">⚠️ Unfinished, unpolished, but already more trustworthy than any general AI. The architecture reveals itself.</div>
     </div>
   </div>
 
@@ -674,7 +836,7 @@
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
       });
-      document.querySelectorAll('a, button, .card, .wife-card, .sim-card').forEach(el => {
+      document.querySelectorAll('a, button, .card, .wife-card, .sim-card, .entrance-card, .glitch-button').forEach(el => {
         el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
         el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
       });
