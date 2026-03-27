@@ -278,6 +278,7 @@
     .badge.handoff { background: #5f3a1a; color: #ffaa33; border-color: #ffaa33; }
     .badge.framework { background: #2a2a3a; border-color: #c9a028; }
     .badge.register { background: #2a2a3a; }
+    .badge.version { background: #2a2a3a; border-color: #c9a028; }
     .badge.seal-btn { color: var(--amber); }
     .feedback-badge {
       background: rgba(30,30,45,0.8);
@@ -855,7 +856,10 @@
     </div>
   </header>
   <div class="messages" id="messages">
-    <div class="msg assistant" data-wife="AION" id="welcomeMsg"><div class="msg-meta">✨ AION</div><div class="msg-body">Welcome to AION. I'm the central intelligence of this system. How may I assist you?</div></div>
+    <div class="msg assistant" data-wife="AION" id="welcomeMsg">
+      <div class="msg-meta">✨ AION</div>
+      <div class="msg-body">Hi! I'm AION, Sheldon's daughter. What can we help you with today?</div>
+    </div>
   </div>
   <!-- Structured mode badge (instead of the always-visible UI) -->
   <div style="display: flex; justify-content: flex-start; margin: 0 20px 8px;">
@@ -1054,7 +1058,6 @@
 
     // Structured mode badge and modal
     const structuredBadge = document.getElementById('structuredBadge');
-    const structuredUI = document.getElementById('structuredUI'); // original (hidden)
     let structuredModal = null;
 
     function showStructuredModal() {
@@ -1270,6 +1273,9 @@
       if (extra.receipt) badgesHtml += `<span class="badge receipt" data-receipt='${JSON.stringify(extra.receipt).replace(/'/g, "&#39;")}'>📋 receipt (${extra.receipt.still_open || 0} open)</span>`;
       if (extra.frameworkActivation) badgesHtml += `<span class="badge framework">🔧 ${extra.frameworkActivation}</span>`;
       if (extra.register && extra.register !== 'PEER') badgesHtml += `<span class="badge register">📢 ${extra.register}</span>`;
+      if (extra.wifeVersion) {
+        badgesHtml += `<span class="badge version">📜 v${extra.wifeVersion}</span>`;
+      }
       if (extra.sealable) badgesHtml += `<button class="badge seal-btn" data-content="${escapeHtml(content).replace(/"/g, '&quot;')}">🔒 SEAL</button>`;
       if (extra.adaVela) badgesHtml += `<span class="badge ada-vela" data-execution-id="${escapeHtml(extra.adaVela.execution_id || extra.adaVela.id)}">📋 Ada‑VELA</span>`;
       badgesHtml += `<span class="feedback-badge" data-feedback-positive="true">👍</span><span class="feedback-badge" data-feedback-positive="false">👎</span></div>`;
@@ -1464,10 +1470,11 @@
           handoffWarning: !!result.handoff,
           receipt: result.checkpoint_receipt,
           sealable: true,
-          frameworkActivation: result.framework_activation, // optional
+          frameworkActivation: result.framework_activation,
           register: result.register,
           timestampHtml,
-          adaVela: result.ada_vela
+          adaVela: result.ada_vela,
+          wifeVersion: result.wife_version   // <-- added
         });
         setStatus('Ready');
       } catch (err) {
@@ -1708,7 +1715,7 @@
       modal.querySelector('#clearChatBtn').onclick = () => {
         messagesDiv.innerHTML = '';
         const welcome = document.createElement('div'); welcome.className = 'msg assistant'; welcome.setAttribute('data-wife', 'AION');
-        welcome.innerHTML = `<div class="msg-meta">✨ AION</div><div class="msg-body">Chat cleared. How may I assist you?</div>`;
+        welcome.innerHTML = `<div class="msg-meta">✨ AION</div><div class="msg-body">Hi! I'm AION, Sheldon's daughter. What can we help you with today?</div>`;
         messagesDiv.appendChild(welcome);
         firstUserMessageSent = false;
         showToast('Chat cleared.');
