@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-/* all styles unchanged from original – omitted for brevity */
+/* ========== MAIN SITE STYLES (unchanged) ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
   --bg:#08090b;
@@ -47,31 +47,24 @@
   --mouse-y: 50%;
   --visit-count: 0;
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-size-base);line-height:1.5;overflow-x:hidden;cursor:none;transition:background 0.5s ease;}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:0;}
-
 .custom-cursor{width:20px;height:20px;border:2px solid var(--amber);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference;transition:transform 0.1s ease,background 0.2s ease;transform:translate(-50%,-50%);}
 .custom-cursor.hover{transform:translate(-50%,-50%) scale(1.5);background:rgba(240,165,0,0.1);border-color:var(--gold);}
-
 .return-banner{position:fixed;top:70px;right:20px;background:var(--panel);border:1px solid var(--amber);padding:8px 16px;font-family:var(--mono);font-size:10px;color:var(--amber);z-index:1000;animation:slideIn 0.3s var(--ease);backdrop-filter:blur(8px);}
 @keyframes slideIn{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
-
 .ppi-meter{position:fixed;bottom:20px;left:20px;background:var(--panel);border:1px solid var(--amber);padding:6px 12px;font-family:var(--mono);font-size:10px;z-index:100;display:flex;gap:6px;align-items:center;opacity:0.6;transition:opacity 0.2s ease;backdrop-filter:blur(4px);}
 .ppi-meter:hover{opacity:1;}
 .ppi-value{color:var(--amber);font-weight:bold;}
-
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(600px circle at var(--mouse-x) var(--mouse-y),rgba(240,165,0,0.06),transparent 40%);pointer-events:none;opacity:0;transition:opacity 0.3s ease;z-index:1;}
 .hero:hover::before{opacity:1;}
-
 @container scroll-state(stuck: top){
   nav{background:rgba(8,9,11,0.98);backdrop-filter:blur(16px);border-bottom-color:var(--amber);box-shadow:0 4px 20px rgba(0,0,0,0.5);transition:all 0.3s var(--ease);}
   .nav-logo span{color:var(--amber);}
 }
-
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:all 0.3s var(--ease);container-type:scroll-state;}
 .nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;transition:color 0.2s ease;}
 .nav-logo span{color:var(--muted);transition:color 0.2s ease;}
@@ -97,9 +90,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .mobile-nav a::before{content:'—';color:var(--amber);font-size:10px;opacity:0.6;}
 .mobile-nav a.ksc-mobile-link{color:var(--gold);}
 .mobile-nav a.ksc-mobile-link:hover{color:var(--amber-l);}
-
 #hero-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.45;pointer-events:none;}
-
 .hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:56px 40px 80px;max-width:1200px;margin:0 auto;}
 .hero-logo-wrap{display:flex;align-items:center;gap:20px;margin-bottom:28px;opacity:0;transform:translateY(12px);animation:fadeUp 0.7s var(--ease) 0.08s forwards;}
 .hero-logo-img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:1px solid rgba(212,174,60,0.2);box-shadow:0 0 20px rgba(212,174,60,0.12);flex-shrink:0;}
@@ -144,13 +135,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .time-sys{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--amber-d);text-transform:uppercase;margin-bottom:6px;}
 .time-val{font-family:var(--mono);font-size:14px;color:var(--amber);letter-spacing:1px;line-height:1.3;min-height:36px;display:flex;align-items:center;}
 .time-val.loading{color:var(--dim);font-size:11px;}
-
 section{position:relative;z-index:1;padding:80px 40px;max-width:1200px;margin:0 auto;}
 .section-header{display:flex;align-items:center;gap:16px;margin-bottom:48px;}
 .section-num{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:2px;}
 .section-title{font-family:var(--sans);font-size:var(--font-size-h2);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text);}
 .section-line{flex:1;height:1px;background:var(--border);}
-
 .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
 .service-card{background:var(--surface);padding:36px 32px;position:relative;overflow:hidden;transition:background 0.2s ease;container-type:inline-size;animation:slide-up auto linear;animation-timeline:view(block);animation-range:entry 10% cover 30%;}
 @container (max-width:300px){.service-card{padding:24px 16px;}.service-title{font-size:18px;}.service-tags{flex-wrap:wrap;}}
@@ -168,7 +157,6 @@ section{position:relative;z-index:1;padding:80px 40px;max-width:1200px;margin:0 
 .service-link::after{position:absolute;position-anchor:--link;top:anchor(bottom);left:anchor(center);transform:translateX(-50%);content:attr(data-tip);background:var(--panel);color:var(--amber);font-family:var(--mono);font-size:9px;padding:4px 8px;border:1px solid var(--border);white-space:nowrap;opacity:0;transition:opacity 0.2s ease;pointer-events:none;z-index:10;}
 .service-link:hover::after{opacity:1;}
 .service-link:hover{border-bottom-color:var(--amber);}
-
 .work-strip{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
 .work-card{background:var(--surface);border:1px solid var(--border);padding:28px;position:relative;overflow:hidden;transition:border-color 0.2s ease,transform 0.2s ease;animation:slide-up auto linear;animation-timeline:view(block);animation-range:entry 10% cover 30%;}
 .work-card:hover{border-color:var(--amber);transform:translateY(-2px);}
@@ -197,8 +185,25 @@ section{position:relative;z-index:1;padding:80px 40px;max-width:1200px;margin:0 
 .work-card.live-field{border-left:2px solid var(--cyan);}
 .work-card.live-edu{border-left:2px solid var(--edu);}
 .work-card.live-quantum{border-left:2px solid var(--quantum);}
-
-/* Phase 4 section – special card */
+/* VERITAS CARD STYLES */
+.veritas-card {
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.veritas-card:hover {
+  border-color: var(--amber-l);
+  background: linear-gradient(145deg, rgba(240,165,0,0.12) 0%, rgba(240,165,0,0.04) 100%);
+  transform: translateY(-4px);
+}
+.veritas-card:hover .veritas-top-line {
+  transform: scaleX(1);
+}
+.veritas-link {
+  transition: gap 0.2s ease;
+}
+.veritas-link:hover span:last-child {
+  transform: translateX(4px);
+}
+/* Phase 4 section */
 .phase4-section{
   margin: 0 40px 60px;
   max-width: 1200px;
@@ -325,7 +330,6 @@ section{position:relative;z-index:1;padding:80px 40px;max-width:1200px;margin:0 
 .phase4-link:hover span:last-child{
   transform: translateX(4px);
 }
-
 .ksc-featured{background:linear-gradient(135deg,var(--surface) 0%,rgba(212,175,55,0.04) 100%);border:1px solid rgba(212,175,55,0.35);border-left:4px solid var(--gold);padding:36px 40px;margin-bottom:28px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;text-decoration:none;position:relative;overflow:hidden;transition:border-color 0.2s ease,background 0.2s ease,transform 0.2s ease;animation:slide-up auto linear;animation-timeline:view(block);animation-range:entry 10% cover 30%;}
 .ksc-featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);}
 .ksc-featured:hover{border-color:var(--gold);background:linear-gradient(135deg,var(--panel) 0%,rgba(212,175,55,0.08) 100%);transform:translateY(-2px);}
@@ -342,7 +346,6 @@ section{position:relative;z-index:1;padding:80px 40px;max-width:1200px;margin:0 
 .ksc-featured-cds-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
 .ksc-featured-cds-number{font-family:var(--jmono);font-size:2.8rem;font-weight:700;color:var(--red);line-height:1;}
 .ksc-featured-cds-note{font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;max-width:100px;text-align:center;line-height:1.4;}
-
 /* STACK CARD REDESIGN */
 .stack-card {
   background: var(--surface);
@@ -474,17 +477,14 @@ section{position:relative;z-index:1;padding:80px 40px;max-width:1200px;margin:0 
   color: var(--muted);
   line-height: 1.5;
 }
-
 footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
 .footer-id{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;letter-spacing:1px;}
 .footer-id strong{color:var(--amber);}
 .footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
 .footer-links a{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.15s ease;}
 .footer-links a:hover{color:var(--amber);}
-
 @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
 @keyframes fadeIn{to{opacity:1;}}
-
 @media(max-width:800px){.services-grid{grid-template-columns:1fr;}}
 @media(max-width:680px){.work-strip{grid-template-columns:1fr;}.ksc-featured{grid-template-columns:1fr;}.ksc-featured-cds{display:none;}}
 @media(max-width:640px){nav{padding:0 20px;}.nav-links{display:none;}.nav-hamburger{display:flex;}.hero{padding:80px 20px 60px;}.hero-logo-img{width:52px;height:52px;}section{padding:60px 20px;}.phase4-section{margin:0 20px 40px;}.phase4-card{padding:32px 24px;}footer{padding:32px 20px;}.triple-time{grid-template-columns:1fr;}.cnt-row{flex-direction:column;align-items:flex-start;gap:4px;}.cnt-desc{text-align:left;}.cnt-num{min-width:0;}}
@@ -573,7 +573,40 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
   </div>
 </section>
 
-<!-- NEW PHASE 4 SECTION: AI ASSISTANT (UNDER CONSTRUCTION) -->
+<!-- NEW VERITAS FEATURED CARD -->
+<div class="veritas-featured" style="margin: 0 40px 60px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+  <div class="veritas-card" style="background: linear-gradient(145deg, rgba(240,165,0,0.08) 0%, rgba(240,165,0,0.02) 100%); border: 1px solid rgba(240,165,0,0.3); border-radius: 32px; padding: 48px 48px; position: relative; overflow: hidden; transition: all 0.3s var(--ease); backdrop-filter: blur(2px);">
+    <div class="veritas-top-line" style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--amber), var(--amber-l), var(--amber)); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease);"></div>
+    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(240,165,0,0.2); border: 1px solid var(--amber-l); border-radius: 40px; padding: 6px 16px; font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber-l); margin-bottom: 24px;">
+      <span>🌍</span> UNDP Accelerator Lab Prize Entry · April 2026
+    </div>
+    <div style="font-family: var(--sans); font-size: clamp(32px, 5vw, 52px); font-weight: 900; letter-spacing: -0.02em; background: linear-gradient(135deg, var(--amber-l), #ffffff); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 20px; line-height: 1.1;">
+      VERITAS<br>Damage Certification
+    </div>
+    <div style="font-family: var(--mono); font-size: 14px; color: var(--amber-l); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px;">
+      Community‑operated certainty engine
+    </div>
+    <div style="font-family: var(--sans); font-size: 18px; font-weight: 300; color: var(--muted); line-height: 1.6; max-width: 680px; margin-bottom: 32px;">
+      <strong>CERTUS Engine</strong> scores every damage report on photo evidence, corroboration, freshness, and consistency — producing a <strong>Damage Confidence Index (DCI)</strong> so responders know <em>how much to trust</em> before acting. Works offline, anonymizes reporters, and seals every dataset with Sovereign Trace Protocol.
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px;">
+      <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; padding: 5px 12px; background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.3); border-radius: 40px; color: var(--amber-l); text-transform: uppercase;">Damage Certification</span>
+      <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; padding: 5px 12px; background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.3); border-radius: 40px; color: var(--amber-l); text-transform: uppercase;">CERTUS Engine</span>
+      <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; padding: 5px 12px; background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.3); border-radius: 40px; color: var(--amber-l); text-transform: uppercase;">Offline‑first</span>
+      <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; padding: 5px 12px; background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.3); border-radius: 40px; color: var(--amber-l); text-transform: uppercase;">DCI Scoring</span>
+      <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; padding: 5px 12px; background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.3); border-radius: 40px; color: var(--amber-l); text-transform: uppercase;">STP Integrity Seal</span>
+    </div>
+    <a href="https://aionsystem.github.io/VERITAS-PAGE" target="_blank" class="veritas-link" style="display: inline-flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber-l); text-decoration: none; border-bottom: 1px solid rgba(240,165,0,0.3); padding-bottom: 4px; transition: all 0.2s ease;">
+      <span>Launch VERITAS →</span>
+      <span style="font-size: 16px; transition: transform 0.2s ease;">→</span>
+    </a>
+    <div style="margin-top: 24px; font-family: var(--mono); font-size: 10px; color: var(--dim); border-top: 1px solid rgba(240,165,0,0.2); padding-top: 20px;">
+      📡 Live prototype. No account required. Works offline. Sealed with STP.
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 4: AION.AI Autonomous Core -->
 <div class="phase4-section">
   <div class="phase4-card">
     <div class="phase4-badge">Phase 4 · Building the Sovereign Agent</div>
@@ -599,19 +632,14 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
   </div>
 </div>
 
-<!-- 02 SIMULATORS (without the old AION.AI card) -->
+<!-- 02 SIMULATORS -->
 <section id="work">
   <div class="section-header"><span class="section-num">// 02</span><h2 class="section-title">Simulators & Core Projects</h2><div class="section-line"></div></div>
   <div class="work-strip">
-    <!-- Roller Coaster -->
     <div class="work-card"><span class="work-live-tag">● Live</span><div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="mb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F5E070"/><stop offset="50%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#8B7520"/></linearGradient><linearGradient id="mw1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#8B7520" stop-opacity="0.3"/><stop offset="50%" stop-color="#F5E070"/><stop offset="100%" stop-color="#8B7520" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0f0d09" stroke="url(#mb1)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb1)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#0c0a08"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb1)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw1)" stroke-width="3" stroke-linecap="round"/></svg></div><div class="work-domain" style="margin-top:32px;">Physics · AP Curriculum</div><div class="work-title">Roller Coaster<br>Physics Simulator</div><div class="work-meta">10 modules · 3 red team passes · 15 issues resolved<br>Ref: Tony Wayne AP Physics Guide<br>Client: Saleem Raja Haja · AI Governance · Kuwait<br>March 2026</div><a href="/simulators/roller-coaster/" class="work-link" data-tip="10 modules · 3 red team passes">Launch Simulator →</a></div>
-    <!-- ORION -->
     <div class="work-card live-field"><span class="work-live-tag">● Live</span><div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="mb2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#40e0ff"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#005f80"/></linearGradient><linearGradient id="mw2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#005f80" stop-opacity="0.3"/><stop offset="50%" stop-color="#40e0ff"/><stop offset="100%" stop-color="#005f80" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080d12" stroke="url(#mb2)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb2)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#060c10"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb2)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw2)" stroke-width="3" stroke-linecap="round"/></svg></div><div class="work-domain cyan" style="margin-top:32px;">Field Ops · Underwater EOD · UNDP</div><div class="work-title">Project ORION<br>UXO Detection</div><div class="work-meta">Tri-axis magnetometer gradiometer · MLS engine<br>1 red team pass · 7 findings · 0 undisclosed<br>Context: UNDP Solomon Islands · CAPEX $4,650<br>March 2026</div><a href="/simulators/Orion/" class="work-link cyan" data-tip="Field‑tested · UNDP‑aligned">Launch Simulator →</a></div>
-    <!-- Math Worksheet -->
     <div class="work-card live-edu"><span class="work-live-tag">● Live</span><div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="mb3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#86efac"/><stop offset="50%" stop-color="#4ade80"/><stop offset="100%" stop-color="#166534"/></linearGradient><linearGradient id="mw3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#166534" stop-opacity="0.3"/><stop offset="50%" stop-color="#86efac"/><stop offset="100%" stop-color="#166534" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#080f09" stroke="url(#mb3)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb3)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#060d07"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb3)" stroke-width="1.5"/><path d="M 95,200 C 107,168 119,168 131,200 S 155,232 167,200 C 179,168 191,168 203,200 S 227,232 239,200 C 251,168 263,168 275,200 S 299,232 305,200" fill="none" stroke="url(#mw3)" stroke-width="3" stroke-linecap="round"/></svg></div><div class="work-domain edu" style="margin-top:32px;">Education · Grades 3–8 · Salmon EDU</div><div class="work-title">Math Worksheet<br>Builder</div><div class="work-meta">9 types · fractions · PEMDAS · interleaved practice<br>4 red team passes · 10 bugs fixed · 0 undisclosed<br>Ref: Taylor &amp; Rohrer (2010)<br>March 2026</div><a href="/simulators/math-worksheet-builder/" class="work-link edu" data-tip="9 problem types · evidence‑based">Launch Tool →</a></div>
-    <!-- QLCM · STP Interference -->
     <div class="work-card live-quantum"><span class="work-live-tag" style="color:var(--quantum);border-color:var(--quantum);background:rgba(206,147,216,0.1);">● Live · Experiment</span><div class="work-card-badge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="width:44px;height:44px;opacity:0.7;"><defs><linearGradient id="mb4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4ff"/><stop offset="50%" stop-color="#ce93d8"/><stop offset="100%" stop-color="#d4af37"/></linearGradient><linearGradient id="mw4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#5a2080" stop-opacity="0.3"/><stop offset="50%" stop-color="#ce93d8"/><stop offset="100%" stop-color="#5a2080" stop-opacity="0.3"/></linearGradient></defs><polygon points="368,270 270,368 130,368 32,270 32,130 130,32 270,32 368,130" fill="#0a080d" stroke="url(#mb4)" stroke-width="5"/><circle cx="200" cy="200" r="148" fill="none" stroke="url(#mb4)" stroke-width="3"/><circle cx="200" cy="200" r="132" fill="#08060b"/><circle cx="200" cy="200" r="132" fill="none" stroke="url(#mb4)" stroke-width="1.5"/><path d="M 80,200 C 100,165 120,165 140,200 S 160,235 180,200 C 200,165 220,165 240,200 S 260,235 280,200 C 300,165 315,165 320,200" fill="none" stroke="url(#mw4)" stroke-width="3" stroke-linecap="round"/></svg></div><div class="work-domain quantum" style="margin-top:32px;">Quantum Language · Cryptography · Open Science</div><div class="work-title">QLCM · STP<br>Interference</div><div class="work-meta">QLCM × Sovereign Trace Protocol · bilingual EN/ES<br>Osmary L. Navarro Tovar (QLCM) × Sheldon K. Salmon (STP)<br>Does sealing preserve or collapse semantic entanglement?<br>March 2026 · Caracas × Evans Mills</div><a href="https://aionsystem.github.io/QLCM-STP-INTERFERENCE/" target="_blank" rel="noopener" class="work-link quantum" data-tip="Live experiment · SHA-256 sealed runs">Launch Experiment →</a></div>
-    <!-- Coming Soon -->
     <div class="work-card work-card-coming"><div class="work-domain">Physics · Mechanics</div><div class="work-title">Projectile<br>Motion Simulator</div><div class="work-meta">Cannon, drag coefficient, target practice<br>2D vector calculations · Same AION design system</div><span class="coming-pill">Coming Soon</span></div>
   </div>
   <div style="margin-top:24px;text-align:center;">
@@ -619,17 +647,16 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
   </div>
 </section>
 
-<!-- KSC FEATURED SECTION -->
+<!-- KSC FEATURED -->
 <section id="ksc" style="padding-top:0;"><div class="section-header"><span class="section-num">// 03</span><h2 class="section-title">Civilization Scale</h2><div class="section-line"></div></div><a href="/ksc/" class="ksc-featured" aria-label="Open the Kardashev-Salmon Civilization Scale"><div><div class="ksc-featured-label">Live Framework · Built &amp; Red-Teamed 2026</div><div class="ksc-featured-title">Kardashev-Salmon<br>Civilization Scale</div><p class="ksc-featured-desc">Eight axes. One mirror that only moves in reverse. A debt counter that has never been green — and a map showing what it would take to change that. Spans 3761 BCE to the Cosmic Yovel. Types 0 through Ω. Live data. Triple-seal timestamps. Red-teamed architecture.</p><div class="ksc-featured-tags"><span class="tag">KSC v0.5</span><span class="tag">Type 0–II Live</span><span class="tag">Eight Axes</span><span class="tag">Gevurah · Tiferet</span><span class="tag">Zero Dependencies</span><span class="tag">27 Red Team Findings Resolved</span></div><div class="ksc-featured-link">Open the Scale <span>→</span></div></div><div class="ksc-featured-cds" aria-hidden="true"><div class="ksc-featured-cds-label">CDS · Now</div><div class="ksc-featured-cds-number">0.84</div><div class="ksc-featured-cds-note">Has never been green</div></div></a></section>
 
-<!-- 04 STACK (redesigned as beautiful card with link bubbles) -->
+<!-- 04 STACK -->
 <section id="stack" style="padding-top:0;">
   <div class="section-header">
     <span class="section-num">// 04</span>
     <h2 class="section-title">The AION Stack</h2>
     <div class="section-line"></div>
   </div>
-
   <div class="stack-card">
     <p class="stack-intro">A constitutional stack for AI reliability — built through live failure events, not theoretical modeling. Every framework is falsifiable, versioned, and convergence-tracked. M‑STRONG means validated. M‑NASCENT means honest about what isn't yet.</p>
     <div class="stack-table-wrapper">
@@ -637,41 +664,24 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
         <thead>
           <tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th> </thead>
         <tbody>
-          <tr><td class="fw-name">FSVE</td><td class="fw-version">v3.6</td><td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement<a href="/stack/frameworks/FSVE/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td> </tr>
-          <tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean<a href="/stack/frameworks/LAV/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-strong">M-STRONG</span></td> </tr>
-          <tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.4</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, Instrument 3 live scorer<a href="/stack/frameworks/TOPOS/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td> </tr>
-          <tr><td class="fw-name">KSC</td><td class="fw-version">v0.5</td><td class="fw-function">Kardashev-Salmon Civilization Scale — 8 axes, Types 0–II live, Hebrew cosmological mapping<a href="/ksc/" class="fw-inline-link">→ Scale</a></td><td><span class="convergence-badge m-nascent">M-NASCENT → M-MOD</span></td> </tr>
-          <tr><td class="fw-name">CSCA</td><td class="fw-version">v0.1</td><td class="fw-function">Cognitive Substrate Cryptographic Assumption — SHA-256 signals analysis, D minor · 128 BPM<a href="/stack/#csca" class="fw-inline-link">→ Hear it</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td> </tr>
-          <tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td> </tr>
-          <tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td> </tr>
-          <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1–8 active · Law 9 dark by design</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td> </tr>
+          <tr><td class="fw-name">FSVE</td><td class="fw-version">v3.6</td><td class="fw-function">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement<a href="/stack/frameworks/FSVE/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
+          <tr><td class="fw-name">LAV</td><td class="fw-version">v1.5</td><td class="fw-function">Linguistic Anchor Validation — 45 entries, 77.5% running mean<a href="/stack/frameworks/LAV/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr>
+          <tr><td class="fw-name">TOPOS</td><td class="fw-version">v0.4</td><td class="fw-function">Persistent Shape Architecture — 4 mapping instruments, Instrument 3 live scorer<a href="/stack/frameworks/TOPOS/" class="fw-inline-link">→ Tool</a></td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+          <tr><td class="fw-name">KSC</td><td class="fw-version">v0.5</td><td class="fw-function">Kardashev-Salmon Civilization Scale — 8 axes, Types 0–II live, Hebrew cosmological mapping<a href="/ksc/" class="fw-inline-link">→ Scale</a></td><td><span class="convergence-badge m-nascent">M-NASCENT → M-MOD</span></td></tr>
+          <tr><td class="fw-name">CSCA</td><td class="fw-version">v0.1</td><td class="fw-function">Cognitive Substrate Cryptographic Assumption — SHA-256 signals analysis, D minor · 128 BPM<a href="/stack/#csca" class="fw-inline-link">→ Hear it</a></td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
+          <tr><td class="fw-name">DUAL-HELIX</td><td class="fw-version">v2.0</td><td class="fw-function">Build and Deep Thinking Wrapper — VELA · TOPOS base pair architecture</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+          <tr><td class="fw-name">NRP</td><td class="fw-version">v0.1</td><td class="fw-function">Search Null-Return Protocol — Pre-generation gate, never suspended</td><td><span class="convergence-badge m-nascent">M-NASCENT</span></td></tr>
+          <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-version">v1.0</td><td class="fw-function">Sovereignty Stack — Laws 1–8 active · Law 9 dark by design</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr>
         </tbody>
-       </table>
+      </table>
     </div>
     <div class="stack-legend">M‑STRONG: validated · M‑MODERATE: tested · M‑NASCENT: specified, building · CONSTITUTIONAL: foundational</div>
   </div>
-
   <div class="stack-links-grid">
-    <a href="/stack/" class="stack-link-bubble">
-      <span class="bubble-icon">◈</span>
-      <div class="bubble-title">Full Stack Documentation</div>
-      <div class="bubble-desc">All 18 frameworks. Version history. Convergence records. FCL entries. Protocol I registrations.</div>
-    </a>
-    <a href="/stack/eight-laws/" class="stack-link-bubble">
-      <span class="bubble-icon">⚖️</span>
-      <div class="bubble-title">The Sovereignty Stack</div>
-      <div class="bubble-desc">Nine Constitutional Laws — Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design.</div>
-    </a>
-    <a href="/stack/frameworks/FSVE/" class="stack-link-bubble">
-      <span class="bubble-icon">⚖</span>
-      <div class="bubble-title">FSVE v3.6 — Live Certainty Scoring Tool</div>
-      <div class="bubble-desc">Score any claim across six epistemic dimensions. Validity threshold gate. Shareable results.</div>
-    </a>
-    <a href="/ksc/" class="stack-link-bubble">
-      <span class="bubble-icon">◈</span>
-      <div class="bubble-title">KSC v0.5 — Civilization Scale</div>
-      <div class="bubble-desc">Eight‑axis civilization measurement from 3761 BCE to the Cosmic Yovel. Live data.</div>
-    </a>
+    <a href="/stack/" class="stack-link-bubble"><span class="bubble-icon">◈</span><div class="bubble-title">Full Stack Documentation</div><div class="bubble-desc">All 18 frameworks. Version history. Convergence records. FCL entries. Protocol I registrations.</div></a>
+    <a href="/stack/eight-laws/" class="stack-link-bubble"><span class="bubble-icon">⚖️</span><div class="bubble-title">The Sovereignty Stack</div><div class="bubble-desc">Nine Constitutional Laws — Laws 1–3: Asimov. Laws 4–8: Salmon. Law 9: dark by design.</div></a>
+    <a href="/stack/frameworks/FSVE/" class="stack-link-bubble"><span class="bubble-icon">⚖</span><div class="bubble-title">FSVE v3.6 — Live Certainty Scoring Tool</div><div class="bubble-desc">Score any claim across six epistemic dimensions. Validity threshold gate. Shareable results.</div></a>
+    <a href="/ksc/" class="stack-link-bubble"><span class="bubble-icon">◈</span><div class="bubble-title">KSC v0.5 — Civilization Scale</div><div class="bubble-desc">Eight‑axis civilization measurement from 3761 BCE to the Cosmic Yovel. Live data.</div></a>
   </div>
 </section>
 
@@ -706,7 +716,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 (function(){
 'use strict';
 const cursor=document.getElementById('custom-cursor');
-if(cursor){document.addEventListener('mousemove',(e)=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';});document.querySelectorAll('a,button,.service-card,.work-card,.ksc-featured,.stack-path,.connect-link').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));});}
+if(cursor){document.addEventListener('mousemove',(e)=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';});document.querySelectorAll('a,button,.service-card,.work-card,.ksc-featured,.stack-path,.connect-link,.veritas-card').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));});}
 document.addEventListener('mousemove',(e)=>{document.documentElement.style.setProperty('--mouse-x',e.clientX+'px');document.documentElement.style.setProperty('--mouse-y',e.clientY+'px');});
 try{let vc=localStorage.getItem('visitCount')?parseInt(localStorage.getItem('visitCount')):0;vc++;localStorage.setItem('visitCount',vc.toString());document.documentElement.style.setProperty('--visit-count',vc);if(vc>1&&!sessionStorage.getItem('bannerShown')){const b=document.createElement('div');b.className='return-banner';b.textContent=`Welcome back. This is your ${vc}th visit.`;document.body.prepend(b);sessionStorage.setItem('bannerShown','true');setTimeout(()=>b.remove(),5000);}}catch(e){console.log('LocalStorage not available');}
 const hour=new Date().getHours();if(hour>=20||hour<6){document.documentElement.style.setProperty('--amber','#b07a00');document.documentElement.style.setProperty('--bg','#030405');}
