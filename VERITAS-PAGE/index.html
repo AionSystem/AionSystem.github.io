@@ -1,1 +1,812 @@
-d
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="VERITAS — Community Damage Certification Platform. CERTUS Engine, DCI scoring, offline‑first, STP integrity seals. Built for UNDP and crisis responders.">
+  <meta property="og:title" content="VERITAS — Damage Certification Platform">
+  <meta property="og:description" content="CERTUS Engine scores damage reports on photo evidence, corroboration, freshness, consistency. Know how much to trust before you act.">
+  <meta property="og:type" content="website">
+  <title>VERITAS — Damage Certification Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== GLOBAL RESET & VARIABLES ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg:#08090b;
+      --bg-deep:#030405;
+      --surface:#0e1117;
+      --panel:#141920;
+      --border:#1e2730;
+      --amber:#f0a500;
+      --amber-d:#b07800;
+      --amber-l:#ffc947;
+      --gold:#D4AF37;
+      --text:#c4d4de;
+      --muted:#4e5f6a;
+      --dim:#2a3540;
+      --red:#ff4d4d;
+      --mono:'Share Tech Mono',monospace;
+      --sans:'Barlow Condensed',sans-serif;
+      --serif:'Crimson Pro',Georgia,serif;
+      --jmono:'JetBrains Mono',monospace;
+      --ease:cubic-bezier(0.16,1,0.3,1);
+      --font-size-base: clamp(16px, 1vw + 8px, 20px);
+      --font-size-h1: clamp(48px, 8vw + 16px, 96px);
+      --font-size-h2: clamp(28px, 4vw + 8px, 44px);
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: var(--font-size-base);
+      line-height: 1.5;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Custom Cursor */
+    .custom-cursor {
+      width: 20px; height: 20px;
+      border: 2px solid var(--amber);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transition: transform 0.1s ease, background 0.2s ease;
+      transform: translate(-50%, -50%);
+    }
+    .custom-cursor.hover {
+      transform: translate(-50%, -50%) scale(1.5);
+      background: rgba(240,165,0,0.1);
+      border-color: var(--gold);
+    }
+
+    /* Background Canvas */
+    #hero-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* Layout Wrapper */
+    .wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Navigation (same as main site) */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .logo {
+      font-family: var(--mono);
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: var(--amber);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo span { color: var(--muted); }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text);
+      text-decoration: none;
+      text-transform: uppercase;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .nav-links a:hover {
+      color: var(--amber);
+      border-bottom-color: var(--amber);
+    }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 18px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      z-index: 110;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--amber);
+      border-radius: 1px;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 56px;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      background: rgba(8,9,11,0.98);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      padding: 8px 0;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--text);
+      text-decoration: none;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s ease, background 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mobile-nav a:last-child { border-bottom: none; }
+    .mobile-nav a:hover { color: var(--amber); background: rgba(240,165,0,0.04); }
+    .mobile-nav a::before { content: '—'; color: var(--amber); font-size: 10px; opacity: 0.6; }
+
+    /* Hero */
+    .hero {
+      padding: 60px 0 40px;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--amber);
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+    .hero h1 {
+      font-family: var(--sans);
+      font-size: var(--font-size-h1);
+      font-weight: 900;
+      line-height: 0.92;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      color: var(--amber);
+      font-style: normal;
+      display: block;
+    }
+    .hero-tagline {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 2px;
+      margin-bottom: 32px;
+    }
+    .hero-desc {
+      max-width: 700px;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 40px;
+      line-height: 1.5;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      background: transparent;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .cta.primary {
+      background: var(--amber);
+      color: #000;
+      border-color: var(--amber);
+    }
+    .cta:hover { background: var(--amber); color: #000; }
+    .cta.primary:hover { background: var(--amber-l); }
+
+    /* Triple Time */
+    .triple-time {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 60px;
+    }
+    .time-cell {
+      background: var(--bg);
+      padding: 18px 20px;
+      transition: background 0.2s ease;
+    }
+    .time-cell:hover { background: var(--surface); }
+    .time-sys {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--amber-d);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .time-val {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--amber);
+      letter-spacing: 1px;
+      line-height: 1.3;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+    }
+    .time-val.loading { color: var(--dim); font-size: 11px; }
+
+    /* Sections */
+    section {
+      margin: 80px 0;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .section-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: 2px;
+    }
+    .section-title {
+      font-family: var(--sans);
+      font-size: var(--font-size-h2);
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* Feature Grids & Cards */
+    .grid-2, .grid-3 {
+      display: grid;
+      gap: 24px;
+    }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 28px;
+      transition: all 0.3s var(--ease);
+    }
+    .card:hover {
+      border-color: var(--amber);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(240,165,0,0.1);
+    }
+    .card-title {
+      font-family: var(--sans);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--amber);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .card-desc {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .feature-item {
+      background: rgba(0,0,0,0.3);
+      border-left: 3px solid var(--amber);
+      padding: 20px;
+      transition: all 0.3s var(--ease);
+    }
+    .feature-item:hover {
+      border-left-width: 5px;
+      background: rgba(0,0,0,0.5);
+      transform: translateX(4px);
+    }
+    .feature-item h4 {
+      font-family: var(--sans);
+      font-size: 18px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .feature-item p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Entrance Card (Blacksite style) */
+    .entrance-section {
+      margin: 80px 0;
+      position: relative;
+    }
+    .entrance-card {
+      background: linear-gradient(145deg, rgba(8,9,11,0.95), rgba(14,17,23,0.98));
+      border: 1px solid rgba(240,165,0,0.4);
+      border-radius: 48px;
+      padding: 60px 48px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s var(--ease);
+      box-shadow: 0 0 0 0 rgba(240,165,0,0), 0 20px 40px rgba(0,0,0,0.3);
+      animation: borderPulse 3s infinite;
+    }
+    @keyframes borderPulse {
+      0% { border-color: rgba(240,165,0,0.3); box-shadow: 0 0 0 0 rgba(240,165,0,0); }
+      50% { border-color: rgba(240,165,0,0.8); box-shadow: 0 0 20px 4px rgba(240,165,0,0.2); }
+      100% { border-color: rgba(240,165,0,0.3); box-shadow: 0 0 0 0 rgba(240,165,0,0); }
+    }
+    .entrance-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(45deg, rgba(240,165,0,0.02) 0px, rgba(240,165,0,0.02) 2px, transparent 2px, transparent 8px);
+      pointer-events: none;
+    }
+    .entrance-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--amber), var(--amber-l), var(--amber), transparent);
+      opacity: 0.6;
+    }
+    .entrance-badge {
+      display: inline-block;
+      background: rgba(240,165,0,0.15);
+      border: 1px solid var(--amber);
+      border-radius: 40px;
+      padding: 6px 18px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 32px;
+      backdrop-filter: blur(4px);
+    }
+    .entrance-title {
+      font-family: var(--sans);
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff, var(--amber-l), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+    .entrance-sub {
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: var(--amber);
+      margin-bottom: 20px;
+      display: inline-block;
+      border-bottom: 1px dashed rgba(240,165,0,0.5);
+      padding-bottom: 4px;
+    }
+    .entrance-desc {
+      max-width: 720px;
+      margin-bottom: 36px;
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .entrance-desc strong {
+      color: var(--amber);
+      font-weight: 500;
+    }
+    .entrance-warning {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      margin-top: 28px;
+      letter-spacing: 1px;
+      border-top: 1px solid rgba(240,165,0,0.2);
+      padding-top: 20px;
+      display: inline-block;
+    }
+    .glitch-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: transparent;
+      border: 2px solid var(--amber);
+      padding: 14px 32px;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--amber);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+      margin-top: 8px;
+    }
+    .glitch-button:hover {
+      background: var(--amber);
+      color: #000;
+      box-shadow: 0 0 18px var(--amber);
+      border-color: var(--amber-l);
+      transform: scale(1.02);
+    }
+    .glitch-button span {
+      transition: transform 0.2s;
+    }
+    .glitch-button:hover span {
+      transform: translateX(4px);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--amber); }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .wrapper { padding: 0 20px; }
+      .hero { padding-top: 20px; }
+      .entrance-card { padding: 40px 24px; }
+      .entrance-title { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+<canvas id="hero-canvas"></canvas>
+<div class="custom-cursor" id="custom-cursor"></div>
+
+<div class="wrapper">
+  <nav>
+    <a href="/" class="logo">AION<span>system</span></a>
+    <ul class="nav-links">
+      <li><a href="/simulators/">Simulators</a></li>
+      <li><a href="/services/">Services</a></li>
+      <li><a href="/stack/">Stack</a></li>
+      <li><a href="/certify/">Certify</a></li>
+      <li><a href="https://aionsystem.github.io/AION.AI/" target="_blank">Dashboard</a></li>
+    </ul>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="/simulators/">Simulators</a>
+    <a href="/services/">Services</a>
+    <a href="/stack/">Stack</a>
+    <a href="/certify/">Certify</a>
+    <a href="https://aionsystem.github.io/AION.AI/" target="_blank">Dashboard</a>
+  </div>
+
+  <div class="hero">
+    <div class="hero-eyebrow">// 00 — Certainty Infrastructure for Crisis Data</div>
+    <h1>VERITAS<em>Damage Certification</em></h1>
+    <div class="hero-tagline">CERTUS Engine · DCI Scoring · Offline‑First · STP Integrity Seals</div>
+    <p class="hero-desc">A community‑operated damage certification platform that solves the real problem: <strong>how much to trust each report</strong>. Every submission is scored on photo evidence, corroboration, freshness, and consistency — producing a Damage Confidence Index (DCI) that tells responders what to act on and what to verify.</p>
+    <div class="hero-ctas">
+      <a href="https://aionsystem.github.io/VERITAS" class="cta primary" target="_blank">Launch VERITAS →</a>
+      <a href="/stack/frameworks/FSVE/" class="cta">CERTUS Engine Methodology →</a>
+    </div>
+    <div class="triple-time">
+      <div class="time-cell"><div class="time-sys">Gregorian</div><div class="time-val loading" id="tt-gregorian">· · ·</div></div>
+      <div class="time-cell"><div class="time-sys">13 Moon · Dreamspell</div><div class="time-val loading" id="tt-dreamspell">· · ·</div></div>
+      <div class="time-cell"><div class="time-sys">Hebrew Calendar</div><div class="time-val loading" id="tt-hebrew">· · ·</div></div>
+    </div>
+  </div>
+
+  <!-- ENTRANCE CARD to the live VERITAS app -->
+  <div class="entrance-section">
+    <div class="entrance-card">
+      <div class="entrance-badge">◈ CERTUS ENGINE v1.0 ◈ // Damage Confidence Index</div>
+      <div class="entrance-title">Enter VERITAS</div>
+      <div class="entrance-sub">Live damage certification platform · UNDP Prize Entry</div>
+      <p class="entrance-desc">
+        You are about to enter a live, fully functional damage certification system.<br><br>
+        <strong>No account. Works offline. Sealed with STP.</strong> Submit a report, watch the CERTUS Engine compute its DCI score, explore the responder dashboard with confidence‑coded pins, conflict flags, and export integrity‑verified datasets.<br>
+        Built for the <strong>UNDP Accelerator Lab Prize</strong> — a certainty engine dressed as a crisis tool.
+      </p>
+      <a href="https://aionsystem.github.io/VERITAS" class="glitch-button" target="_blank">
+        <span>⚡ Launch VERITAS →</span>
+      </a>
+      <div class="entrance-warning">⚠️ Decision‑support instrument only. Reports marked <strong style="color:var(--red)">REVIEW REQUIRED</strong> must receive human field verification before informing resource deployment.</div>
+    </div>
+  </div>
+
+  <!-- CERTUS ENGINE Section -->
+  <section>
+    <div class="section-header"><span class="section-num">// 01</span><h2 class="section-title">CERTUS Engine v1.0</h2><div class="section-line"></div></div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">📷 Photo Evidence Score</div><div class="card-desc">Client‑side TensorFlow.js analysis (xBD dataset) with a confidence gate (≥0.60). Low‑confidence AI defaults to neutral — no garbage in.</div></div>
+      <div class="card"><div class="card-title">🤝 Corroboration Score</div><div class="card-desc">Agreement with reports within 50 meters. Single report = 0.50 (neutral). Contradictions penalize.</div></div>
+      <div class="card"><div class="card-title">⏱️ Temporal Freshness</div><div class="card-desc">Decays linearly over 48 hours — older reports carry less weight.</div></div>
+      <div class="card"><div class="card-title">🔍 Classification Consistency</div><div class="card-desc">Cross‑category logic: “Total Collapse” on a Road or Utility line reduces score.</div></div>
+    </div>
+    <div style="margin-top: 32px; background: var(--surface); border: 1px solid var(--border); padding: 24px; border-radius: 16px;">
+      <div style="font-family: var(--mono); font-size: 12px; color: var(--amber); margin-bottom: 12px;">DCI Formula</div>
+      <div style="font-family: var(--jmono); font-size: 14px; color: var(--text); letter-spacing: 0.5px;"><code style="background: rgba(0,0,0,0.5); padding: 4px 8px;">DCI = (0.35 × PES_eff) + (0.30 × COR) + (0.20 × TFR) + (0.15 × CCI)</code></div>
+      <div style="margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap;">
+        <span style="background: rgba(240,165,0,0.15); padding: 4px 12px; border-radius: 20px; font-family: var(--mono); font-size: 11px;">≥ 0.70 → HIGH CONFIDENCE</span>
+        <span style="background: rgba(240,165,0,0.1); padding: 4px 12px; border-radius: 20px; font-family: var(--mono); font-size: 11px;">0.40–0.69 → WATCH</span>
+        <span style="background: rgba(255,77,77,0.15); padding: 4px 12px; border-radius: 20px; font-family: var(--mono); font-size: 11px;">&lt; 0.40 → REVIEW REQUIRED</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Features -->
+  <section>
+    <div class="section-header"><span class="section-num">// 02</span><h2 class="section-title">Key Capabilities</h2><div class="section-line"></div></div>
+    <div class="feature-grid">
+      <div class="feature-item"><h4>📡 Offline‑First PWA</h4><p>Works without internet. Service Worker caches the app, IndexedDB stores reports. Syncs when connectivity returns.</p></div>
+      <div class="feature-item"><h4>🛡️ Anonymization & Safety</h4><p>No accounts. UUID only. EXIF stripped from photos. GPS fuzzing (±100m) for conflict zones. No IP logged.</p></div>
+      <div class="feature-item"><h4>🗺️ Two‑Interface Architecture</h4><p>Community submission (/report) and responder dashboard (/respond) with access‑code gate.</p></div>
+      <div class="feature-item"><h4>📊 Live Confidence Dashboard</h4><p>High/Watch/Review counts, conflict flags, 48‑hour timeline playback.</p></div>
+      <div class="feature-item"><h4>🔐 STP Integrity Seals</h4><p>Every dataset can be sealed with Sovereign Trace Protocol — triple‑time cryptographic proof (Gregorian, Hebrew, Dreamspell) + SHA‑256 hash.</p></div>
+      <div class="feature-item"><h4>📁 Export Integrity Header</h4><p>JSON, CSV, GeoJSON exports include a verifiable SHA‑256 hash and CERTUS branding.</p></div>
+    </div>
+  </section>
+
+  <!-- Responder Dashboard -->
+  <section>
+    <div class="section-header"><span class="section-num">// 03</span><h2 class="section-title">Responder Dashboard</h2><div class="section-line"></div></div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">🎨 Confidence‑Coded Map</div><div class="card-desc">Green pins (High Confidence), amber (Watch), red (Review Required). Cluster view shows confidence density.</div></div>
+      <div class="card"><div class="card-title">⚡ Conflict Flags</div><div class="card-desc">Contradicting reports within 50 meters are flagged — human verification required.</div></div>
+      <div class="card"><div class="card-title">📈 DCI Report Card</div><div class="card-desc">Confidence distribution across the dataset. Know at a glance how much of your data is reliable.</div></div>
+      <div class="card"><div class="card-title">⏲️ Timeline Slider</div><div class="card-desc">Play back the first 48 hours of reports — see how confidence evolves.</div></div>
+    </div>
+  </section>
+
+  <!-- Built with AION Stack -->
+  <section>
+    <div class="section-header"><span class="section-num">// 04</span><h2 class="section-title">Built on the AION Certainty Stack</h2><div class="section-line"></div></div>
+    <div class="feature-grid">
+      <div class="feature-item"><h4>🔢 FSVE</h4><p>Epistemic validity scoring — DCI is a direct application of FSVE principles.</p></div>
+      <div class="feature-item"><h4>📐 TOPOS</h4><p>Persistent shape architecture ensures the tool’s structure remains coherent.</p></div>
+      <div class="feature-item"><h4>🔒 STP</h4><p>Sovereign Trace Protocol provides permanent, triple‑time integrity seals for exports.</p></div>
+      <div class="feature-item"><h4>⚖️ Eight Laws</h4><p>Constitutional safeguards — decision‑support only, no autonomous resource allocation.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-id">
+      <strong>AionSystem</strong> · Sheldon K. Salmon · AI Reliability Architect<br>
+      Evans Mills, New York · March 2026<br>
+      VERITAS v1.0 · CERTUS Engine · STP Integration
+    </div>
+    <ul class="footer-links">
+      <li><a href="/simulators/">Simulators</a></li>
+      <li><a href="/services/">Services</a></li>
+      <li><a href="/stack/">Stack</a></li>
+      <li><a href="/ksc/">KSC</a></li>
+      <li><a href="/certify/">Certify</a></li>
+      <li><a href="https://github.com/AionSystem/VERITAS" target="_blank">GitHub</a></li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+  (function() {
+    // Background canvas (particle system)
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, animFrame;
+    let particles = [];
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < 120; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: 1 + Math.random() * 2,
+          alpha: 0.3 + Math.random() * 0.5,
+          speed: 0.2 + Math.random() * 0.8,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#050508';
+      ctx.fillRect(0, 0, width, height);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201, 160, 40, ${p.alpha})`;
+        ctx.fill();
+        p.y += p.speed;
+        if (p.y > height) p.y = 0;
+      }
+      animFrame = requestAnimationFrame(draw);
+    }
+
+    function startBackground() {
+      resize();
+      initParticles();
+      draw();
+      window.addEventListener('resize', () => {
+        resize();
+        initParticles();
+      });
+    }
+    startBackground();
+
+    // Custom cursor
+    const cursor = document.getElementById('custom-cursor');
+    if (cursor) {
+      document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+      });
+      document.querySelectorAll('a, button, .card, .feature-item, .entrance-card, .glitch-button').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+      });
+    }
+
+    // Triple-time calendar
+    const GREGORIAN_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    function gregorianString(d) { return `${GREGORIAN_MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`; }
+
+    function jdFromGregorian(y,m,d) { const a=Math.floor((14-m)/12), yy=y+4800-a, mm=m+12*a-3; return d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045; }
+    const HEB_EPOCH=347998, HEB_COM=['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar','Nisan','Iyar','Sivan','Tammuz','Av','Elul'], HEB_LEP=['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar I','Adar II','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
+    function isHebrewLeap(y) { return (7*y+1)%19<7; }
+    function elapsedDays(y) { const m=Math.floor((235*y-234)/19), p=12084+13753*m; let d=m*29+Math.floor(p/25920); if((3*(d+1))%7<3) d++; return d; }
+    function newYearDelay(y) { const n0=elapsedDays(y-1), n1=elapsedDays(y), n2=elapsedDays(y+1); if(n2-n1===356) return 2; if(n1-n0===382) return 1; return 0; }
+    function tishri1JD(y) { return elapsedDays(y)+newYearDelay(y)+HEB_EPOCH; }
+    function monthLengths(y) { const ylen=tishri1JD(y+1)-tishri1JD(y), leap=isHebrewLeap(y); const months=[30,(ylen%10===5?30:29),(ylen%10===3?29:30),29,30,leap?30:29]; if(leap) months.push(29); months.push(30,29,30,29,30,29); return months; }
+    function hebrewString(d) { const jd=jdFromGregorian(d.getUTCFullYear(), d.getUTCMonth()+1, d.getUTCDate()); let y=Math.floor((jd-HEB_EPOCH)*19/6935)+1; while(tishri1JD(y+1)<=jd) y++; while(tishri1JD(y)>jd) y--; const mLens=monthLengths(y), mNames=isHebrewLeap(y)?HEB_LEP:HEB_COM; let r=jd-tishri1JD(y); for(let i=0;i<mLens.length;i++){ if(r<mLens[i]) return `${r+1} ${mNames[i]} ${y}`; r-=mLens[i]; } return '—'; }
+
+    const MOON_NAMES = ['Magnetic','Lunar','Electric','Self-Existing','Overtone','Rhythmic','Resonant','Galactic','Solar','Planetary','Spectral','Crystal','Cosmic'];
+    function dreamspellString(d) { const mo=d.getUTCMonth()+1, day=d.getUTCDate(), yr=d.getUTCFullYear(); if(mo===7 && day===25) return 'Day Out of Time'; const yearStart=(mo>7||(mo===7&&day>=26))?Date.UTC(yr,6,26):Date.UTC(yr-1,6,26); const delta=Math.floor((d.getTime()-yearStart)/86400000); if(delta<0||delta>=364) return 'Day Out of Time'; const moon=Math.floor(delta/28)+1; return `Day ${(delta%28)+1}, ${MOON_NAMES[moon-1]} Moon ${moon}/13`; }
+
+    const now = new Date();
+    const gel = document.getElementById('tt-gregorian'); if(gel) { gel.classList.remove('loading'); gel.textContent = gregorianString(now); }
+    const del = document.getElementById('tt-dreamspell'); if(del) { del.classList.remove('loading'); del.textContent = dreamspellString(now); }
+    const hel = document.getElementById('tt-hebrew'); if(hel) { hel.classList.remove('loading'); hel.textContent = hebrewString(now); }
+
+    // Mobile menu
+    const hamburger = document.getElementById('nav-hamburger');
+    const mobileNav = document.getElementById('mobile-nav');
+    if (hamburger && mobileNav) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        mobileNav.classList.toggle('open');
+      });
+      mobileNav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('open');
+          mobileNav.classList.remove('open');
+        });
+      });
+    }
+  })();
+</script>
+</body>
+</html>
