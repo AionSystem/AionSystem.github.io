@@ -92,6 +92,19 @@ header{padding:44px 0 28px;border-bottom:1px solid var(--border2);}
 .tt-cell{background:var(--bg2);padding:14px 18px;}
 .tt-sys{font-size:0.62rem;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:5px;}
 .tt-val{font-size:0.85rem;color:var(--gold);min-height:22px;}
+.json-key{color:var(--gold-dim);}
+.json-str{color:rgba(61,220,132,0.9);}
+.json-num{color:var(--frozen);}
+.json-bool{color:var(--warn);}
+.ledger-entry{background:var(--bg2);border:1px solid var(--border2);border-radius:3px;padding:16px 18px;margin-bottom:10px;}
+.le-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.le-id{font-family:var(--mono);font-size:0.72rem;color:var(--gold);}
+.le-template{font-size:0.6rem;padding:2px 8px;border-radius:2px;border:1px solid var(--border);color:var(--gold-dim);}
+.le-content{font-size:0.78rem;color:var(--text-dim);margin-bottom:8px;}
+.le-hash{font-size:0.62rem;color:var(--text-faint);font-family:var(--mono);word-break:break-all;}
+.le-github-link{font-size:0.62rem;color:var(--frozen);text-decoration:none;display:inline-block;margin:8px 0;}
+.le-btn{font-family:var(--mono);font-size:0.6rem;padding:5px 10px;border:1px solid var(--border2);background:none;color:var(--text-faint);cursor:pointer;border-radius:2px;}
+.ledger-empty{padding:48px;text-align:center;color:var(--text-faint);font-family:var(--serif);font-style:italic;}
 @media(max-width:760px){.seal-grid{grid-template-columns:1fr !important;}}
 </style>
 </head>
@@ -139,7 +152,7 @@ header{padding:44px 0 28px;border-bottom:1px solid var(--border2);}
         <div class="panel-title">01 — TEMPLATE SELECTION</div>
         <div class="field-group">
           <div class="field-label">Template <span class="req">*</span></div>
-          <select class="select-input" id="seal-template" onchange="onTemplateChange()">
+          <select class="select-input" id="seal-template" onchange="updateSealButton()">
             <option value="">— select template —</option>
             <option value="01">01 — AI Failure</option>
             <option value="02">02 — Research Priority</option>
@@ -225,7 +238,7 @@ header{padding:44px 0 28px;border-bottom:1px solid var(--border2);}
   </div>
 </div>
 
-<!-- VERIFY TAB (simplified) -->
+<!-- VERIFY TAB -->
 <div id="tab-verify" class="tab-panel">
   <div class="panel">
     <div class="panel-title">VERIFY A SEAL</div>
@@ -240,7 +253,7 @@ header{padding:44px 0 28px;border-bottom:1px solid var(--border2);}
 
 <!-- LEDGER TAB -->
 <div id="tab-ledger" class="tab-panel">
-  <div class="ledger-stats" style="display:flex;gap:16px;margin-bottom:20px;">
+  <div style="display:flex;gap:16px;margin-bottom:20px;align-items:center;">
     <span>Session entries: <strong id="ledger-count">0</strong></span>
     <button class="action-btn" onclick="clearLedger()" style="font-size:0.62rem;">Clear Session</button>
   </div>
@@ -249,11 +262,9 @@ header{padding:44px 0 28px;border-bottom:1px solid var(--border2);}
 
 <!-- ABOUT TAB -->
 <div id="tab-about" class="tab-panel">
-  <div class="about-section">
-    <div class="panel">
-      <div class="panel-title">FROZEN-2.0 — SOVEREIGN TRACE PROTOCOL</div>
-      <p style="font-size:0.8rem;line-height:1.6;font-family:var(--serif);">SHA-256 triple-time seal. Browser-native SubtleCrypto. Backend creates GitHub issue + ledger file automatically. No GitHub account required.</p>
-    </div>
+  <div class="panel">
+    <div class="panel-title">FROZEN-2.0 — SOVEREIGN TRACE PROTOCOL</div>
+    <p style="font-size:0.8rem;line-height:1.6;font-family:var(--serif);">SHA-256 triple-time seal. Browser-native SubtleCrypto. Backend creates GitHub issue + ledger file automatically. No GitHub account required.</p>
   </div>
 </div>
 
@@ -261,36 +272,100 @@ header{padding:44px 0 28px;border-bottom:1px solid var(--border2);}
 
 <script>
 // ============================================================
-// STP SEAL TOOL v3.0 – Backend-Connected Version
-// Calls /api/stp-seal on your Vercel backend
+// STP SEAL TOOL v3.0 – Full Calendar + Backend Integration
 // ============================================================
 
-const BACKEND_URL = '/api/stp-seal';  // Your existing endpoint
+const BACKEND_URL = '/api/stp-seal';
 
 let CURRENT_ENTRY = null;
 let sessionLedger = [];
 
-// Calendar helpers (local for live time display)
+// ========== FULL CALENDAR FUNCTIONS (Local) ==========
 const GREGORIAN_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MOON_NAMES = ['Magnetic','Lunar','Electric','Self-Existing','Overtone','Rhythmic','Resonant','Galactic','Solar','Planetary','Spectral','Crystal','Cosmic'];
 
-function gregorianString(d) { return `${GREGORIAN_MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`; }
-function dreamspellString(d) {
-  const month = d.getUTCMonth() + 1, day = d.getUTCDate(), year = d.getUTCFullYear();
+// Hebrew calendar constants
+const HEBREW_EPOCH_JD = 347998;
+const COMMON_MONTHS = ['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
+const LEAP_MONTHS = ['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar I','Adar II','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
+
+function jdFromGregorian(year, month, day) {
+  const a = Math.floor((14 - month) / 12);
+  const y = year + 4800 - a;
+  const m = month + 12 * a - 3;
+  return day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+}
+
+function isHebrewLeap(year) { return (7 * year + 1) % 19 < 7; }
+
+function elapsedDays(year) {
+  const months = Math.floor((235 * year - 234) / 19);
+  const parts = 12084 + 13753 * months;
+  let day = months * 29 + Math.floor(parts / 25920);
+  if ((3 * (day + 1)) % 7 < 3) day++;
+  return day;
+}
+
+function newYearDelay(year) {
+  const ny0 = elapsedDays(year - 1);
+  const ny1 = elapsedDays(year);
+  const ny2 = elapsedDays(year + 1);
+  if (ny2 - ny1 === 356) return 2;
+  if (ny1 - ny0 === 382) return 1;
+  return 0;
+}
+
+function tishri1JD(year) { return elapsedDays(year) + newYearDelay(year) + HEBREW_EPOCH_JD; }
+
+function monthLengths(year) {
+  const ylen = tishri1JD(year + 1) - tishri1JD(year);
+  const leap = isHebrewLeap(year);
+  const months = [30, (ylen % 10 === 5) ? 30 : 29, (ylen % 10 === 3) ? 29 : 30, 29, 30, leap ? 30 : 29];
+  if (leap) months.push(29);
+  months.push(30, 29, 30, 29, 30, 29);
+  return months;
+}
+
+function gregorianToHebrew(year, month, day) {
+  const jd = jdFromGregorian(year, month, day);
+  let hy = Math.floor((jd - HEBREW_EPOCH_JD) * 19 / 6935) + 1;
+  while (tishri1JD(hy + 1) <= jd) hy++;
+  while (tishri1JD(hy) > jd) hy--;
+  const mLens = monthLengths(hy);
+  const mNames = isHebrewLeap(hy) ? LEAP_MONTHS : COMMON_MONTHS;
+  let remaining = jd - tishri1JD(hy);
+  for (let i = 0; i < mLens.length; i++) {
+    if (remaining < mLens[i]) return { year: hy, month: mNames[i], day: remaining + 1 };
+    remaining -= mLens[i];
+  }
+  return { year: hy, month: 'Tishri', day: 1 };
+}
+
+function hebrewString(year, month, day) {
+  const h = gregorianToHebrew(year, month, day);
+  return `${h.day} ${h.month} ${h.year}`;
+}
+
+function dreamspellString(year, month, day) {
   if (month === 7 && day === 25) return 'Day Out of Time';
-  const yearStart = (month > 7 || (month === 7 && day >= 26)) ? Date.UTC(year, 6, 26) : Date.UTC(year - 1, 6, 26);
-  const delta = Math.floor((d.getTime() - yearStart) / 86400000);
+  const yearStart = (month > 7 || (month === 7 && day >= 26)) ? new Date(Date.UTC(year, 6, 26)) : new Date(Date.UTC(year - 1, 6, 26));
+  const cur = new Date(Date.UTC(year, month - 1, day));
+  const delta = Math.floor((cur - yearStart) / 86400000);
   if (delta < 0 || delta >= 364) return 'Day Out of Time';
   const moon = Math.floor(delta / 28) + 1;
   return `Day ${(delta % 28) + 1}, ${MOON_NAMES[moon - 1]} Moon ${moon}/13`;
 }
-function hebrewString(d) { return `${d.getUTCMonth()+1}/${d.getUTCDate()}/${d.getUTCFullYear()} (API) – full Hebrew via backend`; }
+
+function gregorianStringFull(year, month, day) {
+  return `${GREGORIAN_MONTHS[month - 1]} ${day}, ${year}`;
+}
 
 function updateLiveTime() {
   const now = new Date();
-  document.getElementById('live-gregorian').textContent = gregorianString(now);
-  document.getElementById('live-dreamspell').textContent = dreamspellString(now);
-  document.getElementById('live-hebrew').textContent = `${now.getUTCMonth()+1}/${now.getUTCDate()}/${now.getUTCFullYear()}`;
+  const y = now.getUTCFullYear(), m = now.getUTCMonth() + 1, d = now.getUTCDate();
+  document.getElementById('live-gregorian').textContent = gregorianStringFull(y, m, d);
+  document.getElementById('live-dreamspell').textContent = dreamspellString(y, m, d);
+  document.getElementById('live-hebrew').textContent = hebrewString(y, m, d);
 }
 setInterval(updateLiveTime, 1000);
 updateLiveTime();
@@ -303,15 +378,12 @@ function updateSealButton() {
   document.getElementById('char-count').textContent = `${document.getElementById('seal-content').value.length} characters`;
 }
 
-function onTemplateChange() { updateSealButton(); }
-
 async function generateSeal() {
   const template = document.getElementById('seal-template').value;
   const content = document.getElementById('seal-content').value.trim();
   const author = document.getElementById('seal-author').value.trim();
-  const declaration = document.getElementById('seal-declaration').checked;
 
-  if (!template || !content || !declaration) return;
+  if (!template || !content) return;
 
   const btn = document.getElementById('seal-btn');
   btn.disabled = true;
@@ -319,8 +391,10 @@ async function generateSeal() {
   document.getElementById('seal-error').classList.remove('active');
   document.getElementById('seal-placeholder').style.display = 'none';
   document.getElementById('seal-result').classList.add('active');
-  document.getElementById('ledger-status-card').className = 'ledger-status-card pending';
-  document.getElementById('ledger-status-card').innerHTML = '<div class="lsc-icon">⟳</div><div class="lsc-body"><div class="lsc-label">Creating Ledger Entry…</div><div class="lsc-sub">Contacting backend</div></div>';
+  
+  const statusCard = document.getElementById('ledger-status-card');
+  statusCard.className = 'ledger-status-card pending';
+  statusCard.innerHTML = '<div class="lsc-icon">⟳</div><div class="lsc-body"><div class="lsc-label">Creating Ledger Entry…</div><div class="lsc-sub">Contacting backend</div></div>';
 
   try {
     const response = await fetch(BACKEND_URL, {
@@ -335,20 +409,21 @@ async function generateSeal() {
       throw new Error(data.error || data.message || 'Backend error');
     }
 
-    // Backend returned successful seal with GitHub issue URL
     const now = new Date();
+    const y = now.getUTCFullYear(), m = now.getUTCMonth() + 1, d = now.getUTCDate();
+    
     CURRENT_ENTRY = {
-      ledger_id: `STP-${data.template_name || template}-${gregorianString(now).replace(/[,\s]+/g, '-')}-${data.seal.substring(0,6).toUpperCase()}`,
+      ledger_id: `STP-${data.template_name || template}-${gregorianStringFull(y, m, d).replace(/[,\s]+/g, '-')}-${data.seal.substring(0,6).toUpperCase()}`,
       template: template,
       template_name: data.template_name,
       content: content,
       author: author || null,
       content_hash: `sha256:${data.seal}`,
       seal: {
-        gregorian: data.gregorian,
-        hebrew: data.hebrew,
-        dreamspell: data.dreamspell,
-        unix_utc: data.unix_utc,
+        gregorian: data.gregorian || gregorianStringFull(y, m, d),
+        hebrew: data.hebrew || hebrewString(y, m, d),
+        dreamspell: data.dreamspell || dreamspellString(y, m, d),
+        unix_utc: data.unix_utc || Math.floor(now.getTime() / 1000),
         seal_method: 'SHA-256-SubtleCrypto-FROZEN-2.0'
       },
       github_issue_url: data.issue_url || null,
@@ -357,16 +432,13 @@ async function generateSeal() {
       sealed_at: now.toISOString()
     };
 
-    // Update display
     document.getElementById('result-ledger-id').textContent = CURRENT_ENTRY.ledger_id;
-    document.getElementById('result-gregorian').textContent = data.gregorian;
-    document.getElementById('result-hebrew').textContent = data.hebrew;
-    document.getElementById('result-dreamspell').textContent = data.dreamspell;
+    document.getElementById('result-gregorian').textContent = CURRENT_ENTRY.seal.gregorian;
+    document.getElementById('result-hebrew').textContent = CURRENT_ENTRY.seal.hebrew;
+    document.getElementById('result-dreamspell').textContent = CURRENT_ENTRY.seal.dreamspell;
     document.getElementById('result-hash-display').textContent = data.seal;
     document.getElementById('result-json').innerHTML = syntaxHighlight(JSON.stringify(CURRENT_ENTRY, null, 2));
 
-    // Update ledger status
-    const statusCard = document.getElementById('ledger-status-card');
     if (data.issue_url) {
       statusCard.className = 'ledger-status-card';
       statusCard.innerHTML = `<div class="lsc-icon">✓</div><div class="lsc-body"><div class="lsc-label">Ledger Entry Created</div><div class="lsc-sub">GitHub issue sealed</div><a href="${data.issue_url}" target="_blank" class="lsc-link">View GitHub Issue ↗</a></div>`;
@@ -378,12 +450,10 @@ async function generateSeal() {
       statusCard.innerHTML = `<div class="lsc-icon">⟳</div><div class="lsc-body"><div class="lsc-label">Ledger Pending</div><div class="lsc-sub">Seal recorded locally</div></div>`;
     }
 
-    // Save to session ledger
     sessionLedger.unshift(CURRENT_ENTRY);
     if (sessionLedger.length > 50) sessionLedger.pop();
     localStorage.setItem('stp-session-ledger', JSON.stringify(sessionLedger));
     renderLedger();
-
     document.getElementById('reset-btn').classList.add('visible');
 
   } catch (err) {
@@ -426,8 +496,8 @@ function downloadJSON() {
 function copyJSON() {
   if (!CURRENT_ENTRY) return;
   navigator.clipboard.writeText(JSON.stringify(CURRENT_ENTRY, null, 2));
-  const btn = document.querySelector('#seal-result .action-btn:last-child');
-  if (btn) { btn.textContent = '✓ Copied'; setTimeout(() => { btn.textContent = 'Copy JSON'; }, 2000); }
+  const btns = document.querySelectorAll('#seal-result .action-btn');
+  btns.forEach(btn => { if (btn.textContent.includes('Copy')) { btn.textContent = '✓ Copied'; setTimeout(() => { btn.textContent = 'Copy JSON'; }, 2000); } });
 }
 
 async function runVerify() {
@@ -459,12 +529,11 @@ function renderLedger() {
   document.getElementById('ledger-count').textContent = sessionLedger.length;
   container.innerHTML = sessionLedger.map(e => `
     <div class="ledger-entry">
-      <div class="le-header"><span class="le-id">${e.ledger_id}</span><span class="le-template">${e.template_name}</span></div>
+      <div class="le-header"><span class="le-id">${e.ledger_id}</span><span class="le-template">${e.template_name || e.template}</span></div>
       <div class="le-content">${(e.content || '').substring(0, 120)}${e.content?.length > 120 ? '…' : ''}</div>
-      <div class="le-times"><span class="le-time">${e.seal?.gregorian || ''}</span></div>
       <div class="le-hash">${e.content_hash?.substring(0, 50)}…</div>
       ${e.github_issue_url ? `<a href="${e.github_issue_url}" target="_blank" class="le-github-link">✓ GitHub Issue ↗</a>` : ''}
-      <div class="le-actions"><button class="le-btn" onclick="downloadEntry('${e.ledger_id}')">↓ JSON</button></div>
+      <div><button class="le-btn" onclick="downloadEntry('${e.ledger_id}')">↓ Download JSON</button></div>
     </div>
   `).join('');
 }
@@ -483,9 +552,11 @@ function downloadEntry(id) {
 }
 
 function clearLedger() {
-  sessionLedger = [];
-  localStorage.removeItem('stp-session-ledger');
-  renderLedger();
+  if (confirm('Clear all session seals? (JSON files on disk remain)')) {
+    sessionLedger = [];
+    localStorage.removeItem('stp-session-ledger');
+    renderLedger();
+  }
 }
 
 function syntaxHighlight(json) {
@@ -512,7 +583,7 @@ function toggleTheme() {
   document.getElementById('theme-btn').textContent = isLight ? 'LIGHT' : 'DARK';
 }
 
-// Load session ledger from localStorage
+// Load session ledger
 try {
   const saved = localStorage.getItem('stp-session-ledger');
   if (saved) sessionLedger = JSON.parse(saved);
