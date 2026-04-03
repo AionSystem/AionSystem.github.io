@@ -1,1 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Grant submissions by Sheldon K. Salmon — AXIOM, VERITAS, PILLING-SIM, PROJECT ORION, and Textile Pilling Simulator.">
+<meta property="og:title" content="AionSystem — Grant Submissions">
+<meta property="og:description" content="Four grants in one week. One methodology. Zero politics.">
+<meta property="og:type" content="website">
+<title>AionSystem — Submissions | Sheldon K. Salmon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:#08090b;
+  --bg-deep:#030405;
+  --surface:#0e1117;
+  --panel:#141920;
+  --border:#1e2730;
+  --amber:#f0a500;
+  --amber-d:#b07800;
+  --amber-l:#ffc947;
+  --gold:#D4AF37;
+  --text:#c4d4de;
+  --muted:#4e5f6a;
+  --dim:#2a3540;
+  --red:#ff4d4d;
+  --cyan:#00d4ff;
+  --edu:#4ade80;
+  --quantum:#ce93d8;
+  --mono:'Share Tech Mono',monospace;
+  --sans:'Barlow Condensed',sans-serif;
+  --serif:'Crimson Pro',Georgia,serif;
+  --jmono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --font-size-base: clamp(16px, 1vw + 8px, 20px);
+  --font-size-h1: clamp(48px, 8vw + 16px, 96px);
+  --font-size-h2: clamp(28px, 4vw + 8px, 44px);
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-size-base);line-height:1.5;overflow-x:hidden;cursor:none;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:0;}
+.custom-cursor{width:20px;height:20px;border:2px solid var(--amber);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference;transition:transform 0.1s ease,background 0.2s ease;transform:translate(-50%,-50%);}
+.custom-cursor.hover{transform:translate(-50%,-50%) scale(1.5);background:rgba(240,165,0,0.1);border-color:var(--gold);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;}
+.nav-logo span{color:var(--muted);}
+.nav-logo-wrap{display:flex;align-items:center;gap:10px;}
+.nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;filter:drop-shadow(0 0 4px rgba(212,174,60,0.3));}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;padding-bottom:2px;}
+.nav-links a:hover{color:var(--amber);border-bottom-color:var(--amber);}
+.nav-links a.active{color:var(--amber);border-bottom-color:var(--amber);}
+.nav-hamburger{display:none;flex-direction:column;justify-content:space-between;width:24px;height:18px;cursor:pointer;background:none;border:none;padding:0;z-index:110;}
+.nav-hamburger span{display:block;width:100%;height:2px;background:var(--amber);border-radius:1px;transition:transform 0.25s ease,opacity 0.25s ease;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
+.mobile-nav{display:none;position:fixed;top:56px;left:0;right:0;z-index:99;background:rgba(8,9,11,0.98);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);flex-direction:column;padding:8px 0;}
+.mobile-nav.open{display:flex;}
+.mobile-nav a{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;padding:14px 28px;border-bottom:1px solid var(--border);transition:color 0.15s ease,background 0.15s ease;display:flex;align-items:center;gap:10px;}
+.mobile-nav a:last-child{border-bottom:none;}
+.mobile-nav a:hover{color:var(--amber);background:rgba(240,165,0,0.04);}
+.mobile-nav a::before{content:'—';color:var(--amber);font-size:10px;opacity:0.6;}
+.hero{position:relative;z-index:1;min-height:40vh;display:flex;flex-direction:column;justify-content:center;padding:80px 40px 40px;max-width:1200px;margin:0 auto;}
+.hero-name{font-family:var(--sans);font-size:var(--font-size-h1);font-weight:900;letter-spacing:-1px;line-height:0.92;color:var(--text);text-transform:uppercase;margin-bottom:16px;}
+.hero-name em{display:block;color:var(--amber);font-style:normal;font-size:0.8em;}
+.hero-title{font-family:var(--mono);font-size:clamp(13px,1.6vw,17px);color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px;}
+.hero-divider{width:64px;height:2px;background:var(--amber);margin:24px 0;}
+section{position:relative;z-index:1;padding:40px 40px 80px;max-width:1200px;margin:0 auto;}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:32px;}
+.section-num{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:2px;}
+.section-title{font-family:var(--sans);font-size:var(--font-size-h2);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text);}
+.section-line{flex:1;height:1px;background:var(--border);}
+.submissions-grid{display:flex;flex-direction:column;gap:16px;}
+.submission-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 32px;transition:all 0.2s ease;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+.submission-card:hover{border-color:var(--amber);transform:translateX(4px);background:var(--panel);}
+.submission-info{flex:2;}
+.submission-title{font-family:var(--sans);font-size:22px;font-weight:700;letter-spacing:1px;color:var(--amber);margin-bottom:8px;text-transform:uppercase;}
+.submission-meta{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:16px;margin-bottom:12px;}
+.submission-meta span{display:inline-flex;align-items:center;gap:6px;}
+.submission-desc{font-family:var(--sans);font-size:14px;color:var(--text);line-height:1.5;max-width:600px;}
+.submission-status{text-align:right;min-width:140px;}
+.status-badge{font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:8px;}
+.status-submitted{background:rgba(74,222,128,0.15);color:var(--edu);border:1px solid rgba(74,222,128,0.3);}
+.status-evaluation{background:rgba(240,165,0,0.15);color:var(--amber);border:1px solid rgba(240,165,0,0.3);}
+.submission-date{font-family:var(--mono);font-size:10px;color:var(--muted);}
+.stats-bar{margin-top:40px;padding-top:32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.stat{text-align:center;flex:1;}
+.stat-number{font-family:var(--jmono);font-size:36px;font-weight:700;color:var(--amber);}
+.stat-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-id{font-family:var(--mono);font-size:11px;color:var(--muted);}
+.footer-id strong{color:var(--amber);}
+.footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
+.footer-links a{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;}
+.footer-links a:hover{color:var(--amber);}
+@media(max-width:800px){
+  .submission-card{flex-direction:column;align-items:flex-start;}
+  .submission-status{text-align:left;}
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  .hero{padding:80px 20px 40px;}
+  section{padding:40px 20px;}
+  footer{padding:32px 20px;flex-direction:column;text-align:center;}
+  .stats-bar{flex-direction:column;gap:16px;}
+}
+</style>
+</head>
+<body>
+<div class="custom-cursor" id="custom-cursor"></div>
 
+<nav>
+  <a href="/" class="nav-logo nav-logo-wrap">
+    <img src="/assets/aion-logo.jpg" alt="AionSystem" class="nav-logo-img">
+    <span>AION<span>system</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/stack/">Stack</a></li>
+    <li><a href="/ksc/">KSC ◈</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/submissions/" class="active">Submissions</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank">LinkedIn ↗</a></li>
+  </ul>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="/simulators/">Simulators</a>
+  <a href="/services/">Services</a>
+  <a href="/stack/">Stack</a>
+  <a href="/ksc/">KSC — Civilization Scale</a>
+  <a href="/certify/">Certify</a>
+  <a href="/submissions/">Submissions</a>
+  <a href="/about/">About</a>
+  <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank">LinkedIn ↗</a>
+</div>
+
+<div class="hero">
+  <h1 class="hero-name">Grant<em>Submissions</em></h1>
+  <p class="hero-title">Four grants in one week · One methodology · Zero politics</p>
+  <div class="hero-divider"></div>
+</div>
+
+<section>
+  <div class="section-header">
+    <span class="section-num">// 01</span>
+    <h2 class="section-title">Active Submissions</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="submissions-grid">
+    <!-- AXIOM - NICE Challenge -->
+    <div class="submission-card">
+      <div class="submission-info">
+        <div class="submission-title">AXIOM — AI Certainty Middleware</div>
+        <div class="submission-meta">
+          <span>📋 NICE Challenge 2026</span>
+          <span>🏷️ AI & Communications</span>
+          <span>🔬 TRL 6</span>
+          <span>📍 Yangtze Delta</span>
+        </div>
+        <div class="submission-desc">AI reliability infrastructure for industrial decision systems. CDI scoring + Uncertainty Mass + immutable STP audit trail.</div>
+      </div>
+      <div class="submission-status">
+        <div class="status-badge status-submitted">✅ SUBMITTED</div>
+        <div class="submission-date">03/04/2026</div>
+      </div>
+    </div>
+
+    <!-- PILLING-SIM - NICE Challenge -->
+    <div class="submission-card">
+      <div class="submission-info">
+        <div class="submission-title">PILLING-SIM — Textile Pilling Prediction</div>
+        <div class="submission-meta">
+          <span>📋 NICE Challenge 2026</span>
+          <span>🏷️ Advanced Materials</span>
+          <span>🔬 TRL 6</span>
+          <span>📍 Yangtze Delta</span>
+        </div>
+        <div class="submission-desc">Data-driven, explainable pilling prediction for woven fabrics. PSS scoring + relative influence + ISO 12945-2:2000 compliance.</div>
+      </div>
+      <div class="submission-status">
+        <div class="status-badge status-submitted">✅ SUBMITTED</div>
+        <div class="submission-date">03/04/2026</div>
+      </div>
+    </div>
+
+    <!-- VERITAS - UNDP -->
+    <div class="submission-card">
+      <div class="submission-info">
+        <div class="submission-title">VERITAS — Damage Certification Platform</div>
+        <div class="submission-meta">
+          <span>📋 UNDP Accelerator Lab Prize</span>
+          <span>🏷️ Crisis Response</span>
+          <span>🔬 CERTUS Engine</span>
+        </div>
+        <div class="submission-desc">Community-operated certainty engine for crisis damage reporting. DCI scoring + offline-first + STP integrity seals.</div>
+      </div>
+      <div class="submission-status">
+        <div class="status-badge status-submitted">✅ SUBMITTED</div>
+        <div class="submission-date">02/04/2026</div>
+      </div>
+    </div>
+
+    <!-- PROJECT ORION - UNDP -->
+    <div class="submission-card">
+      <div class="submission-info">
+        <div class="submission-title">PROJECT ORION — UXO Detection System</div>
+        <div class="submission-meta">
+          <span>📋 UNDP Innocentive</span>
+          <span>🏷️ Field Ops / EOD</span>
+          <span>🔬 Passive Tri-Axis Gradiometer</span>
+        </div>
+        <div class="submission-desc">Passive tri-axis magnetometer gradiometer for underwater unexploded ordnance detection. MLS engine. Field-tested.</div>
+      </div>
+      <div class="submission-status">
+        <div class="status-badge status-evaluation">⏳ UNDER EVALUATION</div>
+        <div class="submission-date">17/02/2026 · 1st Stage</div>
+      </div>
+    </div>
+
+    <!-- Textile Pilling Simulator - InoCrowd -->
+    <div class="submission-card">
+      <div class="submission-info">
+        <div class="submission-title">Textile Pilling Simulator</div>
+        <div class="submission-meta">
+          <span>📋 InoCrowd Challenge</span>
+          <span>🏷️ Textile Engineering</span>
+          <span>🔬 Live Web Tool</span>
+        </div>
+        <div class="submission-desc">Live simulator for woven fabric pilling prediction. 16+ parameters, ISO 12945-2:2000 compliant. Open source.</div>
+      </div>
+      <div class="submission-status">
+        <div class="status-badge status-submitted">✅ SUBMITTED</div>
+        <div class="submission-date">03/04/2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-number">5</div><div class="stat-label">Total Submissions</div></div>
+    <div class="stat"><div class="stat-number">4</div><div class="stat-label">Domains</div></div>
+    <div class="stat"><div class="stat-number">1</div><div class="stat-label">Week</div></div>
+    <div class="stat"><div class="stat-number">60+</div><div class="stat-label">Frameworks</div></div>
+    <div class="stat"><div class="stat-number">4,000+</div><div class="stat-label">Commits (6 weeks)</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-id">
+    <strong>AionSystem</strong> · Sheldon K. Salmon<br>
+    AI Reliability Architect · Evans Mills, New York · April 2026
+  </div>
+  <ul class="footer-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/stack/">Stack</a></li>
+    <li><a href="/ksc/">KSC</a></li>
+    <li><a href="/submissions/">Submissions</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank">GitHub ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+(function(){
+const cursor=document.getElementById('custom-cursor');
+if(cursor){
+  document.addEventListener('mousemove',(e)=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';});
+  document.querySelectorAll('a,button,.submission-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));
+    el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));
+  });
+}
+})();
+function toggleMobileNav(){
+  const btn=document.getElementById('nav-hamburger'),menu=document.getElementById('mobile-nav');
+  btn.classList.toggle('open');menu.classList.toggle('open');
+}
+document.querySelectorAll('.mobile-nav a').forEach(a=>{
+  a.addEventListener('click',()=>{
+    document.getElementById('nav-hamburger').classList.remove('open');
+    document.getElementById('mobile-nav').classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
