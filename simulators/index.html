@@ -2,261 +2,477 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AionSystem Simulator Suite — Physics, Engineering, Field Operations, Medical, Environmental. Citation-backed. Red-teamed. AION Verified.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="AionSystem Simulator Suite — Physics, Engineering, Field Operations, Education, Medical, Environmental. Citation-backed. Red-teamed. AION Verified.">
 <title>Simulators — AionSystem · Sheldon K. Salmon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --bg:      #08090b;
+  --bg: #08090b;
   --surface: #0e1117;
-  --panel:   #141920;
-  --border:  #1e2730;
-  --amber:   #f0a500;
+  --panel: #141920;
+  --border: #1e2730;
+  --amber: #f0a500;
   --amber-d: #b07800;
   --amber-l: #ffc947;
-  --gold:    #D4AF37;
-  --text:    #c4d4de;
-  --muted:   #4e5f6a;
-  --dim:     #2a3540;
-  --cyan:    #00d4ff;
-  --teal:    #00b894;
-  --edu:     #4ade80;
-  --edu-d:   #22c55e;
-  --mono:    'Share Tech Mono', monospace;
-  --sans:    'Barlow Condensed', sans-serif;
-  --ease:    cubic-bezier(0.16, 1, 0.3, 1);
+  --gold: #D4AF37;
+  --text: #c4d4de;
+  --muted: #4e5f6a;
+  --dim: #2a3540;
+  --red: #ff4d4d;
+  --cyan: #00d4ff;
+  --teal: #00b894;
+  --edu: #4ade80;
+  --edu-d: #22c55e;
+  --mono: 'Share Tech Mono', monospace;
+  --sans: 'Barlow Condensed', sans-serif;
+  --serif: 'Crimson Pro', Georgia, serif;
+  --jmono: 'JetBrains Mono', monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-size-base: clamp(16px, 1vw + 8px, 20px);
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
 body::before {
-  content:''; position:fixed; inset:0;
-  background-image: linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px);
-  background-size:48px 48px; pointer-events:none; z-index:0;
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(240,165,0,0.025) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(240,165,0,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
 }
-
-/* NAV */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+  pointer-events: none;
+  z-index: 0;
+}
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
 nav {
-  position: sticky; top: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 40px; height: 56px;
-  background: rgba(8,9,11,0.94); backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 56px;
+  background: rgba(8,9,11,0.94);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
-.nav-logo { font-family:var(--mono); font-size:13px; letter-spacing:3px; color:var(--amber); text-decoration:none; }
-.nav-logo span { color:var(--muted); }
-.nav-back { font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--muted); text-decoration:none; text-transform:uppercase; transition:color 0.2s; }
-.nav-back:hover { color:var(--amber); }
-
-/* WRAPPER */
-.wrapper { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:64px 40px 80px; }
-
-/* PAGE HEADER */
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--amber);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nav-logo-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.nav-logo span { color: var(--muted); }
+.nav-back {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-back:hover { color: var(--amber); }
+.wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 40px 80px;
+}
 .page-header { margin-bottom: 48px; }
-.page-eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:4px; color:var(--amber); text-transform:uppercase; margin-bottom:12px; }
-.page-title { font-family:var(--sans); font-size:clamp(36px,6vw,72px); font-weight:900; letter-spacing:2px; text-transform:uppercase; line-height:0.95; color:var(--text); }
-.page-title em { color:var(--amber); font-style:normal; }
-.page-sub { font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:2px; margin-top:16px; line-height:1.8; }
-
-/* STATS BAR */
+.page-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.page-title {
+  font-family: var(--sans);
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  line-height: 0.95;
+  color: var(--text);
+}
+.page-title em { color: var(--amber); font-style: normal; }
+.page-sub {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  margin-top: 16px;
+  line-height: 1.8;
+}
 .stats-bar {
-  display:flex; gap:0; margin-bottom:40px;
-  border:1px solid var(--border); background:var(--surface);
+  display: flex;
+  gap: 0;
+  margin-bottom: 40px;
+  border: 1px solid var(--border);
+  background: var(--surface);
 }
 .stat-item {
-  flex:1; padding:16px 20px; border-right:1px solid var(--border);
-  font-family:var(--mono); font-size:10px; letter-spacing:1px; color:var(--muted);
+  flex: 1;
+  padding: 16px 20px;
+  border-right: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
 }
-.stat-item:last-child { border-right:none; }
-.stat-val { font-family:var(--sans); font-size:28px; font-weight:900; color:var(--amber); display:block; line-height:1; margin-bottom:4px; }
-.stat-val.live-count { color:var(--teal); }
-
-/* FILTER ROW */
+.stat-item:last-child { border-right: none; }
+.stat-val {
+  font-family: var(--sans);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--amber);
+  display: block;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-val.live-count { color: var(--teal); }
 .filter-row {
-  display:flex; gap:8px; flex-wrap:wrap; margin-bottom:48px;
-  padding-bottom:24px; border-bottom:1px solid var(--border);
-  align-items:center;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
 }
-.filter-label { font-family:var(--mono); font-size:9px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-right:4px; }
+.filter-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-right: 4px;
+}
 .filter-btn {
-  font-family:var(--mono); font-size:10px; letter-spacing:1.5px; text-transform:uppercase;
-  padding:6px 14px; background:var(--surface); border:1px solid var(--border);
-  color:var(--muted); cursor:pointer; transition:all 0.15s;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
 }
-.filter-btn:hover { border-color:var(--amber-d); color:var(--text); }
-.filter-btn.active { background:var(--amber); color:#000; border-color:var(--amber); font-weight:700; }
-
-/* DOMAIN SECTION */
-.domain-section { margin-bottom:56px; }
-.domain-section[data-hidden="true"] { display:none; }
-
+.filter-btn:hover { border-color: var(--amber-d); color: var(--text); }
+.filter-btn.active {
+  background: var(--amber);
+  color: #000;
+  border-color: var(--amber);
+  font-weight: 700;
+}
+.domain-section { margin-bottom: 56px; }
+.domain-section[data-hidden="true"] { display: none; }
 .domain-header {
-  display:flex; align-items:center; gap:16px;
-  margin-bottom:16px; padding-bottom:12px;
-  border-bottom:1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
 }
 .domain-tag {
-  font-family:var(--mono); font-size:9px; letter-spacing:3px; text-transform:uppercase;
-  padding:4px 10px; border:1px solid; background:transparent;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid;
+  background: transparent;
 }
-.tag-physics    { color:#7ecfff; border-color:#7ecfff; }
-.tag-field      { color:#00d4ff; border-color:#00d4ff; background:rgba(0,212,255,0.06); }
-.tag-engineering{ color:var(--amber); border-color:var(--amber-d); }
-.tag-medical    { color:#a855f7; border-color:#a855f7; }
-.tag-environmental{ color:var(--teal); border-color:var(--teal); }
-.tag-financial  { color:var(--gold); border-color:var(--gold); }
-.tag-education  { color:var(--edu); border-color:var(--edu-d); background:rgba(74,222,128,0.06); }
-
+.tag-physics    { color: #7ecfff; border-color: #7ecfff; }
+.tag-field      { color: var(--cyan); border-color: var(--cyan); background: rgba(0,212,255,0.06); }
+.tag-engineering{ color: var(--amber); border-color: var(--amber-d); }
+.tag-medical    { color: #a855f7; border-color: #a855f7; }
+.tag-environmental { color: var(--teal); border-color: var(--teal); }
+.tag-financial  { color: var(--gold); border-color: var(--gold); }
+.tag-education  { color: var(--edu); border-color: var(--edu-d); background: rgba(74,222,128,0.06); }
 .domain-title {
-  font-family:var(--sans); font-size:18px; font-weight:700; letter-spacing:2px;
-  text-transform:uppercase; color:var(--text);
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text);
 }
 .domain-count {
-  font-family:var(--mono); font-size:10px; color:var(--muted); margin-left:auto;
-  letter-spacing:1px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  margin-left: auto;
+  letter-spacing: 1px;
 }
 .domain-live-badge {
-  font-family:var(--mono); font-size:9px; letter-spacing:1px; color:var(--teal);
-  background:rgba(0,184,148,0.08); border:1px solid var(--teal);
-  padding:2px 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--teal);
+  background: rgba(0,184,148,0.08);
+  border: 1px solid var(--teal);
+  padding: 2px 8px;
 }
-
-/* SIMULATOR GRID */
 .sim-grid {
-  display:grid; grid-template-columns:repeat(3,1fr);
-  gap:1px; background:var(--border); border:1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
 }
-.sim-grid.cols-2 { grid-template-columns:repeat(2,1fr); }
-.sim-grid.cols-1 { grid-template-columns:1fr; max-width:480px; }
-@media (max-width:900px) { .sim-grid, .sim-grid.cols-2 { grid-template-columns:repeat(2,1fr); } }
-@media (max-width:560px) { .sim-grid, .sim-grid.cols-2, .sim-grid.cols-1 { grid-template-columns:1fr; } }
-
-/* CARD */
+.sim-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.sim-grid.cols-1 { grid-template-columns: 1fr; max-width: 480px; }
+@media (max-width: 900px) {
+  .sim-grid, .sim-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .sim-grid, .sim-grid.cols-2, .sim-grid.cols-1 { grid-template-columns: 1fr; }
+}
 .sim-card {
-  background:var(--surface); padding:28px 28px 24px; position:relative;
-  overflow:hidden; display:flex; flex-direction:column; transition:background 0.2s;
+  background: var(--surface);
+  padding: 28px 28px 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.2s;
 }
-.sim-card.live { cursor:pointer; }
-.sim-card.live:hover { background:var(--panel); }
-.sim-card a { text-decoration:none; color:inherit; display:flex; flex-direction:column; height:100%; }
-
-/* Top accent line — color per domain */
+.sim-card.live { cursor: pointer; }
+.sim-card.live:hover { background: var(--panel); }
+.sim-card a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .sim-card::after {
-  content:''; position:absolute; top:0; left:0; right:0; height:2px;
-  transform:scaleX(0); transform-origin:left; transition:transform 0.3s var(--ease);
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease);
 }
-.sim-card.live:hover::after { transform:scaleX(1); }
-.domain-physics    .sim-card::after { background:#7ecfff; }
-.domain-field      .sim-card::after { background:var(--cyan); }
-.domain-engineering .sim-card::after { background:var(--amber); }
-.domain-medical    .sim-card::after { background:#a855f7; }
-.domain-environmental .sim-card::after { background:var(--teal); }
-.domain-financial  .sim-card::after { background:var(--gold); }
-.domain-education  .sim-card::after { background:var(--edu); }
-
+.sim-card.live:hover::after { transform: scaleX(1); }
+.domain-physics    .sim-card::after { background: #7ecfff; }
+.domain-field      .sim-card::after { background: var(--cyan); }
+.domain-engineering .sim-card::after { background: var(--amber); }
+.domain-medical    .sim-card::after { background: #a855f7; }
+.domain-environmental .sim-card::after { background: var(--teal); }
+.domain-financial  .sim-card::after { background: var(--gold); }
+.domain-education  .sim-card::after { background: var(--edu); }
 .sim-status {
-  position:absolute; top:16px; right:16px;
-  font-family:var(--mono); font-size:9px; letter-spacing:1.5px;
-  text-transform:uppercase; padding:3px 8px;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 8px;
 }
-.status-live  { background:rgba(0,230,118,0.1); color:#00e676; border:1px solid #00e676; }
-.status-soon  { background:rgba(78,95,106,0.15); color:var(--muted); border:1px solid var(--dim); }
-
-.sim-domain { font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; margin-top:4px; }
-.domain-physics    .sim-domain { color:#7ecfff; }
-.domain-field      .sim-domain { color:var(--cyan); }
-.domain-engineering .sim-domain { color:var(--amber-d); }
-.domain-medical    .sim-domain { color:#a855f7; }
-.domain-environmental .sim-domain { color:var(--teal); }
-.domain-financial  .sim-domain { color:var(--gold); }
-.domain-education  .sim-domain { color:var(--edu-d); }
-
+.status-live  { background: rgba(0,230,118,0.1); color: #00e676; border: 1px solid #00e676; }
+.status-soon  { background: rgba(78,95,106,0.15); color: var(--muted); border: 1px solid var(--dim); }
+.sim-domain {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  margin-top: 4px;
+}
+.domain-physics    .sim-domain { color: #7ecfff; }
+.domain-field      .sim-domain { color: var(--cyan); }
+.domain-engineering .sim-domain { color: var(--amber-d); }
+.domain-medical    .sim-domain { color: #a855f7; }
+.domain-environmental .sim-domain { color: var(--teal); }
+.domain-financial  .sim-domain { color: var(--gold); }
+.domain-education  .sim-domain { color: var(--edu-d); }
 .sim-title {
-  font-family:var(--sans); font-size:clamp(20px,2.5vw,26px); font-weight:900;
-  letter-spacing:1px; text-transform:uppercase; color:var(--text);
-  line-height:1.1; margin-bottom:10px;
+  font-family: var(--sans);
+  font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 10px;
 }
 .sim-desc {
-  font-family:var(--sans); font-size:14px; font-weight:300; color:var(--muted);
-  line-height:1.7; flex:1; margin-bottom:16px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  flex: 1;
+  margin-bottom: 16px;
 }
 .sim-meta {
-  font-family:var(--mono); font-size:10px; color:var(--dim); letter-spacing:1px;
-  line-height:2; border-top:1px solid var(--border); padding-top:12px; margin-top:auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 1px;
+  line-height: 2;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: auto;
 }
-.sim-meta strong { color:var(--amber-d); }
-
+.sim-meta strong { color: var(--amber-d); }
 .sim-cta {
-  display:inline-flex; align-items:center; gap:8px;
-  font-family:var(--mono); font-size:10px; letter-spacing:2px;
-  text-transform:uppercase; margin-top:12px; text-decoration:none;
-  transition:gap 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 12px;
+  text-decoration: none;
+  transition: gap 0.2s;
 }
-.sim-cta:hover { gap:12px; }
-.domain-physics    .sim-cta { color:#7ecfff; }
-.domain-field      .sim-cta { color:var(--cyan); }
-.domain-engineering .sim-cta { color:var(--amber); }
-.domain-medical    .sim-cta { color:#a855f7; }
-.domain-environmental .sim-cta { color:var(--teal); }
-.domain-financial  .sim-cta { color:var(--gold); }
-.domain-education  .sim-cta { color:var(--edu); }
-
-/* Category divider inside a domain section */
+.sim-cta:hover { gap: 12px; }
+.domain-physics    .sim-cta { color: #7ecfff; }
+.domain-field      .sim-cta { color: var(--cyan); }
+.domain-engineering .sim-cta { color: var(--amber); }
+.domain-medical    .sim-cta { color: #a855f7; }
+.domain-environmental .sim-cta { color: var(--teal); }
+.domain-financial  .sim-cta { color: var(--gold); }
+.domain-education  .sim-cta { color: var(--edu); }
 .category-label {
-  font-family:var(--mono); font-size:9px; letter-spacing:3px; text-transform:uppercase;
-  color:var(--muted); margin:20px 0 10px;
-  display:flex; align-items:center; gap:10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 20px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.category-label::after { content:''; flex:1; height:1px; background:var(--border); }
-
-.sim-card.coming { opacity:0.42; }
-
-/* FEATURED CARD — full-width inside a 1-col or spanning */
+.category-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.sim-card.coming { opacity: 0.42; cursor: default; }
+.sim-card.coming a { cursor: default; }
 .sim-card.featured {
-  padding:32px 36px;
-  border-left:3px solid var(--cyan);
+  padding: 32px 36px;
+  border-left: 3px solid var(--cyan);
 }
-.sim-card.featured .sim-title { font-size:clamp(24px,3vw,32px); }
-
-/* METHODOLOGY NOTE */
+.sim-card.featured .sim-title { font-size: clamp(24px, 3vw, 32px); }
 .method-note {
-  margin-top:16px; background:var(--surface); border:1px solid var(--border);
-  border-left:3px solid var(--amber); padding:24px 28px;
-  display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;
+  margin-top: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  padding: 24px 28px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
-.method-note-icon { font-family:var(--mono); font-size:24px; color:var(--amber); flex-shrink:0; }
-.method-note-text h3 { font-family:var(--sans); font-size:18px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:8px; }
-.method-note-text p { font-family:var(--mono); font-size:11px; color:var(--muted); line-height:1.8; max-width:640px; }
-
-/* FOOTER */
+.method-note-icon { font-family: var(--mono); font-size: 24px; color: var(--amber); flex-shrink: 0; }
+.method-note-text h3 {
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+.method-note-text p {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 640px;
+}
 footer {
-  border-top:1px solid var(--border); padding:32px 40px;
-  display:flex; justify-content:space-between; align-items:center;
-  flex-wrap:wrap; gap:12px; max-width:1200px; margin:0 auto;
-  position:relative; z-index:1;
+  border-top: 1px solid var(--border);
+  padding: 32px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
-footer p { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:1px; }
-footer a { color:var(--amber-d); text-decoration:none; }
-footer a:hover { color:var(--amber); }
-
-@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+footer p { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 1px; }
+footer a { color: var(--amber-d); text-decoration: none; }
+footer a:hover { color: var(--amber); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .domain-section { animation: fadeUp 0.3s var(--ease) both; }
-
-@media(max-width:640px){ .wrapper { padding:48px 20px 60px; } nav { padding:0 20px; } footer { padding:24px 20px; } .stats-bar { flex-wrap:wrap; } .stat-item { flex:1 1 50%; } }
+@media (max-width: 640px) {
+  .wrapper { padding: 48px 20px 60px; }
+  nav { padding: 0 20px; }
+  footer { padding: 24px 20px; }
+  .stats-bar { flex-wrap: wrap; }
+  .stat-item { flex: 1 1 50%; }
+  .domain-header { flex-direction: column; align-items: flex-start; }
+  .domain-count { margin-left: 0; }
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <a href="/" class="nav-logo">
+    <img src="/assets/aion-logo.jpg" alt="AionSystem logo" class="nav-logo-img">
+    <span>AION<span>system</span></span>
+  </a>
   <a href="/" class="nav-back">← Back to Home</a>
 </nav>
 
 <div class="wrapper">
 
-  <!-- PAGE HEADER -->
   <div class="page-header">
     <div class="page-eyebrow">// AionSystem · Simulation Suite</div>
     <h1 class="page-title">Verified<br><em>Simulators</em></h1>
@@ -266,18 +482,18 @@ footer a:hover { color:var(--amber); }
     </div>
   </div>
 
-  <!-- STATS BAR -->
+  <!-- STATS BAR (dynamic counts will be updated by JS) -->
   <div class="stats-bar">
     <div class="stat-item">
-      <span class="stat-val live-count">3</span>
+      <span class="stat-val live-count" id="liveCount">0</span>
       LIVE NOW
     </div>
     <div class="stat-item">
-      <span class="stat-val">6</span>
+      <span class="stat-val" id="domainCount">0</span>
       DOMAINS
     </div>
     <div class="stat-item">
-      <span class="stat-val">7+</span>
+      <span class="stat-val" id="pipelineCount">0</span>
       IN PIPELINE
     </div>
     <div class="stat-item">
@@ -289,204 +505,79 @@ footer a:hover { color:var(--amber); }
   <!-- FILTER ROW -->
   <div class="filter-row">
     <span class="filter-label">Filter:</span>
-    <button class="filter-btn active" onclick="filterDomain('all',this)">All Domains</button>
-    <button class="filter-btn" onclick="filterDomain('physics',this)">Physics</button>
-    <button class="filter-btn" onclick="filterDomain('field',this)">Field Operations</button>
-    <button class="filter-btn" onclick="filterDomain('engineering',this)">Engineering</button>
-    <button class="filter-btn" onclick="filterDomain('education',this)">Education</button>
-    <button class="filter-btn" onclick="filterDomain('medical',this)">Medical</button>
-    <button class="filter-btn" onclick="filterDomain('environmental',this)">Environmental</button>
+    <button class="filter-btn active" data-domain="all">All Domains</button>
+    <button class="filter-btn" data-domain="physics">Physics</button>
+    <button class="filter-btn" data-domain="field">Field Operations</button>
+    <button class="filter-btn" data-domain="engineering">Engineering</button>
+    <button class="filter-btn" data-domain="education">Education</button>
+    <button class="filter-btn" data-domain="medical">Medical</button>
+    <button class="filter-btn" data-domain="environmental">Environmental</button>
   </div>
 
-  <!-- ════════════════ DOMAIN: PHYSICS ════════════════ -->
+  <!-- ========= DOMAIN: PHYSICS ========= -->
   <div class="domain-section domain-physics" data-domain="physics">
     <div class="domain-header">
       <span class="domain-tag tag-physics">Physics</span>
       <span class="domain-title">Physics & Mechanics</span>
-      <span class="domain-live-badge">1 LIVE</span>
-      <span class="domain-count">4 simulators</span>
+      <span class="domain-live-badge" id="physicsLiveBadge">0 LIVE</span>
+      <span class="domain-count" id="physicsCount">0 simulators</span>
     </div>
-    <div class="sim-grid">
-
-      <!-- LIVE: ROLLER COASTER -->
-      <div class="sim-card live">
-        <a href="/simulators/roller-coaster/">
-          <span class="sim-status status-live">● Live</span>
-          <div class="sim-domain">Physics · AP Curriculum</div>
-          <div class="sim-title">Roller Coaster Physics</div>
-          <div class="sim-desc">10 interactive modules — energy conservation, g-forces, loop design, hill profiling, banked curves, spring launches, and full track simulation. Citation-backed against NASA physiological limits.</div>
-          <div class="sim-meta">
-            <strong>Ref:</strong> Tony Wayne AP Physics Guide<br>
-            <strong>Red team:</strong> 3 passes · 15 issues resolved<br>
-            <strong>Client:</strong> Saleem Raja Haja · Kuwait<br>
-            <strong>Date:</strong> March 2026
-          </div>
-          <span class="sim-cta">Launch Simulator →</span>
-        </a>
-      </div>
-
-      <!-- COMING: PROJECTILE -->
-      <div class="sim-card coming">
-        <span class="sim-status status-soon">Coming</span>
-        <div class="sim-domain">Physics · Mechanics</div>
-        <div class="sim-title">Projectile Motion</div>
-        <div class="sim-desc">Cannon launch, drag coefficient, target practice mode, Mars gravity selector. AION design system and red-team methodology throughout.</div>
-        <div class="sim-meta"><strong>Status:</strong> Planned — Q2 2026</div>
-      </div>
-
-      <!-- COMING: FLUID -->
-      <div class="sim-card coming">
-        <span class="sim-status status-soon">Coming</span>
-        <div class="sim-domain">Fluid Dynamics · Energy</div>
-        <div class="sim-title">Pipeline Flow Simulator</div>
-        <div class="sim-desc">Bernoulli's principle, Venturi effect, pipe flow with obstacles, Reynolds number visualization. Oil &amp; gas sector infrastructure planning.</div>
-        <div class="sim-meta"><strong>Status:</strong> Planned — Q2 2026</div>
-      </div>
-
-      <!-- COMING: ORBITAL -->
-      <div class="sim-card coming">
-        <span class="sim-status status-soon">Coming</span>
-        <div class="sim-domain">Physics · Orbital Mechanics</div>
-        <div class="sim-title">Orbital Mechanics</div>
-        <div class="sim-desc">Kepler's laws, satellite orbit calculator, gravitational slingshot, Hohmann transfer visualization.</div>
-        <div class="sim-meta"><strong>Status:</strong> Planned — Q3 2026</div>
-      </div>
-
+    <div class="sim-grid" id="physicsGrid">
+      <!-- populated by JS -->
     </div>
   </div>
 
-  <!-- ════════════════ DOMAIN: FIELD OPERATIONS ════════════════ -->
+  <!-- ========= DOMAIN: FIELD OPERATIONS ========= -->
   <div class="domain-section domain-field" data-domain="field">
     <div class="domain-header">
       <span class="domain-tag tag-field">Field Ops</span>
       <span class="domain-title">Field Operations & Defense</span>
-      <span class="domain-live-badge">1 LIVE</span>
-      <span class="domain-count">1 simulator</span>
+      <span class="domain-live-badge" id="fieldLiveBadge">0 LIVE</span>
+      <span class="domain-count" id="fieldCount">0 simulators</span>
     </div>
-    <div class="sim-grid cols-1">
-
-      <!-- LIVE: ORION -->
-      <div class="sim-card live featured">
-        <a href="/simulators/Orion/">
-          <span class="sim-status status-live">● Live</span>
-          <div class="sim-domain">Underwater EOD · Magnetometry · UNDP</div>
-          <div class="sim-title">Project ORION — Underwater EO Detection</div>
-          <div class="sim-desc">Passive tri-axis magnetometer gradiometer simulator for underwater unexploded ordnance (UXO) detection. Full survey canvas, Munition Likelihood Score (MLS) engine, gradiometer waveform display, detection map with KML/GPX export. Developed for the UNDP Challenge: Affordable Tools to Find and Mark Underwater EO. CAPEX: $4,650.</div>
-          <div class="sim-meta">
-            <strong>Physics:</strong> Magnetic dipole model · tri-axis differential gradient · VHR discrimination<br>
-            <strong>Red team:</strong> 1 pass · 7 findings documented · 0 undisclosed<br>
-            <strong>Context:</strong> UNDP Solomon Islands · EOD field operations<br>
-            <strong>Date:</strong> March 2026
-          </div>
-          <span class="sim-cta">Launch Simulator →</span>
-        </a>
-      </div>
-
-    </div>
+    <div class="sim-grid cols-1" id="fieldGrid"></div>
   </div>
 
-  <!-- ════════════════ DOMAIN: SALMON EDU ════════════════ -->
+  <!-- ========= DOMAIN: EDUCATION ========= -->
   <div class="domain-section domain-education" data-domain="education">
     <div class="domain-header">
       <span class="domain-tag tag-education">Salmon EDU</span>
       <span class="domain-title">Educational Tools for Teachers</span>
-      <span class="domain-live-badge">1 LIVE</span>
-      <span class="domain-count">1 tool · more planned</span>
+      <span class="domain-live-badge" id="educationLiveBadge">0 LIVE</span>
+      <span class="domain-count" id="educationCount">0 simulators</span>
     </div>
-
     <div class="category-label">// Category 01 — Worksheet Generators</div>
-
-    <div class="sim-grid cols-2">
-
-      <!-- LIVE: WORKSHEET BUILDER -->
-      <div class="sim-card live">
-        <a href="/simulators/math-worksheet-builder/">
-          <span class="sim-status status-live">● Live</span>
-          <div class="sim-domain">Math · Grades 3–8 · Worksheet Generator</div>
-          <div class="sim-title">Math Worksheet Builder</div>
-          <div class="sim-desc">9 problem types — arithmetic, fractions, percentages, integers, order of operations, exponents, linear equations, interleaved practice. Interleaved mode implements Taylor &amp; Rohrer (2010): spaced mixed practice doubles test scores vs blocked practice. JSON template save/load. PDF export. Zero dependency — opens offline forever.</div>
-          <div class="sim-meta">
-            <strong>Research:</strong> Taylor &amp; Rohrer (2010) · Rohrer, Dedrick &amp; Stershic (2015)<br>
-            <strong>Red team:</strong> 4 passes · 10 bugs fixed · 0 undisclosed<br>
-            <strong>Version:</strong> v1.3 · March 2026
-          </div>
-          <span class="sim-cta">Launch Tool →</span>
-        </a>
-      </div>
-
-      <!-- COMING: NEXT WORKSHEET TYPE -->
-      <div class="sim-card coming">
-        <span class="sim-status status-soon">Coming</span>
-        <div class="sim-domain">Science / Grammar · Worksheet Generator</div>
-        <div class="sim-title">Next Subject<br>Worksheet Builder</div>
-        <div class="sim-desc">Subject determined after Math Edition validation milestone. Same zero-dependency architecture, same AION red-team standard.</div>
-        <div class="sim-meta"><strong>Status:</strong> Planned — Q3 2026 · trigger: 100-sale gate</div>
-      </div>
-
-    </div>
+    <div class="sim-grid cols-2" id="educationGrid"></div>
   </div>
 
-  <!-- ════════════════ DOMAIN: ENGINEERING ════════════════ -->
+  <!-- ========= DOMAIN: ENGINEERING ========= -->
   <div class="domain-section domain-engineering" data-domain="engineering">
     <div class="domain-header">
       <span class="domain-tag tag-engineering">Engineering</span>
       <span class="domain-title">Civil & Structural Engineering</span>
-      <span class="domain-count">1 simulator planned</span>
+      <span class="domain-count" id="engineeringCount">0 simulators</span>
     </div>
-    <div class="sim-grid cols-1" style="max-width:480px">
-
-      <!-- COMING: BRIDGE -->
-      <div class="sim-card coming">
-        <span class="sim-status status-soon">Coming</span>
-        <div class="sim-domain">Engineering · Civil</div>
-        <div class="sim-title">Bridge Structural Load</div>
-        <div class="sim-desc">Truss stress calculator, material cost estimator, load testing visualizer, failure point prediction, earthquake simulation.</div>
-        <div class="sim-meta"><strong>Status:</strong> Planned — Q2 2026</div>
-      </div>
-
-    </div>
+    <div class="sim-grid cols-1" id="engineeringGrid"></div>
   </div>
 
-  <!-- ════════════════ DOMAIN: MEDICAL ════════════════ -->
+  <!-- ========= DOMAIN: MEDICAL ========= -->
   <div class="domain-section domain-medical" data-domain="medical">
     <div class="domain-header">
       <span class="domain-tag tag-medical">Medical</span>
       <span class="domain-title">Medical & Pharmacology</span>
-      <span class="domain-count">1 simulator planned</span>
+      <span class="domain-count" id="medicalCount">0 simulators</span>
     </div>
-    <div class="sim-grid cols-1" style="max-width:480px">
-
-      <!-- COMING: PHARMACOKINETICS -->
-      <div class="sim-card coming">
-        <span class="sim-status status-soon">Coming</span>
-        <div class="sim-domain">Medical · Pharmacology</div>
-        <div class="sim-title">Drug Pharma&shy;cokinetics</div>
-        <div class="sim-desc">Absorption curves, half-life visualization, dosing schedule optimizer, overdose warning system. Pre-med curriculum tool.</div>
-        <div class="sim-meta"><strong>Status:</strong> Planned — Q3 2026</div>
-      </div>
-
-    </div>
+    <div class="sim-grid cols-1" id="medicalGrid"></div>
   </div>
 
-  <!-- ════════════════ DOMAIN: ENVIRONMENTAL ════════════════ -->
+  <!-- ========= DOMAIN: ENVIRONMENTAL ========= -->
   <div class="domain-section domain-environmental" data-domain="environmental">
     <div class="domain-header">
       <span class="domain-tag tag-environmental">Environmental</span>
       <span class="domain-title">Environmental & Climate</span>
-      <span class="domain-count">1 simulator planned</span>
+      <span class="domain-count" id="environmentalCount">0 simulators</span>
     </div>
-    <div class="sim-grid cols-1" style="max-width:480px">
-
-      <!-- COMING: CLIMATE -->
-      <div class="sim-card coming">
-        <span class="sim-status status-soon">Coming</span>
-        <div class="sim-domain">Environmental · Climate</div>
-        <div class="sim-title">Climate Scenario Simulator</div>
-        <div class="sim-desc">CO₂ emission scenarios, temperature projection, sea level rise visualizer, policy impact comparison, tipping point warnings.</div>
-        <div class="sim-meta"><strong>Status:</strong> Planned — Q3 2026</div>
-      </div>
-
-    </div>
+    <div class="sim-grid cols-1" id="environmentalGrid"></div>
   </div>
 
   <!-- METHODOLOGY NOTE -->
@@ -497,32 +588,238 @@ footer a:hover { color:var(--amber); }
       <p>Every simulator in this suite carries the AION Verified Simulator badge. This means: the physics was verified against cited peer sources, the code was red-teamed for silent errors and edge cases, and the output was reviewed before release. The Red Team tab inside each simulator documents every issue found — severity graded, resolution logged, nothing undisclosed. Nothing ships clean without earning it.</p>
     </div>
   </div>
-
 </div>
 
 <footer>
-  <p>AionSystem · <a href="/">Sheldon K. Salmon</a> · AI Reliability Architect · New York · March 2026</p>
+  <p>AionSystem · <a href="/">Sheldon K. Salmon</a> · AI Reliability Architect · New York · <span id="copyrightYear"></span></p>
   <p><a href="/certify/">Verify a badge</a> &nbsp;·&nbsp; <a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></p>
 </footer>
 
 <script>
-function filterDomain(domain, btnEl) {
-  // Update active button
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btnEl.classList.add('active');
+// Simulator data – easy to extend
+const simulatorsData = {
+  physics: {
+    title: "Physics & Mechanics",
+    sims: [
+      {
+        name: "Roller Coaster Physics",
+        domain: "Physics · AP Curriculum",
+        desc: "10 interactive modules — energy conservation, g‑forces, loop design, hill profiling, banked curves, spring launches, and full track simulation. Citation‑backed against NASA physiological limits.",
+        meta: "<strong>Ref:</strong> Tony Wayne AP Physics Guide<br><strong>Red team:</strong> 3 passes · 15 issues resolved<br><strong>Client:</strong> Saleem Raja Haja · Kuwait<br><strong>Date:</strong> March 2026",
+        link: "/simulators/roller-coaster/",
+        status: "live",
+        featured: false
+      },
+      {
+        name: "Projectile Motion",
+        domain: "Physics · Mechanics",
+        desc: "Cannon launch, drag coefficient, target practice mode, Mars gravity selector. AION design system and red-team methodology throughout.",
+        meta: "<strong>Status:</strong> Planned — Q2 2026",
+        link: "#",
+        status: "coming",
+        featured: false
+      },
+      {
+        name: "Pipeline Flow Simulator",
+        domain: "Fluid Dynamics · Energy",
+        desc: "Bernoulli's principle, Venturi effect, pipe flow with obstacles, Reynolds number visualization. Oil & gas sector infrastructure planning.",
+        meta: "<strong>Status:</strong> Planned — Q2 2026",
+        link: "#",
+        status: "coming",
+        featured: false
+      },
+      {
+        name: "Orbital Mechanics",
+        domain: "Physics · Orbital Mechanics",
+        desc: "Kepler's laws, satellite orbit calculator, gravitational slingshot, Hohmann transfer visualization.",
+        meta: "<strong>Status:</strong> Planned — Q3 2026",
+        link: "#",
+        status: "coming",
+        featured: false
+      }
+    ]
+  },
+  field: {
+    title: "Field Operations & Defense",
+    sims: [
+      {
+        name: "Project ORION — Underwater EO Detection",
+        domain: "Underwater EOD · Magnetometry · UNDP",
+        desc: "Passive tri-axis magnetometer gradiometer simulator for underwater unexploded ordnance (UXO) detection. Full survey canvas, Munition Likelihood Score (MLS) engine, gradiometer waveform display, detection map with KML/GPX export. Developed for the UNDP Challenge: Affordable Tools to Find and Mark Underwater EO. CAPEX: $4,650.",
+        meta: "<strong>Physics:</strong> Magnetic dipole model · tri-axis differential gradient · VHR discrimination<br><strong>Red team:</strong> 1 pass · 7 findings documented · 0 undisclosed<br><strong>Context:</strong> UNDP Solomon Islands · EOD field operations<br><strong>Date:</strong> March 2026",
+        link: "/simulators/Orion/",
+        status: "live",
+        featured: true
+      }
+    ]
+  },
+  education: {
+    title: "Educational Tools for Teachers",
+    sims: [
+      {
+        name: "Math Worksheet Builder",
+        domain: "Math · Grades 3–8 · Worksheet Generator",
+        desc: "9 problem types — arithmetic, fractions, percentages, integers, order of operations, exponents, linear equations, interleaved practice. Interleaved mode implements Taylor & Rohrer (2010): spaced mixed practice doubles test scores vs blocked practice. JSON template save/load. PDF export. Zero dependency — opens offline forever.",
+        meta: "<strong>Research:</strong> Taylor & Rohrer (2010) · Rohrer, Dedrick & Stershic (2015)<br><strong>Red team:</strong> 4 passes · 10 bugs fixed · 0 undisclosed<br><strong>Version:</strong> v1.3 · March 2026",
+        link: "/simulators/math-worksheet-builder/",
+        status: "live",
+        featured: false
+      },
+      {
+        name: "Next Subject Worksheet Builder",
+        domain: "Science / Grammar · Worksheet Generator",
+        desc: "Subject determined after Math Edition validation milestone. Same zero-dependency architecture, same AION red-team standard.",
+        meta: "<strong>Status:</strong> Planned — Q3 2026 · trigger: 100-sale gate",
+        link: "#",
+        status: "coming",
+        featured: false
+      }
+    ]
+  },
+  engineering: {
+    title: "Civil & Structural Engineering",
+    sims: [
+      {
+        name: "Bridge Structural Load",
+        domain: "Engineering · Civil",
+        desc: "Truss stress calculator, material cost estimator, load testing visualizer, failure point prediction, earthquake simulation.",
+        meta: "<strong>Status:</strong> Planned — Q2 2026",
+        link: "#",
+        status: "coming",
+        featured: false
+      }
+    ]
+  },
+  medical: {
+    title: "Medical & Pharmacology",
+    sims: [
+      {
+        name: "Drug Pharmacokinetics",
+        domain: "Medical · Pharmacology",
+        desc: "Absorption curves, half-life visualization, dosing schedule optimizer, overdose warning system. Pre-med curriculum tool.",
+        meta: "<strong>Status:</strong> Planned — Q3 2026",
+        link: "#",
+        status: "coming",
+        featured: false
+      }
+    ]
+  },
+  environmental: {
+    title: "Environmental & Climate",
+    sims: [
+      {
+        name: "Climate Scenario Simulator",
+        domain: "Environmental · Climate",
+        desc: "CO₂ emission scenarios, temperature projection, sea level rise visualizer, policy impact comparison, tipping point warnings.",
+        meta: "<strong>Status:</strong> Planned — Q3 2026",
+        link: "#",
+        status: "coming",
+        featured: false
+      }
+    ]
+  }
+};
 
-  // Show/hide sections
+function renderCard(sim, domainKey) {
+  const isLive = sim.status === 'live';
+  const statusClass = isLive ? 'status-live' : 'status-soon';
+  const statusText = isLive ? '● Live' : 'Coming';
+  const cardClass = isLive ? 'sim-card live' : 'sim-card coming';
+  const featuredClass = sim.featured ? ' featured' : '';
+  const linkTarget = sim.link !== '#' ? `href="${sim.link}"` : `href="#" onclick="return false;"`;
+  const linkClose = sim.link !== '#' ? '' : ' style="cursor:default;"';
+
+  return `
+    <div class="${cardClass}${featuredClass}">
+      <a ${linkTarget}${linkClose}>
+        <span class="sim-status ${statusClass}">${statusText}</span>
+        <div class="sim-domain">${sim.domain}</div>
+        <div class="sim-title">${sim.name}</div>
+        <div class="sim-desc">${sim.desc}</div>
+        <div class="sim-meta">${sim.meta}</div>
+        <span class="sim-cta">${isLive ? 'Launch Simulator →' : 'View Details →'}</span>
+      </a>
+    </div>
+  `;
+}
+
+function renderAll() {
+  let totalLive = 0;
+  let totalPipeline = 0;
+  const domainKeys = ['physics', 'field', 'education', 'engineering', 'medical', 'environmental'];
+  domainKeys.forEach(key => {
+    const domain = simulatorsData[key];
+    if (!domain) return;
+    const sims = domain.sims;
+    const liveSims = sims.filter(s => s.status === 'live');
+    const comingSims = sims.filter(s => s.status === 'coming');
+    totalLive += liveSims.length;
+    totalPipeline += comingSims.length;
+
+    // Update counts in header
+    const countSpan = document.getElementById(`${key}Count`);
+    if (countSpan) countSpan.innerText = `${sims.length} simulator${sims.length !== 1 ? 's' : ''}`;
+    const liveBadge = document.getElementById(`${key}LiveBadge`);
+    if (liveBadge) {
+      if (liveSims.length > 0) liveBadge.innerText = `${liveSims.length} LIVE`;
+      else liveBadge.style.display = 'none';
+    }
+    // Render grid
+    const grid = document.getElementById(`${key}Grid`);
+    if (grid) {
+      grid.innerHTML = sims.map(sim => renderCard(sim, key)).join('');
+    }
+  });
+  document.getElementById('liveCount').innerText = totalLive;
+  document.getElementById('pipelineCount').innerText = totalPipeline;
+  document.getElementById('domainCount').innerText = domainKeys.length;
+}
+
+// Filtering logic
+function filterDomains(domainFilter) {
   const sections = document.querySelectorAll('.domain-section');
-  sections.forEach(sec => {
-    if (domain === 'all' || sec.dataset.domain === domain) {
-      sec.removeAttribute('data-hidden');
-      sec.style.display = '';
+  sections.forEach(section => {
+    const sectionDomain = section.getAttribute('data-domain');
+    if (domainFilter === 'all' || sectionDomain === domainFilter) {
+      section.removeAttribute('data-hidden');
+      section.style.display = '';
     } else {
-      sec.style.display = 'none';
+      section.style.display = 'none';
+    }
+  });
+  // Update active button style
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    if (btn.getAttribute('data-domain') === domainFilter) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
     }
   });
 }
-</script>
 
+// Set up filter event listeners
+function initFilters() {
+  const btns = document.querySelectorAll('.filter-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const domain = btn.getAttribute('data-domain');
+      filterDomains(domain);
+    });
+  });
+}
+
+// Dynamic copyright year
+function setCopyright() {
+  const yearSpan = document.getElementById('copyrightYear');
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+}
+
+// Run on load
+document.addEventListener('DOMContentLoaded', () => {
+  renderAll();
+  initFilters();
+  setCopyright();
+});
+</script>
 </body>
 </html>
