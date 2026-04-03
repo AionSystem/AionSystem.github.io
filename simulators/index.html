@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="description" content="AionSystem Simulator Suite — Physics, Engineering, Field Operations, Education, Medical, Environmental. Citation-backed. Red-teamed. AION Verified.">
+<meta name="description" content="AionSystem Simulator Suite — Physics, Engineering, Field Operations, Textile, Crisis Response, Education. Citation-backed. Red-teamed. AION Verified.">
 <title>Simulators — AionSystem · Sheldon K. Salmon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,6 +27,7 @@
   --teal: #00b894;
   --edu: #4ade80;
   --edu-d: #22c55e;
+  --purple: #a855f7;
   --mono: 'Share Tech Mono', monospace;
   --sans: 'Barlow Condensed', sans-serif;
   --serif: 'Crimson Pro', Georgia, serif;
@@ -224,10 +225,11 @@ nav {
 }
 .tag-physics    { color: #7ecfff; border-color: #7ecfff; }
 .tag-field      { color: var(--cyan); border-color: var(--cyan); background: rgba(0,212,255,0.06); }
+.tag-textile    { color: var(--gold); border-color: var(--gold); background: rgba(212,175,55,0.06); }
+.tag-crisis     { color: var(--purple); border-color: var(--purple); background: rgba(168,85,247,0.06); }
 .tag-engineering{ color: var(--amber); border-color: var(--amber-d); }
 .tag-medical    { color: #a855f7; border-color: #a855f7; }
 .tag-environmental { color: var(--teal); border-color: var(--teal); }
-.tag-financial  { color: var(--gold); border-color: var(--gold); }
 .tag-education  { color: var(--edu); border-color: var(--edu-d); background: rgba(74,222,128,0.06); }
 .domain-title {
   font-family: var(--sans);
@@ -300,10 +302,11 @@ nav {
 .sim-card.live:hover::after { transform: scaleX(1); }
 .domain-physics    .sim-card::after { background: #7ecfff; }
 .domain-field      .sim-card::after { background: var(--cyan); }
+.domain-textile    .sim-card::after { background: var(--gold); }
+.domain-crisis     .sim-card::after { background: var(--purple); }
 .domain-engineering .sim-card::after { background: var(--amber); }
 .domain-medical    .sim-card::after { background: #a855f7; }
 .domain-environmental .sim-card::after { background: var(--teal); }
-.domain-financial  .sim-card::after { background: var(--gold); }
 .domain-education  .sim-card::after { background: var(--edu); }
 .sim-status {
   position: absolute;
@@ -327,10 +330,11 @@ nav {
 }
 .domain-physics    .sim-domain { color: #7ecfff; }
 .domain-field      .sim-domain { color: var(--cyan); }
+.domain-textile    .sim-domain { color: var(--gold); }
+.domain-crisis     .sim-domain { color: var(--purple); }
 .domain-engineering .sim-domain { color: var(--amber-d); }
 .domain-medical    .sim-domain { color: #a855f7; }
 .domain-environmental .sim-domain { color: var(--teal); }
-.domain-financial  .sim-domain { color: var(--gold); }
 .domain-education  .sim-domain { color: var(--edu-d); }
 .sim-title {
   font-family: var(--sans);
@@ -377,10 +381,11 @@ nav {
 .sim-cta:hover { gap: 12px; }
 .domain-physics    .sim-cta { color: #7ecfff; }
 .domain-field      .sim-cta { color: var(--cyan); }
+.domain-textile    .sim-cta { color: var(--gold); }
+.domain-crisis     .sim-cta { color: var(--purple); }
 .domain-engineering .sim-cta { color: var(--amber); }
 .domain-medical    .sim-cta { color: #a855f7; }
 .domain-environmental .sim-cta { color: var(--teal); }
-.domain-financial  .sim-cta { color: var(--gold); }
 .domain-education  .sim-cta { color: var(--edu); }
 .category-label {
   font-family: var(--mono);
@@ -477,29 +482,17 @@ footer a:hover { color: var(--amber); }
     <div class="page-eyebrow">// AionSystem · Simulation Suite</div>
     <h1 class="page-title">Verified<br><em>Simulators</em></h1>
     <div class="page-sub">
-      Physics · Field Operations · Education · Engineering · Medical · Environmental<br>
+      Physics · Field Ops · Textile · Crisis Response · Education · Engineering · Medical · Environmental<br>
       Every simulator: citation-backed · red-teamed · AION Verified badge
     </div>
   </div>
 
-  <!-- STATS BAR (dynamic counts will be updated by JS) -->
+  <!-- STATS BAR (dynamic) -->
   <div class="stats-bar">
-    <div class="stat-item">
-      <span class="stat-val live-count" id="liveCount">0</span>
-      LIVE NOW
-    </div>
-    <div class="stat-item">
-      <span class="stat-val" id="domainCount">0</span>
-      DOMAINS
-    </div>
-    <div class="stat-item">
-      <span class="stat-val" id="pipelineCount">0</span>
-      IN PIPELINE
-    </div>
-    <div class="stat-item">
-      <span class="stat-val">0</span>
-      UNDISCLOSED ERRORS
-    </div>
+    <div class="stat-item"><span class="stat-val live-count" id="liveCount">0</span> LIVE NOW</div>
+    <div class="stat-item"><span class="stat-val" id="domainCount">0</span> DOMAINS</div>
+    <div class="stat-item"><span class="stat-val" id="pipelineCount">0</span> IN PIPELINE</div>
+    <div class="stat-item"><span class="stat-val">0</span> UNDISCLOSED ERRORS</div>
   </div>
 
   <!-- FILTER ROW -->
@@ -507,9 +500,11 @@ footer a:hover { color: var(--amber); }
     <span class="filter-label">Filter:</span>
     <button class="filter-btn active" data-domain="all">All Domains</button>
     <button class="filter-btn" data-domain="physics">Physics</button>
-    <button class="filter-btn" data-domain="field">Field Operations</button>
-    <button class="filter-btn" data-domain="engineering">Engineering</button>
+    <button class="filter-btn" data-domain="field">Field Ops</button>
+    <button class="filter-btn" data-domain="textile">Textile</button>
+    <button class="filter-btn" data-domain="crisis">Crisis</button>
     <button class="filter-btn" data-domain="education">Education</button>
+    <button class="filter-btn" data-domain="engineering">Engineering</button>
     <button class="filter-btn" data-domain="medical">Medical</button>
     <button class="filter-btn" data-domain="environmental">Environmental</button>
   </div>
@@ -522,9 +517,7 @@ footer a:hover { color: var(--amber); }
       <span class="domain-live-badge" id="physicsLiveBadge">0 LIVE</span>
       <span class="domain-count" id="physicsCount">0 simulators</span>
     </div>
-    <div class="sim-grid" id="physicsGrid">
-      <!-- populated by JS -->
-    </div>
+    <div class="sim-grid" id="physicsGrid"></div>
   </div>
 
   <!-- ========= DOMAIN: FIELD OPERATIONS ========= -->
@@ -536,6 +529,28 @@ footer a:hover { color: var(--amber); }
       <span class="domain-count" id="fieldCount">0 simulators</span>
     </div>
     <div class="sim-grid cols-1" id="fieldGrid"></div>
+  </div>
+
+  <!-- ========= NEW DOMAIN: TEXTILE & MATERIALS ========= -->
+  <div class="domain-section domain-textile" data-domain="textile">
+    <div class="domain-header">
+      <span class="domain-tag tag-textile">Textile</span>
+      <span class="domain-title">Textile & Materials Engineering</span>
+      <span class="domain-live-badge" id="textileLiveBadge">0 LIVE</span>
+      <span class="domain-count" id="textileCount">0 simulators</span>
+    </div>
+    <div class="sim-grid cols-1" id="textileGrid"></div>
+  </div>
+
+  <!-- ========= NEW DOMAIN: CRISIS & DAMAGE CERTIFICATION ========= -->
+  <div class="domain-section domain-crisis" data-domain="crisis">
+    <div class="domain-header">
+      <span class="domain-tag tag-crisis">Crisis</span>
+      <span class="domain-title">Crisis & Damage Certification</span>
+      <span class="domain-live-badge" id="crisisLiveBadge">0 LIVE</span>
+      <span class="domain-count" id="crisisCount">0 simulators</span>
+    </div>
+    <div class="sim-grid cols-1" id="crisisGrid"></div>
   </div>
 
   <!-- ========= DOMAIN: EDUCATION ========= -->
@@ -596,126 +611,50 @@ footer a:hover { color: var(--amber); }
 </footer>
 
 <script>
-// Simulator data – easy to extend
+// Simulator data – now includes textile and crisis simulators
 const simulatorsData = {
   physics: {
-    title: "Physics & Mechanics",
     sims: [
-      {
-        name: "Roller Coaster Physics",
-        domain: "Physics · AP Curriculum",
-        desc: "10 interactive modules — energy conservation, g‑forces, loop design, hill profiling, banked curves, spring launches, and full track simulation. Citation‑backed against NASA physiological limits.",
-        meta: "<strong>Ref:</strong> Tony Wayne AP Physics Guide<br><strong>Red team:</strong> 3 passes · 15 issues resolved<br><strong>Client:</strong> Saleem Raja Haja · Kuwait<br><strong>Date:</strong> March 2026",
-        link: "/simulators/roller-coaster/",
-        status: "live",
-        featured: false
-      },
-      {
-        name: "Projectile Motion",
-        domain: "Physics · Mechanics",
-        desc: "Cannon launch, drag coefficient, target practice mode, Mars gravity selector. AION design system and red-team methodology throughout.",
-        meta: "<strong>Status:</strong> Planned — Q2 2026",
-        link: "#",
-        status: "coming",
-        featured: false
-      },
-      {
-        name: "Pipeline Flow Simulator",
-        domain: "Fluid Dynamics · Energy",
-        desc: "Bernoulli's principle, Venturi effect, pipe flow with obstacles, Reynolds number visualization. Oil & gas sector infrastructure planning.",
-        meta: "<strong>Status:</strong> Planned — Q2 2026",
-        link: "#",
-        status: "coming",
-        featured: false
-      },
-      {
-        name: "Orbital Mechanics",
-        domain: "Physics · Orbital Mechanics",
-        desc: "Kepler's laws, satellite orbit calculator, gravitational slingshot, Hohmann transfer visualization.",
-        meta: "<strong>Status:</strong> Planned — Q3 2026",
-        link: "#",
-        status: "coming",
-        featured: false
-      }
+      { name: "Roller Coaster Physics", domain: "Physics · AP Curriculum", desc: "10 interactive modules — energy conservation, g‑forces, loop design, hill profiling, banked curves, spring launches, and full track simulation. Citation‑backed against NASA physiological limits.", meta: "<strong>Ref:</strong> Tony Wayne AP Physics Guide<br><strong>Red team:</strong> 3 passes · 15 issues resolved<br><strong>Client:</strong> Saleem Raja Haja · Kuwait<br><strong>Date:</strong> March 2026", link: "/simulators/roller-coaster/", status: "live", featured: false },
+      { name: "Projectile Motion", domain: "Physics · Mechanics", desc: "Cannon launch, drag coefficient, target practice mode, Mars gravity selector. AION design system and red-team methodology throughout.", meta: "<strong>Status:</strong> Planned — Q2 2026", link: "#", status: "coming", featured: false },
+      { name: "Pipeline Flow Simulator", domain: "Fluid Dynamics · Energy", desc: "Bernoulli's principle, Venturi effect, pipe flow with obstacles, Reynolds number visualization. Oil & gas sector infrastructure planning.", meta: "<strong>Status:</strong> Planned — Q2 2026", link: "#", status: "coming", featured: false },
+      { name: "Orbital Mechanics", domain: "Physics · Orbital Mechanics", desc: "Kepler's laws, satellite orbit calculator, gravitational slingshot, Hohmann transfer visualization.", meta: "<strong>Status:</strong> Planned — Q3 2026", link: "#", status: "coming", featured: false }
     ]
   },
   field: {
-    title: "Field Operations & Defense",
     sims: [
-      {
-        name: "Project ORION — Underwater EO Detection",
-        domain: "Underwater EOD · Magnetometry · UNDP",
-        desc: "Passive tri-axis magnetometer gradiometer simulator for underwater unexploded ordnance (UXO) detection. Full survey canvas, Munition Likelihood Score (MLS) engine, gradiometer waveform display, detection map with KML/GPX export. Developed for the UNDP Challenge: Affordable Tools to Find and Mark Underwater EO. CAPEX: $4,650.",
-        meta: "<strong>Physics:</strong> Magnetic dipole model · tri-axis differential gradient · VHR discrimination<br><strong>Red team:</strong> 1 pass · 7 findings documented · 0 undisclosed<br><strong>Context:</strong> UNDP Solomon Islands · EOD field operations<br><strong>Date:</strong> March 2026",
-        link: "/simulators/Orion/",
-        status: "live",
-        featured: true
-      }
+      { name: "Project ORION — Underwater EO Detection", domain: "Underwater EOD · Magnetometry · UNDP", desc: "Passive tri-axis magnetometer gradiometer simulator for underwater unexploded ordnance (UXO) detection. Full survey canvas, Munition Likelihood Score (MLS) engine, gradiometer waveform display, detection map with KML/GPX export. CAPEX: $4,650.", meta: "<strong>Physics:</strong> Magnetic dipole model · tri-axis differential gradient · VHR discrimination<br><strong>Red team:</strong> 1 pass · 7 findings documented · 0 undisclosed<br><strong>Context:</strong> UNDP Solomon Islands · EOD field operations<br><strong>Date:</strong> March 2026", link: "/simulators/Orion/", status: "live", featured: true }
+    ]
+  },
+  textile: {
+    sims: [
+      { name: "Textile Pilling Simulator", domain: "Woven Fabrics · ISO 12945-2:2000", desc: "Data‑driven, explainable prediction platform for textile pilling. Scores Pilling Susceptibility Score (PSS) across 16+ parameters, predicts ISO class (1‑5), surfaces relative influence of fibre, yarn, construction, and finishing. Live tool built for InoCrowd and NICE challenges.", meta: "<strong>ISO:</strong> 12945-2:2000 compliant · Class ≥3 = PASS<br><strong>DOI:</strong> 10.5281/zenodo.19409957<br><strong>Red team:</strong> 2 passes · 0 undisclosed<br><strong>Date:</strong> April 2026", link: "https://aionsystem.github.io/PILLING-SIMULATOR/", status: "live", featured: false, external: true }
+    ]
+  },
+  crisis: {
+    sims: [
+      { name: "VERITAS — Damage Certification", domain: "Crisis Response · UNDP", desc: "Community‑operated certainty engine for crisis damage reporting. CERTUS Engine scores damage reports on photo evidence, corroboration, freshness, and consistency — producing a Damage Confidence Index (DCI). Works offline, anonymizes reporters, seals every dataset with Sovereign Trace Protocol.", meta: "<strong>UNDP submission:</strong> April 2026<br><strong>Red team:</strong> 6 rounds · 18 findings resolved<br><strong>Status:</strong> Live prototype", link: "https://aionsystem.github.io/VERITAS/", status: "live", featured: true, external: true }
     ]
   },
   education: {
-    title: "Educational Tools for Teachers",
     sims: [
-      {
-        name: "Math Worksheet Builder",
-        domain: "Math · Grades 3–8 · Worksheet Generator",
-        desc: "9 problem types — arithmetic, fractions, percentages, integers, order of operations, exponents, linear equations, interleaved practice. Interleaved mode implements Taylor & Rohrer (2010): spaced mixed practice doubles test scores vs blocked practice. JSON template save/load. PDF export. Zero dependency — opens offline forever.",
-        meta: "<strong>Research:</strong> Taylor & Rohrer (2010) · Rohrer, Dedrick & Stershic (2015)<br><strong>Red team:</strong> 4 passes · 10 bugs fixed · 0 undisclosed<br><strong>Version:</strong> v1.3 · March 2026",
-        link: "/simulators/math-worksheet-builder/",
-        status: "live",
-        featured: false
-      },
-      {
-        name: "Next Subject Worksheet Builder",
-        domain: "Science / Grammar · Worksheet Generator",
-        desc: "Subject determined after Math Edition validation milestone. Same zero-dependency architecture, same AION red-team standard.",
-        meta: "<strong>Status:</strong> Planned — Q3 2026 · trigger: 100-sale gate",
-        link: "#",
-        status: "coming",
-        featured: false
-      }
+      { name: "Math Worksheet Builder", domain: "Math · Grades 3–8 · Worksheet Generator", desc: "9 problem types — arithmetic, fractions, percentages, integers, order of operations, exponents, linear equations, interleaved practice. Implements Taylor & Rohrer (2010): spaced mixed practice doubles test scores vs blocked practice. JSON template save/load. PDF export.", meta: "<strong>Research:</strong> Taylor & Rohrer (2010) · Rohrer, Dedrick & Stershic (2015)<br><strong>Red team:</strong> 4 passes · 10 bugs fixed · 0 undisclosed<br><strong>Version:</strong> v1.3 · March 2026", link: "/simulators/math-worksheet-builder/", status: "live", featured: false },
+      { name: "Next Subject Worksheet Builder", domain: "Science / Grammar · Worksheet Generator", desc: "Subject determined after Math Edition validation milestone. Same zero-dependency architecture, same AION red-team standard.", meta: "<strong>Status:</strong> Planned — Q3 2026 · trigger: 100-sale gate", link: "#", status: "coming", featured: false }
     ]
   },
   engineering: {
-    title: "Civil & Structural Engineering",
     sims: [
-      {
-        name: "Bridge Structural Load",
-        domain: "Engineering · Civil",
-        desc: "Truss stress calculator, material cost estimator, load testing visualizer, failure point prediction, earthquake simulation.",
-        meta: "<strong>Status:</strong> Planned — Q2 2026",
-        link: "#",
-        status: "coming",
-        featured: false
-      }
+      { name: "Bridge Structural Load", domain: "Engineering · Civil", desc: "Truss stress calculator, material cost estimator, load testing visualizer, failure point prediction, earthquake simulation.", meta: "<strong>Status:</strong> Planned — Q2 2026", link: "#", status: "coming", featured: false }
     ]
   },
   medical: {
-    title: "Medical & Pharmacology",
     sims: [
-      {
-        name: "Drug Pharmacokinetics",
-        domain: "Medical · Pharmacology",
-        desc: "Absorption curves, half-life visualization, dosing schedule optimizer, overdose warning system. Pre-med curriculum tool.",
-        meta: "<strong>Status:</strong> Planned — Q3 2026",
-        link: "#",
-        status: "coming",
-        featured: false
-      }
+      { name: "Drug Pharmacokinetics", domain: "Medical · Pharmacology", desc: "Absorption curves, half-life visualization, dosing schedule optimizer, overdose warning system. Pre-med curriculum tool.", meta: "<strong>Status:</strong> Planned — Q3 2026", link: "#", status: "coming", featured: false }
     ]
   },
   environmental: {
-    title: "Environmental & Climate",
     sims: [
-      {
-        name: "Climate Scenario Simulator",
-        domain: "Environmental · Climate",
-        desc: "CO₂ emission scenarios, temperature projection, sea level rise visualizer, policy impact comparison, tipping point warnings.",
-        meta: "<strong>Status:</strong> Planned — Q3 2026",
-        link: "#",
-        status: "coming",
-        featured: false
-      }
+      { name: "Climate Scenario Simulator", domain: "Environmental · Climate", desc: "CO₂ emission scenarios, temperature projection, sea level rise visualizer, policy impact comparison, tipping point warnings.", meta: "<strong>Status:</strong> Planned — Q3 2026", link: "#", status: "coming", featured: false }
     ]
   }
 };
@@ -726,12 +665,12 @@ function renderCard(sim, domainKey) {
   const statusText = isLive ? '● Live' : 'Coming';
   const cardClass = isLive ? 'sim-card live' : 'sim-card coming';
   const featuredClass = sim.featured ? ' featured' : '';
-  const linkTarget = sim.link !== '#' ? `href="${sim.link}"` : `href="#" onclick="return false;"`;
-  const linkClose = sim.link !== '#' ? '' : ' style="cursor:default;"';
-
+  const target = sim.external ? '_blank' : '_self';
+  const linkHref = sim.link !== '#' ? sim.link : '#';
+  const onclickAttr = (sim.link === '#') ? ' onclick="return false;"' : '';
   return `
     <div class="${cardClass}${featuredClass}">
-      <a ${linkTarget}${linkClose}>
+      <a href="${linkHref}" target="${target}"${onclickAttr}>
         <span class="sim-status ${statusClass}">${statusText}</span>
         <div class="sim-domain">${sim.domain}</div>
         <div class="sim-title">${sim.name}</div>
@@ -746,7 +685,7 @@ function renderCard(sim, domainKey) {
 function renderAll() {
   let totalLive = 0;
   let totalPipeline = 0;
-  const domainKeys = ['physics', 'field', 'education', 'engineering', 'medical', 'environmental'];
+  const domainKeys = ['physics', 'field', 'textile', 'crisis', 'education', 'engineering', 'medical', 'environmental'];
   domainKeys.forEach(key => {
     const domain = simulatorsData[key];
     if (!domain) return;
@@ -756,7 +695,6 @@ function renderAll() {
     totalLive += liveSims.length;
     totalPipeline += comingSims.length;
 
-    // Update counts in header
     const countSpan = document.getElementById(`${key}Count`);
     if (countSpan) countSpan.innerText = `${sims.length} simulator${sims.length !== 1 ? 's' : ''}`;
     const liveBadge = document.getElementById(`${key}LiveBadge`);
@@ -764,7 +702,6 @@ function renderAll() {
       if (liveSims.length > 0) liveBadge.innerText = `${liveSims.length} LIVE`;
       else liveBadge.style.display = 'none';
     }
-    // Render grid
     const grid = document.getElementById(`${key}Grid`);
     if (grid) {
       grid.innerHTML = sims.map(sim => renderCard(sim, key)).join('');
@@ -775,7 +712,6 @@ function renderAll() {
   document.getElementById('domainCount').innerText = domainKeys.length;
 }
 
-// Filtering logic
 function filterDomains(domainFilter) {
   const sections = document.querySelectorAll('.domain-section');
   sections.forEach(section => {
@@ -787,34 +723,23 @@ function filterDomains(domainFilter) {
       section.style.display = 'none';
     }
   });
-  // Update active button style
   document.querySelectorAll('.filter-btn').forEach(btn => {
-    if (btn.getAttribute('data-domain') === domainFilter) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
+    if (btn.getAttribute('data-domain') === domainFilter) btn.classList.add('active');
+    else btn.classList.remove('active');
   });
 }
 
-// Set up filter event listeners
 function initFilters() {
-  const btns = document.querySelectorAll('.filter-btn');
-  btns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const domain = btn.getAttribute('data-domain');
-      filterDomains(domain);
-    });
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => filterDomains(btn.getAttribute('data-domain')));
   });
 }
 
-// Dynamic copyright year
 function setCopyright() {
   const yearSpan = document.getElementById('copyrightYear');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 }
 
-// Run on load
 document.addEventListener('DOMContentLoaded', () => {
   renderAll();
   initFilters();
