@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* Your existing CSS - kept identical to your working version */
 :root {
   --bg:#07070d; --bg2:#0d0d18; --bg3:#12121f; --bg4:#171726;
   --border:rgba(212,174,60,0.18); --border2:rgba(212,174,60,0.08);
@@ -30,7 +31,6 @@
 html{font-size:15px;scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;overflow-x:hidden;}
 #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.3;}
-
 .status-bar{background:linear-gradient(135deg,rgba(64,196,255,0.06),rgba(212,174,60,0.04));border-bottom:1px solid var(--border);padding:8px 24px;display:flex;align-items:center;gap:8px;font-size:0.68rem;color:var(--text-dim);flex-wrap:wrap;position:relative;z-index:2;}
 .status-bar .dot{width:6px;height:6px;border-radius:50%;background:var(--frozen);box-shadow:0 0 6px var(--frozen);animation:pulse-dot 2s infinite;}
 @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.4;}}
@@ -272,19 +272,20 @@ header{padding:44px 0 28px;border-bottom:1px solid var(--border2);}
 
 <script>
 // ============================================================
-// STP SEAL TOOL v3.0 – Full Calendar + Backend Integration
+// STP SEAL TOOL v3.0 – Backend Connected
 // ============================================================
 
-const BACKEND_URL = '/api/tools';
+// Try multiple possible endpoint paths (your tools.js handles both /api/stp-seal and /api/tools)
+const BACKEND_PATHS = ['/api/tools', '/api/stp-seal'];
+let currentPathIndex = 0;
 
 let CURRENT_ENTRY = null;
 let sessionLedger = [];
 
-// ========== FULL CALENDAR FUNCTIONS (Local) ==========
+// ========== FULL CALENDAR FUNCTIONS (Local fallback) ==========
 const GREGORIAN_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MOON_NAMES = ['Magnetic','Lunar','Electric','Self-Existing','Overtone','Rhythmic','Resonant','Galactic','Solar','Planetary','Spectral','Crystal','Cosmic'];
 
-// Hebrew calendar constants
 const HEBREW_EPOCH_JD = 347998;
 const COMMON_MONTHS = ['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
 const LEAP_MONTHS = ['Tishri','Cheshvan','Kislev','Tevet','Shevat','Adar I','Adar II','Nisan','Iyar','Sivan','Tammuz','Av','Elul'];
@@ -396,76 +397,92 @@ async function generateSeal() {
   statusCard.className = 'ledger-status-card pending';
   statusCard.innerHTML = '<div class="lsc-icon">⟳</div><div class="lsc-body"><div class="lsc-label">Creating Ledger Entry…</div><div class="lsc-sub">Contacting backend</div></div>';
 
-  try {
-    const response = await fetch(BACKEND_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ entry: content, type: template, sessionId: crypto.randomUUID(), userId: author || null })
-    });
+  let lastError = null;
+  
+  for (let i = 0; i < BACKEND_PATHS.length; i++) {
+    const endpoint = BACKEND_PATHS[i];
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entry: content, type: template, sessionId: crypto.randomUUID(), userId: author || null })
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || data.message || 'Backend error');
+      if (response.ok && data.success) {
+        // Success! Use this endpoint
+        handleSealSuccess(data, content, author, template);
+        return;
+      } else {
+        lastError = data.error || data.message || `HTTP ${response.status}`;
+      }
+    } catch (err) {
+      lastError = err.message;
     }
-
-    const now = new Date();
-    const y = now.getUTCFullYear(), m = now.getUTCMonth() + 1, d = now.getUTCDate();
-    
-    CURRENT_ENTRY = {
-      ledger_id: `STP-${data.template_name || template}-${gregorianStringFull(y, m, d).replace(/[,\s]+/g, '-')}-${data.seal.substring(0,6).toUpperCase()}`,
-      template: template,
-      template_name: data.template_name,
-      content: content,
-      author: author || null,
-      content_hash: `sha256:${data.seal}`,
-      seal: {
-        gregorian: data.gregorian || gregorianStringFull(y, m, d),
-        hebrew: data.hebrew || hebrewString(y, m, d),
-        dreamspell: data.dreamspell || dreamspellString(y, m, d),
-        unix_utc: data.unix_utc || Math.floor(now.getTime() / 1000),
-        seal_method: 'SHA-256-SubtleCrypto-FROZEN-2.0'
-      },
-      github_issue_url: data.issue_url || null,
-      ledger_file: data.ledger_file || null,
-      frozen: 'FROZEN-2.0',
-      sealed_at: now.toISOString()
-    };
-
-    document.getElementById('result-ledger-id').textContent = CURRENT_ENTRY.ledger_id;
-    document.getElementById('result-gregorian').textContent = CURRENT_ENTRY.seal.gregorian;
-    document.getElementById('result-hebrew').textContent = CURRENT_ENTRY.seal.hebrew;
-    document.getElementById('result-dreamspell').textContent = CURRENT_ENTRY.seal.dreamspell;
-    document.getElementById('result-hash-display').textContent = data.seal;
-    document.getElementById('result-json').innerHTML = syntaxHighlight(JSON.stringify(CURRENT_ENTRY, null, 2));
-
-    if (data.issue_url) {
-      statusCard.className = 'ledger-status-card';
-      statusCard.innerHTML = `<div class="lsc-icon">✓</div><div class="lsc-body"><div class="lsc-label">Ledger Entry Created</div><div class="lsc-sub">GitHub issue sealed</div><a href="${data.issue_url}" target="_blank" class="lsc-link">View GitHub Issue ↗</a></div>`;
-    } else if (data.github_error) {
-      statusCard.className = 'ledger-status-card failed';
-      statusCard.innerHTML = `<div class="lsc-icon">⚠</div><div class="lsc-body"><div class="lsc-label">Ledger Failed</div><div class="lsc-sub">${data.github_error}</div></div>`;
-    } else {
-      statusCard.className = 'ledger-status-card pending';
-      statusCard.innerHTML = `<div class="lsc-icon">⟳</div><div class="lsc-body"><div class="lsc-label">Ledger Pending</div><div class="lsc-sub">Seal recorded locally</div></div>`;
-    }
-
-    sessionLedger.unshift(CURRENT_ENTRY);
-    if (sessionLedger.length > 50) sessionLedger.pop();
-    localStorage.setItem('stp-session-ledger', JSON.stringify(sessionLedger));
-    renderLedger();
-    document.getElementById('reset-btn').classList.add('visible');
-
-  } catch (err) {
-    console.error('Seal error:', err);
-    document.getElementById('seal-error').textContent = err.message;
-    document.getElementById('seal-error').classList.add('active');
-    document.getElementById('seal-result').classList.remove('active');
-    document.getElementById('seal-placeholder').style.display = 'block';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '🔒 GENERATE SEAL + ENTER LEDGER';
   }
+  
+  // All endpoints failed
+  document.getElementById('seal-error').textContent = `Backend error: ${lastError}`;
+  document.getElementById('seal-error').classList.add('active');
+  document.getElementById('seal-result').classList.remove('active');
+  document.getElementById('seal-placeholder').style.display = 'block';
+  btn.disabled = false;
+  btn.textContent = '🔒 GENERATE SEAL + ENTER LEDGER';
+}
+
+function handleSealSuccess(data, content, author, template) {
+  const now = new Date();
+  const y = now.getUTCFullYear(), m = now.getUTCMonth() + 1, d = now.getUTCDate();
+  
+  CURRENT_ENTRY = {
+    ledger_id: `STP-${data.template_name || template}-${gregorianStringFull(y, m, d).replace(/[,\s]+/g, '-')}-${data.seal.substring(0,6).toUpperCase()}`,
+    template: template,
+    template_name: data.template_name,
+    content: content,
+    author: author || null,
+    content_hash: `sha256:${data.seal}`,
+    seal: {
+      gregorian: data.gregorian || gregorianStringFull(y, m, d),
+      hebrew: data.hebrew || hebrewString(y, m, d),
+      dreamspell: data.dreamspell || dreamspellString(y, m, d),
+      unix_utc: data.unix_utc || Math.floor(now.getTime() / 1000),
+      seal_method: 'SHA-256-SubtleCrypto-FROZEN-2.0'
+    },
+    github_issue_url: data.issue_url || null,
+    ledger_file: data.ledger_file || null,
+    frozen: 'FROZEN-2.0',
+    sealed_at: now.toISOString()
+  };
+
+  document.getElementById('result-ledger-id').textContent = CURRENT_ENTRY.ledger_id;
+  document.getElementById('result-gregorian').textContent = CURRENT_ENTRY.seal.gregorian;
+  document.getElementById('result-hebrew').textContent = CURRENT_ENTRY.seal.hebrew;
+  document.getElementById('result-dreamspell').textContent = CURRENT_ENTRY.seal.dreamspell;
+  document.getElementById('result-hash-display').textContent = data.seal;
+  document.getElementById('result-json').innerHTML = syntaxHighlight(JSON.stringify(CURRENT_ENTRY, null, 2));
+
+  const statusCard = document.getElementById('ledger-status-card');
+  if (data.issue_url) {
+    statusCard.className = 'ledger-status-card';
+    statusCard.innerHTML = `<div class="lsc-icon">✓</div><div class="lsc-body"><div class="lsc-label">Ledger Entry Created</div><div class="lsc-sub">GitHub issue sealed</div><a href="${data.issue_url}" target="_blank" class="lsc-link">View GitHub Issue ↗</a></div>`;
+  } else if (data.github_error) {
+    statusCard.className = 'ledger-status-card failed';
+    statusCard.innerHTML = `<div class="lsc-icon">⚠</div><div class="lsc-body"><div class="lsc-label">Ledger Failed</div><div class="lsc-sub">${data.github_error}</div></div>`;
+  } else {
+    statusCard.className = 'ledger-status-card pending';
+    statusCard.innerHTML = `<div class="lsc-icon">⟳</div><div class="lsc-body"><div class="lsc-label">Ledger Pending</div><div class="lsc-sub">Seal recorded locally</div></div>`;
+  }
+
+  sessionLedger.unshift(CURRENT_ENTRY);
+  if (sessionLedger.length > 50) sessionLedger.pop();
+  localStorage.setItem('stp-session-ledger', JSON.stringify(sessionLedger));
+  renderLedger();
+  document.getElementById('reset-btn').classList.add('visible');
+  
+  const btn = document.getElementById('seal-btn');
+  btn.disabled = false;
+  btn.textContent = '🔒 GENERATE SEAL + ENTER LEDGER';
 }
 
 function resetTool() {
