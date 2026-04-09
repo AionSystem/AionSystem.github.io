@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Aion Certainty Stack – DSAP · FSVE · ADA-VELA</title>
+  <title>AION FUSION – DSAP · FSVE · ADA-VELA</title>
   <!-- React, ReactDOM, Babel -->
   <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
@@ -18,19 +18,58 @@
       background: #07080a;
       font-family: 'JetBrains Mono', 'Courier New', monospace;
     }
-    /* Load external fonts */
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap');
+    .tooltip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      margin-left: 6px;
+      border-radius: 50%;
+      background: #1c2028;
+      color: #5a6475;
+      font-size: 10px;
+      font-weight: bold;
+      cursor: help;
+      text-decoration: none;
+      border: none;
+      font-family: monospace;
+    }
+    .tooltip-icon:hover {
+      background: #3d8bff;
+      color: #fff;
+    }
+    [data-tooltip] {
+      position: relative;
+      cursor: help;
+    }
+    [data-tooltip]:before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 130%;
+      left: 0;
+      background: #0d0f12;
+      color: #c8d0dc;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      z-index: 1000;
+      display: none;
+      border: 1px solid #2a3040;
+      pointer-events: none;
+    }
+    [data-tooltip]:hover:before {
+      display: block;
+    }
   </style>
 </head>
 <body>
   <div id="root"></div>
 
   <script type="text/babel">
-    // ============================================================
-    // AION FUSION INTERFACE – DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1
-    // Full React component (all logic & UI)
-    // ============================================================
-
     const { useState, useRef, useEffect, useCallback } = React;
 
     // ---------- CONSTANTS ----------
@@ -86,15 +125,12 @@
       Surveillance:  ["State Surveillance","Corporate","Technical Infrastructure","Legal Framework","Counter-surveillance","Privacy Architecture","Biometric"],
     };
 
+    // Only confirmed working models on OpenRouter as of April 2026
     const MODELS = [
-      { id:"anthropic/claude-3.5-sonnet",          name:"Claude 3.5 Sonnet",   tag:"ANTHROPIC" },
-      { id:"anthropic/claude-3-haiku",             name:"Claude 3 Haiku",      tag:"ANTHROPIC" },
-      { id:"openai/gpt-4o",                        name:"GPT-4o",              tag:"OPENAI" },
-      { id:"openai/gpt-4o-mini",                   name:"GPT-4o Mini",         tag:"OPENAI" },
-      { id:"google/gemini-flash-1.5",              name:"Gemini Flash 1.5",    tag:"GOOGLE" },
-      { id:"google/gemini-pro-1.5",               name:"Gemini Pro 1.5",      tag:"GOOGLE" },
-      { id:"meta-llama/llama-3.1-70b-instruct",    name:"Llama 3.1 70B",       tag:"META" },
-      { id:"mistralai/mistral-large",              name:"Mistral Large",       tag:"MISTRAL" },
+      { id:"anthropic/claude-3-haiku",           name:"Claude 3 Haiku",      tag:"ANTHROPIC" },
+      { id:"openai/gpt-4o",                      name:"GPT-4o",              tag:"OPENAI" },
+      { id:"openai/gpt-4o-mini",                 name:"GPT-4o Mini",         tag:"OPENAI" },
+      // Add Grok, DeepSeek etc. here if they become available and work
     ];
 
     const CQ_LEVELS = [
@@ -297,8 +333,13 @@ ${JSON.stringify(schema,null,2)}`;
       return <span style={{fontSize:9,padding:"2px 6px",border:`1px solid ${color||S.borderBright}`,color:color||S.textDim,letterSpacing:"0.1em",fontFamily:S.mono}}>{children}</span>;
     }
 
-    function SectionLabel({children, color}) {
-      return <div style={{fontSize:9,color:color||S.textDim,letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:8,fontFamily:S.mono}}>{children}</div>;
+    function SectionLabel({children, color, tooltip}) {
+      return (
+        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
+          <div style={{fontSize:9,color:color||S.textDim,letterSpacing:"0.15em",textTransform:"uppercase",fontFamily:S.mono}}>{children}</div>
+          {tooltip && <span className="tooltip-icon" data-tooltip={tooltip}>?</span>}
+        </div>
+      );
     }
 
     function ScoreBar({val, label}) {
@@ -437,7 +478,7 @@ ${JSON.stringify(schema,null,2)}`;
       return (
         <div style={{border:`1px solid ${S.border}`,background:S.surface,marginBottom:16}}>
           <div style={{padding:"10px 14px",borderBottom:`1px solid ${S.border}`,display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
-            <SectionLabel color={S.amber}>Variance Domains · M-03</SectionLabel>
+            <SectionLabel color={S.amber} tooltip="Select domains for M-03 Domain Variance. High‑risk domains are marked ⚠. Click ▾ to add subdomains.">Variance Domains · M-03</SectionLabel>
             <div style={{flex:1}}/>
             <span style={{fontSize:9,color:S.textFaint,letterSpacing:"0.06em"}}>⚠ = high-risk · ▾ = subclass dive</span>
           </div>
@@ -574,6 +615,8 @@ ${JSON.stringify(schema,null,2)}`;
       const [arh,setArh]=useState(null);
       const [copied,setCopied]=useState("");
       const [mobileResultTab, setMobileResultTab] = useState("pipeline");
+      const [verifyingSeal, setVerifyingSeal] = useState(false);
+      const [sealVerified, setSealVerified] = useState(null);
       const logEnd=useRef(null);
 
       const addLog=useCallback((msg,type="info")=>{ setLogs(p=>[...p,{msg,type,id:Date.now()+Math.random()}]); },[]);
@@ -591,19 +634,48 @@ ${JSON.stringify(schema,null,2)}`;
       const toggleDomain=(d)=>{ setActiveDomains(p=>{const n=new Set(p); n.has(d)?n.delete(d):n.add(d); return n;}); };
       const addCustomDomain=(d)=>{ setActiveDomains(p=>{const n=new Set(p); n.add(d); return n;}); };
       const copy=(key,text)=>{ navigator.clipboard.writeText(text); setCopied(key); setTimeout(()=>setCopied(""),2000); };
-      const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+      const verifySeal = async () => {
+        if (!arh || !arh.seal) return;
+        setVerifyingSeal(true);
+        try {
+          // Reconstruct the full execution record that was sealed
+          const recordToVerify = {
+            audit_record: {
+              protocol: arh.protocol,
+              version: arh.version,
+              target: arh.target,
+              mode: arh.mode,
+              modules_active: arh.modules_active,
+              domains_active: arh.domains_active,
+              run_timestamp: arh.run_timestamp,
+              certifying_model: arh.certifying_model,
+              prior_audit_state: arh.prior_audit_state
+            },
+            dsap_output: dsapOut,
+            fsve_score: arh.fsve,
+            ada_certification: adaCert,
+            seal_metadata: { target: arh.target, model: arh.certifying_model, cq: arh.fsve?.governance?.Cq, timestamp: arh.run_timestamp }
+          };
+          const recomputed = await generateSeal(recordToVerify);
+          setSealVerified(recomputed === arh.seal);
+        } catch (err) {
+          setSealVerified(false);
+        } finally {
+          setVerifyingSeal(false);
+        }
+      };
 
       const execute=async()=>{
         if (!target.trim()) return;
         const key=apiKey.trim(); if (!key){ alert("OpenRouter API key required."); return; }
         const modelId=customModel.trim()||model;
 
-        setPhase("running"); setLogs([]); setDsapOut(null); setFsveScore(null); setAdaCert(null); setSeal(""); setTripleTs(null); setArh(null);
+        setPhase("running"); setLogs([]); setDsapOut(null); setFsveScore(null); setAdaCert(null); setSeal(""); setTripleTs(null); setArh(null); setSealVerified(null);
         if (isMobile) setMobileResultTab("pipeline");
 
         try {
           addLog("∄  UI advisory scan...", "gate");
-          await sleep(280);
           const advisory = uiAdvisoryFilter(target);
           setConstState(advisory);
           if (advisory.hasViolations) {
@@ -611,15 +683,12 @@ ${JSON.stringify(schema,null,2)}`;
           } else {
             addLog(`∄  No forbidden patterns detected.`, "success");
           }
-          await sleep(150);
 
           const allMods = new Set([...activeMods, "M-00", "M-13"]);
           addLog(`DSAP · constructing ${allMods.size}-module protocol...`, "info");
-          await sleep(200);
           const sysPr = buildSystemPrompt();
           const usrPr = buildUserPrompt(target, mode, allMods, activeDomains);
           addLog(`DSAP · ${allMods.size} modules · ${activeDomains.size} domains · mode=${mode.toUpperCase()}`, "info");
-          await sleep(100);
 
           const modelLabel = MODELS.find(m=>m.id===modelId)?.name||modelId;
           addLog(`OpenRouter → ${modelLabel}...`, "info");
@@ -640,10 +709,7 @@ ${JSON.stringify(schema,null,2)}`;
           const rawText = data.choices?.[0]?.message?.content||"";
           const tokens = data.usage?.total_tokens||"?";
           addLog(`Response · ${tokens} tokens · ${elapsed}s`, "success");
-          await sleep(100);
 
-          addLog("Parsing JSON output...", "info");
-          await sleep(80);
           const parsed = extractJson(rawText);
           if (!parsed){
             addLog("JSON extraction failed — response malformed", "error");
@@ -653,23 +719,18 @@ ${JSON.stringify(schema,null,2)}`;
           setDsapOut(parsed);
           const presentCount = MODULES_DEF.filter(m=>parsed[m.key]!==undefined).length;
           addLog(`JSON parsed · ${presentCount}/${MODULES_DEF.length} modules present`, "success");
-          await sleep(120);
 
           addLog("FSVE v4.0 — scoring execution...", "fsve");
-          await sleep(220);
           const score = scoreFSVE(parsed, allMods, cqLevel);
           setFsveScore(score);
           addLog(`FSVE axes  E=${score.axes.E}  C=${score.axes.C}  M=${score.axes.M}  D=${score.axes.D}`, "fsve");
           addLog(`FSVE EV=${score.EV}  validity_status=${score.validity_status}`, (score.validity_status==="VALID"?"success":score.validity_status==="DEGRADED"?"warn":"error"));
           addLog(`FSVE Uq=${score.governance.Uq}  Cq=${score.governance.Cq}  threshold=${score.governance.cq_threshold}`, "fsve");
-          await sleep(150);
 
           addLog("⁂  Epistemic gate — certifying result...", "gate");
-          await sleep(220);
           const cert = doesExistWithConfidence(score);
           setAdaCert(cert);
           addLog(`⁂  ${cert.cert} · ${cert.reason}`, (cert.cert==="VALID"?"success":cert.cert==="DEGRADED"?"warn":"error"));
-          await sleep(120);
 
           addLog("ADA-VELA · generating seal + triple timestamp...", "info");
           const now = new Date();
@@ -689,7 +750,6 @@ ${JSON.stringify(schema,null,2)}`;
           const sealHash = await generateSeal(fullExecutionRecord);
           setSeal(sealHash);
           addLog(`Seal  ${sealHash.slice(0,16)}···${sealHash.slice(-8)}`, "info");
-          await sleep(100);
 
           const dsapCert = parsed.audit_validity_score?.certification || "PARTIAL";
           const arhRecord = {
@@ -764,29 +824,29 @@ ${JSON.stringify(schema,null,2)}`;
             {fsveScore?(
               <>
                 <div style={{marginBottom:18}}>
-                  <SectionLabel>Evidence Value (EV)</SectionLabel>
+                  <SectionLabel tooltip="Epistemic Validity – overall confidence score (0-1). VALID ≥ threshold, SUSPENDED < 0.45.">Evidence Value (EV)</SectionLabel>
                   <div style={{fontSize:42,fontWeight:800,fontFamily:S.display,lineHeight:1,color:fsveScore.EV>=0.70?S.green:fsveScore.EV>=0.45?S.amber:S.red}}>{fsveScore.EV}</div>
                   <div style={{marginTop:6,display:"inline-block",padding:"3px 10px",background:certBg(fsveScore.validity_status),border:`1px solid ${certColor(fsveScore.validity_status)}`,fontSize:11,color:certColor(fsveScore.validity_status),fontWeight:600,letterSpacing:"0.08em"}}>{fsveScore.validity_status}</div>
                 </div>
                 <div style={{marginBottom:16}}>
-                  <SectionLabel>Axes (simplified)</SectionLabel>
+                  <SectionLabel tooltip="Four scoring axes: Evidence (E), Consistency (C), Methodology (M), Documentation (D).">Axes (simplified)</SectionLabel>
                   {Object.entries(fsveScore.axes).map(([a,v])=><ScoreBar key={a} val={v} label={`${a} — ${axisNames[a]}`}/>)}
                 </div>
                 <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12,marginBottom:14}}>
-                  <SectionLabel>Governance Modifiers</SectionLabel>
+                  <SectionLabel tooltip="Governance modifiers: Uq (Uncertainty Quantification), Cq (Consequence level), EV threshold.">Governance Modifiers</SectionLabel>
                   {[["Uq (Uncertainty)",fsveScore.governance.Uq,S.text],["Cq (Consequence)",fsveScore.governance.Cq,CQ_LEVELS.find(c=>c.id===fsveScore.governance.Cq)?.color||S.textDim],["EV Threshold",fsveScore.governance.cq_threshold,S.textDim]].map(([l,v,c])=>(
                     <div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:4}}><span style={{color:S.textDim}}>{l}</span><span style={{color:c,fontWeight:600}}>{v}</span></div>
                   ))}
                 </div>
                 <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12,marginBottom:14}}>
-                  <SectionLabel>Scan Metrics</SectionLabel>
+                  <SectionLabel tooltip="Raw metrics: number of [?] uncertainty tags, total fields, placeholder counts.">Scan Metrics</SectionLabel>
                   {[["[?] tags",fsveScore.qTags,fsveScore.qTags>5?S.amber:S.green],["Total fields",fsveScore.total,S.text],["Placeholders",fsveScore.pholds,fsveScore.pholds>0?S.red:S.green]].map(([l,v,c])=>(
                     <div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:4}}><span style={{color:S.textDim}}>{l}</span><span style={{color:c,fontWeight:600}}>{v}</span></div>
                   ))}
                 </div>
                 {dsapOut?.audit_validity_score && (
                   <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12}}>
-                    <SectionLabel color={S.purple}>M-13 — DSAP AVS (self-assessed · INFERENTIAL)</SectionLabel>
+                    <SectionLabel color={S.purple} tooltip="Model self‑assessment (INFERENTIAL). Not used for FSVE certification.">M-13 — DSAP AVS (self-assessed · INFERENTIAL)</SectionLabel>
                     <div style={{fontSize:28,fontWeight:800,fontFamily:S.display,color:certColor(dsapOut.audit_validity_score.certification),lineHeight:1}}>
                       {typeof dsapOut.audit_validity_score.avs==="number"?dsapOut.audit_validity_score.avs.toFixed(2):dsapOut.audit_validity_score.avs||"—"}
                     </div>
@@ -806,10 +866,11 @@ ${JSON.stringify(schema,null,2)}`;
           <div style={{borderBottom:`1px solid ${S.border}`,padding:isMobile?"10px 14px":"12px 22px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,background:S.bg,zIndex:100,flexWrap:"wrap"}}>
             <div style={{width:36,height:36,border:`1.5px solid ${S.accent}`,display:"grid",placeItems:"center",fontFamily:S.display,fontWeight:800,fontSize:12,color:S.accent,flexShrink:0,letterSpacing:-1}}>AC</div>
             <div style={{flex:1,minWidth:0}}>
-              <div style={{fontFamily:S.display,fontWeight:800,fontSize:isMobile?13:15,color:"#fff",letterSpacing:"0.04em",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>AION CERTAINTY STACK</div>
+              <div style={{fontFamily:S.display,fontWeight:800,fontSize:isMobile?13:15,color:"#fff",letterSpacing:"0.04em",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>AION FUSION</div>
               {!isMobile&&<div style={{fontSize:10,color:S.textDim,letterSpacing:"0.1em"}}>DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1 — Fusion Execution Interface</div>}
             </div>
             <div style={{display:"flex",gap:5,alignItems:"center",flexWrap:"wrap"}}>
+              <img src="https://aionsystem.github.io/assets/aion-logo.jpg" alt="AION Logo" style={{height:32,width:"auto",maxWidth:80,objectFit:"contain"}} onError={(e)=>{e.target.style.display='none'}}/>
               {!isMobile&&[{l:"DSAP",c:S.accent},{l:"FSVE",c:S.amber},{l:"ADA-VELA",c:S.purple}].map(({l,c})=><Tag key={l} color={c}>{l}</Tag>)}
               {phase==="running"&&<span style={{fontSize:10,color:S.accent}}>⟳</span>}
               {phase==="complete"&&<span style={{fontSize:10,color:S.green}}>✓</span>}
@@ -819,7 +880,10 @@ ${JSON.stringify(schema,null,2)}`;
 
           <div style={{maxWidth:1140,margin:"0 auto",padding:isMobile?"14px 12px 80px":"20px 18px 80px"}}>
             <div style={{border:`1px solid ${S.borderBright}`,padding:isMobile?"12px 14px":"14px 18px",marginBottom:14,position:"relative",background:S.surface}}>
-              <div style={{position:"absolute",top:-1,left:14,background:S.surface,padding:"0 6px",fontSize:9,color:S.accent,letterSpacing:"0.15em",transform:"translateY(-50%)"}}>TARGET CONCEPT / SYSTEM / CLAIM</div>
+              <div style={{position:"absolute",top:-1,left:14,background:S.surface,padding:"0 6px",fontSize:9,color:S.accent,letterSpacing:"0.15em",transform:"translateY(-50%)",display:"flex",alignItems:"center",gap:6}}>
+                <span>TARGET CONCEPT / SYSTEM / CLAIM</span>
+                <span className="tooltip-icon" data-tooltip="Enter a word, phrase, system, or claim to audit. The pipeline will run DSAP, FSVE, and ADA-VELA.">?</span>
+              </div>
               <input value={target} onChange={e=>setTarget(e.target.value)} onKeyDown={e=>e.key==="Enter"&&execute()}
                 placeholder="Enter concept, system, or claim..."
                 style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:isMobile?16:20,fontWeight:500,color:"#fff",caretColor:S.accent,boxSizing:"border-box"}}/>
@@ -827,13 +891,13 @@ ${JSON.stringify(schema,null,2)}`;
 
             <div style={{display:"grid",gridTemplateColumns:configCols,gap:8,marginBottom:12}}>
               <div style={{border:`1px solid ${S.redDim}`,padding:"9px 12px",background:S.redDim+"22"}}>
-                <SectionLabel color={S.red}>⚠️ SECURITY WARNING</SectionLabel>
+                <SectionLabel color={S.red} tooltip="Your OpenRouter API key is stored only in browser memory. Never hardcode keys in the HTML.">⚠️ SECURITY WARNING</SectionLabel>
                 <div style={{fontSize:10,color:S.textDim,marginBottom:4}}>Your API key is stored in browser memory and sent directly to OpenRouter. Anyone with access to your browser's dev tools can view it. For production use, implement a backend proxy.</div>
                 <input type="password" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="sk-or-v1-..."
                   style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:11,color:S.text,boxSizing:"border-box"}}/>
               </div>
               <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
-                <SectionLabel>Model</SectionLabel>
+                <SectionLabel tooltip="Select the AI model to perform the audit. Only models confirmed working on OpenRouter are shown.">Model</SectionLabel>
                 <select value={model} onChange={e=>setModel(e.target.value)} style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:11,color:S.text,cursor:"pointer",marginBottom:4}}>
                   {MODELS.map(m=><option key={m.id} value={m.id} style={{background:S.surface}}>[{m.tag}] {m.name}</option>)}
                 </select>
@@ -841,13 +905,13 @@ ${JSON.stringify(schema,null,2)}`;
                   style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:10,color:S.textDim,borderTop:`1px solid ${S.border}`,paddingTop:4,boxSizing:"border-box"}}/>
               </div>
               <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
-                <SectionLabel>Audit Mode</SectionLabel>
+                <SectionLabel tooltip="Audit mode biases the DSAP modules: full (all), concept (ancestry + MVD), system (reasoning trace), claim (constraints + falsification).">Audit Mode</SectionLabel>
                 <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
                   {["full","concept","system","claim"].map(m=>(<button key={m} onClick={()=>setMode(m)} style={{flex:"1 1 40%",background:mode===m?S.accentDim:"transparent",border:`1px solid ${mode===m?S.accent:S.borderBright}`,color:mode===m?S.accent:S.textDim,fontFamily:S.mono,fontSize:9,padding:"3px 0",cursor:"pointer",letterSpacing:"0.04em",textTransform:"uppercase"}}>{m}</button>))}
                 </div>
               </div>
               <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
-                <SectionLabel>Cq — Consequence (FSVE)</SectionLabel>
+                <SectionLabel tooltip="Cq (Consequence Severity) raises the EV threshold for VALID status. HIGH = 0.80 threshold.">Cq — Consequence (FSVE)</SectionLabel>
                 <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
                   {CQ_LEVELS.map(c=>(<button key={c.id} onClick={()=>setCqLevel(c.id)} style={{flex:"1 1 40%",background:cqLevel===c.id?c.color+"22":"transparent",border:`1px solid ${cqLevel===c.id?c.color:S.borderBright}`,color:cqLevel===c.id?c.color:S.textDim,fontFamily:S.mono,fontSize:9,padding:"3px 0",cursor:"pointer",letterSpacing:"0.04em"}}>{c.id}<br/><span style={{fontSize:8}}>{c.threshold}</span></button>))}
                 </div>
@@ -856,7 +920,7 @@ ${JSON.stringify(schema,null,2)}`;
 
             <div style={{marginBottom:12}}>
               <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
-                <SectionLabel>Protocol Modules</SectionLabel>
+                <SectionLabel tooltip="Select which DSAP modules to include. M-00 and M-13 are always active. M-10 requires M-03.">Protocol Modules</SectionLabel>
                 <div style={{flex:1,height:1,background:S.border}}/>
                 <span style={{fontSize:9,color:S.textFaint}}>● = always active</span>
               </div>
@@ -907,6 +971,10 @@ ${JSON.stringify(schema,null,2)}`;
                       <div style={{marginLeft:"auto",display:"flex",gap:6}}>
                         <button onClick={()=>copy("arh",JSON.stringify(arh,null,2))} style={{fontSize:9,padding:"2px 8px",border:`1px solid ${copied==="arh"?S.green:S.borderBright}`,color:copied==="arh"?S.green:S.textDim,background:"transparent",cursor:"pointer",fontFamily:S.mono}}>{copied==="arh"?"COPIED ✓":"COPY ARH"}</button>
                         <button onClick={()=>copy("raw",JSON.stringify(arh,null,2))} style={{fontSize:9,padding:"2px 8px",border:`1px solid ${copied==="raw"?S.purple:S.borderBright}`,color:copied==="raw"?S.purple:S.textDim,background:"transparent",cursor:"pointer",fontFamily:S.mono}}>FULL JSON</button>
+                        <button onClick={verifySeal} disabled={verifyingSeal}
+                          style={{fontSize:9,padding:"2px 8px",border:`1px solid ${sealVerified===null?S.borderBright:sealVerified?S.green:S.red}`,color:sealVerified===null?S.textDim:sealVerified?S.green:S.red,background:"transparent",cursor:"pointer",fontFamily:S.mono}}>
+                          {verifyingSeal ? "VERIFYING..." : (sealVerified===null ? "VERIFY SEAL" : (sealVerified ? "✓ SEAL VALID" : "✗ SEAL INVALID"))}
+                        </button>
                       </div>
                     </div>
                     <div style={{display:"grid",gridTemplateColumns:sealCols,gap:0}}>
@@ -941,14 +1009,13 @@ ${JSON.stringify(schema,null,2)}`;
           </div>
 
           <div style={{borderTop:`1px solid ${S.border}`,padding:isMobile?"10px 14px":"10px 22px",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:9,color:S.textFaint,letterSpacing:"0.06em",flexWrap:"wrap",gap:4}}>
-            <span>AION Certainty Stack · DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1 · Sheldon K. Salmon & ALBEDO · April 2026</span>
+            <span>AION CERTAINTY STACK · DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1 · Sheldon K. Salmon & ALBEDO · April 2026</span>
             <span>∄ UI Advisory · ⁂ Epistemic · SHA-256 Sealed · Gregorian · Dreamspell</span>
           </div>
         </div>
       );
     }
 
-    // Render the app
     const root = ReactDOM.createRoot(document.getElementById("root"));
     root.render(<AionFusion />);
   </script>
