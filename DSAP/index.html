@@ -19,50 +19,9 @@
       font-family: 'JetBrains Mono', 'Courier New', monospace;
     }
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap');
-    .tooltip-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      margin-left: 6px;
-      border-radius: 50%;
-      background: #1c2028;
-      color: #5a6475;
-      font-size: 10px;
-      font-weight: bold;
+    /* Simple tooltip using title attribute – no custom overflow */
+    [title] {
       cursor: help;
-      text-decoration: none;
-      border: none;
-      font-family: monospace;
-    }
-    .tooltip-icon:hover {
-      background: #3d8bff;
-      color: #fff;
-    }
-    [data-tooltip] {
-      position: relative;
-      cursor: help;
-    }
-    [data-tooltip]:before {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: 130%;
-      left: 0;
-      background: #0d0f12;
-      color: #c8d0dc;
-      padding: 6px 10px;
-      border-radius: 4px;
-      font-size: 10px;
-      font-family: 'JetBrains Mono', monospace;
-      white-space: nowrap;
-      z-index: 1000;
-      display: none;
-      border: 1px solid #2a3040;
-      pointer-events: none;
-    }
-    [data-tooltip]:hover:before {
-      display: block;
     }
   </style>
 </head>
@@ -125,12 +84,17 @@
       Surveillance:  ["State Surveillance","Corporate","Technical Infrastructure","Legal Framework","Counter-surveillance","Privacy Architecture","Biometric"],
     };
 
-    // Only confirmed working models on OpenRouter as of April 2026
+    // Full model list – some may fail on OpenRouter, but users can try them
     const MODELS = [
-      { id:"anthropic/claude-3-haiku",           name:"Claude 3 Haiku",      tag:"ANTHROPIC" },
-      { id:"openai/gpt-4o",                      name:"GPT-4o",              tag:"OPENAI" },
-      { id:"openai/gpt-4o-mini",                 name:"GPT-4o Mini",         tag:"OPENAI" },
-      // Add Grok, DeepSeek etc. here if they become available and work
+      { id:"anthropic/claude-3.5-sonnet",          name:"Claude 3.5 Sonnet",   tag:"ANTHROPIC" },
+      { id:"anthropic/claude-3-haiku",             name:"Claude 3 Haiku",      tag:"ANTHROPIC" },
+      { id:"openai/gpt-4o",                        name:"GPT-4o",              tag:"OPENAI" },
+      { id:"openai/gpt-4o-mini",                   name:"GPT-4o Mini",         tag:"OPENAI" },
+      { id:"google/gemini-flash-1.5",              name:"Gemini Flash 1.5",    tag:"GOOGLE" },
+      { id:"google/gemini-pro-1.5",               name:"Gemini Pro 1.5",      tag:"GOOGLE" },
+      { id:"meta-llama/llama-3.1-70b-instruct",    name:"Llama 3.1 70B",       tag:"META" },
+      { id:"mistralai/mistral-large",              name:"Mistral Large",       tag:"MISTRAL" },
+      // Additional models – you can add Grok, DeepSeek etc. if their IDs are known
     ];
 
     const CQ_LEVELS = [
@@ -337,7 +301,7 @@ ${JSON.stringify(schema,null,2)}`;
       return (
         <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
           <div style={{fontSize:9,color:color||S.textDim,letterSpacing:"0.15em",textTransform:"uppercase",fontFamily:S.mono}}>{children}</div>
-          {tooltip && <span className="tooltip-icon" data-tooltip={tooltip}>?</span>}
+          {tooltip && <span style={{marginLeft:4,fontSize:10,color:S.textFaint,cursor:"help"}} title={tooltip}>ⓘ</span>}
         </div>
       );
     }
@@ -568,16 +532,62 @@ ${JSON.stringify(schema,null,2)}`;
       );
     }
 
-    function ResultTabs({tab, setTab}) {
-      const tabs=[{id:"pipeline",label:"Pipeline"},{id:"findings",label:"Findings"},{id:"scores",label:"Scores"}];
+    function ResultTabs({tab, setTab, isMobile}) {
+      const tabs=[{id:"pipeline",label:"Pipeline"},{id:"findings",label:"Findings"},{id:"scores",label:"Scores"},{id:"guide",label:"Guide"}];
       return (
-        <div style={{display:"flex",borderBottom:`1px solid ${S.border}`,marginBottom:10}}>
+        <div style={{display:"flex",borderBottom:`1px solid ${S.border}`,marginBottom:10,flexWrap:"wrap"}}>
           {tabs.map(t=>(
             <button key={t.id} onClick={()=>setTab(t.id)}
-              style={{flex:1,background:"transparent",border:"none",borderBottom:tab===t.id?`2px solid ${S.accent}`:"2px solid transparent",color:tab===t.id?S.accent:S.textDim,fontFamily:S.mono,fontSize:10,padding:"10px 0",cursor:"pointer",letterSpacing:"0.08em",textTransform:"uppercase"}}>
+              style={{flex:1,background:"transparent",border:"none",borderBottom:tab===t.id?`2px solid ${S.accent}`:"2px solid transparent",color:tab===t.id?S.accent:S.textDim,fontFamily:S.mono,fontSize:isMobile?9:10,padding:"10px 0",cursor:"pointer",letterSpacing:"0.08em",textTransform:"uppercase"}}>
               {t.label}
             </button>
           ))}
+        </div>
+      );
+    }
+
+    // Guide component
+    function GuidePanel() {
+      return (
+        <div style={{border:`1px solid ${S.border}`,background:S.surface,padding:"16px",overflowY:"auto",maxHeight:"60vh"}}>
+          <SectionLabel color={S.accent}>What is AION FUSION?</SectionLabel>
+          <p style={{fontSize:11,lineHeight:1.6,marginBottom:12}}>
+            AION FUSION integrates three frameworks into one pipeline: <strong>DSAP v1.1</strong> (Deep Semantic Audit Protocol), 
+            <strong>FSVE v4.0</strong> (Foundational Scoring and Validation Engine), and <strong>ADA‑VELA v3.1</strong> (constitutional execution layer). 
+            It performs a deep semantic audit on any concept, scores the audit quality, certifies the result, and cryptographically seals the entire execution record.
+          </p>
+
+          <SectionLabel color={S.amber} style={{marginTop:12}}>How to use</SectionLabel>
+          <ol style={{fontSize:11,lineHeight:1.6,marginLeft:20,marginBottom:12}}>
+            <li>Enter your OpenRouter API key (bring your own).</li>
+            <li>Type a target concept / system / claim.</li>
+            <li>Select audit mode, consequence level (Cq), and DSAP modules.</li>
+            <li>Add domains for M‑03 Domain Variance (or leave defaults).</li>
+            <li>Press <strong>EXECUTE</strong>.</li>
+            <li>Watch the pipeline logs, then explore Findings, Scores, and the sealed ARH.</li>
+          </ol>
+
+          <SectionLabel color={S.purple}>What each framework does</SectionLabel>
+          <ul style={{fontSize:11,lineHeight:1.6,marginLeft:20,marginBottom:12}}>
+            <li><strong>DSAP</strong> – Runs a structured audit through modules (M‑00 to M‑14) and produces a JSON audit.</li>
+            <li><strong>FSVE</strong> – Scores the audit on four axes (E, C, M, D), computes EV, and gives VALID/DEGRADED/SUSPENDED.</li>
+            <li><strong>ADA‑VELA</strong> – Provides a UI advisory (∄), an epistemic gate (⁂), and seals the full record with SHA‑256.</li>
+          </ul>
+
+          <SectionLabel color={S.green}>Axes explained</SectionLabel>
+          <ul style={{fontSize:11,lineHeight:1.6,marginLeft:20,marginBottom:12}}>
+            <li><strong>E (Evidence)</strong> – How well the audit is backed by evidence (low [?] tags = higher E).</li>
+            <li><strong>C (Consistency)</strong> – Internal coherence between modules (e.g., M‑07 vs M‑09).</li>
+            <li><strong>M (Methodology)</strong> – Completeness of the DSAP modules (present / expected).</li>
+            <li><strong>D (Documentation)</strong> – Absence of placeholder "..." text.</li>
+          </ul>
+
+          <SectionLabel color={S.red}>Certification & Sealing</SectionLabel>
+          <p style={{fontSize:11,lineHeight:1.6}}>
+            After scoring, the epistemic gate (⁂) produces <strong>VALID</strong> (EV ≥ Cq threshold + M≥0.75), 
+            <strong>DEGRADED</strong> (EV ≥ 0.45), or <strong>SUSPENDED</strong>. 
+            The full execution record (ARH) is then SHA‑256 sealed – you can verify the seal with the “VERIFY SEAL” button.
+          </p>
         </div>
       );
     }
@@ -639,7 +649,6 @@ ${JSON.stringify(schema,null,2)}`;
         if (!arh || !arh.seal) return;
         setVerifyingSeal(true);
         try {
-          // Reconstruct the full execution record that was sealed
           const recordToVerify = {
             audit_record: {
               protocol: arh.protocol,
@@ -864,13 +873,12 @@ ${JSON.stringify(schema,null,2)}`;
       return (
         <div style={{background:S.bg,color:S.text,fontFamily:S.mono,fontSize:13,minHeight:"100vh",lineHeight:1.65}}>
           <div style={{borderBottom:`1px solid ${S.border}`,padding:isMobile?"10px 14px":"12px 22px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,background:S.bg,zIndex:100,flexWrap:"wrap"}}>
-            <div style={{width:36,height:36,border:`1.5px solid ${S.accent}`,display:"grid",placeItems:"center",fontFamily:S.display,fontWeight:800,fontSize:12,color:S.accent,flexShrink:0,letterSpacing:-1}}>AC</div>
+            <img src="https://aionsystem.github.io/assets/aion-logo.jpg" alt="AION Logo" style={{height:36,width:"auto",maxWidth:100,objectFit:"contain"}} onError={(e)=>{e.target.style.display='none'}}/>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontFamily:S.display,fontWeight:800,fontSize:isMobile?13:15,color:"#fff",letterSpacing:"0.04em",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>AION FUSION</div>
               {!isMobile&&<div style={{fontSize:10,color:S.textDim,letterSpacing:"0.1em"}}>DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1 — Fusion Execution Interface</div>}
             </div>
             <div style={{display:"flex",gap:5,alignItems:"center",flexWrap:"wrap"}}>
-              <img src="https://aionsystem.github.io/assets/aion-logo.jpg" alt="AION Logo" style={{height:32,width:"auto",maxWidth:80,objectFit:"contain"}} onError={(e)=>{e.target.style.display='none'}}/>
               {!isMobile&&[{l:"DSAP",c:S.accent},{l:"FSVE",c:S.amber},{l:"ADA-VELA",c:S.purple}].map(({l,c})=><Tag key={l} color={c}>{l}</Tag>)}
               {phase==="running"&&<span style={{fontSize:10,color:S.accent}}>⟳</span>}
               {phase==="complete"&&<span style={{fontSize:10,color:S.green}}>✓</span>}
@@ -882,7 +890,7 @@ ${JSON.stringify(schema,null,2)}`;
             <div style={{border:`1px solid ${S.borderBright}`,padding:isMobile?"12px 14px":"14px 18px",marginBottom:14,position:"relative",background:S.surface}}>
               <div style={{position:"absolute",top:-1,left:14,background:S.surface,padding:"0 6px",fontSize:9,color:S.accent,letterSpacing:"0.15em",transform:"translateY(-50%)",display:"flex",alignItems:"center",gap:6}}>
                 <span>TARGET CONCEPT / SYSTEM / CLAIM</span>
-                <span className="tooltip-icon" data-tooltip="Enter a word, phrase, system, or claim to audit. The pipeline will run DSAP, FSVE, and ADA-VELA.">?</span>
+                <span style={{marginLeft:4,fontSize:10,color:S.textFaint,cursor:"help"}} title="Enter a word, phrase, system, or claim to audit. The pipeline will run DSAP, FSVE, and ADA-VELA.">ⓘ</span>
               </div>
               <input value={target} onChange={e=>setTarget(e.target.value)} onKeyDown={e=>e.key==="Enter"&&execute()}
                 placeholder="Enter concept, system, or claim..."
@@ -897,7 +905,7 @@ ${JSON.stringify(schema,null,2)}`;
                   style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:11,color:S.text,boxSizing:"border-box"}}/>
               </div>
               <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
-                <SectionLabel tooltip="Select the AI model to perform the audit. Only models confirmed working on OpenRouter are shown.">Model</SectionLabel>
+                <SectionLabel tooltip="Select the AI model to perform the audit. Some models may fail on OpenRouter.">Model</SectionLabel>
                 <select value={model} onChange={e=>setModel(e.target.value)} style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:11,color:S.text,cursor:"pointer",marginBottom:4}}>
                   {MODELS.map(m=><option key={m.id} value={m.id} style={{background:S.surface}}>[{m.tag}] {m.name}</option>)}
                 </select>
@@ -951,17 +959,22 @@ ${JSON.stringify(schema,null,2)}`;
               <>
                 {isMobile ? (
                   <>
-                    <ResultTabs tab={mobileResultTab} setTab={setMobileResultTab}/>
+                    <ResultTabs tab={mobileResultTab} setTab={setMobileResultTab} isMobile={true}/>
                     {mobileResultTab==="pipeline" && <PipelinePanel/>}
                     {mobileResultTab==="findings"  && <FindingsPanel/>}
                     {mobileResultTab==="scores"    && <ScoresPanel/>}
+                    {mobileResultTab==="guide"     && <GuidePanel/>}
                   </>
                 ) : (
-                  <div style={{display:"grid",gridTemplateColumns:resultCols,gap:10,marginBottom:12}}>
-                    <PipelinePanel/>
-                    <FindingsPanel/>
-                    <ScoresPanel/>
-                  </div>
+                  <>
+                    <ResultTabs tab={mobileResultTab} setTab={setMobileResultTab} isMobile={false}/>
+                    <div style={{display:"grid",gridTemplateColumns:resultCols,gap:10,marginBottom:12}}>
+                      {mobileResultTab==="pipeline" && <PipelinePanel/>}
+                      {mobileResultTab==="findings"  && <FindingsPanel/>}
+                      {mobileResultTab==="scores"    && <ScoresPanel/>}
+                      {mobileResultTab==="guide"     && <GuidePanel/>}
+                    </div>
+                  </>
                 )}
 
                 {arh&&(
