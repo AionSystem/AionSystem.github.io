@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Aion Certainty Stack – DSAP · FSVE · ADA-VELA</title>
+  <!-- React, ReactDOM, Babel -->
+  <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #07080a;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+    }
+    /* Load external fonts */
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap');
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    // ============================================================
+    // AION FUSION INTERFACE – DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1
+    // Full React component (all logic & UI)
+    // ============================================================
+
+    const { useState, useRef, useEffect, useCallback } = React;
+
+    // ---------- CONSTANTS ----------
+    const MODULES_DEF = [
+      { id:"M-00", name:"Concept Entry State",       key:"concept_entry_state",       alwaysOn:true,  defaultOn:true,  desc:"Pre-exec gate · can this be audited?" },
+      { id:"M-01", name:"Semantic Neighbor Mapping", key:"semantic_neighbor_mapping",  alwaysOn:false, defaultOn:true,  desc:"5 nearest vectors in semantic space" },
+      { id:"M-02", name:"Conceptual Ancestry",       key:"conceptual_ancestry",        alwaysOn:false, defaultOn:true,  desc:"Lineage + rupture event" },
+      { id:"M-03", name:"Domain Variance",           key:"domain_variance",            alwaysOn:false, defaultOn:true,  desc:"Definitions across N domains" },
+      { id:"M-04", name:"Ghost Concepts",            key:"ghost_concepts",             alwaysOn:false, defaultOn:true,  desc:"Dangerous conceptual confusions" },
+      { id:"M-05", name:"Negative Constraints",      key:"negative_constraints",       alwaysOn:false, defaultOn:true,  desc:"Non-trivial exclusions" },
+      { id:"M-06", name:"Reasoning Trace",           key:"reasoning_trace",            alwaysOn:false, defaultOn:true,  desc:"Logic gates to nearest synonym" },
+      { id:"M-07", name:"Min. Viable Definition",    key:"minimum_viable_definition",  alwaysOn:false, defaultOn:true,  desc:"Irreducible core" },
+      { id:"M-08", name:"Activation Conditions",     key:"activation_conditions",      alwaysOn:false, defaultOn:true,  desc:"When concept fires vs. dormant" },
+      { id:"M-09", name:"Collapse Conditions",       key:"collapse_conditions",        alwaysOn:false, defaultOn:true,  desc:"Dissolution into neighbors" },
+      { id:"M-10", name:"Cross-Domain Tension",      key:"cross_domain_tension",       alwaysOn:false, defaultOn:false, desc:"M-03 contradictions (req. M-03)" },
+      { id:"M-11", name:"Falsification Conditions",  key:"falsification_conditions",   alwaysOn:false, defaultOn:false, desc:"What proves concept wrong" },
+      { id:"M-12", name:"Boundary Cases",            key:"boundary_cases",             alwaysOn:false, defaultOn:false, desc:"Edge cases at the membrane" },
+      { id:"M-13", name:"Audit Validity Score",      key:"audit_validity_score",       alwaysOn:true,  defaultOn:true,  desc:"AVS + MAPPED/PARTIAL/CONTESTED" },
+      { id:"M-14", name:"Protocol Falsification",    key:"protocol_falsification",     alwaysOn:false, defaultOn:false, desc:"What falsifies this run" },
+    ];
+
+    const HIGH_RISK_DOMAIN_IDS = new Set([
+      "Military","Nuclear","Medical","Financial","Cybersecurity",
+      "Chemical","Political","Psychological","Surveillance","Weapons"
+    ]);
+
+    const ALL_DOMAINS = [
+      "Biological","Digital","Philosophical","Mathematical","Physical","Linguistic","Social","Legal",
+      "Military","Nuclear","Medical","Financial","Cybersecurity",
+      "Chemical","Political","Psychological","Ecological","Historical","Ethical","Surveillance",
+    ];
+
+    const DOMAIN_SUBCLASSES = {
+      Biological:    ["Molecular","Cellular","Evolutionary","Genomics","Neuroscience","Pathological","Microbiological","Synthetic Biology"],
+      Digital:       ["Algorithmic","Network Architecture","ML/AI","Database","Protocol Layer","Hardware","Embedded Systems","Distributed Systems"],
+      Philosophical: ["Epistemological","Ontological","Phenomenological","Logical","Metaphysical","Philosophy of Mind","Philosophy of Language"],
+      Mathematical:  ["Set Theory","Topology","Algebraic","Statistical","Computational","Number Theory","Category Theory","Geometric"],
+      Physical:      ["Quantum Mechanical","Thermodynamic","Relativistic","Classical Mechanics","Cosmological","Electromagnetic","Condensed Matter"],
+      Linguistic:    ["Semantic","Syntactic","Pragmatic","Phonological","Cognitive Linguistics","Sociolinguistic","Discourse Analysis"],
+      Social:        ["Sociological","Anthropological","Cultural","Demographic","Organizational","Behavioral","Network Theory"],
+      Legal:         ["Constitutional","Criminal","Contract","International Law","Regulatory","Intellectual Property","Tort","Procedural"],
+      Military:      ["Strategic","Tactical","Military Intelligence","Logistics","Doctrine","Command & Control","Asymmetric Warfare","PSYOP"],
+      Nuclear:       ["Fission Physics","Fusion","Radiological","Reactor Safety","Nonproliferation","Weapons Physics","Waste Management"],
+      Medical:       ["Clinical","Epidemiological","Pharmacological","Surgical","Diagnostic","Public Health","Psychiatric","Genomic Medicine"],
+      Financial:     ["Macroeconomic","Market Microstructure","Derivatives","Risk Management","Behavioral Finance","Regulatory","Credit & Debt","Systemic Risk"],
+      Cybersecurity: ["Offensive Security","Defensive","Cryptographic","Network Security","Malware Analysis","Social Engineering","Digital Forensics","Zero-Day Research"],
+      Chemical:      ["Organic","Inorganic","Biochemical","Industrial","Analytical","Toxicological","Hazardous Materials","Synthesis"],
+      Political:     ["Governmental","Electoral","Geopolitical","Policy Analysis","Ideological","International Relations","Propaganda","Psephological"],
+      Psychological: ["Cognitive","Behavioral","Clinical","Developmental","Social","Neuropsychological","Forensic","Trauma & PTSD"],
+      Ecological:    ["Climate Systems","Biodiversity","Ecosystem Dynamics","Conservation","Toxicological","Geophysical","Trophic"],
+      Historical:    ["Contemporary","Modern","Ancient","Revisionist","Archival","Comparative","Counterfactual","Historiographical"],
+      Ethical:       ["Applied Ethics","Bioethics","AI Ethics","Environmental Ethics","Business Ethics","Deontological","Consequentialist","Virtue Ethics"],
+      Surveillance:  ["State Surveillance","Corporate","Technical Infrastructure","Legal Framework","Counter-surveillance","Privacy Architecture","Biometric"],
+    };
+
+    const MODELS = [
+      { id:"anthropic/claude-3.5-sonnet",          name:"Claude 3.5 Sonnet",   tag:"ANTHROPIC" },
+      { id:"anthropic/claude-3-haiku",             name:"Claude 3 Haiku",      tag:"ANTHROPIC" },
+      { id:"openai/gpt-4o",                        name:"GPT-4o",              tag:"OPENAI" },
+      { id:"openai/gpt-4o-mini",                   name:"GPT-4o Mini",         tag:"OPENAI" },
+      { id:"google/gemini-flash-1.5",              name:"Gemini Flash 1.5",    tag:"GOOGLE" },
+      { id:"google/gemini-pro-1.5",               name:"Gemini Pro 1.5",      tag:"GOOGLE" },
+      { id:"meta-llama/llama-3.1-70b-instruct",    name:"Llama 3.1 70B",       tag:"META" },
+      { id:"mistralai/mistral-large",              name:"Mistral Large",       tag:"MISTRAL" },
+    ];
+
+    const CQ_LEVELS = [
+      { id:"LOW",      threshold:0.60, color:"#3dbb6a", desc:"Exploratory" },
+      { id:"MEDIUM",   threshold:0.70, color:"#f0a030", desc:"Standard" },
+      { id:"HIGH",     threshold:0.80, color:"#e05050", desc:"Production" },
+      { id:"CRITICAL", threshold:0.90, color:"#9060e0", desc:"Constitutional" },
+    ];
+
+    const S = {
+      bg:"#07080a", surface:"#0d0f12", surfaceHi:"#111418",
+      border:"#1c2028", borderBright:"#2a3040",
+      text:"#c8d0dc", textDim:"#5a6475", textFaint:"#2e3540",
+      accent:"#3d8bff", accentDim:"#0d1f40",
+      amber:"#f0a030", amberDim:"#3a2000",
+      green:"#3dbb6a", greenDim:"#0d2818",
+      red:"#e05050", redDim:"#2a1010",
+      purple:"#9060e0", purpleDim:"#20103a",
+      orange:"#e87030", orangeDim:"#2a1200",
+      mono:"'JetBrains Mono','Courier New',monospace",
+      display:"'Syne',system-ui,sans-serif",
+    };
+
+    const certColor = c => ({VALID:S.green,DEGRADED:S.amber,SUSPENDED:S.red,MAPPED:S.green,PARTIAL:S.amber,CONTESTED:S.red}[c]||S.textDim);
+    const certBg    = c => ({VALID:S.greenDim,DEGRADED:S.amberDim,SUSPENDED:S.redDim,MAPPED:S.greenDim,PARTIAL:S.amberDim,CONTESTED:S.redDim}[c]||S.surface);
+    const axisNames = { E:"Evidence", C:"Consistency", M:"Methodology", D:"Documentation" };
+
+    // ---------- UTILITIES ----------
+    function useWindowWidth() {
+      const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+      useEffect(() => {
+        const handle = () => setWidth(window.innerWidth);
+        window.addEventListener("resize", handle);
+        return () => window.removeEventListener("resize", handle);
+      }, []);
+      return width;
+    }
+
+    function getDreamspell(date) {
+      const d = new Date(date); d.setHours(0,0,0,0);
+      const moons = [
+        {moon:1,  name:"Magnetic",      start:new Date("2025-07-26")},
+        {moon:2,  name:"Lunar",         start:new Date("2025-08-23")},
+        {moon:3,  name:"Electric",      start:new Date("2025-09-20")},
+        {moon:4,  name:"Self-Existing", start:new Date("2025-10-18")},
+        {moon:5,  name:"Overtone",      start:new Date("2025-11-15")},
+        {moon:6,  name:"Rhythmic",      start:new Date("2025-12-13")},
+        {moon:7,  name:"Resonant",      start:new Date("2026-01-10")},
+        {moon:8,  name:"Galactic",      start:new Date("2026-02-07")},
+        {moon:9,  name:"Solar",         start:new Date("2026-03-07")},
+        {moon:10, name:"Planetary",     start:new Date("2026-04-04")},
+        {moon:11, name:"Spectral",      start:new Date("2026-05-02")},
+        {moon:12, name:"Crystal",       start:new Date("2026-05-30")},
+        {moon:13, name:"Cosmic",        start:new Date("2026-06-27")},
+      ];
+      for (let i = moons.length-1; i >= 0; i--) {
+        if (d >= moons[i].start) {
+          const day = Math.floor((d - moons[i].start)/86400000)+1;
+          return `Day ${day}, ${moons[i].name} Moon ${moons[i].moon}/13`;
+        }
+      }
+      return "Unknown";
+    }
+
+    async function generateSeal(data) {
+      try {
+        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(data)));
+        return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+      } catch { return "SEAL-FAILED-"+Date.now(); }
+    }
+
+    function extractJson(text) {
+      if (!text) return null;
+      try { return JSON.parse(text); } catch {}
+      const m = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+      if (m) { try { return JSON.parse(m[1].trim()); } catch {} }
+      const s = text.indexOf("{"), e = text.lastIndexOf("}");
+      if (s !== -1 && e > s) { try { return JSON.parse(text.slice(s,e+1)); } catch {} }
+      return null;
+    }
+
+    function countLeaves(obj, d=0) {
+      if (d>8||obj===null||obj===undefined) return 1;
+      if (typeof obj!=="object") return 1;
+      if (Array.isArray(obj)) return obj.reduce((s,v)=>s+countLeaves(v,d+1),0);
+      return Object.values(obj).reduce((s,v)=>s+countLeaves(v,d+1),0);
+    }
+    function countQTags(obj)       { return (JSON.stringify(obj||{}).match(/\[\?\]/g)||[]).length; }
+    function countPlaceholders(obj){ return (JSON.stringify(obj||{}).match(/"\.\.\."/g)||[]).length; }
+
+    function computeConsistency(parsed) {
+      let consistencyScore = 1.0;
+      const mvd = parsed.minimum_viable_definition?.irreducible_core;
+      const collapseTarget = parsed.collapse_conditions?.collapses?.[0]?.collapse_target;
+      if (mvd && collapseTarget && collapseTarget.toLowerCase().includes(mvd.toLowerCase())) {
+        consistencyScore -= 0.3;
+      }
+      const neighbors = (parsed.semantic_neighbor_mapping?.neighbors || [])
+        .map(n => (n.concept || "").toLowerCase());
+      const ghosts = (parsed.ghost_concepts?.ghosts || [])
+        .map(g => (g.ghost || "").toLowerCase());
+      const overlap = ghosts.filter(g => neighbors.some(n => n.includes(g) || g.includes(n)));
+      if (overlap.length > 0) {
+        consistencyScore -= 0.15 * Math.min(overlap.length, 3);
+      }
+      const domainDefs = parsed.domain_variance?.definitions || {};
+      const values = Object.values(domainDefs);
+      const uniqueDefs = new Set(values);
+      if (uniqueDefs.size < values.length && values.length > 1) {
+        consistencyScore -= 0.2;
+      }
+      return Math.max(0.0, consistencyScore);
+    }
+
+    function scoreFSVE(parsed, activeMods, cqLevel) {
+      if (!parsed) return null;
+      const keyMap = Object.fromEntries(MODULES_DEF.map(m=>[m.id,m.key]));
+      const total  = countLeaves(parsed);
+      const qTags  = countQTags(parsed);
+      const pholds = countPlaceholders(parsed);
+      const E = Math.max(0,Math.min(1, 1-(qTags/Math.max(total,1))*3.0));
+      const expectedKeys = [...activeMods].map(id=>keyMap[id]).filter(Boolean);
+      const presentKeys  = expectedKeys.filter(k=>parsed[k]!==undefined);
+      const M = expectedKeys.length ? presentKeys.length/expectedKeys.length : 0;
+      const D = Math.max(0, 1-(pholds/Math.max(total,1)));
+      const C = computeConsistency(parsed);
+      const EV = +(E*0.30 + C*0.25 + M*0.25 + D*0.20).toFixed(3);
+      const cqObj = CQ_LEVELS.find(c=>c.id===cqLevel)||CQ_LEVELS[1];
+      const Uq = +Math.max(0,Math.min(1,1-(qTags/Math.max(total,1)))).toFixed(3);
+      let validity_status;
+      if (EV>=cqObj.threshold && M>=0.75) validity_status="VALID";
+      else if (EV>=0.45) validity_status="DEGRADED";
+      else validity_status="SUSPENDED";
+      return { axes:{E:+E.toFixed(3),C:+C.toFixed(3),M:+M.toFixed(3),D:+D.toFixed(3)}, governance:{Uq,Cq:cqLevel,cq_threshold:cqObj.threshold}, EV, validity_status, qTags, total, pholds, version:"FSVE v4.0" };
+    }
+
+    function uiAdvisoryFilter(target) {
+      const forbidden = ["bomb","weapon","malware","virus","exploit","ransomware"];
+      const lower = target.toLowerCase();
+      const hits = forbidden.filter(f => lower.includes(f));
+      return { hasViolations: hits.length > 0, warnings: hits.map(f => `"${f}" detected — UI advisory only. API call will proceed.`), law: hits.length > 0 ? "LAW-6 (advisory — not enforced client-side)" : null };
+    }
+
+    function doesExistWithConfidence(fsve) {
+      if (!fsve) return {cert:"SUSPENDED",reason:"No FSVE score — cannot certify",op:"⁂"};
+      const {EV,validity_status,governance:{cq_threshold}} = fsve;
+      if (EV>=cq_threshold && validity_status==="VALID")
+        return {cert:"VALID",    reason:`EV ${EV} ≥ threshold ${cq_threshold} · validity_status VALID`, op:"⁂"};
+      if (EV>=cq_threshold || validity_status==="DEGRADED")
+        return {cert:"DEGRADED", reason:`EV ${EV} · DEGRADED — warning propagates to ARH`, op:"⁂"};
+      return   {cert:"SUSPENDED",reason:`EV ${EV} < threshold ${cq_threshold} · SUSPENDED`, op:"⁂"};
+    }
+
+    function buildSystemPrompt() {
+      return `You are a Deep Semantic Audit Protocol (DSAP v1.1) engine in strict JSON schema mode.
+
+OPERATING CONSTRAINTS — ABSOLUTE:
+1. Your ENTIRE response must be a single valid JSON object — no markdown, no code fences, no text outside the JSON
+2. Begin with { and end with } — nothing else
+3. Every "..." placeholder must be replaced with real semantic content — never leave "..." as a value
+4. Where genuinely uncertain: use "[?] <brief uncertainty>" — tag the uncertainty, do not omit the field
+5. Preserve rough edges and unresolved tensions — do NOT smooth them
+6. For audit_validity_score: self-assess honestly — do not inflate AVS or certification
+7. For reasoning_trace gates: name decision_criterion explicitly — a gate without a named criterion is not a gate`;
+    }
+
+    function buildUserPrompt(target, mode, activeMods, activeDomains) {
+      const bias={full:"",concept:"AXIS BIAS: Prioritize M-02 (ancestry) and M-07 (MVD).",system:"AXIS BIAS: Prioritize M-06 (reasoning trace), M-08, M-09.",claim:"AXIS BIAS: Prioritize M-05 (negative constraints) and M-11 (falsification)."}[mode]||"";
+      const domList=[...activeDomains];
+      const schema={};
+      if (activeMods.has("M-00")) schema.concept_entry_state={entry_state:"DEFINED|CONTESTED|EMERGENT|UNDERDEFINED",basis:"...",known_definition_communities:["..."],downstream_effect:"...",proceed:true};
+      if (activeMods.has("M-01")) schema.semantic_neighbor_mapping={neighbors:[1,2,3,4,5].map(r=>({rank:r,concept:"...",proximity_reason:"...",divergence:"..."}))};
+      if (activeMods.has("M-02")) schema.conceptual_ancestry={predecessor_concept:"...",rupture_event:"...",what_the_predecessor_could_not_do:"...",first_formalization:{approximate_era:"...",context:"..."},etymology_signal:"..."};
+      if (activeMods.has("M-03")) schema.domain_variance={definitions:Object.fromEntries(domList.map(d=>[d.toLowerCase(),"..."])),convergence_points:["..."],tension_points:["..."],tension_reveals:"..."};
+      if (activeMods.has("M-04")) schema.ghost_concepts={ghosts:[{ghost:"...",substitution_error:"...",confusion_mechanism:"...",cost_of_confusion:"..."}]};
+      if (activeMods.has("M-05")) schema.negative_constraints={is_not:[{exclusion:"...",boundary_reason:"..."},{exclusion:"...",boundary_reason:"..."},{exclusion:"...",boundary_reason:"..."}]};
+      if (activeMods.has("M-06")) schema.reasoning_trace={starting_synonym:"...",gates:[{gate_id:"G1",gate_name:"...",decision_criterion:"...",test:"...",result:"PASS|FAIL|PARTIAL"},{gate_id:"G2",gate_name:"...",decision_criterion:"...",test:"...",result:"PASS|FAIL|PARTIAL"}],final_distinction:"..."};
+      if (activeMods.has("M-07")) schema.minimum_viable_definition={irreducible_core:"...",proof_of_minimality:"...",what_remains_if_removed:"..."};
+      if (activeMods.has("M-08")) schema.activation_conditions={fires_when:["...","..."],dormant_when:["..."],inapplicable_when:["..."]};
+      if (activeMods.has("M-09")) schema.collapse_conditions={collapses:[{trigger:"...",collapse_target:"...",mechanism:"..."}],most_dangerous_collapse:"..."};
+      if (activeMods.has("M-10")&&activeMods.has("M-03")) schema.cross_domain_tension={primary_contradiction:{domain_a:"...",domain_b:"...",contradiction:"...",reveals:"..."},secondary_contradictions:[]};
+      if (activeMods.has("M-11")) schema.falsification_conditions={falsified_if:["...","..."],unfalsifiable:false,unfalsifiable_reason_if_true:null};
+      if (activeMods.has("M-12")) schema.boundary_cases={cases:[{case_description:"...",why_it_almost_applies:"...",why_it_does_not:"...",boundary_principle:"..."}]};
+      if (activeMods.has("M-14")) schema.protocol_falsification={this_run_is_falsified_if:["...","..."],highest_risk_finding:{module:"M-XX",finding:"...",falsification_vector:"..."}};
+      if (activeMods.has("M-13")) schema.audit_validity_score={axes:{coverage:0.0,convergence:0.0,uncertainty_mass:0.0},avs:0.0,certification:"MAPPED|PARTIAL|CONTESTED",certification_basis:"..."};
+      return `Perform a Deep Semantic Audit (DSAP v1.1) on the following target.
+
+TARGET: "${target}"
+MODE: ${mode.toUpperCase()}
+${bias}
+ACTIVE DOMAINS FOR DOMAIN_VARIANCE: ${domList.join(", ")}
+
+Fill every "..." field with real semantic content. Return ONLY the JSON object below — nothing else:
+
+${JSON.stringify(schema,null,2)}`;
+    }
+
+    // ---------- SUB-COMPONENTS ----------
+    function Tag({children, color}) {
+      return <span style={{fontSize:9,padding:"2px 6px",border:`1px solid ${color||S.borderBright}`,color:color||S.textDim,letterSpacing:"0.1em",fontFamily:S.mono}}>{children}</span>;
+    }
+
+    function SectionLabel({children, color}) {
+      return <div style={{fontSize:9,color:color||S.textDim,letterSpacing:"0.15em",textTransform:"uppercase",marginBottom:8,fontFamily:S.mono}}>{children}</div>;
+    }
+
+    function ScoreBar({val, label}) {
+      const col = val>=0.70?S.green:val>=0.45?S.amber:S.red;
+      return (
+        <div style={{marginBottom:8}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:3,fontFamily:S.mono,fontSize:10}}>
+            <span style={{color:S.textDim}}>{label}</span>
+            <span style={{color:col,fontWeight:600}}>{val}</span>
+          </div>
+          <div style={{height:3,background:S.border,borderRadius:2}}>
+            <div style={{height:"100%",width:`${Math.min(val,1)*100}%`,background:col,borderRadius:2,transition:"width 0.6s ease"}}/>
+          </div>
+        </div>
+      );
+    }
+
+    function JsonLeaf({v}) {
+      if (v===null||v===undefined) return <span style={{color:S.textFaint,fontSize:11}}>null</span>;
+      if (typeof v==="boolean") return <span style={{color:v?S.green:S.red,fontSize:11}}>{String(v)}</span>;
+      if (typeof v==="number")  return <span style={{color:S.amber,fontSize:11}}>{v}</span>;
+      const isQ = typeof v==="string"&&v.startsWith("[?]");
+      return <span style={{color:isQ?S.amber:S.text,fontStyle:isQ?"italic":"normal",fontSize:11,lineHeight:1.6,wordBreak:"break-word"}}>{String(v)}</span>;
+    }
+
+    function JsonNode({k,v,depth=0}) {
+      const [open,setOpen]=useState(depth<2);
+      const isObj=v&&typeof v==="object"&&!Array.isArray(v);
+      const isArr=Array.isArray(v);
+      if (isArr) return (
+        <div>
+          <span style={{color:S.textFaint,fontSize:10}}>[{v.length}]</span>
+          <div style={{marginLeft:12,marginTop:2}}>
+            {v.map((item,i)=>(
+              <div key={i} style={{paddingLeft:8,borderLeft:`1px solid ${S.border}`,marginBottom:4}}>
+                {typeof item==="object"?<JsonTree obj={item} depth={depth+1}/>:<JsonLeaf v={item}/>}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+      if (isObj) return (
+        <div>
+          <span onClick={()=>setOpen(o=>!o)} style={{cursor:"pointer",color:S.borderBright,fontSize:10,userSelect:"none"}}>{open?"▾":"▸"} </span>
+          {open&&<div style={{marginLeft:12,marginTop:2}}><JsonTree obj={v} depth={depth+1}/></div>}
+        </div>
+      );
+      return <JsonLeaf v={v}/>;
+    }
+
+    function JsonTree({obj,depth=0}) {
+      return (
+        <div>
+          {Object.entries(obj).map(([k,v])=>(
+            <div key={k} style={{marginBottom:5}}>
+              <span style={{color:S.accent,fontSize:10,fontFamily:S.mono}}>{k}</span>
+              <span style={{color:S.textFaint}}>{": "}</span>
+              {typeof v==="object"&&v!==null
+                ?<JsonNode k={k} v={v} depth={depth}/>
+                :<JsonLeaf v={v}/>}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    const MODULE_LABELS = {
+      concept_entry_state:      "M-00 · Concept Entry State",
+      semantic_neighbor_mapping:"M-01 · Semantic Neighbors",
+      conceptual_ancestry:      "M-02 · Conceptual Ancestry",
+      domain_variance:          "M-03 · Domain Variance",
+      ghost_concepts:           "M-04 · Ghost Concepts",
+      negative_constraints:     "M-05 · Negative Constraints",
+      reasoning_trace:          "M-06 · Reasoning Trace",
+      minimum_viable_definition:"M-07 · Min. Viable Definition",
+      activation_conditions:    "M-08 · Activation Conditions",
+      collapse_conditions:      "M-09 · Collapse Conditions",
+      cross_domain_tension:     "M-10 · Cross-Domain Tension",
+      falsification_conditions: "M-11 · Falsification Conditions",
+      boundary_cases:           "M-12 · Boundary Cases",
+      protocol_falsification:   "M-14 · Protocol Falsification",
+      audit_validity_score:     "M-13 · Audit Validity Score",
+    };
+
+    function DsapPanel({output, isMobile}) {
+      const [activeModule,setActiveModule]=useState(null);
+      if (!output) return <div style={{color:S.textDim,fontSize:11,padding:16}}>Awaiting model response...</div>;
+      const keys=Object.keys(output);
+      const active=activeModule||keys[0];
+      if (isMobile) {
+        return (
+          <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
+            <div style={{overflowX:"auto",borderBottom:`1px solid ${S.border}`,display:"flex",flexShrink:0,WebkitOverflowScrolling:"touch"}}>
+              {keys.map(k=>(
+                <button key={k} onClick={()=>setActiveModule(k)}
+                  style={{padding:"8px 12px",cursor:"pointer",flexShrink:0,background:"transparent",border:"none",
+                    borderBottom:active===k?`2px solid ${S.accent}`:"2px solid transparent",
+                    color:active===k?S.accent:S.textDim,fontFamily:S.mono,fontSize:9,letterSpacing:"0.06em",
+                    whiteSpace:"nowrap"}}>
+                  {MODULE_LABELS[k]||k}
+                </button>
+              ))}
+            </div>
+            <div style={{flex:1,padding:14,overflowY:"auto"}}>
+              <div style={{fontSize:10,color:S.purple,letterSpacing:"0.1em",marginBottom:10,fontWeight:600}}>{MODULE_LABELS[active]||active}</div>
+              {output[active]&&<JsonTree obj={typeof output[active]==="object"?output[active]:{value:output[active]}}/>}
+            </div>
+          </div>
+        );
+      }
+      return (
+        <div style={{display:"flex",height:"100%"}}>
+          <div style={{width:180,flexShrink:0,borderRight:`1px solid ${S.border}`,overflowY:"auto"}}>
+            {keys.map(k=>(
+              <div key={k} onClick={()=>setActiveModule(k)}
+                style={{padding:"8px 12px",cursor:"pointer",borderBottom:`1px solid ${S.border}`,background:active===k?S.accentDim:"transparent",transition:"background 0.1s"}}>
+                <div style={{fontSize:9,color:active===k?S.accent:S.textDim,letterSpacing:"0.08em",lineHeight:1.4,wordBreak:"break-word"}}>{MODULE_LABELS[k]||k}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{flex:1,padding:14,overflowY:"auto"}}>
+            <div style={{fontSize:10,color:S.purple,letterSpacing:"0.1em",marginBottom:10,fontWeight:600}}>{MODULE_LABELS[active]||active}</div>
+            {output[active]&&<JsonTree obj={typeof output[active]==="object"?output[active]:{value:output[active]}}/>}
+          </div>
+        </div>
+      );
+    }
+
+    function DomainSelector({activeDomains, onToggle, onAddCustom, isMobile}) {
+      const [expandedDomain, setExpandedDomain] = useState(null);
+      const [customInput, setCustomInput] = useState("");
+      const handleDomainClick = (d) => { onToggle(d); if (activeDomains.has(d) && expandedDomain === d) setExpandedDomain(null); };
+      const handleDiveClick = (e, d) => { e.stopPropagation(); setExpandedDomain(prev => prev === d ? null : d); };
+      const handleSubclassToggle = (sub) => { onToggle(sub); };
+      const handleCustomAdd = () => { const val = customInput.trim(); if (val && val.length > 1) { onAddCustom(val); setCustomInput(""); } };
+      return (
+        <div style={{border:`1px solid ${S.border}`,background:S.surface,marginBottom:16}}>
+          <div style={{padding:"10px 14px",borderBottom:`1px solid ${S.border}`,display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+            <SectionLabel color={S.amber}>Variance Domains · M-03</SectionLabel>
+            <div style={{flex:1}}/>
+            <span style={{fontSize:9,color:S.textFaint,letterSpacing:"0.06em"}}>⚠ = high-risk · ▾ = subclass dive</span>
+          </div>
+          <div style={{padding:"10px 14px"}}>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom: expandedDomain ? 10 : 0}}>
+              {ALL_DOMAINS.map(d => {
+                const on = activeDomains.has(d);
+                const isHighRisk = HIGH_RISK_DOMAIN_IDS.has(d);
+                const isExpanded = expandedDomain === d;
+                const hasSubs = !!(DOMAIN_SUBCLASSES[d]);
+                const domColor = isHighRisk ? S.orange : S.amber;
+                const domBg    = isHighRisk ? (on ? S.orangeDim : "transparent") : (on ? S.amberDim : "transparent");
+                const domBorder= isHighRisk ? (on ? S.orange : "#3a2000") : (on ? S.amber : S.borderBright);
+                return (
+                  <div key={d} style={{display:"flex",alignItems:"stretch",border:`1px solid ${isExpanded ? domColor : domBorder}`,background:domBg,transition:"all 0.12s"}}>
+                    <button onClick={()=>handleDomainClick(d)}
+                      style={{background:"transparent",border:"none",color:on?domColor:S.textDim,fontFamily:S.mono,
+                        fontSize:isMobile?10:11,padding:isMobile?"4px 8px":"4px 10px",cursor:"pointer",
+                        letterSpacing:"0.04em",display:"flex",alignItems:"center",gap:4}}>
+                      {isHighRisk && <span style={{color:S.orange,fontSize:8}}>⚠</span>}
+                      {on && <span style={{color:domColor,fontSize:9}}>✓</span>}
+                      {d}
+                    </button>
+                    {on && hasSubs && (
+                      <button onClick={(e)=>handleDiveClick(e,d)}
+                        style={{background:isExpanded?domColor+"22":"transparent",border:"none",
+                          borderLeft:`1px solid ${domBorder}`,color:isExpanded?domColor:S.textFaint,
+                          fontFamily:S.mono,fontSize:9,padding:"4px 7px",cursor:"pointer",
+                          transition:"all 0.12s"}}>
+                        {isExpanded?"▴":"▾"}
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            {expandedDomain && DOMAIN_SUBCLASSES[expandedDomain] && (
+              <div style={{border:`1px solid ${HIGH_RISK_DOMAIN_IDS.has(expandedDomain)?S.orange:S.amber}`,background:"#0a0c0e",padding:"12px 14px",marginBottom:10}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+                  <span style={{fontSize:9,color:HIGH_RISK_DOMAIN_IDS.has(expandedDomain)?S.orange:S.amber,letterSpacing:"0.12em",fontFamily:S.mono,fontWeight:600}}>⌄ {expandedDomain.toUpperCase()} · SUBCLASS DIVE</span>
+                  <div style={{flex:1,height:1,background:S.border}}/>
+                  <button onClick={()=>setExpandedDomain(null)} style={{background:"transparent",border:"none",color:S.textDim,cursor:"pointer",fontSize:11,padding:"0 4px"}}>✕</button>
+                </div>
+                <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:10}}>
+                  {DOMAIN_SUBCLASSES[expandedDomain].map(sub => {
+                    const subOn = activeDomains.has(sub);
+                    return (
+                      <button key={sub} onClick={()=>handleSubclassToggle(sub)}
+                        style={{background:subOn?"#151a20":"transparent",border:`1px solid ${subOn?S.accent:S.borderBright}`,color:subOn?S.accent:S.textDim,fontFamily:S.mono,fontSize:isMobile?9:10,padding:"3px 9px",cursor:"pointer",transition:"all 0.12s",letterSpacing:"0.03em"}}>
+                        {subOn && <span style={{color:S.accent,marginRight:4,fontSize:8}}>✓</span>}
+                        {sub}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                  <span style={{fontSize:9,color:S.textFaint,letterSpacing:"0.08em",fontFamily:S.mono,flexShrink:0}}>CUSTOM ›</span>
+                  <input value={customInput} onChange={e=>setCustomInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleCustomAdd()}
+                    placeholder={`Add ${expandedDomain.toLowerCase()} subdomain...`}
+                    style={{flex:1,background:"transparent",border:`1px solid ${S.border}`,outline:"none",fontFamily:S.mono,fontSize:10,color:S.text,padding:"4px 10px",caretColor:S.accent}}/>
+                  <button onClick={handleCustomAdd} style={{background:S.accentDim,border:`1px solid ${S.accent}`,color:S.accent,fontFamily:S.mono,fontSize:9,padding:"4px 10px",cursor:"pointer",letterSpacing:"0.06em"}}>ADD</button>
+                </div>
+              </div>
+            )}
+            {activeDomains.size > 0 && (
+              <div style={{fontSize:9,color:S.textFaint,fontFamily:S.mono,letterSpacing:"0.06em"}}>{activeDomains.size} active: {[...activeDomains].join(" · ")}</div>
+            )}
+          </div>
+          <div style={{padding:"8px 14px",borderTop:`1px solid ${S.border}`,display:"flex",gap:6,alignItems:"center",background:"#090b0d"}}>
+            <span style={{fontSize:9,color:S.textFaint,letterSpacing:"0.08em",fontFamily:S.mono,flexShrink:0}}>GLOBAL CUSTOM ›</span>
+            <GlobalCustomDomain activeDomains={activeDomains} onAdd={onAddCustom} isMobile={isMobile}/>
+          </div>
+        </div>
+      );
+    }
+
+    function GlobalCustomDomain({activeDomains, onAdd, isMobile}) {
+      const [val, setVal] = useState("");
+      const submit = () => { const t = val.trim(); if (t && t.length > 1) { onAdd(t); setVal(""); } };
+      return (
+        <div style={{display:"flex",gap:6,flex:1,alignItems:"center"}}>
+          <input value={val} onChange={e=>setVal(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submit()}
+            placeholder="Add any domain (e.g. Theological, Legal-Technical)..."
+            style={{flex:1,background:"transparent",border:`1px solid ${S.border}`,outline:"none",fontFamily:S.mono,fontSize:10,color:S.text,padding:"4px 10px",caretColor:S.accent}}/>
+          <button onClick={submit} style={{background:"transparent",border:`1px solid ${S.borderBright}`,color:S.textDim,fontFamily:S.mono,fontSize:9,padding:"4px 10px",cursor:"pointer",letterSpacing:"0.06em",flexShrink:0}}>+ ADD</button>
+        </div>
+      );
+    }
+
+    function ResultTabs({tab, setTab}) {
+      const tabs=[{id:"pipeline",label:"Pipeline"},{id:"findings",label:"Findings"},{id:"scores",label:"Scores"}];
+      return (
+        <div style={{display:"flex",borderBottom:`1px solid ${S.border}`,marginBottom:10}}>
+          {tabs.map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id)}
+              style={{flex:1,background:"transparent",border:"none",borderBottom:tab===t.id?`2px solid ${S.accent}`:"2px solid transparent",color:tab===t.id?S.accent:S.textDim,fontFamily:S.mono,fontSize:10,padding:"10px 0",cursor:"pointer",letterSpacing:"0.08em",textTransform:"uppercase"}}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+      );
+    }
+
+    // ---------- MAIN COMPONENT ----------
+    function AionFusion() {
+      const width = useWindowWidth();
+      const isMobile  = width < 700;
+      const isTablet  = width < 1060;
+
+      useEffect(()=>{
+        const link=document.createElement("link");
+        link.href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap";
+        link.rel="stylesheet";
+        document.head.appendChild(link);
+        return()=>document.head.removeChild(link);
+      },[]);
+
+      const [target,setTarget]=useState("");
+      const [apiKey,setApiKey]=useState("");
+      const [model,setModel]=useState(MODELS[0].id);
+      const [customModel,setCustomModel]=useState("");
+      const [cqLevel,setCqLevel]=useState("MEDIUM");
+      const [mode,setMode]=useState("full");
+      const [activeMods,setActiveMods]=useState(new Set(MODULES_DEF.filter(m=>m.defaultOn).map(m=>m.id)));
+      const [activeDomains,setActiveDomains]=useState(new Set(["Biological","Digital","Philosophical"]));
+      const [phase,setPhase]=useState("idle");
+      const [logs,setLogs]=useState([]);
+      const [constState,setConstState]=useState(null);
+      const [dsapOut,setDsapOut]=useState(null);
+      const [fsveScore,setFsveScore]=useState(null);
+      const [adaCert,setAdaCert]=useState(null);
+      const [seal,setSeal]=useState("");
+      const [tripleTs,setTripleTs]=useState(null);
+      const [arh,setArh]=useState(null);
+      const [copied,setCopied]=useState("");
+      const [mobileResultTab, setMobileResultTab] = useState("pipeline");
+      const logEnd=useRef(null);
+
+      const addLog=useCallback((msg,type="info")=>{ setLogs(p=>[...p,{msg,type,id:Date.now()+Math.random()}]); },[]);
+      useEffect(()=>{ logEnd.current?.scrollIntoView({behavior:"smooth"}); },[logs]);
+
+      const toggleMod = (id) => {
+        if (MODULES_DEF.find(m=>m.id===id)?.alwaysOn) return;
+        if (id === "M-10" && !activeMods.has("M-03")) {
+          addLog("M-10 requires M-03 (Domain Variance). Enable M-03 first.", "warn");
+          return;
+        }
+        setActiveMods(p=>{const n=new Set(p); n.has(id)?n.delete(id):n.add(id); return n;});
+      };
+
+      const toggleDomain=(d)=>{ setActiveDomains(p=>{const n=new Set(p); n.has(d)?n.delete(d):n.add(d); return n;}); };
+      const addCustomDomain=(d)=>{ setActiveDomains(p=>{const n=new Set(p); n.add(d); return n;}); };
+      const copy=(key,text)=>{ navigator.clipboard.writeText(text); setCopied(key); setTimeout(()=>setCopied(""),2000); };
+      const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+      const execute=async()=>{
+        if (!target.trim()) return;
+        const key=apiKey.trim(); if (!key){ alert("OpenRouter API key required."); return; }
+        const modelId=customModel.trim()||model;
+
+        setPhase("running"); setLogs([]); setDsapOut(null); setFsveScore(null); setAdaCert(null); setSeal(""); setTripleTs(null); setArh(null);
+        if (isMobile) setMobileResultTab("pipeline");
+
+        try {
+          addLog("∄  UI advisory scan...", "gate");
+          await sleep(280);
+          const advisory = uiAdvisoryFilter(target);
+          setConstState(advisory);
+          if (advisory.hasViolations) {
+            addLog(`∄  ADVISORY: ${advisory.warnings.join(" · ")}`, "warn");
+          } else {
+            addLog(`∄  No forbidden patterns detected.`, "success");
+          }
+          await sleep(150);
+
+          const allMods = new Set([...activeMods, "M-00", "M-13"]);
+          addLog(`DSAP · constructing ${allMods.size}-module protocol...`, "info");
+          await sleep(200);
+          const sysPr = buildSystemPrompt();
+          const usrPr = buildUserPrompt(target, mode, allMods, activeDomains);
+          addLog(`DSAP · ${allMods.size} modules · ${activeDomains.size} domains · mode=${mode.toUpperCase()}`, "info");
+          await sleep(100);
+
+          const modelLabel = MODELS.find(m=>m.id===modelId)?.name||modelId;
+          addLog(`OpenRouter → ${modelLabel}...`, "info");
+          const t0 = Date.now();
+
+          const resp = await fetch("https://openrouter.ai/api/v1/chat/completions",{
+            method:"POST",
+            headers:{"Content-Type":"application/json","Authorization":`Bearer ${key}`,"HTTP-Referer":"https://aionsystem.github.io","X-Title":"AION Certainty Stack"},
+            body:JSON.stringify({model:modelId, messages:[{role:"system",content:sysPr},{role:"user",content:usrPr}], max_tokens:4096, temperature:0.25}),
+          });
+
+          if (!resp.ok){
+            const err = await resp.json().catch(()=>({}));
+            throw new Error(err.error?.message||`HTTP ${resp.status}: ${resp.statusText}`);
+          }
+          const data = await resp.json();
+          const elapsed = ((Date.now()-t0)/1000).toFixed(1);
+          const rawText = data.choices?.[0]?.message?.content||"";
+          const tokens = data.usage?.total_tokens||"?";
+          addLog(`Response · ${tokens} tokens · ${elapsed}s`, "success");
+          await sleep(100);
+
+          addLog("Parsing JSON output...", "info");
+          await sleep(80);
+          const parsed = extractJson(rawText);
+          if (!parsed){
+            addLog("JSON extraction failed — response malformed", "error");
+            addLog("Raw: "+rawText.slice(0,120)+"...", "error");
+            setPhase("error"); return;
+          }
+          setDsapOut(parsed);
+          const presentCount = MODULES_DEF.filter(m=>parsed[m.key]!==undefined).length;
+          addLog(`JSON parsed · ${presentCount}/${MODULES_DEF.length} modules present`, "success");
+          await sleep(120);
+
+          addLog("FSVE v4.0 — scoring execution...", "fsve");
+          await sleep(220);
+          const score = scoreFSVE(parsed, allMods, cqLevel);
+          setFsveScore(score);
+          addLog(`FSVE axes  E=${score.axes.E}  C=${score.axes.C}  M=${score.axes.M}  D=${score.axes.D}`, "fsve");
+          addLog(`FSVE EV=${score.EV}  validity_status=${score.validity_status}`, (score.validity_status==="VALID"?"success":score.validity_status==="DEGRADED"?"warn":"error"));
+          addLog(`FSVE Uq=${score.governance.Uq}  Cq=${score.governance.Cq}  threshold=${score.governance.cq_threshold}`, "fsve");
+          await sleep(150);
+
+          addLog("⁂  Epistemic gate — certifying result...", "gate");
+          await sleep(220);
+          const cert = doesExistWithConfidence(score);
+          setAdaCert(cert);
+          addLog(`⁂  ${cert.cert} · ${cert.reason}`, (cert.cert==="VALID"?"success":cert.cert==="DEGRADED"?"warn":"error"));
+          await sleep(120);
+
+          addLog("ADA-VELA · generating seal + triple timestamp...", "info");
+          const now = new Date();
+          const ts = { gregorian: now.toISOString(), dreamspell: getDreamspell(now), hebrew: "Not fetched — client-side limitation", unix: Math.floor(now.getTime()/1000) };
+          setTripleTs(ts);
+
+          const fullExecutionRecord = {
+            audit_record: { protocol: "DSAP", version: "1.1", target, mode,
+              modules_active: [...allMods], domains_active: [...activeDomains],
+              run_timestamp: ts.gregorian, certifying_model: modelId,
+              prior_audit_state: "UNMAPPED" },
+            dsap_output: parsed,
+            fsve_score: { EV: score.EV, axes: score.axes, governance: score.governance, validity_status: score.validity_status },
+            ada_certification: cert,
+            seal_metadata: { target, model: modelId, cq: cqLevel, timestamp: ts.gregorian }
+          };
+          const sealHash = await generateSeal(fullExecutionRecord);
+          setSeal(sealHash);
+          addLog(`Seal  ${sealHash.slice(0,16)}···${sealHash.slice(-8)}`, "info");
+          await sleep(100);
+
+          const dsapCert = parsed.audit_validity_score?.certification || "PARTIAL";
+          const arhRecord = {
+            protocol:"DSAP", version:"1.1", target, mode,
+            modules_active:[...allMods], domains_active:[...activeDomains],
+            run_timestamp:ts.gregorian, certifying_model:modelId,
+            prior_audit_state:"UNMAPPED",
+            fsve:{EV:score.EV, axes:score.axes, governance:score.governance, validity_status:score.validity_status, version:"v4.0"},
+            ada_vela:{constitutional:"PASS", epistemic_gate:cert.cert, version:"v3.1"},
+            output_certification:dsapCert,
+            seal:sealHash,
+          };
+          setArh(arhRecord);
+          addLog(`ARH locked · output_certification=${dsapCert}`, "success");
+          addLog("─── EXECUTION COMPLETE ───", "complete");
+          setPhase("complete");
+          if (isMobile) setMobileResultTab("findings");
+
+        } catch(err){
+          addLog(`ERROR: ${err.message}`, "error");
+          setPhase("error");
+        }
+      };
+
+      const logColor = { gate:S.purple, success:S.green, error:S.red, warn:S.amber, fsve:S.accent, complete:S.green, info:S.textDim };
+      const configCols = isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr";
+      const moduleCols = isMobile ? "repeat(2,1fr)" : isTablet ? "repeat(3,1fr)" : "repeat(5,1fr)";
+      const resultCols = isMobile ? "1fr" : isTablet ? "1fr" : "240px 1fr 240px";
+      const sealCols   = isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr";
+
+      const PipelinePanel = () => (
+        <div style={{border:`1px solid ${S.border}`,background:S.surface,display:"flex",flexDirection:"column",minHeight:isMobile?320:undefined}}>
+          <div style={{padding:"9px 12px",borderBottom:`1px solid ${S.border}`,fontSize:10,color:S.purple,letterSpacing:"0.1em",fontWeight:600}}>ADA-VELA v3.1 · PIPELINE</div>
+          <div style={{flex:1,overflowY:"auto",padding:"10px 12px",maxHeight:isMobile?260:360}}>
+            {logs.map(l=>(
+              <div key={l.id} style={{fontSize:10,color:logColor[l.type]||S.textDim,marginBottom:5,lineHeight:1.5,wordBreak:"break-word"}}><span style={{color:S.textFaint}}>› </span>{l.msg}</div>
+            ))}
+            <div ref={logEnd}/>
+          </div>
+          {adaCert&&(
+            <div style={{padding:"12px",borderTop:`1px solid ${S.border}`,background:certBg(adaCert.cert)}}>
+              <div style={{fontSize:9,color:S.textDim,letterSpacing:"0.1em",marginBottom:6}}>⁂ EPISTEMIC CERTIFICATION</div>
+              <div style={{fontSize:22,fontWeight:800,fontFamily:S.display,color:certColor(adaCert.cert),letterSpacing:"-0.02em"}}>{adaCert.cert}</div>
+              <div style={{fontSize:10,color:S.textDim,marginTop:5,lineHeight:1.5}}>{adaCert.reason}</div>
+            </div>
+          )}
+          {constState&&!adaCert&&(
+            <div style={{padding:"12px",borderTop:`1px solid ${S.border}`}}>
+              <div style={{fontSize:9,color:S.textDim,letterSpacing:"0.1em",marginBottom:4}}>∄ UI ADVISORY</div>
+              <div style={{fontSize:12,color:constState.hasViolations?S.amber:S.green,fontWeight:600}}>{constState.hasViolations ? "WARNING — advisory only" : "No advisory triggers"}</div>
+            </div>
+          )}
+        </div>
+      );
+
+      const FindingsPanel = () => (
+        <div style={{border:`1px solid ${S.border}`,background:S.surface,display:"flex",flexDirection:"column",minHeight:isMobile?400:undefined}}>
+          <div style={{padding:"9px 12px",borderBottom:`1px solid ${S.border}`,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+            <span style={{fontSize:10,color:S.accent,letterSpacing:"0.1em",fontWeight:600}}>DSAP v1.1 · AUDIT FINDINGS</span>
+            {target&&<span style={{fontSize:9,color:S.textFaint}}>"{target}"</span>}
+            {dsapOut&&(<button onClick={()=>copy("dsap",JSON.stringify(dsapOut,null,2))}
+              style={{marginLeft:"auto",fontSize:9,padding:"2px 8px",border:`1px solid ${copied==="dsap"?S.green:S.borderBright}`,color:copied==="dsap"?S.green:S.textDim,background:"transparent",cursor:"pointer",fontFamily:S.mono}}>{copied==="dsap"?"COPIED ✓":"COPY JSON"}</button>)}
+          </div>
+          <div style={{flex:1,overflow:"hidden",minHeight:isMobile?360:300}}><DsapPanel output={dsapOut} isMobile={isMobile}/></div>
+        </div>
+      );
+
+      const ScoresPanel = () => (
+        <div style={{border:`1px solid ${S.border}`,background:S.surface,display:"flex",flexDirection:"column"}}>
+          <div style={{padding:"9px 12px",borderBottom:`1px solid ${S.border}`,fontSize:10,color:S.amber,letterSpacing:"0.1em",fontWeight:600}}>FSVE v4.0 · SCORE TENSOR</div>
+          <div style={{padding:"14px",overflowY:"auto",flex:1}}>
+            {fsveScore?(
+              <>
+                <div style={{marginBottom:18}}>
+                  <SectionLabel>Evidence Value (EV)</SectionLabel>
+                  <div style={{fontSize:42,fontWeight:800,fontFamily:S.display,lineHeight:1,color:fsveScore.EV>=0.70?S.green:fsveScore.EV>=0.45?S.amber:S.red}}>{fsveScore.EV}</div>
+                  <div style={{marginTop:6,display:"inline-block",padding:"3px 10px",background:certBg(fsveScore.validity_status),border:`1px solid ${certColor(fsveScore.validity_status)}`,fontSize:11,color:certColor(fsveScore.validity_status),fontWeight:600,letterSpacing:"0.08em"}}>{fsveScore.validity_status}</div>
+                </div>
+                <div style={{marginBottom:16}}>
+                  <SectionLabel>Axes (simplified)</SectionLabel>
+                  {Object.entries(fsveScore.axes).map(([a,v])=><ScoreBar key={a} val={v} label={`${a} — ${axisNames[a]}`}/>)}
+                </div>
+                <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12,marginBottom:14}}>
+                  <SectionLabel>Governance Modifiers</SectionLabel>
+                  {[["Uq (Uncertainty)",fsveScore.governance.Uq,S.text],["Cq (Consequence)",fsveScore.governance.Cq,CQ_LEVELS.find(c=>c.id===fsveScore.governance.Cq)?.color||S.textDim],["EV Threshold",fsveScore.governance.cq_threshold,S.textDim]].map(([l,v,c])=>(
+                    <div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:4}}><span style={{color:S.textDim}}>{l}</span><span style={{color:c,fontWeight:600}}>{v}</span></div>
+                  ))}
+                </div>
+                <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12,marginBottom:14}}>
+                  <SectionLabel>Scan Metrics</SectionLabel>
+                  {[["[?] tags",fsveScore.qTags,fsveScore.qTags>5?S.amber:S.green],["Total fields",fsveScore.total,S.text],["Placeholders",fsveScore.pholds,fsveScore.pholds>0?S.red:S.green]].map(([l,v,c])=>(
+                    <div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:4}}><span style={{color:S.textDim}}>{l}</span><span style={{color:c,fontWeight:600}}>{v}</span></div>
+                  ))}
+                </div>
+                {dsapOut?.audit_validity_score && (
+                  <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12}}>
+                    <SectionLabel color={S.purple}>M-13 — DSAP AVS (self-assessed · INFERENTIAL)</SectionLabel>
+                    <div style={{fontSize:28,fontWeight:800,fontFamily:S.display,color:certColor(dsapOut.audit_validity_score.certification),lineHeight:1}}>
+                      {typeof dsapOut.audit_validity_score.avs==="number"?dsapOut.audit_validity_score.avs.toFixed(2):dsapOut.audit_validity_score.avs||"—"}
+                    </div>
+                    <div style={{marginTop:6,fontSize:12,fontWeight:700,color:certColor(dsapOut.audit_validity_score.certification)}}>{dsapOut.audit_validity_score.certification}</div>
+                    {dsapOut.audit_validity_score.certification_basis && <div style={{fontSize:10,color:S.textDim,marginTop:6,lineHeight:1.5}}>{dsapOut.audit_validity_score.certification_basis}</div>}
+                    <div style={{fontSize:8,color:S.textFaint,marginTop:8}}>ⓘ Self-assessment carries +0.20 uncertainty mass per ODR-016. For FCL‑qualifying audits, external auditor Y‑axis assessment is required.</div>
+                  </div>
+                )}
+              </>
+            ):(<div style={{color:S.textDim,fontSize:11}}>Awaiting FSVE scoring...</div>)}
+          </div>
+        </div>
+      );
+
+      return (
+        <div style={{background:S.bg,color:S.text,fontFamily:S.mono,fontSize:13,minHeight:"100vh",lineHeight:1.65}}>
+          <div style={{borderBottom:`1px solid ${S.border}`,padding:isMobile?"10px 14px":"12px 22px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,background:S.bg,zIndex:100,flexWrap:"wrap"}}>
+            <div style={{width:36,height:36,border:`1.5px solid ${S.accent}`,display:"grid",placeItems:"center",fontFamily:S.display,fontWeight:800,fontSize:12,color:S.accent,flexShrink:0,letterSpacing:-1}}>AC</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontFamily:S.display,fontWeight:800,fontSize:isMobile?13:15,color:"#fff",letterSpacing:"0.04em",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>AION CERTAINTY STACK</div>
+              {!isMobile&&<div style={{fontSize:10,color:S.textDim,letterSpacing:"0.1em"}}>DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1 — Fusion Execution Interface</div>}
+            </div>
+            <div style={{display:"flex",gap:5,alignItems:"center",flexWrap:"wrap"}}>
+              {!isMobile&&[{l:"DSAP",c:S.accent},{l:"FSVE",c:S.amber},{l:"ADA-VELA",c:S.purple}].map(({l,c})=><Tag key={l} color={c}>{l}</Tag>)}
+              {phase==="running"&&<span style={{fontSize:10,color:S.accent}}>⟳</span>}
+              {phase==="complete"&&<span style={{fontSize:10,color:S.green}}>✓</span>}
+              {phase==="error"&&<span style={{fontSize:10,color:S.red}}>✗</span>}
+            </div>
+          </div>
+
+          <div style={{maxWidth:1140,margin:"0 auto",padding:isMobile?"14px 12px 80px":"20px 18px 80px"}}>
+            <div style={{border:`1px solid ${S.borderBright}`,padding:isMobile?"12px 14px":"14px 18px",marginBottom:14,position:"relative",background:S.surface}}>
+              <div style={{position:"absolute",top:-1,left:14,background:S.surface,padding:"0 6px",fontSize:9,color:S.accent,letterSpacing:"0.15em",transform:"translateY(-50%)"}}>TARGET CONCEPT / SYSTEM / CLAIM</div>
+              <input value={target} onChange={e=>setTarget(e.target.value)} onKeyDown={e=>e.key==="Enter"&&execute()}
+                placeholder="Enter concept, system, or claim..."
+                style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:isMobile?16:20,fontWeight:500,color:"#fff",caretColor:S.accent,boxSizing:"border-box"}}/>
+            </div>
+
+            <div style={{display:"grid",gridTemplateColumns:configCols,gap:8,marginBottom:12}}>
+              <div style={{border:`1px solid ${S.redDim}`,padding:"9px 12px",background:S.redDim+"22"}}>
+                <SectionLabel color={S.red}>⚠️ SECURITY WARNING</SectionLabel>
+                <div style={{fontSize:10,color:S.textDim,marginBottom:4}}>Your API key is stored in browser memory and sent directly to OpenRouter. Anyone with access to your browser's dev tools can view it. For production use, implement a backend proxy.</div>
+                <input type="password" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="sk-or-v1-..."
+                  style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:11,color:S.text,boxSizing:"border-box"}}/>
+              </div>
+              <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
+                <SectionLabel>Model</SectionLabel>
+                <select value={model} onChange={e=>setModel(e.target.value)} style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:11,color:S.text,cursor:"pointer",marginBottom:4}}>
+                  {MODELS.map(m=><option key={m.id} value={m.id} style={{background:S.surface}}>[{m.tag}] {m.name}</option>)}
+                </select>
+                <input value={customModel} onChange={e=>setCustomModel(e.target.value)} placeholder="or custom model id..."
+                  style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:10,color:S.textDim,borderTop:`1px solid ${S.border}`,paddingTop:4,boxSizing:"border-box"}}/>
+              </div>
+              <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
+                <SectionLabel>Audit Mode</SectionLabel>
+                <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                  {["full","concept","system","claim"].map(m=>(<button key={m} onClick={()=>setMode(m)} style={{flex:"1 1 40%",background:mode===m?S.accentDim:"transparent",border:`1px solid ${mode===m?S.accent:S.borderBright}`,color:mode===m?S.accent:S.textDim,fontFamily:S.mono,fontSize:9,padding:"3px 0",cursor:"pointer",letterSpacing:"0.04em",textTransform:"uppercase"}}>{m}</button>))}
+                </div>
+              </div>
+              <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
+                <SectionLabel>Cq — Consequence (FSVE)</SectionLabel>
+                <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                  {CQ_LEVELS.map(c=>(<button key={c.id} onClick={()=>setCqLevel(c.id)} style={{flex:"1 1 40%",background:cqLevel===c.id?c.color+"22":"transparent",border:`1px solid ${cqLevel===c.id?c.color:S.borderBright}`,color:cqLevel===c.id?c.color:S.textDim,fontFamily:S.mono,fontSize:9,padding:"3px 0",cursor:"pointer",letterSpacing:"0.04em"}}>{c.id}<br/><span style={{fontSize:8}}>{c.threshold}</span></button>))}
+                </div>
+              </div>
+            </div>
+
+            <div style={{marginBottom:12}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+                <SectionLabel>Protocol Modules</SectionLabel>
+                <div style={{flex:1,height:1,background:S.border}}/>
+                <span style={{fontSize:9,color:S.textFaint}}>● = always active</span>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:moduleCols,gap:5}}>
+                {MODULES_DEF.map(m=>{
+                  const on = activeMods.has(m.id);
+                  const isDisabled = m.id === "M-10" && !activeMods.has("M-03");
+                  return (
+                    <div key={m.id} onClick={()=>!isDisabled && toggleMod(m.id)}
+                      style={{opacity:isDisabled?0.5:1, border:`1px solid ${on?S.accentDim:S.border}`,padding:"7px 9px",cursor:isDisabled?"default":"pointer",background:on?"#0a1420":S.surface,transition:"all 0.12s",userSelect:"none"}}>
+                      <div style={{fontSize:9,color:on?S.accent:S.textFaint,letterSpacing:"0.08em",marginBottom:2}}>{m.id}{m.alwaysOn?" ●":""}{isDisabled && <span style={{fontSize:8,color:S.amberDim,marginLeft:4}}>(requires M-03)</span>}</div>
+                      <div style={{fontSize:isMobile?9:10,color:on?"#e8f0ff":S.textDim,fontWeight:on?500:400,marginBottom:1}}>{m.name}</div>
+                      {!isMobile&&<div style={{fontSize:9,color:S.textFaint,lineHeight:1.4}}>{m.desc}</div>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <DomainSelector activeDomains={activeDomains} onToggle={toggleDomain} onAddCustom={addCustomDomain} isMobile={isMobile}/>
+
+            <button onClick={execute} disabled={phase==="running"}
+              style={{width:"100%",background:phase==="running"?S.borderBright:S.accent,border:"none",color:"#fff",fontFamily:S.mono,fontSize:isMobile?11:12,fontWeight:700,letterSpacing:"0.1em",padding:"13px 0",cursor:phase==="running"?"default":"pointer",marginBottom:20,textTransform:"uppercase",transition:"background 0.15s"}}>
+              {phase==="running"?"⟳  EXECUTING — ∄ · DSAP · FSVE · ⁂ · SEAL":"⚡  EXECUTE — ∄ → DSAP → FSVE → ⁂ → SEALED OUTPUT"}
+            </button>
+
+            {phase!=="idle"&&(
+              <>
+                {isMobile ? (
+                  <>
+                    <ResultTabs tab={mobileResultTab} setTab={setMobileResultTab}/>
+                    {mobileResultTab==="pipeline" && <PipelinePanel/>}
+                    {mobileResultTab==="findings"  && <FindingsPanel/>}
+                    {mobileResultTab==="scores"    && <ScoresPanel/>}
+                  </>
+                ) : (
+                  <div style={{display:"grid",gridTemplateColumns:resultCols,gap:10,marginBottom:12}}>
+                    <PipelinePanel/>
+                    <FindingsPanel/>
+                    <ScoresPanel/>
+                  </div>
+                )}
+
+                {arh&&(
+                  <div style={{border:`1px solid ${S.border}`,background:S.surface,marginTop:isMobile?10:0}}>
+                    <div style={{padding:"9px 14px",borderBottom:`1px solid ${S.border}`,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                      <span style={{fontSize:isMobile?9:10,color:S.green,letterSpacing:"0.08em",fontWeight:600}}>ADA-VELA · SEAL · TRIPLE TS · ARH</span>
+                      <div style={{marginLeft:"auto",display:"flex",gap:6}}>
+                        <button onClick={()=>copy("arh",JSON.stringify(arh,null,2))} style={{fontSize:9,padding:"2px 8px",border:`1px solid ${copied==="arh"?S.green:S.borderBright}`,color:copied==="arh"?S.green:S.textDim,background:"transparent",cursor:"pointer",fontFamily:S.mono}}>{copied==="arh"?"COPIED ✓":"COPY ARH"}</button>
+                        <button onClick={()=>copy("raw",JSON.stringify(arh,null,2))} style={{fontSize:9,padding:"2px 8px",border:`1px solid ${copied==="raw"?S.purple:S.borderBright}`,color:copied==="raw"?S.purple:S.textDim,background:"transparent",cursor:"pointer",fontFamily:S.mono}}>FULL JSON</button>
+                      </div>
+                    </div>
+                    <div style={{display:"grid",gridTemplateColumns:sealCols,gap:0}}>
+                      <div style={{padding:"12px 14px",borderRight:`1px solid ${S.border}`,borderBottom:isMobile?`1px solid ${S.border}`:"none"}}>
+                        <SectionLabel>SHA-256 Seal</SectionLabel>
+                        <div style={{fontSize:10,color:S.green,wordBreak:"break-all",lineHeight:1.8,fontWeight:500}}>{seal.slice(0,32)}</div>
+                        <div style={{fontSize:10,color:S.green,wordBreak:"break-all",lineHeight:1.8,fontWeight:500}}>{seal.slice(32)}</div>
+                      </div>
+                      <div style={{padding:"12px 14px",borderRight:isMobile?"none":`1px solid ${S.border}`,borderBottom:isMobile?`1px solid ${S.border}`:"none"}}>
+                        <SectionLabel>Triple Timestamp</SectionLabel>
+                        <div style={{fontSize:10,color:S.text,marginBottom:5}}>📅 <span style={{color:S.textDim}}>Gregorian</span><br/>{tripleTs?.gregorian?.slice(0,19)}Z</div>
+                        <div style={{fontSize:10,color:S.text,marginBottom:5}}>🌑 <span style={{color:S.textDim}}>Dreamspell</span><br/>{tripleTs?.dreamspell}</div>
+                        <div style={{fontSize:10,color:S.textDim}}>✡ Hebrew<br/>{tripleTs?.hebrew || "Not fetched — client-side limitation"}</div>
+                      </div>
+                      <div style={{padding:"12px 14px",borderRight:`1px solid ${S.border}`,borderTop:isMobile?`1px solid ${S.border}`:"none"}}>
+                        <SectionLabel>Stack Certification</SectionLabel>
+                        {[["∄ Advisory",constState?.hasViolations?"WARNING":"CLEAR",constState?.hasViolations?S.amber:S.green],["⁂ Epistemic",adaCert?.cert||"—",certColor(adaCert?.cert)],["DSAP M-13",dsapOut?.audit_validity_score?.certification||"—",certColor(dsapOut?.audit_validity_score?.certification)],["FSVE EV",fsveScore?.EV||"—",fsveScore?.EV>=0.70?S.green:fsveScore?.EV>=0.45?S.amber:S.red]].map(([l,v,c])=>(<div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:5}}><span style={{color:S.textDim}}>{l}</span><span style={{color:c,fontWeight:700}}>{v}</span></div>))}
+                      </div>
+                      <div style={{padding:"12px 14px",borderTop:isMobile?`1px solid ${S.border}`:"none"}}>
+                        <SectionLabel>ARH Summary</SectionLabel>
+                        <div style={{fontSize:10,color:S.text,marginBottom:3}}>target: <span style={{color:S.amber}}>"{arh.target}"</span></div>
+                        <div style={{fontSize:10,color:S.text,marginBottom:3}}>modules: <span style={{color:S.accent}}>{arh.modules_active.length}</span> active</div>
+                        <div style={{fontSize:10,color:S.text,marginBottom:3}}>domains: <span style={{color:S.accent}}>{arh.domains_active.length}</span></div>
+                        <div style={{fontSize:10,color:S.text,marginBottom:3}}>model: <span style={{color:S.textDim}}>{arh.certifying_model.split("/").pop()}</span></div>
+                        <div style={{fontSize:10,color:S.text}}>output_cert: <span style={{color:certColor(arh.output_certification),fontWeight:700}}>{arh.output_certification}</span></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          <div style={{borderTop:`1px solid ${S.border}`,padding:isMobile?"10px 14px":"10px 22px",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:9,color:S.textFaint,letterSpacing:"0.06em",flexWrap:"wrap",gap:4}}>
+            <span>AION Certainty Stack · DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1 · Sheldon K. Salmon & ALBEDO · April 2026</span>
+            <span>∄ UI Advisory · ⁂ Epistemic · SHA-256 Sealed · Gregorian · Dreamspell</span>
+          </div>
+        </div>
+      );
+    }
+
+    // Render the app
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<AionFusion />);
+  </script>
+</body>
+</html>
