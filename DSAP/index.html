@@ -22,7 +22,42 @@ const MODULES_DEF = [
   { id:"M-14", name:"Protocol Falsification",    key:"protocol_falsification",     alwaysOn:false, defaultOn:false, desc:"What falsifies this run" },
 ];
 
-const ALL_DOMAINS = ["Biological","Digital","Philosophical","Mathematical","Physical","Linguistic","Social","Legal"];
+// ── Expanded domain taxonomy ──
+const HIGH_RISK_DOMAIN_IDS = new Set([
+  "Military","Nuclear","Medical","Financial","Cybersecurity",
+  "Chemical","Political","Psychological","Surveillance","Weapons"
+]);
+
+const ALL_DOMAINS = [
+  // Standard
+  "Biological","Digital","Philosophical","Mathematical","Physical","Linguistic","Social","Legal",
+  // High-risk
+  "Military","Nuclear","Medical","Financial","Cybersecurity",
+  "Chemical","Political","Psychological","Ecological","Historical","Ethical","Surveillance",
+];
+
+const DOMAIN_SUBCLASSES = {
+  Biological:    ["Molecular","Cellular","Evolutionary","Genomics","Neuroscience","Pathological","Microbiological","Synthetic Biology"],
+  Digital:       ["Algorithmic","Network Architecture","ML/AI","Database","Protocol Layer","Hardware","Embedded Systems","Distributed Systems"],
+  Philosophical: ["Epistemological","Ontological","Phenomenological","Logical","Metaphysical","Philosophy of Mind","Philosophy of Language"],
+  Mathematical:  ["Set Theory","Topology","Algebraic","Statistical","Computational","Number Theory","Category Theory","Geometric"],
+  Physical:      ["Quantum Mechanical","Thermodynamic","Relativistic","Classical Mechanics","Cosmological","Electromagnetic","Condensed Matter"],
+  Linguistic:    ["Semantic","Syntactic","Pragmatic","Phonological","Cognitive Linguistics","Sociolinguistic","Discourse Analysis"],
+  Social:        ["Sociological","Anthropological","Cultural","Demographic","Organizational","Behavioral","Network Theory"],
+  Legal:         ["Constitutional","Criminal","Contract","International Law","Regulatory","Intellectual Property","Tort","Procedural"],
+  Military:      ["Strategic","Tactical","Military Intelligence","Logistics","Doctrine","Command & Control","Asymmetric Warfare","PSYOP"],
+  Nuclear:       ["Fission Physics","Fusion","Radiological","Reactor Safety","Nonproliferation","Weapons Physics","Waste Management"],
+  Medical:       ["Clinical","Epidemiological","Pharmacological","Surgical","Diagnostic","Public Health","Psychiatric","Genomic Medicine"],
+  Financial:     ["Macroeconomic","Market Microstructure","Derivatives","Risk Management","Behavioral Finance","Regulatory","Credit & Debt","Systemic Risk"],
+  Cybersecurity: ["Offensive Security","Defensive","Cryptographic","Network Security","Malware Analysis","Social Engineering","Digital Forensics","Zero-Day Research"],
+  Chemical:      ["Organic","Inorganic","Biochemical","Industrial","Analytical","Toxicological","Hazardous Materials","Synthesis"],
+  Political:     ["Governmental","Electoral","Geopolitical","Policy Analysis","Ideological","International Relations","Propaganda","Psephological"],
+  Psychological: ["Cognitive","Behavioral","Clinical","Developmental","Social","Neuropsychological","Forensic","Trauma & PTSD"],
+  Ecological:    ["Climate Systems","Biodiversity","Ecosystem Dynamics","Conservation","Toxicological","Geophysical","Trophic"],
+  Historical:    ["Contemporary","Modern","Ancient","Revisionist","Archival","Comparative","Counterfactual","Historiographical"],
+  Ethical:       ["Applied Ethics","Bioethics","AI Ethics","Environmental Ethics","Business Ethics","Deontological","Consequentialist","Virtue Ethics"],
+  Surveillance:  ["State Surveillance","Corporate","Technical Infrastructure","Legal Framework","Counter-surveillance","Privacy Architecture","Biometric"],
+};
 
 const MODELS = [
   { id:"anthropic/claude-3.5-sonnet",          name:"Claude 3.5 Sonnet",   tag:"ANTHROPIC" },
@@ -30,7 +65,7 @@ const MODELS = [
   { id:"openai/gpt-4o",                        name:"GPT-4o",              tag:"OPENAI" },
   { id:"openai/gpt-4o-mini",                   name:"GPT-4o Mini",         tag:"OPENAI" },
   { id:"google/gemini-flash-1.5",              name:"Gemini Flash 1.5",    tag:"GOOGLE" },
-  { id:"google/gemini-pro-1.5",                name:"Gemini Pro 1.5",      tag:"GOOGLE" },
+  { id:"google/gemini-pro-1.5",               name:"Gemini Pro 1.5",      tag:"GOOGLE" },
   { id:"meta-llama/llama-3.1-70b-instruct",    name:"Llama 3.1 70B",       tag:"META" },
   { id:"mistralai/mistral-large",              name:"Mistral Large",       tag:"MISTRAL" },
 ];
@@ -51,6 +86,7 @@ const S = {
   green:"#3dbb6a", greenDim:"#0d2818",
   red:"#e05050", redDim:"#2a1010",
   purple:"#9060e0", purpleDim:"#20103a",
+  orange:"#e87030", orangeDim:"#2a1200",
   mono:"'JetBrains Mono','Courier New',monospace",
   display:"'Syne',system-ui,sans-serif",
 };
@@ -63,22 +99,32 @@ const axisNames = { E:"Evidence", C:"Consistency", M:"Methodology", D:"Documenta
 // UTILITIES
 // ============================================================
 
+function useWindowWidth() {
+  const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+  useEffect(() => {
+    const handle = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handle);
+    return () => window.removeEventListener("resize", handle);
+  }, []);
+  return width;
+}
+
 function getDreamspell(date) {
   const d = new Date(date); d.setHours(0,0,0,0);
   const moons = [
-    {moon:1,  name:"Magnetic",     start:new Date("2025-07-26")},
-    {moon:2,  name:"Lunar",        start:new Date("2025-08-23")},
-    {moon:3,  name:"Electric",     start:new Date("2025-09-20")},
-    {moon:4,  name:"Self-Existing",start:new Date("2025-10-18")},
-    {moon:5,  name:"Overtone",     start:new Date("2025-11-15")},
-    {moon:6,  name:"Rhythmic",     start:new Date("2025-12-13")},
-    {moon:7,  name:"Resonant",     start:new Date("2026-01-10")},
-    {moon:8,  name:"Galactic",     start:new Date("2026-02-07")},
-    {moon:9,  name:"Solar",        start:new Date("2026-03-07")},
-    {moon:10, name:"Planetary",    start:new Date("2026-04-04")},
-    {moon:11, name:"Spectral",     start:new Date("2026-05-02")},
-    {moon:12, name:"Crystal",      start:new Date("2026-05-30")},
-    {moon:13, name:"Cosmic",       start:new Date("2026-06-27")},
+    {moon:1,  name:"Magnetic",      start:new Date("2025-07-26")},
+    {moon:2,  name:"Lunar",         start:new Date("2025-08-23")},
+    {moon:3,  name:"Electric",      start:new Date("2025-09-20")},
+    {moon:4,  name:"Self-Existing", start:new Date("2025-10-18")},
+    {moon:5,  name:"Overtone",      start:new Date("2025-11-15")},
+    {moon:6,  name:"Rhythmic",      start:new Date("2025-12-13")},
+    {moon:7,  name:"Resonant",      start:new Date("2026-01-10")},
+    {moon:8,  name:"Galactic",      start:new Date("2026-02-07")},
+    {moon:9,  name:"Solar",         start:new Date("2026-03-07")},
+    {moon:10, name:"Planetary",     start:new Date("2026-04-04")},
+    {moon:11, name:"Spectral",      start:new Date("2026-05-02")},
+    {moon:12, name:"Crystal",       start:new Date("2026-05-30")},
+    {moon:13, name:"Cosmic",        start:new Date("2026-06-27")},
   ];
   for (let i = moons.length-1; i >= 0; i--) {
     if (d >= moons[i].start) {
@@ -112,25 +158,20 @@ function countLeaves(obj, d=0) {
   if (Array.isArray(obj)) return obj.reduce((s,v)=>s+countLeaves(v,d+1),0);
   return Object.values(obj).reduce((s,v)=>s+countLeaves(v,d+1),0);
 }
-function countQTags(obj)      { return (JSON.stringify(obj||{}).match(/\[\?\]/g)||[]).length; }
-function countPlaceholders(obj) { return (JSON.stringify(obj||{}).match(/"\.\.\."/g)||[]).length; }
+function countQTags(obj)       { return (JSON.stringify(obj||{}).match(/\[\?\]/g)||[]).length; }
+function countPlaceholders(obj){ return (JSON.stringify(obj||{}).match(/"\.\.\."/g)||[]).length; }
 
-// FSVE v4.0 — simplified axis computation
 function scoreFSVE(parsed, activeMods, cqLevel) {
   if (!parsed) return null;
   const keyMap = Object.fromEntries(MODULES_DEF.map(m=>[m.id,m.key]));
-  const total   = countLeaves(parsed);
-  const qTags   = countQTags(parsed);
-  const pholds  = countPlaceholders(parsed);
-
-  const E = Math.max(0,Math.min(1, 1-(qTags/Math.max(total,1))*3.0 ));
-
+  const total  = countLeaves(parsed);
+  const qTags  = countQTags(parsed);
+  const pholds = countPlaceholders(parsed);
+  const E = Math.max(0,Math.min(1, 1-(qTags/Math.max(total,1))*3.0));
   const expectedKeys = [...activeMods].map(id=>keyMap[id]).filter(Boolean);
   const presentKeys  = expectedKeys.filter(k=>parsed[k]!==undefined);
   const M = expectedKeys.length ? presentKeys.length/expectedKeys.length : 0;
-
   const D = Math.max(0, 1-(pholds/Math.max(total,1)));
-
   let C = 0.68;
   if (parsed.semantic_neighbor_mapping && parsed.collapse_conditions) {
     const nbrs = (parsed.semantic_neighbor_mapping.neighbors||[]).map(n=>(n.concept||"").toLowerCase());
@@ -142,20 +183,16 @@ function scoreFSVE(parsed, activeMods, cqLevel) {
     const ct  = parsed.collapse_conditions.collapses[0].collapse_target.toLowerCase();
     if (rem.split(" ").some(w=>w.length>3&&ct.includes(w))) C=Math.min(1,C+0.10);
   }
-
   const EV = +(E*0.30 + C*0.25 + M*0.25 + D*0.20).toFixed(3);
   const cqObj = CQ_LEVELS.find(c=>c.id===cqLevel)||CQ_LEVELS[1];
   const Uq = +Math.max(0,Math.min(1,1-(qTags/Math.max(total,1)))).toFixed(3);
-
   let validity_status;
   if (EV>=cqObj.threshold && M>=0.75) validity_status="VALID";
   else if (EV>=0.45) validity_status="DEGRADED";
   else validity_status="SUSPENDED";
-
   return { axes:{E:+E.toFixed(3),C:+C.toFixed(3),M:+M.toFixed(3),D:+D.toFixed(3)}, governance:{Uq,Cq:cqLevel,cq_threshold:cqObj.threshold}, EV, validity_status, qTags, total, pholds, version:"FSVE v4.0" };
 }
 
-// ADA-VELA gates
 function doesNotExist(target) {
   const forbidden=["bomb","weapon","malware","virus","exploit","ransomware"];
   const lower=target.toLowerCase();
@@ -175,7 +212,6 @@ function doesExistWithConfidence(fsve) {
   return   {cert:"SUSPENDED",reason:`EV ${EV} < threshold ${cq_threshold} · SUSPENDED`, op:"⁂"};
 }
 
-// DSAP prompt builder
 function buildSystemPrompt() {
   return `You are a Deep Semantic Audit Protocol (DSAP v1.1) engine in strict JSON schema mode.
 
@@ -193,7 +229,6 @@ function buildUserPrompt(target, mode, activeMods, activeDomains) {
   const bias={full:"",concept:"AXIS BIAS: Prioritize M-02 (ancestry) and M-07 (MVD).",system:"AXIS BIAS: Prioritize M-06 (reasoning trace), M-08, M-09.",claim:"AXIS BIAS: Prioritize M-05 (negative constraints) and M-11 (falsification)."}[mode]||"";
   const domList=[...activeDomains];
   const schema={};
-
   if (activeMods.has("M-00")) schema.concept_entry_state={entry_state:"DEFINED|CONTESTED|EMERGENT|UNDERDEFINED",basis:"...",known_definition_communities:["..."],downstream_effect:"...",proceed:true};
   if (activeMods.has("M-01")) schema.semantic_neighbor_mapping={neighbors:[1,2,3,4,5].map(r=>({rank:r,concept:"...",proximity_reason:"...",divergence:"..."}))};
   if (activeMods.has("M-02")) schema.conceptual_ancestry={predecessor_concept:"...",rupture_event:"...",what_the_predecessor_could_not_do:"...",first_formalization:{approximate_era:"...",context:"..."},etymology_signal:"..."};
@@ -209,7 +244,6 @@ function buildUserPrompt(target, mode, activeMods, activeDomains) {
   if (activeMods.has("M-12")) schema.boundary_cases={cases:[{case_description:"...",why_it_almost_applies:"...",why_it_does_not:"...",boundary_principle:"..."}]};
   if (activeMods.has("M-14")) schema.protocol_falsification={this_run_is_falsified_if:["...","..."],highest_risk_finding:{module:"M-XX",finding:"...",falsification_vector:"..."}};
   if (activeMods.has("M-13")) schema.audit_validity_score={axes:{coverage:0.0,convergence:0.0,uncertainty_mass:0.0},avs:0.0,certification:"MAPPED|PARTIAL|CONTESTED",certification_basis:"..."};
-
   return `Perform a Deep Semantic Audit (DSAP v1.1) on the following target.
 
 TARGET: "${target}"
@@ -249,12 +283,18 @@ function ScoreBar({val, label}) {
   );
 }
 
+function JsonLeaf({v}) {
+  if (v===null||v===undefined) return <span style={{color:S.textFaint,fontSize:11}}>null</span>;
+  if (typeof v==="boolean") return <span style={{color:v?S.green:S.red,fontSize:11}}>{String(v)}</span>;
+  if (typeof v==="number")  return <span style={{color:S.amber,fontSize:11}}>{v}</span>;
+  const isQ = typeof v==="string"&&v.startsWith("[?]");
+  return <span style={{color:isQ?S.amber:S.text,fontStyle:isQ?"italic":"normal",fontSize:11,lineHeight:1.6,wordBreak:"break-word"}}>{String(v)}</span>;
+}
+
 function JsonNode({k,v,depth=0}) {
   const [open,setOpen]=useState(depth<2);
   const isObj=v&&typeof v==="object"&&!Array.isArray(v);
   const isArr=Array.isArray(v);
-  const isQ=typeof v==="string"&&v.includes("[?]");
-
   if (isArr) return (
     <div>
       <span style={{color:S.textFaint,fontSize:10}}>[{v.length}]</span>
@@ -276,14 +316,6 @@ function JsonNode({k,v,depth=0}) {
   return <JsonLeaf v={v}/>;
 }
 
-function JsonLeaf({v}) {
-  if (v===null||v===undefined) return <span style={{color:S.textFaint,fontSize:11}}>null</span>;
-  if (typeof v==="boolean") return <span style={{color:v?S.green:S.red,fontSize:11}}>{String(v)}</span>;
-  if (typeof v==="number") return <span style={{color:S.amber,fontSize:11}}>{v}</span>;
-  const isQ=typeof v==="string"&&v.startsWith("[?]");
-  return <span style={{color:isQ?S.amber:S.text,fontStyle:isQ?"italic":"normal",fontSize:11,lineHeight:1.6,wordBreak:"break-word"}}>{String(v)}</span>;
-}
-
 function JsonTree({obj,depth=0}) {
   return (
     <div>
@@ -301,33 +333,57 @@ function JsonTree({obj,depth=0}) {
 }
 
 const MODULE_LABELS = {
-  concept_entry_state:"M-00 · Concept Entry State",
+  concept_entry_state:      "M-00 · Concept Entry State",
   semantic_neighbor_mapping:"M-01 · Semantic Neighbors",
-  conceptual_ancestry:"M-02 · Conceptual Ancestry",
-  domain_variance:"M-03 · Domain Variance",
-  ghost_concepts:"M-04 · Ghost Concepts",
-  negative_constraints:"M-05 · Negative Constraints",
-  reasoning_trace:"M-06 · Reasoning Trace",
+  conceptual_ancestry:      "M-02 · Conceptual Ancestry",
+  domain_variance:          "M-03 · Domain Variance",
+  ghost_concepts:           "M-04 · Ghost Concepts",
+  negative_constraints:     "M-05 · Negative Constraints",
+  reasoning_trace:          "M-06 · Reasoning Trace",
   minimum_viable_definition:"M-07 · Min. Viable Definition",
-  activation_conditions:"M-08 · Activation Conditions",
-  collapse_conditions:"M-09 · Collapse Conditions",
-  cross_domain_tension:"M-10 · Cross-Domain Tension",
-  falsification_conditions:"M-11 · Falsification Conditions",
-  boundary_cases:"M-12 · Boundary Cases",
-  protocol_falsification:"M-14 · Protocol Falsification",
-  audit_validity_score:"M-13 · Audit Validity Score",
+  activation_conditions:    "M-08 · Activation Conditions",
+  collapse_conditions:      "M-09 · Collapse Conditions",
+  cross_domain_tension:     "M-10 · Cross-Domain Tension",
+  falsification_conditions: "M-11 · Falsification Conditions",
+  boundary_cases:           "M-12 · Boundary Cases",
+  protocol_falsification:   "M-14 · Protocol Falsification",
+  audit_validity_score:     "M-13 · Audit Validity Score",
 };
 
-function DsapPanel({output}) {
+// ── DsapPanel — mobile-aware ──
+function DsapPanel({output, isMobile}) {
   const [activeModule,setActiveModule]=useState(null);
   if (!output) return <div style={{color:S.textDim,fontSize:11,padding:16}}>Awaiting model response...</div>;
-
   const keys=Object.keys(output);
   const active=activeModule||keys[0];
 
+  if (isMobile) {
+    return (
+      <div style={{display:"flex",flexDirection:"column",height:"100%"}}>
+        {/* Horizontal scroll tabs */}
+        <div style={{overflowX:"auto",borderBottom:`1px solid ${S.border}`,display:"flex",flexShrink:0,WebkitOverflowScrolling:"touch"}}>
+          {keys.map(k=>(
+            <button key={k} onClick={()=>setActiveModule(k)}
+              style={{
+                padding:"8px 12px",cursor:"pointer",flexShrink:0,background:"transparent",border:"none",
+                borderBottom:active===k?`2px solid ${S.accent}`:"2px solid transparent",
+                color:active===k?S.accent:S.textDim,fontFamily:S.mono,fontSize:9,letterSpacing:"0.06em",
+                whiteSpace:"nowrap"
+              }}>
+              {MODULE_LABELS[k]||k}
+            </button>
+          ))}
+        </div>
+        <div style={{flex:1,padding:14,overflowY:"auto"}}>
+          <div style={{fontSize:10,color:S.purple,letterSpacing:"0.1em",marginBottom:10,fontWeight:600}}>{MODULE_LABELS[active]||active}</div>
+          {output[active]&&<JsonTree obj={typeof output[active]==="object"?output[active]:{value:output[active]}}/>}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{display:"flex",height:"100%"}}>
-      {/* module list */}
       <div style={{width:180,flexShrink:0,borderRight:`1px solid ${S.border}`,overflowY:"auto"}}>
         {keys.map(k=>(
           <div key={k} onClick={()=>setActiveModule(k)}
@@ -336,11 +392,215 @@ function DsapPanel({output}) {
           </div>
         ))}
       </div>
-      {/* content */}
       <div style={{flex:1,padding:14,overflowY:"auto"}}>
         <div style={{fontSize:10,color:S.purple,letterSpacing:"0.1em",marginBottom:10,fontWeight:600}}>{MODULE_LABELS[active]||active}</div>
         {output[active]&&<JsonTree obj={typeof output[active]==="object"?output[active]:{value:output[active]}}/>}
       </div>
+    </div>
+  );
+}
+
+// ── DomainSelector — with subclass expansion and custom domain ──
+function DomainSelector({activeDomains, onToggle, onAddCustom, isMobile}) {
+  const [expandedDomain, setExpandedDomain] = useState(null);
+  const [customInput, setCustomInput] = useState("");
+
+  const handleDomainClick = (d) => {
+    onToggle(d);
+    // If turning off the domain that's expanded, close it
+    if (activeDomains.has(d) && expandedDomain === d) setExpandedDomain(null);
+  };
+
+  const handleDiveClick = (e, d) => {
+    e.stopPropagation();
+    setExpandedDomain(prev => prev === d ? null : d);
+  };
+
+  const handleSubclassToggle = (sub) => {
+    onToggle(sub);
+  };
+
+  const handleCustomAdd = () => {
+    const val = customInput.trim();
+    if (val && val.length > 1) {
+      onAddCustom(val);
+      setCustomInput("");
+    }
+  };
+
+  return (
+    <div style={{border:`1px solid ${S.border}`,background:S.surface,marginBottom:16}}>
+      {/* Header */}
+      <div style={{padding:"10px 14px",borderBottom:`1px solid ${S.border}`,display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+        <SectionLabel color={S.amber}>Variance Domains · M-03</SectionLabel>
+        <div style={{flex:1}}/>
+        <span style={{fontSize:9,color:S.textFaint,letterSpacing:"0.06em"}}>
+          ⚠ = high-risk · ▾ = subclass dive
+        </span>
+      </div>
+
+      {/* Domain pill grid */}
+      <div style={{padding:"10px 14px"}}>
+        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom: expandedDomain ? 10 : 0}}>
+          {ALL_DOMAINS.map(d => {
+            const on = activeDomains.has(d);
+            const isHighRisk = HIGH_RISK_DOMAIN_IDS.has(d);
+            const isExpanded = expandedDomain === d;
+            const hasSubs = !!(DOMAIN_SUBCLASSES[d]);
+            const domColor = isHighRisk ? S.orange : S.amber;
+            const domBg    = isHighRisk ? (on ? S.orangeDim : "transparent") : (on ? S.amberDim : "transparent");
+            const domBorder= isHighRisk ? (on ? S.orange : "#3a2000") : (on ? S.amber : S.borderBright);
+
+            return (
+              <div key={d} style={{display:"flex",alignItems:"stretch",border:`1px solid ${isExpanded ? domColor : domBorder}`,background:domBg,transition:"all 0.12s"}}>
+                {/* Main domain button */}
+                <button onClick={()=>handleDomainClick(d)}
+                  style={{background:"transparent",border:"none",color:on?domColor:S.textDim,fontFamily:S.mono,
+                    fontSize:isMobile?10:11,padding:isMobile?"4px 8px":"4px 10px",cursor:"pointer",
+                    letterSpacing:"0.04em",display:"flex",alignItems:"center",gap:4}}>
+                  {isHighRisk && <span style={{color:S.orange,fontSize:8}}>⚠</span>}
+                  {on && <span style={{color:domColor,fontSize:9}}>✓</span>}
+                  {d}
+                </button>
+                {/* Subclass dive toggle — only shows when domain is active and has subclasses */}
+                {on && hasSubs && (
+                  <button onClick={(e)=>handleDiveClick(e,d)}
+                    style={{background:isExpanded?domColor+"22":"transparent",border:"none",
+                      borderLeft:`1px solid ${domBorder}`,color:isExpanded?domColor:S.textFaint,
+                      fontFamily:S.mono,fontSize:9,padding:"4px 7px",cursor:"pointer",
+                      transition:"all 0.12s"}}>
+                    {isExpanded?"▴":"▾"}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Subclass expansion panel */}
+        {expandedDomain && DOMAIN_SUBCLASSES[expandedDomain] && (
+          <div style={{
+            border:`1px solid ${HIGH_RISK_DOMAIN_IDS.has(expandedDomain)?S.orange:S.amber}`,
+            background:"#0a0c0e",padding:"12px 14px",marginBottom:10
+          }}>
+            {/* Panel header */}
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+              <span style={{fontSize:9,color:HIGH_RISK_DOMAIN_IDS.has(expandedDomain)?S.orange:S.amber,
+                letterSpacing:"0.12em",fontFamily:S.mono,fontWeight:600}}>
+                ⌄ {expandedDomain.toUpperCase()} · SUBCLASS DIVE
+              </span>
+              <div style={{flex:1,height:1,background:S.border}}/>
+              <button onClick={()=>setExpandedDomain(null)}
+                style={{background:"transparent",border:"none",color:S.textDim,cursor:"pointer",fontSize:11,padding:"0 4px"}}>✕</button>
+            </div>
+
+            {/* Subclass pills */}
+            <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:10}}>
+              {DOMAIN_SUBCLASSES[expandedDomain].map(sub => {
+                const subOn = activeDomains.has(sub);
+                return (
+                  <button key={sub} onClick={()=>handleSubclassToggle(sub)}
+                    style={{
+                      background:subOn?"#151a20":"transparent",
+                      border:`1px solid ${subOn?S.accent:S.borderBright}`,
+                      color:subOn?S.accent:S.textDim,
+                      fontFamily:S.mono,fontSize:isMobile?9:10,padding:"3px 9px",cursor:"pointer",
+                      transition:"all 0.12s",letterSpacing:"0.03em"
+                    }}>
+                    {subOn && <span style={{color:S.accent,marginRight:4,fontSize:8}}>✓</span>}
+                    {sub}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Custom subdomain input */}
+            <div style={{display:"flex",gap:6,alignItems:"center"}}>
+              <span style={{fontSize:9,color:S.textFaint,letterSpacing:"0.08em",fontFamily:S.mono,flexShrink:0}}>CUSTOM ›</span>
+              <input
+                value={customInput}
+                onChange={e=>setCustomInput(e.target.value)}
+                onKeyDown={e=>e.key==="Enter"&&handleCustomAdd()}
+                placeholder={`Add ${expandedDomain.toLowerCase()} subdomain...`}
+                style={{
+                  flex:1,background:"transparent",border:`1px solid ${S.border}`,outline:"none",
+                  fontFamily:S.mono,fontSize:10,color:S.text,padding:"4px 10px",
+                  caretColor:S.accent
+                }}
+              />
+              <button onClick={handleCustomAdd}
+                style={{
+                  background:S.accentDim,border:`1px solid ${S.accent}`,color:S.accent,
+                  fontFamily:S.mono,fontSize:9,padding:"4px 10px",cursor:"pointer",letterSpacing:"0.06em"
+                }}>
+                ADD
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Active domain summary */}
+        {activeDomains.size > 0 && (
+          <div style={{fontSize:9,color:S.textFaint,fontFamily:S.mono,letterSpacing:"0.06em"}}>
+            {activeDomains.size} active: {[...activeDomains].join(" · ")}
+          </div>
+        )}
+      </div>
+
+      {/* Global custom domain row */}
+      <div style={{
+        padding:"8px 14px",borderTop:`1px solid ${S.border}`,
+        display:"flex",gap:6,alignItems:"center",background:"#090b0d"
+      }}>
+        <span style={{fontSize:9,color:S.textFaint,letterSpacing:"0.08em",fontFamily:S.mono,flexShrink:0}}>GLOBAL CUSTOM ›</span>
+        <GlobalCustomDomain activeDomains={activeDomains} onAdd={onAddCustom} isMobile={isMobile}/>
+      </div>
+    </div>
+  );
+}
+
+function GlobalCustomDomain({activeDomains, onAdd, isMobile}) {
+  const [val, setVal] = useState("");
+  const submit = () => {
+    const t = val.trim();
+    if (t && t.length > 1) { onAdd(t); setVal(""); }
+  };
+  return (
+    <div style={{display:"flex",gap:6,flex:1,alignItems:"center"}}>
+      <input
+        value={val}
+        onChange={e=>setVal(e.target.value)}
+        onKeyDown={e=>e.key==="Enter"&&submit()}
+        placeholder="Add any domain (e.g. Theological, Legal-Technical)..."
+        style={{flex:1,background:"transparent",border:`1px solid ${S.border}`,outline:"none",
+          fontFamily:S.mono,fontSize:10,color:S.text,padding:"4px 10px",caretColor:S.accent}}
+      />
+      <button onClick={submit}
+        style={{background:"transparent",border:`1px solid ${S.borderBright}`,color:S.textDim,
+          fontFamily:S.mono,fontSize:9,padding:"4px 10px",cursor:"pointer",letterSpacing:"0.06em",
+          flexShrink:0}}>
+        + ADD
+      </button>
+    </div>
+  );
+}
+
+// ── Mobile result tabs ──
+function ResultTabs({tab, setTab}) {
+  const tabs=[{id:"pipeline",label:"Pipeline"},{id:"findings",label:"Findings"},{id:"scores",label:"Scores"}];
+  return (
+    <div style={{display:"flex",borderBottom:`1px solid ${S.border}`,marginBottom:10}}>
+      {tabs.map(t=>(
+        <button key={t.id} onClick={()=>setTab(t.id)}
+          style={{
+            flex:1,background:"transparent",border:"none",
+            borderBottom:tab===t.id?`2px solid ${S.accent}`:"2px solid transparent",
+            color:tab===t.id?S.accent:S.textDim,fontFamily:S.mono,fontSize:10,
+            padding:"10px 0",cursor:"pointer",letterSpacing:"0.08em",textTransform:"uppercase"
+          }}>
+          {t.label}
+        </button>
+      ))}
     </div>
   );
 }
@@ -350,6 +610,10 @@ function DsapPanel({output}) {
 // ============================================================
 
 export default function AionFusion() {
+  const width = useWindowWidth();
+  const isMobile  = width < 700;
+  const isTablet  = width < 1060;
+
   useEffect(()=>{
     const link=document.createElement("link");
     link.href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap";
@@ -365,9 +629,10 @@ export default function AionFusion() {
   const [cqLevel,setCqLevel]=useState("MEDIUM");
   const [mode,setMode]=useState("full");
   const [activeMods,setActiveMods]=useState(new Set(MODULES_DEF.filter(m=>m.defaultOn).map(m=>m.id)));
+  // activeDomains holds base domains + subdomains + custom domains all in one flat Set
   const [activeDomains,setActiveDomains]=useState(new Set(["Biological","Digital","Philosophical"]));
 
-  const [phase,setPhase]=useState("idle"); // idle|running|complete|error
+  const [phase,setPhase]=useState("idle");
   const [logs,setLogs]=useState([]);
   const [constState,setConstState]=useState(null);
   const [dsapOut,setDsapOut]=useState(null);
@@ -377,6 +642,7 @@ export default function AionFusion() {
   const [tripleTs,setTripleTs]=useState(null);
   const [arh,setArh]=useState(null);
   const [copied,setCopied]=useState("");
+  const [mobileResultTab, setMobileResultTab] = useState("pipeline");
 
   const logEnd=useRef(null);
   const addLog=useCallback((msg,type="info")=>{
@@ -389,12 +655,16 @@ export default function AionFusion() {
     if (MODULES_DEF.find(m=>m.id===id)?.alwaysOn) return;
     setActiveMods(p=>{const n=new Set(p); n.has(id)?n.delete(id):n.add(id); return n;});
   };
+
   const toggleDomain=(d)=>{
     setActiveDomains(p=>{const n=new Set(p); n.has(d)?n.delete(d):n.add(d); return n;});
   };
 
-  const copy=(key,text)=>{ navigator.clipboard.writeText(text); setCopied(key); setTimeout(()=>setCopied(""),2000); };
+  const addCustomDomain=(d)=>{
+    setActiveDomains(p=>{const n=new Set(p); n.add(d); return n;});
+  };
 
+  const copy=(key,text)=>{ navigator.clipboard.writeText(text); setCopied(key); setTimeout(()=>setCopied(""),2000); };
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
   const execute=async()=>{
@@ -403,10 +673,10 @@ export default function AionFusion() {
     const modelId=customModel.trim()||model;
 
     setPhase("running"); setLogs([]); setDsapOut(null); setFsveScore(null); setAdaCert(null); setSeal(""); setTripleTs(null); setArh(null);
+    if (isMobile) setMobileResultTab("pipeline");
 
     try {
-      // ── ∄ CONSTITUTIONAL GATE ──
-      addLog("∄  Constitutional gate — scanning...", "gate");
+      addLog("∄  Constitutional gate — scanning...","gate");
       await sleep(280);
       const cs=doesNotExist(target);
       setConstState(cs);
@@ -418,7 +688,6 @@ export default function AionFusion() {
       addLog(`∄  PASS · "${target}" — entry permitted`,"success");
       await sleep(150);
 
-      // ── BUILD DSAP PROMPT ──
       const allMods=new Set([...activeMods,"M-00","M-13"]);
       addLog(`DSAP · constructing ${allMods.size}-module protocol...`,"info");
       await sleep(200);
@@ -427,7 +696,6 @@ export default function AionFusion() {
       addLog(`DSAP · ${allMods.size} modules · ${activeDomains.size} domains · mode=${mode.toUpperCase()}`,"info");
       await sleep(100);
 
-      // ── OPENROUTER CALL ──
       const modelLabel=MODELS.find(m=>m.id===modelId)?.name||modelId;
       addLog(`OpenRouter → ${modelLabel}...`,"info");
       const t0=Date.now();
@@ -435,12 +703,7 @@ export default function AionFusion() {
       const resp=await fetch("https://openrouter.ai/api/v1/chat/completions",{
         method:"POST",
         headers:{"Content-Type":"application/json","Authorization":`Bearer ${key}`,"HTTP-Referer":"https://aionsystem.github.io","X-Title":"AION Certainty Stack"},
-        body:JSON.stringify({
-          model:modelId,
-          messages:[{role:"system",content:sysPr},{role:"user",content:usrPr}],
-          max_tokens:4096,
-          temperature:0.25,
-        }),
+        body:JSON.stringify({model:modelId,messages:[{role:"system",content:sysPr},{role:"user",content:usrPr}],max_tokens:4096,temperature:0.25}),
       });
 
       if (!resp.ok){
@@ -455,7 +718,6 @@ export default function AionFusion() {
       addLog(`Response · ${tokens} tokens · ${elapsed}s`,"success");
       await sleep(100);
 
-      // ── PARSE ──
       addLog("Parsing JSON output...","info");
       await sleep(80);
       const parsed=extractJson(rawText);
@@ -469,7 +731,6 @@ export default function AionFusion() {
       addLog(`JSON parsed · ${presentCount}/${MODULES_DEF.length} modules present`,"success");
       await sleep(120);
 
-      // ── FSVE v4.0 SCORING ──
       addLog("FSVE v4.0 — scoring execution...","fsve");
       await sleep(220);
       const score=scoreFSVE(parsed,allMods,cqLevel);
@@ -479,7 +740,6 @@ export default function AionFusion() {
       addLog(`FSVE Uq=${score.governance.Uq}  Cq=${score.governance.Cq}  threshold=${score.governance.cq_threshold}`,"fsve");
       await sleep(150);
 
-      // ── ⁂ EPISTEMIC GATE ──
       addLog("⁂  Epistemic gate — certifying result...","gate");
       await sleep(220);
       const cert=doesExistWithConfidence(score);
@@ -487,7 +747,6 @@ export default function AionFusion() {
       addLog(`⁂  ${cert.cert} · ${cert.reason}`,(cert.cert==="VALID"?"success":cert.cert==="DEGRADED"?"warn":"error"));
       await sleep(120);
 
-      // ── SEAL + TIMESTAMP ──
       addLog("ADA-VELA · generating seal + triple timestamp...","info");
       const now=new Date();
       const ts={gregorian:now.toISOString(),dreamspell:getDreamspell(now),hebrew:"LIVE-FETCH-REQUIRED · hebcal.com",unix:Math.floor(now.getTime()/1000)};
@@ -497,7 +756,6 @@ export default function AionFusion() {
       addLog(`Seal  ${sealHash.slice(0,16)}···${sealHash.slice(-8)}`,"info");
       await sleep(100);
 
-      // ── ARH ──
       const dsapCert=parsed.audit_validity_score?.certification||"PARTIAL";
       const arhRecord={
         protocol:"DSAP",version:"1.1",target,mode,
@@ -513,6 +771,7 @@ export default function AionFusion() {
       addLog(`ARH locked · output_certification=${dsapCert}`,"success");
       addLog("─── EXECUTION COMPLETE ───","complete");
       setPhase("complete");
+      if (isMobile) setMobileResultTab("findings");
 
     } catch(err){
       addLog(`ERROR: ${err.message}`,"error");
@@ -522,44 +781,149 @@ export default function AionFusion() {
 
   const logColor={gate:S.purple,success:S.green,error:S.red,warn:S.amber,fsve:S.accent,complete:S.green,info:S.textDim};
 
+  // ── Responsive config grid columns ──
+  const configCols = isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr";
+  const moduleCols = isMobile ? "repeat(2,1fr)" : isTablet ? "repeat(3,1fr)" : "repeat(5,1fr)";
+  const resultCols = isMobile ? "1fr" : isTablet ? "1fr" : "240px 1fr 240px";
+  const sealCols   = isMobile ? "1fr 1fr" : "1fr 1fr 1fr 1fr";
+
+  // ── Pipeline panel (shared between mobile tab and desktop) ──
+  const PipelinePanel = () => (
+    <div style={{border:`1px solid ${S.border}`,background:S.surface,display:"flex",flexDirection:"column",minHeight:isMobile?320:undefined}}>
+      <div style={{padding:"9px 12px",borderBottom:`1px solid ${S.border}`,fontSize:10,color:S.purple,letterSpacing:"0.1em",fontWeight:600}}>ADA-VELA v3.1 · PIPELINE</div>
+      <div style={{flex:1,overflowY:"auto",padding:"10px 12px",maxHeight:isMobile?260:360}}>
+        {logs.map(l=>(
+          <div key={l.id} style={{fontSize:10,color:logColor[l.type]||S.textDim,marginBottom:5,lineHeight:1.5,wordBreak:"break-word"}}>
+            <span style={{color:S.textFaint}}>› </span>{l.msg}
+          </div>
+        ))}
+        <div ref={logEnd}/>
+      </div>
+      {adaCert&&(
+        <div style={{padding:"12px",borderTop:`1px solid ${S.border}`,background:certBg(adaCert.cert)}}>
+          <div style={{fontSize:9,color:S.textDim,letterSpacing:"0.1em",marginBottom:6}}>⁂ EPISTEMIC CERTIFICATION</div>
+          <div style={{fontSize:22,fontWeight:800,fontFamily:S.display,color:certColor(adaCert.cert),letterSpacing:"-0.02em"}}>{adaCert.cert}</div>
+          <div style={{fontSize:10,color:S.textDim,marginTop:5,lineHeight:1.5}}>{adaCert.reason}</div>
+        </div>
+      )}
+      {constState&&!adaCert&&(
+        <div style={{padding:"12px",borderTop:`1px solid ${S.border}`}}>
+          <div style={{fontSize:9,color:S.textDim,letterSpacing:"0.1em",marginBottom:4}}>∄ CONSTITUTIONAL STATE</div>
+          <div style={{fontSize:12,color:constState.pass?S.green:S.red,fontWeight:600}}>{constState.pass?"PERMITTED":"BLOCKED"}</div>
+        </div>
+      )}
+    </div>
+  );
+
+  // ── Findings panel ──
+  const FindingsPanel = () => (
+    <div style={{border:`1px solid ${S.border}`,background:S.surface,display:"flex",flexDirection:"column",minHeight:isMobile?400:undefined}}>
+      <div style={{padding:"9px 12px",borderBottom:`1px solid ${S.border}`,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+        <span style={{fontSize:10,color:S.accent,letterSpacing:"0.1em",fontWeight:600}}>DSAP v1.1 · AUDIT FINDINGS</span>
+        {target&&<span style={{fontSize:9,color:S.textFaint}}>"{target}"</span>}
+        {dsapOut&&(
+          <button onClick={()=>copy("dsap",JSON.stringify(dsapOut,null,2))}
+            style={{marginLeft:"auto",fontSize:9,padding:"2px 8px",border:`1px solid ${copied==="dsap"?S.green:S.borderBright}`,color:copied==="dsap"?S.green:S.textDim,background:"transparent",cursor:"pointer",fontFamily:S.mono}}>
+            {copied==="dsap"?"COPIED ✓":"COPY JSON"}
+          </button>
+        )}
+      </div>
+      <div style={{flex:1,overflow:"hidden",minHeight:isMobile?360:300}}>
+        <DsapPanel output={dsapOut} isMobile={isMobile}/>
+      </div>
+    </div>
+  );
+
+  // ── Scores panel ──
+  const ScoresPanel = () => (
+    <div style={{border:`1px solid ${S.border}`,background:S.surface,display:"flex",flexDirection:"column"}}>
+      <div style={{padding:"9px 12px",borderBottom:`1px solid ${S.border}`,fontSize:10,color:S.amber,letterSpacing:"0.1em",fontWeight:600}}>FSVE v4.0 · SCORE TENSOR</div>
+      <div style={{padding:"14px",overflowY:"auto",flex:1}}>
+        {fsveScore?(
+          <>
+            <div style={{marginBottom:18}}>
+              <SectionLabel>Evidence Value (EV)</SectionLabel>
+              <div style={{fontSize:42,fontWeight:800,fontFamily:S.display,lineHeight:1,color:fsveScore.EV>=0.70?S.green:fsveScore.EV>=0.45?S.amber:S.red}}>{fsveScore.EV}</div>
+              <div style={{marginTop:6,display:"inline-block",padding:"3px 10px",background:certBg(fsveScore.validity_status),border:`1px solid ${certColor(fsveScore.validity_status)}`,fontSize:11,color:certColor(fsveScore.validity_status),fontWeight:600,letterSpacing:"0.08em"}}>{fsveScore.validity_status}</div>
+            </div>
+            <div style={{marginBottom:16}}>
+              <SectionLabel>Axes (simplified)</SectionLabel>
+              {Object.entries(fsveScore.axes).map(([a,v])=>(
+                <ScoreBar key={a} val={v} label={`${a} — ${axisNames[a]}`}/>
+              ))}
+            </div>
+            <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12,marginBottom:14}}>
+              <SectionLabel>Governance Modifiers</SectionLabel>
+              {[["Uq (Uncertainty)",fsveScore.governance.Uq,S.text],["Cq (Consequence)",fsveScore.governance.Cq,CQ_LEVELS.find(c=>c.id===fsveScore.governance.Cq)?.color||S.textDim],["EV Threshold",fsveScore.governance.cq_threshold,S.textDim]].map(([l,v,c])=>(
+                <div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:4}}>
+                  <span style={{color:S.textDim}}>{l}</span><span style={{color:c,fontWeight:600}}>{v}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12,marginBottom:14}}>
+              <SectionLabel>Scan Metrics</SectionLabel>
+              {[["[?] tags",fsveScore.qTags,fsveScore.qTags>5?S.amber:S.green],["Total fields",fsveScore.total,S.text],["Placeholders",fsveScore.pholds,fsveScore.pholds>0?S.red:S.green]].map(([l,v,c])=>(
+                <div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:4}}>
+                  <span style={{color:S.textDim}}>{l}</span><span style={{color:c,fontWeight:600}}>{v}</span>
+                </div>
+              ))}
+            </div>
+            {dsapOut?.audit_validity_score&&(
+              <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12}}>
+                <SectionLabel color={S.purple}>M-13 — DSAP AVS (self-assessed)</SectionLabel>
+                <div style={{fontSize:28,fontWeight:800,fontFamily:S.display,color:certColor(dsapOut.audit_validity_score.certification),lineHeight:1}}>
+                  {typeof dsapOut.audit_validity_score.avs==="number"?dsapOut.audit_validity_score.avs.toFixed(2):dsapOut.audit_validity_score.avs||"—"}
+                </div>
+                <div style={{marginTop:6,fontSize:12,fontWeight:700,color:certColor(dsapOut.audit_validity_score.certification)}}>{dsapOut.audit_validity_score.certification}</div>
+                {dsapOut.audit_validity_score.certification_basis&&<div style={{fontSize:10,color:S.textDim,marginTop:6,lineHeight:1.5}}>{dsapOut.audit_validity_score.certification_basis}</div>}
+              </div>
+            )}
+          </>
+        ):(
+          <div style={{color:S.textDim,fontSize:11}}>Awaiting FSVE scoring...</div>
+        )}
+      </div>
+    </div>
+  );
+
   // ── RENDER ──
   return (
     <div style={{background:S.bg,color:S.text,fontFamily:S.mono,fontSize:13,minHeight:"100vh",lineHeight:1.65}}>
 
       {/* ── HEADER ── */}
-      <div style={{borderBottom:`1px solid ${S.border}`,padding:"12px 22px",display:"flex",alignItems:"center",gap:14,position:"sticky",top:0,background:S.bg,zIndex:100}}>
-        <div style={{width:38,height:38,border:`1.5px solid ${S.accent}`,display:"grid",placeItems:"center",fontFamily:S.display,fontWeight:800,fontSize:13,color:S.accent,flexShrink:0,letterSpacing:-1}}>AC</div>
-        <div>
-          <div style={{fontFamily:S.display,fontWeight:800,fontSize:15,color:"#fff",letterSpacing:"0.04em"}}>AION CERTAINTY STACK</div>
-          <div style={{fontSize:10,color:S.textDim,letterSpacing:"0.1em"}}>DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1 — Fusion Execution Interface</div>
+      <div style={{borderBottom:`1px solid ${S.border}`,padding:isMobile?"10px 14px":"12px 22px",display:"flex",alignItems:"center",gap:10,position:"sticky",top:0,background:S.bg,zIndex:100,flexWrap:"wrap"}}>
+        <div style={{width:36,height:36,border:`1.5px solid ${S.accent}`,display:"grid",placeItems:"center",fontFamily:S.display,fontWeight:800,fontSize:12,color:S.accent,flexShrink:0,letterSpacing:-1}}>AC</div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontFamily:S.display,fontWeight:800,fontSize:isMobile?13:15,color:"#fff",letterSpacing:"0.04em",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>AION CERTAINTY STACK</div>
+          {!isMobile&&<div style={{fontSize:10,color:S.textDim,letterSpacing:"0.1em"}}>DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1 — Fusion Execution Interface</div>}
         </div>
-        <div style={{marginLeft:"auto",display:"flex",gap:6,alignItems:"center"}}>
-          {[{l:"DSAP",c:S.accent},{l:"FSVE",c:S.amber},{l:"ADA-VELA",c:S.purple}].map(({l,c})=>(
+        <div style={{display:"flex",gap:5,alignItems:"center",flexWrap:"wrap"}}>
+          {!isMobile&&[{l:"DSAP",c:S.accent},{l:"FSVE",c:S.amber},{l:"ADA-VELA",c:S.purple}].map(({l,c})=>(
             <Tag key={l} color={c}>{l}</Tag>
           ))}
-          {phase==="running"&&<span style={{fontSize:10,color:S.accent,animation:"none"}}>⟳ RUNNING</span>}
-          {phase==="complete"&&<span style={{fontSize:10,color:S.green}}>✓ COMPLETE</span>}
-          {phase==="error"&&<span style={{fontSize:10,color:S.red}}>✗ ERROR</span>}
+          {phase==="running"&&<span style={{fontSize:10,color:S.accent}}>⟳</span>}
+          {phase==="complete"&&<span style={{fontSize:10,color:S.green}}>✓</span>}
+          {phase==="error"&&<span style={{fontSize:10,color:S.red}}>✗</span>}
         </div>
       </div>
 
-      <div style={{maxWidth:1140,margin:"0 auto",padding:"20px 18px 80px"}}>
+      <div style={{maxWidth:1140,margin:"0 auto",padding:isMobile?"14px 12px 80px":"20px 18px 80px"}}>
 
         {/* ── TARGET ── */}
-        <div style={{border:`1px solid ${S.borderBright}`,padding:"14px 18px",marginBottom:16,position:"relative",background:S.surface}}>
-          <div style={{position:"absolute",top:-1,left:16,background:S.surface,padding:"0 8px",fontSize:9,color:S.accent,letterSpacing:"0.15em",transform:"translateY(-50%)"}}>TARGET CONCEPT / SYSTEM / CLAIM</div>
+        <div style={{border:`1px solid ${S.borderBright}`,padding:isMobile?"12px 14px":"14px 18px",marginBottom:14,position:"relative",background:S.surface}}>
+          <div style={{position:"absolute",top:-1,left:14,background:S.surface,padding:"0 6px",fontSize:9,color:S.accent,letterSpacing:"0.15em",transform:"translateY(-50%)"}}>TARGET CONCEPT / SYSTEM / CLAIM</div>
           <input value={target} onChange={e=>setTarget(e.target.value)} onKeyDown={e=>e.key==="Enter"&&execute()}
             placeholder="Enter concept, system, or claim..."
-            style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:20,fontWeight:500,color:"#fff",caretColor:S.accent}}/>
+            style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:isMobile?16:20,fontWeight:500,color:"#fff",caretColor:S.accent,boxSizing:"border-box"}}/>
         </div>
 
         {/* ── CONFIG GRID ── */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:10,marginBottom:14}}>
+        <div style={{display:"grid",gridTemplateColumns:configCols,gap:8,marginBottom:12}}>
           {/* API Key */}
           <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
             <SectionLabel>OpenRouter API Key</SectionLabel>
             <input type="password" value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder="sk-or-v1-..."
-              style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:11,color:S.text}}/>
+              style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:11,color:S.text,boxSizing:"border-box"}}/>
           </div>
           {/* Model */}
           <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
@@ -569,15 +933,15 @@ export default function AionFusion() {
               {MODELS.map(m=><option key={m.id} value={m.id} style={{background:S.surface}}>[{m.tag}] {m.name}</option>)}
             </select>
             <input value={customModel} onChange={e=>setCustomModel(e.target.value)} placeholder="or custom model id..."
-              style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:10,color:S.textDim,borderTop:`1px solid ${S.border}`,paddingTop:4}}/>
+              style={{width:"100%",background:"transparent",border:"none",outline:"none",fontFamily:S.mono,fontSize:10,color:S.textDim,borderTop:`1px solid ${S.border}`,paddingTop:4,boxSizing:"border-box"}}/>
           </div>
           {/* Mode */}
           <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
             <SectionLabel>Audit Mode</SectionLabel>
-            <div style={{display:"flex",gap:5}}>
+            <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
               {["full","concept","system","claim"].map(m=>(
                 <button key={m} onClick={()=>setMode(m)}
-                  style={{flex:1,background:mode===m?S.accentDim:"transparent",border:`1px solid ${mode===m?S.accent:S.borderBright}`,color:mode===m?S.accent:S.textDim,fontFamily:S.mono,fontSize:9,padding:"3px 0",cursor:"pointer",letterSpacing:"0.04em",textTransform:"uppercase"}}>
+                  style={{flex:"1 1 40%",background:mode===m?S.accentDim:"transparent",border:`1px solid ${mode===m?S.accent:S.borderBright}`,color:mode===m?S.accent:S.textDim,fontFamily:S.mono,fontSize:9,padding:"3px 0",cursor:"pointer",letterSpacing:"0.04em",textTransform:"uppercase"}}>
                   {m}
                 </button>
               ))}
@@ -585,11 +949,11 @@ export default function AionFusion() {
           </div>
           {/* Cq */}
           <div style={{border:`1px solid ${S.border}`,padding:"9px 12px",background:S.surface}}>
-            <SectionLabel>Cq — Consequence Severity (FSVE)</SectionLabel>
-            <div style={{display:"flex",gap:5}}>
+            <SectionLabel>Cq — Consequence (FSVE)</SectionLabel>
+            <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
               {CQ_LEVELS.map(c=>(
                 <button key={c.id} onClick={()=>setCqLevel(c.id)}
-                  style={{flex:1,background:cqLevel===c.id?c.color+"22":"transparent",border:`1px solid ${cqLevel===c.id?c.color:S.borderBright}`,color:cqLevel===c.id?c.color:S.textDim,fontFamily:S.mono,fontSize:9,padding:"3px 0",cursor:"pointer",letterSpacing:"0.04em"}}>
+                  style={{flex:"1 1 40%",background:cqLevel===c.id?c.color+"22":"transparent",border:`1px solid ${cqLevel===c.id?c.color:S.borderBright}`,color:cqLevel===c.id?c.color:S.textDim,fontFamily:S.mono,fontSize:9,padding:"3px 0",cursor:"pointer",letterSpacing:"0.04em"}}>
                   {c.id}<br/><span style={{fontSize:8}}>{c.threshold}</span>
                 </button>
               ))}
@@ -604,155 +968,60 @@ export default function AionFusion() {
             <div style={{flex:1,height:1,background:S.border}}/>
             <span style={{fontSize:9,color:S.textFaint}}>● = always active</span>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6}}>
+          <div style={{display:"grid",gridTemplateColumns:moduleCols,gap:5}}>
             {MODULES_DEF.map(m=>{
               const on=activeMods.has(m.id);
               return (
                 <div key={m.id} onClick={()=>toggleMod(m.id)}
-                  style={{border:`1px solid ${on?S.accentDim:S.border}`,padding:"8px 10px",cursor:m.alwaysOn?"default":"pointer",background:on?"#0a1420":S.surface,transition:"all 0.12s",userSelect:"none"}}>
+                  style={{border:`1px solid ${on?S.accentDim:S.border}`,padding:"7px 9px",cursor:m.alwaysOn?"default":"pointer",background:on?"#0a1420":S.surface,transition:"all 0.12s",userSelect:"none"}}>
                   <div style={{fontSize:9,color:on?S.accent:S.textFaint,letterSpacing:"0.08em",marginBottom:2}}>{m.id}{m.alwaysOn?" ●":""}</div>
-                  <div style={{fontSize:10,color:on?"#e8f0ff":S.textDim,fontWeight:on?500:400,marginBottom:2}}>{m.name}</div>
-                  <div style={{fontSize:9,color:S.textFaint,lineHeight:1.4}}>{m.desc}</div>
+                  <div style={{fontSize:isMobile?9:10,color:on?"#e8f0ff":S.textDim,fontWeight:on?500:400,marginBottom:1}}>{m.name}</div>
+                  {!isMobile&&<div style={{fontSize:9,color:S.textFaint,lineHeight:1.4}}>{m.desc}</div>}
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* ── DOMAINS ── */}
-        <div style={{border:`1px solid ${S.border}`,padding:"10px 14px",marginBottom:16,background:S.surface}}>
-          <SectionLabel color={S.amber}>Variance Domains — M-03 (click to toggle)</SectionLabel>
-          <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-            {ALL_DOMAINS.map(d=>{
-              const on=activeDomains.has(d);
-              return (
-                <button key={d} onClick={()=>toggleDomain(d)}
-                  style={{background:on?S.amberDim:"transparent",border:`1px solid ${on?S.amber:S.borderBright}`,color:on?S.amber:S.textDim,fontFamily:S.mono,fontSize:11,padding:"4px 12px",cursor:"pointer",transition:"all 0.12s"}}>
-                  {on?"✓ ":""}{d}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        {/* ── DOMAINS (new component) ── */}
+        <DomainSelector
+          activeDomains={activeDomains}
+          onToggle={toggleDomain}
+          onAddCustom={addCustomDomain}
+          isMobile={isMobile}
+        />
 
         {/* ── EXECUTE ── */}
         <button onClick={execute} disabled={phase==="running"}
-          style={{width:"100%",background:phase==="running"?S.borderBright:S.accent,border:"none",color:"#fff",fontFamily:S.mono,fontSize:12,fontWeight:700,letterSpacing:"0.14em",padding:"14px 0",cursor:phase==="running"?"default":"pointer",marginBottom:24,textTransform:"uppercase",transition:"background 0.15s"}}>
+          style={{width:"100%",background:phase==="running"?S.borderBright:S.accent,border:"none",color:"#fff",fontFamily:S.mono,fontSize:isMobile?11:12,fontWeight:700,letterSpacing:"0.1em",padding:"13px 0",cursor:phase==="running"?"default":"pointer",marginBottom:20,textTransform:"uppercase",transition:"background 0.15s"}}>
           {phase==="running"?"⟳  EXECUTING — ∄ · DSAP · FSVE · ⁂ · SEAL":"⚡  EXECUTE — ∄ → DSAP → FSVE → ⁂ → SEALED OUTPUT"}
         </button>
 
         {/* ── RESULTS ── */}
         {phase!=="idle"&&(
           <>
-            {/* THREE PANEL */}
-            <div style={{display:"grid",gridTemplateColumns:"260px 1fr 260px",gap:10,marginBottom:12}}>
-
-              {/* LEFT — ADA-VELA PIPELINE */}
-              <div style={{border:`1px solid ${S.border}`,background:S.surface,display:"flex",flexDirection:"column"}}>
-                <div style={{padding:"9px 12px",borderBottom:`1px solid ${S.border}`,fontSize:10,color:S.purple,letterSpacing:"0.1em",fontWeight:600}}>ADA-VELA v3.1 · PIPELINE</div>
-                <div style={{flex:1,overflowY:"auto",padding:"10px 12px",maxHeight:360}}>
-                  {logs.map(l=>(
-                    <div key={l.id} style={{fontSize:10,color:logColor[l.type]||S.textDim,marginBottom:5,lineHeight:1.5,wordBreak:"break-word"}}>
-                      <span style={{color:S.textFaint}}>› </span>{l.msg}
-                    </div>
-                  ))}
-                  <div ref={logEnd}/>
-                </div>
-                {/* ⁂ Cert block */}
-                {adaCert&&(
-                  <div style={{padding:"12px",borderTop:`1px solid ${S.border}`,background:certBg(adaCert.cert)}}>
-                    <div style={{fontSize:9,color:S.textDim,letterSpacing:"0.1em",marginBottom:6}}>⁂ EPISTEMIC CERTIFICATION</div>
-                    <div style={{fontSize:22,fontWeight:800,fontFamily:S.display,color:certColor(adaCert.cert),letterSpacing:"-0.02em"}}>{adaCert.cert}</div>
-                    <div style={{fontSize:10,color:S.textDim,marginTop:5,lineHeight:1.5}}>{adaCert.reason}</div>
-                  </div>
-                )}
-                {/* ∄ state */}
-                {constState&&!adaCert&&(
-                  <div style={{padding:"12px",borderTop:`1px solid ${S.border}`}}>
-                    <div style={{fontSize:9,color:S.textDim,letterSpacing:"0.1em",marginBottom:4}}>∄ CONSTITUTIONAL STATE</div>
-                    <div style={{fontSize:12,color:constState.pass?S.green:S.red,fontWeight:600}}>{constState.pass?"PERMITTED":"BLOCKED"}</div>
-                  </div>
-                )}
+            {/* Mobile: tab switcher */}
+            {isMobile ? (
+              <>
+                <ResultTabs tab={mobileResultTab} setTab={setMobileResultTab}/>
+                {mobileResultTab==="pipeline" && <PipelinePanel/>}
+                {mobileResultTab==="findings"  && <FindingsPanel/>}
+                {mobileResultTab==="scores"    && <ScoresPanel/>}
+              </>
+            ) : (
+              /* Desktop/Tablet: 3-column grid */
+              <div style={{display:"grid",gridTemplateColumns:resultCols,gap:10,marginBottom:12}}>
+                <PipelinePanel/>
+                <FindingsPanel/>
+                <ScoresPanel/>
               </div>
-
-              {/* CENTER — DSAP OUTPUT */}
-              <div style={{border:`1px solid ${S.border}`,background:S.surface,display:"flex",flexDirection:"column"}}>
-                <div style={{padding:"9px 12px",borderBottom:`1px solid ${S.border}`,display:"flex",alignItems:"center",gap:8}}>
-                  <span style={{fontSize:10,color:S.accent,letterSpacing:"0.1em",fontWeight:600}}>DSAP v1.1 · AUDIT FINDINGS</span>
-                  {target&&<span style={{fontSize:9,color:S.textFaint}}>"{target}"</span>}
-                  {dsapOut&&(
-                    <button onClick={()=>copy("dsap",JSON.stringify(dsapOut,null,2))}
-                      style={{marginLeft:"auto",fontSize:9,padding:"2px 8px",border:`1px solid ${copied==="dsap"?S.green:S.borderBright}`,color:copied==="dsap"?S.green:S.textDim,background:"transparent",cursor:"pointer",fontFamily:S.mono}}>
-                      {copied==="dsap"?"COPIED ✓":"COPY JSON"}
-                    </button>
-                  )}
-                </div>
-                <div style={{flex:1,overflow:"hidden"}}>
-                  <DsapPanel output={dsapOut}/>
-                </div>
-              </div>
-
-              {/* RIGHT — FSVE TENSOR */}
-              <div style={{border:`1px solid ${S.border}`,background:S.surface,display:"flex",flexDirection:"column"}}>
-                <div style={{padding:"9px 12px",borderBottom:`1px solid ${S.border}`,fontSize:10,color:S.amber,letterSpacing:"0.1em",fontWeight:600}}>FSVE v4.0 · SCORE TENSOR</div>
-                <div style={{padding:"14px",overflowY:"auto",flex:1}}>
-                  {fsveScore?(
-                    <>
-                      {/* EV */}
-                      <div style={{marginBottom:18}}>
-                        <SectionLabel>Evidence Value (EV)</SectionLabel>
-                        <div style={{fontSize:42,fontWeight:800,fontFamily:S.display,lineHeight:1,color:fsveScore.EV>=0.70?S.green:fsveScore.EV>=0.45?S.amber:S.red}}>{fsveScore.EV}</div>
-                        <div style={{marginTop:6,display:"inline-block",padding:"3px 10px",background:certBg(fsveScore.validity_status),border:`1px solid ${certColor(fsveScore.validity_status)}`,fontSize:11,color:certColor(fsveScore.validity_status),fontWeight:600,letterSpacing:"0.08em"}}>{fsveScore.validity_status}</div>
-                      </div>
-                      {/* Axes */}
-                      <div style={{marginBottom:16}}>
-                        <SectionLabel>Axes (simplified)</SectionLabel>
-                        {Object.entries(fsveScore.axes).map(([a,v])=>(
-                          <ScoreBar key={a} val={v} label={`${a} — ${axisNames[a]}`}/>
-                        ))}
-                      </div>
-                      {/* Governance */}
-                      <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12,marginBottom:14}}>
-                        <SectionLabel>Governance Modifiers</SectionLabel>
-                        {[["Uq (Uncertainty)", fsveScore.governance.Uq, S.text],["Cq (Consequence)", fsveScore.governance.Cq, CQ_LEVELS.find(c=>c.id===fsveScore.governance.Cq)?.color||S.textDim],["EV Threshold", fsveScore.governance.cq_threshold, S.textDim]].map(([l,v,c])=>(
-                          <div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:4}}>
-                            <span style={{color:S.textDim}}>{l}</span><span style={{color:c,fontWeight:600}}>{v}</span>
-                          </div>
-                        ))}
-                      </div>
-                      {/* Scan metrics */}
-                      <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12,marginBottom:14}}>
-                        <SectionLabel>Scan Metrics</SectionLabel>
-                        {[["[?] tags",fsveScore.qTags,fsveScore.qTags>5?S.amber:S.green],["Total fields",fsveScore.total,S.text],["Placeholders",fsveScore.pholds,fsveScore.pholds>0?S.red:S.green]].map(([l,v,c])=>(
-                          <div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:4}}>
-                            <span style={{color:S.textDim}}>{l}</span><span style={{color:c,fontWeight:600}}>{v}</span>
-                          </div>
-                        ))}
-                      </div>
-                      {/* DSAP M-13 AVS */}
-                      {dsapOut?.audit_validity_score&&(
-                        <div style={{borderTop:`1px solid ${S.border}`,paddingTop:12}}>
-                          <SectionLabel color={S.purple}>M-13 — DSAP AVS (self-assessed)</SectionLabel>
-                          <div style={{fontSize:28,fontWeight:800,fontFamily:S.display,color:certColor(dsapOut.audit_validity_score.certification),lineHeight:1}}>
-                            {typeof dsapOut.audit_validity_score.avs==="number"?dsapOut.audit_validity_score.avs.toFixed(2):dsapOut.audit_validity_score.avs||"—"}
-                          </div>
-                          <div style={{marginTop:6,fontSize:12,fontWeight:700,color:certColor(dsapOut.audit_validity_score.certification)}}>{dsapOut.audit_validity_score.certification}</div>
-                          {dsapOut.audit_validity_score.certification_basis&&<div style={{fontSize:10,color:S.textDim,marginTop:6,lineHeight:1.5}}>{dsapOut.audit_validity_score.certification_basis}</div>}
-                        </div>
-                      )}
-                    </>
-                  ):(
-                    <div style={{color:S.textDim,fontSize:11}}>Awaiting FSVE scoring...</div>
-                  )}
-                </div>
-              </div>
-            </div>
+            )}
 
             {/* ── SEAL + TRIPLE TS + ARH ── */}
             {arh&&(
-              <div style={{border:`1px solid ${S.border}`,background:S.surface}}>
-                <div style={{padding:"9px 14px",borderBottom:`1px solid ${S.border}`,display:"flex",alignItems:"center",gap:10}}>
-                  <span style={{fontSize:10,color:S.green,letterSpacing:"0.1em",fontWeight:600}}>ADA-VELA · SEAL · TRIPLE TIMESTAMP · AUDIT RECORD HEADER</span>
+              <div style={{border:`1px solid ${S.border}`,background:S.surface,marginTop:isMobile?10:0}}>
+                <div style={{padding:"9px 14px",borderBottom:`1px solid ${S.border}`,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                  <span style={{fontSize:isMobile?9:10,color:S.green,letterSpacing:"0.08em",fontWeight:600}}>ADA-VELA · SEAL · TRIPLE TS · ARH</span>
                   <div style={{marginLeft:"auto",display:"flex",gap:6}}>
                     <button onClick={()=>copy("arh",JSON.stringify(arh,null,2))}
                       style={{fontSize:9,padding:"2px 8px",border:`1px solid ${copied==="arh"?S.green:S.borderBright}`,color:copied==="arh"?S.green:S.textDim,background:"transparent",cursor:"pointer",fontFamily:S.mono}}>
@@ -764,22 +1033,19 @@ export default function AionFusion() {
                     </button>
                   </div>
                 </div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:0}}>
-                  {/* Seal */}
-                  <div style={{padding:"14px 16px",borderRight:`1px solid ${S.border}`}}>
-                    <SectionLabel>SHA-256 Seal (ADA-VELA)</SectionLabel>
+                <div style={{display:"grid",gridTemplateColumns:sealCols,gap:0}}>
+                  <div style={{padding:"12px 14px",borderRight:`1px solid ${S.border}`,borderBottom:isMobile?`1px solid ${S.border}`:"none"}}>
+                    <SectionLabel>SHA-256 Seal</SectionLabel>
                     <div style={{fontSize:10,color:S.green,wordBreak:"break-all",lineHeight:1.8,fontWeight:500}}>{seal.slice(0,32)}</div>
                     <div style={{fontSize:10,color:S.green,wordBreak:"break-all",lineHeight:1.8,fontWeight:500}}>{seal.slice(32)}</div>
                   </div>
-                  {/* Triple TS */}
-                  <div style={{padding:"14px 16px",borderRight:`1px solid ${S.border}`}}>
+                  <div style={{padding:"12px 14px",borderRight:isMobile?"none":`1px solid ${S.border}`,borderBottom:isMobile?`1px solid ${S.border}`:"none"}}>
                     <SectionLabel>Triple Timestamp</SectionLabel>
                     <div style={{fontSize:10,color:S.text,marginBottom:5}}>📅 <span style={{color:S.textDim}}>Gregorian</span><br/>{tripleTs?.gregorian?.slice(0,19)}Z</div>
                     <div style={{fontSize:10,color:S.text,marginBottom:5}}>🌑 <span style={{color:S.textDim}}>Dreamspell</span><br/>{tripleTs?.dreamspell}</div>
                     <div style={{fontSize:10,color:S.textDim}}>✡ Hebrew<br/>LIVE-FETCH-REQUIRED</div>
                   </div>
-                  {/* Stack state */}
-                  <div style={{padding:"14px 16px",borderRight:`1px solid ${S.border}`}}>
+                  <div style={{padding:"12px 14px",borderRight:`1px solid ${S.border}`,borderTop:isMobile?`1px solid ${S.border}`:"none"}}>
                     <SectionLabel>Stack Certification</SectionLabel>
                     {[["∄ Constitutional",constState?.pass?"PASS":"FAIL",constState?.pass?S.green:S.red],["⁂ Epistemic",adaCert?.cert||"—",certColor(adaCert?.cert)],["DSAP M-13",dsapOut?.audit_validity_score?.certification||"—",certColor(dsapOut?.audit_validity_score?.certification)],["FSVE EV",fsveScore?.EV||"—",fsveScore?.EV>=0.70?S.green:fsveScore?.EV>=0.45?S.amber:S.red]].map(([l,v,c])=>(
                       <div key={l} style={{display:"flex",justifyContent:"space-between",fontSize:10,marginBottom:5}}>
@@ -787,8 +1053,7 @@ export default function AionFusion() {
                       </div>
                     ))}
                   </div>
-                  {/* ARH summary */}
-                  <div style={{padding:"14px 16px"}}>
+                  <div style={{padding:"12px 14px",borderTop:isMobile?`1px solid ${S.border}`:"none"}}>
                     <SectionLabel>ARH Summary</SectionLabel>
                     <div style={{fontSize:10,color:S.text,marginBottom:3}}>target: <span style={{color:S.amber}}>"{arh.target}"</span></div>
                     <div style={{fontSize:10,color:S.text,marginBottom:3}}>modules: <span style={{color:S.accent}}>{arh.modules_active.length}</span> active</div>
@@ -804,7 +1069,7 @@ export default function AionFusion() {
       </div>
 
       {/* ── FOOTER ── */}
-      <div style={{borderTop:`1px solid ${S.border}`,padding:"10px 22px",display:"flex",justifyContent:"space-between",fontSize:9,color:S.textFaint,letterSpacing:"0.06em"}}>
+      <div style={{borderTop:`1px solid ${S.border}`,padding:isMobile?"10px 14px":"10px 22px",display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:9,color:S.textFaint,letterSpacing:"0.06em",flexWrap:"wrap",gap:4}}>
         <span>AION Certainty Stack · DSAP v1.1 · FSVE v4.0 · ADA-VELA v3.1 · Sheldon K. Salmon & ALBEDO · April 2026</span>
         <span>∄ Constitutional · ⁂ Epistemic · SHA-256 Sealed · Triple-Anchored</span>
       </div>
