@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Grant submissions by Sheldon K. Salmon — AXIOM, VERITAS, PILLING-SIM, PROJECT ORION, Textile Pilling Simulator, and VERITAS‑SHELLFISH.">
+<meta name="description" content="Grant submissions by Sheldon K. Salmon — AXIOM, VERITAS, PILLING-SIM, PROJECT ORION, Textile Pilling Simulator, VERITAS‑SHELLFISH, and VERITAS‑HABCONTROL.">
 <meta property="og:title" content="AionSystem — Grant Submissions">
-<meta property="og:description" content="Six grants. One methodology. Zero politics.">
+<meta property="og:description" content="Seven grants. One methodology. Zero politics.">
 <meta property="og:type" content="website">
 <title>AionSystem — Submissions | Sheldon K. Salmon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,16 +16,16 @@
 :root {
   --bg:#08090b;
   --bg-deep:#030405;
-  --surface:#0e1117;
-  --panel:#141920;
-  --border:#1e2730;
+  --surface:rgba(20, 30, 45, 0.4);
+  --panel:rgba(25, 35, 55, 0.5);
+  --border:rgba(0, 212, 255, 0.15);
   --amber:#f0a500;
   --amber-d:#b07800;
   --amber-l:#ffc947;
   --gold:#D4AF37;
-  --text:#c4d4de;
-  --muted:#4e5f6a;
-  --dim:#2a3540;
+  --text:#e0e8f0;
+  --muted:#7a9aba;
+  --dim:#3a5a7a;
   --red:#ff4d4d;
   --cyan:#00d4ff;
   --edu:#4ade80;
@@ -38,67 +38,327 @@
   --font-size-base: clamp(16px, 1vw + 8px, 20px);
   --font-size-h1: clamp(48px, 8vw + 16px, 96px);
   --font-size-h2: clamp(28px, 4vw + 8px, 44px);
-  --mouse-x: 50%;
-  --mouse-y: 50%;
+  --glow-amber: 0 0 5px #f0a500, 0 0 10px #f0a500, 0 0 20px rgba(240,165,0,0.5);
+  --glow-cyan: 0 0 5px #00d4ff, 0 0 10px #00d4ff, 0 0 20px rgba(0,212,255,0.4);
 }
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-size-base);line-height:1.5;overflow-x:hidden;cursor:none;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:0;}
-.custom-cursor{width:20px;height:20px;border:2px solid var(--amber);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference;transition:transform 0.1s ease,background 0.2s ease;transform:translate(-50%,-50%);}
-.custom-cursor.hover{transform:translate(-50%,-50%) scale(1.5);background:rgba(240,165,0,0.1);border-color:var(--gold);}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:var(--font-size-base);
+  line-height:1.5;
+  overflow-x:hidden;
+  cursor:none;
+}
+/* Holographic Scanline Overlay */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+  z-index:10;
+}
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(0deg,transparent 0px,rgba(0,212,255,0.04) 1px,transparent 2px);
+  pointer-events:none;
+  z-index:11;
+  opacity:0.4;
+  animation:scan 8s linear infinite;
+}
+@keyframes scan{ 0%{transform:translateY(0);} 100%{transform:translateY(4px);} }
+
+/* Custom Cursor with Glow */
+.custom-cursor{
+  width:20px;
+  height:20px;
+  border:2px solid var(--cyan);
+  border-radius:50%;
+  position:fixed;
+  pointer-events:none;
+  z-index:9999;
+  mix-blend-mode:screen;
+  transition:transform 0.1s ease,background 0.2s ease,box-shadow 0.2s ease;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);
+}
+.custom-cursor.hover{
+  transform:translate(-50%,-50%) scale(1.8);
+  background:rgba(0,212,255,0.1);
+  border-color:var(--amber);
+  box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5);
+}
+/* Cursor Trail Particles */
+.cursor-trail{
+  position:fixed;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--cyan);
+  pointer-events:none;
+  z-index:9998;
+  opacity:0.6;
+  box-shadow:0 0 10px var(--cyan);
+  transition:opacity 0.3s ease;
+}
+
+/* Glassmorphism Cards & Panels */
+nav{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 40px;
+  height:56px;
+  background:rgba(8,9,11,0.7);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 0 30px rgba(0,212,255,0.05);
+}
+.submission-card,.stats-bar{
+  background:var(--surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border);
+  box-shadow:0 8px 20px rgba(0,0,0,0.3),inset 0 0 30px rgba(0,212,255,0.03);
+  transition:all 0.3s var(--ease);
+}
+.submission-card:hover{
+  border-color:var(--cyan);
+  box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2),inset 0 0 20px rgba(0,212,255,0.05);
+  transform:translateX(6px) translateY(-2px);
+}
+
+/* Neon Text Glows */
+.nav-logo,.hero-name em,.section-num,.submission-title,.status-badge,.stat-number{
+  text-shadow:0 0 5px currentColor,0 0 10px currentColor;
+}
+.hero-name em{text-shadow:var(--glow-amber);}
+.hero-divider{box-shadow:0 0 15px var(--cyan);}
+
+/* 3D Tilt Effect on Cards (JS) */
+.tilt-card{
+  transform-style:preserve-3d;
+  perspective:1000px;
+}
+
+/* Hero Canvas - Mathematical Symbol Field */
+#hero-canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  opacity:0.5;
+  pointer-events:none;
+}
+
+/* Preserve existing structure */
+.nav-logo{
+  font-family:var(--mono);
+  font-size:13px;
+  letter-spacing:3px;
+  color:var(--amber);
+  text-transform:uppercase;
+  text-decoration:none;
+}
 .nav-logo span{color:var(--muted);}
 .nav-logo-wrap{display:flex;align-items:center;gap:10px;}
-.nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;filter:drop-shadow(0 0 4px rgba(212,174,60,0.3));}
+.nav-logo-img{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid var(--cyan);
+  box-shadow:0 0 10px var(--cyan);
+}
 .nav-links{display:flex;gap:32px;list-style:none;}
-.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;padding-bottom:2px;}
-.nav-links a:hover{color:var(--amber);border-bottom-color:var(--amber);}
-.nav-links a.active{color:var(--amber);border-bottom-color:var(--amber);}
-.nav-hamburger{display:none;flex-direction:column;justify-content:space-between;width:24px;height:18px;cursor:pointer;background:none;border:none;padding:0;z-index:110;}
-.nav-hamburger span{display:block;width:100%;height:2px;background:var(--amber);border-radius:1px;transition:transform 0.25s ease,opacity 0.25s ease;}
-.nav-hamburger.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
-.nav-hamburger.open span:nth-child(2){opacity:0;}
-.nav-hamburger.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
-.mobile-nav{display:none;position:fixed;top:56px;left:0;right:0;z-index:99;background:rgba(8,9,11,0.98);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);flex-direction:column;padding:8px 0;}
-.mobile-nav.open{display:flex;}
-.mobile-nav a{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;padding:14px 28px;border-bottom:1px solid var(--border);transition:color 0.15s ease,background 0.15s ease;display:flex;align-items:center;gap:10px;}
-.mobile-nav a:last-child{border-bottom:none;}
-.mobile-nav a:hover{color:var(--amber);background:rgba(240,165,0,0.04);}
-.mobile-nav a::before{content:'—';color:var(--amber);font-size:10px;opacity:0.6;}
-.hero{position:relative;z-index:1;min-height:40vh;display:flex;flex-direction:column;justify-content:center;padding:80px 40px 40px;max-width:1200px;margin:0 auto;}
-.hero-name{font-family:var(--sans);font-size:var(--font-size-h1);font-weight:900;letter-spacing:-1px;line-height:0.92;color:var(--text);text-transform:uppercase;margin-bottom:16px;}
+.nav-links a{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:2px;
+  color:var(--text);
+  text-decoration:none;
+  text-transform:uppercase;
+  border-bottom:1px solid transparent;
+  padding-bottom:2px;
+  transition:all 0.2s ease;
+}
+.nav-links a:hover,.nav-links a.active{
+  color:var(--cyan);
+  border-bottom-color:var(--cyan);
+  text-shadow:0 0 8px var(--cyan);
+}
+.nav-hamburger{display:none;}
+.mobile-nav{display:none;}
+.hero{
+  position:relative;
+  z-index:2;
+  min-height:40vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:80px 40px 40px;
+  max-width:1200px;
+  margin:0 auto;
+}
+.hero-name{
+  font-family:var(--sans);
+  font-size:var(--font-size-h1);
+  font-weight:900;
+  letter-spacing:-1px;
+  line-height:0.92;
+  color:var(--text);
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
 .hero-name em{display:block;color:var(--amber);font-style:normal;font-size:0.8em;}
-.hero-title{font-family:var(--mono);font-size:clamp(13px,1.6vw,17px);color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px;}
-.hero-divider{width:64px;height:2px;background:var(--amber);margin:24px 0;}
-section{position:relative;z-index:1;padding:40px 40px 80px;max-width:1200px;margin:0 auto;}
+.hero-title{
+  font-family:var(--mono);
+  font-size:clamp(13px,1.6vw,17px);
+  color:var(--muted);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:32px;
+}
+.hero-divider{width:64px;height:2px;background:var(--cyan);margin:24px 0;}
+section{
+  position:relative;
+  z-index:2;
+  padding:40px 40px 80px;
+  max-width:1200px;
+  margin:0 auto;
+}
 .section-header{display:flex;align-items:center;gap:16px;margin-bottom:32px;}
 .section-num{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:2px;}
-.section-title{font-family:var(--sans);font-size:var(--font-size-h2);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text);}
-.section-line{flex:1;height:1px;background:var(--border);}
+.section-title{
+  font-family:var(--sans);
+  font-size:var(--font-size-h2);
+  font-weight:900;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--text);
+  text-shadow:0 0 8px rgba(255,255,255,0.2);
+}
+.section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px var(--cyan);}
 .submissions-grid{display:flex;flex-direction:column;gap:16px;}
-.submission-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 32px;transition:all 0.2s ease;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
-.submission-card:hover{border-color:var(--amber);transform:translateX(4px);background:var(--panel);}
+.submission-card{
+  border-radius:16px;
+  padding:24px 32px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
 .submission-info{flex:2;}
-.submission-title{font-family:var(--sans);font-size:22px;font-weight:700;letter-spacing:1px;color:var(--amber);margin-bottom:8px;text-transform:uppercase;}
-.submission-meta{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:16px;margin-bottom:12px;}
+.submission-title{
+  font-family:var(--sans);
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:1px;
+  color:var(--amber);
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+.submission-meta{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--muted);
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  margin-bottom:12px;
+}
 .submission-meta span{display:inline-flex;align-items:center;gap:6px;}
-.submission-desc{font-family:var(--sans);font-size:14px;color:var(--text);line-height:1.5;max-width:600px;}
+.submission-desc{
+  font-family:var(--sans);
+  font-size:14px;
+  color:var(--text);
+  line-height:1.5;
+  max-width:600px;
+}
 .submission-status{text-align:right;min-width:140px;}
-.status-badge{font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:8px;}
-.status-submitted{background:rgba(74,222,128,0.15);color:var(--edu);border:1px solid rgba(74,222,128,0.3);}
-.status-evaluation{background:rgba(240,165,0,0.15);color:var(--amber);border:1px solid rgba(240,165,0,0.3);}
+.status-badge{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:2px;
+  padding:4px 12px;
+  border-radius:20px;
+  display:inline-block;
+  margin-bottom:8px;
+}
+.status-submitted{
+  background:rgba(74,222,128,0.15);
+  color:var(--edu);
+  border:1px solid rgba(74,222,128,0.3);
+  box-shadow:0 0 8px var(--edu);
+}
+.status-evaluation{
+  background:rgba(240,165,0,0.15);
+  color:var(--amber);
+  border:1px solid rgba(240,165,0,0.3);
+  box-shadow:0 0 8px var(--amber);
+}
 .submission-date{font-family:var(--mono);font-size:10px;color:var(--muted);}
-.stats-bar{margin-top:40px;padding-top:32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.stats-bar{
+  margin-top:40px;
+  padding-top:32px;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  gap:24px;
+  flex-wrap:wrap;
+  border-radius:16px;
+  padding:24px 20px;
+}
 .stat{text-align:center;flex:1;}
-.stat-number{font-family:var(--jmono);font-size:36px;font-weight:700;color:var(--amber);}
-.stat-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
-footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.stat-number{
+  font-family:var(--jmono);
+  font-size:36px;
+  font-weight:700;
+  color:var(--amber);
+}
+.stat-label{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:2px;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+footer{
+  position:relative;
+  z-index:2;
+  border-top:1px solid var(--border);
+  padding:40px;
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:16px;
+}
 .footer-id{font-family:var(--mono);font-size:11px;color:var(--muted);}
 .footer-id strong{color:var(--amber);}
 .footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
-.footer-links a{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;}
-.footer-links a:hover{color:var(--amber);}
+.footer-links a{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:2px;
+  color:var(--muted);
+  text-decoration:none;
+  text-transform:uppercase;
+}
+.footer-links a:hover{color:var(--cyan);text-shadow:0 0 8px var(--cyan);}
 @media(max-width:800px){
   .submission-card{flex-direction:column;align-items:flex-start;}
   .submission-status{text-align:left;}
@@ -113,7 +373,13 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 </style>
 </head>
 <body>
+
+<!-- Mathematical Symbol Canvas -->
+<canvas id="hero-canvas"></canvas>
+
+<!-- Custom Cursor Elements -->
 <div class="custom-cursor" id="custom-cursor"></div>
+<div id="cursor-trail-container"></div>
 
 <nav>
   <a href="/" class="nav-logo nav-logo-wrap">
@@ -147,7 +413,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 
 <div class="hero">
   <h1 class="hero-name">Grant<em>Submissions</em></h1>
-  <p class="hero-title">Six grants. One methodology. Zero politics.</p>
+  <p class="hero-title">Seven grants. One methodology. Zero politics.</p>
   <div class="hero-divider"></div>
 </div>
 
@@ -160,7 +426,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 
   <div class="submissions-grid">
     <!-- AXIOM - NICE Challenge -->
-    <div class="submission-card">
+    <div class="submission-card tilt-card">
       <div class="submission-info">
         <div class="submission-title">AXIOM — AI Certainty Middleware</div>
         <div class="submission-meta">
@@ -178,7 +444,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
     </div>
 
     <!-- PILLING-SIM - NICE Challenge -->
-    <div class="submission-card">
+    <div class="submission-card tilt-card">
       <div class="submission-info">
         <div class="submission-title">PILLING-SIM — Textile Pilling Prediction</div>
         <div class="submission-meta">
@@ -196,7 +462,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
     </div>
 
     <!-- VERITAS - UNDP -->
-    <div class="submission-card">
+    <div class="submission-card tilt-card">
       <div class="submission-info">
         <div class="submission-title">VERITAS — Damage Certification Platform</div>
         <div class="submission-meta">
@@ -213,7 +479,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
     </div>
 
     <!-- PROJECT ORION - UNDP -->
-    <div class="submission-card">
+    <div class="submission-card tilt-card">
       <div class="submission-info">
         <div class="submission-title">PROJECT ORION — UXO Detection System</div>
         <div class="submission-meta">
@@ -230,7 +496,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
     </div>
 
     <!-- Textile Pilling Simulator - InoCrowd -->
-    <div class="submission-card">
+    <div class="submission-card tilt-card">
       <div class="submission-info">
         <div class="submission-title">Textile Pilling Simulator</div>
         <div class="submission-meta">
@@ -247,7 +513,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
     </div>
 
     <!-- VERITAS‑SHELLFISH - NOAA -->
-    <div class="submission-card">
+    <div class="submission-card tilt-card">
       <div class="submission-info">
         <div class="submission-title">VERITAS‑SHELLFISH — HAB Toxin Detection</div>
         <div class="submission-meta">
@@ -262,12 +528,29 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
         <div class="submission-date">13/04/2026</div>
       </div>
     </div>
+
+    <!-- VERITAS‑HABCONTROL - NOAA PCMHAB -->
+    <div class="submission-card tilt-card">
+      <div class="submission-info">
+        <div class="submission-title">VERITAS‑HABCONTROL — HAB Control Evaluation</div>
+        <div class="submission-meta">
+          <span>📋 NOAA PCMHAB</span>
+          <span>🏷️ Environmental / Control Tech</span>
+          <span>🔬 CERTUS + STP</span>
+        </div>
+        <div class="submission-desc">Evaluation platform for HAB control technology field trials. Treatment Confidence Score + Uncertainty Mass + cryptographic sealing. Built for NOAA‑NOS‑NCCOS‑2026‑33016.</div>
+      </div>
+      <div class="submission-status">
+        <div class="status-badge status-submitted">✅ SUBMITTED</div>
+        <div class="submission-date">13/04/2026</div>
+      </div>
+    </div>
   </div>
 
   <!-- Stats Bar -->
   <div class="stats-bar">
-    <div class="stat"><div class="stat-number">6</div><div class="stat-label">Total Submissions</div></div>
-    <div class="stat"><div class="stat-number">5</div><div class="stat-label">Domains</div></div>
+    <div class="stat"><div class="stat-number">7</div><div class="stat-label">Total Submissions</div></div>
+    <div class="stat"><div class="stat-number">6</div><div class="stat-label">Domains</div></div>
     <div class="stat"><div class="stat-number">1</div><div class="stat-label">Week</div></div>
     <div class="stat"><div class="stat-number">60+</div><div class="stat-label">Frameworks</div></div>
     <div class="stat"><div class="stat-number">4,000+</div><div class="stat-label">Commits (6 weeks)</div></div>
@@ -292,25 +575,168 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 
 <script>
 (function(){
-const cursor=document.getElementById('custom-cursor');
-if(cursor){
-  document.addEventListener('mousemove',(e)=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';});
-  document.querySelectorAll('a,button,.submission-card').forEach(el=>{
-    el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));
-    el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));
+  "use strict";
+
+  // ========== MATHEMATICAL SYMBOL FIELD ==========
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let symbols = [];
+  let mouse = { x: null, y: null, radius: 150 };
+
+  const SYMBOL_SET = [
+    '∇', 'Σ', '∫', '∂', 'λ', '⊕', '⊗', '∈', '∀', '∃',
+    '⊢', '⊨', '→', '↔', '∧', '∨', '¬', '≡', '≈', '≠',
+    '≤', '≥', '∞', '∝', '∂', 'Δ', 'Π', 'Ω', 'α', 'β',
+    'γ', 'δ', 'ε', 'θ', 'μ', 'σ', 'φ', 'ψ', 'ω',
+    '∄', '⁂', '◈', '◆', '○', '●', '◉'
+  ];
+
+  function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    initSymbols();
+  }
+
+  function initSymbols() {
+    const count = Math.floor(width * height / 6000);
+    symbols = [];
+    for (let i = 0; i < count; i++) {
+      symbols.push({
+        symbol: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        size: Math.random() * 20 + 12,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        opacity: 0.12 + Math.random() * 0.2
+      });
+    }
+  }
+
+  function drawSymbols() {
+    ctx.clearRect(0, 0, width, height);
+    
+    symbols.forEach(s => {
+      s.x += s.vx;
+      s.y += s.vy;
+      
+      if (s.x < -50) s.x = width + 50;
+      if (s.x > width + 50) s.x = -50;
+      if (s.y < -50) s.y = height + 50;
+      if (s.y > height + 50) s.y = -50;
+      
+      if (mouse.x && mouse.y) {
+        const dx = s.x - mouse.x;
+        const dy = s.y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < mouse.radius) {
+          const angle = Math.atan2(dy, dx);
+          const force = (mouse.radius - dist) / mouse.radius * 2;
+          s.x += Math.cos(angle) * force;
+          s.y += Math.sin(angle) * force;
+        }
+      }
+      
+      ctx.font = `${s.size}px 'JetBrains Mono', 'Share Tech Mono', monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = s.color;
+      ctx.shadowBlur = 15;
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.opacity;
+      ctx.fillText(s.symbol, s.x, s.y);
+    });
+    
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1.0;
+    requestAnimationFrame(drawSymbols);
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
   });
-}
+  window.addEventListener('mouseleave', () => {
+    mouse.x = null;
+    mouse.y = null;
+  });
+
+  resizeCanvas();
+  drawSymbols();
+
+  // ========== CUSTOM CURSOR & TRAIL ==========
+  const cursor = document.getElementById('custom-cursor');
+  const trailContainer = document.getElementById('cursor-trail-container');
+  let trailPositions = [];
+  const MAX_TRAIL = 8;
+  
+  function updateCursor(e) {
+    const x = e.clientX;
+    const y = e.clientY;
+    cursor.style.left = x + 'px';
+    cursor.style.top = y + 'px';
+    
+    trailPositions.push({ x, y, time: Date.now() });
+    if (trailPositions.length > MAX_TRAIL) trailPositions.shift();
+    
+    trailContainer.innerHTML = '';
+    trailPositions.forEach((pos, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'cursor-trail';
+      const age = (Date.now() - pos.time) / 1000;
+      const opacity = Math.max(0, 0.6 - age * 0.8);
+      const scale = 1 - i * 0.1;
+      dot.style.left = pos.x + 'px';
+      dot.style.top = pos.y + 'px';
+      dot.style.opacity = opacity;
+      dot.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      trailContainer.appendChild(dot);
+    });
+  }
+  
+  document.addEventListener('mousemove', updateCursor);
+  
+  document.querySelectorAll('a, button, .submission-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+
+  // ========== 3D TILT EFFECT ==========
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 10;
+      const rotateY = (centerX - x) / 10;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateX(6px) translateY(-2px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateX(0) translateY(0)';
+    });
+  });
+
+  // ========== MOBILE NAV ==========
+  window.toggleMobileNav = function() {
+    const btn = document.getElementById('nav-hamburger');
+    const menu = document.getElementById('mobile-nav');
+    btn.classList.toggle('open');
+    menu.classList.toggle('open');
+  };
+  document.querySelectorAll('.mobile-nav a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('nav-hamburger').classList.remove('open');
+      document.getElementById('mobile-nav').classList.remove('open');
+    });
+  });
 })();
-function toggleMobileNav(){
-  const btn=document.getElementById('nav-hamburger'),menu=document.getElementById('mobile-nav');
-  btn.classList.toggle('open');menu.classList.toggle('open');
-}
-document.querySelectorAll('.mobile-nav a').forEach(a=>{
-  a.addEventListener('click',()=>{
-    document.getElementById('nav-hamburger').classList.remove('open');
-    document.getElementById('mobile-nav').classList.remove('open');
-  });
-});
 </script>
 </body>
 </html>
