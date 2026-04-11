@@ -134,7 +134,7 @@ nav {
   box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset 0 0 30px rgba(0,212,255,0.03);
   transition: all 0.3s var(--ease);
 }
-.service-card:hover, .work-card:hover {
+.service-card:hover, .work-card:hover, .stack-card:hover, .submissions-banner:hover {
   border-color: var(--cyan);
   box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 25px rgba(0,212,255,0.2), inset 0 0 20px rgba(0,212,255,0.05);
   transform: translateY(-4px);
@@ -151,12 +151,12 @@ nav {
 }
 
 /* 3D Tilt Effect on Cards (JS) */
-.work-card, .service-card {
+.tilt-card {
   transform-style: preserve-3d;
   perspective: 1000px;
 }
 
-/* Hero Canvas - Reactive Particle Field */
+/* Hero Canvas - Mathematical Symbol Field */
 #hero-canvas {
   position: fixed;
   top: 0;
@@ -164,7 +164,7 @@ nav {
   width: 100%;
   height: 100%;
   z-index: 0;
-  opacity: 0.6;
+  opacity: 0.65;
   pointer-events: none;
 }
 
@@ -243,7 +243,7 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
 </head>
 <body>
 
-<!-- Particle Field Canvas -->
+<!-- Mathematical Symbol Canvas -->
 <canvas id="hero-canvas"></canvas>
 
 <!-- Custom Cursor Elements -->
@@ -287,7 +287,7 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
     <a href="/services/" class="cta-btn">Services & Consulting →</a>
   </div>
   
-  <div class="submissions-banner">
+  <div class="submissions-banner tilt-card">
     <p>📋 RECENT GRANT SUBMISSIONS (April 2026)</p>
     <div class="grant-list">
       <a href="/submissions/" class="grant-item">AXIOM — NICE</a>
@@ -304,17 +304,17 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
 <section>
   <div class="section-header"><span class="section-num">// 01</span><h2 class="section-title">What I Build</h2><div class="section-line"></div></div>
   <div class="services-grid">
-    <div class="service-card">
+    <div class="service-card tilt-card">
       <div class="service-title">Simulation<br>Creation</div>
       <div class="service-desc">Physics simulators, engineering tools, educational systems — built in days, not months. Citation-backed, red-teamed, with full audit trails.</div>
       <a href="/simulators/" class="service-link">View Simulators →</a>
     </div>
-    <div class="service-card">
+    <div class="service-card tilt-card">
       <div class="service-title">AI Reliability<br>Audit</div>
       <div class="service-desc">Formal verification that AI deployments capture failures immutably and maintain honest epistemic records. STP FROZEN-2.0 compliant.</div>
       <a href="/services/ai-audit/" class="service-link">AI Audit Services →</a>
     </div>
-    <div class="service-card">
+    <div class="service-card tilt-card">
       <div class="service-title">Framework<br>Design</div>
       <div class="service-desc">Custom certainty frameworks for your AI system's failure modes. Built on the AION Constitutional Stack.</div>
       <a href="/services/framework-design/" class="service-link">Framework Engineering →</a>
@@ -359,7 +359,7 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
 
 <section>
   <div class="section-header"><span class="section-num">// 02</span><h2 class="section-title">AION Certainty Stack</h2><div class="section-line"></div></div>
-  <div class="stack-card">
+  <div class="stack-card tilt-card">
     <div class="stack-table-wrapper" style="overflow-x:auto;">
       <table class="stack-table">
         <thead><tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr></thead>
@@ -401,74 +401,84 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
 (function(){
   "use strict";
 
-  // ========== REACTIVE PARTICLE FIELD ==========
+  // ========== MATHEMATICAL SYMBOL FIELD ==========
   const canvas = document.getElementById('hero-canvas');
   const ctx = canvas.getContext('2d');
   let width, height;
-  let particles = [];
-  let mouse = { x: null, y: null, radius: 120 };
+  let symbols = [];
+  let mouse = { x: null, y: null, radius: 150 };
+
+  // Curated set of mathematical/logical symbols relevant to certainty engineering
+  const SYMBOL_SET = [
+    '∇', 'Σ', '∫', '∂', 'λ', '⊕', '⊗', '∈', '∀', '∃',
+    '⊢', '⊨', '→', '↔', '∧', '∨', '¬', '≡', '≈', '≠',
+    '≤', '≥', '∞', '∝', '∂', 'Δ', 'Π', 'Ω', 'α', 'β',
+    'γ', 'δ', 'ε', 'θ', 'μ', 'σ', 'φ', 'ψ', 'ω',
+    '∄', '⁂', '◈', '◆', '○', '●', '◉'
+  ];
 
   function resizeCanvas() {
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = width;
     canvas.height = height;
-    initParticles();
+    initSymbols();
   }
 
-  function initParticles() {
-    const count = Math.floor(width * height / 8000);
-    particles = [];
+  function initSymbols() {
+    const count = Math.floor(width * height / 6000);
+    symbols = [];
     for (let i = 0; i < count; i++) {
-      particles.push({
+      symbols.push({
+        symbol: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        size: Math.random() * 2 + 1,
-        baseColor: Math.random() > 0.5 ? 'rgba(0,212,255,' : 'rgba(240,165,0,'
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        size: Math.random() * 20 + 12,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        opacity: 0.15 + Math.random() * 0.25
       });
     }
   }
 
-  function drawParticles() {
+  function drawSymbols() {
     ctx.clearRect(0, 0, width, height);
     
-    particles.forEach(p => {
-      // Move
-      p.x += p.vx;
-      p.y += p.vy;
+    symbols.forEach(s => {
+      s.x += s.vx;
+      s.y += s.vy;
       
-      // Boundary wrap
-      if (p.x < 0) p.x = width;
-      if (p.x > width) p.x = 0;
-      if (p.y < 0) p.y = height;
-      if (p.y > height) p.y = 0;
+      if (s.x < -50) s.x = width + 50;
+      if (s.x > width + 50) s.x = -50;
+      if (s.y < -50) s.y = height + 50;
+      if (s.y > height + 50) s.y = -50;
       
-      // Mouse interaction
       if (mouse.x && mouse.y) {
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
+        const dx = s.x - mouse.x;
+        const dy = s.y - mouse.y;
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist < mouse.radius) {
           const angle = Math.atan2(dy, dx);
-          const force = (mouse.radius - dist) / mouse.radius;
-          p.x += Math.cos(angle) * force * 3;
-          p.y += Math.sin(angle) * force * 3;
+          const force = (mouse.radius - dist) / mouse.radius * 2;
+          s.x += Math.cos(angle) * force;
+          s.y += Math.sin(angle) * force;
         }
       }
       
-      // Draw
-      const opacity = 0.4 + Math.sin(Date.now() * 0.002 + p.x * 0.01) * 0.2;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = p.baseColor + opacity + ')';
-      ctx.shadowColor = p.baseColor.includes('0,212,255') ? '#00d4ff' : '#f0a500';
-      ctx.shadowBlur = 10;
-      ctx.fill();
+      ctx.font = `${s.size}px 'JetBrains Mono', 'Share Tech Mono', monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = s.color;
+      ctx.shadowBlur = 15;
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.opacity;
+      ctx.fillText(s.symbol, s.x, s.y);
     });
+    
     ctx.shadowBlur = 0;
-    requestAnimationFrame(drawParticles);
+    ctx.globalAlpha = 1.0;
+    requestAnimationFrame(drawSymbols);
   }
 
   window.addEventListener('resize', resizeCanvas);
@@ -482,7 +492,7 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
   });
 
   resizeCanvas();
-  drawParticles();
+  drawSymbols();
 
   // ========== CUSTOM CURSOR & TRAIL ==========
   const cursor = document.getElementById('custom-cursor');
@@ -496,11 +506,9 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
     cursor.style.left = x + 'px';
     cursor.style.top = y + 'px';
     
-    // Trail
     trailPositions.push({ x, y, time: Date.now() });
     if (trailPositions.length > MAX_TRAIL) trailPositions.shift();
     
-    // Render trail
     trailContainer.innerHTML = '';
     trailPositions.forEach((pos, i) => {
       const dot = document.createElement('div');
@@ -518,8 +526,7 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
   
   document.addEventListener('mousemove', updateCursor);
   
-  // Hover effects
-  document.querySelectorAll('a, button, .work-card, .service-card, .cta-btn').forEach(el => {
+  document.querySelectorAll('a, button, .work-card, .service-card, .cta-btn, .tilt-card').forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
   });
@@ -541,7 +548,7 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
     });
   });
 
-  // ========== MOBILE NAV (preserved) ==========
+  // ========== MOBILE NAV ==========
   const hamburger = document.getElementById('hamburger');
   const mobileNav = document.getElementById('mobileNav');
   if (hamburger && mobileNav) {
