@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AionSystem Services — Grant Simulation Studio, Proof-of-Concept Simulation Creation, AI Output Certification, Framework Engineering. Sheldon K. Salmon, AI Reliability Architect, New York.">
+<meta name="description" content="AionSystem Services — Grant Simulation Studio, Proof-of-Concept Simulation Creation, AI Output Certification, Framework Engineering, Negotiate Studio. Sheldon K. Salmon, AI Reliability Architect, New York.">
 <meta property="og:title" content="Services — AionSystem · Sheldon K. Salmon">
-<meta property="og:description" content="Grant-winning simulations in days. POC simulators. AI certification. Framework engineering. Not a full integrator — a proof engine.">
+<meta property="og:description" content="Grant-winning simulations in days. POC simulators. AI certification. Framework engineering. Sovereign contract negotiation.">
 <meta property="og:type" content="website">
 <title>Services — AionSystem · Sheldon K. Salmon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,6 +21,7 @@
   --ease:cubic-bezier(0.16,1,0.3,1);
   --glow-amber:0 0 5px #f0a500,0 0 10px #f0a500,0 0 20px rgba(240,165,0,0.5);
   --glow-cyan:0 0 5px #00d4ff,0 0 10px #00d4ff,0 0 20px rgba(0,212,255,0.4);
+  --glow-purple:0 0 5px #a855f7,0 0 10px #a855f7,0 0 20px rgba(168,85,247,0.4);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -75,8 +76,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .meta-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);flex-shrink:0;box-shadow:0 0 8px var(--cyan);}
 
 /* ── JUMP RAIL ── */
-.service-rail{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:0 40px;display:flex;gap:1px;background:var(--border);border-bottom:1px solid var(--border);opacity:0;animation:fadeIn 0.6s var(--ease) 0.8s forwards;}
-.rail-item{flex:1;background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:20px 24px;text-decoration:none;display:flex;flex-direction:column;gap:6px;transition:all 0.2s;position:relative;overflow:hidden;border:1px solid transparent;}
+.service-rail{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:0 40px;display:flex;gap:1px;background:var(--border);border-bottom:1px solid var(--border);opacity:0;animation:fadeIn 0.6s var(--ease) 0.8s forwards;flex-wrap:wrap;}
+.rail-item{flex:1;min-width:160px;background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:20px 24px;text-decoration:none;display:flex;flex-direction:column;gap:6px;transition:all 0.2s;position:relative;overflow:hidden;border:1px solid transparent;}
 .rail-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--cyan);transform:scaleX(0);transition:transform 0.3s var(--ease);box-shadow:0 0 10px var(--cyan);}
 .rail-item:hover{background:var(--panel);border-color:var(--cyan);}
 .rail-item:hover::after{transform:scaleX(1);}
@@ -120,53 +121,40 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .detail-val.mono{font-family:var(--mono);font-size:13px;}
 
 .sim-tiers,.fw-tiers,.tier-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:16px;}
+.negotiate-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:16px;}
 .sim-tier,.tier-card{background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:28px 22px;position:relative;overflow:hidden;transition:all 0.2s;}
 .sim-tier::before,.tier-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border);transition:all 0.2s;}
 .sim-tier:hover,.tier-card:hover{background:var(--panel);border-color:var(--cyan);box-shadow:0 8px 20px rgba(0,0,0,0.4),0 0 20px rgba(0,212,255,0.1);}
 .sim-tier:hover::before,.tier-card:hover::before{background:var(--cyan);box-shadow:0 0 10px var(--cyan);}
 .sim-tier.featured,.tier-card.featured{background:var(--panel);}
 .sim-tier.featured::before,.tier-card.featured::before{background:var(--gold);box-shadow:0 0 10px var(--gold);}
+.negotiate-tier.featured::before{background:var(--purple);box-shadow:0 0 10px var(--purple);}
 .sim-tier-badge,.tier-badge{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:14px;}
 .sim-tier-badge.featured,.tier-badge.featured{color:var(--gold);}
 .sim-tier-name,.tier-name{font-family:var(--sans);font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text);margin-bottom:6px;}
 .sim-tier-price,.tier-price{font-family:var(--mono);font-size:28px;color:var(--cyan);margin-bottom:2px;letter-spacing:1px;text-shadow:0 0 5px var(--cyan);}
+.negotiate-price{font-family:var(--mono);font-size:28px;color:var(--purple);margin-bottom:2px;letter-spacing:1px;text-shadow:0 0 5px var(--purple);}
 .sim-tier-price.negotiated,.tier-price.negotiated{font-size:18px;color:var(--gold);}
 .sim-tier-cadence,.tier-cadence{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:18px;}
 .tier-divider{height:1px;background:var(--border);margin:14px 0;}
 .tier-includes{list-style:none;display:flex;flex-direction:column;gap:8px;}
 .tier-includes li{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);display:flex;align-items:flex-start;gap:8px;line-height:1.4;}
 .tier-includes li::before{content:'—';color:var(--cyan);flex-shrink:0;}
+.negotiate-includes li::before{content:'—';color:var(--purple);flex-shrink:0;}
 .tier-includes li.highlight{color:var(--text);}
 .tier-includes li.highlight::before{color:var(--amber);}
 
 .pipeline-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px;}
-.pipeline-node{background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:28px 22px;position:relative;text-align:center;}
-.pipeline-node::after{content:'→';position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--cyan);font-size:18px;z-index:2;font-family:var(--mono);text-shadow:0 0 5px var(--cyan);}
+.negotiate-pipeline{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px;}
+.pipeline-node{background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:28px 16px;position:relative;text-align:center;}
+.pipeline-node::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--cyan);font-size:16px;z-index:2;font-family:var(--mono);text-shadow:0 0 5px var(--cyan);}
+.negotiate-pipeline .pipeline-node::after{color:var(--purple);text-shadow:0 0 5px var(--purple);}
 .pipeline-node:last-child::after{display:none;}
-.pipeline-icon{font-size:28px;margin-bottom:12px;display:block;}
-.pipeline-step{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
-.pipeline-name{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;}
-.pipeline-desc{font-family:var(--sans);font-size:12px;font-weight:300;color:var(--muted);line-height:1.5;}
-
-.deliverable-strip{display:flex;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px;}
-.deliv-item{flex:1;background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:20px 18px;}
-.deliv-icon{font-size:20px;margin-bottom:10px;display:block;}
-.deliv-name{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:6px;}
-.deliv-desc{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);line-height:1.5;}
-
-.principles-block{padding:32px 36px;margin-bottom:40px;}
-.principles-title{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:20px;}
-.principles-list{display:grid;grid-template-columns:1fr 1fr;gap:12px 40px;list-style:none;}
-.principles-list li{font-family:var(--sans);font-size:15px;font-weight:300;color:var(--muted);display:flex;align-items:flex-start;gap:10px;line-height:1.5;}
-.principles-list li::before{content:'◈';color:var(--cyan);flex-shrink:0;font-size:12px;margin-top:2px;text-shadow:0 0 5px var(--cyan);}
-
-.framework-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin-bottom:32px;}
-.framework-table th{text-align:left;font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(20,30,45,0.4);}
-.framework-table td{padding:12px 16px;border-bottom:1px solid rgba(30,39,48,0.6);background:var(--bg);transition:background 0.15s;vertical-align:top;}
-.framework-table tr:hover td{background:var(--surface);}
-.fw-name{color:var(--cyan);}
-.fw-fn{color:var(--text);font-family:var(--sans);font-size:13px;}
-.fw-state{color:var(--muted);font-size:11px;}
+.pipeline-icon{font-size:24px;margin-bottom:10px;display:block;}
+.pipeline-step{font-family:var(--mono);font-size:8px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
+.pipeline-name{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;}
+.negotiate-pipeline .pipeline-name{color:var(--purple);}
+.pipeline-desc{font-family:var(--sans);font-size:11px;font-weight:300;color:var(--muted);line-height:1.4;}
 
 .cta-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:24px 0;border-top:1px solid var(--border);}
 .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;backdrop-filter:blur(8px);transition:all 0.2s;position:relative;overflow:hidden;text-shadow:0 0 5px var(--cyan);}
@@ -181,6 +169,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .cta-btn.gold{border-color:var(--gold);color:var(--gold);text-shadow:0 0 5px var(--gold);}
 .cta-btn.gold::before{background:var(--gold);}
 .cta-btn.gold:hover{color:#000;}
+.cta-btn.purple{border-color:var(--purple);color:var(--purple);text-shadow:0 0 5px var(--purple);}
+.cta-btn.purple::before{background:var(--purple);}
+.cta-btn.purple:hover{color:#000;box-shadow:0 0 20px var(--purple);}
 .cta-note{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;}
 
 .section-id{display:flex;align-items:center;gap:12px;padding:12px 0;margin-bottom:0;}
@@ -203,7 +194,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .engage-path-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:4px;text-shadow:0 0 5px var(--cyan);}
 .engage-path-desc{font-family:var(--sans);font-size:14px;font-weight:300;color:var(--muted);}
 
-/* Portfolio Showcase */
 .portfolio-showcase{padding:24px 28px;margin:32px 0;}
 .portfolio-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:16px;}
 .portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
@@ -226,11 +216,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
   .page-header-inner{grid-template-columns:1fr;gap:24px;}
   .service-block-header{grid-template-columns:1fr;gap:24px;}
   .tier-row,.sim-tiers,.fw-tiers{grid-template-columns:1fr 1fr;}
+  .negotiate-tiers{grid-template-columns:1fr;}
   .repo-steps,.pipeline-strip{grid-template-columns:1fr 1fr;}
+  .negotiate-pipeline{grid-template-columns:1fr 1fr;}
+  .pipeline-node::after{display:none;}
   .detail-grid{grid-template-columns:1fr 1fr;}
   .engage-inner{grid-template-columns:1fr;gap:32px;}
-  .deliverable-strip{flex-direction:column;}
-  .principles-list{grid-template-columns:1fr;}
   .portfolio-grid{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:640px){
@@ -242,6 +233,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
   footer{padding:32px 20px;}
   .tier-row,.sim-tiers,.fw-tiers{grid-template-columns:1fr;}
   .repo-steps,.pipeline-strip{grid-template-columns:1fr;}
+  .negotiate-pipeline{grid-template-columns:1fr;}
   .detail-grid{grid-template-columns:1fr;}
   .service-rail{display:none;}
   .repo-step-arrow{display:none;}
@@ -266,7 +258,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
     <li><a href="/certify/">Certify</a></li>
     <li><a href="/submissions/">Submissions</a></li>
     <li><a href="/about/">About</a></li>
-    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
   </ul>
 </nav>
 
@@ -282,7 +273,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
     </div>
     <div class="page-header-right">
       <p class="page-premise">
-        I build proof-of-concept simulations, frameworks, grant-winning demos, and AI output certification systems — in days, not months. <strong>I am not a full-stack integrator.</strong> I turn your domain expertise into a working, red-teamed, certified proof of concept.
+        I build proof-of-concept simulations, frameworks, grant-winning demos, AI output certification, and sovereign contract negotiation — in days, not months. <strong>I am not a full-stack integrator.</strong> I turn your domain expertise into a working, red-teamed, certified proof of concept.
       </p>
       <div class="page-meta">
         <div class="meta-item"><span class="meta-dot"></span><span>Active · April 2026</span></div>
@@ -298,22 +289,27 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
   <a href="#grant-studio" class="rail-item">
     <span class="rail-num">01</span>
     <span class="rail-label">Grant Studio</span>
-    <span class="rail-sub">LOI + Simulation · Funded</span>
+    <span class="rail-sub">LOI + Simulation</span>
   </a>
   <a href="#simulation" class="rail-item">
     <span class="rail-num">02</span>
     <span class="rail-label">POC Simulation</span>
-    <span class="rail-sub">Days not months · AION Verified</span>
+    <span class="rail-sub">Days not months</span>
   </a>
   <a href="#certification" class="rail-item">
     <span class="rail-num">03</span>
     <span class="rail-label">AI Certification</span>
-    <span class="rail-sub">STP FROZEN-2.0 · Four tiers</span>
+    <span class="rail-sub">STP FROZEN-2.0</span>
   </a>
   <a href="#framework" class="rail-item">
     <span class="rail-num">04</span>
-    <span class="rail-label">Framework Engineering</span>
-    <span class="rail-sub">Concept → Framework → Simulation</span>
+    <span class="rail-label">Framework Eng</span>
+    <span class="rail-sub">Concept → Simulation</span>
+  </a>
+  <a href="#negotiate" class="rail-item">
+    <span class="rail-num">05</span>
+    <span class="rail-label">Negotiate</span>
+    <span class="rail-sub">Sovereign Contracts</span>
   </a>
 </div>
 
@@ -322,12 +318,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
 <!-- ══════════════════════════ SERVICE 01: GRANT STUDIO ══════ -->
 <div class="service-block" id="grant-studio">
   <div class="service-block-inner">
-
     <div class="section-id">
       <span class="section-id-num">// 01</span>
       <span class="section-id-line"></span>
     </div>
-
     <div class="service-block-header">
       <div>
         <div class="service-label">LOI + Simulation · NOAA · UNDP · SBIR</div>
@@ -346,207 +340,74 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
         <p class="service-lead">
           Most grant applications are just words. Mine include a <strong>live, interactive simulation</strong> that reviewers can actually use. I write the LOI or full proposal, build the simulation, and deliver a complete package that makes your application unforgettable.
           <br><br>
-          This is how I submitted VERITAS‑SHELLFISH to NOAA — LOI, simulation, video walkthrough, DOI, and cryptographic sealing all in one package. You bring the domain expertise. I bring the proof.
+          This is how I submitted VERITAS‑SHELLFISH to NOAA — LOI, simulation, video walkthrough, DOI, and cryptographic sealing all in one package.
         </p>
       </div>
     </div>
 
-    <!-- Portfolio Showcase -->
     <div class="portfolio-showcase">
       <div class="portfolio-title">Recent Grant Studio Work</div>
       <div class="portfolio-grid">
-        <div class="portfolio-item">
-          <div class="portfolio-item-name">VERITAS‑SHELLFISH</div>
-          <div class="portfolio-item-desc">NOAA‑NOS‑NCCOS‑2026‑32955 · HAB Toxin Detection · LOI + Simulation + Video</div>
-        </div>
-        <div class="portfolio-item">
-          <div class="portfolio-item-name">VERITAS</div>
-          <div class="portfolio-item-desc">UNDP Accelerator Lab Prize · Crisis Certification · Full compliance + DCI scoring</div>
-        </div>
-        <div class="portfolio-item">
-          <div class="portfolio-item-name">AXIOM</div>
-          <div class="portfolio-item-desc">NICE Challenge 2026 · AI Certainty Middleware · TRL 6</div>
-        </div>
-        <div class="portfolio-item">
-          <div class="portfolio-item-name">PILLING-SIM</div>
-          <div class="portfolio-item-desc">NICE Challenge 2026 · Textile Pilling Prediction · ISO 12945-2:2000</div>
-        </div>
-        <div class="portfolio-item">
-          <div class="portfolio-item-name">PROJECT ORION</div>
-          <div class="portfolio-item-desc">UNDP Innocentive · UXO Detection · Passive Tri-Axis Gradiometer</div>
-        </div>
-        <div class="portfolio-item">
-          <div class="portfolio-item-name">Textile Pilling Simulator</div>
-          <div class="portfolio-item-desc">InoCrowd Challenge · Live Web Tool · 16+ parameters</div>
-        </div>
+        <div class="portfolio-item"><div class="portfolio-item-name">VERITAS‑SHELLFISH</div><div class="portfolio-item-desc">NOAA HAB Toxin Detection · LOI + Simulation</div></div>
+        <div class="portfolio-item"><div class="portfolio-item-name">VERITAS</div><div class="portfolio-item-desc">UNDP Crisis Certification · Full compliance</div></div>
+        <div class="portfolio-item"><div class="portfolio-item-name">AXIOM</div><div class="portfolio-item-desc">NICE Challenge · AI Certainty Middleware</div></div>
+        <div class="portfolio-item"><div class="portfolio-item-name">PILLING-SIM</div><div class="portfolio-item-desc">Textile Pilling · ISO 12945-2:2000</div></div>
+        <div class="portfolio-item"><div class="portfolio-item-name">PROJECT ORION</div><div class="portfolio-item-desc">UNDP · UXO Detection</div></div>
+        <div class="portfolio-item"><div class="portfolio-item-name">Textile Pilling</div><div class="portfolio-item-desc">InoCrowd · 16+ parameters</div></div>
       </div>
     </div>
 
-    <!-- What's Included -->
-    <div class="poc-statement">
-      <div class="poc-statement-title">What the Grant Studio Package Includes</div>
-      <div class="poc-statement-body">
-        <strong>Complete LOI or full proposal writing</strong> — tailored to the specific NOFO, with compliance checklist, budget narrative, and partner identification. <strong>Working simulation deployed to GitHub Pages</strong> — live, interactive, mobile-responsive. <strong>Silent video walkthrough</strong> — 2-minute demo linked in the application. <strong>DOI registration via Zenodo</strong> — citable, permanent record. <strong>STP cryptographic seal</strong> — immutable proof of completion date. <strong>Commercial + GPL dual licensing</strong> — clear IP structure for reviewers.
-      </div>
-    </div>
-
-    <!-- Pricing Tiers -->
     <div class="sim-tiers">
-      <div class="sim-tier">
-        <div class="sim-tier-badge">Tier 01 · LOI Package</div>
-        <div class="sim-tier-name">LOI + Simulation</div>
-        <div class="sim-tier-price">$4,500</div>
-        <div class="sim-tier-cadence">3–5 days · LOI deadline ready</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li>Complete LOI writing (NOFO compliant)</li>
-          <li>Single-module simulation</li>
-          <li>Deployed to GitHub Pages</li>
-          <li>Silent video walkthrough</li>
-          <li>DOI registration</li>
-          <li>STP sealed</li>
-          <li>AION Verified badge</li>
-        </ul>
-      </div>
-      <div class="sim-tier featured">
-        <div class="sim-tier-badge featured">Tier 02 · Full Proposal</div>
-        <div class="sim-tier-name">Proposal + Simulation</div>
-        <div class="sim-tier-price">$8,500</div>
-        <div class="sim-tier-cadence">7–12 days · Full proposal ready</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li class="highlight">Everything in LOI Package</li>
-          <li class="highlight">Full 15-20 page proposal</li>
-          <li class="highlight">Budget narrative + justification</li>
-          <li class="highlight">Multi-module simulation (up to 5)</li>
-          <li>Partner identification support</li>
-          <li>Compliance matrix</li>
-          <li>Red-team documentation</li>
-        </ul>
-      </div>
-      <div class="sim-tier">
-        <div class="sim-tier-badge">Tier 03 · Research Grade</div>
-        <div class="sim-tier-name">Full Stack Grant</div>
-        <div class="sim-tier-price">$15,000</div>
-        <div class="sim-tier-cadence">15–20 days · Complete package</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li class="highlight">Everything in Proposal Package</li>
-          <li class="highlight">Unlimited simulation modules</li>
-          <li class="highlight">Co-PI support documentation</li>
-          <li>ORCID + CITATION.cff</li>
-          <li>Experimental framework docs</li>
-          <li>3 month post-submission support</li>
-          <li>Rebuttal assistance if invited</li>
-        </ul>
-      </div>
-      <div class="sim-tier">
-        <div class="sim-tier-badge">Tier 04 · Custom</div>
-        <div class="sim-tier-name">Enterprise Grant</div>
-        <div class="sim-tier-price negotiated">Negotiated</div>
-        <div class="sim-tier-cadence">Scoped per opportunity</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li>Everything in Full Stack</li>
-          <li>Multi-PI consortium support</li>
-          <li>DoD / Federal standards</li>
-          <li>Classified domain support</li>
-          <li>Direct architect availability</li>
-          <li>No ceiling on scope</li>
-        </ul>
-      </div>
-    </div>
-
-    <div style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);padding:14px 20px;margin-bottom:32px;font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;">
-      ◈ &nbsp;All Grant Studio packages include LOI/proposal writing, simulation deployment, video walkthrough, DOI, STP seal, and AION Verified badge. &nbsp;·&nbsp; NDA available. &nbsp;·&nbsp; You retain all IP rights to your research; I retain rights to the simulation architecture.
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 01</div><div class="sim-tier-name">LOI + Simulation</div><div class="sim-tier-price">$4,500</div><div class="sim-tier-cadence">3–5 days</div><div class="tier-divider"></div><ul class="tier-includes"><li>Complete LOI writing</li><li>Single-module simulation</li><li>Video walkthrough</li><li>DOI + STP sealed</li></ul></div>
+      <div class="sim-tier featured"><div class="sim-tier-badge featured">Tier 02</div><div class="sim-tier-name">Proposal + Sim</div><div class="sim-tier-price">$8,500</div><div class="sim-tier-cadence">7–12 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Tier 01</li><li class="highlight">Full 15-20 page proposal</li><li class="highlight">Multi-module (up to 5)</li><li>Compliance matrix</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 03</div><div class="sim-tier-name">Research Grade</div><div class="sim-tier-price">$15,000</div><div class="sim-tier-cadence">15–20 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Tier 02</li><li class="highlight">Unlimited modules</li><li>Co-PI support</li><li>3 month support</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 04</div><div class="sim-tier-name">Enterprise</div><div class="sim-tier-price negotiated">Negotiated</div><div class="sim-tier-cadence">Scoped</div><div class="tier-divider"></div><ul class="tier-includes"><li>Everything in Tier 03</li><li>Multi-PI consortium</li><li>DoD/Federal standards</li><li>Direct architect</li></ul></div>
     </div>
 
     <div class="cta-bar">
-      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn primary">
-        <span>Book a Grant Consultation</span><span class="cta-arrow">→</span>
-      </a>
-      <a href="/submissions/" class="cta-btn">
-        <span>See Grant Portfolio</span><span class="cta-arrow">→</span>
-      </a>
-      <a href="https://aionsystem.github.io/veritas-shellfish" target="_blank" class="cta-btn gold">
-        <span>NOAA LOI Example</span><span class="cta-arrow">→</span>
-      </a>
-      <span class="cta-note">Engagement via LinkedIn DM · NDA available · Response within 48 hrs</span>
+      <a href="/services/grant-studio/" class="cta-btn primary"><span>Explore Grant Studio</span><span class="cta-arrow">→</span></a>
+      <a href="/case-studies/" class="cta-btn"><span>View Case Studies</span><span class="cta-arrow">→</span></a>
     </div>
-
   </div>
 </div>
 
 <!-- ══════════════════════════ SERVICE 02: SIMULATION ══════ -->
 <div class="service-block" id="simulation">
   <div class="service-block-inner">
-
-    <div class="section-id">
-      <span class="section-id-num">// 02</span>
-      <span class="section-id-line"></span>
-    </div>
-
+    <div class="section-id"><span class="section-id-num">// 02</span><span class="section-id-line"></span></div>
     <div class="service-block-header">
-      <div>
-        <div class="service-label">Proof-of-Concept · AION Verified · Days Not Months</div>
-        <h2 class="service-h">POC<em>Simulation</em></h2>
-        <div class="service-tagline">You bring the domain. I build the proof.</div>
-        <div class="domain-chips">
-          <span class="domain-chip"><span class="chip-dot"></span>Physics</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Engineering</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Environmental</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Medical</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Education</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Field Ops</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Research</span>
-        </div>
-      </div>
-      <div>
-        <p class="service-lead">
-          You have the domain expertise, the research, or the idea. <strong>I turn it into a working, red-teamed, certified proof-of-concept simulator in days.</strong>
-          <br><br>
-          I am not your full-stack integrator. I build the proof — the working demonstration that shows exactly what the system looks like and how it behaves.
-        </p>
-      </div>
-    </div>
-
-    <div class="poc-statement">
-      <div class="poc-statement-title">What I am · What I am not</div>
-      <div class="poc-statement-body">
-        <strong>I am a proof-of-concept simulation builder.</strong> I take your PDF research, your working papers, your technical specifications — under NDA if required — and I build a working, self-contained, red-teamed simulator that demonstrates your concept at full fidelity.
-      </div>
+      <div><div class="service-label">Proof-of-Concept · AION Verified</div><h2 class="service-h">POC<em>Simulation</em></h2><div class="service-tagline">You bring the domain. I build the proof.</div></div>
+      <div><p class="service-lead">You have the domain expertise, the research, or the idea. <strong>I turn it into a working, red-teamed, certified proof-of-concept simulator in days.</strong> I am not your full-stack integrator. I build the proof.</p></div>
     </div>
 
     <div class="repo-model">
       <div class="repo-model-title">How the collaboration works</div>
       <div class="repo-steps">
-        <div class="repo-step"><div class="repo-step-num">01</div><div class="repo-step-title">You send the brief</div><div class="repo-step-desc">PDF research, technical docs — NDA available.</div><div class="repo-step-arrow">→</div></div>
-        <div class="repo-step"><div class="repo-step-num">02</div><div class="repo-step-title">I build the repo</div><div class="repo-step-desc">Dedicated GitHub repository under AionSystem.</div><div class="repo-step-arrow">→</div></div>
-        <div class="repo-step"><div class="repo-step-num">03</div><div class="repo-step-title">Red team + badge</div><div class="repo-step-desc">Minimum two adversarial passes. AION Verified.</div><div class="repo-step-arrow">→</div></div>
-        <div class="repo-step"><div class="repo-step-num">04</div><div class="repo-step-title">You get access</div><div class="repo-step-desc">Collaborator access. You own the work.</div><div class="repo-step-arrow">→</div></div>
-        <div class="repo-step"><div class="repo-step-num">05</div><div class="repo-step-title">Live on portfolio</div><div class="repo-step-desc">Linked from aionsystem.github.io.</div></div>
+        <div class="repo-step"><div class="repo-step-num">01</div><div class="repo-step-title">You send brief</div><div class="repo-step-desc">PDF research, NDA available</div><div class="repo-step-arrow">→</div></div>
+        <div class="repo-step"><div class="repo-step-num">02</div><div class="repo-step-title">I build repo</div><div class="repo-step-desc">Dedicated GitHub repository</div><div class="repo-step-arrow">→</div></div>
+        <div class="repo-step"><div class="repo-step-num">03</div><div class="repo-step-title">Red team</div><div class="repo-step-desc">Two adversarial passes</div><div class="repo-step-arrow">→</div></div>
+        <div class="repo-step"><div class="repo-step-num">04</div><div class="repo-step-title">You get access</div><div class="repo-step-desc">Collaborator · You own it</div><div class="repo-step-arrow">→</div></div>
+        <div class="repo-step"><div class="repo-step-num">05</div><div class="repo-step-title">Live portfolio</div><div class="repo-step-desc">aionsystem.github.io</div></div>
       </div>
     </div>
 
     <div class="sim-tiers">
-      <div class="sim-tier"><div class="sim-tier-badge">Tier 01 · Entry</div><div class="sim-tier-name">Starter POC</div><div class="sim-tier-price">$3,500</div><div class="sim-tier-cadence">Single domain · 3–5 days</div><div class="tier-divider"></div><ul class="tier-includes"><li>Single-domain simulation</li><li>Citation-backed</li><li>2 red team passes</li><li>AION Verified badge</li><li>GitHub repo · collaborator</li><li>Zero dependencies</li></ul></div>
-      <div class="sim-tier featured"><div class="sim-tier-badge featured">Tier 02 · Research</div><div class="sim-tier-name">Research POC</div><div class="sim-tier-price">$8,500</div><div class="sim-tier-cadence">Multi-module · 5–10 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Starter</li><li class="highlight">Multi-module (up to 5)</li><li class="highlight">Grant-ready docs</li><li>3 red team passes</li><li>STP sealed</li><li>Bilingual interface</li></ul></div>
-      <div class="sim-tier"><div class="sim-tier-badge">Tier 03 · Collaboration</div><div class="sim-tier-name">Collab POC</div><div class="sim-tier-price">$15,000</div><div class="sim-tier-cadence">Full build · 10–15 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Research</li><li class="highlight">Unlimited modules</li><li class="highlight">Dual-author repo</li><li>ORCID + CITATION.cff</li><li>3 month support</li></ul></div>
-      <div class="sim-tier"><div class="sim-tier-badge">Tier 04 · Custom</div><div class="sim-tier-name">Custom Build</div><div class="sim-tier-price negotiated">Negotiated</div><div class="sim-tier-cadence">Scoped per engagement</div><div class="tier-divider"></div><ul class="tier-includes"><li>Everything in Collab</li><li>DoD / Federal standards</li><li>Classified domain</li><li>Direct architect</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 01</div><div class="sim-tier-name">Starter POC</div><div class="sim-tier-price">$3,500</div><div class="sim-tier-cadence">3–5 days</div><div class="tier-divider"></div><ul class="tier-includes"><li>Single-domain</li><li>Citation-backed</li><li>2 red team passes</li><li>AION Verified</li></ul></div>
+      <div class="sim-tier featured"><div class="sim-tier-badge featured">Tier 02</div><div class="sim-tier-name">Research POC</div><div class="sim-tier-price">$8,500</div><div class="sim-tier-cadence">5–10 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Starter</li><li class="highlight">Multi-module (up to 5)</li><li>Grant-ready docs</li><li>STP sealed</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 03</div><div class="sim-tier-name">Collab POC</div><div class="sim-tier-price">$15,000</div><div class="sim-tier-cadence">10–15 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Research</li><li>Unlimited modules</li><li>Dual-author repo</li><li>3 month support</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 04</div><div class="sim-tier-name">Custom</div><div class="sim-tier-price negotiated">Negotiated</div><div class="sim-tier-cadence">Scoped</div><div class="tier-divider"></div><ul class="tier-includes"><li>Everything in Collab</li><li>DoD/Federal standards</li><li>Classified domain</li><li>Direct architect</li></ul></div>
     </div>
 
     <div class="cta-bar">
-      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn primary"><span>Commission a Simulator</span><span class="cta-arrow">→</span></a>
+      <a href="/services/rapid-prototyping/" class="cta-btn primary"><span>Commission a Simulator</span><span class="cta-arrow">→</span></a>
       <a href="/simulators/" class="cta-btn"><span>See Live Simulators</span><span class="cta-arrow">→</span></a>
     </div>
-
   </div>
 </div>
 
-<!-- ══════════════════════════ SERVICE 03: CERTIFICATION ══ -->
+<!-- ══════════════════════════ SERVICE 03: CERTIFICATION ══════ -->
 <div class="service-block" id="certification">
   <div class="service-block-inner">
-
     <div class="section-id"><span class="section-id-num">// 03</span><span class="section-id-line"></span></div>
     <div class="service-block-header">
       <div><div class="service-label">STP FROZEN-2.0 · Epistemic Audit</div><h2 class="service-h">AI Output<em>Certification</em></h2><div class="service-tagline">Formal verification. Not consultation.</div></div>
@@ -554,24 +415,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
     </div>
 
     <div class="tier-row">
-      <div class="tier-card"><div class="tier-badge">Tier 01</div><div class="tier-name">Verify</div><div class="tier-price">$2,500</div><div class="tier-cadence">One-time audit</div><div class="tier-divider"></div><ul class="tier-includes"><li>Single deployment audit</li><li>Failure capture verification</li><li>AION Verified badge</li><li>Ledger entry</li></ul></div>
-      <div class="tier-card featured"><div class="tier-badge featured">Tier 02</div><div class="tier-name">Enterprise</div><div class="tier-price">$25,000</div><div class="tier-cadence">Per year · Quarterly</div><div class="tier-divider"></div><ul class="tier-includes"><li>Continuous monitoring</li><li>Quarterly audits</li><li>NIST AI RMF alignment</li><li>Full ledger access</li></ul></div>
-      <div class="tier-card"><div class="tier-badge">Tier 03</div><div class="tier-name">Strategic</div><div class="tier-price">$100k<span style="font-size:16px;">+</span></div><div class="tier-cadence">Per year · Monthly</div><div class="tier-divider"></div><ul class="tier-includes"><li>All Enterprise</li><li>Monthly deep audit</li><li>Custom framework</li><li>Board-level reporting</li></ul></div>
-      <div class="tier-card"><div class="tier-badge">Tier 04</div><div class="tier-name">Sovereign</div><div class="tier-price negotiated">Negotiated</div><div class="tier-cadence">Custom scope</div><div class="tier-divider"></div><ul class="tier-includes"><li>All Strategic</li><li>DoD-grade docs</li><li>Custom STP variants</li><li>Direct architect</li></ul></div>
+      <div class="tier-card"><div class="tier-badge">Tier 01</div><div class="tier-name">Verify</div><div class="tier-price">$2,500</div><div class="tier-cadence">One-time audit</div><div class="tier-divider"></div><ul class="tier-includes"><li>Single deployment</li><li>Failure capture verification</li><li>AION Verified badge</li></ul></div>
+      <div class="tier-card featured"><div class="tier-badge featured">Tier 02</div><div class="tier-name">Enterprise</div><div class="tier-price">$25,000</div><div class="tier-cadence">Per year · Quarterly</div><div class="tier-divider"></div><ul class="tier-includes"><li>Continuous monitoring</li><li>Quarterly audits</li><li>NIST AI RMF alignment</li></ul></div>
+      <div class="tier-card"><div class="tier-badge">Tier 03</div><div class="tier-name">Strategic</div><div class="tier-price">$100k+</div><div class="tier-cadence">Per year · Monthly</div><div class="tier-divider"></div><ul class="tier-includes"><li>All Enterprise</li><li>Monthly deep audit</li><li>Board-level reporting</li></ul></div>
+      <div class="tier-card"><div class="tier-badge">Tier 04</div><div class="tier-name">Sovereign</div><div class="tier-price negotiated">Negotiated</div><div class="tier-cadence">Custom scope</div><div class="tier-divider"></div><ul class="tier-includes"><li>All Strategic</li><li>DoD-grade docs</li><li>Direct architect</li></ul></div>
     </div>
 
     <div class="cta-bar">
-      <a href="/certify/" class="cta-btn primary"><span>Certification Details</span><span class="cta-arrow">→</span></a>
+      <a href="/services/ai-audit/" class="cta-btn primary"><span>Certification Details</span><span class="cta-arrow">→</span></a>
       <a href="/certify/" class="cta-btn gold"><span>Verify a Badge</span><span class="cta-arrow">→</span></a>
     </div>
-
   </div>
 </div>
 
 <!-- ══════════════════════════ SERVICE 04: FRAMEWORK ═══════ -->
 <div class="service-block" id="framework">
   <div class="service-block-inner">
-
     <div class="section-id"><span class="section-id-num">// 04</span><span class="section-id-line"></span></div>
     <div class="service-block-header">
       <div><div class="service-label">Concept → Framework → Simulation</div><h2 class="service-h">Framework<em>Engineering</em></h2><div class="service-tagline">Your idea. Built to be falsifiable.</div></div>
@@ -579,23 +438,65 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
     </div>
 
     <div class="pipeline-strip">
-      <div class="pipeline-node"><span class="pipeline-icon">💡</span><div class="pipeline-step">Phase 01</div><div class="pipeline-name">Concept</div><div class="pipeline-desc">Your idea, research, or methodology.</div></div>
-      <div class="pipeline-node"><span class="pipeline-icon">◈</span><div class="pipeline-step">Phase 02</div><div class="pipeline-name">Framework</div><div class="pipeline-desc">Falsifiable spec. ECF-tagged claims.</div></div>
-      <div class="pipeline-node"><span class="pipeline-icon">🎯</span><div class="pipeline-step">Phase 03</div><div class="pipeline-name">Red Team</div><div class="pipeline-desc">Framework adversarially tested.</div></div>
-      <div class="pipeline-node"><span class="pipeline-icon">⚙</span><div class="pipeline-step">Phase 04</div><div class="pipeline-name">Simulation</div><div class="pipeline-desc">POC simulator built on validated framework.</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">💡</span><div class="pipeline-step">Phase 01</div><div class="pipeline-name">Concept</div><div class="pipeline-desc">Your idea, research</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">◈</span><div class="pipeline-step">Phase 02</div><div class="pipeline-name">Framework</div><div class="pipeline-desc">Falsifiable spec</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">🎯</span><div class="pipeline-step">Phase 03</div><div class="pipeline-name">Red Team</div><div class="pipeline-desc">Adversarial testing</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">⚙</span><div class="pipeline-step">Phase 04</div><div class="pipeline-name">Simulation</div><div class="pipeline-desc">POC built</div></div>
     </div>
 
     <div class="fw-tiers">
-      <div class="sim-tier"><div class="sim-tier-badge">Tier 01</div><div class="sim-tier-name">Concept Scaffold</div><div class="sim-tier-price">$5,000</div><div class="sim-tier-cadence">Framework spec only · 3–5 days</div><div class="tier-divider"></div><ul class="tier-includes"><li>Falsifiable framework spec</li><li>ECF-tagged claims</li><li>Invalidation conditions</li><li>Protocol I formula registration</li></ul></div>
-      <div class="sim-tier featured"><div class="sim-tier-badge featured">Tier 02</div><div class="sim-tier-name">Framework + Sim</div><div class="sim-tier-price">$12,500</div><div class="sim-tier-cadence">Full pipeline · 7–12 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Concept</li><li class="highlight">POC simulator</li><li class="highlight">Framework red-teamed</li><li>AION Verified + STP sealed</li></ul></div>
-      <div class="sim-tier"><div class="sim-tier-badge">Tier 03</div><div class="sim-tier-name">Full Stack Build</div><div class="sim-tier-price">$25,000</div><div class="sim-tier-cadence">Complete pipeline · 15–20 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Tier 02</li><li class="highlight">Framework v0.1→v1.0</li><li>Grant-ready docs</li><li>3 month support</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 01</div><div class="sim-tier-name">Concept Scaffold</div><div class="sim-tier-price">$5,000</div><div class="sim-tier-cadence">3–5 days</div><div class="tier-divider"></div><ul class="tier-includes"><li>Falsifiable spec</li><li>ECF-tagged claims</li><li>Invalidation conditions</li></ul></div>
+      <div class="sim-tier featured"><div class="sim-tier-badge featured">Tier 02</div><div class="sim-tier-name">Framework + Sim</div><div class="sim-tier-price">$12,500</div><div class="sim-tier-cadence">7–12 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Tier 01</li><li class="highlight">POC simulator</li><li>Framework red-teamed</li><li>STP sealed</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 03</div><div class="sim-tier-name">Full Stack Build</div><div class="sim-tier-price">$25,000</div><div class="sim-tier-cadence">15–20 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Tier 02</li><li>Framework v0.1→v1.0</li><li>Grant-ready docs</li><li>3 month support</li></ul></div>
     </div>
 
     <div class="cta-bar">
-      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn primary"><span>Discuss Your Framework</span><span class="cta-arrow">→</span></a>
+      <a href="/services/framework-design/" class="cta-btn primary"><span>Discuss Your Framework</span><span class="cta-arrow">→</span></a>
       <a href="/stack/" class="cta-btn"><span>The AION Stack</span><span class="cta-arrow">→</span></a>
     </div>
+  </div>
+</div>
 
+<!-- ══════════════════════════ SERVICE 05: NEGOTIATE ═══════ -->
+<div class="service-block" id="negotiate">
+  <div class="service-block-inner">
+    <div class="section-id"><span class="section-id-num">// 05</span><span class="section-id-line"></span></div>
+    <div class="service-block-header">
+      <div><div class="service-label">Sovereign Contract Execution · AI-Mediated</div><h2 class="service-h">Negotiate<em>Studio</em></h2><div class="service-tagline" style="color:var(--purple);text-shadow:0 0 5px var(--purple);">Skills over sales theater. Zero phone calls.</div></div>
+      <div><p class="service-lead">Negotiate contracts without phone calls. Upload your ADA. AI mediates the negotiation. Digital signature. STP sealed. Notarization verified. <strong>Sovereign contract execution from intake to final seal.</strong></p></div>
+    </div>
+
+    <div class="poc-statement" style="border-left-color:var(--purple);">
+      <div class="poc-statement-title" style="color:var(--purple);text-shadow:0 0 5px var(--purple);">The Six-Phase Pipeline</div>
+      <div class="poc-statement-body">
+        <strong>Intake → AI Negotiation → Contract Generation → Digital Signature → Notarization Verification → Final STP Seal.</strong> Every step logged. Every document sealed. No phone call required — unless you want one.
+      </div>
+    </div>
+
+    <div class="negotiate-pipeline">
+      <div class="pipeline-node"><span class="pipeline-icon">📋</span><div class="pipeline-step">01</div><div class="pipeline-name">Intake</div><div class="pipeline-desc">ADA + Requirements</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">🤖</span><div class="pipeline-step">02</div><div class="pipeline-name">AI Negotiation</div><div class="pipeline-desc">Gap analysis</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">📄</span><div class="pipeline-step">03</div><div class="pipeline-name">Contract</div><div class="pipeline-desc">AI drafted</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">✍️</span><div class="pipeline-step">04</div><div class="pipeline-name">Sign + Seal</div><div class="pipeline-desc">Digital + STP</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">🔏</span><div class="pipeline-step">05</div><div class="pipeline-name">Notarize</div><div class="pipeline-desc">Verify stamp only</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">🔐</span><div class="pipeline-step">06</div><div class="pipeline-name">Final Seal</div><div class="pipeline-desc">Executed</div></div>
+    </div>
+
+    <div class="negotiate-tiers">
+      <div class="sim-tier"><div class="sim-tier-badge">Per Contract</div><div class="sim-tier-name">Basic</div><div class="negotiate-price">$499</div><div class="sim-tier-cadence">per contract</div><div class="tier-divider"></div><ul class="tier-includes negotiate-includes"><li>AI-mediated negotiation</li><li>Contract generation</li><li>Digital signature</li><li>STP seal</li><li>Audit trail</li></ul></div>
+      <div class="sim-tier featured negotiate-tier"><div class="sim-tier-badge featured">Per Contract</div><div class="sim-tier-name">Professional</div><div class="negotiate-price" style="color:var(--purple);">$1,499</div><div class="sim-tier-cadence">per contract</div><div class="tier-divider"></div><ul class="tier-includes negotiate-includes"><li class="highlight">Everything in Basic</li><li class="highlight">Notarization verification</li><li class="highlight">Final STP seal</li><li>Priority AI negotiator</li><li>Extended audit trail</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Annual</div><div class="sim-tier-name">Enterprise</div><div class="negotiate-price">$4,999</div><div class="sim-tier-cadence">per year</div><div class="tier-divider"></div><ul class="tier-includes negotiate-includes"><li class="highlight">Everything in Pro</li><li class="highlight">Unlimited contracts</li><li>Custom templates</li><li>API access</li><li>Dedicated support</li></ul></div>
+    </div>
+
+    <div style="background:rgba(168,85,247,0.04);border:1px solid rgba(168,85,247,0.15);padding:14px 20px;margin-bottom:32px;font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;">
+      ◈ &nbsp;All Negotiate Studio packages include AI-mediated negotiation, contract generation, digital signature, STP seal, and full audit trail. &nbsp;·&nbsp; NDA available. &nbsp;·&nbsp; No phone call required — optional calendar integration available.
+    </div>
+
+    <div class="cta-bar">
+      <a href="/services/negotiate/" class="cta-btn purple"><span>Explore Negotiate Studio</span><span class="cta-arrow">→</span></a>
+      <a href="/contact/" class="cta-btn primary"><span>Schedule Consultation</span><span class="cta-arrow">→</span></a>
+      <span class="cta-note">Engagement via platform · NDA available · No phone required</span>
+    </div>
   </div>
 </div>
 
@@ -605,19 +506,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
 <div class="engage-strip">
   <div class="engage-inner">
     <div>
-      <h2 class="engage-heading">Your IT team builds<em>on proof.</em></h2>
-      <p class="engage-sub">I give them something that works, is documented, is red-teamed, and is certified. They don't have to guess at what they're building toward.</p>
+      <h2 class="engage-heading">Your team builds<em>on proof.</em></h2>
+      <p class="engage-sub">I give them something that works, is documented, is red-teamed, and is certified. They don't have to guess.</p>
     </div>
     <div class="engage-paths">
-      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="engage-path"><span class="engage-path-icon">💡</span><div><div class="engage-path-label">Commission a Simulation</div><div class="engage-path-desc">Send your domain brief via LinkedIn DM. NDA available.</div></div></a>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="engage-path"><span class="engage-path-icon">◈</span><div><div class="engage-path-label">File a Certification Request</div><div class="engage-path-desc">Structured intake via GitHub. No call required.</div></div></a>
-      <a href="/submissions/" class="engage-path"><span class="engage-path-icon">📋</span><div><div class="engage-path-label">Grant Studio Inquiry</div><div class="engage-path-desc">LOI + Simulation packages. See portfolio for examples.</div></div></a>
+      <a href="/services/rapid-prototyping/" class="engage-path"><span class="engage-path-icon">💡</span><div><div class="engage-path-label">Commission a Simulation</div><div class="engage-path-desc">Send your domain brief. NDA available.</div></div></a>
+      <a href="/services/ai-audit/" class="engage-path"><span class="engage-path-icon">◈</span><div><div class="engage-path-label">File a Certification Request</div><div class="engage-path-desc">Structured intake. No call required.</div></div></a>
+      <a href="/services/negotiate/" class="engage-path"><span class="engage-path-icon">📋</span><div><div class="engage-path-label">Start a Negotiation</div><div class="engage-path-desc">Upload ADA. AI-mediated. Zero calls.</div></div></a>
     </div>
   </div>
 </div>
 
 <footer>
-  <div class="footer-id"><strong>AionSystem</strong> · Sheldon K. Salmon<br>AI Reliability Architect · New York · April 2026<br><span style="font-size:10px;">AION v3.0 · STP v2.0 · LEDGER-067 · © 2026 Sheldon K. Salmon</span></div>
+  <div class="footer-id"><strong>AionSystem</strong> · Sheldon K. Salmon<br>AI Reliability Architect · New York · April 2026<br><span style="font-size:10px;">AION v3.0 · STP v2.0 · LEDGER-068 · © 2026 Sheldon K. Salmon</span></div>
   <ul class="footer-links">
     <li><a href="/">Home</a></li>
     <li><a href="/simulators/">Simulators</a></li>
@@ -625,7 +526,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
     <li><a href="/submissions/">Submissions</a></li>
     <li><a href="/certify/">Certify</a></li>
     <li><a href="/about/">About</a></li>
-    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank">GitHub ↗</a></li>
   </ul>
 </footer>
 
@@ -633,7 +534,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
 (function(){
   "use strict";
   
-  // Mathematical Symbol Field
   const canvas = document.getElementById('hero-canvas');
   const ctx = canvas.getContext('2d');
   let width, height;
@@ -651,7 +551,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40
   window.addEventListener('mouseleave',()=>{mouse.x=null;mouse.y=null;});
   resizeCanvas();drawSymbols();
   
-  // Custom Cursor
   const cursor=document.getElementById('custom-cursor');
   const trailContainer=document.getElementById('cursor-trail-container');
   let trailPositions=[];
