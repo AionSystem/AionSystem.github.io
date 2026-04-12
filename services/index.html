@@ -3,230 +3,221 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AionSystem Services — Proof-of-Concept Simulation Creation, AI Output Certification, Framework Engineering. Sheldon K. Salmon, AI Reliability Architect, New York.">
+<meta name="description" content="AionSystem Services — Grant Simulation Studio, Proof-of-Concept Simulation Creation, AI Output Certification, Framework Engineering. Sheldon K. Salmon, AI Reliability Architect, New York.">
 <meta property="og:title" content="Services — AionSystem · Sheldon K. Salmon">
-<meta property="og:description" content="POC simulations in days. Concept to framework to red-teamed simulator. Not a full integrator — a proof engine.">
+<meta property="og:description" content="Grant-winning simulations in days. POC simulators. AI certification. Framework engineering. Not a full integrator — a proof engine.">
 <meta property="og:type" content="website">
 <title>Services — AionSystem · Sheldon K. Salmon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#08090b; --surface:#0e1117; --panel:#141920; --border:#1e2730;
   --amber:#f0a500; --amber-d:#b07800; --amber-l:#ffc947;
   --gold:#D4AF37; --text:#c4d4de; --muted:#4e5f6a; --dim:#2a3540;
-  --green:#00e676; --cyan:#00d4ff;
+  --green:#00e676; --cyan:#00d4ff; --purple:#a855f7;
   --mono:'Share Tech Mono',monospace; --sans:'Barlow Condensed',sans-serif;
+  --serif:'Crimson Pro',Georgia,serif; --jmono:'JetBrains Mono',monospace;
   --ease:cubic-bezier(0.16,1,0.3,1);
+  --glow-amber:0 0 5px #f0a500,0 0 10px #f0a500,0 0 20px rgba(240,165,0,0.5);
+  --glow-cyan:0 0 5px #00d4ff,0 0 10px #00d4ff,0 0 20px rgba(0,212,255,0.4);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.5;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(240,165,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:0;}
+body{
+  background:var(--bg); color:var(--text); font-family:var(--sans);
+  font-size:16px; line-height:1.5; overflow-x:hidden;
+  cursor:none;
+}
+body::before{
+  content:''; position:fixed; inset:0;
+  background-image:linear-gradient(rgba(0,212,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.025) 1px,transparent 1px);
+  background-size:48px 48px; pointer-events:none; z-index:0;
+}
+body::after{
+  content:''; position:fixed; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+  pointer-events:none; z-index:0;
+}
+
+/* Custom Cursor */
+.custom-cursor{width:20px;height:20px;border:2px solid var(--cyan);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:transform 0.1s ease,background 0.2s ease,box-shadow 0.2s ease;transform:translate(-50%,-50%);box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);}
+.custom-cursor.hover{transform:translate(-50%,-50%) scale(1.8);background:rgba(0,212,255,0.1);border-color:var(--amber);box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5);}
+.cursor-trail{position:fixed;width:6px;height:6px;border-radius:50%;background:var(--cyan);pointer-events:none;z-index:9998;opacity:0.6;box-shadow:0 0 10px var(--cyan);transition:opacity 0.3s ease;}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:0 0 30px rgba(0,212,255,0.05);}
+.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;text-shadow:0 0 5px var(--amber);}
 .nav-logo span{color:var(--muted);}
 .nav-links{display:flex;gap:32px;list-style:none;}
 .nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.2s;}
-.nav-links a:hover,.nav-links a.active{color:var(--amber);}
+.nav-links a:hover,.nav-links a.active{color:var(--cyan);text-shadow:0 0 8px var(--cyan);}
 
-#hero-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.25;pointer-events:none;}
+#hero-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.5;pointer-events:none;}
 
 /* ── PAGE HEADER ── */
-.page-header{position:relative;z-index:1;padding:120px 40px 72px;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--border);}
+.page-header{position:relative;z-index:2;padding:120px 40px 72px;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--border);}
 .breadcrumb{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:20px;opacity:0;animation:fadeUp 0.6s var(--ease) 0.1s forwards;}
 .breadcrumb a{color:var(--muted);text-decoration:none;}
-.breadcrumb a:hover{color:var(--amber);}
+.breadcrumb a:hover{color:var(--cyan);}
 .breadcrumb-sep{margin:0 8px;color:var(--dim);}
 .page-header-inner{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;}
 .page-header-left{opacity:0;transform:translateY(16px);animation:fadeUp 0.8s var(--ease) 0.2s forwards;}
-.page-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:16px;}
-.page-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--amber);vertical-align:middle;margin-right:10px;margin-bottom:2px;}
-.page-title{font-family:var(--sans);font-size:clamp(52px,7vw,88px);font-weight:900;letter-spacing:-1px;line-height:0.9;text-transform:uppercase;color:var(--text);}
-.page-title em{display:block;color:var(--amber);font-style:normal;}
+.page-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:16px;text-shadow:0 0 5px var(--amber);}
+.page-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--cyan);vertical-align:middle;margin-right:10px;margin-bottom:2px;box-shadow:0 0 8px var(--cyan);}
+.page-title{font-family:var(--sans);font-size:clamp(52px,7vw,88px);font-weight:900;letter-spacing:-1px;line-height:0.9;text-transform:uppercase;color:var(--text);text-shadow:0 0 8px rgba(255,255,255,0.2);}
+.page-title em{display:block;color:var(--amber);font-style:normal;text-shadow:var(--glow-amber);}
 .page-header-right{opacity:0;transform:translateY(12px);animation:fadeUp 0.7s var(--ease) 0.4s forwards;}
-.page-premise{font-family:var(--sans);font-size:clamp(16px,2vw,20px);font-weight:300;color:var(--muted);line-height:1.7;max-width:480px;border-left:2px solid var(--amber);padding-left:20px;}
+.page-premise{font-family:var(--sans);font-size:clamp(16px,2vw,20px);font-weight:300;color:var(--muted);line-height:1.7;max-width:480px;border-left:2px solid var(--cyan);padding-left:20px;box-shadow:-4px 0 10px rgba(0,212,255,0.1);}
 .page-premise strong{color:var(--text);font-weight:600;}
 .page-meta{display:flex;gap:28px;margin-top:28px;flex-wrap:wrap;}
 .meta-item{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
-.meta-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0;}
+.meta-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);flex-shrink:0;box-shadow:0 0 8px var(--cyan);}
 
 /* ── JUMP RAIL ── */
-.service-rail{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px;display:flex;gap:1px;background:var(--border);border-bottom:1px solid var(--border);opacity:0;animation:fadeIn 0.6s var(--ease) 0.8s forwards;}
-.rail-item{flex:1;background:var(--surface);padding:20px 24px;text-decoration:none;display:flex;flex-direction:column;gap:6px;transition:background 0.2s;position:relative;overflow:hidden;}
-.rail-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--amber);transform:scaleX(0);transition:transform 0.3s var(--ease);}
-.rail-item:hover{background:var(--panel);}
+.service-rail{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:0 40px;display:flex;gap:1px;background:var(--border);border-bottom:1px solid var(--border);opacity:0;animation:fadeIn 0.6s var(--ease) 0.8s forwards;}
+.rail-item{flex:1;background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:20px 24px;text-decoration:none;display:flex;flex-direction:column;gap:6px;transition:all 0.2s;position:relative;overflow:hidden;border:1px solid transparent;}
+.rail-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--cyan);transform:scaleX(0);transition:transform 0.3s var(--ease);box-shadow:0 0 10px var(--cyan);}
+.rail-item:hover{background:var(--panel);border-color:var(--cyan);}
 .rail-item:hover::after{transform:scaleX(1);}
 .rail-num{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);}
-.rail-label{font-family:var(--sans);font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--amber);}
+.rail-label{font-family:var(--sans);font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 5px var(--cyan);}
 .rail-sub{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);}
 
 /* ── SERVICE BLOCK ── */
-.content-wrapper{position:relative;z-index:1;}
+.content-wrapper{position:relative;z-index:2;}
 .service-block{border-bottom:1px solid var(--border);}
 .service-block-inner{max-width:1200px;margin:0 auto;padding:80px 40px;}
 .service-block-header{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-bottom:56px;align-items:start;}
 .service-label{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
-.service-h{font-family:var(--sans);font-size:clamp(36px,5vw,60px);font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--text);line-height:0.95;margin-bottom:8px;}
-.service-h em{display:block;color:var(--amber);font-style:normal;}
-.service-tagline{font-family:var(--mono);font-size:12px;color:var(--amber-d);letter-spacing:2px;margin-top:16px;}
+.service-h{font-family:var(--sans);font-size:clamp(36px,5vw,60px);font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--text);line-height:0.95;margin-bottom:8px;text-shadow:0 0 8px rgba(255,255,255,0.2);}
+.service-h em{display:block;color:var(--amber);font-style:normal;text-shadow:var(--glow-amber);}
+.service-tagline{font-family:var(--mono);font-size:12px;color:var(--cyan);letter-spacing:2px;margin-top:16px;text-shadow:0 0 5px var(--cyan);}
 .service-lead{font-family:var(--sans);font-size:clamp(16px,1.8vw,20px);font-weight:300;color:var(--muted);line-height:1.75;}
 .service-lead strong{color:var(--text);font-weight:600;}
 
-/* ── POC STATEMENT ── */
-.poc-statement{background:rgba(0,230,118,0.04);border:1px solid rgba(0,230,118,0.2);border-left:3px solid var(--green);padding:24px 28px;margin-bottom:32px;}
-.poc-statement-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--green);text-transform:uppercase;margin-bottom:10px;}
+/* ── GLASS CARDS ── */
+.poc-statement,.repo-model,.principles-block,.portfolio-showcase{background:rgba(20,30,45,0.4);backdrop-filter:blur(12px);border:1px solid var(--border);box-shadow:0 8px 20px rgba(0,0,0,0.3),inset 0 0 30px rgba(0,212,255,0.03);}
+.poc-statement{border-left:3px solid var(--green);padding:24px 28px;margin-bottom:32px;}
+.poc-statement-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--green);text-transform:uppercase;margin-bottom:10px;text-shadow:0 0 5px var(--green);}
 .poc-statement-body{font-family:var(--sans);font-size:16px;font-weight:300;color:var(--text);line-height:1.7;}
 .poc-statement-body strong{font-weight:700;color:var(--green);}
 
-/* ── REPO MODEL ── */
-.repo-model{background:var(--surface);border:1px solid var(--border);padding:28px 32px;margin-bottom:32px;}
-.repo-model-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.repo-model{padding:28px 32px;margin-bottom:32px;}
+.repo-model-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);}
 .repo-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);}
 .repo-step{background:var(--bg);padding:20px 16px;position:relative;}
 .repo-step-num{font-family:var(--mono);font-size:24px;color:var(--dim);font-weight:bold;line-height:1;margin-bottom:10px;}
-.repo-step-title{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:6px;}
+.repo-step-title{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;}
 .repo-step-desc{font-family:var(--sans);font-size:12px;font-weight:300;color:var(--muted);line-height:1.5;}
-.repo-step-arrow{position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:14px;z-index:1;}
+.repo-step-arrow{position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--cyan);font-size:14px;z-index:1;}
 
-/* ── DETAIL GRID ── */
 .detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:40px;}
-.detail-cell{background:var(--surface);padding:28px 24px;transition:background 0.2s;}
-.detail-cell:hover{background:var(--panel);}
-.detail-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--amber-d);text-transform:uppercase;margin-bottom:10px;}
+.detail-cell{background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:28px 24px;transition:all 0.2s;}
+.detail-cell:hover{background:var(--panel);border-color:var(--cyan);}
+.detail-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:10px;}
 .detail-val{font-family:var(--sans);font-size:15px;font-weight:400;color:var(--text);line-height:1.6;}
 .detail-val.mono{font-family:var(--mono);font-size:13px;}
 
-/* ── SIMULATION TIER PRICING ── */
-.sim-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:16px;}
-.sim-tier{background:var(--surface);padding:28px 22px;position:relative;overflow:hidden;transition:background 0.2s;}
-.sim-tier::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border);transition:background 0.2s;}
-.sim-tier:hover{background:var(--panel);}
-.sim-tier:hover::before{background:var(--amber);}
-.sim-tier.featured{background:var(--panel);}
-.sim-tier.featured::before{background:var(--gold);}
-.sim-tier-badge{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:14px;}
-.sim-tier-badge.featured{color:var(--gold);}
-.sim-tier-name{font-family:var(--sans);font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text);margin-bottom:6px;}
-.sim-tier-price{font-family:var(--mono);font-size:28px;color:var(--amber);margin-bottom:2px;letter-spacing:1px;}
-.sim-tier-price.negotiated{font-size:18px;color:var(--gold);}
-.sim-tier-cadence{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:18px;}
+.sim-tiers,.fw-tiers,.tier-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:16px;}
+.sim-tier,.tier-card{background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:28px 22px;position:relative;overflow:hidden;transition:all 0.2s;}
+.sim-tier::before,.tier-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border);transition:all 0.2s;}
+.sim-tier:hover,.tier-card:hover{background:var(--panel);border-color:var(--cyan);box-shadow:0 8px 20px rgba(0,0,0,0.4),0 0 20px rgba(0,212,255,0.1);}
+.sim-tier:hover::before,.tier-card:hover::before{background:var(--cyan);box-shadow:0 0 10px var(--cyan);}
+.sim-tier.featured,.tier-card.featured{background:var(--panel);}
+.sim-tier.featured::before,.tier-card.featured::before{background:var(--gold);box-shadow:0 0 10px var(--gold);}
+.sim-tier-badge,.tier-badge{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:14px;}
+.sim-tier-badge.featured,.tier-badge.featured{color:var(--gold);}
+.sim-tier-name,.tier-name{font-family:var(--sans);font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text);margin-bottom:6px;}
+.sim-tier-price,.tier-price{font-family:var(--mono);font-size:28px;color:var(--cyan);margin-bottom:2px;letter-spacing:1px;text-shadow:0 0 5px var(--cyan);}
+.sim-tier-price.negotiated,.tier-price.negotiated{font-size:18px;color:var(--gold);}
+.sim-tier-cadence,.tier-cadence{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:18px;}
 .tier-divider{height:1px;background:var(--border);margin:14px 0;}
 .tier-includes{list-style:none;display:flex;flex-direction:column;gap:8px;}
 .tier-includes li{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);display:flex;align-items:flex-start;gap:8px;line-height:1.4;}
-.tier-includes li::before{content:'—';color:var(--amber-d);flex-shrink:0;}
+.tier-includes li::before{content:'—';color:var(--cyan);flex-shrink:0;}
 .tier-includes li.highlight{color:var(--text);}
 .tier-includes li.highlight::before{color:var(--amber);}
 
-/* ── FRAMEWORK PIPELINE ── */
 .pipeline-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px;}
-.pipeline-node{background:var(--surface);padding:28px 22px;position:relative;text-align:center;}
-.pipeline-node::after{content:'→';position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--amber-d);font-size:18px;z-index:2;font-family:var(--mono);}
+.pipeline-node{background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:28px 22px;position:relative;text-align:center;}
+.pipeline-node::after{content:'→';position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--cyan);font-size:18px;z-index:2;font-family:var(--mono);text-shadow:0 0 5px var(--cyan);}
 .pipeline-node:last-child::after{display:none;}
 .pipeline-icon{font-size:28px;margin-bottom:12px;display:block;}
 .pipeline-step{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
-.pipeline-name{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.pipeline-name{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;}
 .pipeline-desc{font-family:var(--sans);font-size:12px;font-weight:300;color:var(--muted);line-height:1.5;}
 
-/* ── FRAMEWORK PRICING ── */
-.fw-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px;}
-
-/* ── PROCESS STEPS ── */
-.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--dim);border:1px solid var(--border);margin-bottom:40px;}
-.process-step{background:var(--bg);padding:24px 20px;}
-.step-num{font-family:var(--mono);font-size:32px;color:var(--dim);font-weight:bold;line-height:1;margin-bottom:12px;}
-.step-title{font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
-.step-desc{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);line-height:1.6;}
-
-/* ── CERT TIERS ── */
-.tier-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:16px;}
-.tier-card{background:var(--surface);padding:28px 24px;position:relative;overflow:hidden;transition:background 0.2s;}
-.tier-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border);transition:background 0.2s;}
-.tier-card:hover{background:var(--panel);}
-.tier-card:hover::before{background:var(--amber);}
-.tier-card.featured::before{background:var(--gold);}
-.tier-card.featured{background:var(--panel);}
-.tier-badge{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:16px;}
-.tier-badge.featured{color:var(--gold);}
-.tier-name{font-family:var(--sans);font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text);margin-bottom:8px;}
-.tier-price{font-family:var(--mono);font-size:26px;color:var(--amber);margin-bottom:4px;letter-spacing:1px;}
-.tier-price.negotiated{font-size:18px;color:var(--gold);}
-.tier-cadence{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:20px;}
-
-/* ── DELIVERABLE STRIP ── */
 .deliverable-strip{display:flex;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px;}
-.deliv-item{flex:1;background:var(--bg);padding:20px 18px;}
+.deliv-item{flex:1;background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);padding:20px 18px;}
 .deliv-icon{font-size:20px;margin-bottom:10px;display:block;}
-.deliv-name{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:6px;}
+.deliv-name{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:6px;}
 .deliv-desc{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--muted);line-height:1.5;}
 
-/* ── PRINCIPLES ── */
-.principles-block{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);padding:32px 36px;margin-bottom:40px;}
-.principles-title{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:20px;}
+.principles-block{padding:32px 36px;margin-bottom:40px;}
+.principles-title{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:20px;}
 .principles-list{display:grid;grid-template-columns:1fr 1fr;gap:12px 40px;list-style:none;}
 .principles-list li{font-family:var(--sans);font-size:15px;font-weight:300;color:var(--muted);display:flex;align-items:flex-start;gap:10px;line-height:1.5;}
-.principles-list li::before{content:'◈';color:var(--amber-d);flex-shrink:0;font-size:12px;margin-top:2px;}
+.principles-list li::before{content:'◈';color:var(--cyan);flex-shrink:0;font-size:12px;margin-top:2px;text-shadow:0 0 5px var(--cyan);}
 
-/* ── FRAMEWORK TABLE ── */
 .framework-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin-bottom:32px;}
-.framework-table th{text-align:left;font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface);}
+.framework-table th{text-align:left;font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(20,30,45,0.4);}
 .framework-table td{padding:12px 16px;border-bottom:1px solid rgba(30,39,48,0.6);background:var(--bg);transition:background 0.15s;vertical-align:top;}
 .framework-table tr:hover td{background:var(--surface);}
-.fw-name{color:var(--amber);}
+.fw-name{color:var(--cyan);}
 .fw-fn{color:var(--text);font-family:var(--sans);font-size:13px;}
 .fw-state{color:var(--muted);font-size:11px;}
 
-/* ── CTA BAR ── */
 .cta-bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:24px 0;border-top:1px solid var(--border);}
-.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--amber);color:var(--amber);background:transparent;transition:all 0.2s;position:relative;overflow:hidden;}
-.cta-btn::before{content:'';position:absolute;inset:0;background:var(--amber);transform:translateX(-101%);transition:transform 0.25s var(--ease);z-index:0;}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;backdrop-filter:blur(8px);transition:all 0.2s;position:relative;overflow:hidden;text-shadow:0 0 5px var(--cyan);}
+.cta-btn::before{content:'';position:absolute;inset:0;background:var(--cyan);transform:translateX(-101%);transition:transform 0.25s var(--ease);z-index:0;}
 .cta-btn:hover::before{transform:translateX(0);}
-.cta-btn:hover{color:#000;}
+.cta-btn:hover{color:#000;box-shadow:0 0 20px var(--cyan);}
 .cta-btn span{position:relative;z-index:1;}
 .cta-arrow{font-size:14px;transition:transform 0.2s;}
 .cta-btn:hover .cta-arrow{transform:translateX(4px);}
-.cta-btn.primary{background:var(--amber);color:#000;}
+.cta-btn.primary{background:var(--amber);color:#000;border-color:var(--amber);text-shadow:none;box-shadow:0 0 15px var(--amber);}
 .cta-btn.primary::before{background:var(--amber-l);}
-.cta-btn.gold{border-color:var(--gold);color:var(--gold);}
+.cta-btn.gold{border-color:var(--gold);color:var(--gold);text-shadow:0 0 5px var(--gold);}
 .cta-btn.gold::before{background:var(--gold);}
 .cta-btn.gold:hover{color:#000;}
-.cta-btn.soon{border-color:var(--dim);color:var(--muted);opacity:0.5;pointer-events:none;cursor:default;}
-.cta-btn.soon::before{display:none;}
 .cta-note{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;}
 
-/* ── SECTION ID ── */
 .section-id{display:flex;align-items:center;gap:12px;padding:12px 0;margin-bottom:0;}
-.section-id-num{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber-d);}
-.section-id-line{flex:1;height:1px;background:var(--border);}
+.section-id-num{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-shadow:0 0 5px var(--cyan);}
+.section-id-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 8px var(--cyan);}
 
-/* ── DOMAIN CHIPS ── */
 .domain-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
-.domain-chip{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--amber-d);border:1px solid var(--dim);padding:5px 12px;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
-.chip-dot{width:4px;height:4px;border-radius:50%;background:var(--amber);}
+.domain-chip{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--cyan);border:1px solid var(--dim);padding:5px 12px;text-transform:uppercase;display:flex;align-items:center;gap:6px;background:rgba(0,212,255,0.05);}
+.chip-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);box-shadow:0 0 5px var(--cyan);}
 
-/* ── ENGAGE STRIP ── */
-.engage-strip{position:relative;z-index:1;background:var(--surface);border-top:1px solid var(--border);}
+.engage-strip{position:relative;z-index:2;background:rgba(20,30,45,0.4);backdrop-filter:blur(12px);border-top:1px solid var(--border);}
 .engage-inner{max-width:1200px;margin:0 auto;padding:64px 40px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
-.engage-heading{font-family:var(--sans);font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--text);line-height:0.95;margin-bottom:16px;}
-.engage-heading em{display:block;color:var(--amber);font-style:normal;}
+.engage-heading{font-family:var(--sans);font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--text);line-height:0.95;margin-bottom:16px;text-shadow:0 0 8px rgba(255,255,255,0.2);}
+.engage-heading em{display:block;color:var(--amber);font-style:normal;text-shadow:var(--glow-amber);}
 .engage-sub{font-family:var(--sans);font-size:16px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:32px;}
 .engage-paths{display:flex;flex-direction:column;gap:12px;}
-.engage-path{display:flex;align-items:flex-start;gap:16px;padding:16px 20px;background:var(--bg);border:1px solid var(--border);text-decoration:none;transition:border-color 0.2s,background 0.2s;}
-.engage-path:hover{border-color:var(--amber);background:var(--panel);}
+.engage-path{display:flex;align-items:flex-start;gap:16px;padding:16px 20px;background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);border:1px solid var(--border);text-decoration:none;transition:all 0.2s;}
+.engage-path:hover{border-color:var(--cyan);background:var(--panel);box-shadow:0 0 20px rgba(0,212,255,0.1);}
 .engage-path-icon{font-size:20px;flex-shrink:0;}
-.engage-path-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:4px;}
+.engage-path-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:4px;text-shadow:0 0 5px var(--cyan);}
 .engage-path-desc{font-family:var(--sans);font-size:14px;font-weight:300;color:var(--muted);}
 
-/* ── FOOTER ── */
-footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+/* Portfolio Showcase */
+.portfolio-showcase{padding:24px 28px;margin:32px 0;}
+.portfolio-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:16px;}
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.portfolio-item{background:var(--bg);border:1px solid var(--border);padding:16px;transition:all 0.2s;}
+.portfolio-item:hover{border-color:var(--cyan);}
+.portfolio-item-name{font-family:var(--sans);font-size:14px;font-weight:700;color:var(--amber);margin-bottom:4px;}
+.portfolio-item-desc{font-family:var(--mono);font-size:9px;color:var(--muted);}
+
+footer{position:relative;z-index:2;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
 .footer-id{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;letter-spacing:1px;}
 .footer-id strong{color:var(--amber);}
 .footer-links{display:flex;gap:24px;list-style:none;}
 .footer-links a{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.15s;}
-.footer-links a:hover{color:var(--amber);}
+.footer-links a:hover{color:var(--cyan);text-shadow:0 0 8px var(--cyan);}
 
 @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
 @keyframes fadeIn{to{opacity:1;}}
@@ -235,11 +226,12 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
   .page-header-inner{grid-template-columns:1fr;gap:24px;}
   .service-block-header{grid-template-columns:1fr;gap:24px;}
   .tier-row,.sim-tiers,.fw-tiers{grid-template-columns:1fr 1fr;}
-  .process-steps,.repo-steps,.pipeline-strip{grid-template-columns:1fr 1fr;}
+  .repo-steps,.pipeline-strip{grid-template-columns:1fr 1fr;}
   .detail-grid{grid-template-columns:1fr 1fr;}
   .engage-inner{grid-template-columns:1fr;gap:32px;}
   .deliverable-strip{flex-direction:column;}
   .principles-list{grid-template-columns:1fr;}
+  .portfolio-grid{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:640px){
   nav{padding:0 20px;}
@@ -249,24 +241,29 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
   .engage-inner{padding:40px 20px;}
   footer{padding:32px 20px;}
   .tier-row,.sim-tiers,.fw-tiers{grid-template-columns:1fr;}
-  .process-steps,.repo-steps,.pipeline-strip{grid-template-columns:1fr;}
+  .repo-steps,.pipeline-strip{grid-template-columns:1fr;}
   .detail-grid{grid-template-columns:1fr;}
   .service-rail{display:none;}
   .repo-step-arrow{display:none;}
+  .portfolio-grid{grid-template-columns:1fr;}
+  .custom-cursor{display:none;}
 }
 </style>
 </head>
 <body>
 
 <canvas id="hero-canvas"></canvas>
+<div class="custom-cursor" id="custom-cursor"></div>
+<div id="cursor-trail-container"></div>
 
 <nav>
   <a href="/" class="nav-logo">AION<span>system</span></a>
   <ul class="nav-links">
     <li><a href="/simulators/">Simulators</a></li>
     <li><a href="/services/" class="active">Services</a></li>
-    <li><a href="/#stack">Stack</a></li>
+    <li><a href="/stack/">Stack</a></li>
     <li><a href="/certify/">Certify</a></li>
+    <li><a href="/submissions/">Submissions</a></li>
     <li><a href="/about/">About</a></li>
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
   </ul>
@@ -284,10 +281,10 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
     </div>
     <div class="page-header-right">
       <p class="page-premise">
-        I build proof-of-concept simulations, frameworks, and AI output certification systems — in days, not months. <strong>I am not a full-stack integrator.</strong> I turn your domain expertise into a working, red-teamed, certified proof of concept that your IT team can build on — or your funder can see.
+        I build proof-of-concept simulations, frameworks, grant-winning demos, and AI output certification systems — in days, not months. <strong>I am not a full-stack integrator.</strong> I turn your domain expertise into a working, red-teamed, certified proof of concept.
       </p>
       <div class="page-meta">
-        <div class="meta-item"><span class="meta-dot"></span><span>Active · March 2026</span></div>
+        <div class="meta-item"><span class="meta-dot"></span><span>Active · April 2026</span></div>
         <div class="meta-item"><span class="meta-dot"></span><span>New York</span></div>
         <div class="meta-item"><span class="meta-dot"></span><span>Solo · Fast · Certified</span></div>
       </div>
@@ -297,18 +294,23 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 
 <!-- JUMP RAIL -->
 <div class="service-rail">
-  <a href="#simulation" class="rail-item">
+  <a href="#grant-studio" class="rail-item">
     <span class="rail-num">01</span>
+    <span class="rail-label">Grant Studio</span>
+    <span class="rail-sub">LOI + Simulation · Funded</span>
+  </a>
+  <a href="#simulation" class="rail-item">
+    <span class="rail-num">02</span>
     <span class="rail-label">POC Simulation</span>
     <span class="rail-sub">Days not months · AION Verified</span>
   </a>
   <a href="#certification" class="rail-item">
-    <span class="rail-num">02</span>
-    <span class="rail-label">AI Output Certification</span>
+    <span class="rail-num">03</span>
+    <span class="rail-label">AI Certification</span>
     <span class="rail-sub">STP FROZEN-2.0 · Four tiers</span>
   </a>
   <a href="#framework" class="rail-item">
-    <span class="rail-num">03</span>
+    <span class="rail-num">04</span>
     <span class="rail-label">Framework Engineering</span>
     <span class="rail-sub">Concept → Framework → Simulation</span>
   </a>
@@ -316,12 +318,170 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
 
 <div class="content-wrapper">
 
-<!-- ══════════════════════════ SERVICE 01: SIMULATION ══════ -->
-<div class="service-block" id="simulation">
+<!-- ══════════════════════════ SERVICE 01: GRANT STUDIO ══════ -->
+<div class="service-block" id="grant-studio">
   <div class="service-block-inner">
 
     <div class="section-id">
       <span class="section-id-num">// 01</span>
+      <span class="section-id-line"></span>
+    </div>
+
+    <div class="service-block-header">
+      <div>
+        <div class="service-label">LOI + Simulation · NOAA · UNDP · SBIR</div>
+        <h2 class="service-h">Grant<em>Studio</em></h2>
+        <div class="service-tagline">Your research. My simulation. One winning package.</div>
+        <div class="domain-chips">
+          <span class="domain-chip"><span class="chip-dot"></span>NOAA</span>
+          <span class="domain-chip"><span class="chip-dot"></span>UNDP</span>
+          <span class="domain-chip"><span class="chip-dot"></span>SBIR</span>
+          <span class="domain-chip"><span class="chip-dot"></span>NSF</span>
+          <span class="domain-chip"><span class="chip-dot"></span>NIH</span>
+          <span class="domain-chip"><span class="chip-dot"></span>DARPA</span>
+        </div>
+      </div>
+      <div>
+        <p class="service-lead">
+          Most grant applications are just words. Mine include a <strong>live, interactive simulation</strong> that reviewers can actually use. I write the LOI or full proposal, build the simulation, and deliver a complete package that makes your application unforgettable.
+          <br><br>
+          This is how I submitted VERITAS‑SHELLFISH to NOAA — LOI, simulation, video walkthrough, DOI, and cryptographic sealing all in one package. You bring the domain expertise. I bring the proof.
+        </p>
+      </div>
+    </div>
+
+    <!-- Portfolio Showcase -->
+    <div class="portfolio-showcase">
+      <div class="portfolio-title">Recent Grant Studio Work</div>
+      <div class="portfolio-grid">
+        <div class="portfolio-item">
+          <div class="portfolio-item-name">VERITAS‑SHELLFISH</div>
+          <div class="portfolio-item-desc">NOAA‑NOS‑NCCOS‑2026‑32955 · HAB Toxin Detection · LOI + Simulation + Video</div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-item-name">VERITAS</div>
+          <div class="portfolio-item-desc">UNDP Accelerator Lab Prize · Crisis Certification · Full compliance + DCI scoring</div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-item-name">AXIOM</div>
+          <div class="portfolio-item-desc">NICE Challenge 2026 · AI Certainty Middleware · TRL 6</div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-item-name">PILLING-SIM</div>
+          <div class="portfolio-item-desc">NICE Challenge 2026 · Textile Pilling Prediction · ISO 12945-2:2000</div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-item-name">PROJECT ORION</div>
+          <div class="portfolio-item-desc">UNDP Innocentive · UXO Detection · Passive Tri-Axis Gradiometer</div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-item-name">Textile Pilling Simulator</div>
+          <div class="portfolio-item-desc">InoCrowd Challenge · Live Web Tool · 16+ parameters</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What's Included -->
+    <div class="poc-statement">
+      <div class="poc-statement-title">What the Grant Studio Package Includes</div>
+      <div class="poc-statement-body">
+        <strong>Complete LOI or full proposal writing</strong> — tailored to the specific NOFO, with compliance checklist, budget narrative, and partner identification. <strong>Working simulation deployed to GitHub Pages</strong> — live, interactive, mobile-responsive. <strong>Silent video walkthrough</strong> — 2-minute demo linked in the application. <strong>DOI registration via Zenodo</strong> — citable, permanent record. <strong>STP cryptographic seal</strong> — immutable proof of completion date. <strong>Commercial + GPL dual licensing</strong> — clear IP structure for reviewers.
+      </div>
+    </div>
+
+    <!-- Pricing Tiers -->
+    <div class="sim-tiers">
+      <div class="sim-tier">
+        <div class="sim-tier-badge">Tier 01 · LOI Package</div>
+        <div class="sim-tier-name">LOI + Simulation</div>
+        <div class="sim-tier-price">$4,500</div>
+        <div class="sim-tier-cadence">3–5 days · LOI deadline ready</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>Complete LOI writing (NOFO compliant)</li>
+          <li>Single-module simulation</li>
+          <li>Deployed to GitHub Pages</li>
+          <li>Silent video walkthrough</li>
+          <li>DOI registration</li>
+          <li>STP sealed</li>
+          <li>AION Verified badge</li>
+        </ul>
+      </div>
+      <div class="sim-tier featured">
+        <div class="sim-tier-badge featured">Tier 02 · Full Proposal</div>
+        <div class="sim-tier-name">Proposal + Simulation</div>
+        <div class="sim-tier-price">$8,500</div>
+        <div class="sim-tier-cadence">7–12 days · Full proposal ready</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li class="highlight">Everything in LOI Package</li>
+          <li class="highlight">Full 15-20 page proposal</li>
+          <li class="highlight">Budget narrative + justification</li>
+          <li class="highlight">Multi-module simulation (up to 5)</li>
+          <li>Partner identification support</li>
+          <li>Compliance matrix</li>
+          <li>Red-team documentation</li>
+        </ul>
+      </div>
+      <div class="sim-tier">
+        <div class="sim-tier-badge">Tier 03 · Research Grade</div>
+        <div class="sim-tier-name">Full Stack Grant</div>
+        <div class="sim-tier-price">$15,000</div>
+        <div class="sim-tier-cadence">15–20 days · Complete package</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li class="highlight">Everything in Proposal Package</li>
+          <li class="highlight">Unlimited simulation modules</li>
+          <li class="highlight">Co-PI support documentation</li>
+          <li>ORCID + CITATION.cff</li>
+          <li>Experimental framework docs</li>
+          <li>3 month post-submission support</li>
+          <li>Rebuttal assistance if invited</li>
+        </ul>
+      </div>
+      <div class="sim-tier">
+        <div class="sim-tier-badge">Tier 04 · Custom</div>
+        <div class="sim-tier-name">Enterprise Grant</div>
+        <div class="sim-tier-price negotiated">Negotiated</div>
+        <div class="sim-tier-cadence">Scoped per opportunity</div>
+        <div class="tier-divider"></div>
+        <ul class="tier-includes">
+          <li>Everything in Full Stack</li>
+          <li>Multi-PI consortium support</li>
+          <li>DoD / Federal standards</li>
+          <li>Classified domain support</li>
+          <li>Direct architect availability</li>
+          <li>No ceiling on scope</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);padding:14px 20px;margin-bottom:32px;font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;">
+      ◈ &nbsp;All Grant Studio packages include LOI/proposal writing, simulation deployment, video walkthrough, DOI, STP seal, and AION Verified badge. &nbsp;·&nbsp; NDA available. &nbsp;·&nbsp; You retain all IP rights to your research; I retain rights to the simulation architecture.
+    </div>
+
+    <div class="cta-bar">
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn primary">
+        <span>Book a Grant Consultation</span><span class="cta-arrow">→</span>
+      </a>
+      <a href="/submissions/" class="cta-btn">
+        <span>See Grant Portfolio</span><span class="cta-arrow">→</span>
+      </a>
+      <a href="https://aionsystem.github.io/veritas-shellfish" target="_blank" class="cta-btn gold">
+        <span>NOAA LOI Example</span><span class="cta-arrow">→</span>
+      </a>
+      <span class="cta-note">Engagement via LinkedIn DM · NDA available · Response within 48 hrs</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════ SERVICE 02: SIMULATION ══════ -->
+<div class="service-block" id="simulation">
+  <div class="service-block-inner">
+
+    <div class="section-id">
+      <span class="section-id-num">// 02</span>
       <span class="section-id-line"></span>
     </div>
 
@@ -342,465 +502,97 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
       </div>
       <div>
         <p class="service-lead">
-          You have the domain expertise, the research, the grant proposal, or the idea. <strong>I turn it into a working, red-teamed, certified proof-of-concept simulator in days.</strong>
+          You have the domain expertise, the research, or the idea. <strong>I turn it into a working, red-teamed, certified proof-of-concept simulator in days.</strong>
           <br><br>
-          I am not your full-stack integrator. I build the proof — the working demonstration that shows exactly what the system looks like and how it behaves. Your IT team takes that and wires it to your infrastructure. Your funder sees it and understands the concept. Your collaborators can build on it.
+          I am not your full-stack integrator. I build the proof — the working demonstration that shows exactly what the system looks like and how it behaves.
         </p>
       </div>
     </div>
 
-    <!-- POC Statement -->
     <div class="poc-statement">
       <div class="poc-statement-title">What I am · What I am not</div>
       <div class="poc-statement-body">
-        <strong>I am a proof-of-concept simulation builder.</strong> I take your PDF research, your working papers, your technical specifications — under NDA if required — and I build a working, self-contained, red-teamed simulator that demonstrates your concept at full fidelity. I deliver it as a dedicated GitHub repository with you as a collaborator. Your IT team can fork it, wire it to your systems, and scale it. I am not the person who does that wiring. I build the thing that proves the wiring is worth doing.
+        <strong>I am a proof-of-concept simulation builder.</strong> I take your PDF research, your working papers, your technical specifications — under NDA if required — and I build a working, self-contained, red-teamed simulator that demonstrates your concept at full fidelity.
       </div>
     </div>
 
-    <!-- Repo Collaboration Model -->
     <div class="repo-model">
       <div class="repo-model-title">How the collaboration works</div>
       <div class="repo-steps">
-        <div class="repo-step">
-          <div class="repo-step-num">01</div>
-          <div class="repo-step-title">You send the brief</div>
-          <div class="repo-step-desc">PDF research, technical docs, working papers — NDA available. No GitHub account required from you at this stage.</div>
-          <div class="repo-step-arrow">→</div>
-        </div>
-        <div class="repo-step">
-          <div class="repo-step-num">02</div>
-          <div class="repo-step-title">I build the repo</div>
-          <div class="repo-step-desc">A dedicated GitHub repository under the AionSystem org. Your simulator, your documentation, your data.</div>
-          <div class="repo-step-arrow">→</div>
-        </div>
-        <div class="repo-step">
-          <div class="repo-step-num">03</div>
-          <div class="repo-step-title">Red team + badge</div>
-          <div class="repo-step-desc">Minimum two adversarial passes. Issues logged, resolved, documented. AION Verified badge issued on completion.</div>
-          <div class="repo-step-arrow">→</div>
-        </div>
-        <div class="repo-step">
-          <div class="repo-step-num">04</div>
-          <div class="repo-step-title">You get collaborator access</div>
-          <div class="repo-step-desc">Your GitHub account added as a collaborator. You own the work. Fork it, modify it, hand it to your IT team.</div>
-          <div class="repo-step-arrow">→</div>
-        </div>
-        <div class="repo-step">
-          <div class="repo-step-num">05</div>
-          <div class="repo-step-title">Live on my portfolio</div>
-          <div class="repo-step-desc">Your simulator linked from aionsystem.github.io — visible to funders, collaborators, and future clients as a verified build.</div>
-        </div>
+        <div class="repo-step"><div class="repo-step-num">01</div><div class="repo-step-title">You send the brief</div><div class="repo-step-desc">PDF research, technical docs — NDA available.</div><div class="repo-step-arrow">→</div></div>
+        <div class="repo-step"><div class="repo-step-num">02</div><div class="repo-step-title">I build the repo</div><div class="repo-step-desc">Dedicated GitHub repository under AionSystem.</div><div class="repo-step-arrow">→</div></div>
+        <div class="repo-step"><div class="repo-step-num">03</div><div class="repo-step-title">Red team + badge</div><div class="repo-step-desc">Minimum two adversarial passes. AION Verified.</div><div class="repo-step-arrow">→</div></div>
+        <div class="repo-step"><div class="repo-step-num">04</div><div class="repo-step-title">You get access</div><div class="repo-step-desc">Collaborator access. You own the work.</div><div class="repo-step-arrow">→</div></div>
+        <div class="repo-step"><div class="repo-step-num">05</div><div class="repo-step-title">Live on portfolio</div><div class="repo-step-desc">Linked from aionsystem.github.io.</div></div>
       </div>
     </div>
 
-    <!-- Simulation Pricing Tiers -->
     <div class="sim-tiers">
-
-      <div class="sim-tier">
-        <div class="sim-tier-badge">Tier 01 · Entry</div>
-        <div class="sim-tier-name">Starter POC</div>
-        <div class="sim-tier-price">$3,500</div>
-        <div class="sim-tier-cadence">Single domain · 3–5 days</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li>Single-domain simulation (1 module)</li>
-          <li>Citation-backed physics / methodology</li>
-          <li>2 red team passes · issues documented</li>
-          <li>AION Verified badge issued</li>
-          <li>Dedicated GitHub repo · collaborator access</li>
-          <li>Self-contained HTML · zero dependencies</li>
-          <li>Portfolio link on aionsystem.github.io</li>
-        </ul>
-      </div>
-
-      <div class="sim-tier featured">
-        <div class="sim-tier-badge featured">Tier 02 · Research Grade</div>
-        <div class="sim-tier-name">Research POC</div>
-        <div class="sim-tier-price">$8,500</div>
-        <div class="sim-tier-cadence">Multi-module · 5–10 days</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li class="highlight">Everything in Starter POC</li>
-          <li class="highlight">Multi-module simulation (up to 5)</li>
-          <li class="highlight">Grant-proposal ready documentation</li>
-          <li>3 red team passes · full FFA file</li>
-          <li>STP sealed audit trail · SHA-256</li>
-          <li>Bilingual interface (EN + one language)</li>
-          <li>NDA engagement available</li>
-          <li>Publication-ready methodology section</li>
-        </ul>
-      </div>
-
-      <div class="sim-tier">
-        <div class="sim-tier-badge">Tier 03 · Collaboration</div>
-        <div class="sim-tier-name">Collab POC</div>
-        <div class="sim-tier-price">$15,000</div>
-        <div class="sim-tier-cadence">Full build · 10–15 days</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li class="highlight">Everything in Research POC</li>
-          <li class="highlight">Unlimited modules</li>
-          <li class="highlight">Dual-author repo (co-PI support)</li>
-          <li>ORCID integration + CITATION.cff</li>
-          <li>Full experimental framework docs</li>
-          <li>Issue templates for ongoing collaboration</li>
-          <li>3 month post-delivery support window</li>
-          <li>Zenodo DOI registration support</li>
-        </ul>
-      </div>
-
-      <div class="sim-tier">
-        <div class="sim-tier-badge">Tier 04 · Custom</div>
-        <div class="sim-tier-name">Custom Build</div>
-        <div class="sim-tier-price negotiated">Negotiated</div>
-        <div class="sim-tier-cadence">Scoped per engagement</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li>Everything in Collab POC</li>
-          <li>DoD / Federal documentation standards</li>
-          <li>Classified / restricted domain support</li>
-          <li>Custom red-team adversary profile</li>
-          <li>Direct architect availability throughout</li>
-          <li>Framework engineering included</li>
-          <li>No ceiling on scope</li>
-        </ul>
-      </div>
-
-    </div>
-
-    <div style="background:rgba(240,165,0,0.04);border:1px solid rgba(240,165,0,0.15);padding:14px 20px;margin-bottom:32px;font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;">
-      ◈ &nbsp;All tiers include a dedicated GitHub repo, collaborator access, AION Verified badge, and a portfolio link. &nbsp;·&nbsp; NDA available on request for all tiers. &nbsp;·&nbsp; Turnaround is a target, not a guarantee — complex domains take longer. &nbsp;·&nbsp; <strong style="color:var(--amber-d);">I do not do full system integration. I build the proof. Your team builds the production system.</strong>
-    </div>
-
-    <!-- What I need from you -->
-    <div class="detail-grid">
-      <div class="detail-cell">
-        <div class="detail-label">What you send me</div>
-        <div class="detail-val">PDF research · Technical specs · Working papers · Test data · Reference documents. NDA available.</div>
-      </div>
-      <div class="detail-cell">
-        <div class="detail-label">What I build</div>
-        <div class="detail-val">Self-contained HTML simulator · Red-team documentation · AION Verified badge · Dedicated GitHub repo</div>
-      </div>
-      <div class="detail-cell">
-        <div class="detail-label">What I don't do</div>
-        <div class="detail-val">Full-stack integration · Backend APIs · Database wiring · DevOps · Ongoing maintenance contracts</div>
-      </div>
-      <div class="detail-cell">
-        <div class="detail-label">Turnaround</div>
-        <div class="detail-val">Starter: 3–5 days · Research: 5–10 days · Collab: 10–15 days · Custom: scoped per domain</div>
-      </div>
-      <div class="detail-cell">
-        <div class="detail-label">Domains built</div>
-        <div class="detail-val mono">Physics · EOD Field Ops · Quantum Language · Education · Civilization Scale · More in progress</div>
-      </div>
-      <div class="detail-cell">
-        <div class="detail-label">Your IT team gets</div>
-        <div class="detail-val">A working, documented, red-teamed proof-of-concept they can fork, wire, and scale without guessing at what to build</div>
-      </div>
-    </div>
-
-    <!-- Deliverables -->
-    <div class="deliverable-strip">
-      <div class="deliv-item">
-        <span class="deliv-icon">📐</span>
-        <div class="deliv-name">Citation-Backed</div>
-        <div class="deliv-desc">Every equation sourced. Every constant verified. Reference documented in audit trail.</div>
-      </div>
-      <div class="deliv-item">
-        <span class="deliv-icon">🎯</span>
-        <div class="deliv-name">Red-Teamed</div>
-        <div class="deliv-desc">Minimum two adversarial passes. All findings logged, resolved, documented publicly.</div>
-      </div>
-      <div class="deliv-item">
-        <span class="deliv-icon">◈</span>
-        <div class="deliv-name">AION Verified</div>
-        <div class="deliv-desc">Badge issued. Verifiable at /certify/. Not decorative.</div>
-      </div>
-      <div class="deliv-item">
-        <span class="deliv-icon">⚙</span>
-        <div class="deliv-name">Zero Dependencies</div>
-        <div class="deliv-desc">Single HTML file. Runs in a browser in 2035. No npm. No build step.</div>
-      </div>
-      <div class="deliv-item">
-        <span class="deliv-icon">🔒</span>
-        <div class="deliv-name">STP Sealed</div>
-        <div class="deliv-desc">SHA-256 cryptographic seal on Research tier and above. Immutable record of build completion.</div>
-      </div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 01 · Entry</div><div class="sim-tier-name">Starter POC</div><div class="sim-tier-price">$3,500</div><div class="sim-tier-cadence">Single domain · 3–5 days</div><div class="tier-divider"></div><ul class="tier-includes"><li>Single-domain simulation</li><li>Citation-backed</li><li>2 red team passes</li><li>AION Verified badge</li><li>GitHub repo · collaborator</li><li>Zero dependencies</li></ul></div>
+      <div class="sim-tier featured"><div class="sim-tier-badge featured">Tier 02 · Research</div><div class="sim-tier-name">Research POC</div><div class="sim-tier-price">$8,500</div><div class="sim-tier-cadence">Multi-module · 5–10 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Starter</li><li class="highlight">Multi-module (up to 5)</li><li class="highlight">Grant-ready docs</li><li>3 red team passes</li><li>STP sealed</li><li>Bilingual interface</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 03 · Collaboration</div><div class="sim-tier-name">Collab POC</div><div class="sim-tier-price">$15,000</div><div class="sim-tier-cadence">Full build · 10–15 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Research</li><li class="highlight">Unlimited modules</li><li class="highlight">Dual-author repo</li><li>ORCID + CITATION.cff</li><li>3 month support</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 04 · Custom</div><div class="sim-tier-name">Custom Build</div><div class="sim-tier-price negotiated">Negotiated</div><div class="sim-tier-cadence">Scoped per engagement</div><div class="tier-divider"></div><ul class="tier-includes"><li>Everything in Collab</li><li>DoD / Federal standards</li><li>Classified domain</li><li>Direct architect</li></ul></div>
     </div>
 
     <div class="cta-bar">
-      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn primary">
-        <span>Commission a Simulator</span><span class="cta-arrow">→</span>
-      </a>
-      <a href="/simulators/" class="cta-btn">
-        <span>See Live Simulators</span><span class="cta-arrow">→</span>
-      </a>
-      <a href="/simulators/Orion/" class="cta-btn">
-        <span>ORION — Field EOD Example</span><span class="cta-arrow">→</span>
-      </a>
-      <span class="cta-note">Engagement via LinkedIn DM · NDA available · Response within 48 hrs</span>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn primary"><span>Commission a Simulator</span><span class="cta-arrow">→</span></a>
+      <a href="/simulators/" class="cta-btn"><span>See Live Simulators</span><span class="cta-arrow">→</span></a>
     </div>
 
   </div>
 </div>
 
-<!-- ══════════════════════════ SERVICE 02: CERTIFICATION ══ -->
+<!-- ══════════════════════════ SERVICE 03: CERTIFICATION ══ -->
 <div class="service-block" id="certification">
   <div class="service-block-inner">
 
-    <div class="section-id">
-      <span class="section-id-num">// 02</span>
-      <span class="section-id-line"></span>
-    </div>
-
+    <div class="section-id"><span class="section-id-num">// 03</span><span class="section-id-line"></span></div>
     <div class="service-block-header">
-      <div>
-        <div class="service-label">STP FROZEN-2.0 · Epistemic Audit</div>
-        <h2 class="service-h">AI Output<em>Certification</em></h2>
-        <div class="service-tagline">Formal verification. Not consultation.</div>
-        <div class="domain-chips">
-          <span class="domain-chip"><span class="chip-dot"></span>NIST AI RMF</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Failure Logging</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Epistemic Audit</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Cryptographic Seal</span>
-        </div>
-      </div>
-      <div>
-        <p class="service-lead">
-          Certification is not installation of a monitoring tool. It is <strong>formal verification that your AI deployment captures failures immutably, remediates them transparently, and maintains an honest epistemic record.</strong>
-          <br><br>
-          The Sovereign Trace Protocol exists because "responsible AI" without failure documentation is marketing. STP FROZEN-2.0 defines the minimum standard. Certification verifies you meet it — and maintains that verification through a cryptographic ledger that cannot be quietly amended.
-        </p>
-      </div>
+      <div><div class="service-label">STP FROZEN-2.0 · Epistemic Audit</div><h2 class="service-h">AI Output<em>Certification</em></h2><div class="service-tagline">Formal verification. Not consultation.</div></div>
+      <div><p class="service-lead">Certification is formal verification that your AI deployment captures failures immutably and maintains an honest epistemic record.</p></div>
     </div>
 
     <div class="tier-row">
-      <div class="tier-card">
-        <div class="tier-badge">Tier 01 · Single Event</div>
-        <div class="tier-name">Verify</div>
-        <div class="tier-price">$2,500</div>
-        <div class="tier-cadence">One-time audit</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li>Single AI deployment event audit</li>
-          <li>Failure capture verification</li>
-          <li>AION Verified badge issued</li>
-          <li>Ledger entry: immutable record</li>
-          <li>Audit report: public summary</li>
-        </ul>
-      </div>
-      <div class="tier-card featured">
-        <div class="tier-badge featured">Tier 02 · Annual</div>
-        <div class="tier-name">Enterprise</div>
-        <div class="tier-price">$25,000</div>
-        <div class="tier-cadence">Per year · Quarterly reviews</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li>Continuous failure monitoring framework</li>
-          <li>Quarterly epistemic audit passes</li>
-          <li>AION Verified badge: annually renewed</li>
-          <li>NIST AI RMF alignment report</li>
-          <li>Full ledger access and audit trail</li>
-        </ul>
-      </div>
-      <div class="tier-card">
-        <div class="tier-badge">Tier 03 · Annual</div>
-        <div class="tier-name">Strategic</div>
-        <div class="tier-price">$100,000<span style="font-size:16px;">+</span></div>
-        <div class="tier-cadence">Per year · Monthly reviews</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li>All Enterprise inclusions</li>
-          <li>Monthly deep-architecture audit</li>
-          <li>Custom framework for your failure modes</li>
-          <li>Board-level epistemic reporting</li>
-        </ul>
-      </div>
-      <div class="tier-card">
-        <div class="tier-badge">Tier 04 · Defense</div>
-        <div class="tier-name">Sovereign</div>
-        <div class="tier-price negotiated">Negotiated</div>
-        <div class="tier-cadence">Custom scope · Direct engagement</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li>All Strategic inclusions</li>
-          <li>DoD-grade documentation standards</li>
-          <li>Custom STP protocol variants</li>
-          <li>Direct architect engagement</li>
-        </ul>
-      </div>
+      <div class="tier-card"><div class="tier-badge">Tier 01</div><div class="tier-name">Verify</div><div class="tier-price">$2,500</div><div class="tier-cadence">One-time audit</div><div class="tier-divider"></div><ul class="tier-includes"><li>Single deployment audit</li><li>Failure capture verification</li><li>AION Verified badge</li><li>Ledger entry</li></ul></div>
+      <div class="tier-card featured"><div class="tier-badge featured">Tier 02</div><div class="tier-name">Enterprise</div><div class="tier-price">$25,000</div><div class="tier-cadence">Per year · Quarterly</div><div class="tier-divider"></div><ul class="tier-includes"><li>Continuous monitoring</li><li>Quarterly audits</li><li>NIST AI RMF alignment</li><li>Full ledger access</li></ul></div>
+      <div class="tier-card"><div class="tier-badge">Tier 03</div><div class="tier-name">Strategic</div><div class="tier-price">$100k<span style="font-size:16px;">+</span></div><div class="tier-cadence">Per year · Monthly</div><div class="tier-divider"></div><ul class="tier-includes"><li>All Enterprise</li><li>Monthly deep audit</li><li>Custom framework</li><li>Board-level reporting</li></ul></div>
+      <div class="tier-card"><div class="tier-badge">Tier 04</div><div class="tier-name">Sovereign</div><div class="tier-price negotiated">Negotiated</div><div class="tier-cadence">Custom scope</div><div class="tier-divider"></div><ul class="tier-includes"><li>All Strategic</li><li>DoD-grade docs</li><li>Custom STP variants</li><li>Direct architect</li></ul></div>
     </div>
 
     <div class="cta-bar">
-      <a href="/certify/" class="cta-btn primary">
-        <span>Certification Details</span><span class="cta-arrow">→</span>
-      </a>
-      <a href="/certify/" class="cta-btn gold">
-        <span>Verify a Badge</span><span class="cta-arrow">→</span>
-      </a>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="cta-btn">
-        <span>File an Audit Request</span><span class="cta-arrow">→</span>
-      </a>
+      <a href="/certify/" class="cta-btn primary"><span>Certification Details</span><span class="cta-arrow">→</span></a>
+      <a href="/certify/" class="cta-btn gold"><span>Verify a Badge</span><span class="cta-arrow">→</span></a>
     </div>
 
   </div>
 </div>
 
-<!-- ══════════════════════════ SERVICE 03: FRAMEWORK ═══════ -->
+<!-- ══════════════════════════ SERVICE 04: FRAMEWORK ═══════ -->
 <div class="service-block" id="framework">
   <div class="service-block-inner">
 
-    <div class="section-id">
-      <span class="section-id-num">// 03</span>
-      <span class="section-id-line"></span>
-    </div>
-
+    <div class="section-id"><span class="section-id-num">// 04</span><span class="section-id-line"></span></div>
     <div class="service-block-header">
-      <div>
-        <div class="service-label">Concept → Framework → Simulation · Full Pipeline</div>
-        <h2 class="service-h">Framework<em>Engineering</em></h2>
-        <div class="service-tagline">Your idea. Built to be falsifiable.</div>
-        <div class="domain-chips">
-          <span class="domain-chip"><span class="chip-dot"></span>Concept Design</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Framework Spec</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Epistemic Design</span>
-          <span class="domain-chip"><span class="chip-dot"></span>AI Governance</span>
-          <span class="domain-chip"><span class="chip-dot"></span>Simulation</span>
-        </div>
-      </div>
-      <div>
-        <p class="service-lead">
-          You have an idea — a methodology, a theory, a process you want to validate. <strong>I take it from concept to framework to simulation in one pipeline.</strong>
-          <br><br>
-          The full service: I spec your concept as a falsifiable framework with ECF-tagged claims and explicit invalidation conditions. I build a simulation on top of it. I red-team both. You get a certified, documented proof of concept that demonstrates your methodology works — and the framework that explains why.
-        </p>
-      </div>
+      <div><div class="service-label">Concept → Framework → Simulation</div><h2 class="service-h">Framework<em>Engineering</em></h2><div class="service-tagline">Your idea. Built to be falsifiable.</div></div>
+      <div><p class="service-lead">You have an idea. I take it from concept to framework to simulation in one pipeline.</p></div>
     </div>
 
-    <!-- Pipeline -->
     <div class="pipeline-strip">
-      <div class="pipeline-node">
-        <span class="pipeline-icon">💡</span>
-        <div class="pipeline-step">Phase 01</div>
-        <div class="pipeline-name">Concept</div>
-        <div class="pipeline-desc">Your idea, research, or methodology. PDF, whitepaper, or conversation. NDA available.</div>
-      </div>
-      <div class="pipeline-node">
-        <span class="pipeline-icon">◈</span>
-        <div class="pipeline-step">Phase 02</div>
-        <div class="pipeline-name">Framework</div>
-        <div class="pipeline-desc">Falsifiable spec. ECF-tagged claims. Explicit invalidation conditions. Protocol I formula registration.</div>
-      </div>
-      <div class="pipeline-node">
-        <span class="pipeline-icon">🎯</span>
-        <div class="pipeline-step">Phase 03</div>
-        <div class="pipeline-name">Red Team</div>
-        <div class="pipeline-desc">Framework adversarially tested before the simulator is built. Findings logged. Framework updated.</div>
-      </div>
-      <div class="pipeline-node">
-        <span class="pipeline-icon">⚙</span>
-        <div class="pipeline-step">Phase 04</div>
-        <div class="pipeline-name">Simulation</div>
-        <div class="pipeline-desc">POC simulator built on the validated framework. Two red team passes. AION Verified. STP sealed.</div>
-      </div>
+      <div class="pipeline-node"><span class="pipeline-icon">💡</span><div class="pipeline-step">Phase 01</div><div class="pipeline-name">Concept</div><div class="pipeline-desc">Your idea, research, or methodology.</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">◈</span><div class="pipeline-step">Phase 02</div><div class="pipeline-name">Framework</div><div class="pipeline-desc">Falsifiable spec. ECF-tagged claims.</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">🎯</span><div class="pipeline-step">Phase 03</div><div class="pipeline-name">Red Team</div><div class="pipeline-desc">Framework adversarially tested.</div></div>
+      <div class="pipeline-node"><span class="pipeline-icon">⚙</span><div class="pipeline-step">Phase 04</div><div class="pipeline-name">Simulation</div><div class="pipeline-desc">POC simulator built on validated framework.</div></div>
     </div>
 
-    <!-- Framework Pricing -->
     <div class="fw-tiers">
-
-      <div class="sim-tier">
-        <div class="sim-tier-badge">Tier 01 · Concept Only</div>
-        <div class="sim-tier-name">Concept Scaffold</div>
-        <div class="sim-tier-price">$5,000</div>
-        <div class="sim-tier-cadence">Framework spec only · 3–5 days</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li>Concept to falsifiable framework spec</li>
-          <li>ECF-tagged claims throughout</li>
-          <li>Explicit invalidation conditions</li>
-          <li>Protocol I formula registration</li>
-          <li>Convergence state: M-NASCENT assigned</li>
-          <li>Version 0.1 delivered and documented</li>
-          <li>GitHub repo · collaborator access</li>
-        </ul>
-      </div>
-
-      <div class="sim-tier featured">
-        <div class="sim-tier-badge featured">Tier 02 · Full Pipeline</div>
-        <div class="sim-tier-name">Framework + Simulation</div>
-        <div class="sim-tier-price">$12,500</div>
-        <div class="sim-tier-cadence">Concept → Framework → Simulator · 7–12 days</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li class="highlight">Everything in Concept Scaffold</li>
-          <li class="highlight">POC simulator built on the framework</li>
-          <li class="highlight">Framework red-teamed before build</li>
-          <li>Simulator red-teamed on completion</li>
-          <li>AION Verified badge issued</li>
-          <li>STP sealed audit trail</li>
-          <li>Portfolio link · public proof of concept</li>
-          <li>NDA available</li>
-        </ul>
-      </div>
-
-      <div class="sim-tier">
-        <div class="sim-tier-badge">Tier 03 · Research Grade</div>
-        <div class="sim-tier-name">Full Stack Build</div>
-        <div class="sim-tier-price">$25,000</div>
-        <div class="sim-tier-cadence">Complete pipeline · 15–20 days</div>
-        <div class="tier-divider"></div>
-        <ul class="tier-includes">
-          <li class="highlight">Everything in Framework + Simulation</li>
-          <li class="highlight">Multi-module simulation</li>
-          <li class="highlight">Framework v0.1 → v1.0 documented cycle</li>
-          <li>Full AION stack integration mapping</li>
-          <li>Grant-proposal ready documentation</li>
-          <li>ORCID + CITATION.cff + Zenodo support</li>
-          <li>3 month post-delivery support</li>
-        </ul>
-      </div>
-
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 01</div><div class="sim-tier-name">Concept Scaffold</div><div class="sim-tier-price">$5,000</div><div class="sim-tier-cadence">Framework spec only · 3–5 days</div><div class="tier-divider"></div><ul class="tier-includes"><li>Falsifiable framework spec</li><li>ECF-tagged claims</li><li>Invalidation conditions</li><li>Protocol I formula registration</li></ul></div>
+      <div class="sim-tier featured"><div class="sim-tier-badge featured">Tier 02</div><div class="sim-tier-name">Framework + Sim</div><div class="sim-tier-price">$12,500</div><div class="sim-tier-cadence">Full pipeline · 7–12 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Concept</li><li class="highlight">POC simulator</li><li class="highlight">Framework red-teamed</li><li>AION Verified + STP sealed</li></ul></div>
+      <div class="sim-tier"><div class="sim-tier-badge">Tier 03</div><div class="sim-tier-name">Full Stack Build</div><div class="sim-tier-price">$25,000</div><div class="sim-tier-cadence">Complete pipeline · 15–20 days</div><div class="tier-divider"></div><ul class="tier-includes"><li class="highlight">Everything in Tier 02</li><li class="highlight">Framework v0.1→v1.0</li><li>Grant-ready docs</li><li>3 month support</li></ul></div>
     </div>
-
-    <!-- What every framework carries -->
-    <div class="principles-block">
-      <div class="principles-title">What every framework carries</div>
-      <ul class="principles-list">
-        <li>Explicit invalidation conditions — it can say "this claim is invalid"</li>
-        <li>ECF tagging throughout — [D] [R] [S] [?] on every claim</li>
-        <li>Protocol I formula registration — every metric has a computation protocol</li>
-        <li>CEV arithmetic verification — no edge-case undefined behavior</li>
-        <li>Convergence state honest from day one — M-NASCENT is not a failure</li>
-        <li>Full version changelog — every delta documented</li>
-        <li>Falsification conditions — what would prove this wrong</li>
-        <li>FCL integration path — how it grows from nascent to strong</li>
-      </ul>
-    </div>
-
-    <!-- Stack Reference -->
-    <table class="framework-table">
-      <thead><tr><th>Framework</th><th>Version</th><th>Function</th><th>State</th></tr></thead>
-      <tbody>
-        <tr><td class="fw-name">FSVE</td><td class="fw-state">v3.6</td><td class="fw-fn">Certainty Scoring Engine — 6 dimensions, validity threshold enforcement</td><td class="fw-state">M-MODERATE</td></tr>
-        <tr><td class="fw-name">LAV</td><td class="fw-state">v1.5</td><td class="fw-fn">Linguistic Anchor Validation — 45 entries, 77.5% running mean</td><td class="fw-state">M-STRONG</td></tr>
-        <tr><td class="fw-name">TOPOS</td><td class="fw-state">v0.4</td><td class="fw-fn">Persistent Shape Architecture — 4 mapping instruments, deformation tracking</td><td class="fw-state">M-NASCENT</td></tr>
-        <tr><td class="fw-name">CEP</td><td class="fw-state">v0.1</td><td class="fw-fn">Checkpoint Epistemics Protocol — gap detection, question intercept, cleared checkpoint scoring</td><td class="fw-state">M-NASCENT</td></tr>
-        <tr><td class="fw-name">EIGHT LAWS</td><td class="fw-state">v1.0</td><td class="fw-fn">Sovereignty Stack — individual through civilizational · Law 9 dark by design</td><td class="fw-state">CONSTITUTIONAL</td></tr>
-      </tbody>
-    </table>
 
     <div class="cta-bar">
-      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn primary">
-        <span>Discuss Your Framework</span><span class="cta-arrow">→</span>
-      </a>
-      <a href="/stack/" class="cta-btn">
-        <span>The AION Stack</span><span class="cta-arrow">→</span>
-      </a>
-      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="cta-btn">
-        <span>GitHub — Live Frameworks ↗</span>
-      </a>
-      <span class="cta-note">Framework engagements via LinkedIn · NDA available · 48hr response</span>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="cta-btn primary"><span>Discuss Your Framework</span><span class="cta-arrow">→</span></a>
+      <a href="/stack/" class="cta-btn"><span>The AION Stack</span><span class="cta-arrow">→</span></a>
     </div>
 
   </div>
@@ -813,59 +605,61 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40
   <div class="engage-inner">
     <div>
       <h2 class="engage-heading">Your IT team builds<em>on proof.</em></h2>
-      <p class="engage-sub">I give them something that works, is documented, is red-teamed, and is certified. They don't have to guess at what they're building toward. That's the value of a POC built right.</p>
+      <p class="engage-sub">I give them something that works, is documented, is red-teamed, and is certified. They don't have to guess at what they're building toward.</p>
     </div>
     <div class="engage-paths">
-      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="engage-path">
-        <span class="engage-path-icon">💡</span>
-        <div>
-          <div class="engage-path-label">Commission a Simulation</div>
-          <div class="engage-path-desc">Send your domain brief, research docs, or working papers via LinkedIn DM. NDA available.</div>
-        </div>
-      </a>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="engage-path">
-        <span class="engage-path-icon">◈</span>
-        <div>
-          <div class="engage-path-label">File a Certification Request</div>
-          <div class="engage-path-desc">Structured intake via GitHub. Tier 1 and 2 automated — no call required.</div>
-        </div>
-      </a>
-      <a href="/simulators/" class="engage-path">
-        <span class="engage-path-icon">⚙</span>
-        <div>
-          <div class="engage-path-label">See the Portfolio</div>
-          <div class="engage-path-desc">Every simulator is live, red-teamed, and AION Verified. This is what your deliverable looks like.</div>
-        </div>
-      </a>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="engage-path"><span class="engage-path-icon">💡</span><div><div class="engage-path-label">Commission a Simulation</div><div class="engage-path-desc">Send your domain brief via LinkedIn DM. NDA available.</div></div></a>
+      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new/choose" target="_blank" rel="noopener" class="engage-path"><span class="engage-path-icon">◈</span><div><div class="engage-path-label">File a Certification Request</div><div class="engage-path-desc">Structured intake via GitHub. No call required.</div></div></a>
+      <a href="/submissions/" class="engage-path"><span class="engage-path-icon">📋</span><div><div class="engage-path-label">Grant Studio Inquiry</div><div class="engage-path-desc">LOI + Simulation packages. See portfolio for examples.</div></div></a>
     </div>
   </div>
 </div>
 
 <footer>
-  <div class="footer-id">
-    <strong>AionSystem</strong> &nbsp;·&nbsp; Sheldon K. Salmon<br>
-    AI Reliability Architect &nbsp;·&nbsp; New York &nbsp;·&nbsp; March 2026<br>
-    <span style="font-size:10px;">AION v3.0 · STP v2.0 · LEDGER-011 · © 2026 Sheldon K. Salmon</span>
-  </div>
+  <div class="footer-id"><strong>AionSystem</strong> · Sheldon K. Salmon<br>AI Reliability Architect · New York · April 2026<br><span style="font-size:10px;">AION v3.0 · STP v2.0 · LEDGER-067 · © 2026 Sheldon K. Salmon</span></div>
   <ul class="footer-links">
     <li><a href="/">Home</a></li>
     <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/submissions/">Submissions</a></li>
     <li><a href="/certify/">Certify</a></li>
     <li><a href="/about/">About</a></li>
     <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub ↗</a></li>
-    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn ↗</a></li>
   </ul>
 </footer>
 
 <script>
-const canvas=document.getElementById('hero-canvas'),ctx=canvas.getContext('2d');
-let W,H,particles=[],signals=[],t=0;
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-class Signal{constructor(){this.reset();}reset(){this.y=Math.random()*H;this.speed=0.3+Math.random()*0.6;this.amp=8+Math.random()*20;this.freq=0.008+Math.random()*0.012;this.phase=Math.random()*Math.PI*2;this.alpha=0.04+Math.random()*0.12;this.width=0.6+Math.random()*0.8;this.life=0;this.maxLife=180+Math.random()*240;}draw(){this.life++;if(this.life>this.maxLife){this.reset();return;}const fade=Math.sin(this.life/this.maxLife*Math.PI);ctx.beginPath();ctx.strokeStyle=`rgba(240,165,0,${this.alpha*fade})`;ctx.lineWidth=this.width;for(let x=0;x<=W;x+=2){const y=this.y+Math.sin(x*this.freq+this.phase+t*this.speed)*this.amp;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}}
-class Particle{constructor(){this.reset();}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=0.5+Math.random()*1.5;this.vx=(Math.random()-0.5)*0.2;this.vy=(Math.random()-0.5)*0.2;this.alpha=0.1+Math.random()*0.25;}draw(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W||this.y<0||this.y>H){this.reset();return;}ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(240,165,0,${this.alpha})`;ctx.fill();}}
-function init(){resize();for(let i=0;i<12;i++)signals.push(new Signal());for(let i=0;i<60;i++)particles.push(new Particle());}
-function loop(){ctx.clearRect(0,0,W,H);t+=0.01;signals.forEach(s=>s.draw());particles.forEach(p=>p.draw());requestAnimationFrame(loop);}
-window.addEventListener('resize',resize);init();loop();
+(function(){
+  "use strict";
+  
+  // Mathematical Symbol Field
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let symbols = [];
+  let mouse = { x: null, y: null, radius: 150 };
+  
+  const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','∂','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','◆','○','●','◉'];
+  
+  function resizeCanvas(){width=window.innerWidth;height=window.innerHeight;canvas.width=width;canvas.height=height;initSymbols();}
+  function initSymbols(){const count=Math.floor(width*height/6000);symbols=[];for(let i=0;i<count;i++){symbols.push({symbol:SYMBOL_SET[Math.floor(Math.random()*SYMBOL_SET.length)],x:Math.random()*width,y:Math.random()*height,vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2,size:Math.random()*20+12,color:Math.random()>0.5?'#00d4ff':'#f0a500',opacity:0.12+Math.random()*0.2});}}
+  function drawSymbols(){ctx.clearRect(0,0,width,height);symbols.forEach(s=>{s.x+=s.vx;s.y+=s.vy;if(s.x<-50)s.x=width+50;if(s.x>width+50)s.x=-50;if(s.y<-50)s.y=height+50;if(s.y>height+50)s.y=-50;if(mouse.x&&mouse.y){const dx=s.x-mouse.x,dy=s.y-mouse.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<mouse.radius){const angle=Math.atan2(dy,dx),force=(mouse.radius-dist)/mouse.radius*2;s.x+=Math.cos(angle)*force;s.y+=Math.sin(angle)*force;}}ctx.font=`${s.size}px 'JetBrains Mono','Share Tech Mono',monospace`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor=s.color;ctx.shadowBlur=15;ctx.fillStyle=s.color;ctx.globalAlpha=s.opacity;ctx.fillText(s.symbol,s.x,s.y);});ctx.shadowBlur=0;ctx.globalAlpha=1.0;requestAnimationFrame(drawSymbols);}
+  
+  window.addEventListener('resize',resizeCanvas);
+  window.addEventListener('mousemove',(e)=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+  window.addEventListener('mouseleave',()=>{mouse.x=null;mouse.y=null;});
+  resizeCanvas();drawSymbols();
+  
+  // Custom Cursor
+  const cursor=document.getElementById('custom-cursor');
+  const trailContainer=document.getElementById('cursor-trail-container');
+  let trailPositions=[];
+  const MAX_TRAIL=8;
+  if(cursor&&window.matchMedia('(hover:hover)').matches){
+    document.addEventListener('mousemove',(e)=>{const x=e.clientX,y=e.clientY;cursor.style.left=x+'px';cursor.style.top=y+'px';trailPositions.push({x,y,time:Date.now()});if(trailPositions.length>MAX_TRAIL)trailPositions.shift();trailContainer.innerHTML='';trailPositions.forEach((pos,i)=>{const dot=document.createElement('div');dot.className='cursor-trail';const age=(Date.now()-pos.time)/1000;const opacity=Math.max(0,0.6-age*0.8);const scale=1-i*0.1;dot.style.left=pos.x+'px';dot.style.top=pos.y+'px';dot.style.opacity=opacity;dot.style.transform=`translate(-50%,-50%) scale(${scale})`;trailContainer.appendChild(dot);});});
+    document.querySelectorAll('a,button,.rail-item,.sim-tier,.tier-card,.portfolio-item,.engage-path').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('hover'));el.addEventListener('mouseleave',()=>cursor.classList.remove('hover'));});
+  }else if(cursor){cursor.style.display='none';}
+})();
 </script>
 </body>
 </html>
