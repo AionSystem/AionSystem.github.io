@@ -1,1 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="VERITAS‑SHELLFISH — NOAA HAB Toxin Detection Platform. 48 hours from idea to LOI submission. CERTUS‑TOXIN Engine + STP sealed.">
+<meta property="og:title" content="VERITAS‑SHELLFISH — AionSystem Grant Studio">
+<meta property="og:description" content="48 hours. One architect. LOI + simulation + video + DOI + STP seal. Submitted to NOAA.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://aionsystem.github.io/veritas-shellfish/icons/icon-512.png">
+<title>VERITAS‑SHELLFISH — AionSystem Grant Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #08090b;
+  --surface: rgba(20, 30, 45, 0.4);
+  --panel: rgba(25, 35, 55, 0.5);
+  --border: rgba(0, 212, 255, 0.15);
+  --amber: #f0a500;
+  --gold: #D4AF37;
+  --text: #e0e8f0;
+  --muted: #7a9aba;
+  --cyan: #00d4ff;
+  --green: #4ade80;
+  --noaa-blue: #1B3B6F;
+  --mono: 'Share Tech Mono', monospace;
+  --sans: 'Barlow Condensed', sans-serif;
+  --jmono: 'JetBrains Mono', monospace;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --glow-amber: 0 0 5px #f0a500, 0 0 10px #f0a500, 0 0 20px rgba(240,165,0,0.5);
+  --glow-cyan: 0 0 5px #00d4ff, 0 0 10px #00d4ff, 0 0 20px rgba(0,212,255,0.4);
+  --glow-green: 0 0 5px #4ade80, 0 0 10px #4ade80, 0 0 20px rgba(74,222,128,0.4);
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: clamp(16px, 1vw + 8px, 20px);
+  line-height: 1.5;
+  overflow-x: hidden;
+  cursor: none;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 10;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent 0px, rgba(0,212,255,0.04) 1px, transparent 2px);
+  pointer-events: none;
+  z-index: 11;
+  opacity: 0.4;
+  animation: scan 8s linear infinite;
+}
+@keyframes scan { 0% { transform: translateY(0); } 100% { transform: translateY(4px); } }
 
+.custom-cursor {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--cyan);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+  transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px var(--cyan), 0 0 30px rgba(0,212,255,0.3);
+}
+.custom-cursor.hover {
+  transform: translate(-50%, -50%) scale(1.8);
+  background: rgba(0,212,255,0.1);
+  border-color: var(--amber);
+  box-shadow: 0 0 25px var(--amber), 0 0 50px rgba(240,165,0,0.5);
+}
+.cursor-trail {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.6;
+  box-shadow: 0 0 10px var(--cyan);
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 56px;
+  background: rgba(8,9,11,0.7);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--amber);
+  text-transform: uppercase;
+  text-decoration: none;
+  text-shadow: 0 0 5px var(--amber);
+}
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
+
+#hero-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.page-header {
+  position: relative;
+  z-index: 2;
+  padding: 120px 40px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.breadcrumb {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.breadcrumb a { color: var(--muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--cyan); }
+.breadcrumb-sep { margin: 0 8px; color: var(--dim); }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: end;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  text-shadow: var(--glow-green);
+}
+.hero-title {
+  font-family: var(--sans);
+  font-size: clamp(48px, 7vw, 80px);
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 0.92;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.hero-title em {
+  display: block;
+  color: var(--amber);
+  font-style: normal;
+  text-shadow: var(--glow-amber);
+}
+.hero-sub {
+  font-family: var(--sans);
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 500px;
+  border-left: 2px solid var(--cyan);
+  padding-left: 20px;
+}
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+}
+.hero-stat {
+  text-align: left;
+}
+.stat-num {
+  font-family: var(--jmono);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-shadow: var(--glow-cyan);
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+section {
+  position: relative;
+  z-index: 2;
+  padding: 48px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--amber);
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px var(--amber);
+}
+.section-title {
+  font-family: var(--sans);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.section-line { flex: 1; height: 1px; background: var(--border); box-shadow: 0 0 10px var(--cyan); }
+
+.problem-solution-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+.glass-card {
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  transition: all 0.3s var(--ease);
+}
+.glass-card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 20px rgba(0,212,255,0.15);
+}
+.card-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  text-shadow: 0 0 5px var(--cyan);
+}
+.card-title {
+  font-family: var(--sans);
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+.card-title.problem { color: var(--amber); }
+.card-title.solution { color: var(--green); }
+.card-text {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.card-text strong { color: var(--text); font-weight: 600; }
+
+.timeline {
+  margin: 48px 0;
+}
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.timeline-node {
+  background: var(--surface);
+  backdrop-filter: blur(8px);
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+}
+.timeline-node::after {
+  content: '→';
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--cyan);
+  font-size: 18px;
+  font-family: var(--mono);
+  text-shadow: 0 0 8px var(--cyan);
+  z-index: 2;
+}
+.timeline-node:last-child::after { display: none; }
+.timeline-day {
+  font-family: var(--jmono);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+.timeline-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.timeline-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.certus-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 32px 0;
+}
+.certus-dim {
+  background: var(--surface);
+  backdrop-filter: blur(8px);
+  padding: 24px 16px;
+  text-align: center;
+}
+.dim-weight {
+  font-family: var(--jmono);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+.dim-name {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.dim-desc {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 32px 0;
+}
+.evidence-card {
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-decoration: none;
+  transition: all 0.3s var(--ease);
+  display: block;
+}
+.evidence-card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 20px rgba(0,212,255,0.15);
+  transform: translateY(-4px);
+}
+.evidence-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+  display: block;
+}
+.evidence-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.evidence-value {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.evidence-meta {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+}
+
+.tech-stack-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 32px 0;
+}
+.tech-item {
+  background: var(--surface);
+  backdrop-filter: blur(8px);
+  padding: 20px 16px;
+  text-align: center;
+}
+.tech-name {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}
+.tech-desc {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 32px 0;
+}
+.module-card {
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+.module-icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+.module-name {
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.module-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.verdict-card {
+  background: linear-gradient(135deg, rgba(74,222,128,0.08) 0%, rgba(0,212,255,0.04) 100%);
+  border: 1px solid var(--green);
+  border-radius: 16px;
+  padding: 40px;
+  margin: 48px 0;
+  text-align: center;
+}
+.verdict-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  text-shadow: var(--glow-green);
+}
+.verdict-title {
+  font-family: var(--sans);
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.verdict-title em {
+  color: var(--amber);
+  font-style: normal;
+}
+.verdict-text {
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--muted);
+  max-width: 700px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+.cta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 24px 0;
+}
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 28px;
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  background: transparent;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+  text-shadow: 0 0 5px var(--cyan);
+}
+.cta-btn:hover {
+  background: var(--cyan);
+  color: #000;
+  box-shadow: 0 0 25px var(--cyan);
+}
+.cta-btn.primary {
+  background: var(--amber);
+  color: #000;
+  border-color: var(--amber);
+  text-shadow: none;
+  box-shadow: 0 0 15px var(--amber);
+}
+.cta-btn.primary:hover {
+  background: var(--amber-l);
+}
+.cta-arrow {
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+.cta-btn:hover .cta-arrow { transform: translateX(4px); }
+
+footer {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--border);
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-id {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.footer-id strong { color: var(--amber); }
+.footer-links { display: flex; gap: 24px; list-style: none; }
+.footer-links a {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.footer-links a:hover { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
+
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 24px; }
+  .problem-solution-grid { grid-template-columns: 1fr; }
+  .timeline-grid { grid-template-columns: 1fr; }
+  .timeline-node::after { display: none; }
+  .certus-grid { grid-template-columns: 1fr 1fr; }
+  .evidence-grid { grid-template-columns: 1fr; }
+  .tech-stack-grid { grid-template-columns: 1fr 1fr; }
+  .modules-grid { grid-template-columns: 1fr; }
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .page-header { padding: 96px 20px 40px; }
+  section { padding: 40px 20px; }
+}
+@media (max-width: 640px) {
+  .hero-stats { flex-direction: column; gap: 16px; }
+  .certus-grid { grid-template-columns: 1fr; }
+  .tech-stack-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="hero-canvas"></canvas>
+<div class="custom-cursor" id="custom-cursor"></div>
+<div id="cursor-trail-container"></div>
+
+<nav>
+  <a href="/" class="nav-logo">AION<span>system</span></a>
+  <ul class="nav-links">
+    <li><a href="/simulators/">Simulators</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/stack/">Stack</a></li>
+    <li><a href="/certify/">Certify</a></li>
+    <li><a href="/submissions/">Submissions</a></li>
+    <li><a href="/case-studies/" class="active">Case Studies</a></li>
+    <li><a href="/about/">About</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/">AionSystem</a><span class="breadcrumb-sep">/</span>
+    <a href="/case-studies/">Case Studies</a><span class="breadcrumb-sep">/</span>
+    VERITAS‑SHELLFISH
+  </div>
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow">Grant Studio · NOAA Submission</div>
+      <h1 class="hero-title">VERITAS<em>SHELLFISH</em></h1>
+      <p class="hero-sub">HAB Toxin Detection Platform · CERTUS‑TOXIN Engine · STP Sealed</p>
+    </div>
+    <div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="stat-num">48</div>
+          <div class="stat-label">Hours · Idea to Submission</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num">1</div>
+          <div class="stat-label">Architect</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num">19</div>
+          <div class="stat-label">STP Seal Types</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="section-header">
+    <span class="section-num">// 01</span>
+    <h2 class="section-title">The Challenge</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="problem-solution-grid">
+    <div class="glass-card">
+      <div class="card-label">Problem</div>
+      <div class="card-title problem">Binary Tests Fail Communities</div>
+      <div class="card-text">
+        Most point‑of‑use toxin tests return a simple positive/negative result. They don't tell a harvester, a regulator, or a tribal monitoring program <strong>how much to trust that result</strong> under field conditions. No confidence scoring. No uncertainty quantification. No immutable audit trail for regulatory decisions.
+      </div>
+    </div>
+    <div class="glass-card">
+      <div class="card-label">Solution</div>
+      <div class="card-title solution">Certainty Engineering for Seafood Safety</div>
+      <div class="card-text">
+        <strong>CERTUS‑TOXIN Engine</strong> — four-dimensional epistemic scoring (Signal Confidence 35%, Corroboration 30%, Temporal Freshness 20%, Matrix Consistency 15%) with quantified Uncertainty Mass. Every test result cryptographically sealed via <strong>Sovereign Trace Protocol</strong>. Offline‑first PWA. UNDRIP Article 31 data sovereignty.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <span class="section-num">// 02</span>
+    <h2 class="section-title">CERTUS‑TOXIN Engine</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="certus-grid">
+    <div class="certus-dim">
+      <div class="dim-weight">35%</div>
+      <div class="dim-name">Signal Confidence</div>
+      <div class="dim-desc">AI analysis of test/control line intensity and image quality</div>
+    </div>
+    <div class="certus-dim">
+      <div class="dim-weight">30%</div>
+      <div class="dim-name">Corroboration</div>
+      <div class="dim-desc">Agreement with nearby tests (same species, toxin, timeframe)</div>
+    </div>
+    <div class="certus-dim">
+      <div class="dim-weight">20%</div>
+      <div class="dim-name">Temporal Freshness</div>
+      <div class="dim-desc">Decay based on time since harvest — not test time</div>
+    </div>
+    <div class="certus-dim">
+      <div class="dim-weight">15%</div>
+      <div class="dim-name">Matrix Consistency</div>
+      <div class="dim-desc">Species‑specific toxin profile alignment</div>
+    </div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px;">
+    <div class="glass-card" style="padding: 20px; text-align: center;">
+      <div style="color: var(--green); font-size: 24px; margin-bottom: 8px;">≥ 0.70</div>
+      <div style="font-family: var(--mono); color: var(--cyan);">VALID</div>
+      <div style="font-size: 13px; color: var(--muted);">High confidence — regulatory decision support</div>
+    </div>
+    <div class="glass-card" style="padding: 20px; text-align: center;">
+      <div style="color: var(--amber); font-size: 24px; margin-bottom: 8px;">0.40–0.69</div>
+      <div style="font-family: var(--mono); color: var(--amber);">DEGRADED</div>
+      <div style="font-size: 13px; color: var(--muted);">Monitor — verify with additional testing</div>
+    </div>
+    <div class="glass-card" style="padding: 20px; text-align: center;">
+      <div style="color: #ff4d4d; font-size: 24px; margin-bottom: 8px;">< 0.40</div>
+      <div style="font-family: var(--mono); color: #ff4d4d;">SUSPENDED</div>
+      <div style="font-size: 13px; color: var(--muted);">Field verification required before any action</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <span class="section-num">// 03</span>
+    <h2 class="section-title">The 48‑Hour Pipeline</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="timeline">
+    <div class="timeline-grid">
+      <div class="timeline-node">
+        <div class="timeline-day">01</div>
+        <div class="timeline-label">Scaffold</div>
+        <div class="timeline-desc">LOI draft · Repo init · NOAA NOFO compliance matrix</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-day">02</div>
+        <div class="timeline-label">Engine</div>
+        <div class="timeline-desc">CERTUS‑TOXIN v1.1 · OpenRouter AI strip analysis</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-day">03</div>
+        <div class="timeline-label">Red Team</div>
+        <div class="timeline-desc">Round 1 (11 findings, 3 P1) → Round 2 (9 findings, 0 critical)</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-day">04</div>
+        <div class="timeline-label">Polish</div>
+        <div class="timeline-desc">NOAA canvas · Photo fix · Mobile menu · FORGE audit</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-day">05</div>
+        <div class="timeline-label">Submit</div>
+        <div class="timeline-desc">LOI PDF · Video walkthrough · DOI · STP seal · NOAA submission</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <span class="section-num">// 04</span>
+    <h2 class="section-title">Three Core Modules</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-icon">🧪</div>
+      <div class="module-name">Test Shellfish</div>
+      <div class="module-desc">Community submission — works fully offline. Photo capture with EXIF stripping. AI‑assisted strip analysis. Confidence Score displayed immediately. Automatic STP seal (Template 17).</div>
+    </div>
+    <div class="module-card">
+      <div class="module-icon">⚠️</div>
+      <div class="module-name">Unsafe Harvest Alert</div>
+      <div class="module-desc">Emergency signal — one‑tap alert. Automatic GPS location. Works offline — queues for transmission. Critical urgency flag in all exports.</div>
+    </div>
+    <div class="module-card">
+      <div class="module-icon">📊</div>
+      <div class="module-name">Regulator Dashboard</div>
+      <div class="module-desc">Access‑code gated (NOAA2026). Confidence map. Live dashboard. Knowledge Base uploader. Active Calibration Panel. Audit Trail Verifier. One‑click export with integrity hash.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <span class="section-num">// 05</span>
+    <h2 class="section-title">Evidence Package</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="evidence-grid">
+    <a href="https://youtube.com/shorts/HZ-kB39AqNs" target="_blank" class="evidence-card">
+      <span class="evidence-icon">🎥</span>
+      <div class="evidence-label">Video Walkthrough</div>
+      <div class="evidence-value">Silent Demo</div>
+      <div class="evidence-meta">YouTube Shorts · 2min</div>
+    </a>
+    <a href="https://aionsystem.github.io/veritas-shellfish" target="_blank" class="evidence-card">
+      <span class="evidence-icon">🌐</span>
+      <div class="evidence-label">Live Simulation</div>
+      <div class="evidence-value">veritas-shellfish</div>
+      <div class="evidence-meta">GitHub Pages · PWA</div>
+    </a>
+    <a href="https://github.com/AionSystem/VERITAS-SHELLFISH" target="_blank" class="evidence-card">
+      <span class="evidence-icon">📦</span>
+      <div class="evidence-label">Source Code</div>
+      <div class="evidence-value">AionSystem/VERITAS‑SHELLFISH</div>
+      <div class="evidence-meta">GPL‑3.0 + Commercial</div>
+    </a>
+    <a href="https://doi.org/10.5281/zenodo.19520897" target="_blank" class="evidence-card">
+      <span class="evidence-icon">🔖</span>
+      <div class="evidence-label">DOI</div>
+      <div class="evidence-value">10.5281/zenodo.19520897</div>
+      <div class="evidence-meta">Zenodo · Permanent</div>
+    </a>
+    <a href="#" class="evidence-card">
+      <span class="evidence-icon">🔐</span>
+      <div class="evidence-label">STP Seal</div>
+      <div class="evidence-value">Template 17 · 18 · 19</div>
+      <div class="evidence-meta">SHA‑256 · GitHub Ledger</div>
+    </a>
+    <a href="#" class="evidence-card">
+      <span class="evidence-icon">📋</span>
+      <div class="evidence-label">LOI Package</div>
+      <div class="evidence-value">NOAA‑NOS‑NCCOS‑2026‑32955</div>
+      <div class="evidence-meta">Submitted 13 April 2026</div>
+    </a>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <span class="section-num">// 06</span>
+    <h2 class="section-title">Technical Stack</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="tech-stack-grid">
+    <div class="tech-item"><div class="tech-name">CERTUS‑TOXIN</div><div class="tech-desc">Epistemic scoring engine v1.1</div></div>
+    <div class="tech-item"><div class="tech-name">STP</div><div class="tech-desc">19 template types · SHA‑256 seals</div></div>
+    <div class="tech-item"><div class="tech-name">OpenRouter</div><div class="tech-desc">GPT‑4o‑mini + Claude 3.5 Sonnet</div></div>
+    <div class="tech-item"><div class="tech-name">PWA</div><div class="tech-desc">Offline‑first · Service Worker</div></div>
+    <div class="tech-item"><div class="tech-name">IndexedDB</div><div class="tech-desc">Local persistence · Sync on reconnect</div></div>
+    <div class="tech-item"><div class="tech-name">Leaflet.js</div><div class="tech-desc">Harvest zone visualization</div></div>
+    <div class="tech-item"><div class="tech-name">Supabase</div><div class="tech-desc">Backend sync · Row‑level security</div></div>
+    <div class="tech-item"><div class="tech-name">Vercel + GitHub Pages</div><div class="tech-desc">Serverless API · Static frontend</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="verdict-card">
+    <div class="verdict-eyebrow">What This Proves</div>
+    <div class="verdict-title">The Grant Studio<em>Model Works</em></div>
+    <div class="verdict-text">
+      A solo architect delivered a complete LOI + working simulation + video walkthrough + DOI + STP seal package in 48 hours — at a fraction of the cost and time of traditional grant writing consultancies. The CERTUS‑TOXIN Engine is live. The STP ledger is permanent. The NOAA submission is complete.
+    </div>
+    <div class="cta-bar">
+      <a href="/services/" class="cta-btn primary">
+        <span>Commission Your Grant Studio Package</span>
+        <span class="cta-arrow">→</span>
+      </a>
+      <a href="/case-studies/" class="cta-btn">
+        <span>More Case Studies</span>
+        <span class="cta-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-id">
+    <strong>AionSystem</strong> · Sheldon K. Salmon<br>
+    AI Reliability Architect · Evans Mills, New York · April 2026
+  </div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/case-studies/">Case Studies</a></li>
+    <li><a href="/submissions/">Submissions</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank">GitHub ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let symbols = [];
+  let mouse = { x: null, y: null, radius: 150 };
+  
+  const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','∂','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','◆','○','●','◉'];
+  
+  function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    initSymbols();
+  }
+  
+  function initSymbols() {
+    const count = Math.floor(width * height / 6000);
+    symbols = [];
+    for (let i = 0; i < count; i++) {
+      symbols.push({
+        symbol: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        size: Math.random() * 20 + 12,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        opacity: 0.12 + Math.random() * 0.2
+      });
+    }
+  }
+  
+  function drawSymbols() {
+    ctx.clearRect(0, 0, width, height);
+    symbols.forEach(s => {
+      s.x += s.vx;
+      s.y += s.vy;
+      if (s.x < -50) s.x = width + 50;
+      if (s.x > width + 50) s.x = -50;
+      if (s.y < -50) s.y = height + 50;
+      if (s.y > height + 50) s.y = -50;
+      if (mouse.x && mouse.y) {
+        const dx = s.x - mouse.x, dy = s.y - mouse.y, dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < mouse.radius) {
+          const angle = Math.atan2(dy, dx), force = (mouse.radius - dist) / mouse.radius * 2;
+          s.x += Math.cos(angle) * force;
+          s.y += Math.sin(angle) * force;
+        }
+      }
+      ctx.font = `${s.size}px 'JetBrains Mono', 'Share Tech Mono', monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = s.color;
+      ctx.shadowBlur = 15;
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.opacity;
+      ctx.fillText(s.symbol, s.x, s.y);
+    });
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1.0;
+    requestAnimationFrame(drawSymbols);
+  }
+  
+  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+  resizeCanvas();
+  drawSymbols();
+  
+  const cursor = document.getElementById('custom-cursor');
+  const trailContainer = document.getElementById('cursor-trail-container');
+  let trailPositions = [];
+  const MAX_TRAIL = 8;
+  
+  document.addEventListener('mousemove', (e) => {
+    const x = e.clientX, y = e.clientY;
+    cursor.style.left = x + 'px';
+    cursor.style.top = y + 'px';
+    trailPositions.push({ x, y, time: Date.now() });
+    if (trailPositions.length > MAX_TRAIL) trailPositions.shift();
+    trailContainer.innerHTML = '';
+    trailPositions.forEach((pos, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'cursor-trail';
+      const age = (Date.now() - pos.time) / 1000;
+      const opacity = Math.max(0, 0.6 - age * 0.8);
+      const scale = 1 - i * 0.1;
+      dot.style.left = pos.x + 'px';
+      dot.style.top = pos.y + 'px';
+      dot.style.opacity = opacity;
+      dot.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      trailContainer.appendChild(dot);
+    });
+  });
+  
+  document.querySelectorAll('a, button, .glass-card, .evidence-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+})();
+</script>
+</body>
+</html>
