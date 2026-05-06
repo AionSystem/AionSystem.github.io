@@ -49,7 +49,6 @@ body {
   overflow-x: hidden;
   cursor: none;
 }
-/* Holographic Scanline Overlay */
 body::before {
   content: '';
   position: fixed;
@@ -76,7 +75,6 @@ body::after {
 }
 @keyframes scan { 0% { transform: translateY(0); } 100% { transform: translateY(4px); } }
 
-/* Custom Cursor with Glow */
 .custom-cursor {
   width: 20px;
   height: 20px;
@@ -96,7 +94,6 @@ body::after {
   border-color: var(--amber);
   box-shadow: 0 0 25px var(--amber), 0 0 50px rgba(240,165,0,0.5);
 }
-/* Cursor Trail Particles */
 .cursor-trail {
   position: fixed;
   width: 6px;
@@ -110,7 +107,6 @@ body::after {
   transition: opacity 0.3s ease;
 }
 
-/* Glassmorphism Cards & Panels */
 nav {
   position: fixed;
   top: 0;
@@ -140,7 +136,6 @@ nav {
   transform: translateY(-4px);
 }
 
-/* Neon Text Glows */
 .nav-logo, .hero-eyebrow, .hero-name em, .section-num, .service-title, .work-title, .cta-btn, .service-link, .work-link {
   text-shadow: 0 0 5px currentColor, 0 0 10px currentColor;
 }
@@ -150,13 +145,11 @@ nav {
   box-shadow: 0 0 15px var(--amber), inset 0 0 8px rgba(255,255,255,0.3);
 }
 
-/* 3D Tilt Effect on Cards (JS) */
 .tilt-card {
   transform-style: preserve-3d;
   perspective: 1000px;
 }
 
-/* Hero Canvas - Mathematical Symbol Field */
 #hero-canvas {
   position: fixed;
   top: 0;
@@ -168,7 +161,6 @@ nav {
   pointer-events: none;
 }
 
-/* Rest of existing styles (preserved) */
 .nav-logo { font-family: var(--mono); font-size: 13px; letter-spacing: 3px; color: var(--amber); text-transform: uppercase; text-decoration: none; display: flex; align-items: center; gap: 10px; }
 .nav-logo-img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid var(--cyan); box-shadow: 0 0 10px var(--cyan); }
 .nav-logo span { color: var(--muted); }
@@ -243,10 +235,8 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
 </head>
 <body>
 
-<!-- Mathematical Symbol Canvas -->
 <canvas id="hero-canvas"></canvas>
 
-<!-- Custom Cursor Elements -->
 <div class="custom-cursor" id="custom-cursor"></div>
 <div id="cursor-trail-container"></div>
 
@@ -367,10 +357,10 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
       <table class="stack-table">
         <thead><tr><th>Framework</th><th>Version</th><th>Function</th><th>Convergence</th></tr></thead>
         <tbody>
-          <tr><td>FSVE</td><td>v3.6</td><td>6‑dimension certainty scoring</td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
-          <tr><td>LAV</td><td>v1.5</td><td>Linguistic anchor validation (45 anchors)</td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr>
+          <tr><td>FSVE</td><td>v4.0</td><td>11‑axis epistemic scoring</td><td><span class="convergence-badge m-strong">M-STRONG</span></td></tr>
+          <tr><td>CAL</td><td>v0.3</td><td>Code governance (59 FTT checks)</td><td><span class="convergence-badge m-mod">M-MODERATE</span></td></tr>
           <tr><td>STP</td><td>v2.0</td><td>SHA-256 bound audit trail (PyPI)</td><td><span class="convergence-badge live">LIVE</span></td></tr>
-          <tr><td>VERITAS</td><td>v1.0</td><td>Damage certification engine</td><td><span class="convergence-badge live">LIVE</span></td></tr>
+          <tr><td>Ada-VELA</td><td>v3.1</td><td>Constitutional execution gate</td><td><span class="convergence-badge live">LIVE</span></td></tr>
           <tr><td>EIGHT LAWS</td><td>v1.0</td><td>Constitutional sovereignty stack</td><td><span class="convergence-badge m-mod">CONSTITUTIONAL</span></td></tr>
         </tbody>
       </table>
@@ -404,14 +394,21 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
 (function(){
   "use strict";
 
-  // ========== MATHEMATICAL SYMBOL FIELD ==========
+  // ========== MATHEMATICAL SYMBOL FIELD (ENHANCED) ==========
   const canvas = document.getElementById('hero-canvas');
   const ctx = canvas.getContext('2d');
   let width, height;
   let symbols = [];
-  let mouse = { x: null, y: null, radius: 150 };
+  let echoes = [];            // Click echo particles
+  let mouse = { x: null, y: null, radius: 150, vx: 0, vy: 0, prevX: null, prevY: null };
+  let isCollapsing = false;   // Quantum collapse state
+  let collapseTimer = null;
+  let collapsePhase = 0;      // 0=idle, 1=snapping, 2=holding, 3=exploding
+  let collapseStart = 0;
+  const COLLAPSE_SNAP_DURATION = 1500;  // ms to snap to lattice
+  const COLLAPSE_HOLD_DURATION = 800;   // ms to hold before explosion
+  const COLLAPSE_EXPLODE_DURATION = 600;
 
-  // Curated set of mathematical/logical symbols relevant to certainty engineering
   const SYMBOL_SET = [
     '∇', 'Σ', '∫', '∂', 'λ', '⊕', '⊗', '∈', '∀', '∃',
     '⊢', '⊨', '→', '↔', '∧', '∨', '¬', '≡', '≈', '≠',
@@ -420,12 +417,40 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
     '∄', '⁂', '◈', '◆', '○', '●', '◉'
   ];
 
+  // Gravity well constants
+  const GRAVITY_RADIUS = 200;        // px from cursor
+  const GRAVITY_STRENGTH = 0.04;     // attraction coefficient
+  const TANGENTIAL_FACTOR = 0.06;    // spin factor
+
+  // Scroll bloom
+  const SCROLL_BLOOM_RADIUS = 100;   // px from viewport edge
+  let scrollBlooms = [];             // temporary glow boosts
+
+  // Pre‑compute hexagonal lattice for collapse
+  let latticePoints = [];
+  function buildLattice() {
+    latticePoints = [];
+    const hexW = 60, hexH = hexW * Math.sqrt(3) / 2;
+    for (let y = 0; y < height + hexH; y += hexH) {
+      for (let x = 0; x < width + hexW; x += hexW) {
+        let px = x + (Math.floor(y / hexH) % 2) * (hexW / 2);
+        latticePoints.push({ x: px, y: y });
+      }
+    }
+    // Shuffle to avoid ordered appearance
+    for (let i = latticePoints.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [latticePoints[i], latticePoints[j]] = [latticePoints[j], latticePoints[i]];
+    }
+  }
+
   function resizeCanvas() {
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = width;
     canvas.height = height;
     initSymbols();
+    buildLattice();
   }
 
   function initSymbols() {
@@ -440,42 +465,231 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
         vy: (Math.random() - 0.5) * 0.2,
         size: Math.random() * 20 + 12,
         color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
-        opacity: 0.15 + Math.random() * 0.25
+        opacity: 0.15 + Math.random() * 0.25,
+        // Save original position/velocity for collapse reset
+        origX: 0, origY: 0, origVx: 0, origVy: 0,
+        // Scroll bloom
+        scrollGlow: 0,
+        // Gravity well
+        inWell: false
       });
     }
   }
 
-  function drawSymbols() {
+  // Spawn click echo particles
+  function spawnEcho(x, y) {
+    for (let i = 0; i < 12; i++) {
+      const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.3;
+      const speed = 1.5 + Math.random() * 2;
+      echoes.push({
+        symbol: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x: x,
+        y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 8 + Math.random() * 8,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        opacity: 0.8,
+        age: 0,
+        maxAge: 600 // ms
+      });
+    }
+  }
+
+  // Quantum Collapse function
+  function triggerCollapse() {
+    if (isCollapsing) return;
+    isCollapsing = true;
+    collapsePhase = 1;
+    collapseStart = performance.now();
+    // Save original positions and velocities
+    symbols.forEach(s => {
+      s.origX = s.x;
+      s.origY = s.y;
+      s.origVx = s.vx;
+      s.origVy = s.vy;
+      // Assign a random lattice target
+      const target = latticePoints[Math.floor(Math.random() * latticePoints.length)];
+      s.targetX = target.x;
+      s.targetY = target.y;
+    });
+    // Clear lattice build in case window resized
+    buildLattice();
+  }
+
+  function updateCollapse(now) {
+    if (!isCollapsing) return;
+    const elapsed = now - collapseStart;
+    if (collapsePhase === 1) { // Snapping to lattice
+      const progress = Math.min(elapsed / COLLAPSE_SNAP_DURATION, 1.0);
+      symbols.forEach(s => {
+        // Ease-out
+        const t = 1 - Math.pow(1 - progress, 3);
+        s.x = s.origX + (s.targetX - s.origX) * t;
+        s.y = s.origY + (s.targetY - s.origY) * t;
+        s.vx = 0;
+        s.vy = 0;
+        s.opacity = 0.15 + 0.35 * progress; // brighten
+        s.color = '#f0a500'; // amber during collapse
+      });
+      if (progress >= 1.0) {
+        collapsePhase = 2;
+        collapseStart = now;
+        // Brief hold
+        collapseTimer = setTimeout(() => {
+          if (isCollapsing && collapsePhase === 2) {
+            collapsePhase = 3;
+            collapseStart = performance.now();
+            // Explosion: give random velocities outward from lattice targets
+            symbols.forEach(s => {
+              const angle = Math.random() * Math.PI * 2;
+              const speed = 3 + Math.random() * 4;
+              s.vx = Math.cos(angle) * speed;
+              s.vy = Math.sin(angle) * speed;
+              s.color = '#00d4ff'; // cyan explosion
+              s.opacity = 0.6;
+            });
+            // Spawn extra echo burst
+            spawnEcho(width/2, height/2);
+            spawnEcho(width/2, height/2);
+          }
+        }, COLLAPSE_HOLD_DURATION);
+      }
+    } else if (collapsePhase === 3) { // Explosion
+      const progress = Math.min(elapsed / COLLAPSE_EXPLODE_DURATION, 1.0);
+      symbols.forEach(s => {
+        // Fade opacity back to normal, colors return
+        s.opacity = 0.15 + 0.25 * (1 - progress);
+        if (progress > 0.5) {
+          s.color = Math.random() > 0.5 ? '#00d4ff' : '#f0a500';
+        }
+        // Continue velocity, decay slightly
+        s.vx *= 0.98;
+        s.vy *= 0.98;
+      });
+      if (progress >= 1.0) {
+        isCollapsing = false;
+        collapsePhase = 0;
+        if (collapseTimer) clearTimeout(collapseTimer);
+        // Restore normal behavior
+        symbols.forEach(s => {
+          s.vx = (Math.random() - 0.5) * 0.2;
+          s.vy = (Math.random() - 0.5) * 0.2;
+        });
+      }
+    }
+  }
+
+  // Scroll bloom
+  let scrollTimeout;
+  function handleScroll() {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    symbols.forEach(s => {
+      const distTop = s.y - scrollY;
+      const distBottom = (scrollY + vh) - s.y;
+      if (distTop < SCROLL_BLOOM_RADIUS || distBottom < SCROLL_BLOOM_RADIUS) {
+        s.scrollGlow = 1.0;
+      } else {
+        s.scrollGlow = 0;
+      }
+    });
+    if (scrollTimeout) clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      symbols.forEach(s => s.scrollGlow = 0);
+    }, 300);
+  }
+
+  function drawSymbols(now) {
     ctx.clearRect(0, 0, width, height);
     
+    // Update mouse velocity for gravity well
+    if (mouse.prevX !== null && mouse.x !== null) {
+      mouse.vx = mouse.x - mouse.prevX;
+      mouse.vy = mouse.y - mouse.prevY;
+    }
+    if (mouse.x !== null) {
+      mouse.prevX = mouse.x;
+      mouse.prevY = mouse.y;
+    }
+
+    // Update collapse animation
+    updateCollapse(now);
+
+    // Update echoes
+    echoes = echoes.filter(e => {
+      e.age += 16; // approx frame time
+      if (e.age >= e.maxAge) return false;
+      e.x += e.vx;
+      e.y += e.vy;
+      e.opacity = 0.8 * (1 - e.age / e.maxAge);
+      e.size *= 0.995;
+      return true;
+    });
+
+    // Draw echoes
+    echoes.forEach(e => {
+      ctx.font = `${e.size}px 'JetBrains Mono', 'Share Tech Mono', monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = e.color;
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = e.color;
+      ctx.globalAlpha = e.opacity;
+      ctx.fillText(e.symbol, e.x, e.y);
+    });
+    ctx.globalAlpha = 1.0;
+    ctx.shadowBlur = 0;
+
+    // Draw symbols
     symbols.forEach(s => {
-      s.x += s.vx;
-      s.y += s.vy;
-      
-      if (s.x < -50) s.x = width + 50;
-      if (s.x > width + 50) s.x = -50;
-      if (s.y < -50) s.y = height + 50;
-      if (s.y > height + 50) s.y = -50;
-      
-      if (mouse.x && mouse.y) {
-        const dx = s.x - mouse.x;
-        const dy = s.y - mouse.y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < mouse.radius) {
-          const angle = Math.atan2(dy, dx);
-          const force = (mouse.radius - dist) / mouse.radius * 2;
-          s.x += Math.cos(angle) * force;
-          s.y += Math.sin(angle) * force;
+      if (isCollapsing) {
+        // Handled by updateCollapse
+      } else {
+        // Normal physics
+        s.x += s.vx;
+        s.y += s.vy;
+        if (s.x < -50) s.x = width + 50;
+        if (s.x > width + 50) s.x = -50;
+        if (s.y < -50) s.y = height + 50;
+        if (s.y > height + 50) s.y = -50;
+        
+        // Gravity well effect
+        if (mouse.x && mouse.y) {
+          const dx = s.x - mouse.x;
+          const dy = s.y - mouse.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < GRAVITY_RADIUS) {
+            // Attractive force
+            const force = GRAVITY_STRENGTH * (1 - dist / GRAVITY_RADIUS);
+            const angle = Math.atan2(dy, dx);
+            s.vx -= Math.cos(angle) * force;
+            s.vy -= Math.sin(angle) * force;
+            // Tangential spin
+            const tangentAngle = angle + Math.PI/2;
+            const spin = TANGENTIAL_FACTOR * (1 - dist / GRAVITY_RADIUS);
+            s.vx += Math.cos(tangentAngle) * spin * (mouse.vx * 0.1);
+            s.vy += Math.sin(tangentAngle) * spin * (mouse.vy * 0.1);
+            s.inWell = true;
+          } else {
+            s.inWell = false;
+          }
+        }
+        // Scroll bloom
+        if (s.scrollGlow > 0) {
+          s.scrollGlow *= 0.95;
         }
       }
-      
+
+      // Draw symbol
+      const glowSize = s.scrollGlow > 0.01 ? 15 + s.scrollGlow * 20 : 15;
       ctx.font = `${s.size}px 'JetBrains Mono', 'Share Tech Mono', monospace`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.shadowColor = s.color;
-      ctx.shadowBlur = 15;
+      ctx.shadowBlur = glowSize;
       ctx.fillStyle = s.color;
-      ctx.globalAlpha = s.opacity;
+      ctx.globalAlpha = s.opacity + s.scrollGlow * 0.2;
       ctx.fillText(s.symbol, s.x, s.y);
     });
     
@@ -492,10 +706,26 @@ footer { border-top: 1px solid var(--border); padding: 40px; max-width: 1200px; 
   window.addEventListener('mouseleave', () => {
     mouse.x = null;
     mouse.y = null;
+    mouse.prevX = null;
+    mouse.prevY = null;
   });
+  // Click echo
+  window.addEventListener('click', (e) => {
+    spawnEcho(e.clientX, e.clientY);
+  });
+  // Scroll bloom
+  window.addEventListener('scroll', handleScroll, { passive: true });
 
   resizeCanvas();
-  drawSymbols();
+  requestAnimationFrame(drawSymbols);
+
+  // ========== QUANTUM COLLAPSE HOTKEY ==========
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'Q') {
+      e.preventDefault();
+      triggerCollapse();
+    }
+  });
 
   // ========== CUSTOM CURSOR & TRAIL ==========
   const cursor = document.getElementById('custom-cursor');
