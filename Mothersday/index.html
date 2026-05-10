@@ -1,1 +1,511 @@
-s
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="Happy Mother's Day — with love from Sheldon">
+<meta property="og:title" content="Happy Mother's Day">
+<meta property="og:description" content="For the women who hold the world together.">
+<meta property="og:type" content="website">
+<title>Happy Mother's Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,500;0,700;1,300;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:#0d0a0b;
+  --surface:rgba(40, 15, 20, 0.45);
+  --panel:rgba(45, 18, 25, 0.55);
+  --border:rgba(255, 180, 190, 0.2);
+  --rose:#e8a0b0;
+  --rose-d:#c07080;
+  --rose-l:#ffd0d8;
+  --gold:#D4AF37;
+  --gold-d:#b8960f;
+  --gold-l:#f0d060;
+  --white:#fff5f5;
+  --red:#e04050;
+  --pink:#f0a0b0;
+  --muted:#b09098;
+  --dim:#604048;
+  --mono:'JetBrains Mono', monospace;
+  --serif:'Crimson Pro', Georgia, serif;
+  --display:'Playfair Display', Georgia, serif;
+  --garamond:'Cormorant Garamond', Georgia, serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --glow-rose: 0 0 5px #e8a0b0, 0 0 10px #e8a0b0, 0 0 20px rgba(232,160,176,0.5);
+  --glow-gold: 0 0 5px #D4AF37, 0 0 10px #D4AF37, 0 0 20px rgba(212,175,55,0.5);
+}
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--serif);
+  font-size: clamp(16px, 1vw + 8px, 20px);
+  line-height: 1.5;
+  overflow-x: hidden;
+  cursor: none;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(232,160,176,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,160,176,0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 10;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(212,175,55,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 70%, rgba(232,160,176,0.04) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 60%, rgba(240,160,176,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 11;
+}
+
+.custom-cursor {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+  transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px var(--gold), 0 0 30px rgba(212,175,55,0.3);
+}
+.custom-cursor.hover {
+  transform: translate(-50%, -50%) scale(1.8);
+  background: rgba(212,175,55,0.12);
+  border-color: var(--rose);
+  box-shadow: 0 0 25px var(--rose), 0 0 50px rgba(232,160,176,0.5);
+}
+.cursor-trail {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.5;
+  box-shadow: 0 0 10px var(--gold);
+}
+
+#hero-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.hero {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 30px;
+  text-align: center;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  text-shadow: 0 0 8px var(--gold);
+}
+.hero-title {
+  font-family: var(--display);
+  font-size: clamp(52px, 8vw, 96px);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.05;
+  text-shadow: 0 0 30px rgba(255,245,245,0.15);
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+  text-shadow: var(--glow-gold);
+}
+.hero-subtitle {
+  font-family: var(--garamond);
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--rose);
+  margin-top: 12px;
+  text-shadow: 0 0 10px var(--rose);
+}
+.hero-divider {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 32px auto;
+}
+
+.cards {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto 80px;
+  padding: 0 30px;
+}
+.card {
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px 32px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4), inset 0 0 40px rgba(232,160,176,0.03);
+  transition: all 0.35s var(--ease);
+  text-align: center;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+.card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 30px rgba(212,175,55,0.2), inset 0 0 30px rgba(212,175,55,0.06);
+  transform: translateY(-6px);
+}
+.card-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+.card-to {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.card-name {
+  font-family: var(--display);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--gold);
+  text-shadow: 0 0 10px var(--gold);
+  margin-bottom: 8px;
+}
+.card-relation {
+  font-family: var(--garamond);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--rose);
+  margin-bottom: 20px;
+}
+.card-message {
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--white);
+  opacity: 0.9;
+  margin-bottom: 24px;
+}
+.card-signature {
+  font-family: var(--garamond);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--gold-l);
+  text-shadow: 0 0 6px var(--gold);
+}
+.card-signature span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 6px;
+  font-style: normal;
+}
+
+footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px 20px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 1px;
+}
+
+@media (max-width: 600px) {
+  .cards { grid-template-columns: 1fr; }
+  .hero-title { font-size: 42px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="hero-canvas"></canvas>
+
+<div class="custom-cursor" id="custom-cursor"></div>
+<div id="cursor-trail-container"></div>
+
+<div class="hero">
+  <div class="hero-eyebrow">✦ Mother's Day 2026 ✦</div>
+  <h1 class="hero-title"><em>Happy</em> Mother's<br>Day</h1>
+  <p class="hero-subtitle">For the women who hold the world together</p>
+  <div class="hero-divider"></div>
+</div>
+
+<div class="cards">
+  <div class="card tilt-card" id="card-mom">
+    <div class="card-icon">🌹</div>
+    <div class="card-to">To My</div>
+    <div class="card-name">Mother</div>
+    <div class="card-relation">— the foundation —</div>
+    <div class="card-message">
+      Mom, without you there is no me. You've given me shelter, a phone, and the space to build what I'm building. Every line of code, every framework, every grant application — it all exists because you made sure I had a roof and a plate of food. I'm going to make it. I'm going to pay you back for everything, not because you ask for it, but because you deserve to see that your son turned his mind into something that matters. I love you. Happy Mother's Day.
+    </div>
+    <div class="card-signature">
+      With all my love,
+      <span>— Sheldon, your son</span>
+    </div>
+  </div>
+
+  <div class="card tilt-card" id="card-sister">
+    <div class="card-icon">🌸</div>
+    <div class="card-to">To My</div>
+    <div class="card-name">Sister</div>
+    <div class="card-relation">— the rock —</div>
+    <div class="card-message">
+      Khi, you've held things down in ways I don't always say out loud. You're a mother too, and you carry that weight with strength I admire. I'm still in the lab building the future, and when it lands, you'll be part of it. Thank you for being there for Mom and for me. I don't say it enough. Happy Mother's Day, sis.
+    </div>
+    <div class="card-signature">
+      From your brother,
+      <span>— Sheldon</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Made with love · Evans Mills, New York · May 10, 2026
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ========== HEART & FLOWER SYMBOL FIELD ==========
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let symbols = [];
+  let echoes = [];
+  let mouse = { x: null, y: null, radius: 160, vx: 0, vy: 0, prevX: null, prevY: null };
+
+  const HEART_SET = [
+    '♥', '❤', '♡', '❥', '❦', '❧',
+    '✿', '❀', '🌹', '🌷', '🌺', '🌸', '🌼', '💐',
+    '✦', '✧', '⋆', '✶', '⭒',
+    '∞', '◈', '◆', '○', '◉'
+  ];
+
+  const GRAVITY_RADIUS = 220;
+  const GRAVITY_STRENGTH = 0.018;
+  const TANGENTIAL_FACTOR = 0.22;
+
+  function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    initSymbols();
+  }
+
+  function initSymbols() {
+    const count = Math.floor(width * height / 6000);
+    symbols = [];
+    for (let i = 0; i < count; i++) {
+      symbols.push({
+        symbol: HEART_SET[Math.floor(Math.random() * HEART_SET.length)],
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        size: Math.random() * 22 + 10,
+        color: Math.random() > 0.5 ? '#e8a0b0' : '#D4AF37',
+        opacity: 0.12 + Math.random() * 0.22,
+        inWell: false,
+        scrollGlow: 0,
+      });
+    }
+  }
+
+  function spawnEcho(x, y) {
+    for (let i = 0; i < 14; i++) {
+      const angle = (Math.PI * 2 * i) / 14 + Math.random() * 0.3;
+      const speed = 1.8 + Math.random() * 2.5;
+      echoes.push({
+        symbol: HEART_SET[Math.floor(Math.random() * HEART_SET.length)],
+        x: x, y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: 7 + Math.random() * 9,
+        color: Math.random() > 0.5 ? '#e8a0b0' : '#D4AF37',
+        opacity: 0.85,
+        age: 0,
+        maxAge: 650
+      });
+    }
+  }
+
+  function drawSymbols(now) {
+    ctx.clearRect(0, 0, width, height);
+
+    if (mouse.prevX !== null && mouse.x !== null) {
+      mouse.vx = mouse.x - mouse.prevX;
+      mouse.vy = mouse.y - mouse.prevY;
+    }
+    if (mouse.x !== null) {
+      mouse.prevX = mouse.x;
+      mouse.prevY = mouse.y;
+    }
+
+    echoes = echoes.filter(e => {
+      e.age += 16;
+      if (e.age >= e.maxAge) return false;
+      e.x += e.vx; e.y += e.vy;
+      e.opacity = 0.85 * (1 - e.age / e.maxAge);
+      e.size *= 0.994;
+      return true;
+    });
+
+    echoes.forEach(e => {
+      ctx.font = `${e.size}px 'JetBrains Mono', monospace`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = e.color; ctx.shadowBlur = 12;
+      ctx.fillStyle = e.color; ctx.globalAlpha = e.opacity;
+      ctx.fillText(e.symbol, e.x, e.y);
+    });
+    ctx.globalAlpha = 1.0; ctx.shadowBlur = 0;
+
+    symbols.forEach(s => {
+      s.x += s.vx; s.y += s.vy;
+      if (s.x < -50) s.x = width + 50;
+      if (s.x > width + 50) s.x = -50;
+      if (s.y < -50) s.y = height + 50;
+      if (s.y > height + 50) s.y = -50;
+
+      if (mouse.x && mouse.y) {
+        const dx = s.x - mouse.x, dy = s.y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < GRAVITY_RADIUS) {
+          const force = GRAVITY_STRENGTH * (1 - dist / GRAVITY_RADIUS);
+          const angle = Math.atan2(dy, dx);
+          s.vx -= Math.cos(angle) * force;
+          s.vy -= Math.sin(angle) * force;
+          const tangentAngle = angle + Math.PI/2;
+          const spin = TANGENTIAL_FACTOR * (1 - dist / GRAVITY_RADIUS);
+          s.vx += Math.cos(tangentAngle) * spin * (mouse.vx * 0.05 + 0.5);
+          s.vy += Math.sin(tangentAngle) * spin * (mouse.vx * 0.05 + 0.5);
+          s.vx *= 0.99; s.vy *= 0.99;
+          s.inWell = true;
+        } else {
+          s.inWell = false;
+        }
+      }
+
+      const glowSize = s.inWell ? 28 : 16;
+      ctx.font = `${s.size}px 'JetBrains Mono', monospace`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = s.color; ctx.shadowBlur = glowSize;
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.opacity;
+      ctx.fillText(s.symbol, s.x, s.y);
+    });
+
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1.0;
+    requestAnimationFrame(drawSymbols);
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX; mouse.y = e.clientY;
+  });
+  window.addEventListener('mouseleave', () => {
+    mouse.x = null; mouse.y = null;
+    mouse.prevX = null; mouse.prevY = null;
+  });
+  window.addEventListener('click', (e) => {
+    spawnEcho(e.clientX, e.clientY);
+  });
+
+  resizeCanvas();
+  requestAnimationFrame(drawSymbols);
+
+  // ========== CUSTOM CURSOR ==========
+  const cursor = document.getElementById('custom-cursor');
+  const trailContainer = document.getElementById('cursor-trail-container');
+  let trailPositions = [];
+  const MAX_TRAIL = 10;
+
+  function updateCursor(e) {
+    const x = e.clientX, y = e.clientY;
+    cursor.style.left = x + 'px'; cursor.style.top = y + 'px';
+    trailPositions.push({ x, y, time: Date.now() });
+    if (trailPositions.length > MAX_TRAIL) trailPositions.shift();
+    trailContainer.innerHTML = '';
+    trailPositions.forEach((pos, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'cursor-trail';
+      const age = (Date.now() - pos.time) / 1000;
+      const opacity = Math.max(0, 0.5 - age * 0.7);
+      const scale = 1 - i * 0.08;
+      dot.style.left = pos.x + 'px'; dot.style.top = pos.y + 'px';
+      dot.style.opacity = opacity;
+      dot.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      trailContainer.appendChild(dot);
+    });
+  }
+
+  document.addEventListener('mousemove', updateCursor);
+
+  document.querySelectorAll('.card, a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+
+  // ========== 3D TILT ==========
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 12;
+      const rotateY = (centerX - x) / 12;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+    });
+  });
+})();
+</script>
+</body>
+</html>
