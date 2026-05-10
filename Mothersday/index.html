@@ -68,6 +68,7 @@ body::after {
   z-index: 11;
 }
 
+/* CURSOR – faster response */
 .custom-cursor {
   width: 22px;
   height: 22px;
@@ -77,7 +78,8 @@ body::after {
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: screen;
-  transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+  transition: transform 0.05s ease, background 0.15s ease, box-shadow 0.15s ease;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 15px var(--gold), 0 0 30px rgba(212,175,55,0.3);
 }
@@ -97,6 +99,7 @@ body::after {
   z-index: 9998;
   opacity: 0.5;
   box-shadow: 0 0 10px var(--gold);
+  will-change: transform, opacity;
 }
 
 #hero-canvas {
@@ -157,6 +160,33 @@ body::after {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
   margin: 32px auto;
+}
+
+/* SCROLL INDICATOR */
+.scroll-indicator {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: -20px auto 60px;
+  padding: 0 30px;
+  text-align: center;
+}
+.scroll-text {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-shadow: 0 0 8px var(--gold);
+  margin-bottom: 24px;
+}
+#scroll-canvas {
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
 }
 
 .cards {
@@ -271,6 +301,11 @@ footer {
   <div class="hero-divider"></div>
 </div>
 
+<div class="scroll-indicator">
+  <div class="scroll-text">Scroll Down</div>
+  <canvas id="scroll-canvas" width="120" height="120"></canvas>
+</div>
+
 <div class="cards">
   <div class="card tilt-card" id="card-mom">
     <div class="card-icon">🌹</div>
@@ -309,13 +344,13 @@ footer {
 (function(){
   "use strict";
 
-  // ========== HEART & FLOWER SYMBOL FIELD ==========
+  // ========== BACKGROUND SYMBOL FIELD ==========
   const canvas = document.getElementById('hero-canvas');
   const ctx = canvas.getContext('2d');
   let width, height;
   let symbols = [];
   let echoes = [];
-  let mouse = { x: null, y: null, radius: 160, vx: 0, vy: 0, prevX: null, prevY: null };
+  let mouse = { x: null, y: null, vx: 0, vy: 0, prevX: null, prevY: null };
 
   const HEART_SET = [
     '♥', '❤', '♡', '❥', '❦', '❧',
@@ -457,11 +492,58 @@ footer {
   resizeCanvas();
   requestAnimationFrame(drawSymbols);
 
-  // ========== CUSTOM CURSOR ==========
+  // ========== SCROLL INDICATOR – Heart-shaped rotating symbols ==========
+  const scrollCanvas = document.getElementById('scroll-canvas');
+  const sctx = scrollCanvas.getContext('2d');
+  const heartSymbols = ['♥','❤','♡','✦','✧','❀','🌸','🌺','🌷','🌹'];
+  const centerX = 60, centerY = 60;
+  const heartScale = 28; // size of heart shape
+  let startAngle = 0;
+
+  // Parametric heart shape
+  function heartPoint(t) {
+    // t in [0, 2PI]
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+    return { x: x * 1.8, y: -y * 1.8 }; // scale and flip y
+  }
+
+  const numHeartSymbols = 18; // symbols around heart
+
+  function drawScrollIndicator(now) {
+    sctx.clearRect(0, 0, 120, 120);
+    const angleOffset = startAngle + now * 0.0008; // rotate slowly
+
+    for (let i = 0; i < numHeartSymbols; i++) {
+      const t = (i / numHeartSymbols) * Math.PI * 2 + angleOffset;
+      const pt = heartPoint(t);
+      const x = centerX + pt.x;
+      const y = centerY + pt.y;
+      const sym = heartSymbols[i % heartSymbols.length];
+      const size = 12 + Math.sin(now * 0.005 + i) * 3;
+      const alpha = 0.6 + Math.sin(now * 0.003 + i) * 0.3;
+      const color = (i % 2 === 0) ? '#D4AF37' : '#e8a0b0';
+      sctx.font = `${size}px 'JetBrains Mono', monospace`;
+      sctx.textAlign = 'center';
+      sctx.textBaseline = 'middle';
+      sctx.shadowColor = color;
+      sctx.shadowBlur = 8;
+      sctx.fillStyle = color;
+      sctx.globalAlpha = alpha;
+      sctx.fillText(sym, x, y);
+    }
+    sctx.globalAlpha = 1.0;
+    sctx.shadowBlur = 0;
+    startAngle += 0.002;
+    requestAnimationFrame(drawScrollIndicator);
+  }
+  requestAnimationFrame(drawScrollIndicator);
+
+  // ========== CUSTOM CURSOR (optimized) ==========
   const cursor = document.getElementById('custom-cursor');
   const trailContainer = document.getElementById('cursor-trail-container');
   let trailPositions = [];
-  const MAX_TRAIL = 10;
+  const MAX_TRAIL = 5; // reduced for snappiness
 
   function updateCursor(e) {
     const x = e.clientX, y = e.clientY;
@@ -469,20 +551,22 @@ footer {
     trailPositions.push({ x, y, time: Date.now() });
     if (trailPositions.length > MAX_TRAIL) trailPositions.shift();
     trailContainer.innerHTML = '';
-    trailPositions.forEach((pos, i) => {
+    for (let i = 0; i < trailPositions.length; i++) {
+      const pos = trailPositions[i];
       const dot = document.createElement('div');
       dot.className = 'cursor-trail';
       const age = (Date.now() - pos.time) / 1000;
-      const opacity = Math.max(0, 0.5 - age * 0.7);
-      const scale = 1 - i * 0.08;
-      dot.style.left = pos.x + 'px'; dot.style.top = pos.y + 'px';
+      const opacity = Math.max(0, 0.5 - age * 1.2);
+      const scale = 1 - i * 0.12;
+      dot.style.left = pos.x + 'px';
+      dot.style.top = pos.y + 'px';
       dot.style.opacity = opacity;
       dot.style.transform = `translate(-50%, -50%) scale(${scale})`;
       trailContainer.appendChild(dot);
-    });
+    }
   }
 
-  document.addEventListener('mousemove', updateCursor);
+  document.addEventListener('mousemove', updateCursor, { passive: true });
 
   document.querySelectorAll('.card, a, button').forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
