@@ -46,7 +46,6 @@ body {
   overflow-x: hidden;
   cursor: none;
 }
-/* Enhanced grid overlay – matches main site */
 body::before {
   content: '';
   position: fixed;
@@ -58,7 +57,6 @@ body::before {
   pointer-events: none;
   z-index: 10;
 }
-/* Scanline overlay – restored from main site */
 body::after {
   content: '';
   position: fixed;
@@ -74,7 +72,7 @@ body::after {
 }
 @keyframes scan { 0% { transform: translateY(0); } 100% { transform: translateY(4px); } }
 
-/* CURSOR – identical to main site */
+/* PURE-GPU CURSOR – no trail, no DOM updates, zero layout shift */
 .custom-cursor {
   width: 20px;
   height: 20px;
@@ -87,24 +85,13 @@ body::after {
   transition: transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 15px var(--gold), 0 0 30px rgba(212,175,55,0.3);
+  will-change: transform;
 }
 .custom-cursor.hover {
   transform: translate(-50%, -50%) scale(1.8);
   background: rgba(212,175,55,0.1);
   border-color: var(--rose);
   box-shadow: 0 0 25px var(--rose), 0 0 50px rgba(232,160,176,0.5);
-}
-.cursor-trail {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--gold);
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.6;
-  box-shadow: 0 0 10px var(--gold);
-  transition: opacity 0.3s ease;
 }
 
 #hero-canvas {
@@ -114,7 +101,7 @@ body::after {
   width: 100%;
   height: 100%;
   z-index: 0;
-  opacity: 0.65; /* matched to main site */
+  opacity: 0.65;
   pointer-events: none;
 }
 
@@ -167,7 +154,6 @@ body::after {
   margin: 32px auto;
 }
 
-/* SCROLL INDICATOR – pure CSS heart path, no canvas, no RAF */
 .scroll-indicator {
   position: relative;
   z-index: 2;
@@ -234,7 +220,7 @@ body::after {
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 32px;
   max-width: 900px;
-  margin: 0 auto 80px;
+  margin: 0 auto 40px;
   padding: 0 30px;
 }
 .card {
@@ -263,6 +249,7 @@ body::after {
 .card-signature span { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 6px; font-style: normal; }
 
 footer { position: relative; z-index: 2; text-align: center; padding: 40px 20px; font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 1px; }
+.cosmic-thanks { font-family:var(--garamond); font-size:18px; font-style:italic; color:var(--rose); margin-bottom:8px; text-shadow:0 0 6px var(--rose); }
 
 @media (max-width: 600px) {
   .cards { grid-template-columns: 1fr; }
@@ -275,7 +262,6 @@ footer { position: relative; z-index: 2; text-align: center; padding: 40px 20px;
 <canvas id="hero-canvas"></canvas>
 
 <div class="custom-cursor" id="custom-cursor"></div>
-<div id="cursor-trail-container"></div>
 
 <div class="hero">
   <div class="hero-eyebrow">✦ Mother's Day 2026 ✦</div>
@@ -327,9 +313,7 @@ footer { position: relative; z-index: 2; text-align: center; padding: 40px 20px;
 </div>
 
 <footer>
-  <p style="font-family:var(--garamond); font-size:18px; font-style:italic; color:var(--rose); margin-bottom:8px; text-shadow:0 0 6px var(--rose);">
-    And to the one who birthed the stars and set the first spark of life — thank you. We come from you.
-  </p>
+  <p class="cosmic-thanks">And to the one who birthed the stars and set the first spark of life — thank you. We come from you.</p>
   Made with love · Evans Mills, New York · May 10, 2026
 </footer>
 
@@ -522,29 +506,12 @@ footer { position: relative; z-index: 2; text-align: center; padding: 40px 20px;
   resizeCanvas();
   requestAnimationFrame(drawSymbols);
 
-  // ========== CUSTOM CURSOR & TRAIL ==========
+  // ========== CUSTOM CURSOR (GPU-only, no trail, no layout shift) ==========
   const cursor = document.getElementById('custom-cursor');
-  const trailContainer = document.getElementById('cursor-trail-container');
-  let trailPositions = [];
-  const MAX_TRAIL = 8;
 
   function updateCursor(e) {
     const x = e.clientX, y = e.clientY;
-    cursor.style.left = x + 'px'; cursor.style.top = y + 'px';
-    trailPositions.push({ x, y, time: Date.now() });
-    if (trailPositions.length > MAX_TRAIL) trailPositions.shift();
-    trailContainer.innerHTML = '';
-    trailPositions.forEach((pos, i) => {
-      const dot = document.createElement('div');
-      dot.className = 'cursor-trail';
-      const age = (Date.now() - pos.time) / 1000;
-      const opacity = Math.max(0, 0.6 - age * 0.8);
-      const scale = 1 - i * 0.1;
-      dot.style.left = pos.x + 'px'; dot.style.top = pos.y + 'px';
-      dot.style.opacity = opacity;
-      dot.style.transform = `translate(-50%, -50%) scale(${scale})`;
-      trailContainer.appendChild(dot);
-    });
+    cursor.style.transform = `translate3d(${x - 10}px, ${y - 10}px, 0)`;
   }
 
   document.addEventListener('mousemove', updateCursor, { passive: true });
