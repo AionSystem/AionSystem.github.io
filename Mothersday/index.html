@@ -46,29 +46,35 @@ body {
   overflow-x: hidden;
   cursor: none;
 }
+/* Enhanced grid overlay – matches main site */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   background-image: 
-    linear-gradient(rgba(232,160,176,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(232,160,176,0.02) 1px, transparent 1px);
+    linear-gradient(rgba(232,160,176,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,160,176,0.03) 1px, transparent 1px);
   background-size: 48px 48px;
   pointer-events: none;
   z-index: 10;
 }
+/* Scanline overlay – restored from main site */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 30%, rgba(212,175,55,0.06) 0%, transparent 60%),
-              radial-gradient(ellipse at 20% 70%, rgba(232,160,176,0.04) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 60%, rgba(240,160,176,0.04) 0%, transparent 50%);
+  background: repeating-linear-gradient(0deg, 
+    rgba(0,0,0,0) 0px, 
+    rgba(232,160,176,0.04) 1px, 
+    rgba(0,0,0,0) 2px);
   pointer-events: none;
   z-index: 11;
+  opacity: 0.4;
+  animation: scan 8s linear infinite;
 }
+@keyframes scan { 0% { transform: translateY(0); } 100% { transform: translateY(4px); } }
 
-/* CURSOR – identical to main site for smooth response */
+/* CURSOR – identical to main site */
 .custom-cursor {
   width: 20px;
   height: 20px;
@@ -108,7 +114,7 @@ body::after {
   width: 100%;
   height: 100%;
   z-index: 0;
-  opacity: 0.7;
+  opacity: 0.65; /* matched to main site */
   pointer-events: none;
 }
 
@@ -161,7 +167,7 @@ body::after {
   margin: 32px auto;
 }
 
-/* SCROLL INDICATOR */
+/* SCROLL INDICATOR – pure CSS heart path, no canvas, no RAF */
 .scroll-indicator {
   position: relative;
   z-index: 2;
@@ -181,11 +187,44 @@ body::after {
   text-shadow: 0 0 8px var(--gold);
   margin-bottom: 24px;
 }
-#scroll-canvas {
-  display: block;
+.scroll-heart {
+  position: relative;
   width: 120px;
   height: 120px;
   margin: 0 auto;
+}
+.heart-symbol {
+  position: absolute;
+  top: 50%; left: 50%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--gold);
+  text-shadow: 0 0 6px var(--gold);
+  will-change: transform, offset-distance;
+  offset-path: path("M0,0 C-15,-18 -45,-18 -45,0 C-45,22 -10,40 0,55 C10,40 45,22 45,0 C45,-18 15,-18 0,0Z");
+  offset-rotate: 0deg;
+  animation: circle-heart 8s linear infinite;
+}
+.heart-symbol:nth-child(odd) { color: var(--rose); text-shadow: 0 0 6px var(--rose); }
+.heart-symbol:nth-child(2) { animation-delay: -0.5s; }
+.heart-symbol:nth-child(3) { animation-delay: -1s; }
+.heart-symbol:nth-child(4) { animation-delay: -1.5s; }
+.heart-symbol:nth-child(5) { animation-delay: -2s; }
+.heart-symbol:nth-child(6) { animation-delay: -2.5s; }
+.heart-symbol:nth-child(7) { animation-delay: -3s; }
+.heart-symbol:nth-child(8) { animation-delay: -3.5s; }
+.heart-symbol:nth-child(9) { animation-delay: -4s; }
+.heart-symbol:nth-child(10) { animation-delay: -4.5s; }
+.heart-symbol:nth-child(11) { animation-delay: -5s; }
+.heart-symbol:nth-child(12) { animation-delay: -5.5s; }
+.heart-symbol:nth-child(13) { animation-delay: -6s; }
+.heart-symbol:nth-child(14) { animation-delay: -6.5s; }
+.heart-symbol:nth-child(15) { animation-delay: -7s; }
+.heart-symbol:nth-child(16) { animation-delay: -7.5s; }
+
+@keyframes circle-heart {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
 }
 
 .cards {
@@ -215,70 +254,15 @@ body::after {
   box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 30px rgba(212,175,55,0.2), inset 0 0 30px rgba(212,175,55,0.06);
   transform: translateY(-6px);
 }
-.card-icon {
-  font-size: 56px;
-  margin-bottom: 16px;
-  line-height: 1;
-}
-.card-to {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-.card-name {
-  font-family: var(--display);
-  font-size: 36px;
-  font-weight: 700;
-  color: var(--gold);
-  text-shadow: 0 0 10px var(--gold);
-  margin-bottom: 8px;
-}
-.card-relation {
-  font-family: var(--garamond);
-  font-size: 18px;
-  font-style: italic;
-  color: var(--rose);
-  margin-bottom: 20px;
-}
-.card-message {
-  font-family: var(--serif);
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--white);
-  opacity: 0.9;
-  margin-bottom: 24px;
-}
-.card-signature {
-  font-family: var(--garamond);
-  font-size: 20px;
-  font-style: italic;
-  color: var(--gold-l);
-  text-shadow: 0 0 6px var(--gold);
-}
-.card-signature span {
-  display: block;
-  font-family: var(--mono);
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 6px;
-  font-style: normal;
-}
+.card-icon { font-size: 56px; margin-bottom: 16px; line-height: 1; }
+.card-to { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.card-name { font-family: var(--display); font-size: 36px; font-weight: 700; color: var(--gold); text-shadow: 0 0 10px var(--gold); margin-bottom: 8px; }
+.card-relation { font-family: var(--garamond); font-size: 18px; font-style: italic; color: var(--rose); margin-bottom: 20px; }
+.card-message { font-family: var(--serif); font-size: 17px; line-height: 1.7; color: var(--white); opacity: 0.9; margin-bottom: 24px; }
+.card-signature { font-family: var(--garamond); font-size: 20px; font-style: italic; color: var(--gold-l); text-shadow: 0 0 6px var(--gold); }
+.card-signature span { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 6px; font-style: normal; }
 
-footer {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 40px 20px;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--dim);
-  letter-spacing: 1px;
-}
+footer { position: relative; z-index: 2; text-align: center; padding: 40px 20px; font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 1px; }
 
 @media (max-width: 600px) {
   .cards { grid-template-columns: 1fr; }
@@ -302,7 +286,14 @@ footer {
 
 <div class="scroll-indicator">
   <div class="scroll-text">Scroll Down</div>
-  <canvas id="scroll-canvas" width="120" height="120"></canvas>
+  <div class="scroll-heart">
+    <span class="heart-symbol">♥</span><span class="heart-symbol">❤</span><span class="heart-symbol">♡</span>
+    <span class="heart-symbol">✦</span><span class="heart-symbol">✧</span><span class="heart-symbol">❀</span>
+    <span class="heart-symbol">🌸</span><span class="heart-symbol">🌺</span><span class="heart-symbol">🌷</span>
+    <span class="heart-symbol">🌹</span><span class="heart-symbol">♥</span><span class="heart-symbol">❤</span>
+    <span class="heart-symbol">♡</span><span class="heart-symbol">✦</span><span class="heart-symbol">✧</span>
+    <span class="heart-symbol">❀</span>
+  </div>
 </div>
 
 <div class="cards">
@@ -312,7 +303,7 @@ footer {
     <div class="card-name">Mother</div>
     <div class="card-relation">— the foundation —</div>
     <div class="card-message">
-      Mom, without you there is no me. You've given me shelter, a phone, and the space to build what I'm building. Every line of code, every framework, every grant application — it all exists because you made sure I had a roof and a plate of food. I'm going to make it. I'm going to pay you back for everything, not because you ask for it, but because you deserve to see that your son turned his mind into something that matters. I love you. Happy Mother's Day.
+      Mom, without you there is no me. You’ve given me shelter, a phone, and the space to build what I’m building. Every line of code, every framework, every grant application — it all exists because you made sure I had a roof and a plate of food. I’m going to make it. I’m going to pay you back for everything, not because you ask for it, but because you deserve to see that your son turned his mind into something that matters. I love you. Happy Mother’s Day.
     </div>
     <div class="card-signature">
       With all my love,
@@ -326,7 +317,7 @@ footer {
     <div class="card-name">Sister</div>
     <div class="card-relation">— the rock —</div>
     <div class="card-message">
-      Khi, you've held things down in ways I don't always say out loud. You're a mother too, and you carry that weight with strength I admire. I'm still in the lab building the future, and when it lands, you'll be part of it. Thank you for being there for Mom and for me. I don't say it enough. Happy Mother's Day, sis.
+      Khi, you’ve held things down in ways I don’t always say out loud. You’re a mother too, and you carry that weight with strength I admire. I’m still in the lab building the future, and when it lands, you’ll be part of it. Thank you for being there for Mom and for me. I don’t say it enough. Happy Mother’s Day, sis.
     </div>
     <div class="card-signature">
       From your brother,
@@ -343,7 +334,41 @@ footer {
 (function(){
   "use strict";
 
-  // ========== BACKGROUND SYMBOL FIELD ==========
+  // ========== OBSERVATION LEDGER ==========
+  const OBSERVATION_KEY = 'aion-md-observation-ledger';
+  let observationLedger = [];
+  try {
+    const stored = sessionStorage.getItem(OBSERVATION_KEY);
+    if (stored) observationLedger = JSON.parse(stored);
+  } catch(e) {}
+
+  function recordObservation(type, x, y) {
+    observationLedger.push({ type, x, y, t: Date.now() });
+    if (observationLedger.length > 500) observationLedger.shift();
+    try { sessionStorage.setItem(OBSERVATION_KEY, JSON.stringify(observationLedger)); } catch(e) {}
+  }
+
+  function getHotZones() {
+    if (!observationLedger.length) return [];
+    const zones = [];
+    const grid = {};
+    const cellSize = 100;
+    observationLedger.forEach(obs => {
+      const cx = Math.floor(obs.x / cellSize) * cellSize + cellSize/2;
+      const cy = Math.floor(obs.y / cellSize) * cellSize + cellSize/2;
+      const key = `${cx},${cy}`;
+      if (!grid[key]) grid[key] = { x: cx, y: cy, count: 0 };
+      grid[key].count++;
+    });
+    const maxCount = Math.max(...Object.values(grid).map(g => g.count), 1);
+    for (const key in grid) {
+      const g = grid[key];
+      zones.push({ x: g.x, y: g.y, weight: g.count / maxCount });
+    }
+    return zones;
+  }
+
+  // ========== SYMBOL FIELD (single canvas, no second RAF) ==========
   const canvas = document.getElementById('hero-canvas');
   const ctx = canvas.getContext('2d');
   let width, height;
@@ -373,18 +398,24 @@ footer {
   function initSymbols() {
     const count = Math.floor(width * height / 6000);
     symbols = [];
+    const hotZones = getHotZones();
     for (let i = 0; i < count; i++) {
+      let sx = Math.random() * width;
+      let sy = Math.random() * height;
+      if (hotZones.length > 2 && Math.random() < 0.3) {
+        const zone = hotZones[Math.floor(Math.random() * hotZones.length)];
+        sx = zone.x + (Math.random() - 0.5) * 200;
+        sy = zone.y + (Math.random() - 0.5) * 200;
+      }
       symbols.push({
         symbol: HEART_SET[Math.floor(Math.random() * HEART_SET.length)],
-        x: Math.random() * width,
-        y: Math.random() * height,
+        x: sx, y: sy,
         vx: (Math.random() - 0.5) * 0.25,
         vy: (Math.random() - 0.5) * 0.25,
         size: Math.random() * 22 + 10,
         color: Math.random() > 0.5 ? '#e8a0b0' : '#D4AF37',
         opacity: 0.12 + Math.random() * 0.22,
-        inWell: false,
-        scrollGlow: 0,
+        inWell: false
       });
     }
   }
@@ -414,10 +445,7 @@ footer {
       mouse.vx = mouse.x - mouse.prevX;
       mouse.vy = mouse.y - mouse.prevY;
     }
-    if (mouse.x !== null) {
-      mouse.prevX = mouse.x;
-      mouse.prevY = mouse.y;
-    }
+    if (mouse.x !== null) { mouse.prevX = mouse.x; mouse.prevY = mouse.y; }
 
     echoes = echoes.filter(e => {
       e.age += 16;
@@ -458,9 +486,7 @@ footer {
           s.vy += Math.sin(tangentAngle) * spin * (mouse.vx * 0.05 + 0.5);
           s.vx *= 0.99; s.vy *= 0.99;
           s.inWell = true;
-        } else {
-          s.inWell = false;
-        }
+        } else { s.inWell = false; }
       }
 
       const glowSize = s.inWell ? 28 : 16;
@@ -479,6 +505,7 @@ footer {
   window.addEventListener('resize', resizeCanvas);
   window.addEventListener('mousemove', (e) => {
     mouse.x = e.clientX; mouse.y = e.clientY;
+    recordObservation('move', e.clientX, e.clientY);
   });
   window.addEventListener('mouseleave', () => {
     mouse.x = null; mouse.y = null;
@@ -486,56 +513,13 @@ footer {
   });
   window.addEventListener('click', (e) => {
     spawnEcho(e.clientX, e.clientY);
+    recordObservation('click', e.clientX, e.clientY);
   });
 
   resizeCanvas();
   requestAnimationFrame(drawSymbols);
 
-  // ========== SCROLL INDICATOR – Heart-shaped rotating symbols ==========
-  const scrollCanvas = document.getElementById('scroll-canvas');
-  const sctx = scrollCanvas.getContext('2d');
-  const heartSymbols = ['♥','❤','♡','✦','✧','❀','🌸','🌺','🌷','🌹'];
-  const centerX = 60, centerY = 60;
-  let startAngle = 0;
-
-  function heartPoint(t) {
-    const x = 16 * Math.pow(Math.sin(t), 3);
-    const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-    return { x: x * 1.8, y: -y * 1.8 };
-  }
-
-  const numHeartSymbols = 18;
-
-  function drawScrollIndicator(now) {
-    sctx.clearRect(0, 0, 120, 120);
-    const angleOffset = startAngle + now * 0.0008;
-
-    for (let i = 0; i < numHeartSymbols; i++) {
-      const t = (i / numHeartSymbols) * Math.PI * 2 + angleOffset;
-      const pt = heartPoint(t);
-      const x = centerX + pt.x;
-      const y = centerY + pt.y;
-      const sym = heartSymbols[i % heartSymbols.length];
-      const size = 12 + Math.sin(now * 0.005 + i) * 3;
-      const alpha = 0.6 + Math.sin(now * 0.003 + i) * 0.3;
-      const color = (i % 2 === 0) ? '#D4AF37' : '#e8a0b0';
-      sctx.font = `${size}px 'JetBrains Mono', monospace`;
-      sctx.textAlign = 'center';
-      sctx.textBaseline = 'middle';
-      sctx.shadowColor = color;
-      sctx.shadowBlur = 8;
-      sctx.fillStyle = color;
-      sctx.globalAlpha = alpha;
-      sctx.fillText(sym, x, y);
-    }
-    sctx.globalAlpha = 1.0;
-    sctx.shadowBlur = 0;
-    startAngle += 0.002;
-    requestAnimationFrame(drawScrollIndicator);
-  }
-  requestAnimationFrame(drawScrollIndicator);
-
-  // ========== CUSTOM CURSOR (matches main site) ==========
+  // ========== CUSTOM CURSOR & TRAIL ==========
   const cursor = document.getElementById('custom-cursor');
   const trailContainer = document.getElementById('cursor-trail-container');
   let trailPositions = [];
