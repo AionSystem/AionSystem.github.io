@@ -121,6 +121,7 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
   display:flex;flex-direction:column;gap:8px;
   transition:all 0.3s var(--ease);
   position:relative;
+  cursor:pointer;
 }
 .fw-card:hover{border-color:var(--cyan);box-shadow:0 8px 20px rgba(0,212,255,0.15);transform:translateY(-2px)}
 .fw-icon{font-size:1.5rem}
@@ -128,39 +129,48 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .fw-version{font-family:var(--mono);font-size:0.7rem;color:var(--muted);text-transform:uppercase}
 .fw-desc{font-family:var(--sans);font-size:0.85rem;color:var(--muted);line-height:1.4;flex:1}
 
-/* ===== ICON BUTTONS (GitHub + Sim) ===== */
-.fw-actions{display:flex;gap:12px;margin-top:8px;align-items:center}
-.icon-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;color:var(--cyan);cursor:pointer;transition:all 0.2s ease}
-.icon-btn:hover{background:rgba(0,212,255,0.1);box-shadow:0 0 10px var(--cyan);color:#fff}
-.icon-btn.disabled{opacity:0.3;pointer-events:none;cursor:not-allowed}
-/* tooltip */
-.icon-btn::after{
-  content:attr(data-tooltip);
-  position:absolute;
-  bottom:calc(100% + 8px);
-  left:50%;
-  transform:translateX(-50%);
-  padding:4px 10px;
-  border-radius:4px;
-  background:rgba(8,9,11,0.9);
-  border:1px solid var(--border);
-  color:var(--cyan);
-  font-family:var(--mono);
-  font-size:9px;
-  letter-spacing:1px;
-  white-space:nowrap;
-  pointer-events:none;
-  opacity:0;
-  transition:opacity 0.2s ease;
-  z-index:10;
+/* ===== MODAL OVERLAY ===== */
+.modal-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s;
 }
-.icon-btn:hover::after{opacity:1}
+.modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s}
+.modal-box{
+  background:var(--surface);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:20px;
+  padding:32px;max-width:420px;width:90%;
+  box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(0,212,255,0.1);
+  position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);
+}
+.modal-overlay.active .modal-box{transform:scale(1)}
+.modal-close{
+  position:absolute;top:12px;right:16px;
+  background:none;border:none;color:var(--muted);font-size:1.5rem;
+  cursor:pointer;line-height:1;transition:color 0.2s;
+}
+.modal-close:hover{color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.modal-icon{font-size:2.5rem;margin-bottom:12px}
+.modal-name{font-family:var(--sans);font-size:1.8rem;font-weight:900;color:var(--text);text-transform:uppercase;letter-spacing:1px}
+.modal-version{font-family:var(--mono);font-size:0.8rem;color:var(--muted);margin-bottom:16px}
+.modal-desc{font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6;margin-bottom:24px}
+.modal-actions{display:flex;gap:16px}
+.modal-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 0;border-radius:8px;
+  font-family:var(--mono);font-size:0.8rem;letter-spacing:1px;text-transform:uppercase;
+  text-decoration:none;transition:all 0.2s ease;border:1px solid;
+}
+.modal-btn.github{border-color:var(--cyan);color:var(--cyan)}
+.modal-btn.github:hover{background:var(--cyan);color:#000;box-shadow:0 0 15px var(--cyan)}
+.modal-btn.sim{border-color:var(--violet);color:var(--violet)}
+.modal-btn.sim:hover{background:var(--violet);color:#fff;box-shadow:0 0 15px var(--violet)}
+.modal-btn.disabled{opacity:0.3;pointer-events:none;cursor:not-allowed}
 
-/* ===== TIER CARDS (Tier 2 & 3) unchanged ===== */
+/* ===== TIER CARDS (Tier 2 & 3) ===== */
 .card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);box-shadow:0 8px 20px rgba(0,0,0,0.3),inset 0 0 30px rgba(0,212,255,0.03);border-radius:16px;padding:32px;transition:all 0.3s var(--ease)}
 .card:hover{border-color:var(--cyan);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2),inset 0 0 20px rgba(0,212,255,0.05);transform:translateY(-4px)}
-
-/* Tier-specific accents */
 .tier-open .card{border-left:3px solid var(--cyan)}
 .tier-spec .card{border-left:3px solid var(--amber)}
 .tier-sovereign .card{border-left:3px solid var(--violet)}
@@ -234,379 +244,44 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
       <h2 class="section-title">Open Armory</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
-    <p style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);margin-bottom:40px">30 free, pip‑installable frameworks. Public repos. Live simulations. First taste is free.</p>
+    <p style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);margin-bottom:40px">30 free, pip‑installable frameworks. Public repos. Live simulations. Click any card to explore.</p>
 
     <!-- Domain: Audit & Scoring -->
     <div class="domain-heading">// Audit & Scoring</div>
-    <div class="scroll-row">
-      <!-- FSVE Lite -->
-      <div class="fw-card">
-        <div class="fw-icon">🧪</div>
-        <div class="fw-name">FSVE Lite</div>
-        <div class="fw-version">v4.3‑lite</div>
-        <div class="fw-desc">Lightweight epistemic scoring for single‑output validation. 6 axes, no topology engine.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/FSVE" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- LAV -->
-      <div class="fw-card">
-        <div class="fw-icon">📐</div>
-        <div class="fw-name">LAV</div>
-        <div class="fw-version">v1.5</div>
-        <div class="fw-desc">Linguistic Anchor Validation for AI‑generated text. 5 reviewer roles, red‑team reports.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn" data-tooltip="Launch Simulator"><a href="/simulations/lav/" target="_blank"><i data-lucide="play" style="width:18px;height:18px"></i></a></span>
-        </div>
-      </div>
-      <!-- PDE -->
-      <div class="fw-card">
-        <div class="fw-icon">🌊</div>
-        <div class="fw-name">PDE Scanner</div>
-        <div class="fw-version">v0.5‑core</div>
-        <div class="fw-desc">12‑domain diagnostic scan. Gaps, vulnerabilities, blind spots in AI systems.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- CAVTE -->
-      <div class="fw-card">
-        <div class="fw-icon">🕸️</div>
-        <div class="fw-name">CAVTE</div>
-        <div class="fw-version">v0.2</div>
-        <div class="fw-desc">Cross-Artifact Validation Topology Engine. Echo chamber detection via persistent homology.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/FSVE" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- RQS -->
-      <div class="fw-card">
-        <div class="fw-icon">✅</div>
-        <div class="fw-name">RQS</div>
-        <div class="fw-version">v0.6</div>
-        <div class="fw-desc">Run Quality Score. Evaluates reliability of scoring pipeline execution.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-    </div>
+    <div class="scroll-row" id="row-audit"></div>
 
     <!-- Domain: Governance & Constitution -->
     <div class="domain-heading" style="margin-top:40px">// Governance & Constitution</div>
-    <div class="scroll-row">
-      <!-- Constitutional Engine -->
-      <div class="fw-card">
-        <div class="fw-icon">⚖️</div>
-        <div class="fw-name">Constitutional Engine</div>
-        <div class="fw-version">v2.1‑lite</div>
-        <div class="fw-desc">Reference implementation of the Nine Laws. 426 tests, mock consent oracle.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AI-CONSTITUTION" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- STP Client -->
-      <div class="fw-card">
-        <div class="fw-icon">🔐</div>
-        <div class="fw-name">STP Client</div>
-        <div class="fw-version">v2.0.0</div>
-        <div class="fw-desc">Triple‑time seal from the command line. Zero deps. FROZEN‑2.0.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn" data-tooltip="Launch Simulator"><a href="/simulations/stp-demo/" target="_blank"><i data-lucide="play" style="width:18px;height:18px"></i></a></span>
-        </div>
-      </div>
-      <!-- QAE Lite -->
-      <div class="fw-card">
-        <div class="fw-icon">❓</div>
-        <div class="fw-name">QAE Lite</div>
-        <div class="fw-version">v1.4‑lite</div>
-        <div class="fw-desc">Question Amplification Engine – basic epistemic interrogation.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- ADA‑VELA Lite -->
-      <div class="fw-card">
-        <div class="fw-icon">🛡️</div>
-        <div class="fw-name">ADA‑VELA Lite</div>
-        <div class="fw-version">v3.2‑lite</div>
-        <div class="fw-desc">Execution gate with basic constitutional compliance check.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- Certus Engine -->
-      <div class="fw-card">
-        <div class="fw-icon">📋</div>
-        <div class="fw-name">Certus Engine</div>
-        <div class="fw-version">v0.3</div>
-        <div class="fw-desc">Damage Confidence Index and community‑operated certification platform. Core of VERITAS.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/CERTUS-ENGINE" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-    </div>
+    <div class="scroll-row" id="row-governance"></div>
 
     <!-- Domain: Provenance & Sealing -->
     <div class="domain-heading" style="margin-top:40px">// Provenance & Sealing</div>
-    <div class="scroll-row">
-      <!-- PPP -->
-      <div class="fw-card">
-        <div class="fw-icon">🔗</div>
-        <div class="fw-name">PPP</div>
-        <div class="fw-version">v0.4</div>
-        <div class="fw-desc">Priority Provenance Protocol – SHA‑256 chain for scored artifacts.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/FSVE" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- WebEater -->
-      <div class="fw-card">
-        <div class="fw-icon">🕷️</div>
-        <div class="fw-name">WebEater</div>
-        <div class="fw-version">v0.1</div>
-        <div class="fw-desc">Cryptographic link binding between entities – binds new seal to existing SHA‑256.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- ANCHOR -->
-      <div class="fw-card">
-        <div class="fw-icon">⚓</div>
-        <div class="fw-name">ANCHOR</div>
-        <div class="fw-version">v0.2</div>
-        <div class="fw-desc">AI output reliability anchoring – roots output to provenance chain.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- GRAFT -->
-      <div class="fw-card">
-        <div class="fw-icon">🌱</div>
-        <div class="fw-name">GRAFT</div>
-        <div class="fw-version">v0.1</div>
-        <div class="fw-desc">Root integration for new frameworks into existing provenance trees.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- SIEVE -->
-      <div class="fw-card">
-        <div class="fw-icon">🧹</div>
-        <div class="fw-name">SIEVE</div>
-        <div class="fw-version">v0.1</div>
-        <div class="fw-desc">Client gateway that filters and routes outputs to certification services.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-    </div>
+    <div class="scroll-row" id="row-provenance"></div>
 
     <!-- Domain: Writing & Content -->
     <div class="domain-heading" style="margin-top:40px">// Writing & Content</div>
-    <div class="scroll-row">
-      <!-- VEIN -->
-      <div class="fw-card">
-        <div class="fw-icon">✍️</div>
-        <div class="fw-name">VEIN</div>
-        <div class="fw-version">v0.5</div>
-        <div class="fw-desc">Output methodology – controls narrative flow, tone, and structure.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- RESONANCE -->
-      <div class="fw-card">
-        <div class="fw-icon">🔊</div>
-        <div class="fw-name">RESONANCE</div>
-        <div class="fw-version">v0.3</div>
-        <div class="fw-desc">Inbound decoding – maps user input to style and emotional register.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- DUAL‑HELIX -->
-      <div class="fw-card">
-        <div class="fw-icon">🧬</div>
-        <div class="fw-name">DUAL‑HELIX</div>
-        <div class="fw-version">v2.0</div>
-        <div class="fw-desc">Build wrapper that pairs framework logic with narrative structure.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- FORGE Lite -->
-      <div class="fw-card">
-        <div class="fw-icon">🔥</div>
-        <div class="fw-name">FORGE Lite</div>
-        <div class="fw-version">v2.1‑lite</div>
-        <div class="fw-desc">Polymath Council review with basic convergence gating – open‑source version.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- GENESIS Lite -->
-      <div class="fw-card">
-        <div class="fw-icon">🚀</div>
-        <div class="fw-name">GENESIS Lite</div>
-        <div class="fw-version">v0.3‑lite</div>
-        <div class="fw-desc">Scaling architecture with depth governor – basic deployment readiness.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-    </div>
+    <div class="scroll-row" id="row-writing"></div>
 
     <!-- Domain: Diagnostics & Red Teaming -->
     <div class="domain-heading" style="margin-top:40px">// Diagnostics & Red Teaming</div>
-    <div class="scroll-row">
-      <!-- SAR -->
-      <div class="fw-card">
-        <div class="fw-icon">⚔️</div>
-        <div class="fw-name">SAR</div>
-        <div class="fw-version">v0.2</div>
-        <div class="fw-desc">Sovereign Adversarial Reasoning – 12 FTT checks including Disaggregation Diagnosis.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- ANTI‑FORGE -->
-      <div class="fw-card">
-        <div class="fw-icon">🛡️</div>
-        <div class="fw-name">ANTI‑FORGE</div>
-        <div class="fw-version">v1.3</div>
-        <div class="fw-desc">15‑role rejection council. Produces a Rejection Map.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- EAE -->
-      <div class="fw-card">
-        <div class="fw-icon">❌</div>
-        <div class="fw-name">EAE</div>
-        <div class="fw-version">v0.3</div>
-        <div class="fw-desc">Elimination mapping by systematic negation. Produces survivor silhouette.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- CAL -->
-      <div class="fw-card">
-        <div class="fw-icon">📏</div>
-        <div class="fw-name">CAL</div>
-        <div class="fw-version">v0.3</div>
-        <div class="fw-desc">59 FTT checks across conceptual, algorithmic, implementation, and error‑control layers.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-      <!-- CCP -->
-      <div class="fw-card">
-        <div class="fw-icon">🗺️</div>
-        <div class="fw-name">CCP</div>
-        <div class="fw-version">v0.1</div>
-        <div class="fw-desc">Coverage Cartography Protocol – maps test coverage to epistemic gaps.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/AION-BRAIN" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-    </div>
+    <div class="scroll-row" id="row-diagnostics"></div>
 
     <!-- Domain: Simulation & Education -->
     <div class="domain-heading" style="margin-top:40px">// Simulation & Education</div>
-    <div class="scroll-row">
-      <!-- Roller Coaster Physics -->
-      <div class="fw-card">
-        <div class="fw-icon">🎢</div>
-        <div class="fw-name">Roller Coaster Physics</div>
-        <div class="fw-version">v1.0</div>
-        <div class="fw-desc">AP Physics curriculum. 10 modules, citation‑backed, 2 red‑team passes.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/ROLLER-COASTER" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn" data-tooltip="Launch Simulator"><a href="/simulations/roller-coaster/" target="_blank"><i data-lucide="play" style="width:18px;height:18px"></i></a></span>
-        </div>
-      </div>
-      <!-- Math Worksheet Builder -->
-      <div class="fw-card">
-        <div class="fw-icon">🧮</div>
-        <div class="fw-name">Math Worksheet Builder</div>
-        <div class="fw-version">v1.0</div>
-        <div class="fw-desc">Grades 3–8. 9 problem types. Evidence‑based. Generates printable worksheets.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/MATH-WORKSHEET" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn" data-tooltip="Launch Simulator"><a href="/simulations/math-worksheet-builder/" target="_blank"><i data-lucide="play" style="width:18px;height:18px"></i></a></span>
-        </div>
-      </div>
-      <!-- ORION (UXO) -->
-      <div class="fw-card">
-        <div class="fw-icon">💣</div>
-        <div class="fw-name">Project ORION</div>
-        <div class="fw-version">v2.1</div>
-        <div class="fw-desc">UNDP UXO detection. Tri‑axis gradiometer simulation. Field‑tested.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/ORION" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn" data-tooltip="Launch Simulator"><a href="/simulators/Orion/" target="_blank"><i data-lucide="play" style="width:18px;height:18px"></i></a></span>
-        </div>
-      </div>
-      <!-- VERITAS -->
-      <div class="fw-card">
-        <div class="fw-icon">📊</div>
-        <div class="fw-name">VERITAS</div>
-        <div class="fw-version">v1.0</div>
-        <div class="fw-desc">Damage certification platform. DCI scoring, STP seals. UNDP submission.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/VERITAS" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn" data-tooltip="Launch Simulator"><a href="https://aionsystem.github.io/VERITAS" target="_blank"><i data-lucide="play" style="width:18px;height:18px"></i></a></span>
-        </div>
-      </div>
-      <!-- VERITAS‑SHELLFISH -->
-      <div class="fw-card">
-        <div class="fw-icon">🐚</div>
-        <div class="fw-name">VERITAS‑SHELLFISH</div>
-        <div class="fw-version">v0.1</div>
-        <div class="fw-desc">NOAA HAB toxin detection. CERTUS confidence scoring. STP sealing.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/VERITAS-SHELLFISH" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn" data-tooltip="Launch Simulator"><a href="https://aionsystem.github.io/VERITAS-SHELLFISH" target="_blank"><i data-lucide="play" style="width:18px;height:18px"></i></a></span>
-        </div>
-      </div>
-      <!-- Textile‑Pilling -->
-      <div class="fw-card">
-        <div class="fw-icon">🧵</div>
-        <div class="fw-name">Textile‑Pilling</div>
-        <div class="fw-version">v1.0</div>
-        <div class="fw-desc">Fabric degradation analysis. Pilling detection research tool.</div>
-        <div class="fw-actions">
-          <span class="icon-btn" data-tooltip="GitHub"><a href="https://github.com/AionSystem/TEXTILE-PILLING" target="_blank" rel="noopener"><i data-lucide="github" style="width:18px;height:18px"></i></a></span>
-          <span class="icon-btn disabled" data-tooltip="Simulation coming soon"><i data-lucide="play" style="width:18px;height:18px"></i></span>
-        </div>
-      </div>
-    </div>
+    <div class="scroll-row" id="row-simulation"></div>
   </section>
+
+  <!-- ============ MODAL ============ -->
+  <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <div class="modal-icon" id="modal-icon"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-version" id="modal-version"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
 
   <!-- ============ TIER 2: SPEC LIBRARY ============ -->
   <section id="spec-library" class="tier-spec">
@@ -617,14 +292,13 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     </div>
     <p style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);margin-bottom:32px">270+ locked blueprints. Browse capability summaries. Commission a full build‑to‑Docker on demand.</p>
     <div class="fw-grid">
-      <!-- Sample locked blueprints (keep as before) -->
       <div class="fw-card">
         <span class="lock-icon">🔒</span>
         <div class="fw-icon">🧠</div>
         <div class="fw-name">FSVE Enterprise</div>
         <div class="fw-version">v4.3‑full</div>
         <div class="fw-desc">All 13 axes, CAVTE, C‑Mode, streaming ingress.</div>
-        <span class="fw-link" style="color:var(--amber);cursor:pointer" data-tooltip="Purchase Docker Image to unlock">Purchase Docker Image →</span>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
       </div>
       <div class="fw-card">
         <span class="lock-icon">🔒</span>
@@ -632,7 +306,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
         <div class="fw-name">QAE Pro</div>
         <div class="fw-version">v1.4‑full</div>
         <div class="fw-desc">Full epistemic interrogation suite with adversarial stress.</div>
-        <span class="fw-link" style="color:var(--amber);cursor:pointer" data-tooltip="Purchase Docker Image to unlock">Purchase Docker Image →</span>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
       </div>
       <div class="fw-card">
         <span class="lock-icon">🔒</span>
@@ -640,7 +314,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
         <div class="fw-name">ADA‑VELA Gate</div>
         <div class="fw-version">v3.2‑enterprise</div>
         <div class="fw-desc">Execution gate with full compliance logging and SHA‑256 attestation.</div>
-        <span class="fw-link" style="color:var(--amber);cursor:pointer" data-tooltip="Purchase Docker Image to unlock">Purchase Docker Image →</span>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
       </div>
       <div class="fw-card">
         <span class="lock-icon">🔒</span>
@@ -648,21 +322,21 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
         <div class="fw-name">FORGE Review Suite</div>
         <div class="fw-version">v2.1‑full</div>
         <div class="fw-desc">Polymath Council with extended panels and FSVE‑aligned gating.</div>
-        <span class="fw-link" style="color:var(--amber);cursor:pointer" data-tooltip="Purchase Docker Image to unlock">Purchase Docker Image →</span>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
       </div>
       <div class="fw-card">
         <span class="lock-icon">🔒</span>
         <div class="fw-name">GENESIS Deployment</div>
         <div class="fw-version">v0.3‑full</div>
         <div class="fw-desc">Scaling architecture with depth governor and confidence management.</div>
-        <span class="fw-link" style="color:var(--amber);cursor:pointer" data-tooltip="Purchase Docker Image to unlock">Purchase Docker Image →</span>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
       </div>
       <div class="fw-card">
         <span class="lock-icon">🔒</span>
         <div class="fw-name">TOPOS Shape Engine</div>
         <div class="fw-version">v0.3‑full</div>
         <div class="fw-desc">Persistent shape mapping between frozen weights and fluid output.</div>
-        <span class="fw-link" style="color:var(--amber);cursor:pointer" data-tooltip="Purchase Docker Image to unlock">Purchase Docker Image →</span>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
       </div>
     </div>
     <p style="text-align:center;margin-top:32px">
@@ -990,6 +664,131 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
   if (!reducedMotion) { resizeCanvas(); resizeTrail(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
+
+  // ============= MODAL LOGIC =============
+  const frameworks = {
+    // Audit & Scoring
+    'FSVE Lite': { icon:'🧪', name:'FSVE Lite', ver:'v4.3‑lite', desc:'Lightweight epistemic scoring for single‑output validation. 6 axes, no topology engine. Ideal for getting started with certainty engineering.', github:'https://github.com/AionSystem/FSVE', sim: null },
+    'LAV': { icon:'📐', name:'LAV', ver:'v1.5', desc:'Linguistic Anchor Validation for AI‑generated text. 5 reviewer roles, red‑team reports. M‑STRONG convergence.', github:'https://github.com/AionSystem/AION-BRAIN', sim:'/simulations/lav/' },
+    'PDE Scanner': { icon:'🌊', name:'PDE Scanner', ver:'v0.5‑core', desc:'12‑domain diagnostic scan. Finds gaps, vulnerabilities, loopholes, and blind spots in AI systems. 60 pellucid focal variants.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'CAVTE': { icon:'🕸️', name:'CAVTE', ver:'v0.2', desc:'Cross-Artifact Validation Topology Engine. Detects echo chambers via persistent homology. Computes Betti numbers.', github:'https://github.com/AionSystem/FSVE', sim: null },
+    'RQS': { icon:'✅', name:'RQS', ver:'v0.6', desc:'Run Quality Score. Evaluates reliability of the scoring pipeline execution. Produces RQS quality tiers.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    // Governance
+    'Constitutional Engine': { icon:'⚖️', name:'Constitutional Engine', ver:'v2.1‑lite', desc:'Reference implementation of the Nine Laws. 426 tests, mock consent oracle, and cryptographic attestation.', github:'https://github.com/AionSystem/AI-CONSTITUTION', sim: null },
+    'STP Client': { icon:'🔐', name:'STP Client', ver:'v2.0.0', desc:'Triple‑time seal from the command line. Zero dependencies. FROZEN‑2.0.', github:'https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL', sim:'/simulations/stp-demo/' },
+    'QAE Lite': { icon:'❓', name:'QAE Lite', ver:'v1.4‑lite', desc:'Question Amplification Engine – basic epistemic interrogation for AI outputs.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'ADA‑VELA Lite': { icon:'🛡️', name:'ADA‑VELA Lite', ver:'v3.2‑lite', desc:'Execution gate with basic constitutional compliance check.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'Certus Engine': { icon:'📋', name:'Certus Engine', ver:'v0.3', desc:'Damage Confidence Index and community‑operated certification platform. Core of VERITAS.', github:'https://github.com/AionSystem/CERTUS-ENGINE', sim: null },
+    // Provenance
+    'PPP': { icon:'🔗', name:'PPP', ver:'v0.4', desc:'Priority Provenance Protocol – SHA‑256 chain for scored artifacts.', github:'https://github.com/AionSystem/FSVE', sim: null },
+    'WebEater': { icon:'🕷️', name:'WebEater', ver:'v0.1', desc:'Cryptographic link binding between entities – binds new seal to existing SHA‑256.', github:'https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL', sim: null },
+    'ANCHOR': { icon:'⚓', name:'ANCHOR', ver:'v0.2', desc:'AI output reliability anchoring – roots output to provenance chain.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'GRAFT': { icon:'🌱', name:'GRAFT', ver:'v0.1', desc:'Root integration for new frameworks into existing provenance trees.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'SIEVE': { icon:'🧹', name:'SIEVE', ver:'v0.1', desc:'Client gateway that filters and routes outputs to certification services.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    // Writing
+    'VEIN': { icon:'✍️', name:'VEIN', ver:'v0.5', desc:'Output methodology – controls narrative flow, tone, and structure.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'RESONANCE': { icon:'🔊', name:'RESONANCE', ver:'v0.3', desc:'Inbound decoding – maps user input to style and emotional register.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'DUAL‑HELIX': { icon:'🧬', name:'DUAL‑HELIX', ver:'v2.0', desc:'Build wrapper that pairs framework logic with narrative structure.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'FORGE Lite': { icon:'🔥', name:'FORGE Lite', ver:'v2.1‑lite', desc:'Polymath Council review with basic convergence gating – open‑source version.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'GENESIS Lite': { icon:'🚀', name:'GENESIS Lite', ver:'v0.3‑lite', desc:'Scaling architecture with depth governor – basic deployment readiness.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    // Diagnostics
+    'SAR': { icon:'⚔️', name:'SAR', ver:'v0.2', desc:'Sovereign Adversarial Reasoning – 12 FTT checks including Disaggregation Diagnosis.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'ANTI‑FORGE': { icon:'🛡️', name:'ANTI‑FORGE', ver:'v1.3', desc:'15‑role rejection council. Produces a Rejection Map.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'EAE': { icon:'❌', name:'EAE', ver:'v0.3', desc:'Elimination mapping by systematic negation. Produces survivor silhouette.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'CAL': { icon:'📏', name:'CAL', ver:'v0.3', desc:'59 FTT checks across conceptual, algorithmic, implementation, and error‑control layers.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'CCP': { icon:'🗺️', name:'CCP', ver:'v0.1', desc:'Coverage Cartography Protocol – maps test coverage to epistemic gaps.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    // Simulation & Education
+    'Roller Coaster Physics': { icon:'🎢', name:'Roller Coaster Physics', ver:'v1.0', desc:'AP Physics curriculum. 10 modules, citation‑backed, 2 red‑team passes.', github:'https://github.com/AionSystem/ROLLER-COASTER', sim:'/simulations/roller-coaster/' },
+    'Math Worksheet Builder': { icon:'🧮', name:'Math Worksheet Builder', ver:'v1.0', desc:'Grades 3–8. 9 problem types. Evidence‑based. Generates printable worksheets.', github:'https://github.com/AionSystem/MATH-WORKSHEET', sim:'/simulations/math-worksheet-builder/' },
+    'Project ORION': { icon:'💣', name:'Project ORION', ver:'v2.1', desc:'UNDP UXO detection. Tri‑axis gradiometer simulation. Field‑tested.', github:'https://github.com/AionSystem/ORION', sim:'/simulators/Orion/' },
+    'VERITAS': { icon:'📊', name:'VERITAS', ver:'v1.0', desc:'Damage certification platform. DCI scoring, STP seals. UNDP submission.', github:'https://github.com/AionSystem/VERITAS', sim:'https://aionsystem.github.io/VERITAS' },
+    'VERITAS‑SHELLFISH': { icon:'🐚', name:'VERITAS‑SHELLFISH', ver:'v0.1', desc:'NOAA HAB toxin detection. CERTUS confidence scoring. STP sealing.', github:'https://github.com/AionSystem/VERITAS-SHELLFISH', sim:'https://aionsystem.github.io/VERITAS-SHELLFISH' },
+    'Textile‑Pilling': { icon:'🧵', name:'Textile‑Pilling', ver:'v1.0', desc:'Fabric degradation analysis. Pilling detection research tool.', github:'https://github.com/AionSystem/TEXTILE-PILLING', sim: null }
+  };
+
+  const rows = {
+    'row-audit': ['FSVE Lite','LAV','PDE Scanner','CAVTE','RQS'],
+    'row-governance': ['Constitutional Engine','STP Client','QAE Lite','ADA‑VELA Lite','Certus Engine'],
+    'row-provenance': ['PPP','WebEater','ANCHOR','GRAFT','SIEVE'],
+    'row-writing': ['VEIN','RESONANCE','DUAL‑HELIX','FORGE Lite','GENESIS Lite'],
+    'row-diagnostics': ['SAR','ANTI‑FORGE','EAE','CAL','CCP'],
+    'row-simulation': ['Roller Coaster Physics','Math Worksheet Builder','Project ORION','VERITAS','VERITAS‑SHELLFISH','Textile‑Pilling']
+  };
+
+  // Build cards
+  for (let rowId in rows) {
+    const row = document.getElementById(rowId);
+    if (!row) continue;
+    rows[rowId].forEach(name => {
+      const fw = frameworks[name];
+      if (!fw) return;
+      const card = document.createElement('div');
+      card.className = 'fw-card';
+      card.innerHTML = `
+        <div class="fw-icon">${fw.icon}</div>
+        <div class="fw-name">${fw.name}</div>
+        <div class="fw-version">${fw.ver}</div>
+        <div class="fw-desc">${fw.desc.substring(0,80)}…</div>
+      `;
+      card.addEventListener('click', () => openModal(fw));
+      row.appendChild(card);
+    });
+  }
+
+  const modalOverlay = document.getElementById('modal-overlay');
+  const modalClose = document.getElementById('modal-close');
+  const modalIcon = document.getElementById('modal-icon');
+  const modalName = document.getElementById('modal-name');
+  const modalVersion = document.getElementById('modal-version');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalActions = document.getElementById('modal-actions');
+
+  function openModal(fw) {
+    modalIcon.textContent = fw.icon;
+    modalName.textContent = fw.name;
+    modalVersion.textContent = fw.ver;
+    modalDesc.textContent = fw.desc;
+    // Build buttons
+    modalActions.innerHTML = '';
+    if (fw.github) {
+      const gitBtn = document.createElement('a');
+      gitBtn.href = fw.github;
+      gitBtn.target = '_blank';
+      gitBtn.rel = 'noopener noreferrer';
+      gitBtn.className = 'modal-btn github';
+      gitBtn.innerHTML = '<i data-lucide="github" style="width:16px;height:16px"></i> GitHub';
+      modalActions.appendChild(gitBtn);
+    }
+    const simBtn = document.createElement('a');
+    simBtn.href = fw.sim || '#';
+    simBtn.target = fw.sim ? '_blank' : '_self';
+    simBtn.rel = 'noopener noreferrer';
+    simBtn.className = `modal-btn sim${fw.sim ? '' : ' disabled'}`;
+    simBtn.innerHTML = '<i data-lucide="play" style="width:16px;height:16px"></i> ' + (fw.sim ? 'Launch Simulator' : 'Simulation Pending');
+    modalActions.appendChild(simBtn);
+    // Show modal
+    modalOverlay.classList.add('active');
+    modalOverlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal() {
+    modalOverlay.classList.remove('active');
+    modalOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  modalClose.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+      closeModal();
+    }
+  });
+
+  // Refresh Lucide icons after dynamic button creation
+  setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 100);
 })();
 </script>
 </body>
