@@ -50,13 +50,33 @@ body.cursor-active{cursor:none}
 #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
 #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
 #symbol-canvas.ready{opacity:0.65}
-#trail-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:9997;pointer-events:none;will-change:transform}
 .scan-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10}
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,212,255,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite}
 @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
-.custom-cursor{width:20px;height:20px;border:2px solid var(--cyan);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:transform 0.1s ease,background 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease;transform:translate(-50%,-50%);box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);will-change:transform;display:none}
+
+/* ===== HYPERDIAMOND CURSOR ===== */
+.custom-cursor{
+  width:22px;height:22px;
+  background:rgba(0,212,255,0.15);
+  border:2px solid var(--cyan);
+  clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  position:fixed;pointer-events:none;z-index:9999;
+  mix-blend-mode:screen;
+  transition:transform 0.1s ease,clip-path 0.2s ease,border-radius 0.2s ease,background 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease;
+  transform:translate(-50%,-50%) rotate(0deg);
+  box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);
+  will-change:transform;display:none;
+}
 body.cursor-active .custom-cursor{display:block}
-.custom-cursor.hover{transform:translate(-50%,-50%) scale(1.8);background:rgba(0,212,255,0.1);border-color:var(--amber);box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5)}
+.custom-cursor.hover{
+  clip-path:circle(50%);
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(1.8);
+  background:rgba(0,212,255,0.1);
+  border-color:var(--amber);
+  box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5);
+}
+
 .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
 .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none}
 .audio-toggle[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);box-shadow:0 0 15px rgba(240,165,0,0.3)}
@@ -102,8 +122,8 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 
 /* ===== PIPELINE CARDS ===== */
 .pipeline-row{
-  display:flex; align-items:flex-start; gap:0;
-  overflow-x:auto; padding:16px 0 32px;
+  display:flex;align-items:flex-start;gap:0;
+  overflow-x:auto;padding:16px 0 32px;
   scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;
 }
@@ -113,65 +133,44 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .pipeline-row::-webkit-scrollbar-thumb:hover{background:var(--cyan)}
 
 .pipe-card{
-  flex:0 0 280px; scroll-snap-align:start;
-  background:var(--surface); backdrop-filter:blur(12px);
-  border:1px solid var(--border); border-radius:20px;
-  padding:24px 20px 20px; margin:0 6px;
-  display:flex; flex-direction:column;
-  transition:border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+  flex:0 0 280px;scroll-snap-align:start;
+  background:var(--surface);backdrop-filter:blur(12px);
+  border:1px solid var(--border);border-radius:20px;
+  padding:24px 20px 20px;margin:0 6px;
+  display:flex;flex-direction:column;
+  transition:border-color 0.3s var(--ease),box-shadow 0.3s var(--ease),transform 0.3s var(--ease);
   position:relative;
-  overflow:hidden; z-index:1;
+  overflow:hidden;z-index:1;
 }
-.pipe-card:hover {
-  border-color: var(--cyan);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 25px rgba(0,212,255,0.2), inset 0 0 20px rgba(0,212,255,0.05);
-  transform: translateY(-6px);
+.pipe-card:hover{
+  border-color:transparent;
+  box-shadow:
+    0 0 0 1px rgba(0,212,255,0.5),
+    0 0 0 3px rgba(168,85,247,0.35),
+    0 0 0 5px rgba(240,165,0,0.2),
+    0 12px 30px rgba(0,0,0,0.5);
+  transform:translateY(-6px);
+  z-index:2;
 }
+.pipe-icon{font-size:2rem;margin-bottom:12px}
+.pipe-name{font-family:var(--sans);font-size:1.4rem;font-weight:900;text-transform:uppercase;color:var(--amber);text-shadow:0 0 5px var(--amber);margin-bottom:4px}
+.pipe-tag{font-family:var(--mono);font-size:0.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.pipe-summary{font-family:var(--sans);font-size:0.9rem;color:var(--muted);line-height:1.5;margin-bottom:12px;flex:1}
 
-.pipe-icon{font-size:2rem; margin-bottom:12px}
-.pipe-name{
-  font-family:var(--sans); font-size:1.4rem; font-weight:900;
-  text-transform:uppercase; color:var(--amber);
-  text-shadow:0 0 5px var(--amber); margin-bottom:4px;
-}
-.pipe-tag{font-family:var(--mono); font-size:0.7rem; color:var(--cyan); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px}
-.pipe-summary{font-family:var(--sans); font-size:0.9rem; color:var(--muted); line-height:1.5; margin-bottom:12px; flex:1}
-
-/* expandable detail */
 .pipe-details{
-  background:rgba(0,0,0,0.3); border-radius:8px;
-  padding:0 12px; border-left:2px solid var(--violet);
-  max-height:0; opacity:0; overflow:hidden;
-  transition:max-height 0.3s var(--ease), opacity 0.3s var(--ease), padding 0.3s var(--ease);
+  background:rgba(0,0,0,0.3);border-radius:8px;
+  padding:0 12px;border-left:2px solid var(--violet);
+  max-height:0;opacity:0;overflow:hidden;
+  transition:max-height 0.3s var(--ease),opacity 0.3s var(--ease),padding 0.3s var(--ease);
 }
-.pipe-card:hover .pipe-details{
-  max-height:250px; opacity:1; padding:12px;
-}
-.pipe-detail-item{
-  display:flex; align-items:flex-start; gap:8px;
-  font-family:var(--mono); font-size:0.7rem; color:var(--muted);
-  margin-bottom:6px;
-}
+.pipe-card:hover .pipe-details{max-height:250px;opacity:1;padding:12px}
+.pipe-detail-item{display:flex;align-items:flex-start;gap:8px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);margin-bottom:6px}
 .pipe-detail-item:last-child{margin-bottom:0}
-.pipe-detail-icon{color:var(--cyan); flex-shrink:0}
-.pipe-code{
-  background:rgba(0,0,0,0.6); border:1px solid var(--border);
-  border-radius:6px; padding:8px 10px;
-  font-family:var(--mono); font-size:0.7rem; color:var(--cyan);
-  margin-top:8px; white-space:pre-wrap;
-  display:none;
-}
+.pipe-detail-icon{color:var(--cyan);flex-shrink:0}
+.pipe-code{background:rgba(0,0,0,0.6);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:var(--mono);font-size:0.7rem;color:var(--cyan);margin-top:8px;white-space:pre-wrap;display:none}
 .pipe-card:hover .pipe-code{display:block}
 
-/* arrow connector */
-.pipe-arrow{
-  flex:0 0 auto;
-  display:flex; align-items:center; justify-content:center;
-  font-size:1.8rem; color:var(--violet);
-  width:40px; margin:0 4px;
-  text-shadow:0 0 8px var(--violet);
-  transition:transform 0.3s;
-}
+.pipe-arrow{flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:var(--violet);width:40px;margin:0 4px;text-shadow:0 0 8px var(--violet);transition:transform 0.3s}
 
 .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
 .cta-btn.primary{background:var(--amber);color:#000;border-color:var(--amber)}
@@ -185,19 +184,9 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--cyan);text-shadow:0 0 8px var(--cyan);outline:none}
 .footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
 
-/* ===== MOBILE ===== */
-@media (max-width:800px){
-  nav{padding:0 20px}
-  .nav-links{display:none}
-  .nav-hamburger{display:flex}
-  .wrapper{padding:80px 20px 60px}
-  .pipe-card{flex:0 0 260px}
-  .pipeline-row{gap:0}
-}
-@media (max-width:500px){
-  .pipe-card{flex:0 0 calc(100vw - 40px)}
-  .pipe-arrow{display:none}
-}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}body{cursor:auto !important}.custom-cursor{display:none !important}}
+@media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}.pipe-card{flex:0 0 260px}.pipeline-row{gap:0}}
+@media (max-width:500px){.pipe-card{flex:0 0 calc(100vw - 40px)}.pipe-arrow{display:none}}
 </style>
 </head>
 <body class="cursor-active">
@@ -205,7 +194,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
-<canvas id="trail-canvas" aria-hidden="true"></canvas>
 <div class="scan-grid" aria-hidden="true"></div>
 <div class="scan-lines" aria-hidden="true"></div>
 <div class="custom-cursor" id="custom-cursor" aria-hidden="true"></div>
@@ -235,7 +223,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 
 <div class="wrapper" id="main">
 
-  <!-- HERO -->
   <section>
     <div class="eyebrow">// Build Process</div>
     <h1>Vibe‑to‑<em>Container</em></h1>
@@ -245,35 +232,29 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </p>
   </section>
 
-  <!-- PIPELINE CARDS -->
   <section>
     <div class="section-header">
       <span class="section-num">// 01</span>
       <h2 class="section-title">The Pipeline</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
-
-    <div class="pipeline-row" id="pipeline-row">
-      <!-- Cards will be injected by JS -->
-    </div>
+    <div class="pipeline-row" id="pipeline-row"></div>
   </section>
 
-  <!-- VIBE‑TO‑SIM TRACK -->
   <section>
     <div class="section-header">
       <span class="section-num">// 02</span>
       <h2 class="section-title">Vibe‑to‑Sim (Optional)</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
-    <div class="card" style="background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:800px">
+    <div style="background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:800px">
       <p style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);line-height:1.7">
-        Not every framework needs a simulation, but when it helps, we build a standalone interactive demo — single‑file HTML, no dependencies, sharable via link. It lives alongside the Docker image as a “try before you trust” preview.
+        Not every framework needs a simulation, but when it helps, we build a standalone interactive demo — single‑file HTML, no dependencies, sharable via link. It lives alongside the Docker image as a "try before you trust" preview.
       </p>
       <a href="/simulations/" class="cta-btn violet" style="margin-top:20px">Explore Simulations →</a>
     </div>
   </section>
 
-  <!-- CTA -->
   <section>
     <div class="section-header">
       <span class="section-num">// 03</span>
@@ -305,7 +286,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 </footer>
 
 <script>
-// ===== FULL VISUAL ENGINE =====
 (function () {
   'use strict';
 
@@ -461,48 +441,19 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
-  // Trail canvas
-  const trailCanvas = document.getElementById('trail-canvas');
-  const trailCtx = trailCanvas.getContext('2d');
-  const TRAIL_MAX = 16, TRAIL_AGE = 150;
-  let trailPts = [];
-  function pushTrailPoint(x, y, t) {
-    trailPts.push({ x, y, t });
-    const cutoff = t - TRAIL_AGE;
-    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
-    if (trailPts.length > TRAIL_MAX) trailPts.shift();
-  }
-  function renderTrail(now) {
-    trailCtx.clearRect(0, 0, W, H);
-    const cutoff = now - TRAIL_AGE;
-    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
-    if (trailPts.length < 2) return;
-    for (let i = 0; i < trailPts.length - 1; i++) {
-      const p0 = trailPts[i], p1 = trailPts[i + 1];
-      const tNorm = i / (trailPts.length - 1), alpha = tNorm * 0.55, width = 1 + tNorm * 1.5;
-      trailCtx.beginPath(); trailCtx.moveTo(p0.x, p0.y); trailCtx.lineTo(p1.x, p1.y);
-      trailCtx.strokeStyle = `rgba(0,212,255,${alpha.toFixed(3)})`; trailCtx.lineWidth = width;
-      trailCtx.lineCap = 'round'; trailCtx.shadowColor = '#00d4ff'; trailCtx.shadowBlur = tNorm * 8;
-      trailCtx.stroke();
-    }
-    trailCtx.shadowBlur = 0;
-  }
-  function resizeTrail() { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; }
-  window.addEventListener('resize', resizeTrail);
-
   let rafId = null;
-  function loop(t) { updatePhysics(t); render(); renderWebGL(t); renderTrail(t); rafId = requestAnimationFrame(loop); }
+  function loop(t) { updatePhysics(t); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
 
-  // Cursor
+  // Hyperdiamond Cursor
   const cursor = document.getElementById('custom-cursor');
   let curTarget = { x: -100, y: -100 }, curPos = { x: -100, y: -100 };
   function animateCursor() { curPos.x += (curTarget.x - curPos.x) * 0.18; curPos.y += (curTarget.y - curPos.y) * 0.18; cursor.style.left = curPos.x + 'px'; cursor.style.top = curPos.y + 'px'; requestAnimationFrame(animateCursor); }
   if (!reducedMotion) animateCursor();
+
   window.addEventListener('pointermove', (e) => {
     if (e.pointerType === 'mouse') {
       mouse.x = e.clientX; mouse.y = e.clientY;
       curTarget.x = e.clientX; curTarget.y = e.clientY;
-      pushTrailPoint(e.clientX, e.clientY, performance.now());
     }
   });
   window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
@@ -580,92 +531,29 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   const yearSpan = document.getElementById('copyright-year');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-  if (!reducedMotion) { resizeCanvas(); resizeTrail(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
+  if (!reducedMotion) { resizeCanvas(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
 
-  // ========== POPULATE PIPELINE CARDS ==========
+  // Pipeline cards
   const steps = [
-    {
-      icon:'💡', name:'Idea', tag:'Client Brief',
-      summary:'The conversation starts. A reliability bottleneck is identified. Scope boundary defined.',
-      details:[
-        'Validated problem statement',
-        'No code yet — just clarity'
-      ],
-      code:'Scope: FSVE-based certainty scoring for NLP pipeline.'
-    },
-    {
-      icon:'📐', name:'Spec', tag:'Blueprint',
-      summary:'A frozen specification document is drafted. Architecture, axes, constraints, and falsification conditions are locked.',
-      details:[
-        'FSVE axes defined',
-        'Deployment gates set',
-        'Falsification protocols'
-      ],
-      code:'Axes: Evidence, Validity, Completeness, Consistency, Confidence, Risk.'
-    },
-    {
-      icon:'⚙️', name:'Vibe Code', tag:'AI‑Assisted',
-      summary:'2–4 iterative builds using high‑token AI workflows. Edge‑case handling is exhaustive.',
-      details:[
-        'ECF tags applied',
-        'Falsification tests defined',
-        'Red team: 23 findings resolved'
-      ],
-      code:'ECF tags active. Red team pass: 23 findings surfaced & resolved.'
-    },
-    {
-      icon:'📦', name:'Package', tag:'pip install',
-      summary:'Bundled into a Python package. Single pip install command. No DevOps PhD required.',
-      details:[
-        'Three-line integration',
-        'CLI tools included'
-      ],
-      code:'$ pip install framework-name\nfrom framework import Engine\nengine = Engine(config="client.yaml")'
-    },
-    {
-      icon:'🔐', name:'Seal', tag:'Immutable',
-      summary:'Wrapped in a Docker image. SHA‑256 provenance stamp applied. Triple‑time seal.',
-      details:[
-        'SHA‑256 digest',
-        'Triple‑time stamp',
-        'Constitutional Engine verified'
-      ],
-      code:'IMAGE: framework-client:1.0.0\nDIGEST: sha256:a3f8c2...\nCONSTITUTIONAL: Nine Laws compliant'
-    },
-    {
-      icon:'🚀', name:'Deliver', tag:'You Own It',
-      summary:'Docker image uploaded to a private registry. You receive credentials, a spec document, and a red team report.',
-      details:[
-        'Private registry access',
-        'Full specification document',
-        'Architectural Insurance retainer'
-      ],
-      code:'Download credentials sent. Framework is yours — permanently.'
-    }
+    { icon:'💡', name:'Idea', tag:'Client Brief', summary:'The conversation starts. A reliability bottleneck is identified. Scope boundary defined.', details:['Validated problem statement','No code yet — just clarity'], code:'Scope: FSVE-based certainty scoring for NLP pipeline.' },
+    { icon:'📐', name:'Spec', tag:'Blueprint', summary:'A frozen specification document is drafted. Architecture, axes, constraints, and falsification conditions are locked.', details:['FSVE axes defined','Deployment gates set','Falsification protocols'], code:'Axes: Evidence, Validity, Completeness, Consistency, Confidence, Risk.' },
+    { icon:'⚙️', name:'Vibe Code', tag:'AI‑Assisted', summary:'2–4 iterative builds using high‑token AI workflows. Edge‑case handling is exhaustive.', details:['ECF tags applied','Falsification tests defined','Red team: 23 findings resolved'], code:'ECF tags active. Red team pass: 23 findings surfaced & resolved.' },
+    { icon:'📦', name:'Package', tag:'pip install', summary:'Bundled into a Python package. Single pip install command. No DevOps PhD required.', details:['Three-line integration','CLI tools included'], code:'$ pip install framework-name\nfrom framework import Engine\nengine = Engine(config="client.yaml")' },
+    { icon:'🔐', name:'Seal', tag:'Immutable', summary:'Wrapped in a Docker image. SHA‑256 provenance stamp applied. Triple‑time seal.', details:['SHA‑256 digest','Triple‑time stamp','Constitutional Engine verified'], code:'IMAGE: framework-client:1.0.0\nDIGEST: sha256:a3f8c2...\nCONSTITUTIONAL: Nine Laws compliant' },
+    { icon:'🚀', name:'Deliver', tag:'You Own It', summary:'Docker image uploaded to a private registry. You receive credentials, a spec document, and a red team report.', details:['Private registry access','Full specification document','Architectural Insurance retainer'], code:'Download credentials sent. Framework is yours — permanently.' }
   ];
 
   const container = document.getElementById('pipeline-row');
   steps.forEach((step, i) => {
     let detailsHTML = '';
-    if (step.details && step.details.length) {
-      detailsHTML = step.details.map(d => `<div class="pipe-detail-item"><span class="pipe-detail-icon">◈</span>${d}</div>`).join('');
-    }
-    if (step.code) {
-      detailsHTML += `<div class="pipe-code">${step.code}</div>`;
-    }
+    if (step.details && step.details.length) detailsHTML = step.details.map(d => `<div class="pipe-detail-item"><span class="pipe-detail-icon">◈</span>${d}</div>`).join('');
+    if (step.code) detailsHTML += `<div class="pipe-code">${step.code}</div>`;
 
     const card = document.createElement('div');
     card.className = 'pipe-card';
-    card.innerHTML = `
-      <div class="pipe-icon">${step.icon}</div>
-      <div class="pipe-name">${step.name}</div>
-      <div class="pipe-tag">${step.tag}</div>
-      <div class="pipe-summary">${step.summary}</div>
-      ${detailsHTML ? `<div class="pipe-details">${detailsHTML}</div>` : ''}
-    `;
+    card.innerHTML = `<div class="pipe-icon">${step.icon}</div><div class="pipe-name">${step.name}</div><div class="pipe-tag">${step.tag}</div><div class="pipe-summary">${step.summary}</div>${detailsHTML ? `<div class="pipe-details">${detailsHTML}</div>` : ''}`;
     container.appendChild(card);
 
-    // Arrow (except after last card)
     if (i < steps.length - 1) {
       const arrow = document.createElement('div');
       arrow.className = 'pipe-arrow';
