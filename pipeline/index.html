@@ -101,68 +101,65 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px var(--cyan)}
 
 /* ===== PIPELINE CARDS ===== */
-.pipeline-row{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:20px}
+.pipeline-row{
+  display:flex; align-items:flex-start; gap:0;
+  overflow-x:auto; padding:16px 0 32px;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+}
 .pipeline-row::-webkit-scrollbar{height:6px}
 .pipeline-row::-webkit-scrollbar-track{background:rgba(0,212,255,0.05);border-radius:3px}
 .pipeline-row::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}
 .pipeline-row::-webkit-scrollbar-thumb:hover{background:var(--cyan)}
 
 .pipe-card{
-  flex:0 0 260px;
-  background:var(--surface);
-  backdrop-filter:blur(12px);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:24px 20px 20px;
-  display:flex;flex-direction:column;
-  transition:all 0.3s var(--ease);
+  flex:0 0 280px; scroll-snap-align:start;
+  background:var(--surface); backdrop-filter:blur(12px);
+  border:1px solid var(--border); border-radius:20px;
+  padding:24px 20px 20px; margin:0 6px;
+  display:flex; flex-direction:column;
+  transition:border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
   position:relative;
-  cursor:default;
-  min-height:200px;
-  overflow:hidden;
+  overflow:hidden; z-index:1;
 }
 .pipe-card:hover{
   border-color:var(--cyan);
-  box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2);
+  box-shadow:0 0 20px rgba(0,212,255,0.3), 0 0 0 1px var(--cyan);
   transform:translateY(-6px);
+  z-index:2;
 }
-.pipe-card::before{
-  content:'';
-  position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--amber));
-  opacity:0;transition:opacity 0.3s;
+
+.pipe-icon{font-size:2rem; margin-bottom:12px}
+.pipe-name{
+  font-family:var(--sans); font-size:1.4rem; font-weight:900;
+  text-transform:uppercase; color:var(--amber);
+  text-shadow:0 0 5px var(--amber); margin-bottom:4px;
 }
-.pipe-card:hover::before{opacity:1}
-.pipe-icon{font-size:2rem;margin-bottom:12px}
-.pipe-name{font-family:var(--sans);font-size:1.4rem;font-weight:900;text-transform:uppercase;color:var(--amber);text-shadow:0 0 5px var(--amber);margin-bottom:4px}
-.pipe-tag{font-family:var(--mono);font-size:0.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-.pipe-summary{font-family:var(--sans);font-size:0.9rem;color:var(--muted);line-height:1.5;margin-bottom:12px;flex:1}
+.pipe-tag{font-family:var(--mono); font-size:0.7rem; color:var(--cyan); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px}
+.pipe-summary{font-family:var(--sans); font-size:0.9rem; color:var(--muted); line-height:1.5; margin-bottom:12px; flex:1}
+
 /* expandable detail */
 .pipe-details{
-  background:rgba(0,0,0,0.3);
-  border-radius:8px;
-  padding:0 12px;
-  border-left:2px solid var(--violet);
-  max-height:0;opacity:0;overflow:hidden;
-  transition:max-height 0.3s var(--ease),opacity 0.3s var(--ease),padding 0.3s var(--ease);
+  background:rgba(0,0,0,0.3); border-radius:8px;
+  padding:0 12px; border-left:2px solid var(--violet);
+  max-height:0; opacity:0; overflow:hidden;
+  transition:max-height 0.3s var(--ease), opacity 0.3s var(--ease), padding 0.3s var(--ease);
 }
 .pipe-card:hover .pipe-details{
-  max-height:250px;opacity:1;padding:12px;
+  max-height:250px; opacity:1; padding:12px;
 }
 .pipe-detail-item{
-  display:flex;align-items:flex-start;gap:8px;
-  font-family:var(--mono);font-size:0.7rem;color:var(--muted);
+  display:flex; align-items:flex-start; gap:8px;
+  font-family:var(--mono); font-size:0.7rem; color:var(--muted);
   margin-bottom:6px;
 }
 .pipe-detail-item:last-child{margin-bottom:0}
-.pipe-detail-icon{color:var(--cyan);flex-shrink:0}
+.pipe-detail-icon{color:var(--cyan); flex-shrink:0}
 .pipe-code{
-  background:rgba(0,0,0,0.6);
-  border:1px solid var(--border);
-  border-radius:6px;
-  padding:8px 10px;
-  font-family:var(--mono);font-size:0.7rem;color:var(--cyan);
-  margin-top:8px;white-space:pre-wrap;
+  background:rgba(0,0,0,0.6); border:1px solid var(--border);
+  border-radius:6px; padding:8px 10px;
+  font-family:var(--mono); font-size:0.7rem; color:var(--cyan);
+  margin-top:8px; white-space:pre-wrap;
   display:none;
 }
 .pipe-card:hover .pipe-code{display:block}
@@ -170,12 +167,11 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 /* arrow connector */
 .pipe-arrow{
   flex:0 0 auto;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.8rem;color:var(--violet);
-  width:40px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.8rem; color:var(--violet);
+  width:40px; margin:0 4px;
   text-shadow:0 0 8px var(--violet);
   transition:transform 0.3s;
-  margin:0 4px;
 }
 
 .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
@@ -190,8 +186,19 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--cyan);text-shadow:0 0 8px var(--cyan);outline:none}
 .footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
 
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,#trail-canvas,.scan-lines{display:none}body{cursor:auto !important}.custom-cursor{display:none !important}}
-@media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}.pipe-card{flex:0 0 220px}}
+/* ===== MOBILE ===== */
+@media (max-width:800px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
+  .wrapper{padding:80px 20px 60px}
+  .pipe-card{flex:0 0 260px}
+  .pipeline-row{gap:0}
+}
+@media (max-width:500px){
+  .pipe-card{flex:0 0 calc(100vw - 40px)}
+  .pipe-arrow{display:none}
+}
 </style>
 </head>
 <body class="cursor-active">
@@ -248,7 +255,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
 
     <div class="pipeline-row" id="pipeline-row">
-      <!-- Cards will be injected by JS to avoid repetition -->
+      <!-- Cards will be injected by JS -->
     </div>
   </section>
 
@@ -299,7 +306,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 </footer>
 
 <script>
-// ===== FULL VISUAL ENGINE (identical to root index) =====
+// ===== FULL VISUAL ENGINE =====
 (function () {
   'use strict';
 
@@ -640,7 +647,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 
   const container = document.getElementById('pipeline-row');
   steps.forEach((step, i) => {
-    // Build details HTML
     let detailsHTML = '';
     if (step.details && step.details.length) {
       detailsHTML = step.details.map(d => `<div class="pipe-detail-item"><span class="pipe-detail-icon">◈</span>${d}</div>`).join('');
@@ -660,7 +666,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     `;
     container.appendChild(card);
 
-    // Add arrow except after last card
+    // Arrow (except after last card)
     if (i < steps.length - 1) {
       const arrow = document.createElement('div');
       arrow.className = 'pipe-arrow';
