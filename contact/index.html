@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
+/* ===== RESET & VARIABLES (identical to previous pages) ===== */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#08090b;
@@ -120,11 +121,16 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .section-title{font-family:var(--sans);font-size:var(--font-h2);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text);text-shadow:0 0 8px rgba(255,255,255,0.2)}
 .section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px var(--cyan)}
 
-/* ===== CONTACT GRID ===== */
-.connect-grid{display:flex;flex-wrap:wrap;gap:40px;margin-bottom:40px}
-.connect-grid strong{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
-.connect-grid a{color:var(--cyan);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:1px;transition:all 0.2s ease}
-.connect-grid a:hover,.connect-grid a:focus-visible{text-shadow:0 0 8px var(--cyan);outline:none}
+/* ===== CARDS ===== */
+.card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;transition:border-color 0.3s var(--ease),box-shadow 0.3s var(--ease)}
+.card:hover{border-color:var(--cyan);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2)}
+
+/* ===== PLATFORM LOGOS (enlarged + white) ===== */
+.logo-grid{display:flex;flex-wrap:wrap;gap:32px;align-items:center}
+.logo-link{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;font-family:var(--mono);font-size:0.7rem;color:var(--muted);transition:all 0.2s}
+.logo-link:hover{color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.logo-link img{width:60px;height:60px;object-fit:contain;filter:brightness(0) invert(1);transition:filter 0.2s}
+.logo-link:hover img{filter:brightness(0) invert(0.8) sepia(1) saturate(5) hue-rotate(10deg);}
 
 .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
 .cta-btn.primary{background:var(--amber);color:#000;border-color:var(--amber)}
@@ -132,6 +138,25 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--amber-l);border-color:var(--amber-l);box-shadow:0 0 20px var(--amber)}
 .cta-btn.violet{border-color:var(--violet);color:var(--violet)}
 .cta-btn.violet:hover,.cta-btn.violet:focus-visible{background:var(--violet);color:#fff;box-shadow:0 0 20px var(--violet);outline:none}
+
+/* ===== MODALS ===== */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s}
+.modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s}
+.modal-box{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:560px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(0,212,255,0.1);position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);max-height:90vh;overflow-y:auto}
+.modal-overlay.active .modal-box{transform:scale(1)}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;transition:color 0.2s}
+.modal-close:hover{color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.modal-title{font-family:var(--sans);font-size:1.6rem;font-weight:900;color:var(--amber);margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-family:var(--mono);font-size:0.7rem;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:0.8rem;outline:none;transition:border-color 0.2s}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.form-actions{display:flex;gap:12px;align-items:center;margin-top:24px;flex-wrap:wrap}
+.nda-section{display:none;flex-direction:column;gap:12px;margin-top:16px;padding:16px;border:1px solid var(--border);border-radius:8px;background:rgba(0,0,0,0.2)}
+.nda-section.visible{display:flex}
+.nda-section label{font-family:var(--mono);font-size:0.7rem;color:var(--muted)}
+.nda-check{display:flex;align-items:center;gap:8px}
+.nda-text{font-family:var(--serif);font-size:0.8rem;color:var(--muted);line-height:1.5;margin-bottom:8px}
 footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:2}
 .footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
 .footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
@@ -176,7 +201,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 
 <div class="wrapper" id="main">
 
-  <!-- HERO -->
   <section>
     <div class="eyebrow">// Direct Line</div>
     <h1>Contact the<em>Architect</em></h1>
@@ -186,14 +210,14 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     </p>
   </section>
 
-  <!-- PRIMARY CONTACT -->
+  <!-- Direct Email -->
   <section>
     <div class="section-header">
       <span class="section-num">// 01</span>
       <h2 class="section-title">Direct Email</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
-    <div class="card" style="background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:800px">
+    <div class="card" style="max-width:800px">
       <p style="font-family:var(--mono);font-size:1.2rem;color:var(--text);margin-bottom:16px">📧 <a href="mailto:aionsystem@outlook.com" style="color:var(--cyan);text-shadow:0 0 8px var(--cyan);text-decoration:underline">aionsystem@outlook.com</a></p>
       <p style="font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6">
         This is the fastest way to reach me. All enterprise engagements, audit requests, and collaboration inquiries start here. I respond within 24–48 hours.
@@ -201,53 +225,62 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     </div>
   </section>
 
-  <!-- AUDIT INTAKE -->
+  <!-- Audit Request Section -->
   <section>
     <div class="section-header">
       <span class="section-num">// 02</span>
-      <h2 class="section-title">Audit Requests</h2>
+      <h2 class="section-title">AI Reliability Audit</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
-    <div class="card" style="background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:800px">
+    <div class="card" style="max-width:800px">
       <p style="font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6;margin-bottom:20px">
-        For AI Reliability Snapshots or full certification, the intake channel is the Sovereign Trace Protocol issue template. File a request and the audit workflow begins automatically.
+        For AI Reliability Snapshots or full certification, fill out the intake form and we'll prepare a tailored proposal.
       </p>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml" target="_blank" rel="noopener" class="cta-btn primary">File an Audit Request →</a>
+      <button class="cta-btn primary" id="open-audit-form">📋 Open Audit Request Form</button>
     </div>
   </section>
 
-  <!-- CONNECT GRID -->
+  <!-- Custom Build (Tier 3) Section -->
   <section>
     <div class="section-header">
       <span class="section-num">// 03</span>
+      <h2 class="section-title">Custom Sovereign Build</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div class="card" style="max-width:800px">
+      <p style="font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6;margin-bottom:20px">
+        Need a framework built from scratch? From $15k to $50k, delivered Docker‑sealed with Architectural Insurance.
+      </p>
+      <button class="cta-btn violet" id="open-custom-form">🔒 Start a Custom Build</button>
+    </div>
+  </section>
+
+  <!-- Everywhere Else -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 04</span>
       <h2 class="section-title">Everywhere Else</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
-    <div class="connect-grid">
-      <div>
-        <strong>GitHub</strong>
-        <a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">github.com/AionSystem</a>
-      </div>
-      <div>
-        <strong>LinkedIn</strong>
-        <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">Sheldon K. Salmon</a>
-      </div>
-      <div>
-        <strong>ORCID</strong>
-        <a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener noreferrer">0009-0005-8057-5115</a>
-      </div>
-      <div>
-        <strong>X</strong>
-        <a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener noreferrer">@OCEAN_AION</a>
-      </div>
-      <div>
-        <strong>Medium</strong>
-        <a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener noreferrer">@sheldonksalmon</a>
-      </div>
-      <div>
-        <strong>The Vault</strong>
-        <a href="/vault/">Browse Frameworks</a>
-      </div>
+    <div class="logo-grid">
+      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub"> <span>GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn"> <span>LinkedIn</span>
+      </a>
+      <a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/orcid.svg" alt="ORCID"> <span>ORCID</span>
+      </a>
+      <a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" alt="X"> <span>X</span>
+      </a>
+      <a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/medium.svg" alt="Medium"> <span>Medium</span>
+      </a>
+      <a href="/vault/" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/html5.svg" alt="Vault"> <span>The Vault</span>
+      </a>
     </div>
   </section>
 
@@ -269,10 +302,72 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
   </ul>
 </footer>
 
+<!-- AUDIT REQUEST MODAL -->
+<div class="modal-overlay" id="audit-modal">
+  <div class="modal-box">
+    <button class="modal-close" data-modal="audit-modal">×</button>
+    <div class="modal-title">AI Reliability Audit Request</div>
+    <form id="audit-form">
+      <div class="form-group"><label>Full Name *</label><input type="text" name="name" required></div>
+      <div class="form-group"><label>Email *</label><input type="email" name="email" required></div>
+      <div class="form-group"><label>Company / Organization</label><input type="text" name="company"></div>
+      <div class="form-group"><label>AI System Description (type, domain, scale)</label><textarea name="system" rows="3"></textarea></div>
+      <div class="form-group"><label>Primary Use Case</label><select name="usecase"><option>Chatbot / Conversational AI</option><option>Content Generation</option><option>Code Generation</option><option>Data Analysis</option><option>Decision Support</option><option>Other</option></select></div>
+      <div class="form-group"><label>Experienced AI Failures?</label><select name="failures"><option>No, first audit</option><option>Yes, minor issues</option><option>Yes, critical failures</option></select></div>
+      <div class="form-group"><label>Number of outputs to audit *</label><input type="number" name="outputs" min="1" max="10" required></div>
+      <div class="form-group"><label>Urgency</label><select name="urgency"><option>Standard (48‑72h)</option><option>Priority (24‑48h, +50%)</option><option>Expedited (12‑24h, 2×)</option></select></div>
+      <div class="form-group"><label>Preferred Contact Method</label><div style="display:flex;gap:16px;margin-top:4px"><label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--text)"><input type="radio" name="contactmethod" value="email" checked> Email</label><label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--text)"><input type="radio" name="contactmethod" value="call"> Phone Call</label></div></div>
+      <div class="form-actions">
+        <button type="button" class="cta-btn primary" id="confirm-audit">Confirm Answers</button>
+        <div class="nda-section" id="audit-nda">
+          <div class="nda-text"><strong>Mutual Non‑Disclosure Agreement (Preview)</strong><br>By requesting an NDA, both parties agree to keep all project details confidential. A formal NDA will be provided via DocuSign upon engagement.</div>
+          <div class="nda-check">
+            <input type="checkbox" id="audit-nda-check"> <label for="audit-nda-check">I request an NDA and agree to receive the formal document.</label>
+          </div>
+          <div class="form-group"><label>Signatory Name</label><input type="text" name="nda-signer" placeholder="Your full legal name"></div>
+          <div class="form-group"><label>Signatory Title</label><input type="text" name="nda-title" placeholder="e.g., CEO, CTO"></div>
+          <button type="button" class="cta-btn" id="send-audit">Send Request</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- CUSTOM BUILD MODAL -->
+<div class="modal-overlay" id="custom-modal">
+  <div class="modal-box">
+    <button class="modal-close" data-modal="custom-modal">×</button>
+    <div class="modal-title">Custom Sovereign Build (Tier 3)</div>
+    <form id="custom-form">
+      <div class="form-group"><label>Full Name *</label><input type="text" name="name" required></div>
+      <div class="form-group"><label>Email *</label><input type="email" name="email" required></div>
+      <div class="form-group"><label>Company / Organization</label><input type="text" name="company"></div>
+      <div class="form-group"><label>Project Description (framework purpose, constraints)</label><textarea name="description" rows="4"></textarea></div>
+      <div class="form-group"><label>Target Deployment Environment</label><select name="environment"><option>On‑premises</option><option>Cloud (AWS, GCP, Azure)</option><option>Hybrid</option><option>Edge / IoT</option></select></div>
+      <div class="form-group"><label>Desired Timeline</label><select name="timeline"><option>2–4 weeks</option><option>1–2 months</option><option>3+ months</option></select></div>
+      <div class="form-group"><label>Integration Requirements</label><textarea name="integration" rows="2" placeholder="e.g., existing CI/CD, APIs, compliance"></textarea></div>
+      <div class="form-group"><label>Estimated Budget Range</label><select name="budget"><option>$15,000 – $25,000</option><option>$25,000 – $50,000</option><option>$50,000+</option></select></div>
+      <div class="form-actions">
+        <button type="button" class="cta-btn violet" id="confirm-custom">Confirm Answers</button>
+        <div class="nda-section" id="custom-nda">
+          <div class="nda-text"><strong>Mutual Non‑Disclosure Agreement (Preview)</strong><br>By requesting an NDA, both parties agree to keep all project details confidential. A formal NDA will be provided via DocuSign upon engagement.</div>
+          <div class="nda-check">
+            <input type="checkbox" id="custom-nda-check"> <label for="custom-nda-check">I request an NDA and agree to receive the formal document.</label>
+          </div>
+          <div class="form-group"><label>Signatory Name</label><input type="text" name="nda-signer" placeholder="Your full legal name"></div>
+          <div class="form-group"><label>Signatory Title</label><input type="text" name="nda-title" placeholder="e.g., CEO, CTO"></div>
+          <button type="button" class="cta-btn" id="send-custom">Send Request</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 (function () {
   'use strict';
 
+  // ===== FULL VISUAL ENGINE (identical to Pipeline page) =====
   const concurrency = navigator.hardwareConcurrency || 2;
   const deviceMem   = navigator.deviceMemory || 2;
   const lowDevice   = concurrency < 4 || deviceMem < 4;
@@ -443,7 +538,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
   window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
   window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
 
-  document.querySelectorAll('a, button, .card, .cta-btn, .tilt-card, .icon-btn').forEach(el => {
+  document.querySelectorAll('a, button, .card, .cta-btn, .tilt-card, .icon-btn, .logo-link').forEach(el => {
     el.addEventListener('pointerenter', () => cursor.classList.add('hover'));
     el.addEventListener('pointerleave', () => cursor.classList.remove('hover'));
   });
@@ -516,6 +611,55 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
   if (!reducedMotion) { resizeCanvas(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
+
+  // ===== MODAL & FORM LOGIC =====
+  function openModal(id) { document.getElementById(id).classList.add('active'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+  document.getElementById('open-audit-form').addEventListener('click', () => openModal('audit-modal'));
+  document.getElementById('open-custom-form').addEventListener('click', () => openModal('custom-modal'));
+  document.querySelectorAll('.modal-close').forEach(btn => {
+    btn.addEventListener('click', () => closeModal(btn.dataset.modal));
+  });
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+
+  // Confirm buttons reveal NDA section
+  document.getElementById('confirm-audit').addEventListener('click', () => {
+    document.getElementById('audit-nda').classList.add('visible');
+  });
+  document.getElementById('confirm-custom').addEventListener('click', () => {
+    document.getElementById('custom-nda').classList.add('visible');
+  });
+
+  // Send buttons → compose mailto
+  function composeMailto(formId, ndaCheckId, subject) {
+    const form = document.getElementById(formId);
+    const data = new FormData(form);
+    let body = '';
+    for (let [key, val] of data.entries()) {
+      if (key === 'nda-signer' || key === 'nda-title') continue; // handled separately
+      body += `${key}: ${val}\n`;
+    }
+    const nda = document.getElementById(ndaCheckId).checked ? 'Yes' : 'No';
+    body += `NDA Requested: ${nda}\n`;
+    if (document.getElementById(ndaCheckId).checked) {
+      body += `NDA Signatory: ${form.querySelector('input[name="nda-signer"]').value}\n`;
+      body += `NDA Title: ${form.querySelector('input[name="nda-title"]').value}\n`;
+    }
+    const mailto = `mailto:aionsystem@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
+  }
+
+  document.getElementById('send-audit').addEventListener('click', () => {
+    composeMailto('audit-form', 'audit-nda-check', 'AI Reliability Audit Request');
+  });
+  document.getElementById('send-custom').addEventListener('click', () => {
+    composeMailto('custom-form', 'custom-nda-check', 'Custom Sovereign Build Inquiry');
+  });
+
 })();
 </script>
 </body>
