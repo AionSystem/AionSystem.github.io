@@ -197,40 +197,72 @@ nav{
 /* ===== MOBILE NAV ===== */
 .mobile-nav{
   position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;
-  background:rgba(8,9,11,0.96);backdrop-filter:blur(24px);
-  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
-  gap:0;padding:24px 40px;
+  background:rgba(8,9,11,0.97);backdrop-filter:blur(24px);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-content:start;
+  gap:0;
+  padding:0;
   transform:translateY(-110%);
   visibility:hidden;
-  transition:transform 0.45s var(--ease-spring), visibility 0s linear 0.45s;
+  transition:transform 0.4s var(--ease-spring), visibility 0s linear 0.4s;
   overflow-y:auto;overscroll-behavior:contain;
   pointer-events:none;
+  border-top:1px solid var(--border);
 }
 .mobile-nav.open{
   transform:translateY(0);
   visibility:visible;
   pointer-events:all;
-  transition:transform 0.45s var(--ease-spring), visibility 0s linear 0s;
+  transition:transform 0.4s var(--ease-spring), visibility 0s linear 0s;
 }
 .mobile-nav a{
-  font-family:var(--sans);font-size:clamp(20px,4vw,28px);font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;color:var(--muted);
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:400;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
   text-decoration:none;
-  padding:10px 0;
-  width:100%;
-  border-bottom:1px solid rgba(0,212,255,0.07);
-  transition:all 0.2s ease;
-  opacity:0;transform:translateX(-12px);
+  padding:20px 24px;
+  border-bottom:1px solid var(--border);
+  border-right:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+  transition:all 0.15s ease;
+  opacity:0;
+  transform:translateY(6px);
+  position:relative;
 }
-.mobile-nav a:last-child{border-bottom:none}
-.mobile-nav.open a{opacity:1;transform:translateX(0)}
-.mobile-nav a:hover,.mobile-nav a.active{
+/* right column — no right border */
+.mobile-nav a:nth-child(2n){border-right:none}
+/* last row — no bottom border (handles odd counts too) */
+.mobile-nav a:nth-last-child(1),
+.mobile-nav a:nth-last-child(2):nth-child(2n+1){border-bottom:none}
+.mobile-nav.open a{opacity:1;transform:translateY(0)}
+.mobile-nav a::before{
+  content:'';display:block;width:4px;height:4px;border-radius:50%;
+  background:var(--dim);flex-shrink:0;
+  transition:background 0.15s ease, box-shadow 0.15s ease;
+}
+.mobile-nav a:hover,
+.mobile-nav a:focus-visible,
+.mobile-nav a.active{
   color:var(--cyan);
-  border-bottom-color:rgba(0,212,255,0.2);
-  padding-left:8px;
-  text-shadow:0 0 12px var(--cyan);
+  background:rgba(0,212,255,0.04);
+  text-shadow:0 0 8px var(--cyan);
+  outline:none;
 }
-.mobile-nav a:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;border-radius:2px}
+.mobile-nav a:hover::before,
+.mobile-nav a:focus-visible::before,
+.mobile-nav a.active::before{
+  background:var(--cyan);
+  box-shadow:0 0 6px var(--cyan);
+}
+/* LinkedIn gets full width on its own row if it's last */
+.mobile-nav a:last-child:nth-child(2n+1){
+  grid-column:1 / -1;
+  border-right:none;
+}
 
 /* ===== PAGE LOAD — STAGGER REVEAL ===== */
 .reveal-hero{
@@ -1518,7 +1550,7 @@ footer{
       a.textContent = link.textContent;
       if (link.getAttribute('target')) a.setAttribute('target', link.getAttribute('target'));
       if (link.getAttribute('rel'))    a.setAttribute('rel', link.getAttribute('rel'));
-      a.style.transitionDelay = `${i * 40}ms`;
+      a.style.transitionDelay = `${i * 30}ms`;
       mobileNav.appendChild(a);
     });
 
