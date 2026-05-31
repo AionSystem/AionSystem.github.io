@@ -139,25 +139,6 @@ body.cursor-active .custom-cursor{display:block}
   box-shadow:0 0 15px rgba(240,165,0,0.3);
 }
 
-/* ===== SECTION PROGRESS ===== */
-.scroll-progress{
-  position:fixed;bottom:0;left:0;right:0;height:2px;z-index:200;
-  background:transparent;
-}
-.scroll-progress-bar{
-  height:100%;width:0%;
-  background:linear-gradient(90deg,var(--cyan),var(--violet));
-  box-shadow:0 0 8px var(--cyan);
-  transition:width 0.1s linear;
-}
-.section-counter{
-  position:fixed;top:72px;right:24px;z-index:200;
-  font-family:var(--mono);font-size:10px;letter-spacing:2px;
-  color:var(--muted);opacity:0;
-  transition:opacity 0.3s ease;
-}
-.section-counter.visible{opacity:1}
-
 /* ===== NAV ===== */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
@@ -220,11 +201,17 @@ nav{
   display:flex;flex-direction:column;justify-content:center;align-items:center;
   gap:8px;padding:40px 24px;
   transform:translateY(-110%);
-  transition:transform 0.45s var(--ease-spring);
+  visibility:hidden;
+  transition:transform 0.45s var(--ease-spring), visibility 0s linear 0.45s;
   overflow-y:auto;overscroll-behavior:contain;
   pointer-events:none;
 }
-.mobile-nav.open{transform:translateY(0);pointer-events:all}
+.mobile-nav.open{
+  transform:translateY(0);
+  visibility:visible;
+  pointer-events:all;
+  transition:transform 0.45s var(--ease-spring), visibility 0s linear 0s;
+}
 .mobile-nav a{
   font-family:var(--sans);font-size:clamp(28px,6vw,48px);font-weight:700;
   letter-spacing:3px;text-transform:uppercase;color:var(--text);
@@ -465,13 +452,7 @@ footer{
 <!-- ARIA LIVE REGION for canvas announcements -->
 <div aria-live="polite" aria-atomic="true" class="sr-only" id="canvas-announce"></div>
 
-<!-- SCROLL PROGRESS -->
-<div class="scroll-progress" role="progressbar" aria-label="Page scroll progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-  <div class="scroll-progress-bar" id="progress-bar"></div>
-</div>
 
-<!-- SECTION COUNTER -->
-<div class="section-counter" id="section-counter" aria-hidden="true">// 00</div>
 
 <!-- CANVAS LAYERS -->
 <canvas id="webgl-canvas" aria-hidden="true" aria-label="Chromatic depth field"></canvas>
@@ -1146,32 +1127,7 @@ footer{
       glScrollVel *= 0.9;
     }, 300);
 
-    // Progress bar
-    const totalH  = document.documentElement.scrollHeight - H;
-    const pct     = totalH > 0 ? Math.min((sy / totalH) * 100, 100) : 0;
-    const bar     = document.getElementById('progress-bar');
-    if (bar) {
-      bar.style.width = pct + '%';
-      bar.closest('[role=progressbar]').setAttribute('aria-valuenow', Math.round(pct));
-    }
-
-    // Section counter
-    updateSectionCounter(sy);
     updateSectionBounds();
-  }
-
-  function updateSectionCounter(scrollY) {
-    const sections = document.querySelectorAll('section[data-section]');
-    let active = null;
-    sections.forEach(s => {
-      const r = s.getBoundingClientRect();
-      if (r.top < H * 0.5) active = s.dataset.section;
-    });
-    const counter = document.getElementById('section-counter');
-    if (counter) {
-      counter.textContent = '// ' + (active || '00');
-      counter.classList.toggle('visible', active !== null);
-    }
   }
 
   /* ============================================================
