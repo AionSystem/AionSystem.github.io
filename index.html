@@ -1303,51 +1303,53 @@ footer{
   ============================================================ */
   const trailCanvas  = document.getElementById('trail-canvas');
   const trailCtx     = trailCanvas.getContext('2d');
-  const TRAIL_MAX    = 64;
-  let trailBuf       = new Array(TRAIL_MAX).fill(null);
-  let trailHead      = 0;
-  let trailLen       = 0;
+  // 16 points max, 150ms window — tight, clean, never scribbles
+  const TRAIL_MAX    = 16;
+  const TRAIL_AGE    = 150; // ms — points older than this are dropped
+  let trailPts       = []; // simple array, push/shift — small enough
 
+  /** @param {number} x @param {number} y @param {number} t */
   function pushTrailPoint(x, y, t) {
-    trailBuf[trailHead] = { x, y, t };
-    trailHead = (trailHead + 1) % TRAIL_MAX;
-    if (trailLen < TRAIL_MAX) trailLen++;
+    trailPts.push({ x, y, t });
+    // Evict points beyond age window first, then cap count
+    const cutoff = t - TRAIL_AGE;
+    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
+    if (trailPts.length > TRAIL_MAX) trailPts.shift();
   }
 
   function renderTrail(now) {
     trailCtx.clearRect(0, 0, W, H);
-    if (trailLen < 3) return;
 
-    const pts = [];
-    for (let i = 0; i < trailLen; i++) {
-      const idx = (trailHead - trailLen + i + TRAIL_MAX) % TRAIL_MAX;
-      pts.push(trailBuf[idx]);
+    // Drop stale points on every frame too (mouse may have stopped)
+    const cutoff = now - TRAIL_AGE;
+    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
+
+    if (trailPts.length < 2) return;
+
+    // Draw each consecutive segment with its own fading alpha
+    // Newest point = index (length-1) = alpha 1.0
+    // Oldest point = index 0         = alpha 0.0
+    for (let i = 0; i < trailPts.length - 1; i++) {
+      const p0 = trailPts[i];
+      const p1 = trailPts[i + 1];
+
+      // t=0 (oldest) → alpha 0, t=1 (newest) → alpha 0.55
+      const tNorm  = i / (trailPts.length - 1);
+      const alpha  = tNorm * 0.55;
+      const width  = 1 + tNorm * 1.5; // tapers from tip to tail
+
+      trailCtx.beginPath();
+      trailCtx.moveTo(p0.x, p0.y);
+      trailCtx.lineTo(p1.x, p1.y);
+      trailCtx.strokeStyle = `rgba(0,212,255,${alpha.toFixed(3)})`;
+      trailCtx.lineWidth   = width;
+      trailCtx.lineCap     = 'round';
+      trailCtx.shadowColor = '#00d4ff';
+      trailCtx.shadowBlur  = tNorm * 8;
+      trailCtx.stroke();
     }
 
-    trailCtx.beginPath();
-    trailCtx.moveTo(pts[0].x, pts[0].y);
-
-    for (let i = 1; i < pts.length - 1; i++) {
-      const age   = (now - pts[i].t) / 400; // 0 fresh → 1 old
-      const alpha = Math.max(0, 1 - age);
-      if (alpha < 0.01) continue;
-
-      const cx = (pts[i].x + pts[i + 1].x) / 2;
-      const cy = (pts[i].y + pts[i + 1].y) / 2;
-      trailCtx.quadraticCurveTo(pts[i].x, pts[i].y, cx, cy);
-    }
-
-    const vel = mouse.x !== null
-      ? Math.hypot(mouse.vx, mouse.vy)
-      : 0;
-    const alpha = Math.max(0.1, Math.min(0.6, vel / 20));
-
-    trailCtx.strokeStyle = `rgba(0,212,255,${alpha})`;
-    trailCtx.lineWidth   = 1.5;
-    trailCtx.shadowColor = '#00d4ff';
-    trailCtx.shadowBlur  = 6;
-    trailCtx.stroke();
-    trailCtx.shadowBlur  = 0;
+    trailCtx.shadowBlur = 0;
   }
 
   /* ============================================================
