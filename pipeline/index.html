@@ -1,1 +1,674 @@
-<!-- placeholder — awaiting content -->
+<!DOCTYPE html>
+<html lang="en" data-pde-scan="v0.5-hdre-v0.3">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="Vibe‑to‑Container — The AionSystem build pipeline. From idea to Docker‑sealed framework in six precise steps.">
+<title>Pipeline — Vibe‑to‑Container | AionSystem</title>
+<meta property="og:title" content="Pipeline — Vibe‑to‑Container | AionSystem">
+<meta property="og:description" content="Idea to locked Docker image. No DevOps degree required. Six steps, fully transparent.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08090b;
+  --surface:rgba(20,30,45,0.4);
+  --panel:rgba(25,35,55,0.5);
+  --border:rgba(0,212,255,0.15);
+  --amber:#f0a500;
+  --amber-d:#b07800;
+  --amber-l:#ffc947;
+  --gold:#D4AF37;
+  --text:#e0e8f0;
+  --muted:#7a9aba;
+  --dim:#3a5a7a;
+  --red:#ff4d4d;
+  --cyan:#00d4ff;
+  --violet:#a855f7;
+  --violet-dark:#7c3aed;
+  --edu:#4ade80;
+  --mono:'Share Tech Mono',monospace;
+  --sans:'Barlow Condensed',sans-serif;
+  --serif:'Crimson Pro',Georgia,serif;
+  --jmono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
+  --font-base:clamp(16px,1vw + 8px,20px);
+  --font-h1:clamp(48px,8vw + 16px,96px);
+  --font-h2:clamp(28px,4vw + 8px,44px);
+  --glow-amber:0 0 5px #f0a500,0 0 10px #f0a500,0 0 20px rgba(240,165,0,0.5);
+  --glow-cyan:0 0 5px #00d4ff,0 0 10px #00d4ff,0 0 20px rgba(0,212,255,0.4);
+  --glow-violet:0 0 5px #a855f7,0 0 10px #a855f7,0 0 20px rgba(168,85,247,0.4);
+}
+.skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--cyan);color:#000;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s ease}
+.skip-nav:focus{top:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-base);line-height:1.5;overflow-x:hidden}
+body.cursor-active{cursor:none}
+#webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
+#symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+#symbol-canvas.ready{opacity:0.65}
+#trail-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:9997;pointer-events:none;will-change:transform}
+.scan-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10}
+.scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,212,255,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite}
+@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
+.custom-cursor{width:20px;height:20px;border:2px solid var(--cyan);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:transform 0.1s ease,background 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease;transform:translate(-50%,-50%);box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);will-change:transform;display:none}
+body.cursor-active .custom-cursor{display:block}
+.custom-cursor.hover{transform:translate(-50%,-50%) scale(1.8);background:rgba(0,212,255,0.1);border-color:var(--amber);box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5)}
+.audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
+.audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none}
+.audio-toggle[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);box-shadow:0 0 15px rgba(240,165,0,0.3)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:0 0 30px rgba(0,212,255,0.05)}
+.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.nav-logo span{color:var(--muted)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;padding-bottom:2px;transition:all 0.2s ease}
+.nav-links a:hover,.nav-links a.active{color:var(--cyan);border-bottom-color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.nav-links a:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;border-radius:2px}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;width:32px;height:32px;flex-direction:column;justify-content:space-between;align-items:flex-end;padding:4px 0;color:var(--text)}
+.nav-hamburger span{display:block;height:2px;background:var(--text);transition:all 0.3s var(--ease-spring);border-radius:2px}
+.nav-hamburger span:nth-child(1){width:100%}
+.nav-hamburger span:nth-child(2){width:70%}
+.nav-hamburger span:nth-child(3){width:100%}
+.nav-hamburger.open span:nth-child(1){transform:translateY(10px) rotate(45deg);width:100%}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-10px) rotate(-45deg);width:100%}
+.mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:rgba(8,9,11,0.97);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:0;padding:0;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;overscroll-behavior:contain;pointer-events:none;border-top:1px solid var(--border)}
+.mobile-nav.open{transform:translateY(0);visibility:visible;pointer-events:all;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0s}
+.mobile-nav a{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;gap:8px;transition:all 0.15s ease;opacity:0;transform:translateY(6px)}
+.mobile-nav a:nth-child(2n){border-right:none}
+.mobile-nav a:nth-last-child(1),.mobile-nav a:nth-last-child(2):nth-child(2n+1){border-bottom:none}
+.mobile-nav.open a{opacity:1;transform:translateY(0)}
+.mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background 0.15s ease,box-shadow 0.15s ease}
+.mobile-nav a:hover,.mobile-nav a:focus-visible,.mobile-nav a.active{color:var(--cyan);background:rgba(0,212,255,0.04);text-shadow:0 0 8px var(--cyan);outline:none}
+.mobile-nav a:hover::before,.mobile-nav a:focus-visible::before,.mobile-nav a.active::before{background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.mobile-nav a:last-child:nth-child(2n+1){grid-column:1 / -1;border-right:none}
+
+/* ===== COMMON LAYOUT ===== */
+.wrapper{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:100px 40px 80px}
+section{margin-bottom:80px}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:12px}
+.eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--cyan);vertical-align:middle;margin-right:10px;margin-bottom:2px;box-shadow:0 0 8px var(--cyan)}
+h1{font-family:var(--sans);font-size:clamp(40px,6vw,72px);font-weight:900;letter-spacing:1px;text-transform:uppercase;line-height:0.95;color:var(--text);margin-bottom:8px}
+h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-amber)}
+.title-line{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:3px;margin-bottom:36px;margin-top:16px}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:48px}
+.section-num{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:2px}
+.section-title{font-family:var(--sans);font-size:var(--font-h2);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text);text-shadow:0 0 8px rgba(255,255,255,0.2)}
+.section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px var(--cyan)}
+
+/* ===== PIPELINE CARDS ===== */
+.pipeline-row{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:20px}
+.pipeline-row::-webkit-scrollbar{height:6px}
+.pipeline-row::-webkit-scrollbar-track{background:rgba(0,212,255,0.05);border-radius:3px}
+.pipeline-row::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px}
+.pipeline-row::-webkit-scrollbar-thumb:hover{background:var(--cyan)}
+
+.pipe-card{
+  flex:0 0 260px;
+  background:var(--surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:24px 20px 20px;
+  display:flex;flex-direction:column;
+  transition:all 0.3s var(--ease);
+  position:relative;
+  cursor:default;
+  min-height:200px;
+  overflow:hidden;
+}
+.pipe-card:hover{
+  border-color:var(--cyan);
+  box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2);
+  transform:translateY(-6px);
+}
+.pipe-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet),var(--amber));
+  opacity:0;transition:opacity 0.3s;
+}
+.pipe-card:hover::before{opacity:1}
+.pipe-icon{font-size:2rem;margin-bottom:12px}
+.pipe-name{font-family:var(--sans);font-size:1.4rem;font-weight:900;text-transform:uppercase;color:var(--amber);text-shadow:0 0 5px var(--amber);margin-bottom:4px}
+.pipe-tag{font-family:var(--mono);font-size:0.7rem;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.pipe-summary{font-family:var(--sans);font-size:0.9rem;color:var(--muted);line-height:1.5;margin-bottom:12px;flex:1}
+/* expandable detail */
+.pipe-details{
+  background:rgba(0,0,0,0.3);
+  border-radius:8px;
+  padding:0 12px;
+  border-left:2px solid var(--violet);
+  max-height:0;opacity:0;overflow:hidden;
+  transition:max-height 0.3s var(--ease),opacity 0.3s var(--ease),padding 0.3s var(--ease);
+}
+.pipe-card:hover .pipe-details{
+  max-height:250px;opacity:1;padding:12px;
+}
+.pipe-detail-item{
+  display:flex;align-items:flex-start;gap:8px;
+  font-family:var(--mono);font-size:0.7rem;color:var(--muted);
+  margin-bottom:6px;
+}
+.pipe-detail-item:last-child{margin-bottom:0}
+.pipe-detail-icon{color:var(--cyan);flex-shrink:0}
+.pipe-code{
+  background:rgba(0,0,0,0.6);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:8px 10px;
+  font-family:var(--mono);font-size:0.7rem;color:var(--cyan);
+  margin-top:8px;white-space:pre-wrap;
+  display:none;
+}
+.pipe-card:hover .pipe-code{display:block}
+
+/* arrow connector */
+.pipe-arrow{
+  flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;color:var(--violet);
+  width:40px;
+  text-shadow:0 0 8px var(--violet);
+  transition:transform 0.3s;
+  margin:0 4px;
+}
+
+.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
+.cta-btn.primary{background:var(--amber);color:#000;border-color:var(--amber)}
+.cta-btn:hover,.cta-btn:focus-visible{background:var(--cyan);color:#000;border-color:var(--cyan);box-shadow:0 0 20px var(--cyan);outline:none}
+.cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--amber-l);border-color:var(--amber-l);box-shadow:0 0 20px var(--amber)}
+.cta-btn.violet{border-color:var(--violet);color:var(--violet)}
+.cta-btn.violet:hover,.cta-btn.violet:focus-visible{background:var(--violet);color:#fff;box-shadow:0 0 20px var(--violet);outline:none}
+footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:2}
+.footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
+.footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
+.footer-links a:hover,.footer-links a:focus-visible{color:var(--cyan);text-shadow:0 0 8px var(--cyan);outline:none}
+.footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,#trail-canvas,.scan-lines{display:none}body{cursor:auto !important}.custom-cursor{display:none !important}}
+@media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}.pipe-card{flex:0 0 220px}}
+</style>
+</head>
+<body class="cursor-active">
+<a href="#main" class="skip-nav">Skip to content</a>
+
+<canvas id="webgl-canvas" aria-hidden="true"></canvas>
+<canvas id="symbol-canvas" aria-hidden="true"></canvas>
+<canvas id="trail-canvas" aria-hidden="true"></canvas>
+<div class="scan-grid" aria-hidden="true"></div>
+<div class="scan-lines" aria-hidden="true"></div>
+<div class="custom-cursor" id="custom-cursor" aria-hidden="true"></div>
+
+<button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
+
+<nav aria-label="Primary navigation">
+  <a href="/" class="nav-logo" aria-label="AionSystem home">
+    <img src="/assets/aion-logo.jpg" alt="AionSystem logo" class="nav-logo-img" width="28" height="28">
+    <span>AION<span>system</span></span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="/about/">About</a></li>
+    <li><a href="/vault/">Vault</a></li>
+    <li><a href="/audit/">Audit</a></li>
+    <li><a href="/pipeline/" class="active">Pipeline</a></li>
+    <li><a href="/simulations/">Simulations</a></li>
+    <li><a href="/case-studies/">Case Studies</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true"></nav>
+
+<div class="wrapper" id="main">
+
+  <!-- HERO -->
+  <section>
+    <div class="eyebrow">// Build Process</div>
+    <h1>Vibe‑to‑<em>Container</em></h1>
+    <div class="title-line">Idea → Spec → Vibe Code → Package → Seal → Deliver</div>
+    <p style="font-family:var(--serif);font-size:1.3rem;font-weight:300;font-style:italic;max-width:680px;color:var(--muted);margin-bottom:32px">
+      From a conversation to a Docker‑sealed framework in six steps. No DevOps degree required. The same pipeline that produced 300+ frameworks.
+    </p>
+  </section>
+
+  <!-- PIPELINE CARDS -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 01</span>
+      <h2 class="section-title">The Pipeline</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+
+    <div class="pipeline-row" id="pipeline-row">
+      <!-- Cards will be injected by JS to avoid repetition -->
+    </div>
+  </section>
+
+  <!-- VIBE‑TO‑SIM TRACK -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 02</span>
+      <h2 class="section-title">Vibe‑to‑Sim (Optional)</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div class="card" style="background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:800px">
+      <p style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);line-height:1.7">
+        Not every framework needs a simulation, but when it helps, we build a standalone interactive demo — single‑file HTML, no dependencies, sharable via link. It lives alongside the Docker image as a “try before you trust” preview.
+      </p>
+      <a href="/simulations/" class="cta-btn violet" style="margin-top:20px">Explore Simulations →</a>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div class="section-header">
+      <span class="section-num">// 03</span>
+      <h2 class="section-title">Start a Build</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div style="max-width:600px">
+      <p style="font-family:var(--serif);font-size:1.2rem;font-style:italic;color:var(--muted);margin-bottom:24px">Have a reliability bottleneck? Need a custom framework? The pipeline starts with a conversation.</p>
+      <a href="/contact/" class="cta-btn primary">Contact the Architect →</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div>
+    <div>AionSystem · Sheldon K. Salmon · AI Reliability Architect · © <span id="copyright-year"></span></div>
+    <div class="footer-legal">All frameworks are original work. No warranty implied. Enterprise engagements subject to written agreement.</div>
+  </div>
+  <ul class="footer-links" role="list">
+    <li><a href="/vault/">Vault</a></li>
+    <li><a href="/audit/">Audit</a></li>
+    <li><a href="/pipeline/">Pipeline</a></li>
+    <li><a href="/simulations/">Simulations</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+// ===== FULL VISUAL ENGINE (identical to root index) =====
+(function () {
+  'use strict';
+
+  const concurrency = navigator.hardwareConcurrency || 2;
+  const deviceMem   = navigator.deviceMemory || 2;
+  const lowDevice   = concurrency < 4 || deviceMem < 4;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (window.matchMedia('(pointer: fine)').matches && !reducedMotion) {
+    document.body.classList.add('cursor-active');
+  }
+
+  // WebGL
+  const wglCanvas = document.getElementById('webgl-canvas');
+  let gl = null, glProgram = null, glUniforms = {}, glScrollVel = 0, glMouseDist = 1.0;
+  if (!reducedMotion) {
+    try { gl = wglCanvas.getContext('webgl') || wglCanvas.getContext('experimental-webgl'); } catch (_) {}
+  }
+  if (gl) {
+    const vsrc = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+    const fsrc = `precision mediump float;uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
+    void main(){vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
+    float ab=0.003*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
+    vec3 col=vec3(0.0);col.r=sin(d*8.0+u_time)*ab;col.b=cos(d*8.0-u_time)*ab;
+    float rf=0.002*sin(uv.x*6.28+u_time*0.7)*u_mouse_dist;col.g=rf;
+    gl_FragColor=vec4(col,0.18*(1.0-smoothstep(0.6,1.0,d)));}`;
+    function cs(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
+    glProgram = gl.createProgram();
+    gl.attachShader(glProgram, cs(gl.VERTEX_SHADER, vsrc));
+    gl.attachShader(glProgram, cs(gl.FRAGMENT_SHADER, fsrc));
+    gl.linkProgram(glProgram); gl.useProgram(glProgram);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(glProgram, 'a_pos');
+    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    glUniforms.res = gl.getUniformLocation(glProgram,'u_res');
+    glUniforms.time = gl.getUniformLocation(glProgram,'u_time');
+    glUniforms.scrollVel = gl.getUniformLocation(glProgram,'u_scroll_vel');
+    glUniforms.mouseDist = gl.getUniformLocation(glProgram,'u_mouse_dist');
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  }
+
+  // Symbol field
+  const symCanvas = document.getElementById('symbol-canvas');
+  const ctx = symCanvas.getContext('2d');
+  const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','◆','○','●','◉'];
+  let W, H, symbols = [], echoes = [];
+  const mouse = { x: null, y: null, vx: 0, vy: 0, prevX: null, prevY: null };
+  const GRAVITY_R = 200, GRAVITY_STR = 0.015, TANGENTIAL = 0.18;
+  const PHYSICS_FPS = lowDevice ? 30 : 60, PHYSICS_DT = 1000 / PHYSICS_FPS;
+
+  function resizeCanvas() {
+    W = symCanvas.width = wglCanvas.width = window.innerWidth;
+    H = symCanvas.height = wglCanvas.height = window.innerHeight;
+    if (gl) gl.viewport(0, 0, W, H);
+    initSymbols();
+  }
+  let resizeTimer = null;
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeCanvas, 150); });
+
+  function initSymbols() {
+    const count = Math.floor((W * H) / 7000);
+    symbols = [];
+    for (let i = 0; i < count; i++) {
+      symbols.push({
+        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2,
+        size: 12 + Math.random() * 20,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        alpha: 0.15 + Math.random() * 0.25,
+        scrollGlow: 0, inWell: false,
+      });
+    }
+  }
+
+  function spawnEcho(x, y) {
+    for (let i = 0; i < 12; i++) {
+      const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.3;
+      const speed = 1.5 + Math.random() * 2;
+      echoes.push({
+        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x, y,
+        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        size: 8 + Math.random() * 8,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        alpha: 0.8, age: 0, maxAge: 600,
+      });
+    }
+  }
+
+  let lastScrollY = window.scrollY, scrollVel = 0, scrollTimeout = null;
+  function handleScroll() {
+    const sy = window.scrollY; scrollVel = sy - lastScrollY; lastScrollY = sy;
+    glScrollVel = Math.abs(scrollVel) / 60;
+    symbols.forEach(s => { if (Math.abs(s.y - (sy + H / 2)) < 200) s.scrollGlow = 1.0; });
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => { symbols.forEach(s => s.scrollGlow = 0); scrollVel = 0; glScrollVel *= 0.9; }, 300);
+  }
+
+  let lastPhysicsTime = 0;
+  function updatePhysics(now) {
+    if (now - lastPhysicsTime < PHYSICS_DT) return;
+    lastPhysicsTime = now;
+    if (mouse.prevX !== null && mouse.x !== null) { mouse.vx = mouse.x - mouse.prevX; mouse.vy = mouse.y - mouse.prevY; }
+    if (mouse.x !== null) { mouse.prevX = mouse.x; mouse.prevY = mouse.y; }
+
+    symbols.forEach(s => {
+      s.x += s.vx; s.y += s.vy;
+      if (s.x < -50) s.x = W + 50; if (s.x > W + 50) s.x = -50;
+      if (s.y < -50) s.y = H + 50; if (s.y > H + 50) s.y = -50;
+
+      if (mouse.x !== null && mouse.y !== null) {
+        const dx = s.x - mouse.x, dy = s.y - mouse.y; const dist = Math.hypot(dx, dy);
+        if (dist < GRAVITY_R) {
+          const force = GRAVITY_STR * (1 - dist / GRAVITY_R); const angle = Math.atan2(dy, dx);
+          s.vx -= Math.cos(angle) * force; s.vy -= Math.sin(angle) * force;
+          const ta = angle + Math.PI / 2; const spin = TANGENTIAL * (1 - dist / GRAVITY_R);
+          s.vx += Math.cos(ta) * spin * (mouse.vx * 0.05 + 0.5);
+          s.vy += Math.sin(ta) * spin * (mouse.vy * 0.05 + 0.5);
+          s.vx *= 0.99; s.vy *= 0.99; s.inWell = true;
+          glMouseDist = Math.min(glMouseDist, dist / GRAVITY_R);
+        } else { s.inWell = false; }
+      }
+      if (s.scrollGlow > 0.01) s.scrollGlow *= 0.94; else s.scrollGlow = 0;
+    });
+    glMouseDist = Math.min(1, glMouseDist + 0.02);
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+    echoes = echoes.filter(e => {
+      e.age += PHYSICS_DT; if (e.age >= e.maxAge) return false;
+      e.x += e.vx; e.y += e.vy; e.alpha = 0.8 * (1 - e.age / e.maxAge); e.size *= 0.996;
+      ctx.font = `${e.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = e.color; ctx.shadowBlur = 10; ctx.fillStyle = e.color; ctx.globalAlpha = e.alpha;
+      ctx.fillText(e.char, e.x, e.y); return true;
+    });
+    symbols.forEach(s => {
+      const glow = s.scrollGlow > 0.01 ? 15 + s.scrollGlow * 20 : (s.inWell ? 25 : 12);
+      ctx.font = `${s.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = s.color; ctx.shadowBlur = glow; ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.alpha + s.scrollGlow * 0.2; ctx.fillText(s.char, s.x, s.y);
+    });
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  }
+
+  function renderWebGL(t) {
+    if (!gl || !glProgram) return;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform2f(glUniforms.res, W, H); gl.uniform1f(glUniforms.time, t * 0.001);
+    gl.uniform1f(glUniforms.scrollVel, glScrollVel); gl.uniform1f(glUniforms.mouseDist, glMouseDist);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+
+  // Trail canvas
+  const trailCanvas = document.getElementById('trail-canvas');
+  const trailCtx = trailCanvas.getContext('2d');
+  const TRAIL_MAX = 16, TRAIL_AGE = 150;
+  let trailPts = [];
+  function pushTrailPoint(x, y, t) {
+    trailPts.push({ x, y, t });
+    const cutoff = t - TRAIL_AGE;
+    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
+    if (trailPts.length > TRAIL_MAX) trailPts.shift();
+  }
+  function renderTrail(now) {
+    trailCtx.clearRect(0, 0, W, H);
+    const cutoff = now - TRAIL_AGE;
+    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
+    if (trailPts.length < 2) return;
+    for (let i = 0; i < trailPts.length - 1; i++) {
+      const p0 = trailPts[i], p1 = trailPts[i + 1];
+      const tNorm = i / (trailPts.length - 1), alpha = tNorm * 0.55, width = 1 + tNorm * 1.5;
+      trailCtx.beginPath(); trailCtx.moveTo(p0.x, p0.y); trailCtx.lineTo(p1.x, p1.y);
+      trailCtx.strokeStyle = `rgba(0,212,255,${alpha.toFixed(3)})`; trailCtx.lineWidth = width;
+      trailCtx.lineCap = 'round'; trailCtx.shadowColor = '#00d4ff'; trailCtx.shadowBlur = tNorm * 8;
+      trailCtx.stroke();
+    }
+    trailCtx.shadowBlur = 0;
+  }
+  function resizeTrail() { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; }
+  window.addEventListener('resize', resizeTrail);
+
+  let rafId = null;
+  function loop(t) { updatePhysics(t); render(); renderWebGL(t); renderTrail(t); rafId = requestAnimationFrame(loop); }
+
+  // Cursor
+  const cursor = document.getElementById('custom-cursor');
+  let curTarget = { x: -100, y: -100 }, curPos = { x: -100, y: -100 };
+  function animateCursor() { curPos.x += (curTarget.x - curPos.x) * 0.18; curPos.y += (curTarget.y - curPos.y) * 0.18; cursor.style.left = curPos.x + 'px'; cursor.style.top = curPos.y + 'px'; requestAnimationFrame(animateCursor); }
+  if (!reducedMotion) animateCursor();
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'mouse') {
+      mouse.x = e.clientX; mouse.y = e.clientY;
+      curTarget.x = e.clientX; curTarget.y = e.clientY;
+      pushTrailPoint(e.clientX, e.clientY, performance.now());
+    }
+  });
+  window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
+  window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
+
+  document.querySelectorAll('a, button, .pipe-card, .card, .cta-btn, .tilt-card, .icon-btn').forEach(el => {
+    el.addEventListener('pointerenter', () => cursor.classList.add('hover'));
+    el.addEventListener('pointerleave', () => cursor.classList.remove('hover'));
+  });
+
+  // Audio
+  let audioCtx = null, audioNodes = null, audioOn = false;
+  const toggle = document.getElementById('audio-toggle');
+  function initAudio() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audioCtx = new AC();
+    const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 400; filter.Q.value = 0.8;
+    const osc1 = audioCtx.createOscillator(); osc1.type = 'sine'; osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+    const osc2 = audioCtx.createOscillator(); osc2.type = 'sawtooth'; osc2.frequency.setValueAtTime(110.5, audioCtx.currentTime);
+    const g2 = audioCtx.createGain(); g2.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    osc1.connect(filter); osc2.connect(g2); g2.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+    osc1.start(); osc2.start();
+    audioNodes = { gain, osc1, osc2 };
+    window.addEventListener('pagehide', () => { try { audioCtx.close(); } catch(_) {} }, { once: true });
+  }
+  function modulateAudio(scrollY) {
+    if (!audioNodes || !audioCtx) return;
+    const pct = scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+    audioNodes.osc1.frequency.setTargetAtTime(55 + pct * 40, audioCtx.currentTime, 0.3);
+  }
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      audioOn = !audioOn;
+      toggle.setAttribute('aria-pressed', String(audioOn));
+      if (audioOn) { if (!audioCtx) initAudio(); else if (audioCtx.state === 'suspended') audioCtx.resume(); }
+      else { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend(); }
+    });
+  }
+
+  let scrollRAFId = null;
+  window.addEventListener('scroll', () => {
+    if (scrollRAFId) return;
+    scrollRAFId = requestAnimationFrame(() => { handleScroll(); modulateAudio(window.scrollY); scrollRAFId = null; });
+  }, { passive: true });
+
+  // Mobile nav
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  let navOpen = false;
+  if (hamburger && mobileNav) {
+    document.querySelectorAll('.nav-links a').forEach((link, i) => {
+      const a = document.createElement('a');
+      a.href = link.getAttribute('href'); a.textContent = link.textContent;
+      if (link.getAttribute('target')) a.setAttribute('target', link.getAttribute('target'));
+      if (link.getAttribute('rel')) a.setAttribute('rel', link.getAttribute('rel'));
+      a.style.transitionDelay = `${i * 30}ms`; mobileNav.appendChild(a);
+    });
+    function openMenu() { navOpen = true; mobileNav.classList.add('open'); mobileNav.setAttribute('aria-hidden', 'false'); hamburger.classList.add('open'); hamburger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; setTimeout(() => { const f = mobileNav.querySelector('a'); if (f) f.focus(); }, 100); }
+    function closeMenu() { navOpen = false; mobileNav.classList.remove('open'); mobileNav.setAttribute('aria-hidden', 'true'); hamburger.classList.remove('open'); hamburger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; hamburger.focus(); }
+    hamburger.addEventListener('click', () => navOpen ? closeMenu() : openMenu());
+    mobileNav.addEventListener('click', (e) => { if (e.target.tagName === 'A') closeMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && navOpen) closeMenu(); });
+    mobileNav.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusable = Array.from(mobileNav.querySelectorAll('a'));
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
+
+  const yearSpan = document.getElementById('copyright-year');
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+  if (!reducedMotion) { resizeCanvas(); resizeTrail(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
+
+  // ========== POPULATE PIPELINE CARDS ==========
+  const steps = [
+    {
+      icon:'💡', name:'Idea', tag:'Client Brief',
+      summary:'The conversation starts. A reliability bottleneck is identified. Scope boundary defined.',
+      details:[
+        'Validated problem statement',
+        'No code yet — just clarity'
+      ],
+      code:'Scope: FSVE-based certainty scoring for NLP pipeline.'
+    },
+    {
+      icon:'📐', name:'Spec', tag:'Blueprint',
+      summary:'A frozen specification document is drafted. Architecture, axes, constraints, and falsification conditions are locked.',
+      details:[
+        'FSVE axes defined',
+        'Deployment gates set',
+        'Falsification protocols'
+      ],
+      code:'Axes: Evidence, Validity, Completeness, Consistency, Confidence, Risk.'
+    },
+    {
+      icon:'⚙️', name:'Vibe Code', tag:'AI‑Assisted',
+      summary:'2–4 iterative builds using high‑token AI workflows. Edge‑case handling is exhaustive.',
+      details:[
+        'ECF tags applied',
+        'Falsification tests defined',
+        'Red team: 23 findings resolved'
+      ],
+      code:'ECF tags active. Red team pass: 23 findings surfaced & resolved.'
+    },
+    {
+      icon:'📦', name:'Package', tag:'pip install',
+      summary:'Bundled into a Python package. Single pip install command. No DevOps PhD required.',
+      details:[
+        'Three-line integration',
+        'CLI tools included'
+      ],
+      code:'$ pip install framework-name\nfrom framework import Engine\nengine = Engine(config="client.yaml")'
+    },
+    {
+      icon:'🔐', name:'Seal', tag:'Immutable',
+      summary:'Wrapped in a Docker image. SHA‑256 provenance stamp applied. Triple‑time seal.',
+      details:[
+        'SHA‑256 digest',
+        'Triple‑time stamp',
+        'Constitutional Engine verified'
+      ],
+      code:'IMAGE: framework-client:1.0.0\nDIGEST: sha256:a3f8c2...\nCONSTITUTIONAL: Nine Laws compliant'
+    },
+    {
+      icon:'🚀', name:'Deliver', tag:'You Own It',
+      summary:'Docker image uploaded to a private registry. You receive credentials, a spec document, and a red team report.',
+      details:[
+        'Private registry access',
+        'Full specification document',
+        'Architectural Insurance retainer'
+      ],
+      code:'Download credentials sent. Framework is yours — permanently.'
+    }
+  ];
+
+  const container = document.getElementById('pipeline-row');
+  steps.forEach((step, i) => {
+    // Build details HTML
+    let detailsHTML = '';
+    if (step.details && step.details.length) {
+      detailsHTML = step.details.map(d => `<div class="pipe-detail-item"><span class="pipe-detail-icon">◈</span>${d}</div>`).join('');
+    }
+    if (step.code) {
+      detailsHTML += `<div class="pipe-code">${step.code}</div>`;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'pipe-card';
+    card.innerHTML = `
+      <div class="pipe-icon">${step.icon}</div>
+      <div class="pipe-name">${step.name}</div>
+      <div class="pipe-tag">${step.tag}</div>
+      <div class="pipe-summary">${step.summary}</div>
+      ${detailsHTML ? `<div class="pipe-details">${detailsHTML}</div>` : ''}
+    `;
+    container.appendChild(card);
+
+    // Add arrow except after last card
+    if (i < steps.length - 1) {
+      const arrow = document.createElement('div');
+      arrow.className = 'pipe-arrow';
+      arrow.innerHTML = '→';
+      container.appendChild(arrow);
+    }
+  });
+})();
+</script>
+</body>
+</html>
