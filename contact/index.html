@@ -101,12 +101,16 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;transition:border-color 0.3s var(--ease),box-shadow 0.3s var(--ease)}
 .card:hover{border-color:var(--cyan);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2)}
 
-/* ===== PLATFORM LOGOS (enlarged + white) ===== */
+/* ===== PLATFORM LOGOS ===== */
 .logo-grid{display:flex;flex-wrap:wrap;gap:32px;align-items:center}
 .logo-link{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;font-family:var(--mono);font-size:0.7rem;color:var(--muted);transition:all 0.2s}
 .logo-link:hover{color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
 .logo-link img{width:60px;height:60px;object-fit:contain;filter:brightness(0) invert(1);transition:filter 0.2s}
 .logo-link:hover img{filter:brightness(0) invert(0.8) sepia(1) saturate(5) hue-rotate(10deg);}
+
+/* Remove white filter for AionSystem logo so it stays coloured */
+.vault-logo img{filter:none !important}
+.vault-logo:hover img{filter:none !important}
 
 .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
 .cta-btn.primary{background:var(--amber);color:#000;border-color:var(--amber)}
@@ -251,10 +255,14 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" alt="X"> <span>X</span>
       </a>
       <a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener" class="logo-link">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/medium.svg" alt="Medium"> <span>Medium</span>
+        <!-- Official Medium "M" mark (black version) -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1043.63 592.71" width="60" height="60" fill="currentColor">
+          <path d="M588.67 296.36c0 163.67-131.78 296.35-294.33 296.35S0 460 0 296.36 131.78 0 294.34 0s294.33 132.69 294.33 296.36M911.56 296.36c0 154.06-65.89 279-147.17 279s-147.17-124.94-147.17-279 65.88-279 147.16-279 147.17 124.9 147.17 279M1043.63 296.36c0 138-23.17 249.94-51.76 249.94s-51.75-111.91-51.75-249.94 23.17-249.94 51.75-249.94 51.76 111.9 51.76 249.94"/>
+        </svg>
+        <span>Medium</span>
       </a>
-      <a href="/vault/" class="logo-link">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/html5.svg" alt="Vault"> <span>The Vault</span>
+      <a href="/vault/" class="logo-link vault-logo">
+        <img src="/assets/aion-logo.jpg" alt="Vault" style="border-radius:50%"> <span>The Vault</span>
       </a>
     </div>
   </section>
