@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ===== RESET & VARIABLES (identical to previous pages) ===== */
+/* ===== RESET & VARIABLES ===== */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#08090b;
@@ -47,36 +47,12 @@
 .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--cyan);color:#000;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s ease}
 .skip-nav:focus{top:0}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-base);line-height:1.5;overflow-x:hidden}
-body.cursor-active{cursor:none}
 #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
 #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
 #symbol-canvas.ready{opacity:0.65}
 .scan-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10}
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,212,255,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite}
 @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
-
-/* ===== HYPERDIAMOND CURSOR ===== */
-.custom-cursor{
-  width:22px;height:22px;
-  background:rgba(0,212,255,0.15);
-  border:2px solid var(--cyan);
-  clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-  position:fixed;pointer-events:none;z-index:9999;
-  mix-blend-mode:screen;
-  transition:transform 0.1s ease,clip-path 0.2s ease,border-radius 0.2s ease,background 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease;
-  transform:translate(-50%,-50%) rotate(0deg);
-  box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);
-  will-change:transform;display:none;
-}
-body.cursor-active .custom-cursor{display:block}
-.custom-cursor.hover{
-  clip-path:circle(50%);
-  border-radius:50%;
-  transform:translate(-50%,-50%) scale(1.8);
-  background:rgba(0,212,255,0.1);
-  border-color:var(--amber);
-  box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5);
-}
 
 .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
 .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none}
@@ -163,18 +139,17 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--cyan);text-shadow:0 0 8px var(--cyan);outline:none}
 .footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
 
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}body{cursor:auto !important}.custom-cursor{display:none !important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}body{cursor:auto !important}}
 @media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}}
 </style>
 </head>
-<body class="cursor-active">
+<body>
 <a href="#main" class="skip-nav">Skip to content</a>
 
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
 <div class="scan-grid" aria-hidden="true"></div>
 <div class="scan-lines" aria-hidden="true"></div>
-<div class="custom-cursor" id="custom-cursor" aria-hidden="true"></div>
 
 <button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
 
@@ -367,15 +342,11 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 (function () {
   'use strict';
 
-  // ===== FULL VISUAL ENGINE (identical to Pipeline page) =====
+  // ===== FULL VISUAL ENGINE (standard cursor, collapse included) =====
   const concurrency = navigator.hardwareConcurrency || 2;
   const deviceMem   = navigator.deviceMemory || 2;
   const lowDevice   = concurrency < 4 || deviceMem < 4;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (window.matchMedia('(pointer: fine)').matches && !reducedMotion) {
-    document.body.classList.add('cursor-active');
-  }
 
   // WebGL
   const wglCanvas = document.getElementById('webgl-canvas');
@@ -416,6 +387,11 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
   const GRAVITY_R = 200, GRAVITY_STR = 0.015, TANGENTIAL = 0.18;
   const PHYSICS_FPS = lowDevice ? 30 : 60, PHYSICS_DT = 1000 / PHYSICS_FPS;
 
+  // Collapse state
+  let isCollapsing = false, collapsePhase = 0, collapseStart = 0;
+  const SNAP_DUR = 1500, HOLD_DUR = 800, EXPLODE_DUR = 600;
+  let collapseHoldTimeout = null;
+
   function resizeCanvas() {
     W = symCanvas.width = wglCanvas.width = window.innerWidth;
     H = symCanvas.height = wglCanvas.height = window.innerHeight;
@@ -437,6 +413,9 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
         color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
         alpha: 0.15 + Math.random() * 0.25,
         scrollGlow: 0, inWell: false,
+        active: true,
+        origX: 0, origY: 0,
+        targetX: 0, targetY: 0
       });
     }
   }
@@ -456,6 +435,68 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     }
   }
 
+  function triggerCollapse() {
+    if (isCollapsing) return;
+    isCollapsing = true; collapsePhase = 1; collapseStart = performance.now();
+    const lattice = [];
+    const hexW = 60, hexH = hexW * Math.sqrt(3) / 2;
+    for (let y = 0; y < H + hexH; y += hexH)
+      for (let x = 0; x < W + hexW; x += hexW)
+        lattice.push({ x: x + (Math.floor(y / hexH) % 2) * (hexW / 2), y });
+    symbols.forEach(s => {
+      s.origX = s.x; s.origY = s.y;
+      const tgt = lattice[Math.floor(Math.random() * lattice.length)];
+      s.targetX = tgt.x; s.targetY = tgt.y;
+    });
+  }
+
+  function stepCollapse(now) {
+    if (!isCollapsing) return;
+    const elapsed = now - collapseStart;
+    if (collapsePhase === 1) {
+      const p = Math.min(elapsed / SNAP_DUR, 1);
+      const t = 1 - Math.pow(1 - p, 3);
+      symbols.forEach(s => {
+        s.x = s.origX + (s.targetX - s.origX) * t;
+        s.y = s.origY + (s.targetY - s.origY) * t;
+        s.vx = 0; s.vy = 0;
+        s.alpha = 0.15 + 0.35 * p;
+        s.color = '#f0a500';
+      });
+      if (p >= 1) {
+        collapsePhase = 2; collapseStart = now;
+        if (collapseHoldTimeout) clearTimeout(collapseHoldTimeout);
+        collapseHoldTimeout = setTimeout(() => {
+          if (!isCollapsing) return;
+          collapsePhase = 3; collapseStart = performance.now();
+          symbols.forEach(s => {
+            const a = Math.random() * Math.PI * 2;
+            const spd = 3 + Math.random() * 4;
+            s.vx = Math.cos(a) * spd;
+            s.vy = Math.sin(a) * spd;
+            s.color = '#00d4ff';
+            s.alpha = 0.6;
+          });
+          spawnEcho(W / 2, H / 2); spawnEcho(W / 2, H / 2);
+        }, HOLD_DUR);
+      }
+    } else if (collapsePhase === 3) {
+      const p = Math.min(elapsed / EXPLODE_DUR, 1);
+      symbols.forEach(s => {
+        s.alpha = 0.15 + 0.25 * (1 - p);
+        s.vx *= 0.98; s.vy *= 0.98;
+      });
+      if (p >= 1) {
+        isCollapsing = false; collapsePhase = 0;
+        symbols.forEach(s => {
+          s.vx = (Math.random() - 0.5) * 0.2;
+          s.vy = (Math.random() - 0.5) * 0.2;
+          s.color = Math.random() > 0.5 ? '#00d4ff' : '#f0a500';
+        });
+      }
+    }
+  }
+
   let lastScrollY = window.scrollY, scrollVel = 0, scrollTimeout = null;
   function handleScroll() {
     const sy = window.scrollY; scrollVel = sy - lastScrollY; lastScrollY = sy;
@@ -472,7 +513,10 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     if (mouse.prevX !== null && mouse.x !== null) { mouse.vx = mouse.x - mouse.prevX; mouse.vy = mouse.y - mouse.prevY; }
     if (mouse.x !== null) { mouse.prevX = mouse.x; mouse.prevY = mouse.y; }
 
+    if (isCollapsing) { stepCollapse(now); return; }
+
     symbols.forEach(s => {
+      if (!s.active) return;
       s.x += s.vx; s.y += s.vy;
       if (s.x < -50) s.x = W + 50; if (s.x > W + 50) s.x = -50;
       if (s.y < -50) s.y = H + 50; if (s.y > H + 50) s.y = -50;
@@ -504,6 +548,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
       ctx.fillText(e.char, e.x, e.y); return true;
     });
     symbols.forEach(s => {
+      if (!s.active && !isCollapsing) return;
       const glow = s.scrollGlow > 0.01 ? 15 + s.scrollGlow * 20 : (s.inWell ? 25 : 12);
       ctx.font = `${s.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.shadowColor = s.color; ctx.shadowBlur = glow; ctx.fillStyle = s.color;
@@ -523,24 +568,30 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
   let rafId = null;
   function loop(t) { updatePhysics(t); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
 
-  // Hyperdiamond Cursor
-  const cursor = document.getElementById('custom-cursor');
-  let curTarget = { x: -100, y: -100 }, curPos = { x: -100, y: -100 };
-  function animateCursor() { curPos.x += (curTarget.x - curPos.x) * 0.18; curPos.y += (curTarget.y - curPos.y) * 0.18; cursor.style.left = curPos.x + 'px'; cursor.style.top = curPos.y + 'px'; requestAnimationFrame(animateCursor); }
-  if (!reducedMotion) animateCursor();
-
+  // Mouse events for symbol field and collapse
   window.addEventListener('pointermove', (e) => {
     if (e.pointerType === 'mouse') {
       mouse.x = e.clientX; mouse.y = e.clientY;
-      curTarget.x = e.clientX; curTarget.y = e.clientY;
     }
   });
   window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
   window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
 
-  document.querySelectorAll('a, button, .card, .cta-btn, .tilt-card, .icon-btn, .logo-link').forEach(el => {
-    el.addEventListener('pointerenter', () => cursor.classList.add('hover'));
-    el.addEventListener('pointerleave', () => cursor.classList.remove('hover'));
+  // Double-click collapse with interactive element guard
+  window.addEventListener('dblclick', (e) => {
+    const tag = e.target.tagName.toLowerCase();
+    const isInteractive = ['a', 'button', 'input', 'select', 'textarea'].includes(tag) ||
+      e.target.closest('a') || e.target.closest('button') || e.target.closest('.cta-btn') ||
+      e.target.closest('.audience-path') || e.target.closest('.stage-pip') || e.target.closest('.card') ||
+      e.target.closest('.logo-link') || e.target.closest('.pipe-card') || e.target.closest('.modal-overlay');
+    if (isInteractive) return;
+    triggerCollapse();
+    spawnEcho(e.clientX, e.clientY);
+  });
+
+  // Keyboard shortcut for collapse
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'Q') { e.preventDefault(); triggerCollapse(); }
   });
 
   // Audio
@@ -640,7 +691,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     const data = new FormData(form);
     let body = '';
     for (let [key, val] of data.entries()) {
-      if (key === 'nda-signer' || key === 'nda-title') continue; // handled separately
+      if (key === 'nda-signer' || key === 'nda-title') continue;
       body += `${key}: ${val}\n`;
     }
     const nda = document.getElementById(ndaCheckId).checked ? 'Yes' : 'No';
