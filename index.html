@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Sheldon K. Salmon — AI Reliability Architect. I find out when your AI is wrong — before it costs you something irreversible. FSVE certainty engine, 300+ frameworks, Docker-sealed.">
-<!-- STRIKE 6: Name first in title, differentiator visible in SERP -->
 <title>Sheldon K. Salmon — AI Reliability Architect | AionSystem</title>
 <meta property="og:title" content="Sheldon K. Salmon — AI Reliability Architect | AionSystem">
 <meta property="og:description" content="I find out when your AI is wrong — before it costs you something irreversible.">
@@ -56,17 +55,12 @@ body{
   font-family:var(--sans);font-size:var(--font-base);line-height:1.5;
   overflow-x:hidden;
 }
-body.cursor-active{cursor:none}
 #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4;}
 #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
 #symbol-canvas.ready{opacity:0.65}
-#trail-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:9997;pointer-events:none;will-change:transform;}
 .scan-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10;}
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,212,255,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite;}
 @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
-.custom-cursor{width:20px;height:20px;border:2px solid var(--cyan);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:transform 0.1s ease,background 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease;transform:translate(-50%,-50%);box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);will-change:transform;display:none;}
-body.cursor-active .custom-cursor{display:block}
-.custom-cursor.hover{transform:translate(-50%,-50%) scale(1.8);background:rgba(0,212,255,0.1);border-color:var(--amber);box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5);}
 .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;}
 .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none;}
 .audio-toggle[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);box-shadow:0 0 15px rgba(240,165,0,0.3);}
@@ -417,9 +411,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}
-  #webgl-canvas,#symbol-canvas,#trail-canvas,.scan-lines{display:none}
-  body{cursor:auto !important}
-  .custom-cursor{display:none !important}
+  #webgl-canvas,#symbol-canvas,.scan-lines{display:none}
   .reveal-hero{opacity:1;transform:none}
   section{opacity:1;transform:none}
   nav{opacity:1;transform:none}
@@ -430,7 +422,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   nav{padding:0 20px}
   .nav-links{display:none}
   .nav-hamburger{display:flex}
-  /* STRIKE: explicit mobile hero layout */
   .hero{padding:60px 20px 40px;min-height:auto;}
   .hero-name{font-size:clamp(36px,10vw,60px);}
   .hero-hook{font-size:clamp(1.3rem,5vw,2rem);}
@@ -460,12 +451,9 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
-<canvas id="trail-canvas" aria-hidden="true"></canvas>
 <div class="scan-grid" aria-hidden="true"></div>
 <div class="scan-lines" aria-hidden="true"></div>
-<div class="custom-cursor" id="custom-cursor" aria-hidden="true"></div>
 
-<!-- STRIKE 3b: audio description improved -->
 <button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone — low-frequency oscillator, non-disruptive" title="Toggle ambient audio">♪</button>
 
 <!-- NAV -->
@@ -508,7 +496,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   <p class="hero-title reveal-hero d-3">Sheldon K. Salmon · AI Reliability Architect · Evans Mills, New York</p>
   <div class="hero-divider reveal-hero d-3"></div>
 
-  <!-- STRIKE 1: Single sentence, full weight, answers the question -->
   <p class="hero-hook reveal-hero d-4">
     When your AI is wrong — <em>I find out</em> before it costs you <strong>something irreversible.</strong>
   </p>
@@ -517,7 +504,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     Docker-sealed. Scored. Delivered with an architectural insurance layer baked in.
   </p>
 
-  <!-- STRIKE 4: Two-path audience split -->
   <div class="audience-split reveal-hero d-5" role="navigation" aria-label="Choose your path">
     <a href="/audit/" class="audience-path buyer" aria-label="I need an AI reliability audit">
       <span class="path-label">Executive Path</span>
@@ -536,7 +522,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     <a href="/about/" class="cta-btn">Meet the Architect →</a>
   </div>
 
-  <!-- STRIKE 7: Badge translation layer -->
   <div class="badge-row reveal-hero d-6">
     <div class="badge-group">
       <img src="https://img.shields.io/badge/ORCID-0009--0005--8057--5115-a6ce39?style=flat&logo=orcid&logoColor=white" alt="ORCID research identity" loading="lazy" decoding="async">
@@ -589,7 +574,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
   </div>
 
-  <!-- FSVE Excerpt — redacted sample output -->
   <div class="fsve-excerpt">
     <div class="fsve-header">
       <div class="fsve-title">⬡ FSVE Reliability Snapshot — Sample Output (Redacted)</div>
@@ -651,7 +635,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div aria-hidden="true" style="font-size:2rem">🔓</div>
       <h3 class="service-title" style="color:var(--cyan)">Open Armory</h3>
       <p class="service-desc">30 free, pip-installable frameworks. Public repos. Live simulations. The drug-dealer strategy — first taste is free.</p>
-      <!-- STRIKE: Fixed broken path — armory goes to vault, not simulations -->
       <a href="/vault/#open-armory" class="cta-btn violet">Browse Free Frameworks →</a>
     </div>
     <div class="vault-card" role="listitem">
@@ -804,7 +787,6 @@ Package delivered with:<br>
   <div class="stack-card">
     <p class="service-title" style="margin-bottom:16px">The Reliability Snapshot</p>
 
-    <!-- STRIKE 3b: Scarcity with visual weight + declared mechanism -->
     <div class="scarcity-block" role="status" aria-live="polite">
       <div class="scarcity-dot"></div>
       <span class="scarcity-text">3 founding client spots — first come, first sealed</span>
@@ -928,7 +910,6 @@ Package delivered with:<br>
     </div>
   </div>
 
-  <!-- STRIKE: Closing statement — last thing the visitor sees -->
   <div class="closing-statement">
     <p class="closing-line">
       The substrate is built. The lattice is here. <strong>The question is whether your AI knows what it doesn't know.</strong>
@@ -945,7 +926,6 @@ Package delivered with:<br>
 <footer>
   <div>
     <div>AionSystem · Sheldon K. Salmon · AI Reliability Architect · © <span id="copyright-year"></span></div>
-    <!-- STRIKE: Legal stub added — site solicits enterprise engagements -->
     <div class="footer-legal">All frameworks are original work. No warranty implied. Enterprise engagements subject to written agreement.</div>
   </div>
   <ul class="footer-links" role="list">
@@ -967,10 +947,6 @@ Package delivered with:<br>
   const deviceMem   = navigator.deviceMemory || 2;
   const lowDevice   = concurrency < 4 || deviceMem < 4;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (window.matchMedia('(pointer: fine)').matches && !reducedMotion) {
-    document.body.classList.add('cursor-active');
-  }
 
   const LEDGER_KEY  = 'aion-obs-v2';
   const LEDGER_MAX  = 200;
@@ -1232,39 +1208,8 @@ Package delivered with:<br>
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
-  const trailCanvas = document.getElementById('trail-canvas');
-  const trailCtx = trailCanvas.getContext('2d');
-  const TRAIL_MAX = 16, TRAIL_AGE = 150;
-  let trailPts = [];
-
-  function pushTrailPoint(x, y, t) {
-    trailPts.push({ x, y, t });
-    const cutoff = t - TRAIL_AGE;
-    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
-    if (trailPts.length > TRAIL_MAX) trailPts.shift();
-  }
-
-  function renderTrail(now) {
-    trailCtx.clearRect(0, 0, W, H);
-    const cutoff = now - TRAIL_AGE;
-    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
-    if (trailPts.length < 2) return;
-    for (let i = 0; i < trailPts.length - 1; i++) {
-      const p0 = trailPts[i], p1 = trailPts[i + 1];
-      const tNorm = i / (trailPts.length - 1), alpha = tNorm * 0.55, width = 1 + tNorm * 1.5;
-      trailCtx.beginPath(); trailCtx.moveTo(p0.x, p0.y); trailCtx.lineTo(p1.x, p1.y);
-      trailCtx.strokeStyle = `rgba(0,212,255,${alpha.toFixed(3)})`; trailCtx.lineWidth = width;
-      trailCtx.lineCap = 'round'; trailCtx.shadowColor = '#00d4ff'; trailCtx.shadowBlur = tNorm * 8;
-      trailCtx.stroke();
-    }
-    trailCtx.shadowBlur = 0;
-  }
-
-  function resizeTrail() { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; }
-  window.addEventListener('resize', resizeTrail);
-
   let rafId = null;
-  function loop(t) { updatePhysics(t); updateVisibilityByViewport(); render(); renderWebGL(t); renderTrail(t); rafId = requestAnimationFrame(loop); }
+  function loop(t) { updatePhysics(t); updateVisibilityByViewport(); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
 
   let audioCtx = null, audioNodes = null, audioOn = false;
   const toggle = document.getElementById('audio-toggle');
@@ -1281,7 +1226,6 @@ Package delivered with:<br>
     osc1.connect(filter); osc2.connect(g2); g2.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
     osc1.start(); osc2.start();
     audioNodes = { gain, osc1, osc2 };
-    // STRIKE E-001: cleanup on unload
     window.addEventListener('pagehide', () => { try { audioCtx.close(); } catch(_) {} }, { once: true });
   }
 
@@ -1305,13 +1249,11 @@ Package delivered with:<br>
   }, { rootMargin: '0px 0px -80px 0px', threshold: 0.1 });
   document.querySelectorAll('section').forEach(s => sectionObserver.observe(s));
 
-  // Animate FSVE bars when proof section comes into view
   const proofSection = document.getElementById('section-proof');
   if (proofSection) {
     const barObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          // Bars are already set via inline style — CSS transition handles animation
           barObserver.unobserve(e.target);
         }
       });
@@ -1319,18 +1261,12 @@ Package delivered with:<br>
     barObserver.observe(proofSection);
   }
 
-  const cursor = document.getElementById('custom-cursor');
-  let curTarget = { x: -100, y: -100 }, curPos = { x: -100, y: -100 };
-  function animateCursor() { curPos.x += (curTarget.x - curPos.x) * 0.18; curPos.y += (curTarget.y - curPos.y) * 0.18; cursor.style.left = curPos.x + 'px'; cursor.style.top = curPos.y + 'px'; requestAnimationFrame(animateCursor); }
-  if (!reducedMotion) animateCursor();
-
   window.addEventListener('pointermove', (e) => {
-    if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; curTarget.x = e.clientX; curTarget.y = e.clientY; pushTrailPoint(e.clientX, e.clientY, performance.now()); recordObs('move', e.clientX, e.clientY); }
+    if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; recordObs('move', e.clientX, e.clientY); }
   });
   window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
   window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); recordObs('click', e.clientX, e.clientY); });
 
-  // STRIKE 5: dblclick handler filters interactive elements
   window.addEventListener('dblclick', (e) => {
     const tag = e.target.tagName.toLowerCase();
     const isInteractive = ['a', 'button', 'input', 'select', 'textarea'].includes(tag) || e.target.closest('a') || e.target.closest('button') || e.target.closest('.cta-btn') || e.target.closest('.audience-path') || e.target.closest('.stage-pip');
@@ -1339,11 +1275,6 @@ Package delivered with:<br>
   });
 
   window.addEventListener('keydown', (e) => { if (e.ctrlKey && e.shiftKey && e.key === 'Q') { e.preventDefault(); triggerCollapse(); } });
-
-  document.querySelectorAll('a, button, .work-card, .service-card, .cta-btn, .tilt-card, .vault-card, .audience-path').forEach(el => {
-    el.addEventListener('pointerenter', () => cursor.classList.add('hover'));
-    el.addEventListener('pointerleave', () => cursor.classList.remove('hover'));
-  });
 
   let scrollRAFId = null;
   window.addEventListener('scroll', () => {
@@ -1422,7 +1353,6 @@ Package delivered with:<br>
     });
   });
 
-  // Auto-advance every 3.5s when section is in view
   const pipelineSection = document.getElementById('section-pipeline');
   if (pipelineSection) {
     const pipeObserver = new IntersectionObserver((entries) => {
@@ -1442,7 +1372,7 @@ Package delivered with:<br>
   const yearSpan = document.getElementById('copyright-year');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-  if (!reducedMotion) { resizeCanvas(); resizeTrail(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
+  if (!reducedMotion) { resizeCanvas(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
 
 })();
 </script>
