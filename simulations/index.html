@@ -55,29 +55,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:va
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,212,255,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite}
 @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
 
-/* ===== NORMAL CURSOR + HOVER GLOW ===== */
-body.cursor-active{cursor:auto}
-.custom-cursor{
-  width:40px;height:40px;
-  border-radius:50%;
-  background:rgba(0,212,255,0.05);
-  border:2px solid rgba(0,212,255,0.3);
-  position:fixed;pointer-events:none;z-index:9999;
-  mix-blend-mode:screen;
-  transition:transform 0.1s ease,opacity 0.2s ease;
-  transform:translate(-50%,-50%);
-  opacity:0;
-  display:none;
-}
-body.cursor-active .custom-cursor{display:block}
-.custom-cursor.hover{
-  opacity:1;
-  transform:translate(-50%,-50%) scale(1.5);
-  background:rgba(0,212,255,0.15);
-  border-color:var(--amber);
-  box-shadow:0 0 20px var(--amber),0 0 40px rgba(240,165,0,0.4);
-}
-
+/* ===== AUDIO TOGGLE ===== */
 .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
 .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none}
 .audio-toggle[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);box-shadow:0 0 15px rgba(240,165,0,0.3)}
@@ -256,7 +234,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--cyan);text-shadow:0 0 8px var(--cyan);outline:none}
 .footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
 
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}body{cursor:auto !important}.custom-cursor{display:none !important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}body{cursor:auto !important}}
 @media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}}
 </style>
 </head>
@@ -267,7 +245,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
 <div class="scan-grid" aria-hidden="true"></div>
 <div class="scan-lines" aria-hidden="true"></div>
-<div class="custom-cursor" id="custom-cursor" aria-hidden="true"></div>
 
 <button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
 
@@ -465,15 +442,11 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 (function () {
   'use strict';
 
-  // ===== FULL VISUAL ENGINE (WebGL, symbols, normal cursor with hover glow, audio, mobile nav) =====
+  // ===== FULL VISUAL ENGINE (WebGL, symbols, normal cursor + double-click echo, audio, mobile nav) =====
   const concurrency = navigator.hardwareConcurrency || 2;
   const deviceMem   = navigator.deviceMemory || 2;
   const lowDevice   = concurrency < 4 || deviceMem < 4;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (window.matchMedia('(pointer: fine)').matches && !reducedMotion) {
-    document.body.classList.add('cursor-active');
-  }
 
   // WebGL
   const wglCanvas = document.getElementById('webgl-canvas');
@@ -621,24 +594,17 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   let rafId = null;
   function loop(t) { updatePhysics(t); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
 
-  // Normal cursor with hover glow
-  const cursor = document.getElementById('custom-cursor');
-  let curTarget = { x: -100, y: -100 }, curPos = { x: -100, y: -100 };
-  function animateCursor() { curPos.x += (curTarget.x - curPos.x) * 0.18; curPos.y += (curTarget.y - curPos.y) * 0.18; cursor.style.left = curPos.x + 'px'; cursor.style.top = curPos.y + 'px'; requestAnimationFrame(animateCursor); }
-  if (!reducedMotion) animateCursor();
-
+  // Pointer events for symbol field and double-click echo
   window.addEventListener('pointermove', (e) => {
     if (e.pointerType === 'mouse') {
       mouse.x = e.clientX; mouse.y = e.clientY;
-      curTarget.x = e.clientX; curTarget.y = e.clientY;
     }
   });
-  window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; cursor.classList.remove('hover'); });
+  window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
   window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
-
-  document.querySelectorAll('a, button, .sim-card, .filter-btn, .cta-btn, .tilt-card, .icon-btn').forEach(el => {
-    el.addEventListener('pointerenter', () => cursor.classList.add('hover'));
-    el.addEventListener('pointerleave', () => cursor.classList.remove('hover'));
+  // Double-click echo (restored)
+  window.addEventListener('dblclick', (e) => {
+    spawnEcho(e.clientX, e.clientY);
   });
 
   // Audio
