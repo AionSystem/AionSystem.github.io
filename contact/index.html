@@ -47,7 +47,6 @@
 .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--cyan);color:#000;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s ease}
 .skip-nav:focus{top:0}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-base);line-height:1.5;overflow-x:hidden}
-body.cursor-active{cursor:none}
 #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
 #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
 #symbol-canvas.ready{opacity:0.65}
@@ -56,28 +55,7 @@ body.cursor-active{cursor:none}
 @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
 
 /* ===== HYPERDIAMOND CURSOR ===== */
-.custom-cursor{
-  width:22px;height:22px;
-  background:rgba(0,212,255,0.15);
-  border:2px solid var(--cyan);
-  clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-  position:fixed;pointer-events:none;z-index:9999;
-  mix-blend-mode:screen;
-  transition:transform 0.1s ease,clip-path 0.2s ease,border-radius 0.2s ease,background 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease;
-  transform:translate(-50%,-50%) rotate(0deg);
-  box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);
-  will-change:transform;display:none;
-}
-body.cursor-active .custom-cursor{display:block}
-.custom-cursor.hover{
-  clip-path:circle(50%);
-  border-radius:50%;
-  transform:translate(-50%,-50%) scale(1.8);
-  background:rgba(0,212,255,0.1);
-  border-color:var(--amber);
-  box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5);
-}
-
+body.cursor-active 
 .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
 .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none}
 .audio-toggle[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);box-shadow:0 0 15px rgba(240,165,0,0.3)}
@@ -163,7 +141,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--cyan);text-shadow:0 0 8px var(--cyan);outline:none}
 .footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
 
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}body{cursor:auto !important}.custom-cursor{display:none !important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}body{cursor:auto !important}}
 @media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}}
 </style>
 </head>
@@ -174,7 +152,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
 <div class="scan-grid" aria-hidden="true"></div>
 <div class="scan-lines" aria-hidden="true"></div>
-<div class="custom-cursor" id="custom-cursor" aria-hidden="true"></div>
 
 <button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
 
