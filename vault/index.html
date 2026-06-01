@@ -1,1 +1,795 @@
-<!-- placeholder — awaiting content -->
+<!DOCTYPE html>
+<html lang="en" data-pde-scan="v0.5-hdre-v0.3">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="The Vault — AionSystem framework catalog. 300+ frameworks: open‑source armory, spec library blueprints, custom Docker‑sealed builds.">
+<title>The Vault — Frameworks | AionSystem</title>
+<meta property="og:title" content="The Vault — AionSystem Framework Catalog">
+<meta property="og:description" content="Browse 300+ AI reliability frameworks. Free open‑source tools, 270+ locked blueprints, and enterprise Docker‑sealed builds.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08090b;
+  --surface:rgba(20,30,45,0.4);
+  --panel:rgba(25,35,55,0.5);
+  --border:rgba(0,212,255,0.15);
+  --amber:#f0a500;
+  --amber-d:#b07800;
+  --amber-l:#ffc947;
+  --gold:#D4AF37;
+  --text:#e0e8f0;
+  --muted:#7a9aba;
+  --dim:#3a5a7a;
+  --red:#ff4d4d;
+  --cyan:#00d4ff;
+  --violet:#a855f7;
+  --violet-dark:#7c3aed;
+  --edu:#4ade80;
+  --mono:'Share Tech Mono',monospace;
+  --sans:'Barlow Condensed',sans-serif;
+  --serif:'Crimson Pro',Georgia,serif;
+  --jmono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
+  --font-base:clamp(16px,1vw + 8px,20px);
+  --font-h1:clamp(48px,8vw + 16px,96px);
+  --font-h2:clamp(28px,4vw + 8px,44px);
+  --glow-amber:0 0 5px #f0a500,0 0 10px #f0a500,0 0 20px rgba(240,165,0,0.5);
+  --glow-cyan:0 0 5px #00d4ff,0 0 10px #00d4ff,0 0 20px rgba(0,212,255,0.4);
+  --glow-violet:0 0 5px #a855f7,0 0 10px #a855f7,0 0 20px rgba(168,85,247,0.4);
+}
+.skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--cyan);color:#000;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s ease}
+.skip-nav:focus{top:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-base);line-height:1.5;overflow-x:hidden}
+body.cursor-active{cursor:none}
+#webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
+#symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+#symbol-canvas.ready{opacity:0.65}
+#trail-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:9997;pointer-events:none;will-change:transform}
+.scan-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10}
+.scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,212,255,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite}
+@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
+.custom-cursor{width:20px;height:20px;border:2px solid var(--cyan);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:transform 0.1s ease,background 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease;transform:translate(-50%,-50%);box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);will-change:transform;display:none}
+body.cursor-active .custom-cursor{display:block}
+.custom-cursor.hover{transform:translate(-50%,-50%) scale(1.8);background:rgba(0,212,255,0.1);border-color:var(--amber);box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5)}
+.audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
+.audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none}
+.audio-toggle[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);box-shadow:0 0 15px rgba(240,165,0,0.3)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:0 0 30px rgba(0,212,255,0.05)}
+.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.nav-logo span{color:var(--muted)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;padding-bottom:2px;transition:all 0.2s ease}
+.nav-links a:hover,.nav-links a.active{color:var(--cyan);border-bottom-color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.nav-links a:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;border-radius:2px}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;width:32px;height:32px;flex-direction:column;justify-content:space-between;align-items:flex-end;padding:4px 0;color:var(--text)}
+.nav-hamburger span{display:block;height:2px;background:var(--text);transition:all 0.3s var(--ease-spring);border-radius:2px}
+.nav-hamburger span:nth-child(1){width:100%}
+.nav-hamburger span:nth-child(2){width:70%}
+.nav-hamburger span:nth-child(3){width:100%}
+.nav-hamburger.open span:nth-child(1){transform:translateY(10px) rotate(45deg);width:100%}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-10px) rotate(-45deg);width:100%}
+.mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:rgba(8,9,11,0.97);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:0;padding:0;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;overscroll-behavior:contain;pointer-events:none;border-top:1px solid var(--border)}
+.mobile-nav.open{transform:translateY(0);visibility:visible;pointer-events:all;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0s}
+.mobile-nav a{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;gap:8px;transition:all 0.15s ease;opacity:0;transform:translateY(6px)}
+.mobile-nav a:nth-child(2n){border-right:none}
+.mobile-nav a:nth-last-child(1),.mobile-nav a:nth-last-child(2):nth-child(2n+1){border-bottom:none}
+.mobile-nav.open a{opacity:1;transform:translateY(0)}
+.mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background 0.15s ease,box-shadow 0.15s ease}
+.mobile-nav a:hover,.mobile-nav a:focus-visible,.mobile-nav a.active{color:var(--cyan);background:rgba(0,212,255,0.04);text-shadow:0 0 8px var(--cyan);outline:none}
+.mobile-nav a:hover::before,.mobile-nav a:focus-visible::before,.mobile-nav a.active::before{background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.mobile-nav a:last-child:nth-child(2n+1){grid-column:1 / -1;border-right:none}
+
+/* ===== COMMON LAYOUT ===== */
+.wrapper{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:100px 40px 80px}
+section{margin-bottom:80px}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:12px}
+.eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--cyan);vertical-align:middle;margin-right:10px;margin-bottom:2px;box-shadow:0 0 8px var(--cyan)}
+h1{font-family:var(--sans);font-size:clamp(40px,6vw,72px);font-weight:900;letter-spacing:1px;text-transform:uppercase;line-height:0.95;color:var(--text);margin-bottom:8px}
+h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-amber)}
+.title-line{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:3px;margin-bottom:36px;margin-top:16px}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:48px}
+.section-num{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:2px}
+.section-title{font-family:var(--sans);font-size:var(--font-h2);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text);text-shadow:0 0 8px rgba(255,255,255,0.2)}
+.section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px var(--cyan)}
+
+/* ===== DOMAIN HEADINGS ===== */
+.domain-heading{font-family:var(--mono);font-size:13px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:16px;padding-left:8px;border-left:2px solid var(--cyan);text-shadow:0 0 5px var(--amber)}
+
+/* ===== HORIZONTAL SCROLL ROW ===== */
+.scroll-row{display:flex;gap:20px;overflow-x:auto;padding-bottom:12px;scroll-behavior:smooth}
+.scroll-row::-webkit-scrollbar{height:6px}
+.scroll-row::-webkit-scrollbar-track{background:rgba(0,212,255,0.05);border-radius:3px}
+.scroll-row::-webkit-scrollbar-thumb{background:var(--dim);border-radius:3px;transition:background 0.2s}
+.scroll-row::-webkit-scrollbar-thumb:hover{background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+
+/* ===== FRAMEWORK CARD ===== */
+.fw-card{
+  flex:0 0 280px;
+  background:var(--surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  display:flex;flex-direction:column;gap:8px;
+  transition:all 0.3s var(--ease);
+  position:relative;
+  cursor:pointer;
+}
+.fw-card:hover{border-color:var(--cyan);box-shadow:0 8px 20px rgba(0,212,255,0.15);transform:translateY(-2px)}
+.fw-icon{font-size:1.5rem}
+.fw-name{font-family:var(--sans);font-size:1.1rem;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:1px}
+.fw-version{font-family:var(--mono);font-size:0.7rem;color:var(--muted);text-transform:uppercase}
+.fw-desc{font-family:var(--sans);font-size:0.85rem;color:var(--muted);line-height:1.4;flex:1}
+
+/* ===== MODAL OVERLAY ===== */
+.modal-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s;
+}
+.modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s}
+.modal-box{
+  background:var(--surface);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:20px;
+  padding:32px;max-width:420px;width:90%;
+  box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(0,212,255,0.1);
+  position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);
+}
+.modal-overlay.active .modal-box{transform:scale(1)}
+.modal-close{
+  position:absolute;top:12px;right:16px;
+  background:none;border:none;color:var(--muted);font-size:1.5rem;
+  cursor:pointer;line-height:1;transition:color 0.2s;
+}
+.modal-close:hover{color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.modal-icon{font-size:2.5rem;margin-bottom:12px}
+.modal-name{font-family:var(--sans);font-size:1.8rem;font-weight:900;color:var(--text);text-transform:uppercase;letter-spacing:1px}
+.modal-version{font-family:var(--mono);font-size:0.8rem;color:var(--muted);margin-bottom:16px}
+.modal-desc{font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6;margin-bottom:24px}
+.modal-actions{display:flex;gap:16px}
+.modal-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 0;border-radius:8px;
+  font-family:var(--mono);font-size:0.8rem;letter-spacing:1px;text-transform:uppercase;
+  text-decoration:none;transition:all 0.2s ease;border:1px solid;
+}
+.modal-btn.github{border-color:var(--cyan);color:var(--cyan)}
+.modal-btn.github:hover{background:var(--cyan);color:#000;box-shadow:0 0 15px var(--cyan)}
+.modal-btn.sim{border-color:var(--violet);color:var(--violet)}
+.modal-btn.sim:hover{background:var(--violet);color:#fff;box-shadow:0 0 15px var(--violet)}
+.modal-btn.disabled{opacity:0.3;pointer-events:none;cursor:not-allowed}
+
+/* ===== TIER CARDS (Tier 2 & 3) ===== */
+.card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);box-shadow:0 8px 20px rgba(0,0,0,0.3),inset 0 0 30px rgba(0,212,255,0.03);border-radius:16px;padding:32px;transition:all 0.3s var(--ease)}
+.card:hover{border-color:var(--cyan);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2),inset 0 0 20px rgba(0,212,255,0.05);transform:translateY(-4px)}
+.tier-open .card{border-left:3px solid var(--cyan)}
+.tier-spec .card{border-left:3px solid var(--amber)}
+.tier-sovereign .card{border-left:3px solid var(--violet)}
+
+.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
+.cta-btn.primary{background:var(--amber);color:#000;border-color:var(--amber)}
+.cta-btn:hover,.cta-btn:focus-visible{background:var(--cyan);color:#000;border-color:var(--cyan);box-shadow:0 0 20px var(--cyan);outline:none}
+.cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--amber-l);border-color:var(--amber-l);box-shadow:0 0 20px var(--amber)}
+.cta-btn.violet{border-color:var(--violet);color:var(--violet)}
+.cta-btn.violet:hover,.cta-btn.violet:focus-visible{background:var(--violet);color:#fff;box-shadow:0 0 20px var(--violet);outline:none}
+footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:2}
+.footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
+.footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
+.footer-links a:hover,.footer-links a:focus-visible{color:var(--cyan);text-shadow:0 0 8px var(--cyan);outline:none}
+.footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,#trail-canvas,.scan-lines{display:none}body{cursor:auto !important}.custom-cursor{display:none !important}}
+@media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}.fw-card{flex:0 0 240px}}
+</style>
+</head>
+<body class="cursor-active">
+<a href="#main" class="skip-nav">Skip to content</a>
+
+<canvas id="webgl-canvas" aria-hidden="true"></canvas>
+<canvas id="symbol-canvas" aria-hidden="true"></canvas>
+<canvas id="trail-canvas" aria-hidden="true"></canvas>
+<div class="scan-grid" aria-hidden="true"></div>
+<div class="scan-lines" aria-hidden="true"></div>
+<div class="custom-cursor" id="custom-cursor" aria-hidden="true"></div>
+
+<button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
+
+<nav aria-label="Primary navigation">
+  <a href="/" class="nav-logo" aria-label="AionSystem home">
+    <img src="/assets/aion-logo.jpg" alt="AionSystem logo" class="nav-logo-img" width="28" height="28">
+    <span>AION<span>system</span></span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="/about/">About</a></li>
+    <li><a href="/vault/" class="active">Vault</a></li>
+    <li><a href="/audit/">Audit</a></li>
+    <li><a href="/pipeline/">Pipeline</a></li>
+    <li><a href="/simulations/">Simulations</a></li>
+    <li><a href="/case-studies/">Case Studies</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true"></nav>
+
+<div class="wrapper" id="main">
+
+  <!-- HERO -->
+  <section>
+    <div class="eyebrow">// Framework Catalog</div>
+    <h1>The<em>Vault</em></h1>
+    <div class="title-line">300+ Frameworks · Open Armory · Spec Library · Sovereign Builds</div>
+    <p style="font-family:var(--serif);font-size:1.3rem;font-weight:300;font-style:italic;max-width:680px;color:var(--muted);margin-bottom:32px">
+      I don't build products — I build the <strong style="color:var(--text)">substrate</strong> others anchor to.
+      The frameworks in this vault are the crystalline lattice: some free, some locked, all real.
+    </p>
+  </section>
+
+  <!-- ============ TIER 1: OPEN ARMORY ============ -->
+  <section id="open-armory" class="tier-open">
+    <div class="section-header">
+      <span class="section-num">Tier 1</span>
+      <h2 class="section-title">Open Armory</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <p style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);margin-bottom:40px">30 free, pip‑installable frameworks. Public repos. Live simulations. Click any card to explore.</p>
+
+    <!-- Domain: Audit & Scoring -->
+    <div class="domain-heading">// Audit & Scoring</div>
+    <div class="scroll-row" id="row-audit"></div>
+
+    <!-- Domain: Governance & Constitution -->
+    <div class="domain-heading" style="margin-top:40px">// Governance & Constitution</div>
+    <div class="scroll-row" id="row-governance"></div>
+
+    <!-- Domain: Provenance & Sealing -->
+    <div class="domain-heading" style="margin-top:40px">// Provenance & Sealing</div>
+    <div class="scroll-row" id="row-provenance"></div>
+
+    <!-- Domain: Writing & Content -->
+    <div class="domain-heading" style="margin-top:40px">// Writing & Content</div>
+    <div class="scroll-row" id="row-writing"></div>
+
+    <!-- Domain: Diagnostics & Red Teaming -->
+    <div class="domain-heading" style="margin-top:40px">// Diagnostics & Red Teaming</div>
+    <div class="scroll-row" id="row-diagnostics"></div>
+
+    <!-- Domain: Simulation & Education -->
+    <div class="domain-heading" style="margin-top:40px">// Simulation & Education</div>
+    <div class="scroll-row" id="row-simulation"></div>
+  </section>
+
+  <!-- ============ MODAL ============ -->
+  <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <div class="modal-icon" id="modal-icon"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-version" id="modal-version"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+
+  <!-- ============ TIER 2: SPEC LIBRARY ============ -->
+  <section id="spec-library" class="tier-spec">
+    <div class="section-header">
+      <span class="section-num">Tier 2</span>
+      <h2 class="section-title">Spec Library</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <p style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);margin-bottom:32px">270+ locked blueprints. Browse capability summaries. Commission a full build‑to‑Docker on demand.</p>
+    <div class="fw-grid">
+      <div class="fw-card">
+        <span class="lock-icon">🔒</span>
+        <div class="fw-icon">🧠</div>
+        <div class="fw-name">FSVE Enterprise</div>
+        <div class="fw-version">v4.3‑full</div>
+        <div class="fw-desc">All 13 axes, CAVTE, C‑Mode, streaming ingress.</div>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
+      </div>
+      <div class="fw-card">
+        <span class="lock-icon">🔒</span>
+        <div class="fw-icon">⚖️</div>
+        <div class="fw-name">QAE Pro</div>
+        <div class="fw-version">v1.4‑full</div>
+        <div class="fw-desc">Full epistemic interrogation suite with adversarial stress.</div>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
+      </div>
+      <div class="fw-card">
+        <span class="lock-icon">🔒</span>
+        <div class="fw-icon">🛡️</div>
+        <div class="fw-name">ADA‑VELA Gate</div>
+        <div class="fw-version">v3.2‑enterprise</div>
+        <div class="fw-desc">Execution gate with full compliance logging and SHA‑256 attestation.</div>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
+      </div>
+      <div class="fw-card">
+        <span class="lock-icon">🔒</span>
+        <div class="fw-icon">📊</div>
+        <div class="fw-name">FORGE Review Suite</div>
+        <div class="fw-version">v2.1‑full</div>
+        <div class="fw-desc">Polymath Council with extended panels and FSVE‑aligned gating.</div>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
+      </div>
+      <div class="fw-card">
+        <span class="lock-icon">🔒</span>
+        <div class="fw-name">GENESIS Deployment</div>
+        <div class="fw-version">v0.3‑full</div>
+        <div class="fw-desc">Scaling architecture with depth governor and confidence management.</div>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
+      </div>
+      <div class="fw-card">
+        <span class="lock-icon">🔒</span>
+        <div class="fw-name">TOPOS Shape Engine</div>
+        <div class="fw-version">v0.3‑full</div>
+        <div class="fw-desc">Persistent shape mapping between frozen weights and fluid output.</div>
+        <span class="fw-link" style="color:var(--amber);cursor:pointer">Purchase Docker Image →</span>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:32px">
+      <a href="/contact/" class="cta-btn primary">Commission a Build →</a>
+    </p>
+  </section>
+
+  <!-- ============ TIER 3: CUSTOM SOVEREIGN BUILDS ============ -->
+  <section id="sovereign-builds" class="tier-sovereign">
+    <div class="section-header">
+      <span class="section-num">Tier 3</span>
+      <h2 class="section-title">Custom Sovereign Builds</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div class="card" style="max-width:800px;margin-bottom:24px">
+      <p style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);line-height:1.7">
+        Enterprise‑grade frameworks built to your specification. Private repos. Docker‑sealed. Delivered with Architectural Insurance — monthly maintenance retainers that keep your sovereign AI on track.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:20px">
+        <div>
+          <strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px">Engagement Range</strong>
+          <span style="color:var(--amber);font-size:1.3rem">$15,000 – $50,000</span>
+        </div>
+        <div>
+          <strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px">Maintenance</strong>
+          <span style="color:var(--cyan)">Monthly retainer available</span>
+        </div>
+      </div>
+    </div>
+    <a href="/contact/" class="cta-btn violet">Start a Project →</a>
+  </section>
+
+</div>
+
+<footer>
+  <div>
+    <div>AionSystem · Sheldon K. Salmon · AI Reliability Architect · © <span id="copyright-year"></span></div>
+    <div class="footer-legal">All frameworks are original work. No warranty implied. Enterprise engagements subject to written agreement.</div>
+  </div>
+  <ul class="footer-links" role="list">
+    <li><a href="/vault/">Vault</a></li>
+    <li><a href="/audit/">Audit</a></li>
+    <li><a href="/pipeline/">Pipeline</a></li>
+    <li><a href="/simulations/">Simulations</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+// ===== FULL VISUAL ENGINE (identical to root index — WebGL, symbols, cursor, audio, mobile nav) =====
+(function () {
+  'use strict';
+
+  const concurrency = navigator.hardwareConcurrency || 2;
+  const deviceMem   = navigator.deviceMemory || 2;
+  const lowDevice   = concurrency < 4 || deviceMem < 4;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (window.matchMedia('(pointer: fine)').matches && !reducedMotion) {
+    document.body.classList.add('cursor-active');
+  }
+
+  // WebGL
+  const wglCanvas = document.getElementById('webgl-canvas');
+  let gl = null, glProgram = null, glUniforms = {}, glScrollVel = 0, glMouseDist = 1.0;
+  if (!reducedMotion) {
+    try { gl = wglCanvas.getContext('webgl') || wglCanvas.getContext('experimental-webgl'); } catch (_) {}
+  }
+  if (gl) {
+    const vsrc = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+    const fsrc = `precision mediump float;uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
+    void main(){vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
+    float ab=0.003*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
+    vec3 col=vec3(0.0);col.r=sin(d*8.0+u_time)*ab;col.b=cos(d*8.0-u_time)*ab;
+    float rf=0.002*sin(uv.x*6.28+u_time*0.7)*u_mouse_dist;col.g=rf;
+    gl_FragColor=vec4(col,0.18*(1.0-smoothstep(0.6,1.0,d)));}`;
+    function cs(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
+    glProgram = gl.createProgram();
+    gl.attachShader(glProgram, cs(gl.VERTEX_SHADER, vsrc));
+    gl.attachShader(glProgram, cs(gl.FRAGMENT_SHADER, fsrc));
+    gl.linkProgram(glProgram); gl.useProgram(glProgram);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(glProgram, 'a_pos');
+    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    glUniforms.res = gl.getUniformLocation(glProgram,'u_res');
+    glUniforms.time = gl.getUniformLocation(glProgram,'u_time');
+    glUniforms.scrollVel = gl.getUniformLocation(glProgram,'u_scroll_vel');
+    glUniforms.mouseDist = gl.getUniformLocation(glProgram,'u_mouse_dist');
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  }
+
+  // Symbol field
+  const symCanvas = document.getElementById('symbol-canvas');
+  const ctx = symCanvas.getContext('2d');
+  const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','◆','○','●','◉'];
+  let W, H, symbols = [], echoes = [];
+  const mouse = { x: null, y: null, vx: 0, vy: 0, prevX: null, prevY: null };
+  const GRAVITY_R = 200, GRAVITY_STR = 0.015, TANGENTIAL = 0.18;
+  const PHYSICS_FPS = lowDevice ? 30 : 60, PHYSICS_DT = 1000 / PHYSICS_FPS;
+
+  function resizeCanvas() {
+    W = symCanvas.width = wglCanvas.width = window.innerWidth;
+    H = symCanvas.height = wglCanvas.height = window.innerHeight;
+    if (gl) gl.viewport(0, 0, W, H);
+    initSymbols();
+  }
+  let resizeTimer = null;
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeCanvas, 150); });
+
+  function initSymbols() {
+    const count = Math.floor((W * H) / 7000);
+    symbols = [];
+    for (let i = 0; i < count; i++) {
+      symbols.push({
+        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2,
+        size: 12 + Math.random() * 20,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        alpha: 0.15 + Math.random() * 0.25,
+        scrollGlow: 0, inWell: false,
+      });
+    }
+  }
+
+  function spawnEcho(x, y) {
+    for (let i = 0; i < 12; i++) {
+      const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.3;
+      const speed = 1.5 + Math.random() * 2;
+      echoes.push({
+        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x, y,
+        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        size: 8 + Math.random() * 8,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        alpha: 0.8, age: 0, maxAge: 600,
+      });
+    }
+  }
+
+  let lastScrollY = window.scrollY, scrollVel = 0, scrollTimeout = null;
+  function handleScroll() {
+    const sy = window.scrollY; scrollVel = sy - lastScrollY; lastScrollY = sy;
+    glScrollVel = Math.abs(scrollVel) / 60;
+    symbols.forEach(s => { if (Math.abs(s.y - (sy + H / 2)) < 200) s.scrollGlow = 1.0; });
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => { symbols.forEach(s => s.scrollGlow = 0); scrollVel = 0; glScrollVel *= 0.9; }, 300);
+  }
+
+  let lastPhysicsTime = 0;
+  function updatePhysics(now) {
+    if (now - lastPhysicsTime < PHYSICS_DT) return;
+    lastPhysicsTime = now;
+    if (mouse.prevX !== null && mouse.x !== null) { mouse.vx = mouse.x - mouse.prevX; mouse.vy = mouse.y - mouse.prevY; }
+    if (mouse.x !== null) { mouse.prevX = mouse.x; mouse.prevY = mouse.y; }
+
+    symbols.forEach(s => {
+      s.x += s.vx; s.y += s.vy;
+      if (s.x < -50) s.x = W + 50; if (s.x > W + 50) s.x = -50;
+      if (s.y < -50) s.y = H + 50; if (s.y > H + 50) s.y = -50;
+
+      if (mouse.x !== null && mouse.y !== null) {
+        const dx = s.x - mouse.x, dy = s.y - mouse.y; const dist = Math.hypot(dx, dy);
+        if (dist < GRAVITY_R) {
+          const force = GRAVITY_STR * (1 - dist / GRAVITY_R); const angle = Math.atan2(dy, dx);
+          s.vx -= Math.cos(angle) * force; s.vy -= Math.sin(angle) * force;
+          const ta = angle + Math.PI / 2; const spin = TANGENTIAL * (1 - dist / GRAVITY_R);
+          s.vx += Math.cos(ta) * spin * (mouse.vx * 0.05 + 0.5);
+          s.vy += Math.sin(ta) * spin * (mouse.vy * 0.05 + 0.5);
+          s.vx *= 0.99; s.vy *= 0.99; s.inWell = true;
+          glMouseDist = Math.min(glMouseDist, dist / GRAVITY_R);
+        } else { s.inWell = false; }
+      }
+      if (s.scrollGlow > 0.01) s.scrollGlow *= 0.94; else s.scrollGlow = 0;
+    });
+    glMouseDist = Math.min(1, glMouseDist + 0.02);
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+    echoes = echoes.filter(e => {
+      e.age += PHYSICS_DT; if (e.age >= e.maxAge) return false;
+      e.x += e.vx; e.y += e.vy; e.alpha = 0.8 * (1 - e.age / e.maxAge); e.size *= 0.996;
+      ctx.font = `${e.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = e.color; ctx.shadowBlur = 10; ctx.fillStyle = e.color; ctx.globalAlpha = e.alpha;
+      ctx.fillText(e.char, e.x, e.y); return true;
+    });
+    symbols.forEach(s => {
+      const glow = s.scrollGlow > 0.01 ? 15 + s.scrollGlow * 20 : (s.inWell ? 25 : 12);
+      ctx.font = `${s.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = s.color; ctx.shadowBlur = glow; ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.alpha + s.scrollGlow * 0.2; ctx.fillText(s.char, s.x, s.y);
+    });
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  }
+
+  function renderWebGL(t) {
+    if (!gl || !glProgram) return;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform2f(glUniforms.res, W, H); gl.uniform1f(glUniforms.time, t * 0.001);
+    gl.uniform1f(glUniforms.scrollVel, glScrollVel); gl.uniform1f(glUniforms.mouseDist, glMouseDist);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+
+  // Trail canvas
+  const trailCanvas = document.getElementById('trail-canvas');
+  const trailCtx = trailCanvas.getContext('2d');
+  const TRAIL_MAX = 16, TRAIL_AGE = 150;
+  let trailPts = [];
+  function pushTrailPoint(x, y, t) {
+    trailPts.push({ x, y, t });
+    const cutoff = t - TRAIL_AGE;
+    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
+    if (trailPts.length > TRAIL_MAX) trailPts.shift();
+  }
+  function renderTrail(now) {
+    trailCtx.clearRect(0, 0, W, H);
+    const cutoff = now - TRAIL_AGE;
+    while (trailPts.length > 0 && trailPts[0].t < cutoff) trailPts.shift();
+    if (trailPts.length < 2) return;
+    for (let i = 0; i < trailPts.length - 1; i++) {
+      const p0 = trailPts[i], p1 = trailPts[i + 1];
+      const tNorm = i / (trailPts.length - 1), alpha = tNorm * 0.55, width = 1 + tNorm * 1.5;
+      trailCtx.beginPath(); trailCtx.moveTo(p0.x, p0.y); trailCtx.lineTo(p1.x, p1.y);
+      trailCtx.strokeStyle = `rgba(0,212,255,${alpha.toFixed(3)})`; trailCtx.lineWidth = width;
+      trailCtx.lineCap = 'round'; trailCtx.shadowColor = '#00d4ff'; trailCtx.shadowBlur = tNorm * 8;
+      trailCtx.stroke();
+    }
+    trailCtx.shadowBlur = 0;
+  }
+  function resizeTrail() { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; }
+  window.addEventListener('resize', resizeTrail);
+
+  let rafId = null;
+  function loop(t) { updatePhysics(t); render(); renderWebGL(t); renderTrail(t); rafId = requestAnimationFrame(loop); }
+
+  // Cursor
+  const cursor = document.getElementById('custom-cursor');
+  let curTarget = { x: -100, y: -100 }, curPos = { x: -100, y: -100 };
+  function animateCursor() { curPos.x += (curTarget.x - curPos.x) * 0.18; curPos.y += (curTarget.y - curPos.y) * 0.18; cursor.style.left = curPos.x + 'px'; cursor.style.top = curPos.y + 'px'; requestAnimationFrame(animateCursor); }
+  if (!reducedMotion) animateCursor();
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'mouse') {
+      mouse.x = e.clientX; mouse.y = e.clientY;
+      curTarget.x = e.clientX; curTarget.y = e.clientY;
+      pushTrailPoint(e.clientX, e.clientY, performance.now());
+    }
+  });
+  window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
+  window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
+
+  document.querySelectorAll('a, button, .card, .fw-card, .cta-btn, .vault-card, .tilt-card, .icon-btn').forEach(el => {
+    el.addEventListener('pointerenter', () => cursor.classList.add('hover'));
+    el.addEventListener('pointerleave', () => cursor.classList.remove('hover'));
+  });
+
+  // Audio
+  let audioCtx = null, audioNodes = null, audioOn = false;
+  const toggle = document.getElementById('audio-toggle');
+  function initAudio() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audioCtx = new AC();
+    const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 400; filter.Q.value = 0.8;
+    const osc1 = audioCtx.createOscillator(); osc1.type = 'sine'; osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+    const osc2 = audioCtx.createOscillator(); osc2.type = 'sawtooth'; osc2.frequency.setValueAtTime(110.5, audioCtx.currentTime);
+    const g2 = audioCtx.createGain(); g2.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    osc1.connect(filter); osc2.connect(g2); g2.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+    osc1.start(); osc2.start();
+    audioNodes = { gain, osc1, osc2 };
+    window.addEventListener('pagehide', () => { try { audioCtx.close(); } catch(_) {} }, { once: true });
+  }
+  function modulateAudio(scrollY) {
+    if (!audioNodes || !audioCtx) return;
+    const pct = scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+    audioNodes.osc1.frequency.setTargetAtTime(55 + pct * 40, audioCtx.currentTime, 0.3);
+  }
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      audioOn = !audioOn;
+      toggle.setAttribute('aria-pressed', String(audioOn));
+      if (audioOn) { if (!audioCtx) initAudio(); else if (audioCtx.state === 'suspended') audioCtx.resume(); }
+      else { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend(); }
+    });
+  }
+
+  let scrollRAFId = null;
+  window.addEventListener('scroll', () => {
+    if (scrollRAFId) return;
+    scrollRAFId = requestAnimationFrame(() => { handleScroll(); modulateAudio(window.scrollY); scrollRAFId = null; });
+  }, { passive: true });
+
+  // Mobile nav
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  let navOpen = false;
+  if (hamburger && mobileNav) {
+    document.querySelectorAll('.nav-links a').forEach((link, i) => {
+      const a = document.createElement('a');
+      a.href = link.getAttribute('href'); a.textContent = link.textContent;
+      if (link.getAttribute('target')) a.setAttribute('target', link.getAttribute('target'));
+      if (link.getAttribute('rel')) a.setAttribute('rel', link.getAttribute('rel'));
+      a.style.transitionDelay = `${i * 30}ms`; mobileNav.appendChild(a);
+    });
+    function openMenu() { navOpen = true; mobileNav.classList.add('open'); mobileNav.setAttribute('aria-hidden', 'false'); hamburger.classList.add('open'); hamburger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; setTimeout(() => { const f = mobileNav.querySelector('a'); if (f) f.focus(); }, 100); }
+    function closeMenu() { navOpen = false; mobileNav.classList.remove('open'); mobileNav.setAttribute('aria-hidden', 'true'); hamburger.classList.remove('open'); hamburger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; hamburger.focus(); }
+    hamburger.addEventListener('click', () => navOpen ? closeMenu() : openMenu());
+    mobileNav.addEventListener('click', (e) => { if (e.target.tagName === 'A') closeMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && navOpen) closeMenu(); });
+    mobileNav.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusable = Array.from(mobileNav.querySelectorAll('a'));
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
+
+  const yearSpan = document.getElementById('copyright-year');
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+  if (!reducedMotion) { resizeCanvas(); resizeTrail(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
+
+  // ============= MODAL LOGIC =============
+  const frameworks = {
+    // Audit & Scoring
+    'FSVE Lite': { icon:'🧪', name:'FSVE Lite', ver:'v4.3‑lite', desc:'Lightweight epistemic scoring for single‑output validation. 6 axes, no topology engine. Ideal for getting started with certainty engineering.', github:'https://github.com/AionSystem/FSVE', sim: null },
+    'LAV': { icon:'📐', name:'LAV', ver:'v1.5', desc:'Linguistic Anchor Validation for AI‑generated text. 5 reviewer roles, red‑team reports. M‑STRONG convergence.', github:'https://github.com/AionSystem/AION-BRAIN', sim:'/simulations/lav/' },
+    'PDE Scanner': { icon:'🌊', name:'PDE Scanner', ver:'v0.5‑core', desc:'12‑domain diagnostic scan. Finds gaps, vulnerabilities, loopholes, and blind spots in AI systems. 60 pellucid focal variants.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'CAVTE': { icon:'🕸️', name:'CAVTE', ver:'v0.2', desc:'Cross-Artifact Validation Topology Engine. Detects echo chambers via persistent homology. Computes Betti numbers.', github:'https://github.com/AionSystem/FSVE', sim: null },
+    'RQS': { icon:'✅', name:'RQS', ver:'v0.6', desc:'Run Quality Score. Evaluates reliability of the scoring pipeline execution. Produces RQS quality tiers.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    // Governance
+    'Constitutional Engine': { icon:'⚖️', name:'Constitutional Engine', ver:'v2.1‑lite', desc:'Reference implementation of the Nine Laws. 426 tests, mock consent oracle, and cryptographic attestation.', github:'https://github.com/AionSystem/AI-CONSTITUTION', sim: null },
+    'STP Client': { icon:'🔐', name:'STP Client', ver:'v2.0.0', desc:'Triple‑time seal from the command line. Zero dependencies. FROZEN‑2.0.', github:'https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL', sim:'/simulations/stp-demo/' },
+    'QAE Lite': { icon:'❓', name:'QAE Lite', ver:'v1.4‑lite', desc:'Question Amplification Engine – basic epistemic interrogation for AI outputs.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'ADA‑VELA Lite': { icon:'🛡️', name:'ADA‑VELA Lite', ver:'v3.2‑lite', desc:'Execution gate with basic constitutional compliance check.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'Certus Engine': { icon:'📋', name:'Certus Engine', ver:'v0.3', desc:'Damage Confidence Index and community‑operated certification platform. Core of VERITAS.', github:'https://github.com/AionSystem/CERTUS-ENGINE', sim: null },
+    // Provenance
+    'PPP': { icon:'🔗', name:'PPP', ver:'v0.4', desc:'Priority Provenance Protocol – SHA‑256 chain for scored artifacts.', github:'https://github.com/AionSystem/FSVE', sim: null },
+    'WebEater': { icon:'🕷️', name:'WebEater', ver:'v0.1', desc:'Cryptographic link binding between entities – binds new seal to existing SHA‑256.', github:'https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL', sim: null },
+    'ANCHOR': { icon:'⚓', name:'ANCHOR', ver:'v0.2', desc:'AI output reliability anchoring – roots output to provenance chain.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'GRAFT': { icon:'🌱', name:'GRAFT', ver:'v0.1', desc:'Root integration for new frameworks into existing provenance trees.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'SIEVE': { icon:'🧹', name:'SIEVE', ver:'v0.1', desc:'Client gateway that filters and routes outputs to certification services.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    // Writing
+    'VEIN': { icon:'✍️', name:'VEIN', ver:'v0.5', desc:'Output methodology – controls narrative flow, tone, and structure.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'RESONANCE': { icon:'🔊', name:'RESONANCE', ver:'v0.3', desc:'Inbound decoding – maps user input to style and emotional register.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'DUAL‑HELIX': { icon:'🧬', name:'DUAL‑HELIX', ver:'v2.0', desc:'Build wrapper that pairs framework logic with narrative structure.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'FORGE Lite': { icon:'🔥', name:'FORGE Lite', ver:'v2.1‑lite', desc:'Polymath Council review with basic convergence gating – open‑source version.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'GENESIS Lite': { icon:'🚀', name:'GENESIS Lite', ver:'v0.3‑lite', desc:'Scaling architecture with depth governor – basic deployment readiness.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    // Diagnostics
+    'SAR': { icon:'⚔️', name:'SAR', ver:'v0.2', desc:'Sovereign Adversarial Reasoning – 12 FTT checks including Disaggregation Diagnosis.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'ANTI‑FORGE': { icon:'🛡️', name:'ANTI‑FORGE', ver:'v1.3', desc:'15‑role rejection council. Produces a Rejection Map.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'EAE': { icon:'❌', name:'EAE', ver:'v0.3', desc:'Elimination mapping by systematic negation. Produces survivor silhouette.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'CAL': { icon:'📏', name:'CAL', ver:'v0.3', desc:'59 FTT checks across conceptual, algorithmic, implementation, and error‑control layers.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    'CCP': { icon:'🗺️', name:'CCP', ver:'v0.1', desc:'Coverage Cartography Protocol – maps test coverage to epistemic gaps.', github:'https://github.com/AionSystem/AION-BRAIN', sim: null },
+    // Simulation & Education
+    'Roller Coaster Physics': { icon:'🎢', name:'Roller Coaster Physics', ver:'v1.0', desc:'AP Physics curriculum. 10 modules, citation‑backed, 2 red‑team passes.', github:'https://github.com/AionSystem/ROLLER-COASTER', sim:'/simulations/roller-coaster/' },
+    'Math Worksheet Builder': { icon:'🧮', name:'Math Worksheet Builder', ver:'v1.0', desc:'Grades 3–8. 9 problem types. Evidence‑based. Generates printable worksheets.', github:'https://github.com/AionSystem/MATH-WORKSHEET', sim:'/simulations/math-worksheet-builder/' },
+    'Project ORION': { icon:'💣', name:'Project ORION', ver:'v2.1', desc:'UNDP UXO detection. Tri‑axis gradiometer simulation. Field‑tested.', github:'https://github.com/AionSystem/ORION', sim:'/simulators/Orion/' },
+    'VERITAS': { icon:'📊', name:'VERITAS', ver:'v1.0', desc:'Damage certification platform. DCI scoring, STP seals. UNDP submission.', github:'https://github.com/AionSystem/VERITAS', sim:'https://aionsystem.github.io/VERITAS' },
+    'VERITAS‑SHELLFISH': { icon:'🐚', name:'VERITAS‑SHELLFISH', ver:'v0.1', desc:'NOAA HAB toxin detection. CERTUS confidence scoring. STP sealing.', github:'https://github.com/AionSystem/VERITAS-SHELLFISH', sim:'https://aionsystem.github.io/VERITAS-SHELLFISH' },
+    'Textile‑Pilling': { icon:'🧵', name:'Textile‑Pilling', ver:'v1.0', desc:'Fabric degradation analysis. Pilling detection research tool.', github:'https://github.com/AionSystem/TEXTILE-PILLING', sim: null }
+  };
+
+  const rows = {
+    'row-audit': ['FSVE Lite','LAV','PDE Scanner','CAVTE','RQS'],
+    'row-governance': ['Constitutional Engine','STP Client','QAE Lite','ADA‑VELA Lite','Certus Engine'],
+    'row-provenance': ['PPP','WebEater','ANCHOR','GRAFT','SIEVE'],
+    'row-writing': ['VEIN','RESONANCE','DUAL‑HELIX','FORGE Lite','GENESIS Lite'],
+    'row-diagnostics': ['SAR','ANTI‑FORGE','EAE','CAL','CCP'],
+    'row-simulation': ['Roller Coaster Physics','Math Worksheet Builder','Project ORION','VERITAS','VERITAS‑SHELLFISH','Textile‑Pilling']
+  };
+
+  // Build cards
+  for (let rowId in rows) {
+    const row = document.getElementById(rowId);
+    if (!row) continue;
+    rows[rowId].forEach(name => {
+      const fw = frameworks[name];
+      if (!fw) return;
+      const card = document.createElement('div');
+      card.className = 'fw-card';
+      card.innerHTML = `
+        <div class="fw-icon">${fw.icon}</div>
+        <div class="fw-name">${fw.name}</div>
+        <div class="fw-version">${fw.ver}</div>
+        <div class="fw-desc">${fw.desc.substring(0,80)}…</div>
+      `;
+      card.addEventListener('click', () => openModal(fw));
+      row.appendChild(card);
+    });
+  }
+
+  const modalOverlay = document.getElementById('modal-overlay');
+  const modalClose = document.getElementById('modal-close');
+  const modalIcon = document.getElementById('modal-icon');
+  const modalName = document.getElementById('modal-name');
+  const modalVersion = document.getElementById('modal-version');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalActions = document.getElementById('modal-actions');
+
+  function openModal(fw) {
+    modalIcon.textContent = fw.icon;
+    modalName.textContent = fw.name;
+    modalVersion.textContent = fw.ver;
+    modalDesc.textContent = fw.desc;
+    // Build buttons
+    modalActions.innerHTML = '';
+    if (fw.github) {
+      const gitBtn = document.createElement('a');
+      gitBtn.href = fw.github;
+      gitBtn.target = '_blank';
+      gitBtn.rel = 'noopener noreferrer';
+      gitBtn.className = 'modal-btn github';
+      gitBtn.innerHTML = '<i data-lucide="github" style="width:16px;height:16px"></i> GitHub';
+      modalActions.appendChild(gitBtn);
+    }
+    const simBtn = document.createElement('a');
+    simBtn.href = fw.sim || '#';
+    simBtn.target = fw.sim ? '_blank' : '_self';
+    simBtn.rel = 'noopener noreferrer';
+    simBtn.className = `modal-btn sim${fw.sim ? '' : ' disabled'}`;
+    simBtn.innerHTML = '<i data-lucide="play" style="width:16px;height:16px"></i> ' + (fw.sim ? 'Launch Simulator' : 'Simulation Pending');
+    modalActions.appendChild(simBtn);
+    // Show modal
+    modalOverlay.classList.add('active');
+    modalOverlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal() {
+    modalOverlay.classList.remove('active');
+    modalOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  modalClose.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+      closeModal();
+    }
+  });
+
+  // Refresh Lucide icons after dynamic button creation
+  setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 100);
+})();
+</script>
+</body>
+</html>

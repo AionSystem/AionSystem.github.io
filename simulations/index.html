@@ -1,1 +1,709 @@
-<!-- placeholder — awaiting content -->
+<!DOCTYPE html>
+<html lang="en" data-pde-scan="v0.5-hdre-v0.3">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="AionSystem Simulations — Citation‑backed, red‑teamed interactive demos. Physics, field ops, textile, crisis, education, and AI certainty tools.">
+<title>Simulations — AionSystem</title>
+<meta property="og:title" content="Simulations — AionSystem">
+<meta property="og:description" content="Explore live, interactive demos of AionSystem frameworks. Open‑source, free, and built with the AION Constitutional Stack.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & VARIABLES ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08090b;
+  --surface:rgba(20,30,45,0.4);
+  --panel:rgba(25,35,55,0.5);
+  --border:rgba(0,212,255,0.15);
+  --amber:#f0a500;
+  --amber-d:#b07800;
+  --amber-l:#ffc947;
+  --gold:#D4AF37;
+  --text:#e0e8f0;
+  --muted:#7a9aba;
+  --dim:#3a5a7a;
+  --red:#ff4d4d;
+  --cyan:#00d4ff;
+  --violet:#a855f7;
+  --violet-dark:#7c3aed;
+  --edu:#4ade80;
+  --teal:#00b894;
+  --mono:'Share Tech Mono',monospace;
+  --sans:'Barlow Condensed',sans-serif;
+  --serif:'Crimson Pro',Georgia,serif;
+  --jmono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
+  --font-base:clamp(16px,1vw + 8px,20px);
+  --font-h1:clamp(48px,8vw + 16px,96px);
+  --font-h2:clamp(28px,4vw + 8px,44px);
+  --glow-amber:0 0 5px #f0a500,0 0 10px #f0a500,0 0 20px rgba(240,165,0,0.5);
+  --glow-cyan:0 0 5px #00d4ff,0 0 10px #00d4ff,0 0 20px rgba(0,212,255,0.4);
+  --glow-violet:0 0 5px #a855f7,0 0 10px #a855f7,0 0 20px rgba(168,85,247,0.4);
+}
+.skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--cyan);color:#000;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s ease}
+.skip-nav:focus{top:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-base);line-height:1.5;overflow-x:hidden}
+#webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
+#symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+#symbol-canvas.ready{opacity:0.65}
+.scan-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10}
+.scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,212,255,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite}
+@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
+
+.audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
+.audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none}
+.audio-toggle[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);box-shadow:0 0 15px rgba(240,165,0,0.3)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:0 0 30px rgba(0,212,255,0.05)}
+.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.nav-logo span{color:var(--muted)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;padding-bottom:2px;transition:all 0.2s ease}
+.nav-links a:hover,.nav-links a.active{color:var(--cyan);border-bottom-color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.nav-links a:focus-visible{outline:2px solid var(--cyan);outline-offset:4px;border-radius:2px}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;width:32px;height:32px;flex-direction:column;justify-content:space-between;align-items:flex-end;padding:4px 0;color:var(--text)}
+.nav-hamburger span{display:block;height:2px;background:var(--text);transition:all 0.3s var(--ease-spring);border-radius:2px}
+.nav-hamburger span:nth-child(1){width:100%}
+.nav-hamburger span:nth-child(2){width:70%}
+.nav-hamburger span:nth-child(3){width:100%}
+.nav-hamburger.open span:nth-child(1){transform:translateY(10px) rotate(45deg);width:100%}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-10px) rotate(-45deg);width:100%}
+.mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:rgba(8,9,11,0.97);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:0;padding:0;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;overscroll-behavior:contain;pointer-events:none;border-top:1px solid var(--border)}
+.mobile-nav.open{transform:translateY(0);visibility:visible;pointer-events:all;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0s}
+.mobile-nav a{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;gap:8px;transition:all 0.15s ease;opacity:0;transform:translateY(6px)}
+.mobile-nav a:nth-child(2n){border-right:none}
+.mobile-nav a:nth-last-child(1),.mobile-nav a:nth-last-child(2):nth-child(2n+1){border-bottom:none}
+.mobile-nav.open a{opacity:1;transform:translateY(0)}
+.mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background 0.15s ease,box-shadow 0.15s ease}
+.mobile-nav a:hover,.mobile-nav a:focus-visible,.mobile-nav a.active{color:var(--cyan);background:rgba(0,212,255,0.04);text-shadow:0 0 8px var(--cyan);outline:none}
+.mobile-nav a:hover::before,.mobile-nav a:focus-visible::before,.mobile-nav a.active::before{background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.mobile-nav a:last-child:nth-child(2n+1){grid-column:1 / -1;border-right:none}
+
+/* ===== COMMON LAYOUT ===== */
+.wrapper{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:100px 40px 80px}
+section{margin-bottom:80px}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--amber);text-transform:uppercase;margin-bottom:12px}
+.eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--cyan);vertical-align:middle;margin-right:10px;margin-bottom:2px;box-shadow:0 0 8px var(--cyan)}
+h1{font-family:var(--sans);font-size:clamp(40px,6vw,72px);font-weight:900;letter-spacing:1px;text-transform:uppercase;line-height:0.95;color:var(--text);margin-bottom:8px}
+h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-amber)}
+.title-line{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:3px;margin-bottom:36px;margin-top:16px}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:48px}
+.section-num{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:2px}
+.section-title{font-family:var(--sans);font-size:var(--font-h2);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text);text-shadow:0 0 8px rgba(255,255,255,0.2)}
+.section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px var(--cyan)}
+
+/* ===== STATS BAR ===== */
+.stats-bar{
+  display:flex;gap:0;margin-bottom:40px;
+  border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;background:var(--surface);
+  backdrop-filter:blur(12px);
+}
+.stat-item{
+  flex:1;padding:16px 20px;border-right:1px solid var(--border);
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--muted);
+}
+.stat-item:last-child{border-right:none}
+.stat-val{font-family:var(--sans);font-size:28px;font-weight:900;color:var(--amber);display:block;line-height:1;margin-bottom:4px}
+.stat-val.live-count{color:var(--teal)}
+
+/* ===== FILTER ROW ===== */
+.filter-row{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:48px;
+  padding-bottom:24px;border-bottom:1px solid var(--border);
+  align-items:center;
+}
+.filter-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  color:var(--muted);text-transform:uppercase;margin-right:4px;
+}
+.filter-btn{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  padding:6px 14px;background:rgba(20,30,45,0.4);backdrop-filter:blur(8px);
+  border:1px solid var(--border);color:var(--muted);cursor:pointer;
+  transition:all 0.15s;border-radius:20px;
+}
+.filter-btn:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.filter-btn.active{background:var(--amber);color:#000;border-color:var(--amber);font-weight:700}
+
+/* ===== DOMAIN SECTION ===== */
+.domain-section{margin-bottom:56px}
+.domain-header{
+  display:flex;align-items:center;gap:16px;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1px solid var(--border);flex-wrap:wrap;
+}
+.domain-tag{
+  font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  padding:4px 10px;border:1px solid;background:transparent;border-radius:20px;
+}
+.tag-ai        { color:var(--violet); border-color:var(--violet); }
+.tag-physics   { color:#7ecfff; border-color:#7ecfff; }
+.tag-field     { color:var(--cyan); border-color:var(--cyan); }
+.tag-textile   { color:var(--gold); border-color:var(--gold); }
+.tag-crisis    { color:var(--purple); border-color:var(--purple); }
+.tag-education { color:var(--edu); border-color:var(--edu); }
+.tag-engineering{ color:var(--amber); border-color:var(--amber-d); }
+.tag-medical   { color:#a855f7; border-color:#a855f7; }
+.tag-environmental{ color:var(--teal); border-color:var(--teal); }
+.domain-title{
+  font-family:var(--sans);font-size:18px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text);
+}
+.domain-count{font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:auto;letter-spacing:1px}
+
+/* ===== CARD GRID ===== */
+.sim-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+}
+.sim-card{
+  background:var(--surface);backdrop-filter:blur(12px);
+  border:1px solid var(--border);border-radius:14px;
+  padding:20px;cursor:pointer;
+  transition:all 0.3s var(--ease);
+  display:flex;flex-direction:column;
+}
+.sim-card:hover{
+  border-color:var(--cyan);
+  box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2);
+  transform:translateY(-4px);
+}
+.sim-icon{font-size:2rem;margin-bottom:10px}
+.sim-name{font-family:var(--sans);font-size:1.2rem;font-weight:900;text-transform:uppercase;color:var(--amber);margin-bottom:4px}
+.sim-tag{font-family:var(--mono);font-size:0.65rem;color:var(--cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.sim-desc{font-family:var(--sans);font-size:0.85rem;color:var(--muted);line-height:1.5;flex:1}
+.sim-status{font-family:var(--mono);font-size:0.6rem;text-transform:uppercase;padding:2px 8px;border-radius:20px;align-self:flex-start;margin-top:10px}
+.status-live{background:rgba(0,230,118,0.1);color:#00e676;border:1px solid #00e676}
+.status-soon{background:rgba(122,154,186,0.1);color:var(--muted);border:1px solid var(--dim)}
+
+/* ===== MODAL (expanded card) ===== */
+.modal-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s;
+}
+.modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s}
+.modal-box{
+  background:var(--surface);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:20px;
+  padding:32px;max-width:500px;width:90%;
+  box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(0,212,255,0.1);
+  position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);
+  max-height:85vh;overflow-y:auto;
+}
+.modal-overlay.active .modal-box{transform:scale(1)}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1}
+.modal-close:hover{color:var(--cyan)}
+.modal-icon{font-size:3rem;margin-bottom:10px}
+.modal-name{font-family:var(--sans);font-size:1.8rem;font-weight:900;text-transform:uppercase;color:var(--amber);margin-bottom:4px}
+.modal-tag{font-family:var(--mono);font-size:0.8rem;color:var(--cyan);margin-bottom:16px}
+.modal-desc{font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.modal-meta{font-family:var(--mono);font-size:0.7rem;color:var(--dim);line-height:1.8;margin-bottom:20px}
+.modal-actions{display:flex;gap:12px;flex-wrap:wrap}
+.modal-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:0.7rem;letter-spacing:1px;text-transform:uppercase;
+  text-decoration:none;padding:10px 18px;border-radius:6px;
+  border:1px solid var(--cyan);color:var(--cyan);
+  transition:all 0.2s ease;background:transparent;
+}
+.modal-btn:hover{background:var(--cyan);color:#000;box-shadow:0 0 15px var(--cyan)}
+.modal-btn.primary{background:var(--amber);color:#000;border-color:var(--amber)}
+.modal-btn.primary:hover{background:var(--amber-l);box-shadow:0 0 15px var(--amber)}
+.modal-btn.violet{border-color:var(--violet);color:var(--violet)}
+.modal-btn.violet:hover{background:var(--violet);color:#fff;box-shadow:0 0 15px var(--violet)}
+
+/* Verified badge in modal — single self‑contained image, clickable */
+#modal-badge-wrap{display:none;text-align:center;margin-bottom:20px}
+#modal-badge-wrap a{display:inline-block;cursor:pointer;transition:transform 0.2s ease,filter 0.2s ease}
+#modal-badge-wrap a:hover{transform:scale(1.05);filter:drop-shadow(0 0 12px rgba(212,175,55,0.5))}
+#modal-badge-wrap img{width:110px;height:110px}
+
+.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
+.cta-btn.primary{background:var(--amber);color:#000;border-color:var(--amber)}
+.cta-btn:hover,.cta-btn:focus-visible{background:var(--cyan);color:#000;border-color:var(--cyan);box-shadow:0 0 20px var(--cyan);outline:none}
+.cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--amber-l);border-color:var(--amber-l);box-shadow:0 0 20px var(--amber)}
+footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:2}
+.footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
+.footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
+.footer-links a:hover,.footer-links a:focus-visible{color:var(--cyan);text-shadow:0 0 8px var(--cyan);outline:none}
+.footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}body{cursor:auto !important}}
+@media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-nav">Skip to content</a>
+
+<canvas id="webgl-canvas" aria-hidden="true"></canvas>
+<canvas id="symbol-canvas" aria-hidden="true"></canvas>
+<div class="scan-grid" aria-hidden="true"></div>
+<div class="scan-lines" aria-hidden="true"></div>
+
+<button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
+
+<nav aria-label="Primary navigation">
+  <a href="/" class="nav-logo" aria-label="AionSystem home">
+    <img src="/assets/aion-logo.jpg" alt="AionSystem logo" class="nav-logo-img" width="28" height="28">
+    <span>AION<span>system</span></span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="/about/">About</a></li>
+    <li><a href="/vault/">Vault</a></li>
+    <li><a href="/audit/">Audit</a></li>
+    <li><a href="/pipeline/">Pipeline</a></li>
+    <li><a href="/simulations/" class="active">Simulations</a></li>
+    <li><a href="/case-studies/">Case Studies</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true"></nav>
+
+<div class="wrapper" id="main">
+
+  <section>
+    <div class="eyebrow">// Interactive Demos</div>
+    <h1>Live<em>Simulations</em></h1>
+    <div class="title-line">Citation‑backed · Red‑teamed · AION Verified</div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item"><span class="stat-val live-count" id="liveCount">0</span> LIVE NOW</div>
+    <div class="stat-item"><span class="stat-val" id="domainCount">0</span> DOMAINS</div>
+    <div class="stat-item"><span class="stat-val" id="pipelineCount">0</span> IN PIPELINE</div>
+    <div class="stat-item"><span class="stat-val" id="verifiedCount">0</span> AION VERIFIED</div>
+  </div>
+
+  <!-- FILTER ROW -->
+  <div class="filter-row">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-domain="all">All</button>
+    <button class="filter-btn" data-domain="ai">AI &amp; Epistemics</button>
+    <button class="filter-btn" data-domain="physics">Physics</button>
+    <button class="filter-btn" data-domain="field">Field Ops</button>
+    <button class="filter-btn" data-domain="textile">Textile</button>
+    <button class="filter-btn" data-domain="crisis">Crisis</button>
+    <button class="filter-btn" data-domain="education">Education</button>
+    <button class="filter-btn" data-domain="engineering">Engineering</button>
+    <button class="filter-btn" data-domain="medical">Medical</button>
+    <button class="filter-btn" data-domain="environmental">Environmental</button>
+  </div>
+
+  <!-- ========== DOMAINS ========= -->
+  <div class="domain-section" data-domain="ai"><div class="domain-header"><span class="domain-tag tag-ai">AI</span><span class="domain-title">AI &amp; Epistemics</span><span class="domain-count" id="aiCount">0 simulators</span></div><div class="sim-grid" id="aiGrid"></div></div>
+  <div class="domain-section" data-domain="physics"><div class="domain-header"><span class="domain-tag tag-physics">Physics</span><span class="domain-title">Physics &amp; Mechanics</span><span class="domain-count" id="physicsCount">0 simulators</span></div><div class="sim-grid" id="physicsGrid"></div></div>
+  <div class="domain-section" data-domain="field"><div class="domain-header"><span class="domain-tag tag-field">Field Ops</span><span class="domain-title">Field Operations &amp; Defense</span><span class="domain-count" id="fieldCount">0 simulators</span></div><div class="sim-grid" id="fieldGrid"></div></div>
+  <div class="domain-section" data-domain="textile"><div class="domain-header"><span class="domain-tag tag-textile">Textile</span><span class="domain-title">Textile &amp; Materials Engineering</span><span class="domain-count" id="textileCount">0 simulators</span></div><div class="sim-grid" id="textileGrid"></div></div>
+  <div class="domain-section" data-domain="crisis"><div class="domain-header"><span class="domain-tag tag-crisis">Crisis</span><span class="domain-title">Crisis &amp; Damage Certification</span><span class="domain-count" id="crisisCount">0 simulators</span></div><div class="sim-grid" id="crisisGrid"></div></div>
+  <div class="domain-section" data-domain="education"><div class="domain-header"><span class="domain-tag tag-education">Salmon EDU</span><span class="domain-title">Educational Tools for Teachers</span><span class="domain-count" id="educationCount">0 simulators</span></div><div class="sim-grid" id="educationGrid"></div></div>
+  <div class="domain-section" data-domain="engineering"><div class="domain-header"><span class="domain-tag tag-engineering">Engineering</span><span class="domain-title">Civil &amp; Structural Engineering</span><span class="domain-count" id="engineeringCount">0 simulators</span></div><div class="sim-grid" id="engineeringGrid"></div></div>
+  <div class="domain-section" data-domain="medical"><div class="domain-header"><span class="domain-tag tag-medical">Medical</span><span class="domain-title">Medical &amp; Pharmacology</span><span class="domain-count" id="medicalCount">0 simulators</span></div><div class="sim-grid" id="medicalGrid"></div></div>
+  <div class="domain-section" data-domain="environmental"><div class="domain-header"><span class="domain-tag tag-environmental">Environmental</span><span class="domain-title">Environmental &amp; Climate</span><span class="domain-count" id="environmentalCount">0 simulators</span></div><div class="sim-grid" id="environmentalGrid"></div></div>
+
+  <!-- METHODOLOGY NOTE -->
+  <section id="verified-badge-section">
+    <div class="section-header">
+      <span class="section-num">// ★</span>
+      <h2 class="section-title">AION Verified Simulator Badge</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div class="card" style="background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:800px;display:flex;flex-wrap:wrap;align-items:center;gap:24px">
+      <div style="position:relative;width:120px;height:120px;flex-shrink:0">
+        <img src="/assets/badges/aion-verified-simulator-badge-v2.svg" alt="AION Verified Simulator badge" style="width:120px;height:120px;position:absolute;inset:0">
+      </div>
+      <p style="font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6">
+        Every simulation bearing the <strong style="color:var(--amber)">AION Verified Simulator</strong> badge has passed three rigorous checks: physics verified against primary sources, code red‑teamed for silent errors, and output peer‑reviewed against real‑world data. The Red Team tab inside each simulator documents every issue found — severity graded, resolution logged, nothing undisclosed.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<!-- EXPANDED CARD MODAL -->
+<div class="modal-overlay" id="sim-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close">×</button>
+    <div class="modal-icon" id="modal-icon"></div>
+    <div class="modal-name" id="modal-name"></div>
+    <div class="modal-tag" id="modal-tag"></div>
+    <!-- Self‑contained badge that closes modal and scrolls to explanation on click -->
+    <div id="modal-badge-wrap">
+      <a href="#verified-badge-section" id="badge-click" title="Learn about the AION Verified Simulator badge">
+        <img src="/assets/badges/aion-verified-simulator-badge-v2.svg" alt="AION Verified Simulator">
+      </a>
+    </div>
+    <div class="modal-desc" id="modal-desc"></div>
+    <div class="modal-meta" id="modal-meta"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div>AionSystem · Sheldon K. Salmon · AI Reliability Architect · © <span id="copyright-year"></span></div>
+    <div class="footer-legal">All frameworks are original work. No warranty implied. Enterprise engagements subject to written agreement.</div>
+  </div>
+  <ul class="footer-links" role="list">
+    <li><a href="/vault/">Vault</a></li>
+    <li><a href="/audit/">Audit</a></li>
+    <li><a href="/pipeline/">Pipeline</a></li>
+    <li><a href="/simulations/">Simulations</a></li>
+    <li><a href="/about/">About</a></li>
+    <li><a href="/contact/">Contact</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===== FULL VISUAL ENGINE (unchanged) =====
+  const concurrency = navigator.hardwareConcurrency || 2;
+  const deviceMem   = navigator.deviceMemory || 2;
+  const lowDevice   = concurrency < 4 || deviceMem < 4;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const wglCanvas = document.getElementById('webgl-canvas');
+  let gl = null, glProgram = null, glUniforms = {}, glScrollVel = 0, glMouseDist = 1.0;
+  if (!reducedMotion) {
+    try { gl = wglCanvas.getContext('webgl') || wglCanvas.getContext('experimental-webgl'); } catch (_) {}
+  }
+  if (gl) {
+    const vsrc = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+    const fsrc = `precision mediump float;uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
+    void main(){vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
+    float ab=0.003*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
+    vec3 col=vec3(0.0);col.r=sin(d*8.0+u_time)*ab;col.b=cos(d*8.0-u_time)*ab;
+    float rf=0.002*sin(uv.x*6.28+u_time*0.7)*u_mouse_dist;col.g=rf;
+    gl_FragColor=vec4(col,0.18*(1.0-smoothstep(0.6,1.0,d)));}`;
+    function cs(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
+    glProgram = gl.createProgram();
+    gl.attachShader(glProgram, cs(gl.VERTEX_SHADER, vsrc));
+    gl.attachShader(glProgram, cs(gl.FRAGMENT_SHADER, fsrc));
+    gl.linkProgram(glProgram); gl.useProgram(glProgram);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(glProgram, 'a_pos');
+    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    glUniforms.res = gl.getUniformLocation(glProgram,'u_res');
+    glUniforms.time = gl.getUniformLocation(glProgram,'u_time');
+    glUniforms.scrollVel = gl.getUniformLocation(glProgram,'u_scroll_vel');
+    glUniforms.mouseDist = gl.getUniformLocation(glProgram,'u_mouse_dist');
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  }
+
+  const symCanvas = document.getElementById('symbol-canvas');
+  const ctx = symCanvas.getContext('2d');
+  const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','◆','○','●','◉'];
+  let W, H, symbols = [], echoes = [];
+  const mouse = { x: null, y: null, vx: 0, vy: 0, prevX: null, prevY: null };
+  const GRAVITY_R = 200, GRAVITY_STR = 0.015, TANGENTIAL = 0.18;
+  const PHYSICS_FPS = lowDevice ? 30 : 60, PHYSICS_DT = 1000 / PHYSICS_FPS;
+
+  function resizeCanvas() {
+    W = symCanvas.width = wglCanvas.width = window.innerWidth;
+    H = symCanvas.height = wglCanvas.height = window.innerHeight;
+    if (gl) gl.viewport(0, 0, W, H);
+    initSymbols();
+  }
+  let resizeTimer = null;
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeCanvas, 150); });
+
+  function initSymbols() {
+    const count = Math.floor((W * H) / 7000);
+    symbols = [];
+    for (let i = 0; i < count; i++) {
+      symbols.push({
+        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2,
+        size: 12 + Math.random() * 20,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        alpha: 0.15 + Math.random() * 0.25,
+        scrollGlow: 0, inWell: false,
+      });
+    }
+  }
+
+  function spawnEcho(x, y) {
+    for (let i = 0; i < 12; i++) {
+      const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.3;
+      const speed = 1.5 + Math.random() * 2;
+      echoes.push({
+        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x, y,
+        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        size: 8 + Math.random() * 8,
+        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
+        alpha: 0.8, age: 0, maxAge: 600,
+      });
+    }
+  }
+
+  let lastScrollY = window.scrollY, scrollVel = 0, scrollTimeout = null;
+  function handleScroll() {
+    const sy = window.scrollY; scrollVel = sy - lastScrollY; lastScrollY = sy;
+    glScrollVel = Math.abs(scrollVel) / 60;
+    symbols.forEach(s => { if (Math.abs(s.y - (sy + H / 2)) < 200) s.scrollGlow = 1.0; });
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => { symbols.forEach(s => s.scrollGlow = 0); scrollVel = 0; glScrollVel *= 0.9; }, 300);
+  }
+
+  let lastPhysicsTime = 0;
+  function updatePhysics(now) {
+    if (now - lastPhysicsTime < PHYSICS_DT) return;
+    lastPhysicsTime = now;
+    if (mouse.prevX !== null && mouse.x !== null) { mouse.vx = mouse.x - mouse.prevX; mouse.vy = mouse.y - mouse.prevY; }
+    if (mouse.x !== null) { mouse.prevX = mouse.x; mouse.prevY = mouse.y; }
+
+    symbols.forEach(s => {
+      s.x += s.vx; s.y += s.vy;
+      if (s.x < -50) s.x = W + 50; if (s.x > W + 50) s.x = -50;
+      if (s.y < -50) s.y = H + 50; if (s.y > H + 50) s.y = -50;
+      if (mouse.x !== null && mouse.y !== null) {
+        const dx = s.x - mouse.x, dy = s.y - mouse.y; const dist = Math.hypot(dx, dy);
+        if (dist < GRAVITY_R) {
+          const force = GRAVITY_STR * (1 - dist / GRAVITY_R); const angle = Math.atan2(dy, dx);
+          s.vx -= Math.cos(angle) * force; s.vy -= Math.sin(angle) * force;
+          const ta = angle + Math.PI / 2; const spin = TANGENTIAL * (1 - dist / GRAVITY_R);
+          s.vx += Math.cos(ta) * spin * (mouse.vx * 0.05 + 0.5);
+          s.vy += Math.sin(ta) * spin * (mouse.vy * 0.05 + 0.5);
+          s.vx *= 0.99; s.vy *= 0.99; s.inWell = true;
+          glMouseDist = Math.min(glMouseDist, dist / GRAVITY_R);
+        } else { s.inWell = false; }
+      }
+      if (s.scrollGlow > 0.01) s.scrollGlow *= 0.94; else s.scrollGlow = 0;
+    });
+    glMouseDist = Math.min(1, glMouseDist + 0.02);
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+    echoes = echoes.filter(e => {
+      e.age += PHYSICS_DT; if (e.age >= e.maxAge) return false;
+      e.x += e.vx; e.y += e.vy; e.alpha = 0.8 * (1 - e.age / e.maxAge); e.size *= 0.996;
+      ctx.font = `${e.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = e.color; ctx.shadowBlur = 10; ctx.fillStyle = e.color; ctx.globalAlpha = e.alpha;
+      ctx.fillText(e.char, e.x, e.y); return true;
+    });
+    symbols.forEach(s => {
+      const glow = s.scrollGlow > 0.01 ? 15 + s.scrollGlow * 20 : (s.inWell ? 25 : 12);
+      ctx.font = `${s.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = s.color; ctx.shadowBlur = glow; ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.alpha + s.scrollGlow * 0.2; ctx.fillText(s.char, s.x, s.y);
+    });
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  }
+
+  function renderWebGL(t) {
+    if (!gl || !glProgram) return;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform2f(glUniforms.res, W, H); gl.uniform1f(glUniforms.time, t * 0.001);
+    gl.uniform1f(glUniforms.scrollVel, glScrollVel); gl.uniform1f(glUniforms.mouseDist, glMouseDist);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+
+  let rafId = null;
+  function loop(t) { updatePhysics(t); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
+
+  window.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; } });
+  window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
+  window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
+  window.addEventListener('dblclick', (e) => { spawnEcho(e.clientX, e.clientY); });
+
+  let audioCtx = null, audioNodes = null, audioOn = false;
+  const toggle = document.getElementById('audio-toggle');
+  function initAudio() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audioCtx = new AC();
+    const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 400; filter.Q.value = 0.8;
+    const osc1 = audioCtx.createOscillator(); osc1.type = 'sine'; osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+    const osc2 = audioCtx.createOscillator(); osc2.type = 'sawtooth'; osc2.frequency.setValueAtTime(110.5, audioCtx.currentTime);
+    const g2 = audioCtx.createGain(); g2.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    osc1.connect(filter); osc2.connect(g2); g2.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+    osc1.start(); osc2.start();
+    audioNodes = { gain, osc1, osc2 };
+    window.addEventListener('pagehide', () => { try { audioCtx.close(); } catch(_) {} }, { once: true });
+  }
+  function modulateAudio(scrollY) {
+    if (!audioNodes || !audioCtx) return;
+    const pct = scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+    audioNodes.osc1.frequency.setTargetAtTime(55 + pct * 40, audioCtx.currentTime, 0.3);
+  }
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      audioOn = !audioOn;
+      toggle.setAttribute('aria-pressed', String(audioOn));
+      if (audioOn) { if (!audioCtx) initAudio(); else if (audioCtx.state === 'suspended') audioCtx.resume(); }
+      else { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend(); }
+    });
+  }
+
+  let scrollRAFId = null;
+  window.addEventListener('scroll', () => {
+    if (scrollRAFId) return;
+    scrollRAFId = requestAnimationFrame(() => { handleScroll(); modulateAudio(window.scrollY); scrollRAFId = null; });
+  }, { passive: true });
+
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  let navOpen = false;
+  if (hamburger && mobileNav) {
+    document.querySelectorAll('.nav-links a').forEach((link, i) => {
+      const a = document.createElement('a');
+      a.href = link.getAttribute('href'); a.textContent = link.textContent;
+      if (link.getAttribute('target')) a.setAttribute('target', link.getAttribute('target'));
+      if (link.getAttribute('rel')) a.setAttribute('rel', link.getAttribute('rel'));
+      a.style.transitionDelay = `${i * 30}ms`; mobileNav.appendChild(a);
+    });
+    function openMenu() { navOpen = true; mobileNav.classList.add('open'); mobileNav.setAttribute('aria-hidden', 'false'); hamburger.classList.add('open'); hamburger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; setTimeout(() => { const f = mobileNav.querySelector('a'); if (f) f.focus(); }, 100); }
+    function closeMenu() { navOpen = false; mobileNav.classList.remove('open'); mobileNav.setAttribute('aria-hidden', 'true'); hamburger.classList.remove('open'); hamburger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; hamburger.focus(); }
+    hamburger.addEventListener('click', () => navOpen ? closeMenu() : openMenu());
+    mobileNav.addEventListener('click', (e) => { if (e.target.tagName === 'A') closeMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && navOpen) closeMenu(); });
+    mobileNav.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusable = Array.from(mobileNav.querySelectorAll('a'));
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
+
+  const yearSpan = document.getElementById('copyright-year');
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+  if (!reducedMotion) { resizeCanvas(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
+
+  // ========== SIMULATOR DATA ==========
+  const sims = {
+    ai: [
+      { icon:'📐', name:'LAV Simulator', tag:'Linguistic Anchor Validation · M‑STRONG', desc:'Live demo of the Linguistic Anchor Validation engine. 5 reviewer roles, red‑team reports.', meta:'<strong>Red team:</strong> 2 passes · 0 undisclosed<br><strong>Version:</strong> v1.5', link:'/simulations/lav/', github:'https://github.com/AionSystem/AION-BRAIN', status:'live', verified:true },
+      { icon:'🔐', name:'STP Seal Demo', tag:'Triple‑Time Stamp · FROZEN‑2.0', desc:'Interactive demonstration of the Sovereign Trace Protocol.', meta:'<strong>Status:</strong> Live · pip install stp', link:'/simulations/stp-demo/', github:'https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL', status:'live', verified:false }
+    ],
+    physics: [
+      { icon:'🎢', name:'Roller Coaster Physics', tag:'AP Curriculum · M‑STRONG', desc:'10 modules covering kinematics, energy, and circular motion.', meta:'<strong>Ref:</strong> Tony Wayne AP Physics Guide<br><strong>Red team:</strong> 3 passes · 15 issues resolved', link:'/simulations/roller-coaster/', github:'https://github.com/AionSystem/ROLLER-COASTER', status:'live', verified:true },
+      { icon:'🚀', name:'Projectile Motion', tag:'Mechanics · Coming Q2 2026', desc:'Cannon launch, drag coefficient, Mars gravity selector.', meta:'<strong>Status:</strong> Planned', link:'#', github:'#', status:'coming', verified:false }
+    ],
+    field: [
+      { icon:'💣', name:'Project ORION', tag:'UNDP · UXO Detection', desc:'Tri‑axis gradiometer simulation for unexploded ordnance detection.', meta:'<strong>Red team:</strong> 1 pass · 7 findings documented<br><strong>Client:</strong> UNDP Solomon Islands', link:'/simulators/Orion/', github:'https://github.com/AionSystem/ORION', status:'live', verified:true }
+    ],
+    textile: [
+      { icon:'🧵', name:'Textile Pilling Simulator', tag:'ISO 12945‑2:2000', desc:'Data‑driven pilling susceptibility prediction.', meta:'<strong>DOI:</strong> 10.5281/zenodo.19409957<br><strong>Red team:</strong> 2 passes · 0 undisclosed', link:'https://aionsystem.github.io/TEXTILE-PILLING/', github:'https://github.com/AionSystem/TEXTILE-PILLING', status:'live', verified:true }
+    ],
+    crisis: [
+      { icon:'📊', name:'VERITAS', tag:'Damage Certification · UNDP', desc:'Community‑operated certainty engine for crisis damage reporting.', meta:'<strong>UNDP submission:</strong> April 2026<br><strong>Red team:</strong> 6 rounds · 18 findings resolved', link:'https://aionsystem.github.io/VERITAS/', github:'https://github.com/AionSystem/VERITAS', status:'live', verified:true }
+    ],
+    education: [
+      { icon:'🧮', name:'Math Worksheet Builder', tag:'Grades 3–8 · Evidence‑Based', desc:'Generates printable worksheets across 9 problem types.', meta:'<strong>Research:</strong> Taylor & Rohrer (2010)<br><strong>Red team:</strong> 4 passes · 10 bugs fixed', link:'/simulations/math-worksheet-builder/', github:'https://github.com/AionSystem/MATH-WORKSHEET', status:'live', verified:true }
+    ],
+    engineering: [],
+    medical: [],
+    environmental: [
+      { icon:'🐚', name:'VERITAS‑SHELLFISH', tag:'NOAA · HAB Toxin Detection', desc:'Point‑of‑use HAB toxin detection with CERTUS confidence scoring.', meta:'<strong>NOFO:</strong> NOAA‑NOS‑NCCOS‑2026‑32955', link:'https://aionsystem.github.io/VERITAS-SHELLFISH', github:'https://github.com/AionSystem/VERITAS-SHELLFISH', status:'live', verified:true }
+    ]
+  };
+
+  const domainKeys = ['ai','physics','field','textile','crisis','education','engineering','medical','environmental'];
+  let totalLive = 0, totalPipeline = 0, totalVerified = 0;
+
+  domainKeys.forEach(key => {
+    const domainSims = sims[key] || [];
+    const grid = document.getElementById(`${key}Grid`);
+    const countEl = document.getElementById(`${key}Count`);
+    if (!grid) return;
+    grid.innerHTML = '';
+    domainSims.forEach(sim => {
+      const card = document.createElement('div');
+      card.className = 'sim-card';
+      card.innerHTML = `<div class="sim-icon">${sim.icon}</div><div class="sim-name">${sim.name}</div><div class="sim-tag">${sim.tag}</div><div class="sim-desc">${sim.desc}</div><span class="sim-status ${sim.status==='live'?'status-live':'status-soon'}">${sim.status==='live'?'● Live':'Coming'}</span>`;
+      card.addEventListener('click', () => openModal(sim));
+      grid.appendChild(card);
+      if (sim.status === 'live') totalLive++;
+      if (sim.status === 'coming') totalPipeline++;
+      if (sim.verified) totalVerified++;
+    });
+    if (countEl) countEl.textContent = `${domainSims.length} simulator${domainSims.length !== 1 ? 's' : ''}`;
+  });
+
+  document.getElementById('liveCount').textContent = totalLive;
+  document.getElementById('pipelineCount').textContent = totalPipeline;
+  document.getElementById('domainCount').textContent = domainKeys.filter(k => sims[k] && sims[k].length > 0).length;
+  document.getElementById('verifiedCount').textContent = totalVerified;
+
+  // ===== MODAL LOGIC =====
+  const modalOverlay = document.getElementById('sim-modal');
+  const modalClose = document.getElementById('modal-close');
+  const modalIcon = document.getElementById('modal-icon');
+  const modalName = document.getElementById('modal-name');
+  const modalTag = document.getElementById('modal-tag');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalMeta = document.getElementById('modal-meta');
+  const modalActions = document.getElementById('modal-actions');
+  const modalBadgeWrap = document.getElementById('modal-badge-wrap');
+  const badgeClick = document.getElementById('badge-click');
+
+  function openModal(sim) {
+    modalIcon.textContent = sim.icon;
+    modalName.textContent = sim.name;
+    modalTag.textContent = sim.tag;
+    modalDesc.textContent = sim.desc;
+    modalMeta.innerHTML = sim.meta;
+    modalBadgeWrap.style.display = sim.verified ? 'block' : 'none';
+    let actions = '';
+    if (sim.link && sim.link !== '#') actions += `<a href="${sim.link}" target="_blank" rel="noopener" class="modal-btn primary">▶ Launch Simulator</a>`;
+    if (sim.github && sim.github !== '#') actions += `<a href="${sim.github}" target="_blank" rel="noopener" class="modal-btn">⌥ GitHub</a>`;
+    if (sim.status === 'coming') actions += `<span class="modal-btn" style="opacity:0.5;cursor:default">Coming Soon</span>`;
+    modalActions.innerHTML = actions;
+    modalOverlay.classList.add('active');
+  }
+
+  function closeModal() { modalOverlay.classList.remove('active'); }
+  modalClose.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal(); });
+
+  // Badge click: close modal and scroll to badge explanation
+  badgeClick.addEventListener('click', function(e) {
+    e.preventDefault();
+    closeModal();
+    // Wait for modal to finish closing, then scroll smoothly
+    setTimeout(() => {
+      const target = document.getElementById('verified-badge-section');
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }, 350);
+  });
+
+  // ===== FILTER LOGIC =====
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const domain = btn.getAttribute('data-domain');
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.domain-section').forEach(section => {
+        section.style.display = (domain === 'all' || section.getAttribute('data-domain') === domain) ? '' : 'none';
+      });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
