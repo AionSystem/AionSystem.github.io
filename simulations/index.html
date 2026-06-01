@@ -55,7 +55,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:va
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,212,255,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite}
 @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
 
-/* ===== AUDIO TOGGLE ===== */
 .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
 .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none}
 .audio-toggle[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);box-shadow:0 0 15px rgba(240,165,0,0.3)}
@@ -221,8 +220,10 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .modal-btn.violet{border-color:var(--violet);color:var(--violet)}
 .modal-btn.violet:hover{background:var(--violet);color:#fff;box-shadow:0 0 15px var(--violet)}
 
-/* Verified badge in modal */
-.verified-badge-img{max-width:120px;margin-bottom:16px;display:block}
+/* Combined badge in modal */
+.verified-badge-wrap{display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.verified-badge-wrap img:first-child{width:100px;height:100px}
+.verified-badge-wrap img:last-child{width:50px;height:50px;border-radius:50%;border:2px solid var(--gold);box-shadow:0 0 15px rgba(212,175,55,0.3)}
 
 .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
 .cta-btn.primary{background:var(--amber);color:#000;border-color:var(--amber)}
@@ -300,7 +301,8 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     <button class="filter-btn" data-domain="environmental">Environmental</button>
   </div>
 
-  <!-- ========== DOMAIN: AI & EPISTEMICS ========= -->
+  <!-- ========== DOMAINS (AI through Environmental) ========= -->
+  <!-- AI -->
   <div class="domain-section" data-domain="ai">
     <div class="domain-header">
       <span class="domain-tag tag-ai">AI</span>
@@ -309,8 +311,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
     <div class="sim-grid" id="aiGrid"></div>
   </div>
-
-  <!-- ========== DOMAIN: PHYSICS ========= -->
+  <!-- Physics -->
   <div class="domain-section" data-domain="physics">
     <div class="domain-header">
       <span class="domain-tag tag-physics">Physics</span>
@@ -319,8 +320,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
     <div class="sim-grid" id="physicsGrid"></div>
   </div>
-
-  <!-- ========== DOMAIN: FIELD OPERATIONS ========= -->
+  <!-- Field Ops -->
   <div class="domain-section" data-domain="field">
     <div class="domain-header">
       <span class="domain-tag tag-field">Field Ops</span>
@@ -329,8 +329,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
     <div class="sim-grid" id="fieldGrid"></div>
   </div>
-
-  <!-- ========== DOMAIN: TEXTILE & MATERIALS ========= -->
+  <!-- Textile -->
   <div class="domain-section" data-domain="textile">
     <div class="domain-header">
       <span class="domain-tag tag-textile">Textile</span>
@@ -339,8 +338,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
     <div class="sim-grid" id="textileGrid"></div>
   </div>
-
-  <!-- ========== DOMAIN: CRISIS ========= -->
+  <!-- Crisis -->
   <div class="domain-section" data-domain="crisis">
     <div class="domain-header">
       <span class="domain-tag tag-crisis">Crisis</span>
@@ -349,8 +347,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
     <div class="sim-grid" id="crisisGrid"></div>
   </div>
-
-  <!-- ========== DOMAIN: EDUCATION ========= -->
+  <!-- Education -->
   <div class="domain-section" data-domain="education">
     <div class="domain-header">
       <span class="domain-tag tag-education">Salmon EDU</span>
@@ -359,8 +356,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
     <div class="sim-grid" id="educationGrid"></div>
   </div>
-
-  <!-- ========== DOMAIN: ENGINEERING ========= -->
+  <!-- Engineering -->
   <div class="domain-section" data-domain="engineering">
     <div class="domain-header">
       <span class="domain-tag tag-engineering">Engineering</span>
@@ -369,8 +365,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
     <div class="sim-grid" id="engineeringGrid"></div>
   </div>
-
-  <!-- ========== DOMAIN: MEDICAL ========= -->
+  <!-- Medical -->
   <div class="domain-section" data-domain="medical">
     <div class="domain-header">
       <span class="domain-tag tag-medical">Medical</span>
@@ -379,8 +374,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     </div>
     <div class="sim-grid" id="medicalGrid"></div>
   </div>
-
-  <!-- ========== DOMAIN: ENVIRONMENTAL ========= -->
+  <!-- Environmental -->
   <div class="domain-section" data-domain="environmental">
     <div class="domain-header">
       <span class="domain-tag tag-environmental">Environmental</span>
@@ -398,7 +392,11 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <div class="card" style="background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:800px;display:flex;flex-wrap:wrap;align-items:center;gap:24px">
-      <img src="/assets/badges/aion-verified-simulator-badge-v1.svg" alt="AION Verified Simulator badge" style="width:100px;height:100px;flex-shrink:0">
+      <!-- Combined badge: outer SVG + inner logo -->
+      <div style="position:relative;width:120px;height:120px;flex-shrink:0">
+        <img src="/assets/badges/aion-verified-simulator-badge-v1.svg" alt="AION Verified Simulator badge" style="width:120px;height:120px;position:absolute;inset:0">
+        <img src="/assets/aion-logo.jpg" alt="AionSystem" style="width:52px;height:52px;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:2px solid var(--gold);box-shadow:0 0 12px rgba(212,175,55,0.4)">
+      </div>
       <p style="font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6">
         Every simulation bearing the <strong style="color:var(--amber)">AION Verified Simulator</strong> badge has passed three rigorous checks: physics verified against primary sources, code red‑teamed for silent errors, and output peer‑reviewed against real‑world data. The Red Team tab inside each simulator documents every issue found — severity graded, resolution logged, nothing undisclosed.
       </p>
@@ -414,8 +412,11 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     <div class="modal-icon" id="modal-icon"></div>
     <div class="modal-name" id="modal-name"></div>
     <div class="modal-tag" id="modal-tag"></div>
-    <!-- badge image placeholder -->
-    <img id="modal-badge" class="verified-badge-img" src="/assets/badges/aion-verified-simulator-badge-v1.svg" alt="AION Verified" style="display:none">
+    <!-- Combined badge in modal -->
+    <div class="verified-badge-wrap" id="modal-badge-wrap" style="display:none">
+      <img src="/assets/badges/aion-verified-simulator-badge-v1.svg" alt="AION Verified Simulator badge">
+      <img src="/assets/aion-logo.jpg" alt="AionSystem">
+    </div>
     <div class="modal-desc" id="modal-desc"></div>
     <div class="modal-meta" id="modal-meta"></div>
     <div class="modal-actions" id="modal-actions"></div>
@@ -442,7 +443,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 (function () {
   'use strict';
 
-  // ===== FULL VISUAL ENGINE (WebGL, symbols, normal cursor + double-click echo, audio, mobile nav) =====
+  // ===== FULL VISUAL ENGINE (WebGL, symbols, double-click echo, audio, mobile nav) =====
   const concurrency = navigator.hardwareConcurrency || 2;
   const deviceMem   = navigator.deviceMemory || 2;
   const lowDevice   = concurrency < 4 || deviceMem < 4;
@@ -594,18 +595,13 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   let rafId = null;
   function loop(t) { updatePhysics(t); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
 
-  // Pointer events for symbol field and double-click echo
+  // Pointer events for symbol field + double-click echo
   window.addEventListener('pointermove', (e) => {
-    if (e.pointerType === 'mouse') {
-      mouse.x = e.clientX; mouse.y = e.clientY;
-    }
+    if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; }
   });
   window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
   window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
-  // Double-click echo (restored)
-  window.addEventListener('dblclick', (e) => {
-    spawnEcho(e.clientX, e.clientY);
-  });
+  window.addEventListener('dblclick', (e) => { spawnEcho(e.clientX, e.clientY); });
 
   // Audio
   let audioCtx = null, audioNodes = null, audioOn = false;
@@ -715,7 +711,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     const countEl = document.getElementById(`${key}Count`);
     if (!grid) return;
 
-    // Clear
     grid.innerHTML = '';
     domainSims.forEach(sim => {
       const card = document.createElement('div');
@@ -753,7 +748,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   const modalDesc = document.getElementById('modal-desc');
   const modalMeta = document.getElementById('modal-meta');
   const modalActions = document.getElementById('modal-actions');
-  const modalBadge = document.getElementById('modal-badge');
+  const modalBadgeWrap = document.getElementById('modal-badge-wrap');
 
   function openModal(sim) {
     modalIcon.textContent = sim.icon;
@@ -762,12 +757,8 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     modalDesc.textContent = sim.desc;
     modalMeta.innerHTML = sim.meta;
 
-    // Show badge only if verified
-    if (sim.verified) {
-      modalBadge.style.display = 'block';
-    } else {
-      modalBadge.style.display = 'none';
-    }
+    // Show combined badge only if verified
+    modalBadgeWrap.style.display = sim.verified ? 'flex' : 'none';
 
     let actions = '';
     if (sim.link && sim.link !== '#') {
@@ -795,11 +786,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       document.querySelectorAll('.domain-section').forEach(section => {
-        if (domain === 'all' || section.getAttribute('data-domain') === domain) {
-          section.style.display = '';
-        } else {
-          section.style.display = 'none';
-        }
+        section.style.display = (domain === 'all' || section.getAttribute('data-domain') === domain) ? '' : 'none';
       });
     });
   });
