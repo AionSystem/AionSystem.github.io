@@ -55,13 +55,18 @@ body{
   font-family:var(--sans);font-size:var(--font-base);line-height:1.5;
   overflow-x:hidden;
 }
+body.cursor-active{cursor:none}
 #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4;}
 #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
 #symbol-canvas.ready{opacity:0.65}
+#trail-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:9997;pointer-events:none;will-change:transform;}
 .scan-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10;}
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,212,255,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite;}
 @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
-body.cursor-active .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;}
+.custom-cursor{width:20px;height:20px;border:2px solid var(--cyan);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:screen;transition:transform 0.1s ease,background 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease;transform:translate(-50%,-50%);box-shadow:0 0 15px var(--cyan),0 0 30px rgba(0,212,255,0.3);will-change:transform;display:none;}
+body.cursor-active .custom-cursor{display:block}
+.custom-cursor.hover{transform:translate(-50%,-50%) scale(1.8);background:rgba(0,212,255,0.1);border-color:var(--amber);box-shadow:0 0 25px var(--amber),0 0 50px rgba(240,165,0,0.5);}
+.audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;}
 .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 15px rgba(0,212,255,0.3);outline:none;}
 .audio-toggle[aria-pressed="true"]{border-color:var(--amber);color:var(--amber);box-shadow:0 0 15px rgba(240,165,0,0.3);}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:0 0 30px rgba(0,212,255,0.05);}
@@ -172,8 +177,10 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}
-  #webgl-canvas,#symbol-canvas,.scan-lines{display:none}
-  }
+  #webgl-canvas,#symbol-canvas,#trail-canvas,.scan-lines{display:none}
+  body{cursor:auto !important}
+  .custom-cursor{display:none !important}
+}
 </style>
 </head>
 <body class="cursor-active">
@@ -181,8 +188,10 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
+<canvas id="trail-canvas" aria-hidden="true"></canvas>
 <div class="scan-grid" aria-hidden="true"></div>
 <div class="scan-lines" aria-hidden="true"></div>
+<div class="custom-cursor" id="custom-cursor" aria-hidden="true"></div>
 
 <button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone — low-frequency oscillator, non-disruptive" title="Toggle ambient audio">♪</button>
 
