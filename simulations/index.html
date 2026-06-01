@@ -220,7 +220,7 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .modal-btn.violet{border-color:var(--violet);color:var(--violet)}
 .modal-btn.violet:hover{background:var(--violet);color:#fff;box-shadow:0 0 15px var(--violet)}
 
-/* Verified badge in modal — single self‑contained image */
+/* Verified badge in modal — single self‑contained image, clickable */
 #modal-badge-wrap{display:none;text-align:center;margin-bottom:20px}
 #modal-badge-wrap a{display:inline-block;cursor:pointer;transition:transform 0.2s ease,filter 0.2s ease}
 #modal-badge-wrap a:hover{transform:scale(1.05);filter:drop-shadow(0 0 12px rgba(212,175,55,0.5))}
@@ -339,9 +339,9 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     <div class="modal-icon" id="modal-icon"></div>
     <div class="modal-name" id="modal-name"></div>
     <div class="modal-tag" id="modal-tag"></div>
-    <!-- Self‑contained badge that scrolls to explanation on click -->
+    <!-- Self‑contained badge that closes modal and scrolls to explanation on click -->
     <div id="modal-badge-wrap">
-      <a href="#verified-badge-section" title="Learn about the AION Verified Simulator badge">
+      <a href="#verified-badge-section" id="badge-click" title="Learn about the AION Verified Simulator badge">
         <img src="/assets/badges/aion-verified-simulator-badge-v2.svg" alt="AION Verified Simulator">
       </a>
     </div>
@@ -658,6 +658,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   const modalMeta = document.getElementById('modal-meta');
   const modalActions = document.getElementById('modal-actions');
   const modalBadgeWrap = document.getElementById('modal-badge-wrap');
+  const badgeClick = document.getElementById('badge-click');
 
   function openModal(sim) {
     modalIcon.textContent = sim.icon;
@@ -678,6 +679,17 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   modalClose.addEventListener('click', closeModal);
   modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal(); });
+
+  // Badge click: close modal and scroll to badge explanation
+  badgeClick.addEventListener('click', function(e) {
+    e.preventDefault();
+    closeModal();
+    // Wait for modal to finish closing, then scroll smoothly
+    setTimeout(() => {
+      const target = document.getElementById('verified-badge-section');
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }, 350);
+  });
 
   // ===== FILTER LOGIC =====
   document.querySelectorAll('.filter-btn').forEach(btn => {
