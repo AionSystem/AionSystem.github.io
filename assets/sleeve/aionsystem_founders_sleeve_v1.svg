@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 680" width="500" height="680">
+  <!--
+    ╔══════════════════════════════════════════════╗
+    ║  HYPERDIAMOND SOVEREIGN SEAL — v4           ║
+    ║  Founder‑Exclusive · Sheldon K. Salmon      ║
+    ║  Only for audits bearing STP‑AUDITOR‑0001   ║
+    ╚══════════════════════════════════════════════╝
+
+    TEMPLATE FIELDS (replace all {{…}})
+    ──────────────────────────────────
+    {{ENTRY_ID}}               – STP ledger entry ID
+    {{SHA256_HASH}}            – full SHA‑256 hash
+    {{VERIFY_URL}}             – verification page URL
+    {{QR_CODE_URL}}            – QR code image
+    {{SOVEREIGN_TIER_BADGE_SVG}} – tier badge SVG inline (optional, could be omitted)
+  -->
+
+  <defs>
+    <!-- Rainbow border (subtle, but present) -->
+    <linearGradient id="rainbowBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="40%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#f0a500"/>
+    </linearGradient>
+
+    <linearGradient id="lamination" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+
+    <!-- Deep black background with gold undertone -->
+    <linearGradient id="sleeveBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="30%" stop-color="#111111"/>
+      <stop offset="70%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#080808"/>
+    </linearGradient>
+
+    <!-- Gold diagonal stripe pattern (more opaque for founder) -->
+    <pattern id="goldStripes" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="40" stroke="#D4AF37" stroke-width="1.5" stroke-opacity="0.1"/>
+    </pattern>
+
+    <pattern id="matrixRain" width="30" height="30" patternUnits="userSpaceOnUse">
+      <text x="0" y="15" font-family="'Courier New', monospace" font-size="10" fill="#D4AF37" opacity="0.06">0</text>
+      <text x="10" y="25" font-family="'Courier New', monospace" font-size="8" fill="#D4AF37" opacity="0.04">1</text>
+      <text x="20" y="10" font-family="'Courier New', monospace" font-size="12" fill="#D4AF37" opacity="0.05">;</text>
+    </pattern>
+
+    <!-- AI/ON watermark (gold, slightly stronger) -->
+    <pattern id="aionWatermark" width="200" height="200" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)">
+      <text x="0" y="0" font-family="'Courier New', monospace" font-size="28" font-weight="bold" fill="#D4AF37" opacity="0.12">AI/ON</text>
+      <text x="100" y="100" font-family="'Courier New', monospace" font-size="28" font-weight="bold" fill="#D4AF37" opacity="0.12">AI/ON</text>
+    </pattern>
+
+    <!-- Gold ribbon gradient (only gold, no silver) -->
+    <linearGradient id="ribbonGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8B6914"/>
+      <stop offset="20%" stop-color="#D4AF37"/>
+      <stop offset="50%" stop-color="#F5E08A"/>
+      <stop offset="80%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+
+    <!-- Black ribbon (for contrast) -->
+    <linearGradient id="ribbonBlack" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#000000"/>
+      <stop offset="20%" stop-color="#1a1a1a"/>
+      <stop offset="50%" stop-color="#333333"/>
+      <stop offset="80%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+
+    <filter id="sleeveShadow">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#D4AF37" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- BACKGROUND -->
+  <rect width="500" height="680" rx="24" fill="url(#sleeveBg)" filter="url(#sleeveShadow)"/>
+  <rect width="500" height="680" rx="24" fill="url(#goldStripes)"/>
+  <rect width="500" height="680" rx="24" fill="url(#matrixRain)"/>
+  <rect width="500" height="680" rx="24" fill="url(#aionWatermark)"/>
+
+  <!-- BORDER (rainbow, subtle) -->
+  <rect x="3" y="3" width="494" height="674" rx="22" fill="none" stroke="url(#rainbowBorder)" stroke-width="3" opacity="0.8"/>
+
+  <!-- Inner gold border for extra weight -->
+  <rect x="7" y="7" width="486" height="666" rx="18" fill="none" stroke="#D4AF37" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- LAMINATION -->
+  <g opacity="0.03">
+    <line x1="0" y1="0" x2="500" y2="680" stroke="#ffffff" stroke-width="1"/>
+    <line x1="50" y1="0" x2="500" y2="630" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="100" y1="0" x2="500" y2="580" stroke="#ffffff" stroke-width="0.5"/>
+  </g>
+
+  <!-- RIBBONS — only gold and black, no silver -->
+  <rect x="0" y="38" width="500" height="24" fill="url(#ribbonGold)" opacity="0.95"/>
+  <text x="250" y="55" font-family="'Georgia', 'Times New Roman', serif" font-size="11" font-weight="bold" letter-spacing="4" fill="#0a0a14" text-anchor="middle" opacity="0.95">FOUNDER'S SOVEREIGN SEAL</text>
+
+  <rect x="0" y="62" width="500" height="16" fill="url(#ribbonBlack)" opacity="0.9"/>
+  <text x="250" y="73" font-family="'Georgia', 'Times New Roman', serif" font-size="8" font-weight="bold" letter-spacing="3" fill="#D4AF37" text-anchor="middle" opacity="0.85">ONLY ISSUED BY STP‑AUDITOR‑0001</text>
+
+  <!-- FOUNDER'S AUDITOR BADGE (centered, large) -->
+  <image x="130" y="85" width="240" height="240"
+         xlink:href="/assets/badges/stp-auditor-0001.svg"/>
+
+  <!-- VERIFICATION BAR (gold-heavy) -->
+  <rect x="40" y="350" width="420" height="210" rx="12" fill="#0a0a0a" stroke="#D4AF37" stroke-width="2" stroke-opacity="0.8"/>
+  <rect x="40" y="350" width="420" height="30" rx="12" fill="#D4AF37" fill-opacity="0.2"/>
+  <text x="250" y="372" font-family="'Courier New', monospace" font-size="10" fill="#D4AF37" font-weight="bold" text-anchor="middle">VERIFIED CERTIFICATION · FOUNDER'S SEAL</text>
+  <line x1="60" y1="384" x2="440" y2="384" stroke="#D4AF37" stroke-width="0.8" stroke-opacity="0.5"/>
+
+  <!-- Auditor info (founder only, so color fixed gold) -->
+  <text x="250" y="408" font-family="'Courier New', monospace" font-size="9" text-anchor="middle">
+    <tspan fill="#DAA520">◈ </tspan>
+    <tspan fill="#F5E08A">Certified by STP‑AUDITOR‑0001 (Founding Badge)</tspan>
+  </text>
+
+  <!-- Tier badge slot (if applicable, otherwise omit) -->
+  <g transform="translate(114, 425) scale(0.85)">
+    {{SOVEREIGN_TIER_BADGE_SVG}}
+  </g>
+
+  <!-- AUDIT DETAILS -->
+  <text x="70" y="525" font-family="'Courier New', monospace" font-size="9" fill="#aaa" opacity="0.8">Entry</text>
+  <text x="180" y="525" font-family="'Courier New', monospace" font-size="9" fill="#F5E08A" font-weight="bold">{{ENTRY_ID}}</text>
+
+  <text x="70" y="541" font-family="'Courier New', monospace" font-size="9" fill="#aaa" opacity="0.8">SHA‑256</text>
+  <text x="180" y="541" font-family="'Courier New', monospace" font-size="9" fill="#48CAE4">{{SHA256_HASH}}</text>
+
+  <text x="70" y="557" font-family="'Courier New', monospace" font-size="9" fill="#aaa" opacity="0.8">Verify at</text>
+  <text x="180" y="557" font-family="'Courier New', monospace" font-size="9" fill="#48CAE4">{{VERIFY_URL}}</text>
+
+  <!-- ISSUER (always Sheldon K. Salmon) -->
+  <text x="250" y="605" font-family="'Courier New', monospace" font-size="9" fill="#DAA520" text-anchor="middle">ISSUED BY SHELDON K. SALMON · AIONSYSTEM</text>
+  <text x="250" y="625" font-family="'Courier New', monospace" font-size="8" fill="#666" text-anchor="middle">Founding Auditor · Digital signature appended to STP ledger entry</text>
+
+  <!-- QR CODE -->
+  <rect x="420" y="610" width="60" height="60" rx="6" fill="#0a0a0a" stroke="#D4AF37" stroke-width="2"/>
+  <image x="425" y="615" width="50" height="50"
+         xlink:href="{{QR_CODE_URL}}"/>
+  <text x="450" y="685" font-family="'Courier New', monospace" font-size="6" fill="#D4AF37" opacity="0.7" text-anchor="middle">SCAN</text>
+
+  <!-- GLOSSY OVERLAY -->
+  <rect width="500" height="680" rx="24" fill="url(#lamination)" pointer-events="none"/>
+</svg>
