@@ -126,7 +126,7 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .fw-version{font-family:var(--mono);font-size:0.7rem;color:var(--muted);text-transform:uppercase}
 .fw-desc{font-family:var(--sans);font-size:0.85rem;color:var(--muted);line-height:1.4;flex:1}
 
-/* ===== FLAGSHIP CARD ===== */
+/* ===== FLAGSHIP CARD (no underlines anywhere) ===== */
 .flagship-card{
   flex:0 0 320px;
   background:linear-gradient(135deg,rgba(240,165,0,0.08),rgba(212,175,55,0.06));
@@ -137,6 +137,10 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
   transition:all 0.3s var(--ease);
   cursor:pointer;
   position:relative;
+  text-decoration: none !important;           /* remove underline on whole card */
+}
+.flagship-card * {
+  text-decoration: none !important;           /* no underline on any child element */
 }
 .flagship-card:hover{border-color:var(--gold);box-shadow:0 0 20px rgba(240,165,0,0.2);transform:translateY(-2px)}
 .flagship-badge{
@@ -149,7 +153,7 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .flagship-name{font-family:var(--sans);font-size:1.3rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
 .flagship-version{font-family:var(--mono);font-size:0.75rem;color:var(--muted);text-transform:uppercase}
 .flagship-desc{font-family:var(--sans);font-size:0.9rem;color:var(--muted);line-height:1.5;flex:1}
-.flagship-link{font-family:var(--mono);font-size:0.75rem;letter-spacing:2px;color:var(--amber);text-decoration:none;text-transform:uppercase;margin-top:8px;display:inline-flex;align-items:center;gap:6px}
+.flagship-link{font-family:var(--mono);font-size:0.75rem;letter-spacing:2px;color:var(--amber);margin-top:8px;display:inline-flex;align-items:center;gap:6px}
 
 /* ===== COMING SOON / BY REQUEST BADGE ===== */
 .coming-soon{
@@ -277,7 +281,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     </div>
     <p style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);margin-bottom:40px">30 free, pip‑installable frameworks. Public repos. Live simulations. Click any card to preview.</p>
 
-    <!-- FLAGSHIP FRAMEWORKS -->
+    <!-- FLAGSHIP FRAMEWORDS (THREE CARDS) -->
     <div class="domain-heading">// Flagship Frameworks</div>
     <div class="scroll-row" style="margin-bottom:40px">
       <!-- STP -->
@@ -296,6 +300,15 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
         <div class="flagship-name">AI‑CONSTITUTION</div>
         <div class="flagship-version">v2.1 · 426 tests · Nine Laws</div>
         <div class="flagship-desc">The constitutional enforcement layer. Every framework, every audit, every seal answers to these Nine Laws. The governance substrate.</div>
+        <span class="flagship-link">Explore the Repo →</span>
+      </a>
+      <!-- FSVE v4.3 – THIRD FLAGSHIP (added) -->
+      <a href="https://github.com/AionSystem/FSVE" target="_blank" rel="noopener noreferrer" class="flagship-card">
+        <span class="flagship-badge">FLAGSHIP</span>
+        <div class="flagship-icon">📊</div>
+        <div class="flagship-name">FSVE — Epistemic State Machine</div>
+        <div class="flagship-version">v4.3 · 13 axes · CAVTE · C‑Mode</div>
+        <div class="flagship-desc">The scoring engine. Temporal momentum, fragility, topology, 18 FMIA gates. Turns a claim into a tested, sealed verdict.</div>
         <span class="flagship-link">Explore the Repo →</span>
       </a>
     </div>
