@@ -100,7 +100,6 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 /* ===== CARDS ===== */
 .card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);box-shadow:0 8px 20px rgba(0,0,0,0.3),inset 0 0 30px rgba(0,212,255,0.03);border-radius:16px;padding:32px;transition:all 0.3s var(--ease)}
 .card:hover{border-color:var(--cyan);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2),inset 0 0 20px rgba(0,212,255,0.05);transform:translateY(-4px)}
-.badge-icon{width:48px;height:48px;margin-bottom:16px}
 
 /* ===== SCARCITY BLOCK ===== */
 .scarcity-block{display:inline-flex;align-items:center;gap:12px;padding:10px 16px;border:1px solid rgba(240,165,0,0.4);border-radius:8px;background:rgba(240,165,0,0.05);margin-bottom:24px}
@@ -125,8 +124,9 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .compliance-badge-img{height:60px;object-fit:contain;margin:8px 0}
 
 /* ===== SLEEVE GRID ===== */
-.sleeve-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
-.sleeve-card{display:flex;flex-direction:column;gap:16px}
+.sleeve-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.sleeve-card{cursor:pointer;display:flex;flex-direction:column}
+.sleeve-card .card{flex:1;display:flex;flex-direction:column;gap:16px}
 
 /* ===== FSVE EXCERPT ===== */
 .fsve-excerpt{margin-top:24px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:rgba(8,9,11,0.8);backdrop-filter:blur(20px)}
@@ -148,6 +148,16 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .fsve-ev{font-family:var(--sans);font-size:1.1rem;font-weight:700;color:var(--cyan)}
 .redacted-notice{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase}
 
+/* ===== MODAL (matching simulations page) ===== */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s}
+.modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s}
+.modal-box{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:560px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(0,212,255,0.1);position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);max-height:85vh;overflow-y:auto}
+.modal-overlay.active .modal-box{transform:scale(1)}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;transition:color 0.2s}
+.modal-close:hover{color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.modal-sleeve-img{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);margin:16px 0}
+.modal-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+
 /* ===== CTA BUTTONS ===== */
 .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--cyan);color:var(--cyan);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
 .cta-btn.primary{background:var(--amber);color:#000;border-color:var(--amber)}
@@ -155,8 +165,6 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--amber-l);border-color:var(--amber-l);box-shadow:0 0 20px var(--amber)}
 .cta-btn.violet{border-color:var(--violet);color:var(--violet)}
 .cta-btn.violet:hover,.cta-btn.violet:focus-visible{background:var(--violet);color:#fff;box-shadow:0 0 20px var(--violet);outline:none}
-.cta-btn.pearl{border-color:var(--pearl);color:var(--pearl)}
-.cta-btn.pearl:hover,.cta-btn.pearl:focus-visible{background:var(--pearl);color:#000;box-shadow:0 0 20px var(--pearl);outline:none}
 footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:2}
 .footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
 .footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
@@ -201,28 +209,25 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 
 <div class="wrapper" id="main">
 
-  <!-- HERO -->
+  <!-- HERO (unchanged) -->
   <section>
     <div class="eyebrow">// AI Reliability Audit</div>
     <h1>The<em>Reliability</em>Snapshot</h1>
     <div class="title-line">Certainty scoring · STP‑sealed · 48‑hour delivery</div>
-
     <div class="scarcity-block" role="status" aria-live="polite">
       <div class="scarcity-dot"></div>
       <span class="scarcity-text">3 founding client spots — first come, first sealed</span>
     </div>
-
     <p style="font-family:var(--serif);font-size:1.4rem;font-weight:300;font-style:italic;max-width:640px;margin-bottom:32px;color:var(--muted)">
       Up to 10 real AI outputs, run through the <strong style="color:var(--text)">FSVE certainty engine</strong>. 
       A plain‑language executive report in 48–72 hours. Not a consultant’s guess — a scored certainty architecture.
     </p>
-
     <div class="cta-btn primary" style="font-size:1rem;padding:14px 28px;" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">
       Request an Audit →
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
+  <!-- HOW IT WORKS (unchanged) -->
   <section>
     <div class="section-header">
       <span class="section-num">// 01</span>
@@ -239,7 +244,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     </div>
   </section>
 
-  <!-- STP BEDROCK -->
+  <!-- STP BEDROCK (unchanged) -->
   <section>
     <div class="section-header">
       <span class="section-num">// 02</span>
@@ -258,7 +263,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     </div>
   </section>
 
-  <!-- CERTIFICATION TIERS -->
+  <!-- CERTIFICATION TIERS (unchanged) -->
   <section>
     <div class="section-header">
       <span class="section-num">// 03</span>
@@ -357,7 +362,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
         <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">Request Compliance Audit →</div>
       </div>
       <div class="card compliance-card">
-        <img src="/assets/badges/compliance/compliance-legal-badge.svg" alt="Legal & Justice AI Compliance Badge" class="compliance-badge-img">
+        <img src="/assets/badges/compliance/compliance-legal-badge.svg" alt="Legal &amp; Justice AI Compliance Badge" class="compliance-badge-img">
         <div class="tier-name">Legal &amp; Justice AI</div>
         <div class="tier-price">$12,000</div>
         <div class="tier-desc">
@@ -387,7 +392,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:16px">Compliance badges expire after 12 months. Re‑audit required for renewal. Combined audits available at negotiated rates.</p>
   </section>
 
-  <!-- CERTIFIED SLEEVES (unchanged) -->
+  <!-- CERTIFIED SLEEVES — interactive, matching simulations page pattern -->
   <section>
     <div class="section-header">
       <span class="section-num">// 05</span>
@@ -395,51 +400,56 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <p style="font-family:var(--serif);font-size:1.2rem;color:var(--muted);margin-bottom:32px">
-      Every certification is delivered inside a cryptographic credential sleeve — a forgery‑resistant, visually graded wrapper that carries the audit details, badges, and verification proof. The sleeve design matches the certification type.
+      Every certification is delivered inside a cryptographic credential sleeve — a forgery‑resistant, visually graded wrapper. Click any sleeve to see the full design.
     </p>
     <div class="sleeve-grid">
-      <div class="card sleeve-card">
-        <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">🛡️</div>
-        <div class="tier-name">v1 — Certified Audit</div>
-        <div class="tier-price">Full Certification</div>
-        <div class="tier-desc">
-          The flagship sleeve. Displays both the simulator badge and the auditor badge, tier classification, triple‑time dates, and the complete verification bar. Issued for Tier 1–5 engagements that include both audit and simulator verification.
+      <!-- v1 -->
+      <div class="sleeve-card" onclick="openSleeveModal('v1')">
+        <div class="card">
+          <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">🛡️</div>
+          <div class="tier-name">v1 — Certified Audit</div>
+          <div class="tier-price">Full Certification</div>
+          <div class="tier-desc">The flagship sleeve. Auditor badge, simulator badge, tier badge, triple‑time dates, verification bar. Click to view.</div>
         </div>
       </div>
-      <div class="card sleeve-card">
-        <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">🔬</div>
-        <div class="tier-name">v2 — Simulation Verified</div>
-        <div class="tier-price">Tool‑Only Verification</div>
-        <div class="tier-desc">
-          Dark cyan palette. Shows the simulator badge with name, version, SHA‑256, and run URL. No auditor badge. Explicitly states the simulator is verified but not a full audit. For AION Verified Simulators.
+      <!-- v2 -->
+      <div class="sleeve-card" onclick="openSleeveModal('v2')">
+        <div class="card">
+          <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">🔬</div>
+          <div class="tier-name">v2 — Simulation Verified</div>
+          <div class="tier-price">Tool‑Only Verification</div>
+          <div class="tier-desc">Dark cyan palette. Simulator badge with version, hash, and run URL. Not a full audit. Click to view.</div>
         </div>
       </div>
-      <div class="card sleeve-card">
-        <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">🔐</div>
-        <div class="tier-name">v3 — Audit Only</div>
-        <div class="tier-price">Private Framework</div>
-        <div class="tier-desc">
-          Dark violet palette. Auditor badge and tier classification only. No simulator slot. For enterprise, defense, or private Docker‑sealed frameworks that have been audited but have no public simulation.
+      <!-- v3 -->
+      <div class="sleeve-card" onclick="openSleeveModal('v3')">
+        <div class="card">
+          <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">🔐</div>
+          <div class="tier-name">v3 — Audit Only</div>
+          <div class="tier-price">Private Framework</div>
+          <div class="tier-desc">Dark violet palette. Auditor badge only — no simulator slot. For enterprise/defense private builds. Click to view.</div>
         </div>
       </div>
-      <div class="card sleeve-card">
-        <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">💎</div>
-        <div class="tier-name">v4 — Founder's Sovereign Seal</div>
-        <div class="tier-price">Founder‑Exclusive</div>
-        <div class="tier-desc">
-          Black‑and‑gold hyperdiamond sleeve. Only issued under STP‑AUDITOR‑0001. Carries the founder’s auditor badge and the highest trust signal in the AION ecosystem.
+      <!-- v4 -->
+      <div class="sleeve-card" onclick="openSleeveModal('v4')">
+        <div class="card">
+          <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">💎</div>
+          <div class="tier-name">v4 — Founder's Sovereign Seal</div>
+          <div class="tier-price">Founder‑Exclusive</div>
+          <div class="tier-desc">Black‑and‑gold hyperdiamond sleeve. Only issued under STP‑AUDITOR‑0001. Click to view.</div>
         </div>
       </div>
-      <div class="card sleeve-card">
-        <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">📋</div>
-        <div class="tier-name">Auditor Credential</div>
-        <div class="tier-price">STP Auditor Network</div>
-        <div class="tier-desc">
-          The sleeve carried by STP Certified Auditors. Displays the auditor’s personal shield badge, rank, specialization, validity window, and QR verification. Identity is on the badge; the sleeve adds the audit scope.
+      <!-- Auditor Credential -->
+      <div class="sleeve-card" onclick="openSleeveModal('auditor')">
+        <div class="card">
+          <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">📋</div>
+          <div class="tier-name">Auditor Credential</div>
+          <div class="tier-price">STP Auditor Network</div>
+          <div class="tier-desc">The sleeve carried by certified auditors. Shield badge, rank, specialization, QR. Click to view.</div>
         </div>
       </div>
     </div>
-    <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:16px">All sleeves are SHA‑256 sealed, QR‑verifiable, and carry micro‑text anti‑forgery bands. The sleeve is delivered alongside the signed audit report.</p>
+    <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:16px">All sleeves are SHA‑256 sealed, QR‑verifiable, and carry micro‑text anti‑forgery bands.</p>
   </section>
 
   <!-- FSVE PREVIEW (unchanged) -->
@@ -488,6 +498,14 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 
 </div>
 
+<!-- SLEEVE MODAL -->
+<div class="modal-overlay" id="sleeve-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="sleeve-modal-close">×</button>
+    <div id="sleeve-modal-content"></div>
+  </div>
+</div>
+
 <footer>
   <div>
     <div>AionSystem · Sheldon K. Salmon · AI Reliability Architect · © <span id="copyright-year"></span></div>
@@ -505,7 +523,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 </footer>
 
 <script>
-// ===== FULL VISUAL ENGINE (standard cursor, collapse included) =====
+// ===== FULL VISUAL ENGINE (unchanged) =====
 (function () {
   'use strict';
 
@@ -734,16 +752,10 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
   let rafId = null;
   function loop(t) { updatePhysics(t); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
 
-  // Mouse events for symbol field and collapse
-  window.addEventListener('pointermove', (e) => {
-    if (e.pointerType === 'mouse') {
-      mouse.x = e.clientX; mouse.y = e.clientY;
-    }
-  });
+  window.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; } });
   window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
   window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
 
-  // Double-click collapse with interactive element guard (including new sections)
   window.addEventListener('dblclick', (e) => {
     const tag = e.target.tagName.toLowerCase();
     const isInteractive = ['a', 'button', 'input', 'select', 'textarea'].includes(tag) ||
@@ -755,10 +767,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     spawnEcho(e.clientX, e.clientY);
   });
 
-  // Keyboard shortcut for collapse
-  window.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey && e.key === 'Q') { e.preventDefault(); triggerCollapse(); }
-  });
+  window.addEventListener('keydown', (e) => { if (e.ctrlKey && e.shiftKey && e.key === 'Q') { e.preventDefault(); triggerCollapse(); } });
 
   // Audio
   let audioCtx = null, audioNodes = null, audioOn = false;
@@ -829,6 +838,72 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 
   if (!reducedMotion) { resizeCanvas(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
 })();
+
+// ===== SLEEVE MODAL LOGIC (matching simulations page pattern) =====
+const sleeveData = {
+  v1: {
+    title: 'v1 — Certified Audit Sleeve',
+    desc: 'The flagship credential. Displays both the simulator badge and the auditor badge, tier classification, triple‑time dates, and a complete verification bar. Issued for Tier 1–5 engagements that include both audit and simulator verification.',
+    img: '/assets/sleeve/small-sleeve/aionsystem_certified_audit_sleeve_smv1.svg',
+    alt: 'Certified Audit Sleeve'
+  },
+  v2: {
+    title: 'v2 — Simulation Verified Sleeve',
+    desc: 'Dark cyan palette. Shows the simulator badge with name, version, SHA‑256 hash, and run URL. No auditor badge. Explicitly states the simulator is verified but not a full audit. For AION Verified Simulators.',
+    img: '/assets/sleeve/small-sleeve/aionsystem_sim_verified_sleeve_smv1.svg',
+    alt: 'Simulation Verified Sleeve'
+  },
+  v3: {
+    title: 'v3 — Audit Only Sleeve',
+    desc: 'Dark violet palette. Auditor badge and tier classification only. No simulator slot. For enterprise, defense, or private Docker‑sealed frameworks that have been audited but have no public simulation.',
+    img: null,
+    alt: 'Audit Only Sleeve'
+  },
+  v4: {
+    title: 'v4 — Founder\'s Sovereign Seal',
+    desc: 'Black‑and‑gold hyperdiamond sleeve. Only issued under STP‑AUDITOR‑0001. Carries the founder’s auditor badge and the highest trust signal in the AION ecosystem.',
+    img: '/assets/sleeve/small-sleeve/aionsystem_founders_sleeve_smv1.svg',
+    alt: 'Founder\'s Sovereign Seal'
+  },
+  auditor: {
+    title: 'Auditor Credential Sleeve',
+    desc: 'The sleeve carried by STP Certified Auditors. Displays the auditor’s personal shield badge, rank, specialization, validity window, and QR verification. Identity is on the badge; the sleeve adds the audit scope.',
+    img: '/assets/sleeve/small-sleeve/aionsystem_auditor_sleeve_smv1.svg',
+    alt: 'Auditor Credential Sleeve'
+  }
+};
+
+function openSleeveModal(type) {
+  const data = sleeveData[type];
+  const content = document.getElementById('sleeve-modal-content');
+  let html = `<h3 style="font-family:var(--sans);font-size:1.5rem;color:var(--amber);margin-bottom:12px">${data.title}</h3>`;
+  html += `<p style="font-family:var(--sans);color:var(--muted);margin-bottom:16px">${data.desc}</p>`;
+  if (data.img) {
+    html += `<img src="${data.img}" alt="${data.alt}" class="modal-sleeve-img">`;
+  } else {
+    html += `<p style="font-family:var(--mono);color:var(--dim);margin:16px 0">Sleeve graphic is being finalized.</p>`;
+  }
+  html += `<div class="modal-actions">`;
+  html += `<a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml" target="_blank" rel="noopener" class="cta-btn primary">Request Audit →</a>`;
+  html += `<a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener" class="cta-btn">STP GitHub Repo →</a>`;
+  html += `</div>`;
+  content.innerHTML = html;
+  document.getElementById('sleeve-modal').classList.add('active');
+}
+
+function closeSleeveModal() {
+  document.getElementById('sleeve-modal').classList.remove('active');
+}
+
+document.getElementById('sleeve-modal-close').addEventListener('click', closeSleeveModal);
+document.getElementById('sleeve-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeSleeveModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('sleeve-modal').classList.contains('active')) {
+    closeSleeveModal();
+  }
+});
 </script>
 </body>
 </html>
