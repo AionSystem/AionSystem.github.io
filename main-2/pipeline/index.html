@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="The Sovereign Design Pipeline — Sheldon K. Salmon's game development methodology. From scoping to handoff.">
+  <title>Pipeline — World Architect & Game Design</title>
+  <meta property="og:title" content="Pipeline — Sovereign Design Methodology">
+  <meta property="og:description" content="How a game goes from vision to sealed specification.">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & VARIABLES (main-2 gaming palette) ===== */
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#08090b;
+      --surface:rgba(25,15,35,0.5);
+      --panel:rgba(35,20,50,0.6);
+      --border:rgba(168,85,247,0.2);
+      --primary:#a855f7;
+      --primary-dark:#7c3aed;
+      --primary-light:#c084fc;
+      --gold:#D4AF37;
+      --gold-light:#f0d060;
+      --amber:#f0a500;
+      --text:#e0e8f0;
+      --muted:#a89ab0;
+      --dim:#5a4a6a;
+      --red:#ff4d4d;
+      --cyan:#00d4ff;
+      --violet:#a855f7;
+      --edu:#4ade80;
+      --mono:'Share Tech Mono',monospace;
+      --sans:'Barlow Condensed',sans-serif;
+      --serif:'Crimson Pro',Georgia,serif;
+      --jmono:'JetBrains Mono',monospace;
+      --ease:cubic-bezier(0.16,1,0.3,1);
+      --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
+      --font-base:clamp(16px,1vw + 8px,20px);
+      --font-h1:clamp(40px,6vw,72px);
+      --font-h2:clamp(28px,4vw + 8px,44px);
+      --glow-primary:0 0 5px #a855f7,0 0 10px #a855f7,0 0 20px rgba(168,85,247,0.5);
+      --glow-gold:0 0 5px #D4AF37,0 0 10px #D4AF37,0 0 20px rgba(212,175,55,0.4);
+    }
+    .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--primary);color:#fff;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s ease}
+    .skip-nav:focus{top:0}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-base);line-height:1.5;overflow-x:hidden}
+    #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
+    #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+    #symbol-canvas.ready{opacity:0.65}
+    .scan-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10}
+    .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(168,85,247,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite}
+    @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
+    .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
+    .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--primary);color:var(--primary);box-shadow:0 0 15px rgba(168,85,247,0.3);outline:none}
+    .audio-toggle[aria-pressed="true"]{border-color:var(--gold);color:var(--gold);box-shadow:0 0 15px rgba(212,175,55,0.3)}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:0 0 30px rgba(168,85,247,0.05)}
+    .nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px}
+    .nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--primary);box-shadow:0 0 10px var(--primary)}
+    .nav-logo span{color:var(--muted)}
+    .nav-links{display:flex;gap:24px;list-style:none}
+    .nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;padding-bottom:2px;transition:all 0.2s ease}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);border-bottom-color:var(--gold);text-shadow:0 0 8px var(--gold)}
+    .nav-links a:focus-visible{outline:2px solid var(--gold);outline-offset:4px;border-radius:2px}
+    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;width:32px;height:32px;flex-direction:column;justify-content:space-between;align-items:flex-end;padding:4px 0;color:var(--text)}
+    .nav-hamburger span{display:block;height:2px;background:var(--text);transition:all 0.3s var(--ease-spring);border-radius:2px}
+    .nav-hamburger span:nth-child(1){width:100%}
+    .nav-hamburger span:nth-child(2){width:70%}
+    .nav-hamburger span:nth-child(3){width:100%}
+    .nav-hamburger.open span:nth-child(1){transform:translateY(10px) rotate(45deg);width:100%}
+    .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+    .nav-hamburger.open span:nth-child(3){transform:translateY(-10px) rotate(-45deg);width:100%}
+    .mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:rgba(8,9,11,0.97);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:0;padding:0;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;overscroll-behavior:contain;pointer-events:none;border-top:1px solid var(--border)}
+    .mobile-nav.open{transform:translateY(0);visibility:visible;pointer-events:all;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0s}
+    .mobile-nav a{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;gap:8px;transition:all 0.15s ease;opacity:0;transform:translateY(6px)}
+    .mobile-nav a:nth-child(2n){border-right:none}
+    .mobile-nav a:nth-last-child(1),.mobile-nav a:nth-last-child(2):nth-child(2n+1){border-bottom:none}
+    .mobile-nav.open a{opacity:1;transform:translateY(0)}
+    .mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background 0.15s ease,box-shadow 0.15s ease}
+    .mobile-nav a:hover,.mobile-nav a:focus-visible,.mobile-nav a.active{color:var(--gold);background:rgba(212,175,55,0.04);text-shadow:0 0 8px var(--gold);outline:none}
+    .mobile-nav a:hover::before,.mobile-nav a:focus-visible::before,.mobile-nav a.active::before{background:var(--gold);box-shadow:0 0 6px var(--gold)}
+    .mobile-nav a:last-child:nth-child(2n+1){grid-column:1 / -1;border-right:none}
+
+    .wrapper{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:100px 40px 80px}
+    .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:12px}
+    .eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--primary);vertical-align:middle;margin-right:10px;margin-bottom:2px;box-shadow:0 0 8px var(--primary)}
+    .eyebrow::after{content:'';display:inline-block;width:20px;height:1px;background:var(--primary);vertical-align:middle;margin-left:10px;margin-bottom:2px;box-shadow:0 0 8px var(--primary)}
+    h1{font-family:var(--sans);font-size:var(--font-h1);font-weight:900;letter-spacing:1px;text-transform:uppercase;line-height:0.95;color:var(--text);margin-bottom:8px}
+    h1 em{color:var(--gold);font-style:normal;display:block;text-shadow:var(--glow-gold)}
+    .title-line{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:3px;margin-bottom:36px;margin-top:16px}
+
+    /* ===== PIPELINE FLOW ===== */
+    .pipeline-track{position:relative;padding:20px 0 40px}
+    .pipeline-track::before{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--gold),var(--primary));opacity:0.3;transform:translateY(-50%);z-index:0}
+    .stage-row{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;position:relative;z-index:1}
+    .stage-card{flex:1;min-width:200px;max-width:280px;background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:24px 20px;text-align:center;transition:all 0.3s var(--ease);cursor:pointer;position:relative}
+    .stage-card:hover{border-color:var(--gold);transform:translateY(-6px);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(212,175,55,0.15)}
+    .stage-number{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--dim);margin-bottom:8px}
+    .stage-icon{font-size:2.4rem;margin-bottom:8px;display:block}
+    .stage-title{font-family:var(--sans);font-size:1.1rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .stage-desc{font-family:var(--sans);font-size:0.85rem;color:var(--muted);line-height:1.5}
+    .stage-arrow{color:var(--dim);font-size:1.5rem;margin:0 -8px;align-self:center;display:none}
+
+    /* ===== MODAL (glass-morphic, same as services) ===== */
+    .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s}
+    .modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s}
+    .modal-box{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:560px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(168,85,247,0.1);position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);max-height:90vh;overflow-y:auto}
+    .modal-overlay.active .modal-box{transform:scale(1)}
+    .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;transition:color 0.2s}
+    .modal-close:hover{color:var(--gold);text-shadow:0 0 8px var(--gold)}
+    .modal-icon{font-size:2.5rem;margin-bottom:8px}
+    .modal-title{font-family:var(--sans);font-size:1.6rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+    .modal-sub{font-family:var(--mono);font-size:0.7rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+    .modal-desc{font-family:var(--serif);font-size:0.95rem;color:var(--text);line-height:1.7;margin-bottom:24px}
+    .modal-desc p{margin-bottom:12px}
+    .modal-desc strong{color:var(--gold)}
+    .modal-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+    .modal-tags span{font-family:var(--mono);font-size:9px;letter-spacing:1px;padding:4px 12px;border-radius:12px;background:rgba(168,85,247,0.12);color:var(--primary-light);border:1px solid rgba(168,85,247,0.2)}
+    .modal-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .modal-btn{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:10px 20px;border:1px solid var(--gold);color:var(--gold);background:transparent;border-radius:4px;transition:all 0.2s ease;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+    .modal-btn:hover{background:var(--gold);color:#000;box-shadow:0 0 20px var(--gold)}
+
+    /* ===== METHODOLOGY CALLOUT (professional) ===== */
+    .method-callout{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--gold);border-radius:16px;padding:32px 40px;margin-top:56px;max-width:800px;margin-left:auto;margin-right:auto;text-align:center}
+    .method-callout h3{font-family:var(--sans);font-size:1.4rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+    .method-callout p{font-family:var(--serif);font-size:1rem;color:var(--muted);line-height:1.8;max-width:680px;margin:0 auto}
+    .method-callout strong{color:var(--text)}
+
+    footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:2}
+    .footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
+    .footer-links a:hover,.footer-links a:focus-visible{color:var(--gold);text-shadow:0 0 8px var(--gold);outline:none}
+    .footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
+
+    @media (min-width:900px){.stage-row{flex-wrap:nowrap}}
+    @media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}.method-callout{padding:24px 20px}}
+    @media (max-width:480px){.eyebrow::before,.eyebrow::after{width:12px}}
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}}
+  </style>
+</head>
+<body>
+<a href="#main" class="skip-nav">Skip to content</a>
+
+<canvas id="webgl-canvas" aria-hidden="true"></canvas>
+<canvas id="symbol-canvas" aria-hidden="true"></canvas>
+<div class="scan-grid" aria-hidden="true"></div>
+<div class="scan-lines" aria-hidden="true"></div>
+
+<button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
+
+<nav aria-label="Primary navigation">
+  <a href="/main-2/index.html" class="nav-logo" aria-label="AionSystem home">
+    <img src="/assets/img/aion-logo.jpg" alt="AionSystem logo" class="nav-logo-img" width="28" height="28">
+    <span>AION<span>system</span></span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="/main-2/services/index.html">Services</a></li>
+    <li><a href="/main-2/portfolio/index.html">Portfolio</a></li>
+    <li><a href="/main-2/testimonials/index.html">Testimonials</a></li>
+    <li><a href="/main-2/about/index.html">About</a></li>
+    <li><a href="/main-2/pipeline/index.html" class="active">Pipeline</a></li>
+    <li><a href="/main-2/contact/index.html">Contact</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true"></nav>
+
+<div class="wrapper" id="main">
+
+  <div class="eyebrow">// Methodology</div>
+  <h1>The Sovereign<em>Design Pipeline</em></h1>
+  <div class="title-line">Scoping → Foundation → Systems → Handoff → Pitch</div>
+
+  <p style="font-family:var(--serif);font-size:1.2rem;font-weight:300;font-style:italic;max-width:680px;color:var(--muted);margin-bottom:40px">
+    A modular, tiered system that turns a game vision into a sealed, implementation‑ready specification. Every stage is optional, every depth is scoped to the project.
+  </p>
+
+  <!-- ===== PIPELINE STAGES (clickable modals) ===== -->
+  <div class="pipeline-track">
+    <div class="stage-row">
+      <div class="stage-card" data-stage="1">
+        <div class="stage-number">// 01</div>
+        <span class="stage-icon">📋</span>
+        <div class="stage-title">Scoping &amp; Intake</div>
+        <div class="stage-desc">Master Index determines exactly which modules a project needs—based on genre, stage, and budget. No overbuild, no gaps.</div>
+      </div>
+      <div class="stage-card" data-stage="2">
+        <div class="stage-number">// 02</div>
+        <span class="stage-icon">⚖️</span>
+        <div class="stage-title">World Foundation</div>
+        <div class="stage-desc">Game Overview anchors every decision with Design Pillars. Lore/Story Bible fuses mythology into load‑bearing mechanics.</div>
+      </div>
+      <div class="stage-card" data-stage="3">
+        <div class="stage-number">// 03</div>
+        <span class="stage-icon">⚙️</span>
+        <div class="stage-title">Systems Engineering</div>
+        <div class="stage-desc">Deterministic combat, anti‑inflation economies, dynamic world‑states—specified before any code is written.</div>
+      </div>
+      <div class="stage-card" data-stage="4">
+        <div class="stage-number">// 04</div>
+        <span class="stage-icon">📤</span>
+        <div class="stage-title">Production Handoff</div>
+        <div class="stage-desc">Technical specs, UI/UX, art direction, and roadmaps—ensuring the vision survives transition to build.</div>
+      </div>
+      <div class="stage-card" data-stage="5">
+        <div class="stage-number">// 05</div>
+        <span class="stage-icon">🎯</span>
+        <div class="stage-title">External Pitch</div>
+        <div class="stage-desc">A tight, visual‑led investor/publisher deck—distilled from the internal architecture for funding meetings.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL CONTAINER ===== -->
+  <div class="modal-overlay" id="stage-modal" aria-hidden="true">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <div class="modal-icon" id="modal-icon"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-sub" id="modal-sub"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-tags" id="modal-tags"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+
+  <!-- ===== PROFESSIONAL METHODOLOGY CALLOUT ===== -->
+  <div class="method-callout">
+    <h3>⬡ The Sovereign Design Methodology</h3>
+    <p>
+      A disciplined, modular approach to game design that treats <strong>lore as load‑bearing architecture</strong> and <strong>specifications as the contract</strong>.
+      Every engagement is scoped to the project's actual needs—never overbuilt, never underbuilt.
+      The process is <strong>red‑teamed</strong> for consistency, <strong>falsifiable</strong> at every stage, and <strong>production‑handoff ready</strong>.
+      What you see here is the <strong>spine</strong>—the muscle is built per engagement, tailored to your vision and your team.
+    </p>
+  </div>
+
+</div>
+
+<footer>
+  <div>
+    <div>AionSystem · Sheldon K. Salmon · Game Systems Architect · © <span id="copyright-year"></span></div>
+    <div class="footer-legal">Lore is not decoration — it is load-bearing architecture.</div>
+  </div>
+  <ul class="footer-links" role="list">
+    <li><a href="/main-2/services/index.html">Services</a></li>
+    <li><a href="/main-2/portfolio/index.html">Portfolio</a></li>
+    <li><a href="/main-2/testimonials/index.html">Testimonials</a></li>
+    <li><a href="/main-2/about/index.html">About</a></li>
+    <li><a href="/main-2/pipeline/index.html">Pipeline</a></li>
+    <li><a href="/main-2/contact/index.html">Contact</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===== FULL VISUAL ENGINE =====
+  const concurrency = navigator.hardwareConcurrency || 2;
+  const deviceMem   = navigator.deviceMemory || 2;
+  const lowDevice   = concurrency < 4 || deviceMem < 4;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const wglCanvas = document.getElementById('webgl-canvas');
+  let gl = null, glProgram = null, glUniforms = {}, glScrollVel = 0, glMouseDist = 1.0;
+  if (!reducedMotion) {
+    try { gl = wglCanvas.getContext('webgl') || wglCanvas.getContext('experimental-webgl'); } catch (_) {}
+  }
+  if (gl) {
+    const vsrc = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+    const fsrc = `precision mediump float;uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
+    void main(){vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
+    float ab=0.003*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
+    vec3 col=vec3(0.0);col.r=sin(d*8.0+u_time)*ab;col.b=cos(d*8.0-u_time)*ab;
+    float rf=0.002*sin(uv.x*6.28+u_time*0.7)*u_mouse_dist;col.g=rf;
+    gl_FragColor=vec4(col,0.18*(1.0-smoothstep(0.6,1.0,d)));}`;
+    function cs(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
+    glProgram = gl.createProgram();
+    gl.attachShader(glProgram, cs(gl.VERTEX_SHADER, vsrc));
+    gl.attachShader(glProgram, cs(gl.FRAGMENT_SHADER, fsrc));
+    gl.linkProgram(glProgram); gl.useProgram(glProgram);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(glProgram, 'a_pos');
+    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    glUniforms.res = gl.getUniformLocation(glProgram,'u_res');
+    glUniforms.time = gl.getUniformLocation(glProgram,'u_time');
+    glUniforms.scrollVel = gl.getUniformLocation(glProgram,'u_scroll_vel');
+    glUniforms.mouseDist = gl.getUniformLocation(glProgram,'u_mouse_dist');
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  }
+
+  const symCanvas = document.getElementById('symbol-canvas');
+  const ctx = symCanvas.getContext('2d');
+  const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','◆','○','●','◉'];
+  let W, H, symbols = [], echoes = [];
+  const mouse = { x: null, y: null, vx: 0, vy: 0, prevX: null, prevY: null };
+  const GRAVITY_R = 200, GRAVITY_STR = 0.015, TANGENTIAL = 0.18;
+  const PHYSICS_FPS = lowDevice ? 30 : 60, PHYSICS_DT = 1000 / PHYSICS_FPS;
+
+  let isCollapsing = false, collapsePhase = 0, collapseStart = 0;
+  const SNAP_DUR = 1500, HOLD_DUR = 800, EXPLODE_DUR = 600;
+  let collapseHoldTimeout = null;
+
+  function resizeCanvas() {
+    W = symCanvas.width = wglCanvas.width = window.innerWidth;
+    H = symCanvas.height = wglCanvas.height = window.innerHeight;
+    if (gl) gl.viewport(0, 0, W, H);
+    initSymbols();
+  }
+  let resizeTimer = null;
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeCanvas, 150); });
+
+  function initSymbols() {
+    const count = Math.floor((W * H) / 7000);
+    symbols = [];
+    for (let i = 0; i < count; i++) {
+      symbols.push({
+        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2,
+        size: 12 + Math.random() * 20,
+        color: Math.random() > 0.5 ? '#a855f7' : '#D4AF37',
+        alpha: 0.15 + Math.random() * 0.25,
+        scrollGlow: 0, inWell: false,
+        active: true,
+        origX: 0, origY: 0,
+        targetX: 0, targetY: 0
+      });
+    }
+  }
+
+  function spawnEcho(x, y) {
+    for (let i = 0; i < 12; i++) {
+      const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.3;
+      const speed = 1.5 + Math.random() * 2;
+      echoes.push({
+        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+        x, y,
+        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        size: 8 + Math.random() * 8,
+        color: Math.random() > 0.5 ? '#a855f7' : '#D4AF37',
+        alpha: 0.8, age: 0, maxAge: 600,
+      });
+    }
+  }
+
+  function triggerCollapse() {
+    if (isCollapsing) return;
+    isCollapsing = true; collapsePhase = 1; collapseStart = performance.now();
+    const lattice = [];
+    const hexW = 60, hexH = hexW * Math.sqrt(3) / 2;
+    for (let y = 0; y < H + hexH; y += hexH)
+      for (let x = 0; x < W + hexW; x += hexW)
+        lattice.push({ x: x + (Math.floor(y / hexH) % 2) * (hexW / 2), y });
+    symbols.forEach(s => {
+      s.origX = s.x; s.origY = s.y;
+      const tgt = lattice[Math.floor(Math.random() * lattice.length)];
+      s.targetX = tgt.x; s.targetY = tgt.y;
+    });
+  }
+
+  function stepCollapse(now) {
+    if (!isCollapsing) return;
+    const elapsed = now - collapseStart;
+    if (collapsePhase === 1) {
+      const p = Math.min(elapsed / SNAP_DUR, 1);
+      const t = 1 - Math.pow(1 - p, 3);
+      symbols.forEach(s => {
+        s.x = s.origX + (s.targetX - s.origX) * t;
+        s.y = s.origY + (s.targetY - s.origY) * t;
+        s.vx = 0; s.vy = 0;
+        s.alpha = 0.15 + 0.35 * p;
+        s.color = '#D4AF37';
+      });
+      if (p >= 1) {
+        collapsePhase = 2; collapseStart = now;
+        if (collapseHoldTimeout) clearTimeout(collapseHoldTimeout);
+        collapseHoldTimeout = setTimeout(() => {
+          if (!isCollapsing) return;
+          collapsePhase = 3; collapseStart = performance.now();
+          symbols.forEach(s => {
+            const a = Math.random() * Math.PI * 2;
+            const spd = 3 + Math.random() * 4;
+            s.vx = Math.cos(a) * spd;
+            s.vy = Math.sin(a) * spd;
+            s.color = '#a855f7';
+            s.alpha = 0.6;
+          });
+          spawnEcho(W / 2, H / 2); spawnEcho(W / 2, H / 2);
+        }, HOLD_DUR);
+      }
+    } else if (collapsePhase === 3) {
+      const p = Math.min(elapsed / EXPLODE_DUR, 1);
+      symbols.forEach(s => {
+        s.alpha = 0.15 + 0.25 * (1 - p);
+        s.vx *= 0.98; s.vy *= 0.98;
+      });
+      if (p >= 1) {
+        isCollapsing = false; collapsePhase = 0;
+        symbols.forEach(s => {
+          s.vx = (Math.random() - 0.5) * 0.2;
+          s.vy = (Math.random() - 0.5) * 0.2;
+          s.color = Math.random() > 0.5 ? '#a855f7' : '#D4AF37';
+        });
+      }
+    }
+  }
+
+  let lastScrollY = window.scrollY, scrollVel = 0, scrollTimeout = null;
+  function handleScroll() {
+    const sy = window.scrollY; scrollVel = sy - lastScrollY; lastScrollY = sy;
+    glScrollVel = Math.abs(scrollVel) / 60;
+    symbols.forEach(s => { if (Math.abs(s.y - (sy + H / 2)) < 200) s.scrollGlow = 1.0; });
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => { symbols.forEach(s => s.scrollGlow = 0); scrollVel = 0; glScrollVel *= 0.9; }, 300);
+  }
+
+  let lastPhysicsTime = 0;
+  function updatePhysics(now) {
+    if (now - lastPhysicsTime < PHYSICS_DT) return;
+    lastPhysicsTime = now;
+    if (mouse.prevX !== null && mouse.x !== null) { mouse.vx = mouse.x - mouse.prevX; mouse.vy = mouse.y - mouse.prevY; }
+    if (mouse.x !== null) { mouse.prevX = mouse.x; mouse.prevY = mouse.y; }
+
+    if (isCollapsing) { stepCollapse(now); return; }
+
+    symbols.forEach(s => {
+      if (!s.active) return;
+      s.x += s.vx; s.y += s.vy;
+      if (s.x < -50) s.x = W + 50; if (s.x > W + 50) s.x = -50;
+      if (s.y < -50) s.y = H + 50; if (s.y > H + 50) s.y = -50;
+
+      if (mouse.x !== null && mouse.y !== null) {
+        const dx = s.x - mouse.x, dy = s.y - mouse.y; const dist = Math.hypot(dx, dy);
+        if (dist < GRAVITY_R) {
+          const force = GRAVITY_STR * (1 - dist / GRAVITY_R); const angle = Math.atan2(dy, dx);
+          s.vx -= Math.cos(angle) * force; s.vy -= Math.sin(angle) * force;
+          const ta = angle + Math.PI / 2; const spin = TANGENTIAL * (1 - dist / GRAVITY_R);
+          s.vx += Math.cos(ta) * spin * (mouse.vx * 0.05 + 0.5);
+          s.vy += Math.sin(ta) * spin * (mouse.vy * 0.05 + 0.5);
+          s.vx *= 0.99; s.vy *= 0.99; s.inWell = true;
+          glMouseDist = Math.min(glMouseDist, dist / GRAVITY_R);
+        } else { s.inWell = false; }
+      }
+      if (s.scrollGlow > 0.01) s.scrollGlow *= 0.94; else s.scrollGlow = 0;
+    });
+    glMouseDist = Math.min(1, glMouseDist + 0.02);
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+    echoes = echoes.filter(e => {
+      e.age += PHYSICS_DT; if (e.age >= e.maxAge) return false;
+      e.x += e.vx; e.y += e.vy; e.alpha = 0.8 * (1 - e.age / e.maxAge); e.size *= 0.996;
+      ctx.font = `${e.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = e.color; ctx.shadowBlur = 10; ctx.fillStyle = e.color; ctx.globalAlpha = e.alpha;
+      ctx.fillText(e.char, e.x, e.y); return true;
+    });
+    symbols.forEach(s => {
+      if (!s.active && !isCollapsing) return;
+      const glow = s.scrollGlow > 0.01 ? 15 + s.scrollGlow * 20 : (s.inWell ? 25 : 12);
+      ctx.font = `${s.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.shadowColor = s.color; ctx.shadowBlur = glow; ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.alpha + s.scrollGlow * 0.2; ctx.fillText(s.char, s.x, s.y);
+    });
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  }
+
+  function renderWebGL(t) {
+    if (!gl || !glProgram) return;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform2f(glUniforms.res, W, H); gl.uniform1f(glUniforms.time, t * 0.001);
+    gl.uniform1f(glUniforms.scrollVel, glScrollVel); gl.uniform1f(glUniforms.mouseDist, glMouseDist);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+
+  let rafId = null;
+  function loop(t) { updatePhysics(t); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
+
+  window.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; }
+  });
+  window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
+  window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
+
+  window.addEventListener('dblclick', (e) => {
+    const tag = e.target.tagName.toLowerCase();
+    const isInteractive = ['a', 'button', 'input', 'select', 'textarea'].includes(tag) ||
+      e.target.closest('a') || e.target.closest('button') || e.target.closest('.modal-btn') ||
+      e.target.closest('.modal-close') || e.target.closest('.stage-card');
+    if (isInteractive) return;
+    triggerCollapse();
+    spawnEcho(e.clientX, e.clientY);
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'Q') { e.preventDefault(); triggerCollapse(); }
+  });
+
+  let audioCtx = null, audioNodes = null, audioOn = false;
+  const toggle = document.getElementById('audio-toggle');
+  function initAudio() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    audioCtx = new AC();
+    const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 400; filter.Q.value = 0.8;
+    const osc1 = audioCtx.createOscillator(); osc1.type = 'sine'; osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+    const osc2 = audioCtx.createOscillator(); osc2.type = 'sawtooth'; osc2.frequency.setValueAtTime(110.5, audioCtx.currentTime);
+    const g2 = audioCtx.createGain(); g2.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    osc1.connect(filter); osc2.connect(g2); g2.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+    osc1.start(); osc2.start();
+    audioNodes = { gain, osc1, osc2 };
+    window.addEventListener('pagehide', () => { try { audioCtx.close(); } catch(_) {} }, { once: true });
+  }
+  function modulateAudio(scrollY) {
+    if (!audioNodes || !audioCtx) return;
+    const pct = scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+    audioNodes.osc1.frequency.setTargetAtTime(55 + pct * 40, audioCtx.currentTime, 0.3);
+  }
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      audioOn = !audioOn;
+      toggle.setAttribute('aria-pressed', String(audioOn));
+      if (audioOn) { if (!audioCtx) initAudio(); else if (audioCtx.state === 'suspended') audioCtx.resume(); }
+      else { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend(); }
+    });
+  }
+
+  let scrollRAFId = null;
+  window.addEventListener('scroll', () => {
+    if (scrollRAFId) return;
+    scrollRAFId = requestAnimationFrame(() => { handleScroll(); modulateAudio(window.scrollY); scrollRAFId = null; });
+  }, { passive: true });
+
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  let navOpen = false;
+  if (hamburger && mobileNav) {
+    document.querySelectorAll('.nav-links a').forEach((link, i) => {
+      const a = document.createElement('a');
+      a.href = link.getAttribute('href'); a.textContent = link.textContent;
+      if (link.getAttribute('target')) a.setAttribute('target', link.getAttribute('target'));
+      if (link.getAttribute('rel')) a.setAttribute('rel', link.getAttribute('rel'));
+      a.style.transitionDelay = `${i * 30}ms`; mobileNav.appendChild(a);
+    });
+    function openMenu() { navOpen = true; mobileNav.classList.add('open'); mobileNav.setAttribute('aria-hidden', 'false'); hamburger.classList.add('open'); hamburger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; setTimeout(() => { const f = mobileNav.querySelector('a'); if (f) f.focus(); }, 100); }
+    function closeMenu() { navOpen = false; mobileNav.classList.remove('open'); mobileNav.setAttribute('aria-hidden', 'true'); hamburger.classList.remove('open'); hamburger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; hamburger.focus(); }
+    hamburger.addEventListener('click', () => navOpen ? closeMenu() : openMenu());
+    mobileNav.addEventListener('click', (e) => { if (e.target.tagName === 'A') closeMenu(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && navOpen) closeMenu(); });
+    mobileNav.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusable = Array.from(mobileNav.querySelectorAll('a'));
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
+
+  const yearSpan = document.getElementById('copyright-year');
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+  if (!reducedMotion) { resizeCanvas(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
+
+  // ===== MODAL LOGIC =====
+  const stageData = {
+    1: {
+      icon: '📋',
+      title: 'Scoping & Intake',
+      sub: 'Stage 01 · Engagement Foundation',
+      desc: `<p>The <strong>Master Index</strong> is the first document in every engagement. It converts a catalog of independent GDD module templates into one scoped, priced, client‑facing proposal — rather than a pile of unrelated documents the client has to assemble themselves.</p>
+            <p>Through a structured questionnaire, we determine exactly which modules a project needs — based on genre, development stage, audience, and budget. The Scoping Matrix prevents the common failure of overbuilding or underbuilding: you get the depth you need, not the whole catalog.</p>
+            <p><strong>Output:</strong> A custom engagement scope with tiered pricing, a clear module list, and a production sequence — all before any design work begins.</p>`,
+      tags: ['Required for all engagements', 'Pitch Depth / Production Depth'],
+      actions: `<a href="/main-2/contact/index.html" class="modal-btn">Start Your Scoping →</a>`
+    },
+    2: {
+      icon: '⚖️',
+      title: 'World Foundation',
+      sub: 'Stage 02 · Anchor Documents',
+      desc: `<p>Two anchor documents define the game’s internal truth and narrative architecture. The <strong>Game Overview Foundation</strong> states the High‑Concept Pitch, Design Pillars, Core Loop, and USPs — every other module traces back to this source.</p>
+            <p>The <strong>Lore/Story Bible</strong> builds cosmology, faction architecture, a central mystery that outlasts any content cycle, and endgame philosophy — all grounded in documented mythological research. The lore is <strong>load‑bearing</strong>: faction philosophies become damage modifiers; covenant structures become resource scarcity conditions.</p>
+            <p><strong>Output:</strong> A sealed specification that ensures the story can be felt through the controller — not just read on a wiki.</p>`,
+      tags: ['Required for narrative‑driven games', 'Research‑grounded', 'Production Depth'],
+      actions: `<a href="/main-2/portfolio/index.html" class="modal-btn">See Lore Examples →</a>`
+    },
+    3: {
+      icon: '⚙️',
+      title: 'Systems Engineering',
+      sub: 'Stage 03 · Deterministic Design',
+      desc: `<p>Core Mechanics, Economy, Combat, and Multiplayer systems are specified before a single line of code is written. Each module is independently sellable and references the Foundation.</p>
+            <p>Systems are designed to be <strong>deterministic</strong> (zero RNG where it matters), <strong>balanced</strong> (no dominant strategy), and <strong>player‑centric</strong> (gatekeeping is a design failure — every build should be viable). Anti‑inflation economies, progression curves with no stat squishes, and combat formulas that reward mastery over gear score.</p>
+            <p><strong>Output:</strong> Implementation‑ready specifications that a development team can build from without guesswork.</p>`,
+      tags: ['Required for interactive projects', 'Multi‑module available', 'Production Depth'],
+      actions: `<a href="/main-2/services/index.html" class="modal-btn">Explore Systems Services →</a>`
+    },
+    4: {
+      icon: '📤',
+      title: 'Production Handoff',
+      sub: 'Stage 04 · Bridge to Implementation',
+      desc: `<p>Technical Specs, UI/UX, Art/Audio Direction, and Production Roadmap ensure the design survives the transition from document to build.</p>
+            <p>Each module includes a <strong>"What This Game Is Not"</strong> section — a named scope‑creep guard that prevents feature bloat before it starts. The zip folder ships with a <strong>START_HERE.md</strong> that maps dependencies explicitly, so a change to a Design Pillar triggers a review of every other module that depends on it.</p>
+            <p><strong>Output:</strong> A complete, cross‑referenced package that a studio or contractor can execute without requiring the architect's ongoing presence.</p>`,
+      tags: ['Recommended for all projects', 'Cross‑module consistency enforced'],
+      actions: `<a href="/main-2/contact/index.html" class="modal-btn">Inquire About Handoff →</a>`
+    },
+    5: {
+      icon: '🎯',
+      title: 'External Pitch',
+      sub: 'Stage 05 · Investor / Publisher Deck',
+      desc: `<p>A short, visual‑led document built from the internal foundation, restructured for investor or publisher cognition: <strong>Problem → Solution → Market Proof → Team → The Ask</strong>.</p>
+            <p>This is a genuinely separate artifact from the internal GDD — because a pitch deck that reads like a design doc loses the room. It is distilled from the Game Overview and Lore Bible, but aimed at a reader who has never seen any other document in your GDD suite and has limited time.</p>
+            <p><strong>Output:</strong> A tight, skimmable deck that ends with a specific, concrete ask — not a vague request for "support" or "interest."</p>`,
+      tags: ['Optional — pre‑funding or publishing', 'Pitch Depth'],
+      actions: `<a href="/main-2/contact/index.html" class="modal-btn">Discuss Your Pitch →</a>`
+    }
+  };
+
+  const modalOverlay = document.getElementById('stage-modal');
+  const modalClose = document.getElementById('modal-close');
+  const modalIcon = document.getElementById('modal-icon');
+  const modalTitle = document.getElementById('modal-title');
+  const modalSub = document.getElementById('modal-sub');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalTags = document.getElementById('modal-tags');
+  const modalActions = document.getElementById('modal-actions');
+
+  function openModal(stageId) {
+    const data = stageData[stageId];
+    if (!data) return;
+    modalIcon.textContent = data.icon;
+    modalTitle.textContent = data.title;
+    modalSub.textContent = data.sub;
+    modalDesc.innerHTML = data.desc;
+    modalTags.innerHTML = data.tags.map(t => `<span>${t}</span>`).join('');
+    modalActions.innerHTML = data.actions;
+    modalOverlay.classList.add('active');
+    modalOverlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal() {
+    modalOverlay.classList.remove('active');
+    modalOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  document.querySelectorAll('.stage-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const stage = card.getAttribute('data-stage');
+      openModal(stage);
+    });
+  });
+
+  modalClose.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
+  });
+
+})();
+</script>
+</body>
+</html>
