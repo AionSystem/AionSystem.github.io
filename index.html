@@ -15,526 +15,109 @@
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-
 :root{
-  /* Left domain — AI Reliability — cold electric */
   --cold-void:#050507;
   --cold-primary:#4f46e5;
   --cold-secondary:#06b6d4;
   --cold-accent:#818cf8;
-  --cold-glow:rgba(79,70,229,0.4);
-
-  /* Right domain — Game Design — hot ember */
   --hot-void:#080406;
   --hot-primary:#f59e0b;
   --hot-secondary:#ef4444;
   --hot-accent:#fcd34d;
-  --hot-glow:rgba(245,158,11,0.4);
-
-  /* Spine */
-  --spine:#ffffff;
-  --spine-glow:rgba(255,255,255,0.15);
-
-  /* Shared */
   --text-bright:#f0f4f8;
   --text-mid:#94a3b8;
   --text-dim:#475569;
   --bg:#05060a;
-
-  /* Type */
   --display:'Space Grotesk',sans-serif;
   --body:'Inter',sans-serif;
   --mono:'JetBrains Mono',monospace;
-
   --ease:cubic-bezier(0.16,1,0.3,1);
   --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
 }
-
-/* ═══════════════════════════════
-   CANVAS LAYER — SPLIT WORLD
-═══════════════════════════════ */
-#split-canvas{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  z-index:0;
-  pointer-events:none;
-}
-
-/* ═══════════════════════════════
-   BODY
-═══════════════════════════════ */
-body{
-  background:var(--bg);
-  color:var(--text-bright);
-  font-family:var(--body);
-  overflow-x:hidden;
-  min-height:100vh;
-}
-
-/* ═══════════════════════════════
-   SKIP NAV
-═══════════════════════════════ */
-.skip-nav{
-  position:absolute;top:-100%;left:0;z-index:99999;
-  padding:10px 20px;background:var(--cold-primary);color:#fff;
-  font-family:var(--mono);font-size:12px;letter-spacing:2px;text-decoration:none;
-  transition:top 0.2s;
-}
+#split-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+body{background:var(--bg);color:var(--text-bright);font-family:var(--body);overflow-x:hidden;min-height:100vh;}
+.skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:10px 20px;background:var(--cold-primary);color:#fff;font-family:var(--mono);font-size:12px;letter-spacing:2px;text-decoration:none;transition:top 0.2s;}
 .skip-nav:focus{top:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
-/* ═══════════════════════════════
-   NAV
-═══════════════════════════════ */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 40px;height:56px;
-  background:rgba(5,6,10,0.7);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(255,255,255,0.06);
-  animation:fadeInNav 0.6s var(--ease) 0.3s both;
-}
+.spine{position:fixed;top:0;bottom:0;left:50%;width:1px;z-index:2;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,rgba(255,255,255,0.04) 10%,rgba(255,255,255,0.25) 30%,rgba(255,255,255,0.5) 50%,rgba(255,255,255,0.25) 70%,rgba(255,255,255,0.04) 90%,transparent 100%);animation:spinePulse 4s ease-in-out infinite;}
+.spine::after{content:'';position:absolute;top:0;bottom:0;left:-4px;width:9px;background:linear-gradient(to right,transparent,rgba(255,255,255,0.04),rgba(255,255,255,0.12),rgba(255,255,255,0.04),transparent);filter:blur(3px);}
+@keyframes spinePulse{0%,100%{opacity:0.6}50%{opacity:1}}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(5,6,10,0.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06);animation:fadeInNav 0.6s var(--ease) 0.3s both;}
 @keyframes fadeInNav{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-
-.nav-logo{
-  display:flex;align-items:center;gap:10px;text-decoration:none;
-  font-family:var(--mono);font-size:12px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--text-bright);
-}
-.nav-logo-img{
-  width:26px;height:26px;border-radius:50%;object-fit:cover;
-  border:1px solid rgba(255,255,255,0.2);
-}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--text-bright);}
+.nav-logo-img{width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.2);}
 .nav-logo .dot{color:var(--cold-secondary)}
-
 .nav-right{display:flex;align-items:center;gap:28px;}
-.nav-link{
-  font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--text-mid);text-decoration:none;
-  transition:color 0.2s;
-}
+.nav-link{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:color 0.2s;}
 .nav-link:hover,.nav-link:focus-visible{color:var(--text-bright);outline:none;}
-
-/* ═══════════════════════════════
-   SPINE — the fault line
-═══════════════════════════════ */
-.spine{
-  position:fixed;
-  top:0;bottom:0;
-  left:50%;
-  width:1px;
-  z-index:2;
-  pointer-events:none;
-  background:linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(255,255,255,0.04) 10%,
-    rgba(255,255,255,0.25) 30%,
-    rgba(255,255,255,0.5) 50%,
-    rgba(255,255,255,0.25) 70%,
-    rgba(255,255,255,0.04) 90%,
-    transparent 100%
-  );
-  animation:spinePulse 4s ease-in-out infinite;
-}
-.spine::after{
-  content:'';
-  position:absolute;
-  top:0;bottom:0;left:-4px;
-  width:9px;
-  background:linear-gradient(to right,
-    transparent,
-    rgba(255,255,255,0.04),
-    rgba(255,255,255,0.12),
-    rgba(255,255,255,0.04),
-    transparent
-  );
-  filter:blur(3px);
-}
-@keyframes spinePulse{
-  0%,100%{opacity:0.6;}
-  50%{opacity:1;}
-}
-
-/* ═══════════════════════════════
-   HERO
-═══════════════════════════════ */
-.hero{
-  position:relative;z-index:3;
-  min-height:100vh;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:80px 40px 60px;
-  text-align:center;
-}
-
-/* Badge */
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--text-mid);
-  border:1px solid rgba(255,255,255,0.08);
-  padding:6px 16px;border-radius:20px;
-  margin-bottom:32px;
-  background:rgba(255,255,255,0.03);
-  backdrop-filter:blur(8px);
-  animation:fadeUp 0.6s var(--ease) 0.5s both;
-}
-.hero-badge::before{
-  content:'';display:block;width:6px;height:6px;border-radius:50%;
-  background:var(--cold-secondary);
-  box-shadow:0 0 8px var(--cold-secondary);
-  animation:blink 2s ease-in-out infinite;
-}
+.hero{position:relative;z-index:3;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px 60px;text-align:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-mid);border:1px solid rgba(255,255,255,0.08);padding:6px 16px;border-radius:20px;margin-bottom:32px;background:rgba(255,255,255,0.03);backdrop-filter:blur(8px);animation:fadeUp 0.6s var(--ease) 0.5s both;}
+.hero-badge::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--cold-secondary);box-shadow:0 0 8px var(--cold-secondary);animation:blink 2s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-
-/* Name — split rendering */
-.hero-name{
-  font-family:var(--display);
-  font-size:clamp(52px,9vw,120px);
-  font-weight:700;
-  letter-spacing:-3px;
-  line-height:0.9;
-  text-transform:uppercase;
-  margin-bottom:8px;
-  animation:fadeUp 0.7s var(--ease) 0.6s both;
-  /* Default color — overridden per-half by JS hover */
-  color:var(--text-bright);
-  position:relative;
-}
-
-/* The name splits — left half cold, right half hot */
-.name-cold{
-  color:transparent;
-  background:linear-gradient(135deg, var(--cold-secondary) 0%, var(--cold-primary) 60%, var(--cold-accent) 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-}
-.name-hot{
-  color:transparent;
-  background:linear-gradient(135deg, var(--hot-primary) 0%, var(--hot-secondary) 60%, #f97316 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-}
-
-.hero-sub-title{
-  font-family:var(--mono);font-size:11px;letter-spacing:4px;text-transform:uppercase;
-  color:var(--text-dim);
-  margin-bottom:16px;
-  animation:fadeUp 0.7s var(--ease) 0.7s both;
-}
-
-.hero-descriptor{
-  font-family:var(--body);font-size:clamp(15px,1.8vw,19px);font-weight:300;
-  color:var(--text-mid);max-width:580px;line-height:1.65;
-  margin:0 auto 48px;
-  animation:fadeUp 0.7s var(--ease) 0.8s both;
-}
+.hero-name{font-family:var(--display);font-size:clamp(52px,9vw,120px);font-weight:700;letter-spacing:-3px;line-height:0.9;text-transform:uppercase;margin-bottom:8px;animation:fadeUp 0.7s var(--ease) 0.6s both;}
+.name-cold{color:transparent;background:linear-gradient(135deg,var(--cold-secondary) 0%,var(--cold-primary) 60%,var(--cold-accent) 100%);-webkit-background-clip:text;background-clip:text;}
+.name-hot{color:transparent;background:linear-gradient(135deg,var(--hot-primary) 0%,var(--hot-secondary) 60%,#f97316 100%);-webkit-background-clip:text;background-clip:text;}
+.hero-sub-title{font-family:var(--mono);font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px;animation:fadeUp 0.7s var(--ease) 0.7s both;}
+.hero-descriptor{font-family:var(--body);font-size:clamp(15px,1.8vw,19px);font-weight:300;color:var(--text-mid);max-width:580px;line-height:1.65;margin:0 auto 40px;animation:fadeUp 0.7s var(--ease) 0.8s both;}
 .hero-descriptor strong{color:var(--text-bright);font-weight:500;}
-
-/* ═══════════════════════════════
-   CHOICE GRID
-═══════════════════════════════ */
-.choice-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-  max-width:860px;
-  width:100%;
-  margin:0 auto 40px;
-  animation:fadeUp 0.8s var(--ease) 0.9s both;
-}
-
-.choice-card{
-  position:relative;
-  display:flex;flex-direction:column;
-  padding:36px 32px 28px;
-  border-radius:16px;
-  text-decoration:none;
-  color:inherit;
-  overflow:hidden;
-  transition:transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
-  cursor:pointer;
-  outline:none;
-}
-.choice-card::before{
-  content:'';
-  position:absolute;inset:0;
-  border-radius:inherit;
-  transition:opacity 0.4s var(--ease);
-  pointer-events:none;
-  z-index:0;
-}
-.choice-card > *{position:relative;z-index:1;}
-
-/* Cold card */
-.card-cold{
-  background:
-    linear-gradient(135deg,
-      rgba(15,15,35,0.95) 0%,
-      rgba(20,20,50,0.9) 100%
-    );
-  border:1px solid rgba(79,70,229,0.25);
-  box-shadow:
-    0 4px 24px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.06),
-    0 0 40px rgba(79,70,229,0.05);
-}
-.card-cold::before{
-  background:
-    radial-gradient(ellipse at top left, rgba(79,70,229,0.2) 0%, transparent 70%),
-    radial-gradient(ellipse at bottom right, rgba(6,182,212,0.1) 0%, transparent 70%);
-  opacity:0.7;
-}
-.card-cold:hover,.card-cold:focus-visible{
-  transform:translateY(-8px) scale(1.01);
-  border-color:rgba(79,70,229,0.6);
-  box-shadow:
-    0 20px 60px rgba(0,0,0,0.6),
-    0 0 60px rgba(79,70,229,0.2),
-    0 0 120px rgba(6,182,212,0.08),
-    inset 0 1px 0 rgba(255,255,255,0.1);
-}
+.stat-row{display:flex;align-items:center;gap:32px;flex-wrap:wrap;justify-content:center;margin-bottom:40px;animation:fadeUp 0.8s var(--ease) 0.85s both;}
+.stat-item{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.stat-number{font-family:var(--mono);font-size:22px;font-weight:700;color:transparent;background:linear-gradient(90deg,var(--cold-secondary),var(--cold-primary));-webkit-background-clip:text;background-clip:text;}
+.stat-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);}
+.stat-divider{width:1px;height:32px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,0.1),transparent);}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:860px;width:100%;margin:0 auto 32px;animation:fadeUp 0.8s var(--ease) 0.9s both;}
+.choice-card{position:relative;display:flex;flex-direction:column;padding:36px 32px 28px;border-radius:16px;text-decoration:none;color:inherit;overflow:hidden;transition:transform 0.4s var(--ease),box-shadow 0.4s var(--ease);cursor:pointer;outline:none;}
+.choice-card::before{content:'';position:absolute;inset:0;border-radius:inherit;transition:opacity 0.4s var(--ease);pointer-events:none;z-index:0;}
+.choice-card>*{position:relative;z-index:1;}
+.card-cold{background:linear-gradient(135deg,rgba(15,15,35,0.95) 0%,rgba(20,20,50,0.9) 100%);border:1px solid rgba(79,70,229,0.25);box-shadow:0 4px 24px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.06),0 0 40px rgba(79,70,229,0.05);}
+.card-cold::before{background:radial-gradient(ellipse at top left,rgba(79,70,229,0.2) 0%,transparent 70%),radial-gradient(ellipse at bottom right,rgba(6,182,212,0.1) 0%,transparent 70%);opacity:0.7;}
+.card-cold:hover,.card-cold:focus-visible{transform:translateY(-8px) scale(1.01);border-color:rgba(79,70,229,0.6);box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 60px rgba(79,70,229,0.2),0 0 120px rgba(6,182,212,0.08),inset 0 1px 0 rgba(255,255,255,0.1);}
 .card-cold:hover::before,.card-cold:focus-visible::before{opacity:1;}
-
-/* Hot card */
-.card-hot{
-  background:
-    linear-gradient(135deg,
-      rgba(20,12,5,0.95) 0%,
-      rgba(30,15,5,0.9) 100%
-    );
-  border:1px solid rgba(245,158,11,0.2);
-  box-shadow:
-    0 4px 24px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.04),
-    0 0 40px rgba(245,158,11,0.04);
-}
-.card-hot::before{
-  background:
-    radial-gradient(ellipse at top right, rgba(245,158,11,0.18) 0%, transparent 70%),
-    radial-gradient(ellipse at bottom left, rgba(239,68,68,0.08) 0%, transparent 70%);
-  opacity:0.7;
-}
-.card-hot:hover,.card-hot:focus-visible{
-  transform:translateY(-8px) scale(1.01);
-  border-color:rgba(245,158,11,0.55);
-  box-shadow:
-    0 20px 60px rgba(0,0,0,0.6),
-    0 0 60px rgba(245,158,11,0.18),
-    0 0 120px rgba(239,68,68,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-}
+.card-hot{background:linear-gradient(135deg,rgba(20,12,5,0.95) 0%,rgba(30,15,5,0.9) 100%);border:1px solid rgba(245,158,11,0.2);box-shadow:0 4px 24px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.04),0 0 40px rgba(245,158,11,0.04);}
+.card-hot::before{background:radial-gradient(ellipse at top right,rgba(245,158,11,0.18) 0%,transparent 70%),radial-gradient(ellipse at bottom left,rgba(239,68,68,0.08) 0%,transparent 70%);opacity:0.7;}
+.card-hot:hover,.card-hot:focus-visible{transform:translateY(-8px) scale(1.01);border-color:rgba(245,158,11,0.55);box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 60px rgba(245,158,11,0.18),0 0 120px rgba(239,68,68,0.06),inset 0 1px 0 rgba(255,255,255,0.08);}
 .card-hot:hover::before,.card-hot:focus-visible::before{opacity:1;}
-
-/* Card content */
-.card-domain-tag{
-  font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;
-  margin-bottom:20px;display:flex;align-items:center;gap:8px;
-}
+.card-domain-tag{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
 .card-cold .card-domain-tag{color:var(--cold-secondary);}
 .card-hot .card-domain-tag{color:var(--hot-primary);}
-
-.domain-dot{
-  width:5px;height:5px;border-radius:50%;flex-shrink:0;
-}
+.domain-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
 .card-cold .domain-dot{background:var(--cold-secondary);box-shadow:0 0 8px var(--cold-secondary);}
 .card-hot .domain-dot{background:var(--hot-primary);box-shadow:0 0 8px var(--hot-primary);}
-
-.card-icon{
-  font-size:2.2rem;line-height:1;
-  margin-bottom:16px;
-  filter:drop-shadow(0 0 12px currentColor);
-}
-
-.card-title{
-  font-family:var(--display);
-  font-size:clamp(26px,3.5vw,38px);
-  font-weight:700;
-  letter-spacing:-1px;
-  line-height:1.05;
-  text-transform:uppercase;
-  margin-bottom:6px;
-}
-.card-cold .card-title{
-  color:transparent;
-  background:linear-gradient(135deg,#e0e7ff,var(--cold-accent),var(--cold-secondary));
-  -webkit-background-clip:text;background-clip:text;
-}
-.card-hot .card-title{
-  color:transparent;
-  background:linear-gradient(135deg,#fef3c7,var(--hot-primary),var(--hot-secondary));
-  -webkit-background-clip:text;background-clip:text;
-}
-
-.card-subtitle{
-  font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--text-dim);margin-bottom:20px;
-}
-
-.card-desc{
-  font-family:var(--body);font-size:14px;font-weight:300;
-  color:var(--text-mid);line-height:1.65;
-  flex:1;margin-bottom:28px;
-}
-
-/* Circuit decorations — cold card */
-.card-cold .card-circuit{
-  position:absolute;
-  bottom:12px;right:16px;
-  opacity:0.07;
-  font-family:var(--mono);font-size:9px;letter-spacing:1px;
-  color:var(--cold-secondary);
-  pointer-events:none;
-  line-height:1.4;
-  text-align:right;
-  transition:opacity 0.4s;
-}
-.card-cold:hover .card-circuit{opacity:0.18;}
-
-/* Ember decorations — hot card */
-.card-hot .card-embers{
-  position:absolute;
-  bottom:12px;right:16px;
-  opacity:0.08;
-  font-family:var(--mono);font-size:9px;letter-spacing:1px;
-  color:var(--hot-primary);
-  pointer-events:none;
-  line-height:1.4;
-  text-align:right;
-  transition:opacity 0.4s;
-}
-.card-hot:hover .card-embers{opacity:0.2;}
-
-.card-cta{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;
-  padding:10px 20px;border-radius:6px;
-  font-weight:500;
-  transition:all 0.25s var(--ease);
-  width:fit-content;
-}
-.card-cold .card-cta{
-  background:rgba(79,70,229,0.12);
-  border:1px solid rgba(79,70,229,0.3);
-  color:var(--cold-accent);
-}
-.card-cold:hover .card-cta{
-  background:rgba(79,70,229,0.22);
-  border-color:rgba(79,70,229,0.6);
-  color:#e0e7ff;
-  box-shadow:0 0 20px rgba(79,70,229,0.25);
-}
-.card-hot .card-cta{
-  background:rgba(245,158,11,0.1);
-  border:1px solid rgba(245,158,11,0.25);
-  color:var(--hot-primary);
-}
-.card-hot:hover .card-cta{
-  background:rgba(245,158,11,0.2);
-  border-color:rgba(245,158,11,0.55);
-  color:#fef3c7;
-  box-shadow:0 0 20px rgba(245,158,11,0.2);
-}
-
+.card-icon{font-size:2.2rem;line-height:1;margin-bottom:16px;}
+.card-title{font-family:var(--display);font-size:clamp(26px,3.5vw,38px);font-weight:700;letter-spacing:-1px;line-height:1.05;text-transform:uppercase;margin-bottom:6px;}
+.card-cold .card-title{color:transparent;background:linear-gradient(135deg,#e0e7ff,var(--cold-accent),var(--cold-secondary));-webkit-background-clip:text;background-clip:text;}
+.card-hot .card-title{color:transparent;background:linear-gradient(135deg,#fef3c7,var(--hot-primary),var(--hot-secondary));-webkit-background-clip:text;background-clip:text;}
+.card-subtitle{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:20px;}
+.card-desc{font-family:var(--body);font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.65;flex:1;margin-bottom:28px;}
+.card-cold .card-corner{position:absolute;bottom:12px;right:16px;opacity:0.07;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--cold-secondary);pointer-events:none;line-height:1.4;text-align:right;transition:opacity 0.4s;}
+.card-cold:hover .card-corner{opacity:0.18;}
+.card-hot .card-corner{position:absolute;bottom:12px;right:16px;opacity:0.08;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--hot-primary);pointer-events:none;line-height:1.4;text-align:right;transition:opacity 0.4s;}
+.card-hot:hover .card-corner{opacity:0.2;}
+.card-cta{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:10px 20px;border-radius:6px;font-weight:500;transition:all 0.25s var(--ease);width:fit-content;}
+.card-cold .card-cta{background:rgba(79,70,229,0.12);border:1px solid rgba(79,70,229,0.3);color:var(--cold-accent);}
+.card-cold:hover .card-cta{background:rgba(79,70,229,0.22);border-color:rgba(79,70,229,0.6);color:#e0e7ff;box-shadow:0 0 20px rgba(79,70,229,0.25);}
+.card-hot .card-cta{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--hot-primary);}
+.card-hot:hover .card-cta{background:rgba(245,158,11,0.2);border-color:rgba(245,158,11,0.55);color:#fef3c7;box-shadow:0 0 20px rgba(245,158,11,0.2);}
 .cta-arrow{transition:transform 0.25s var(--ease);}
 .choice-card:hover .cta-arrow{transform:translateX(5px);}
-
-/* ═══════════════════════════════
-   STAT ROW
-═══════════════════════════════ */
-.stat-row{
-  display:flex;align-items:center;gap:32px;
-  flex-wrap:wrap;justify-content:center;
-  margin-bottom:48px;
-  animation:fadeUp 0.8s var(--ease) 1.0s both;
-}
-.stat-item{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-}
-.stat-number{
-  font-family:var(--mono);font-size:22px;font-weight:700;
-  color:transparent;
-  background:linear-gradient(90deg,var(--cold-secondary),var(--cold-primary));
-  -webkit-background-clip:text;background-clip:text;
-}
-.stat-label{
-  font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--text-dim);
-}
-.stat-divider{
-  width:1px;height:32px;
-  background:linear-gradient(to bottom,transparent,rgba(255,255,255,0.1),transparent);
-}
-
-/* ═══════════════════════════════
-   FOOTER
-═══════════════════════════════ */
-footer{
-  position:relative;z-index:3;
-  border-top:1px solid rgba(255,255,255,0.05);
-  padding:32px 40px;
-  display:flex;justify-content:space-between;align-items:center;
-  flex-wrap:wrap;gap:16px;
-  font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--text-dim);
-}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);padding:32px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);}
 .footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap;}
 .footer-links a{color:var(--text-dim);text-decoration:none;transition:color 0.2s;}
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--text-bright);outline:none;}
-
-/* ═══════════════════════════════
-   ANIMATIONS
-═══════════════════════════════ */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:none}
-}
-
-/* ═══════════════════════════════
-   REDUCED MOTION
-═══════════════════════════════ */
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}
-  #split-canvas{display:none}
-  .spine{display:none}
-}
-
-/* ═══════════════════════════════
-   MOBILE
-═══════════════════════════════ */
-@media(max-width:720px){
-  nav{padding:0 20px;}
-  .hero{padding:72px 20px 48px;}
-  .hero-name{letter-spacing:-1.5px;}
-  .choice-grid{grid-template-columns:1fr;max-width:440px;gap:16px;}
-  .spine{display:none;}
-  .stat-row{gap:20px;}
-  .stat-divider{height:24px;}
-  footer{flex-direction:column;align-items:center;text-align:center;padding:24px 20px;}
-  .footer-links{justify-content:center;}
-}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#split-canvas{display:none}.spine{display:none}}
+@media(max-width:720px){nav{padding:0 20px;}.hero{padding:72px 20px 48px;}.hero-name{letter-spacing:-1.5px;}.choice-grid{grid-template-columns:1fr;max-width:440px;gap:16px;}.spine{display:none;}.stat-row{gap:20px;}.stat-divider{height:24px;}footer{flex-direction:column;align-items:center;text-align:center;padding:24px 20px;}.footer-links{justify-content:center;}}
 </style>
 </head>
 <body>
-
 <a href="#main" class="skip-nav">Skip to content</a>
 <div aria-live="polite" aria-atomic="true" class="sr-only" id="canvas-announce"></div>
-
-<!-- SPLIT CANVAS -->
 <canvas id="split-canvas" aria-hidden="true"></canvas>
-
-<!-- SPINE — fault line -->
 <div class="spine" aria-hidden="true"></div>
 
-<!-- NAV -->
 <nav aria-label="Primary navigation">
   <a href="/" class="nav-logo" aria-label="AionSystem home">
-    <img src="/assets/img/aion-logo.jpg" alt="AionSystem" class="nav-logo-img" width="26" height="26"
-      onerror="this.style.display='none'">
+    <img src="/assets/img/aion-logo.jpg" alt="AionSystem" class="nav-logo-img" width="26" height="26" onerror="this.style.display='none'">
     <span>AION<span class="dot">·</span>SYSTEM</span>
   </a>
   <div class="nav-right">
@@ -543,42 +126,22 @@ footer{
   </div>
 </nav>
 
-<!-- MAIN -->
 <main id="main">
   <div class="hero">
-
-    <!-- Status badge -->
-    <div class="hero-badge">
-      Two practices · One sovereign architect · Evans Mills, NY
-    </div>
-
-    <!-- Split name -->
+    <div class="hero-badge">Two practices · One sovereign architect · Evans Mills, NY</div>
     <h1 class="hero-name" aria-label="Sheldon K. Salmon">
       <span class="name-cold">Sheldon&nbsp;K.</span>&nbsp;<span class="name-hot">Salmon</span>
     </h1>
     <p class="hero-sub-title">The Sovereign Architect</p>
 
-    <!-- Stats -->
     <div class="stat-row" role="list" aria-label="Credentials at a glance">
-      <div class="stat-item" role="listitem">
-        <span class="stat-number">300+</span>
-        <span class="stat-label">Frameworks Built</span>
-      </div>
+      <div class="stat-item" role="listitem"><span class="stat-number">300+</span><span class="stat-label">Frameworks Built</span></div>
       <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item" role="listitem">
-        <span class="stat-number">23+</span>
-        <span class="stat-label">Repositories</span>
-      </div>
+      <div class="stat-item" role="listitem"><span class="stat-number">23+</span><span class="stat-label">Repositories</span></div>
       <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item" role="listitem">
-        <span class="stat-number">23+</span>
-        <span class="stat-label">Registered DOIs</span>
-      </div>
+      <div class="stat-item" role="listitem"><span class="stat-number">23+</span><span class="stat-label">Registered DOIs</span></div>
       <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item" role="listitem">
-        <span class="stat-number">ARIA</span>
-        <span class="stat-label">UK Gov · 2026</span>
-      </div>
+      <div class="stat-item" role="listitem"><span class="stat-number">ORCID</span><span class="stat-label">Verified Researcher</span></div>
     </div>
 
     <p class="hero-descriptor">
@@ -587,76 +150,29 @@ footer{
       <strong>Choose the door that fits what you need.</strong>
     </p>
 
-    <!-- Cards -->
     <div class="choice-grid">
-
-      <!-- AI Reliability -->
-      <a href="/main-1/index.html" class="choice-card card-cold"
-         aria-label="AI Reliability Architecture — enter the vault">
-
-        <div class="card-domain-tag">
-          <span class="domain-dot" aria-hidden="true"></span>
-          Practice 01 · AI Domain
-        </div>
-
+      <a href="/main-1/index.html" class="choice-card card-cold" aria-label="AI Reliability Architecture — enter the vault">
+        <div class="card-domain-tag"><span class="domain-dot" aria-hidden="true"></span>Practice 01 · AI Domain</div>
         <div class="card-icon" aria-hidden="true">⬡</div>
-
         <h2 class="card-title">AI Reliability<br>Architecture</h2>
         <p class="card-subtitle">FSVE · Constitutional Engine · Certainty Scoring</p>
-
-        <p class="card-desc">
-          Epistemic state machines. Pre-code authority documents. Adversarial red-team methodology.
-          I find where your AI system will fail — before it costs you something irreversible.
-        </p>
-
-        <span class="card-cta">
-          Enter the vault <span class="cta-arrow">→</span>
-        </span>
-
-        <div class="card-circuit" aria-hidden="true">
-          if(EV &lt; 0.40) → HALT<br>
-          FSVE.score() → certify<br>
-          AION.validate()
-        </div>
+        <p class="card-desc">Epistemic state machines. Pre-code authority documents. Adversarial red-team methodology. I find where your AI system will fail — before it costs you something irreversible.</p>
+        <span class="card-cta">Enter the vault <span class="cta-arrow">→</span></span>
+        <div class="card-corner" aria-hidden="true">if(EV &lt; 0.40) → HALT<br>FSVE.score() → certify<br>AION.validate()</div>
       </a>
-
-      <!-- Game Design -->
-      <a href="/main-2/index.html" class="choice-card card-hot"
-         aria-label="World Architect & Game Design — build a world">
-
-        <div class="card-domain-tag">
-          <span class="domain-dot" aria-hidden="true"></span>
-          Practice 02 · World Domain
-        </div>
-
+      <a href="/main-2/index.html" class="choice-card card-hot" aria-label="World Architect & Game Design — build a world">
+        <div class="card-domain-tag"><span class="domain-dot" aria-hidden="true"></span>Practice 02 · World Domain</div>
         <div class="card-icon" aria-hidden="true">⚔</div>
-
         <h2 class="card-title">World Architect<br>&amp; Game Design</h2>
         <p class="card-subtitle">Lore-to-Mechanics · Nine Realms · Sovereign Factions</p>
-
-        <p class="card-desc">
-          Complete game worlds. Nine-realm MMORPG architecture. Lore that becomes mechanics.
-          Systems that hold together. Worlds that remember what happened before you arrived.
-        </p>
-
-        <span class="card-cta">
-          Build a world <span class="cta-arrow">→</span>
-        </span>
-
-        <div class="card-embers" aria-hidden="true">
-          REALM.forge(nine)<br>
-          lore → mechanics<br>
-          world.remember()
-        </div>
+        <p class="card-desc">Complete game worlds. Nine-realm MMORPG architecture. Lore that becomes mechanics. Systems that hold together. Worlds that remember what happened before you arrived.</p>
+        <span class="card-cta">Build a world <span class="cta-arrow">→</span></span>
+        <div class="card-corner" aria-hidden="true">REALM.forge(nine)<br>lore → mechanics<br>world.remember()</div>
       </a>
+    </div>
 
-    </div><!-- /choice-grid -->
-
-    <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);animation:fadeUp 0.8s var(--ease) 1.1s both;display:block;">
-      Both paths lead to the same architect
-    </p>
-
-  </div><!-- /hero -->
+    <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);animation:fadeUp 0.8s var(--ease) 1.1s both;display:block;">Both paths lead to the same architect</p>
+  </div>
 </main>
 
 <footer>
@@ -672,231 +188,372 @@ footer{
   </ul>
 </footer>
 
-<!-- ═══════════════════════════════════════════
-     CANVAS ENGINE — SPLIT WORLD RENDERER
-════════════════════════════════════════════ -->
 <script>
 (function(){
 'use strict';
 
 const canvas = document.getElementById('split-canvas');
-const ctx    = canvas.getContext('2d');
-let W, H;
+const ctx = canvas.getContext('2d');
+let W, H, t = 0;
+const mouse = { x: -9999, y: -9999, prevX: -9999, prevY: -9999, vx: 0, vy: 0 };
 
-/* ── State ── */
-let mouse = { x: -9999, y: -9999 };
-let hotSide   = null; // 'cold' | 'hot' | null
-let blendT    = 0.5;  // 0 = full cold, 1 = full hot
-let targetBlend = 0.5;
-let particles = [];
-let circuits  = [];
-let embers    = [];
-let t         = 0;
+/* ─── SYMBOL SYSTEM (left half) ─── */
+const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈'];
+const GRAVITY_R = 180, GRAVITY_STR = 0.018, TANGENTIAL = 0.22;
+let symbols = [];
 
-/* ── Resize ── */
-function resize(){
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-  buildCircuits();
-  buildEmbers();
-}
-
-/* ── Circuit traces (left half) ── */
-function buildCircuits(){
-  circuits = [];
-  const count = Math.floor(W * H / 40000);
-  for(let i = 0; i < count; i++){
-    const x = Math.random() * (W * 0.5 - 40) + 10;
-    const y = Math.random() * H;
-    const len = 40 + Math.random() * 120;
-    const dir = Math.random() > 0.5 ? 'h' : 'v';
-    circuits.push({x, y, len, dir, alpha: 0.04 + Math.random() * 0.08, pulse: Math.random() * Math.PI * 2});
-  }
-}
-
-/* ── Ember particles (right half) ── */
-function buildEmbers(){
-  embers = [];
-  const count = Math.floor(W * H / 6000);
-  for(let i = 0; i < count; i++){
-    const x = W * 0.5 + Math.random() * W * 0.5;
-    const y = Math.random() * H;
-    embers.push({
-      x, y,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: -0.3 - Math.random() * 0.5,
-      size: 0.5 + Math.random() * 2.5,
-      alpha: 0.1 + Math.random() * 0.4,
-      hue: 30 + Math.random() * 20, // amber range
-      life: Math.random(),
-      maxLife: 0.4 + Math.random() * 0.6,
+function initSymbols() {
+  symbols = [];
+  const count = Math.floor((W * 0.5) * H / 7000);
+  for (let i = 0; i < count; i++) {
+    symbols.push({
+      char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+      x: Math.random() * W * 0.5,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      size: 11 + Math.random() * 18,
+      alpha: 0.12 + Math.random() * 0.22,
+      inWell: false,
+      scrollGlow: 0,
       phase: Math.random() * Math.PI * 2,
     });
   }
 }
 
-/* ── Cold grid (left half) ── */
-function drawColdGrid(){
-  const cx = Math.min(W * 0.5, mouse.x < W * 0.5 ? mouse.x : W * 0.5);
-  const GRID = 48;
-  ctx.save();
-  ctx.globalAlpha = 1;
+function updateSymbols() {
+  mouse.vx = mouse.x - mouse.prevX;
+  mouse.vy = mouse.y - mouse.prevY;
+  mouse.prevX = mouse.x;
+  mouse.prevY = mouse.y;
 
-  // Base dark fill left
-  const leftGrad = ctx.createLinearGradient(0, 0, W * 0.5, 0);
-  leftGrad.addColorStop(0, 'rgba(5,5,15,0.97)');
-  leftGrad.addColorStop(1, 'rgba(10,10,28,0.88)');
-  ctx.fillStyle = leftGrad;
+  symbols.forEach(s => {
+    s.x += s.vx;
+    s.y += s.vy;
+    // wrap within left half
+    if (s.x < -40) s.x = W * 0.5 + 40;
+    if (s.x > W * 0.5 + 40) s.x = -40;
+    if (s.y < -40) s.y = H + 40;
+    if (s.y > H + 40) s.y = -40;
+
+    // mouse gravity + tangential spin
+    if (mouse.x < W * 0.5 + 60) {
+      const dx = s.x - mouse.x;
+      const dy = s.y - mouse.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < GRAVITY_R && dist > 1) {
+        const force = GRAVITY_STR * (1 - dist / GRAVITY_R);
+        const angle = Math.atan2(dy, dx);
+        s.vx -= Math.cos(angle) * force;
+        s.vy -= Math.sin(angle) * force;
+        const ta = angle + Math.PI / 2;
+        const spin = TANGENTIAL * (1 - dist / GRAVITY_R);
+        s.vx += Math.cos(ta) * spin * (mouse.vx * 0.04 + 0.5);
+        s.vy += Math.sin(ta) * spin * (mouse.vy * 0.04 + 0.5);
+        s.vx *= 0.985;
+        s.vy *= 0.985;
+        s.inWell = true;
+      } else {
+        s.inWell = false;
+        // gentle drift damping
+        s.vx *= 0.998;
+        s.vy *= 0.998;
+      }
+    } else {
+      s.inWell = false;
+    }
+
+    if (s.scrollGlow > 0.01) s.scrollGlow *= 0.93;
+    else s.scrollGlow = 0;
+  });
+}
+
+function drawSymbols() {
+  ctx.save();
+  ctx.font = ''; // reset
+  symbols.forEach(s => {
+    const glow = s.scrollGlow > 0.01 ? 14 + s.scrollGlow * 18 : (s.inWell ? 22 : 10);
+    ctx.font = `${s.size}px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    // color: indigo or cyan based on phase
+    const col = Math.sin(t * 0.3 + s.phase) > 0 ? 'rgba(6,182,212,' : 'rgba(129,140,248,';
+    ctx.shadowColor = Math.sin(t * 0.3 + s.phase) > 0 ? '#06b6d4' : '#818cf8';
+    ctx.shadowBlur = glow;
+    ctx.fillStyle = col + (s.alpha + s.scrollGlow * 0.2).toFixed(3) + ')';
+    ctx.globalAlpha = 1;
+    ctx.fillText(s.char, s.x, s.y);
+  });
+  ctx.shadowBlur = 0;
+  ctx.restore();
+}
+
+/* ─── ECHO BURST (click) ─── */
+let echoes = [];
+function spawnEcho(x, y) {
+  for (let i = 0; i < 10; i++) {
+    const angle = (Math.PI * 2 * i) / 10 + Math.random() * 0.4;
+    const speed = 1.5 + Math.random() * 2.5;
+    echoes.push({
+      char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      size: 9 + Math.random() * 8,
+      alpha: 0.7,
+      age: 0,
+      maxAge: 500,
+    });
+  }
+}
+function updateEchoes() {
+  echoes = echoes.filter(e => {
+    e.age += 16;
+    if (e.age >= e.maxAge) return false;
+    e.x += e.vx; e.y += e.vy;
+    e.alpha = 0.7 * (1 - e.age / e.maxAge);
+    e.vx *= 0.97; e.vy *= 0.97;
+    return true;
+  });
+}
+function drawEchoes() {
+  ctx.save();
+  echoes.forEach(e => {
+    ctx.globalAlpha = e.alpha;
+    ctx.font = `${e.size}px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = '#06b6d4';
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = '#06b6d4';
+    ctx.fillText(e.char, e.x, e.y);
+  });
+  ctx.shadowBlur = 0;
+  ctx.restore();
+}
+
+/* ─── CIRCUIT TRACES (left half) ─── */
+let circuits = [];
+function buildCircuits() {
+  circuits = [];
+  const count = Math.floor(W * H / 38000);
+  for (let i = 0; i < count; i++) {
+    circuits.push({
+      x: Math.random() * (W * 0.5 - 40) + 10,
+      y: Math.random() * H,
+      len: 35 + Math.random() * 100,
+      dir: Math.random() > 0.5 ? 'h' : 'v',
+      alpha: 0.04 + Math.random() * 0.07,
+      pulse: Math.random() * Math.PI * 2,
+    });
+  }
+}
+function drawCircuits() {
+  ctx.save();
+  circuits.forEach(c => {
+    const pulse = Math.sin(t * 0.9 + c.pulse);
+    const a = c.alpha * (0.5 + pulse * 0.5);
+    ctx.globalAlpha = a;
+    ctx.strokeStyle = pulse > 0.2 ? 'rgba(6,182,212,0.7)' : 'rgba(79,70,229,0.5)';
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    if (c.dir === 'h') {
+      ctx.moveTo(c.x, c.y); ctx.lineTo(c.x + c.len, c.y); ctx.stroke();
+      ctx.globalAlpha = a * 2.5;
+      ctx.fillStyle = 'rgba(6,182,212,0.9)';
+      ctx.beginPath(); ctx.arc(c.x + c.len, c.y, 1.5, 0, Math.PI * 2); ctx.fill();
+    } else {
+      ctx.moveTo(c.x, c.y); ctx.lineTo(c.x, c.y + c.len); ctx.stroke();
+      ctx.globalAlpha = a * 2.5;
+      ctx.fillStyle = 'rgba(79,70,229,1)';
+      ctx.beginPath(); ctx.arc(c.x, c.y + c.len, 1.5, 0, Math.PI * 2); ctx.fill();
+    }
+  });
+  ctx.restore();
+}
+
+/* ─── GRID (left half) ─── */
+function drawColdGrid() {
+  ctx.save();
+  // Base fill
+  const lg = ctx.createLinearGradient(0, 0, W * 0.5, 0);
+  lg.addColorStop(0, 'rgba(5,5,15,0.97)');
+  lg.addColorStop(1, 'rgba(10,10,28,0.88)');
+  ctx.fillStyle = lg;
+  ctx.globalAlpha = 1;
   ctx.fillRect(0, 0, W * 0.5, H);
 
-  // Cold radial glow near mouse
-  if(mouse.x < W * 0.5 + 80){
-    const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 300);
-    g.addColorStop(0, 'rgba(79,70,229,0.15)');
-    g.addColorStop(0.5, 'rgba(6,182,212,0.05)');
-    g.addColorStop(1, 'transparent');
-    ctx.fillStyle = g;
+  // Mouse glow
+  if (mouse.x > 0 && mouse.x < W * 0.5 + 80) {
+    const mg = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 280);
+    mg.addColorStop(0, 'rgba(79,70,229,0.14)');
+    mg.addColorStop(0.5, 'rgba(6,182,212,0.04)');
+    mg.addColorStop(1, 'transparent');
+    ctx.fillStyle = mg;
     ctx.fillRect(0, 0, W * 0.5, H);
   }
 
   // Grid lines
-  ctx.strokeStyle = 'rgba(79,70,229,0.08)';
+  const GRID = 48;
+  ctx.strokeStyle = 'rgba(79,70,229,0.07)';
   ctx.lineWidth = 0.5;
-  for(let x = 0; x < W * 0.5; x += GRID){
+  ctx.globalAlpha = 1;
+  for (let x = 0; x < W * 0.5; x += GRID) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
   }
-  for(let y = 0; y < H; y += GRID){
+  for (let y = 0; y < H; y += GRID) {
     ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W * 0.5, y); ctx.stroke();
   }
 
-  // Intersection dots
-  ctx.fillStyle = 'rgba(6,182,212,0.15)';
-  for(let x = GRID; x < W * 0.5; x += GRID){
-    for(let y = GRID; y < H; y += GRID){
+  // Glowing intersection dots
+  for (let x = GRID; x < W * 0.5; x += GRID) {
+    for (let y = GRID; y < H; y += GRID) {
       const dx = x - mouse.x, dy = y - mouse.y;
       const d = Math.hypot(dx, dy);
-      const glow = Math.max(0, 1 - d / 200);
-      ctx.globalAlpha = 0.08 + glow * 0.3;
-      ctx.beginPath(); ctx.arc(x, y, 1, 0, Math.PI * 2); ctx.fill();
+      const glow = Math.max(0, 1 - d / 180);
+      ctx.globalAlpha = 0.06 + glow * 0.35;
+      ctx.fillStyle = glow > 0.3 ? 'rgba(6,182,212,0.9)' : 'rgba(79,70,229,0.7)';
+      ctx.beginPath(); ctx.arc(x, y, 1 + glow, 0, Math.PI * 2); ctx.fill();
     }
   }
-
   ctx.restore();
 }
 
-/* ── Circuit traces ── */
-function drawCircuits(){
+/* ─── EMBER PARTICLES (right half — full field) ─── */
+let embers = [];
+function buildEmbers() {
+  embers = [];
+  // Dense field across entire right half
+  const count = Math.floor(W * H / 3800);
+  for (let i = 0; i < count; i++) {
+    const tier = Math.random(); // 0=micro 1=large
+    embers.push({
+      x: W * 0.5 + Math.random() * W * 0.5,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: -(0.2 + Math.random() * 0.8),
+      size: tier < 0.5 ? 0.4 + Math.random() * 1.2 : 1.0 + Math.random() * 2.8,
+      alpha: tier < 0.5 ? 0.08 + Math.random() * 0.25 : 0.15 + Math.random() * 0.45,
+      hue: 25 + Math.random() * 25,
+      life: Math.random(),
+      maxLife: 0.35 + Math.random() * 0.65,
+      phase: Math.random() * Math.PI * 2,
+      wobble: (Math.random() - 0.5) * 0.6,
+      tier,
+    });
+  }
+}
+
+function updateEmbers() {
+  embers.forEach(e => {
+    e.x += e.vx + Math.sin(t * 0.6 + e.phase) * e.wobble;
+    e.y += e.vy;
+    e.life += 0.003 + Math.random() * 0.003;
+    if (e.life > e.maxLife) {
+      // respawn anywhere in right half
+      e.life = 0;
+      e.x = W * 0.5 + Math.random() * W * 0.5;
+      e.y = H + 8 + Math.random() * 40;
+      e.alpha = e.tier < 0.5 ? 0.08 + Math.random() * 0.25 : 0.15 + Math.random() * 0.45;
+      e.hue = 25 + Math.random() * 25;
+    }
+    // mouse heat pulse on right half
+    if (mouse.x > W * 0.5) {
+      const dx = e.x - mouse.x, dy = e.y - mouse.y;
+      const d = Math.hypot(dx, dy);
+      if (d < 120) {
+        const push = (1 - d / 120) * 0.4;
+        e.vx += (dx / d) * push;
+        e.vy += (dy / d) * push * 0.5 - push * 0.3;
+      }
+    }
+  });
+}
+
+function drawEmbers() {
   ctx.save();
-  circuits.forEach(c => {
-    const pulse = Math.sin(t * 0.8 + c.pulse);
-    const a = c.alpha * (0.6 + pulse * 0.4);
-    ctx.globalAlpha = a;
-    ctx.strokeStyle = pulse > 0.3 ? 'rgba(6,182,212,0.6)' : 'rgba(79,70,229,0.4)';
-    ctx.lineWidth = 0.8;
-    ctx.beginPath();
-    if(c.dir === 'h'){
-      ctx.moveTo(c.x, c.y); ctx.lineTo(c.x + c.len, c.y);
-      // Node at end
-      ctx.stroke();
-      ctx.globalAlpha = a * 2;
-      ctx.fillStyle = 'rgba(6,182,212,0.8)';
-      ctx.beginPath(); ctx.arc(c.x + c.len, c.y, 1.5, 0, Math.PI*2); ctx.fill();
+  embers.forEach(e => {
+    const lr = e.life / e.maxLife;
+    const fade = lr < 0.15 ? lr / 0.15 : lr > 0.75 ? (1 - lr) / 0.25 : 1;
+    ctx.globalAlpha = e.alpha * fade;
+
+    if (e.tier < 0.5) {
+      // Micro spark — just a dot
+      ctx.fillStyle = `hsla(${e.hue}, 85%, 60%, 1)`;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+      ctx.fill();
     } else {
-      ctx.moveTo(c.x, c.y); ctx.lineTo(c.x, c.y + c.len);
-      ctx.stroke();
-      ctx.globalAlpha = a * 2;
-      ctx.fillStyle = 'rgba(79,70,229,0.9)';
-      ctx.beginPath(); ctx.arc(c.x, c.y + c.len, 1.5, 0, Math.PI*2); ctx.fill();
+      // Full ember with radial glow
+      const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.size * 2.5);
+      g.addColorStop(0, `hsla(${e.hue}, 95%, 72%, 1)`);
+      g.addColorStop(0.4, `hsla(${e.hue + 8}, 80%, 55%, 0.6)`);
+      g.addColorStop(1, `hsla(${e.hue + 15}, 70%, 40%, 0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, e.size * 2.5, 0, Math.PI * 2);
+      ctx.fill();
     }
   });
   ctx.restore();
 }
 
-/* ── Hot void (right half) ── */
-function drawHotVoid(){
+/* ─── HOT VOID BASE (right half) ─── */
+function drawHotVoid() {
   ctx.save();
-  const rightGrad = ctx.createLinearGradient(W * 0.5, 0, W, 0);
-  rightGrad.addColorStop(0, 'rgba(12,6,3,0.88)');
-  rightGrad.addColorStop(1, 'rgba(8,4,2,0.97)');
-  ctx.fillStyle = rightGrad;
+  ctx.globalAlpha = 1;
+  const rg = ctx.createLinearGradient(W * 0.5, 0, W, 0);
+  rg.addColorStop(0, 'rgba(12,6,2,0.92)');
+  rg.addColorStop(1, 'rgba(6,3,1,0.97)');
+  ctx.fillStyle = rg;
   ctx.fillRect(W * 0.5, 0, W * 0.5, H);
 
-  // Hot radial glow near mouse
-  if(mouse.x > W * 0.5 - 80){
-    const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 350);
-    g.addColorStop(0, 'rgba(245,158,11,0.12)');
-    g.addColorStop(0.4, 'rgba(239,68,68,0.04)');
-    g.addColorStop(1, 'transparent');
-    ctx.fillStyle = g;
+  // Mouse heat zone
+  if (mouse.x > W * 0.5 - 60) {
+    const mx = Math.max(mouse.x, W * 0.5 + 1);
+    const hg = ctx.createRadialGradient(mx, mouse.y, 0, mx, mouse.y, 320);
+    hg.addColorStop(0, 'rgba(245,158,11,0.1)');
+    hg.addColorStop(0.4, 'rgba(239,68,68,0.04)');
+    hg.addColorStop(1, 'transparent');
+    ctx.fillStyle = hg;
     ctx.fillRect(W * 0.5, 0, W * 0.5, H);
   }
 
-  // Subtle ember-haze horizontal lines
-  ctx.strokeStyle = 'rgba(245,158,11,0.04)';
+  // Subtle horizontal haze bands
+  ctx.strokeStyle = 'rgba(245,158,11,0.03)';
   ctx.lineWidth = 0.5;
-  const HSTEP = 64;
-  for(let y = 0; y < H; y += HSTEP){
-    ctx.globalAlpha = 0.5 + 0.5 * Math.sin(t * 0.5 + y * 0.01);
+  const BAND = 72;
+  for (let y = 0; y < H; y += BAND) {
+    ctx.globalAlpha = 0.4 + 0.4 * Math.sin(t * 0.4 + y * 0.008);
     ctx.beginPath(); ctx.moveTo(W * 0.5, y); ctx.lineTo(W, y); ctx.stroke();
   }
-
   ctx.restore();
 }
 
-/* ── Ember particles ── */
-function updateEmbers(){
-  embers.forEach(e => {
-    e.x  += e.vx + Math.sin(t * 0.5 + e.phase) * 0.2;
-    e.y  += e.vy;
-    e.life += 0.004;
-    if(e.life > e.maxLife){
-      e.life = 0;
-      e.x = W * 0.5 + Math.random() * W * 0.5;
-      e.y = H + 10;
-      e.alpha = 0.1 + Math.random() * 0.4;
-    }
-  });
-}
-
-function drawEmbers(){
-  ctx.save();
-  embers.forEach(e => {
-    const lifeRatio = e.life / e.maxLife;
-    const fade = lifeRatio < 0.2 ? lifeRatio / 0.2 : lifeRatio > 0.8 ? (1 - lifeRatio) / 0.2 : 1;
-    ctx.globalAlpha = e.alpha * fade;
-    const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, e.size * 2);
-    g.addColorStop(0, `hsla(${e.hue}, 90%, 65%, 1)`);
-    g.addColorStop(1, `hsla(${e.hue + 10}, 80%, 50%, 0)`);
-    ctx.fillStyle = g;
-    ctx.beginPath(); ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2); ctx.fill();
-  });
-  ctx.restore();
-}
-
-/* ── Spine glow — center fault line ── */
-function drawSpineGlow(){
+/* ─── SPINE AURORA ─── */
+function drawSpineAurora() {
   ctx.save();
   const cx = W * 0.5;
-  // Left aurora
-  const lg = ctx.createLinearGradient(cx - 60, 0, cx, 0);
+  const pulse = Math.sin(t * 1.1);
+  const lg = ctx.createLinearGradient(cx - 70, 0, cx, 0);
   lg.addColorStop(0, 'transparent');
-  lg.addColorStop(1, `rgba(79,70,229,${0.04 + 0.03 * Math.sin(t * 1.2)})`);
+  lg.addColorStop(1, `rgba(79,70,229,${0.035 + 0.025 * pulse})`);
   ctx.fillStyle = lg;
-  ctx.fillRect(cx - 60, 0, 60, H);
+  ctx.fillRect(cx - 70, 0, 70, H);
 
-  // Right aurora
-  const rg = ctx.createLinearGradient(cx, 0, cx + 60, 0);
-  rg.addColorStop(0, `rgba(245,158,11,${0.04 + 0.03 * Math.sin(t * 1.2 + 1)})`);
-  rg.addColorStop(1, 'transparent');
-  ctx.fillStyle = rg;
-  ctx.fillRect(cx, 0, 60, H);
-
+  const rg2 = ctx.createLinearGradient(cx, 0, cx + 70, 0);
+  rg2.addColorStop(0, `rgba(245,158,11,${0.04 + 0.025 * pulse})`);
+  rg2.addColorStop(1, 'transparent');
+  ctx.fillStyle = rg2;
+  ctx.fillRect(cx, 0, 70, H);
   ctx.restore();
 }
 
-/* ── RAF loop ── */
-function loop(){
+/* ─── RAF LOOP ─── */
+function loop() {
   t += 0.016;
+  updateSymbols();
+  updateEchoes();
   updateEmbers();
 
   ctx.clearRect(0, 0, W, H);
@@ -904,54 +561,47 @@ function loop(){
   drawCircuits();
   drawHotVoid();
   drawEmbers();
-  drawSpineGlow();
+  drawSpineAurora();
+  drawSymbols();
+  drawEchoes();
 
   requestAnimationFrame(loop);
 }
 
-/* ── Mouse tracking ── */
-window.addEventListener('pointermove', e => {
-  if(e.pointerType === 'mouse'){
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  }
-});
-window.addEventListener('pointerleave', () => {
-  mouse.x = -9999; mouse.y = -9999;
-});
-
-/* ── Resize ── */
+/* ─── RESIZE ─── */
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  initSymbols();
+  buildCircuits();
+  buildEmbers();
+}
 let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(resize, 150);
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 150); });
+
+/* ─── INPUT ─── */
+window.addEventListener('pointermove', e => {
+  if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; }
+});
+window.addEventListener('pointerleave', () => { mouse.x = -9999; mouse.y = -9999; });
+window.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'mouse') return;
+  if (e.clientX < window.innerWidth * 0.5) spawnEcho(e.clientX, e.clientY);
 });
 
-/* ── Init ── */
+// Scroll glow on symbols
+let scrollTimer;
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  symbols.forEach(s => { if (Math.abs(s.y - (sy + H / 2)) < 180) s.scrollGlow = 1.0; });
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => symbols.forEach(s => s.scrollGlow = 0), 300);
+}, { passive: true });
+
+/* ─── INIT ─── */
 document.getElementById('copyright-year').textContent = new Date().getFullYear();
 resize();
 requestAnimationFrame(loop);
-
-/* ── Card hover accent reinforcement ── */
-const coldCard = document.querySelector('.card-cold');
-const hotCard  = document.querySelector('.card-hot');
-
-function setHoverClass(side){
-  document.body.dataset.hover = side || '';
-}
-
-if(coldCard){
-  coldCard.addEventListener('mouseenter', () => setHoverClass('cold'));
-  coldCard.addEventListener('mouseleave', () => setHoverClass(''));
-  coldCard.addEventListener('focusin',    () => setHoverClass('cold'));
-  coldCard.addEventListener('focusout',   () => setHoverClass(''));
-}
-if(hotCard){
-  hotCard.addEventListener('mouseenter', () => setHoverClass('hot'));
-  hotCard.addEventListener('mouseleave', () => setHoverClass(''));
-  hotCard.addEventListener('focusin',    () => setHoverClass('hot'));
-  hotCard.addEventListener('focusout',   () => setHoverClass(''));
-}
 
 })();
 </script>
