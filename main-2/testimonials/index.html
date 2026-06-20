@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <meta name="description" content="Testimonials — Sheldon K. Salmon, Game Systems Architect. What clients say about lore bibles, combat systems, and world builds.">
+  <meta name="description" content="Testimonials — Sheldon K. Salmon, Game Systems Architect. Submit your feedback and help build a community of trust.">
   <title>Testimonials — World Architect & Game Design</title>
   <meta property="og:title" content="Testimonials — World Architect & Game Design">
-  <meta property="og:description" content="Feedback from game developers who trusted the Sovereign Design Pipeline.">
+  <meta property="og:description" content="Real feedback from developers who trust the Sovereign Design Pipeline. Submit your own review.">
   <meta property="og:type" content="website">
   <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,33 +98,43 @@
     .stat-num{font-family:var(--jmono);font-size:38px;font-weight:700;color:var(--gold);text-shadow:0 0 5px var(--gold),0 0 10px var(--gold);line-height:1}
     .stat-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
 
-    /* ===== TESTIMONIALS GRID ===== */
-    .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;margin-top:16px}
-    .testimonial-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:28px 24px;transition:all 0.3s var(--ease);cursor:pointer;display:flex;flex-direction:column;gap:12px}
-    .testimonial-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(212,175,55,0.12)}
-    .testimonial-stars{font-size:1.1rem;letter-spacing:2px;color:var(--gold)}
-    .testimonial-quote{font-family:var(--serif);font-size:1rem;color:var(--text);line-height:1.7;font-style:italic;flex:1}
+    /* ===== TESTIMONIALS GRID (Coming Soon) ===== */
+    .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;margin-top:16px;margin-bottom:48px}
+    .testimonial-card.placeholder{background:var(--surface);backdrop-filter:blur(12px);border:1px dashed var(--border);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:12px;opacity:0.7;cursor:default;transition:all 0.3s var(--ease)}
+    .testimonial-card.placeholder:hover{border-color:var(--dim);transform:none;box-shadow:none}
+    .testimonial-card.placeholder .placeholder-icon{font-size:3rem;text-align:center;opacity:0.3;margin-bottom:8px}
+    .testimonial-card.placeholder .placeholder-text{font-family:var(--sans);font-size:0.9rem;color:var(--dim);text-align:center;line-height:1.6}
+    .testimonial-stars{font-size:1.1rem;letter-spacing:2px;color:var(--dim)}
+    .testimonial-quote{font-family:var(--serif);font-size:1rem;color:var(--muted);line-height:1.7;font-style:italic;flex:1}
     .testimonial-author{display:flex;align-items:center;gap:14px;margin-top:4px;border-top:1px solid var(--border);padding-top:14px}
-    .testimonial-avatar{width:44px;height:44px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:1.2rem;font-weight:700;color:#fff;flex-shrink:0}
-    .testimonial-name{font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--text)}
-    .testimonial-role{font-family:var(--mono);font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-    .testimonial-tag{font-family:var(--mono);font-size:8px;letter-spacing:1.5px;padding:2px 10px;border-radius:12px;background:rgba(168,85,247,0.12);color:var(--primary-light);border:1px solid rgba(168,85,247,0.2);align-self:flex-start;text-transform:uppercase}
+    .testimonial-avatar{width:44px;height:44px;border-radius:50%;background:var(--dim);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:1.2rem;font-weight:700;color:var(--bg);flex-shrink:0}
+    .testimonial-name{font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--muted)}
+    .testimonial-role{font-family:var(--mono);font-size:0.7rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
+    .testimonial-tag{font-family:var(--mono);font-size:8px;letter-spacing:1.5px;padding:2px 10px;border-radius:12px;background:rgba(168,85,247,0.05);color:var(--dim);border:1px solid var(--border);align-self:flex-start;text-transform:uppercase}
 
-    /* ===== MODAL ===== */
-    .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s}
-    .modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s}
-    .modal-box{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:560px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(168,85,247,0.1);position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);max-height:90vh;overflow-y:auto}
-    .modal-overlay.active .modal-box{transform:scale(1)}
-    .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;transition:color 0.2s}
-    .modal-close:hover{color:var(--gold);text-shadow:0 0 8px var(--gold)}
-    .modal-stars{font-size:1.4rem;letter-spacing:3px;color:var(--gold);margin-bottom:8px}
-    .modal-quote{font-family:var(--serif);font-size:1.05rem;color:var(--text);line-height:1.8;font-style:italic;margin-bottom:20px}
-    .modal-author{display:flex;align-items:center;gap:16px;border-top:1px solid var(--border);padding-top:16px}
-    .modal-avatar{width:56px;height:56px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0}
-    .modal-name{font-family:var(--sans);font-size:1.1rem;font-weight:700;color:var(--text)}
-    .modal-role{font-family:var(--mono);font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-    .modal-project{font-family:var(--mono);font-size:0.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
-    .modal-tag{display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:1.5px;padding:4px 12px;border-radius:12px;background:rgba(168,85,247,0.12);color:var(--primary-light);border:1px solid rgba(168,85,247,0.2);text-transform:uppercase;margin-top:8px}
+    /* ===== FEEDBACK FORM ===== */
+    .feedback-section{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:40px;margin-top:16px;max-width:760px;margin-left:auto;margin-right:auto}
+    .feedback-section h2{font-family:var(--sans);font-size:1.4rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+    .feedback-section .sub{font-family:var(--serif);font-size:1rem;color:var(--muted);line-height:1.7;margin-bottom:24px}
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-family:var(--mono);font-size:0.7rem;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+    .form-group label .req{color:var(--red)}
+    .form-group input,.form-group textarea{width:100%;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--serif);font-size:0.95rem;outline:none;transition:border-color 0.2s}
+    .form-group input:focus,.form-group textarea:focus{border-color:var(--gold);box-shadow:0 0 8px var(--gold)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .star-selector{display:flex;gap:8px;flex-direction:row-reverse;justify-content:flex-end}
+    .star-selector input[type="radio"]{display:none}
+    .star-selector label{font-size:2rem;color:var(--dim);cursor:pointer;transition:color 0.15s ease,transform 0.15s ease;line-height:1}
+    .star-selector label:hover,.star-selector label:hover~label{color:var(--gold);transform:scale(1.1)}
+    .star-selector input[type="radio"]:checked~label{color:var(--gold)}
+    .form-checkbox{display:flex;align-items:flex-start;gap:10px;margin-top:8px}
+    .form-checkbox input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--gold);flex-shrink:0;cursor:pointer}
+    .form-checkbox label{font-family:var(--serif);font-size:0.9rem;color:var(--muted);line-height:1.5;cursor:pointer}
+    .form-checkbox label a{color:var(--gold);text-decoration:underline}
+    .form-submit{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 28px;border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:4px;cursor:pointer;transition:all 0.2s ease;margin-top:8px}
+    .form-submit:hover{background:var(--gold);color:#000;box-shadow:0 0 20px var(--gold)}
+    .form-note{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:0.5px;margin-top:16px;text-align:center}
+    .form-note strong{color:var(--muted)}
 
     /* ===== CTA ===== */
     .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--primary);color:var(--primary);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
@@ -132,17 +142,13 @@
     .cta-btn:hover,.cta-btn:focus-visible{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 0 20px var(--primary);outline:none}
     .cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--gold-light);border-color:var(--gold-light);box-shadow:0 0 20px var(--gold);color:#000}
 
-    .cta-section{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--gold);border-radius:16px;padding:32px 40px;margin-top:48px;text-align:center;max-width:800px;margin-left:auto;margin-right:auto}
-    .cta-section h3{font-family:var(--sans);font-size:1.2rem;font-weight:900;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
-    .cta-section p{font-family:var(--serif);font-size:1rem;color:var(--muted);line-height:1.7;margin-bottom:20px}
-
     footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:2}
     .footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
     .footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
     .footer-links a:hover,.footer-links a:focus-visible{color:var(--gold);text-shadow:0 0 8px var(--gold);outline:none}
     .footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
 
-    @media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}.hero-stats{flex-direction:column;gap:16px}.testimonials-grid{grid-template-columns:1fr}}
+    @media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}.hero-stats{flex-direction:column;gap:16px}.feedback-section{padding:24px 20px}.form-row{grid-template-columns:1fr}}
     @media (max-width:480px){.eyebrow::before,.eyebrow::after{width:12px}}
     @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}}
   </style>
@@ -180,37 +186,124 @@
 <div class="wrapper" id="main">
 
   <!-- Hero -->
-  <div class="eyebrow">// Client Feedback</div>
-  <h1>What Clients <em>Say</em></h1>
-  <div class="title-line">Testimonials from developers and studios who trusted the Sovereign Design Pipeline</div>
+  <div class="eyebrow">// Community Trust</div>
+  <h1>Testimonials <em>Coming Soon</em></h1>
+  <div class="title-line">Real feedback from real developers. Currently building our first reviews.</div>
 
   <div class="hero-stats">
     <div class="hero-stat">
-      <div class="stat-num">4+</div>
-      <div class="stat-label">Projects Delivered</div>
+      <div class="stat-num">0</div>
+      <div class="stat-label">Reviews Published</div>
     </div>
     <div class="hero-stat">
       <div class="stat-num">100%</div>
-      <div class="stat-label">Client Satisfaction</div>
+      <div class="stat-label">Transparency</div>
     </div>
     <div class="hero-stat">
-      <div class="stat-num">3</div>
-      <div class="stat-label">Service Categories</div>
+      <div class="stat-num">5</div>
+      <div class="stat-label">Star Rating Expected</div>
     </div>
     <div class="hero-stat">
-      <div class="stat-num">0</div>
-      <div class="stat-label">Missed Deadlines</div>
+      <div class="stat-num">⏳</div>
+      <div class="stat-label">Your Review Could Be First</div>
     </div>
   </div>
 
-  <!-- Testimonials Grid -->
-  <div class="testimonials-grid" id="testimonials-grid"></div>
+  <!-- Coming Soon Placeholder Grid -->
+  <div class="testimonials-grid">
+    <div class="testimonial-card placeholder">
+      <div class="placeholder-icon">📝</div>
+      <div class="placeholder-text">Be the first to leave a review.<br>Your honest feedback helps others trust the process.</div>
+      <div class="testimonial-stars">☆☆☆☆☆</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">?</div>
+        <div>
+          <div class="testimonial-name">Your Name Here</div>
+          <div class="testimonial-role">Your Role · Your Project</div>
+        </div>
+      </div>
+      <div class="testimonial-tag">Waiting for you</div>
+    </div>
+    <div class="testimonial-card placeholder">
+      <div class="placeholder-icon">⏳</div>
+      <div class="placeholder-text">A review from a real client will appear here soon.</div>
+      <div class="testimonial-stars">☆☆☆☆☆</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">?</div>
+        <div>
+          <div class="testimonial-name">Coming Soon</div>
+          <div class="testimonial-role">Studio · Project</div>
+        </div>
+      </div>
+      <div class="testimonial-tag">Coming Soon</div>
+    </div>
+    <div class="testimonial-card placeholder">
+      <div class="placeholder-icon">🔜</div>
+      <div class="placeholder-text">Your project could be featured here. Submit your feedback below.</div>
+      <div class="testimonial-stars">☆☆☆☆☆</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">?</div>
+        <div>
+          <div class="testimonial-name">Future Client</div>
+          <div class="testimonial-role">Role · Project</div>
+        </div>
+      </div>
+      <div class="testimonial-tag">Submit Yours</div>
+    </div>
+  </div>
 
-  <!-- CTA Section -->
-  <div class="cta-section">
-    <h3>⬡ Ready to Build Your World?</h3>
-    <p>Whether you need a full lore bible, a combat system specification, or a complete pre‑production package — the Sovereign Design Pipeline delivers. Join the clients who have already trusted this methodology.</p>
-    <a href="/main-2/contact/index.html" class="cta-btn primary">Start Your Project →</a>
+  <!-- ===== FEEDBACK FORM ===== -->
+  <div class="feedback-section">
+    <h2>⬡ Submit Your Feedback</h2>
+    <div class="sub">Help us build a community of trust. If we've worked together, leave an honest review and we'll feature it right here — along with your LinkedIn profile if you choose.</div>
+
+    <form id="feedback-form" onsubmit="sendFeedback(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="f-name">Full Name <span class="req">*</span></label>
+          <input type="text" id="f-name" required placeholder="e.g. Jane Doe">
+        </div>
+        <div class="form-group">
+          <label for="f-email">Email <span class="req">*</span></label>
+          <input type="email" id="f-email" required placeholder="jane@studio.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="f-role">Role / Title <span class="req">*</span></label>
+          <input type="text" id="f-role" required placeholder="e.g. Creative Director, Solo Dev">
+        </div>
+        <div class="form-group">
+          <label for="f-project">Project / Service Used <span class="req">*</span></label>
+          <input type="text" id="f-project" required placeholder="e.g. Lore Bible, Combat System, Full Build">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Your Rating <span class="req">*</span></label>
+        <div class="star-selector" id="star-selector">
+          <input type="radio" name="rating" id="star5" value="5"><label for="star5" title="5 Stars">★</label>
+          <input type="radio" name="rating" id="star4" value="4"><label for="star4" title="4 Stars">★</label>
+          <input type="radio" name="rating" id="star3" value="3"><label for="star3" title="3 Stars">★</label>
+          <input type="radio" name="rating" id="star2" value="2"><label for="star2" title="2 Stars">★</label>
+          <input type="radio" name="rating" id="star1" value="1"><label for="star1" title="1 Star">★</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="f-linkedin">LinkedIn Profile URL (optional)</label>
+        <input type="url" id="f-linkedin" placeholder="https://www.linkedin.com/in/yourprofile">
+        <div style="font-family:var(--mono);font-size:8px;color:var(--dim);margin-top:4px">If provided, we'll link your name to your profile — promoting your work alongside your feedback.</div>
+      </div>
+      <div class="form-group">
+        <label for="f-message">Your Feedback <span class="req">*</span></label>
+        <textarea id="f-message" rows="4" required placeholder="What did we build together? What was the result? What would you tell another developer considering working with me?"></textarea>
+      </div>
+      <div class="form-checkbox">
+        <input type="checkbox" id="f-consent" required>
+        <label for="f-consent">I consent to having my name, role, project, feedback, and LinkedIn link (if provided) published on this website. I confirm this feedback is my genuine experience. <span class="req">*</span></label>
+      </div>
+      <button type="submit" class="form-submit">Submit Feedback →</button>
+    </form>
+    <div class="form-note">All submissions are reviewed before publishing. Your email is never shared or stored — it's only used to verify your identity and to respond if we have questions. <strong>Build trust. Be honest.</strong></div>
   </div>
 
 </div>
@@ -231,24 +324,6 @@
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
   </ul>
 </footer>
-
-<!-- ===== MODAL ===== -->
-<div class="modal-overlay" id="testimonial-modal" aria-hidden="true">
-  <div class="modal-box">
-    <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
-    <div class="modal-stars" id="modal-stars"></div>
-    <div class="modal-quote" id="modal-quote"></div>
-    <div class="modal-author">
-      <div class="modal-avatar" id="modal-avatar"></div>
-      <div>
-        <div class="modal-name" id="modal-name"></div>
-        <div class="modal-role" id="modal-role"></div>
-        <div class="modal-project" id="modal-project"></div>
-      </div>
-    </div>
-    <div class="modal-tag" id="modal-tag"></div>
-  </div>
-</div>
 
 <script>
 (function () {
@@ -486,8 +561,8 @@
   window.addEventListener('dblclick', (e) => {
     const tag = e.target.tagName.toLowerCase();
     const isInteractive = ['a', 'button', 'input', 'select', 'textarea'].includes(tag) ||
-      e.target.closest('a') || e.target.closest('button') || e.target.closest('.cta-btn') ||
-      e.target.closest('.testimonial-card') || e.target.closest('.modal-close');
+      e.target.closest('a') || e.target.closest('button') || e.target.closest('.form-submit') ||
+      e.target.closest('.audio-toggle') || e.target.closest('.nav-hamburger');
     if (isInteractive) return;
     triggerCollapse();
     spawnEcho(e.clientX, e.clientY);
@@ -564,136 +639,45 @@
 
   if (!reducedMotion) { resizeCanvas(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
 
-  // ===== TESTIMONIALS DATA =====
-  const testimonials = [
-    {
-      id: 1,
-      name: 'Alex Rivera',
-      role: 'Creative Director',
-      project: 'The Thalassic Covenant',
-      tag: 'Lore Bible',
-      stars: 5,
-      avatar: 'AR',
-      quote: 'Sheldon took a few scattered notes about a deep‑sea world and turned them into a complete, internally consistent lore bible with faction economies, covenant mechanics, and a mystery that actually holds. The Depth Record mechanic alone changed how we think about player progression. This wasn\'t just world‑building—it was system architecture dressed as mythology.',
-      fullQuote: 'Sheldon took a few scattered notes about a deep‑sea world and turned them into a complete, internally consistent lore bible with faction economies, covenant mechanics, and a mystery that actually holds. The Depth Record mechanic alone changed how we think about player progression. This wasn\'t just world‑building—it was system architecture dressed as mythology. Every faction has a flaw, every covenant has a cost, and the endgame question is genuinely unanswerable. I\'ve never seen a lore document that doubled as a design spec until I worked with him.'
-    },
-    {
-      id: 2,
-      name: 'Maya Chen',
-      role: 'Lead Systems Designer',
-      project: 'Sovereign Realm',
-      tag: 'Combat & Mechanics',
-      stars: 5,
-      avatar: 'MC',
-      quote: 'I\'ve been in game dev for 12 years, and I\'ve never seen a combat system specified with this level of determinism before a single line of code was written. The damage formulas, stamina curves, and class identity mechanics were all locked before we started prototyping. We shipped combat in half the usual time with zero reworks.',
-      fullQuote: 'I\'ve been in game dev for 12 years, and I\'ve never seen a combat system specified with this level of determinism before a single line of code was written. The damage formulas, stamina curves, and class identity mechanics were all locked before we started prototyping. We shipped combat in half the usual time with zero reworks. The zero‑RNG approach for critical hits and the positional modifier system solved our biggest balance headaches before they even existed. This is how combat should be designed.'
-    },
-    {
-      id: 3,
-      name: 'James Okafor',
-      role: 'Studio Head',
-      project: 'The Salary of a Dream',
-      tag: 'Full World Build',
-      stars: 5,
-      avatar: 'JO',
-      quote: 'The Salary of a Dream lore bible made me cry. Not because it was sad—because it was the first time I saw my vision of rural Japan rendered as a complete, playable system. The Honne no Ma mechanic, the Dream Record, the Fukuro mystery—every element carries weight. This is a world I can actually build.',
-      fullQuote: 'The Salary of a Dream lore bible made me cry. Not because it was sad—because it was the first time I saw my vision of rural Japan rendered as a complete, playable system. The Honne no Ma mechanic, the Dream Record, the Fukuro mystery—every element carries weight. This is a world I can actually build. Sheldon understood something most world‑builders miss: a world isn\'t a collection of places; it\'s a collection of decisions. Every community, every character, every piece of lore in this bible exists because it creates a decision for the player. That\'s rare. That\'s valuable.'
-    },
-    {
-      id: 4,
-      name: 'Elena Voss',
-      role: 'Lead Writer',
-      project: 'The Thalassic Covenant',
-      tag: 'Lore Bible',
-      stars: 5,
-      avatar: 'EV',
-      quote: 'I\'ve written for three published RPGs, and this is the first lore bible I\'ve received that didn\'t require a separate systems document to understand what was actually possible in the world. The covenant mechanics, the Depth Record, the faction interdependencies—it\'s all there. I can write quests that actually matter because I know what the world can and cannot do.',
-      fullQuote: 'I\'ve written for three published RPGs, and this is the first lore bible I\'ve received that didn\'t require a separate systems document to understand what was actually possible in the world. The covenant mechanics, the Depth Record, the faction interdependencies—it\'s all there. I can write quests that actually matter because I know what the world can and cannot do. The Righteous Traps in every faction\'s narrative hook gave me more material than I\'ve had from entire GDDs on other projects. Sheldon treats lore as load‑bearing architecture, and it shows.'
-    },
-    {
-      id: 5,
-      name: 'Carlos Mendes',
-      role: 'Solo Developer',
-      project: 'Custom Economy System',
-      tag: 'Economy & Resources',
-      stars: 5,
-      avatar: 'CM',
-      quote: 'I was building a solo MMO and had no idea how to design an economy that wouldn\'t collapse. Sheldon gave me a complete anti‑inflation architecture, faction resource dependencies, and a player‑driven market system—all before I had written a single line of server code. My economy is the feature playtesters keep praising.',
-      fullQuote: 'I was building a solo MMO and had no idea how to design an economy that wouldn\'t collapse. Sheldon gave me a complete anti‑inflation architecture, faction resource dependencies, and a player‑driven market system—all before I had written a single line of server code. My economy is the feature playtesters keep praising. The regional pricing, the item decay, the dynamic trade routes—it all works. I\'ve watched other solo devs burn months trying to fix broken economies. I spent a week in spec and then built once. That\'s the difference.'
-    },
-    {
-      id: 6,
-      name: 'David Kim',
-      role: 'Design Director',
-      project: 'Quest Architecture',
-      tag: 'Quest & Narrative',
-      stars: 5,
-      avatar: 'DK',
-      quote: 'Sheldon\'s quest architecture gave me a system that generates morally weighted choices, persistent world consequences, and NPCs that remember what the player did. I\'ve spent years trying to build systems like this. He delivered it as a single, self‑contained spec. It\'s the most useful design document I\'ve ever received.',
-      fullQuote: 'Sheldon\'s quest architecture gave me a system that generates morally weighted choices, persistent world consequences, and NPCs that remember what the player did. I\'ve spent years trying to build systems like this. He delivered it as a single, self‑contained spec. It\'s the most useful design document I\'ve ever received. The Righteous Trap pattern—where every seemingly correct choice has a real, named cost—has completely changed how we write quests. We\'re not telling stories anymore. We\'re designing decisions. That\'s the shift.'
+  // ===== FORM HANDLER =====
+  function sendFeedback(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const role = document.getElementById('f-role').value.trim();
+    const project = document.getElementById('f-project').value.trim();
+    const linkedin = document.getElementById('f-linkedin').value.trim();
+    const message = document.getElementById('f-message').value.trim();
+
+    const ratingEl = document.querySelector('input[name="rating"]:checked');
+    const rating = ratingEl ? ratingEl.value : 'Not rated';
+    const consent = document.getElementById('f-consent').checked;
+
+    if (!consent) {
+      alert('You must consent to publication to submit feedback.');
+      return;
     }
-  ];
 
-  // ===== RENDER TESTIMONIALS =====
-  const grid = document.getElementById('testimonials-grid');
+    const subject = `Testimonial Submission from ${name}`;
+    const body = `Name: ${name}
+Email: ${email}
+Role: ${role}
+Project: ${project}
+Rating: ${rating} / 5
+LinkedIn: ${linkedin || 'Not provided'}
 
-  testimonials.forEach(t => {
-    const card = document.createElement('div');
-    card.className = 'testimonial-card';
-    card.setAttribute('data-id', t.id);
-    const stars = '★'.repeat(t.stars) + '☆'.repeat(5 - t.stars);
-    card.innerHTML = `
-      <div class="testimonial-stars">${stars}</div>
-      <div class="testimonial-quote">"${t.quote}"</div>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">${t.avatar}</div>
-        <div>
-          <div class="testimonial-name">${t.name}</div>
-          <div class="testimonial-role">${t.role} · ${t.project}</div>
-        </div>
-      </div>
-      <div class="testimonial-tag">${t.tag}</div>
-    `;
-    card.addEventListener('click', () => openModal(t));
-    grid.appendChild(card);
-  });
+Feedback:
+${message}
 
-  // ===== MODAL LOGIC =====
-  const modalOverlay = document.getElementById('testimonial-modal');
-  const modalClose = document.getElementById('modal-close');
-  const modalStars = document.getElementById('modal-stars');
-  const modalQuote = document.getElementById('modal-quote');
-  const modalAvatar = document.getElementById('modal-avatar');
-  const modalName = document.getElementById('modal-name');
-  const modalRole = document.getElementById('modal-role');
-  const modalProject = document.getElementById('modal-project');
-  const modalTag = document.getElementById('modal-tag');
+---
+Consent given: Yes
+Submitted via aionsystem.com/testimonials`;
 
-  function openModal(t) {
-    const stars = '★'.repeat(t.stars) + '☆'.repeat(5 - t.stars);
-    modalStars.textContent = stars;
-    modalQuote.textContent = `"${t.fullQuote}"`;
-    modalAvatar.textContent = t.avatar;
-    modalName.textContent = t.name;
-    modalRole.textContent = t.role;
-    modalProject.textContent = t.project;
-    modalTag.textContent = t.tag;
-    modalOverlay.classList.add('active');
-    modalOverlay.setAttribute('aria-hidden', 'false');
+    window.location.href = `mailto:sheldon@aionsystem.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
-  function closeModal() {
-    modalOverlay.classList.remove('active');
-    modalOverlay.setAttribute('aria-hidden', 'true');
-  }
-
-  modalClose.addEventListener('click', closeModal);
-  modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) closeModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
-  });
+  window.sendFeedback = sendFeedback;
 
 })();
 </script>
