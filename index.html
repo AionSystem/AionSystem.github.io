@@ -51,6 +51,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-link{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:color 0.2s;}
 .nav-link:hover,.nav-link:focus-visible{color:var(--text-bright);outline:none;}
 .hero{position:relative;z-index:3;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px 60px;text-align:center;}
+.hero-logo-wrap{display:flex;align-items:center;gap:16px;margin-bottom:20px;animation:fadeUp 0.6s var(--ease) 0.3s both;}
+.hero-logo-wrap img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.15);}
+.hero-logo-wordmark{font-family:var(--mono);font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--text-bright);}
+.hero-logo-wordmark span{color:var(--text-mid);}
+.hero-logo-tagline{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-mid);border:1px solid rgba(255,255,255,0.08);padding:6px 16px;border-radius:20px;margin-bottom:32px;background:rgba(255,255,255,0.03);backdrop-filter:blur(8px);animation:fadeUp 0.6s var(--ease) 0.5s both;}
 .hero-badge::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--cold-secondary);box-shadow:0 0 8px var(--cold-secondary);animation:blink 2s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
@@ -127,7 +132,15 @@ footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);p
 </nav>
 
 <main id="main">
-  <div class="hero">
+  <div class="hero" role="banner">
+    <div class="hero-logo-wrap">
+      <img src="/assets/img/aion-logo.jpg" alt="AionSystem">
+      <div>
+        <div class="hero-logo-wordmark">AION<span>system</span></div>
+        <div class="hero-logo-tagline">The Sovereign Architect</div>
+      </div>
+    </div>
+
     <div class="hero-badge">Two practices · One sovereign architect · Evans Mills, NY</div>
     <h1 class="hero-name" aria-label="Sheldon K. Salmon">
       <span class="name-cold">Sheldon&nbsp;K.</span>&nbsp;<span class="name-hot">Salmon</span>
@@ -173,6 +186,42 @@ footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);p
 
     <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);animation:fadeUp 0.8s var(--ease) 1.1s both;display:block;">Both paths lead to the same architect</p>
   </div>
+
+  <!-- ===== EVERYWHERE ELSE (Logo Grid) ===== -->
+  <div style="position:relative;z-index:3;max-width:860px;margin:0 auto 40px;padding:0 20px;text-align:center;">
+    <div style="display:flex;align-items:center;gap:16px;justify-content:center;margin-bottom:16px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.06);"></div>
+      <span style="font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);">Everywhere Else</span>
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.06);"></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:center;">
+      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text-mid);transition:color 0.2s;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" style="width:44px;height:44px;filter:brightness(0) invert(1);transition:filter 0.2s;">
+        <span style="font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;">GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text-mid);transition:color 0.2s;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" style="width:44px;height:44px;filter:brightness(0) invert(1);transition:filter 0.2s;">
+        <span style="font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;">LinkedIn</span>
+      </a>
+      <a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text-mid);transition:color 0.2s;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/orcid.svg" alt="ORCID" style="width:44px;height:44px;filter:brightness(0) invert(1);transition:filter 0.2s;">
+        <span style="font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;">ORCID</span>
+      </a>
+      <a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text-mid);transition:color 0.2s;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" alt="X" style="width:44px;height:44px;filter:brightness(0) invert(1);transition:filter 0.2s;">
+        <span style="font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;">X</span>
+      </a>
+      <a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text-mid);transition:color 0.2s;">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/medium.svg" alt="Medium" style="width:44px;height:44px;filter:brightness(0) invert(1);transition:filter 0.2s;">
+        <span style="font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;">Medium</span>
+      </a>
+      <a href="/vault/" style="display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text-mid);transition:color 0.2s;">
+        <img src="/assets/img/aion-logo.jpg" alt="The Vault" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.1);">
+        <span style="font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;">The Vault</span>
+      </a>
+    </div>
+  </div>
+
 </main>
 
 <footer>
@@ -427,11 +476,13 @@ function buildEmbers() {
   const count = Math.floor(W * H / 3800);
   for (let i = 0; i < count; i++) {
     const tier = Math.random(); // 0=micro 1=large
+    // Initial velocity: random up or down
+    const vy = Math.random() > 0.5 ? 0.2 + Math.random() * 0.8 : -(0.2 + Math.random() * 0.8);
     embers.push({
       x: W * 0.5 + Math.random() * W * 0.5,
       y: Math.random() * H,
       vx: (Math.random() - 0.5) * 0.35,
-      vy: -(0.2 + Math.random() * 0.8),
+      vy: vy,
       size: tier < 0.5 ? 0.4 + Math.random() * 1.2 : 1.0 + Math.random() * 2.8,
       alpha: tier < 0.5 ? 0.08 + Math.random() * 0.25 : 0.15 + Math.random() * 0.45,
       hue: 25 + Math.random() * 25,
@@ -450,10 +501,19 @@ function updateEmbers() {
     e.y += e.vy;
     e.life += 0.003 + Math.random() * 0.003;
     if (e.life > e.maxLife) {
-      // respawn anywhere in right half
+      // RESPAWN: randomly from top (falling) or bottom (rising)
       e.life = 0;
       e.x = W * 0.5 + Math.random() * W * 0.5;
-      e.y = H + 8 + Math.random() * 40;
+      if (Math.random() < 0.5) {
+        // Spawn from top, float down
+        e.y = -20 - Math.random() * 30;
+        e.vy = 0.2 + Math.random() * 0.8;
+      } else {
+        // Spawn from bottom, float up
+        e.y = H + 20 + Math.random() * 30;
+        e.vy = -(0.2 + Math.random() * 0.8);
+      }
+      e.vx = (Math.random() - 0.5) * 0.35;
       e.alpha = e.tier < 0.5 ? 0.08 + Math.random() * 0.25 : 0.15 + Math.random() * 0.45;
       e.hue = 25 + Math.random() * 25;
     }
