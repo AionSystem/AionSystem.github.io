@@ -3,151 +3,346 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <meta name="description" content="Contact Sheldon K. Salmon — Game Design Services. Start your world with a custom consultation.">
-  <title>Contact — World Architect & Game Design</title>
+  <meta name="description" content="Contact Sheldon K. Salmon — World Architect & Game Design Services. Start your world with a custom consultation.">
+  <title>Contact — World Architect & Game Design | AionSystem</title>
   <meta property="og:title" content="Contact — World Architect & Game Design">
   <meta property="og:description" content="Describe your vision. I'll architect the system.">
   <meta property="og:type" content="website">
   <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+
   <style>
-    /* ========== RESET & VARIABLES (identical to main‑2 services) ========== */
+    /* ===== RESET ===== */
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+    /* ===== DESIGN TOKENS — hot side ===== */
     :root{
-      --bg:#08090b;
-      --surface:rgba(25,15,35,0.5);
-      --panel:rgba(35,20,50,0.6);
-      --border:rgba(168,85,247,0.2);
-      --primary:#a855f7;
-      --primary-dark:#7c3aed;
-      --primary-light:#c084fc;
-      --gold:#D4AF37;
-      --gold-light:#f0d060;
-      --amber:#f0a500;
-      --text:#e0e8f0;
-      --muted:#a89ab0;
-      --dim:#5a4a6a;
-      --red:#ff4d4d;
-      --cyan:#00d4ff;
-      --violet:#a855f7;
-      --edu:#4ade80;
-      --mono:'Share Tech Mono',monospace;
-      --sans:'Barlow Condensed',sans-serif;
-      --serif:'Crimson Pro',Georgia,serif;
-      --jmono:'JetBrains Mono',monospace;
+      --bg:#05060a;
+      --surface:rgba(20,10,4,0.72);
+      --panel:rgba(28,14,5,0.8);
+
+      --hot-primary:#f59e0b;
+      --hot-secondary:#ef4444;
+      --hot-accent:#fcd34d;
+      --hot-border:rgba(245,158,11,0.22);
+      --hot-border-hover:rgba(245,158,11,0.55);
+
+      --cold-secondary:#06b6d4;
+      --cold-primary:#4f46e5;
+      --cold-border:rgba(6,182,212,0.25);
+
+      --text-bright:#f0f4f8;
+      --text-mid:#94a3b8;
+      --text-dim:#475569;
+
+      --display:'Space Grotesk',sans-serif;
+      --body:'Inter',sans-serif;
+      --mono:'JetBrains Mono',monospace;
       --ease:cubic-bezier(0.16,1,0.3,1);
       --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
-      --font-base:clamp(16px,1vw + 8px,20px);
-      --font-h1:clamp(48px,8vw + 16px,96px);
-      --font-h2:clamp(28px,4vw + 8px,44px);
-      --glow-primary:0 0 5px #a855f7,0 0 10px #a855f7,0 0 20px rgba(168,85,247,0.5);
-      --glow-gold:0 0 5px #D4AF37,0 0 10px #D4AF37,0 0 20px rgba(212,175,55,0.4);
     }
-    .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--primary);color:#fff;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s ease}
+
+    /* ===== BASE ===== */
+    .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--hot-primary);color:#000;font-family:var(--mono);font-size:12px;letter-spacing:2px;text-decoration:none;transition:top 0.2s;}
     .skip-nav:focus{top:0}
-    body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-base);line-height:1.5;overflow-x:hidden}
-    #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
-    #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
-    #symbol-canvas.ready{opacity:0.65}
-    .scan-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10}
-    .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(168,85,247,0.04) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite}
-    @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
-    .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(8,9,11,0.7);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease}
-    .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--primary);color:var(--primary);box-shadow:0 0 15px rgba(168,85,247,0.3);outline:none}
-    .audio-toggle[aria-pressed="true"]{border-color:var(--gold);color:var(--gold);box-shadow:0 0 15px rgba(212,175,55,0.3)}
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(8,9,11,0.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:0 0 30px rgba(168,85,247,0.05)}
-    .nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px}
-    .nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--primary);box-shadow:0 0 10px var(--primary)}
-    .nav-logo span{color:var(--muted)}
-    .nav-links{display:flex;gap:24px;list-style:none}
-    .nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;padding-bottom:2px;transition:all 0.2s ease}
-    .nav-links a:hover,.nav-links a.active{color:var(--gold);border-bottom-color:var(--gold);text-shadow:0 0 8px var(--gold)}
-    .nav-links a:focus-visible{outline:2px solid var(--gold);outline-offset:4px;border-radius:2px}
-    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;width:32px;height:32px;flex-direction:column;justify-content:space-between;align-items:flex-end;padding:4px 0;color:var(--text)}
-    .nav-hamburger span{display:block;height:2px;background:var(--text);transition:all 0.3s var(--ease-spring);border-radius:2px}
+
+    body{
+      background:var(--bg);
+      color:var(--text-bright);
+      font-family:var(--body);
+      font-size:16px;line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    /* ===== CANVAS LAYERS ===== */
+    #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.35;}
+    #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s var(--ease);}
+    #symbol-canvas.ready{opacity:0.5}
+
+    .hot-haze{
+      position:fixed;inset:0;z-index:2;pointer-events:none;
+      background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(245,158,11,0.02) 1px,rgba(0,0,0,0) 2px);
+      opacity:0.6;
+    }
+
+    /* ===== AUDIO TOGGLE ===== */
+    .audio-toggle{
+      position:fixed;bottom:24px;right:24px;z-index:200;
+      width:44px;height:44px;border-radius:50%;
+      border:1px solid var(--hot-border);
+      background:rgba(8,4,2,0.75);backdrop-filter:blur(12px);
+      color:var(--text-mid);font-size:1.1rem;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      transition:all 0.25s var(--ease);
+    }
+    .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--hot-primary);color:var(--hot-primary);box-shadow:0 0 18px rgba(245,158,11,0.35);outline:none;}
+    .audio-toggle[aria-pressed="true"]{border-color:var(--hot-accent);color:var(--hot-accent);box-shadow:0 0 18px rgba(252,211,77,0.35);}
+
+    /* ===== NAV ===== */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 40px;height:56px;
+      background:rgba(5,6,10,0.75);backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--hot-border);
+      box-shadow:0 0 40px rgba(245,158,11,0.04);
+      animation:fadeInNav 0.6s var(--ease) 0.2s both;
+    }
+    @keyframes fadeInNav{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+    .nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--text-bright);text-transform:uppercase;text-decoration:none;}
+    .nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--hot-border);box-shadow:0 0 10px rgba(245,158,11,0.2);}
+    .nav-logo .dot{color:var(--hot-primary);}
+
+    .nav-links{display:flex;gap:24px;list-style:none;}
+    .nav-links a{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-mid);text-decoration:none;text-transform:uppercase;padding-bottom:2px;border-bottom:1px solid transparent;transition:all 0.2s var(--ease);}
+    .nav-links a:hover,.nav-links a:focus-visible,.nav-links a.active{color:var(--hot-primary);border-bottom-color:var(--hot-primary);text-shadow:0 0 10px rgba(245,158,11,0.4);outline:none;}
+
+    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;width:32px;height:32px;flex-direction:column;justify-content:space-between;align-items:flex-end;padding:4px 0;}
+    .nav-hamburger span{display:block;height:2px;background:var(--text-mid);transition:all 0.3s var(--ease-spring);border-radius:2px;}
     .nav-hamburger span:nth-child(1){width:100%}
     .nav-hamburger span:nth-child(2){width:70%}
     .nav-hamburger span:nth-child(3){width:100%}
     .nav-hamburger.open span:nth-child(1){transform:translateY(10px) rotate(45deg);width:100%}
     .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
     .nav-hamburger.open span:nth-child(3){transform:translateY(-10px) rotate(-45deg);width:100%}
-    .mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:rgba(8,9,11,0.97);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:0;padding:0;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;overscroll-behavior:contain;pointer-events:none;border-top:1px solid var(--border)}
+
+    .mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:rgba(5,3,2,0.97);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;padding:0;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;overscroll-behavior:contain;pointer-events:none;border-top:1px solid var(--hot-border);}
     .mobile-nav.open{transform:translateY(0);visibility:visible;pointer-events:all;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0s}
-    .mobile-nav a{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;gap:8px;transition:all 0.15s ease;opacity:0;transform:translateY(6px)}
-    .mobile-nav a:nth-child(2n){border-right:none}
-    .mobile-nav a:nth-last-child(1),.mobile-nav a:nth-last-child(2):nth-child(2n+1){border-bottom:none}
+    .mobile-nav a{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--hot-border);border-right:1px solid var(--hot-border);display:flex;align-items:center;gap:8px;transition:all 0.15s;opacity:0;transform:translateY(6px);}
     .mobile-nav.open a{opacity:1;transform:translateY(0)}
-    .mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:background 0.15s ease,box-shadow 0.15s ease}
-    .mobile-nav a:hover,.mobile-nav a:focus-visible,.mobile-nav a.active{color:var(--gold);background:rgba(212,175,55,0.04);text-shadow:0 0 8px var(--gold);outline:none}
-    .mobile-nav a:hover::before,.mobile-nav a:focus-visible::before,.mobile-nav a.active::before{background:var(--gold);box-shadow:0 0 6px var(--gold)}
-    .mobile-nav a:last-child:nth-child(2n+1){grid-column:1 / -1;border-right:none}
+    .mobile-nav a:nth-child(2n){border-right:none}
+    .mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--text-dim);flex-shrink:0;transition:background 0.15s,box-shadow 0.15s;}
+    .mobile-nav a:hover,.mobile-nav a.active{color:var(--hot-primary);background:rgba(245,158,11,0.04);text-shadow:0 0 8px rgba(245,158,11,0.4);outline:none;}
+    .mobile-nav a:hover::before,.mobile-nav a.active::before{background:var(--hot-primary);box-shadow:0 0 6px var(--hot-primary);}
 
-    .wrapper{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:100px 40px 80px}
-    .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:12px}
-    .eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--primary);vertical-align:middle;margin-right:10px;margin-bottom:2px;box-shadow:0 0 8px var(--primary)}
-    .eyebrow::after{content:'';display:inline-block;width:20px;height:1px;background:var(--primary);vertical-align:middle;margin-left:10px;margin-bottom:2px;box-shadow:0 0 8px var(--primary)}
-    h1{font-family:var(--sans);font-size:clamp(40px,6vw,72px);font-weight:900;letter-spacing:1px;text-transform:uppercase;line-height:0.95;color:var(--text);margin-bottom:8px}
-    h1 em{color:var(--gold);font-style:normal;display:block;text-shadow:var(--glow-gold)}
-    .title-line{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:3px;margin-bottom:36px;margin-top:16px}
-    section{margin-bottom:64px}
+    /* ===== PAGE LAYOUT ===== */
+    .wrapper{position:relative;z-index:3;max-width:1100px;margin:0 auto;padding:100px 40px 80px;}
 
-    .card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.3s var(--ease);max-width:800px}
-    .card:hover{border-color:var(--gold);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 30px rgba(212,175,55,0.08)}
+    section{margin-bottom:56px;}
 
-    .section-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
-    .section-num{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:2px}
-    .section-title{font-family:var(--sans);font-size:var(--font-h2);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text)}
-    .section-line{flex:1;height:1px;background:var(--border)}
+    /* ===== PAGE HEADER ===== */
+    .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--hot-primary);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+    .eyebrow::before,.eyebrow::after{content:'';display:inline-block;width:20px;height:1px;background:var(--hot-secondary);flex-shrink:0;box-shadow:0 0 8px var(--hot-secondary);}
 
-    .logo-grid{display:flex;flex-wrap:wrap;gap:32px;align-items:center}
-    .logo-link{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;font-family:var(--mono);font-size:0.7rem;color:var(--muted);transition:all 0.2s}
-    .logo-link:hover{color:var(--gold);text-shadow:0 0 8px var(--gold)}
-    .logo-link img{width:60px;height:60px;object-fit:contain;filter:brightness(0) invert(1);transition:filter 0.2s}
-    .logo-link:hover img{filter:brightness(0) invert(0.8) sepia(1) saturate(5) hue-rotate(10deg);}
-    .vault-logo img{filter:none !important}
-    .vault-logo:hover img{filter:none !important}
+    h1{font-family:var(--display);font-size:clamp(40px,6vw,80px);font-weight:700;letter-spacing:-2px;text-transform:uppercase;line-height:0.92;color:var(--text-bright);margin-bottom:8px;}
+    h1 em{display:block;font-style:normal;background:linear-gradient(135deg,#fef3c7,var(--hot-primary),var(--hot-secondary));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(245,158,11,0.3));}
 
-    .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--primary);color:var(--primary);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer}
-    .cta-btn.primary{background:var(--gold);color:#000;border-color:var(--gold)}
-    .cta-btn:hover,.cta-btn:focus-visible{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 0 20px var(--primary);outline:none}
-    .cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--gold-light);border-color:var(--gold-light);box-shadow:0 0 20px var(--gold);color:#000}
-    .cta-btn.violet{border-color:var(--violet);color:var(--violet)}
-    .cta-btn.violet:hover,.cta-btn.violet:focus-visible{background:var(--violet);color:#fff;box-shadow:0 0 20px var(--violet)}
+    .title-line{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:28px;margin-top:12px;}
 
-    /* ===== MODALS (glass-morphic) ===== */
-    .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s}
-    .modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s}
-    .modal-box{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:600px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(168,85,247,0.1);position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);max-height:90vh;overflow-y:auto}
-    .modal-overlay.active .modal-box{transform:scale(1)}
-    .modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;transition:color 0.2s}
-    .modal-close:hover{color:var(--gold);text-shadow:0 0 8px var(--gold)}
-    .modal-title{font-family:var(--sans);font-size:1.6rem;font-weight:900;color:var(--gold);margin-bottom:16px}
-    .form-group{margin-bottom:16px}
-    .form-group label{display:block;font-family:var(--mono);font-size:0.7rem;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
-    .form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--serif);font-size:0.9rem;outline:none;transition:border-color 0.2s}
-    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--gold);box-shadow:0 0 8px var(--gold)}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .form-actions{display:flex;gap:12px;align-items:center;margin-top:24px;flex-wrap:wrap}
-    .nda-section{display:none;flex-direction:column;gap:12px;margin-top:16px;padding:16px;border:1px solid var(--border);border-radius:8px;background:rgba(0,0,0,0.2)}
-    .nda-section.visible{display:flex}
-    .nda-section label{font-family:var(--mono);font-size:0.7rem;color:var(--muted)}
-    .nda-check{display:flex;align-items:center;gap:8px}
-    .nda-text{font-family:var(--serif);font-size:0.8rem;color:var(--muted);line-height:1.5;margin-bottom:8px}
+    .hero-desc{font-family:var(--body);font-size:18px;font-weight:300;font-style:italic;max-width:640px;color:var(--text-mid);margin-bottom:0;line-height:1.7;border-left:2px solid var(--hot-primary);padding-left:20px;}
 
-    /* Attachment note */
-    .attachment-note{font-family:var(--mono);font-size:0.7rem;color:var(--dim);margin-top:4px;border-top:1px solid var(--border);padding-top:12px}
+    /* ===== SECTION HEADERS ===== */
+    .section-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+    .section-num{font-family:var(--mono);font-size:10px;color:var(--hot-primary);letter-spacing:2px;}
+    .section-title{font-family:var(--display);font-size:clamp(20px,2.5vw,28px);font-weight:700;letter-spacing:-0.5px;text-transform:uppercase;color:var(--text-bright);}
+    .section-line{flex:1;height:1px;background:var(--hot-border);}
 
-    footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:2}
-    .footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
-    .footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
-    .footer-links a:hover,.footer-links a:focus-visible{color:var(--gold);text-shadow:0 0 8px var(--gold);outline:none}
-    .footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
+    /* ===== CARDS ===== */
+    .card{
+      background:var(--surface);backdrop-filter:blur(12px);
+      border:1px solid var(--hot-border);border-radius:16px;
+      padding:32px;max-width:760px;
+      position:relative;overflow:hidden;
+      transition:all 0.35s var(--ease);
+      box-shadow:0 8px 32px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--hot-primary),var(--hot-accent),transparent);opacity:0;transition:opacity 0.3s var(--ease);}
+    .card:hover{border-color:var(--hot-border-hover);box-shadow:0 16px 48px rgba(0,0,0,0.4),0 0 50px rgba(245,158,11,0.1),inset 0 1px 0 rgba(255,255,255,0.05);}
+    .card:hover::before{opacity:0.7;}
 
-    @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}#webgl-canvas,#symbol-canvas,.scan-lines{display:none}}
-    @media (max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}.wrapper{padding:80px 20px 60px}.form-row{grid-template-columns:1fr}}
-    @media (max-width:480px){.eyebrow::before,.eyebrow::after{width:12px}}
+    .card-email{font-family:var(--mono);font-size:1.1rem;color:var(--hot-accent);margin-bottom:12px;display:block;}
+    .card-email a{color:var(--hot-accent);text-decoration:underline;text-shadow:0 0 10px rgba(252,211,77,0.3);}
+    .card-email a:hover{text-shadow:0 0 20px rgba(252,211,77,0.5);}
+    .card-desc{font-family:var(--body);font-size:15px;font-weight:300;color:var(--text-mid);line-height:1.7;}
+    .card-desc a{color:var(--hot-primary);text-decoration:underline;}
+
+    /* ===== CTA BUTTONS ===== */
+    .cta-btn{
+      display:inline-flex;align-items:center;gap:10px;
+      font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;
+      text-decoration:none;padding:12px 24px;
+      border:1px solid var(--hot-border);
+      color:var(--hot-primary);background:transparent;
+      transition:all 0.25s var(--ease);border-radius:6px;
+      backdrop-filter:blur(8px);cursor:pointer;
+      margin-top:20px;
+    }
+    .cta-btn:hover,.cta-btn:focus-visible{background:rgba(245,158,11,0.1);border-color:var(--hot-border-hover);color:var(--hot-accent);box-shadow:0 0 24px rgba(245,158,11,0.2);outline:none;}
+
+    /* Cold variant — for Custom World (cyan accent) */
+    .cta-btn.cold{border-color:var(--cold-border);color:var(--cold-secondary);}
+    .cta-btn.cold:hover,.cta-btn.cold:focus-visible{background:rgba(6,182,212,0.08);border-color:rgba(6,182,212,0.55);color:#e0f7ff;box-shadow:0 0 24px rgba(6,182,212,0.15);}
+
+    /* ===== LOGO GRID ===== */
+    .logo-grid{display:flex;flex-wrap:wrap;gap:32px;align-items:center;}
+    .logo-link{
+      display:flex;flex-direction:column;align-items:center;gap:6px;
+      text-decoration:none;
+      font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;
+      color:var(--text-dim);transition:all 0.2s var(--ease);
+    }
+    .logo-link img{width:44px;height:44px;object-fit:contain;filter:brightness(0) invert(0.4);transition:filter 0.2s;}
+    .logo-link:hover{color:var(--hot-primary);text-shadow:0 0 8px rgba(245,158,11,0.4);}
+    .logo-link:hover img{filter:brightness(0) invert(0.75) sepia(1) saturate(3) hue-rotate(5deg);}
+    .vault-logo img{filter:none !important;border-radius:50%;border:1px solid var(--hot-border);}
+    .vault-logo:hover img{filter:none !important;}
+
+    /* ===== MODALS ===== */
+    .modal-overlay{
+      position:fixed;inset:0;z-index:1000;
+      background:rgba(5,3,2,0.88);backdrop-filter:blur(20px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;visibility:hidden;
+      transition:opacity 0.35s var(--ease),visibility 0s linear 0.35s;
+    }
+    .modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.35s var(--ease),visibility 0s linear 0s;}
+
+    .modal-box{
+      background:rgba(18,10,3,0.96);
+      backdrop-filter:blur(32px);
+      border:1px solid var(--hot-border);
+      border-radius:20px;
+      padding:36px 40px;
+      max-width:660px;width:92%;
+      max-height:88vh;overflow-y:auto;
+      position:relative;
+      transform:scale(0.95) translateY(16px);
+      transition:transform 0.35s var(--ease-spring);
+      box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 60px rgba(245,158,11,0.07),inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:20px 20px 0 0;background:linear-gradient(90deg,transparent,var(--hot-primary),var(--hot-accent),var(--hot-primary),transparent);opacity:0.55;}
+    .modal-overlay.active .modal-box{transform:scale(1) translateY(0);}
+
+    .modal-close{
+      position:absolute;top:14px;right:18px;
+      background:none;border:none;color:var(--text-dim);
+      font-size:1.5rem;cursor:pointer;line-height:1;
+      transition:all 0.2s var(--ease);padding:4px;border-radius:4px;
+    }
+    .modal-close:hover,.modal-close:focus-visible{color:var(--hot-primary);transform:rotate(90deg);outline:none;}
+
+    .modal-title{
+      font-family:var(--display);font-size:22px;font-weight:700;
+      color:var(--hot-accent);letter-spacing:-0.5px;text-transform:uppercase;
+      margin-bottom:20px;
+    }
+
+    /* ===== FORM ELEMENTS ===== */
+    .form-group{margin-bottom:16px;}
+    .form-group label{
+      display:block;font-family:var(--mono);font-size:9px;
+      letter-spacing:2px;text-transform:uppercase;
+      color:var(--text-dim);margin-bottom:5px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select{
+      width:100%;padding:10px 14px;
+      background:rgba(0,0,0,0.45);
+      border:1px solid var(--hot-border);
+      border-radius:6px;
+      color:var(--text-bright);
+      font-family:var(--body);font-size:14px;font-weight:300;
+      outline:none;
+      transition:border-color 0.2s var(--ease),box-shadow 0.2s var(--ease);
+      -webkit-appearance:none;
+    }
+    .form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-dim);}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--hot-primary);box-shadow:0 0 12px rgba(245,158,11,0.2);}
+    .form-group select option{background:#0e0800;color:var(--text-bright);}
+    .form-group textarea{resize:vertical;min-height:90px;}
+
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+    /* System checkboxes */
+    .system-checks{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+    .system-checks label{
+      display:flex;align-items:center;gap:6px;
+      font-family:var(--mono);font-size:9px;letter-spacing:1px;
+      color:var(--text-mid);
+      background:rgba(245,158,11,0.05);
+      padding:5px 12px;border-radius:20px;
+      border:1px solid var(--hot-border);
+      cursor:pointer;transition:all 0.15s var(--ease);
+    }
+    .system-checks label:hover{border-color:rgba(245,158,11,0.4);color:var(--hot-accent);background:rgba(245,158,11,0.08);}
+    .system-checks input[type="checkbox"]{accent-color:var(--hot-primary);width:12px;height:12px;}
+
+    .attachment-placeholder{
+      border:1px dashed var(--hot-border);border-radius:6px;
+      padding:12px;text-align:center;
+      font-family:var(--mono);font-size:9px;letter-spacing:1px;
+      color:var(--text-dim);
+    }
+    .attachment-placeholder span{display:block;font-size:8px;color:var(--text-dim);margin-top:4px;}
+
+    /* Form actions row */
+    .form-actions{display:flex;gap:12px;align-items:flex-start;margin-top:20px;flex-wrap:wrap;}
+
+    /* Inline CTA for modals */
+    .form-btn{
+      font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
+      padding:10px 20px;border-radius:6px;cursor:pointer;
+      transition:all 0.2s var(--ease);display:inline-flex;align-items:center;gap:6px;
+    }
+    .form-btn.amber{border:1px solid var(--hot-border);background:transparent;color:var(--hot-primary);}
+    .form-btn.amber:hover{background:rgba(245,158,11,0.1);border-color:var(--hot-border-hover);color:var(--hot-accent);box-shadow:0 0 20px rgba(245,158,11,0.2);}
+    .form-btn.confirm{border:1px solid rgba(6,182,212,0.3);background:transparent;color:var(--cold-secondary);}
+    .form-btn.confirm:hover{background:rgba(6,182,212,0.08);border-color:rgba(6,182,212,0.55);color:#e0f7ff;}
+    .form-btn.send{background:rgba(245,158,11,0.12);border:1px solid var(--hot-border-hover);color:var(--hot-accent);}
+    .form-btn.send:hover{background:rgba(245,158,11,0.2);box-shadow:0 0 24px rgba(245,158,11,0.25);}
+
+    /* NDA section */
+    .nda-section{
+      display:none;flex-direction:column;gap:12px;
+      margin-top:16px;padding:16px;
+      border:1px solid var(--hot-border);border-radius:10px;
+      background:rgba(0,0,0,0.2);
+      width:100%;
+    }
+    .nda-section.visible{display:flex;}
+    .nda-text{font-family:var(--body);font-size:13px;font-weight:300;color:var(--text-mid);line-height:1.6;}
+    .nda-text strong{color:var(--text-bright);font-weight:500;}
+    .nda-check{display:flex;align-items:center;gap:8px;}
+    .nda-check input[type="checkbox"]{accent-color:var(--hot-primary);width:14px;height:14px;cursor:pointer;}
+    .nda-check label{font-family:var(--body);font-size:13px;font-weight:300;color:var(--text-mid);cursor:pointer;letter-spacing:0;text-transform:none;}
+
+    /* ===== FOOTER ===== */
+    footer{
+      position:relative;z-index:3;
+      border-top:1px solid var(--hot-border);
+      padding:32px 40px;
+      max-width:1100px;margin:0 auto;
+      display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;
+      font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);
+    }
+    .footer-legal{font-size:8px;color:var(--text-dim);margin-top:4px;letter-spacing:1px;}
+    .footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap;}
+    .footer-links a{color:var(--text-dim);text-decoration:none;transition:color 0.2s;}
+    .footer-links a:hover,.footer-links a:focus-visible{color:var(--hot-primary);text-shadow:0 0 8px rgba(245,158,11,0.4);outline:none;}
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:800px){
+      nav{padding:0 20px;}
+      .nav-links{display:none;}
+      .nav-hamburger{display:flex;}
+      .wrapper{padding:80px 20px 60px;}
+      .form-row{grid-template-columns:1fr;}
+      .modal-box{padding:24px 20px;}
+      footer{padding:24px 20px;flex-direction:column;align-items:center;text-align:center;}
+      .footer-links{justify-content:center;}
+    }
+    @media(max-width:480px){
+      h1{letter-spacing:-1px;}
+      .eyebrow::before,.eyebrow::after{width:12px;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:0.001ms !important;transition-duration:0.001ms !important}
+      #webgl-canvas,#symbol-canvas,.hot-haze{display:none}
+    }
   </style>
 </head>
 <body>
@@ -155,15 +350,15 @@
 
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
-<div class="scan-grid" aria-hidden="true"></div>
-<div class="scan-lines" aria-hidden="true"></div>
+<div class="hot-haze" aria-hidden="true"></div>
 
 <button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
 
+<!-- NAV -->
 <nav aria-label="Primary navigation">
   <a href="/main-2/index.html" class="nav-logo" aria-label="AionSystem home">
-    <img src="/assets/img/aion-logo.jpg" alt="AionSystem logo" class="nav-logo-img" width="28" height="28">
-    <span>AION<span>system</span></span>
+    <img src="/assets/img/aion-logo.jpg" alt="AionSystem logo" class="nav-logo-img" width="28" height="28" onerror="this.style.display='none'">
+    <span>AION<span class="dot">·</span>SYSTEM</span>
   </a>
   <ul class="nav-links" role="list">
     <li><a href="/main-2/services/index.html">Services</a></li>
@@ -180,6 +375,7 @@
 </nav>
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true"></nav>
 
+<!-- MAIN -->
 <div class="wrapper" id="main">
 
   <!-- Hero -->
@@ -187,12 +383,12 @@
     <div class="eyebrow">// Start Your World</div>
     <h1>Contact <em>Sheldon</em></h1>
     <div class="title-line">Describe your vision. I'll architect the system.</div>
-    <p style="font-family:var(--serif);font-size:1.2rem;font-weight:300;font-style:italic;max-width:680px;color:var(--muted);margin-bottom:32px">
+    <p class="hero-desc">
       Whether you need a quick consultation, a full world build, or a custom framework — the door is open.
     </p>
   </section>
 
-  <!-- Direct Email -->
+  <!-- 01 — Direct Email -->
   <section>
     <div class="section-header">
       <span class="section-num">// 01</span>
@@ -200,14 +396,12 @@
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <div class="card">
-      <p style="font-family:var(--mono);font-size:1.2rem;color:var(--text);margin-bottom:12px">📧 <a href="mailto:sheldon@aionsystem.com" style="color:var(--gold);text-shadow:0 0 8px var(--gold);text-decoration:underline">sheldon@aionsystem.com</a></p>
-      <p style="font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6">
-        The fastest way to reach me. All project inquiries, consultations, and collaborations start here. I respond within 24–48 hours.
-      </p>
+      <span class="card-email">📧 <a href="mailto:sheldon@aionsystem.com">sheldon@aionsystem.com</a></span>
+      <p class="card-desc">The fastest way to reach me. All project inquiries, consultations, and collaborations start here. I respond within 24–48 hours.</p>
     </div>
   </section>
 
-  <!-- General Inquiry -->
+  <!-- 02 — General Inquiry -->
   <section>
     <div class="section-header">
       <span class="section-num">// 02</span>
@@ -215,14 +409,12 @@
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <div class="card">
-      <p style="font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6;margin-bottom:20px">
-        Quick question, quote request, or general discussion about your project.
-      </p>
+      <p class="card-desc">Quick question, quote request, or general discussion about your project.</p>
       <button class="cta-btn" id="open-general-form">📋 Open General Inquiry Form</button>
     </div>
   </section>
 
-  <!-- Custom Game World -->
+  <!-- 03 — Custom Game World -->
   <section>
     <div class="section-header">
       <span class="section-num">// 03</span>
@@ -230,14 +422,12 @@
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <div class="card">
-      <p style="font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6;margin-bottom:20px">
-        In‑depth intake for full game architecture, lore‑to‑mechanics, or any of the services listed on the <a href="/main-2/services/index.html" style="color:var(--gold);text-decoration:underline;">Services page</a>.
-      </p>
-      <button class="cta-btn violet" id="open-custom-form">🌍 Start Your Custom World</button>
+      <p class="card-desc">In-depth intake for full game architecture, lore-to-mechanics, or any of the services listed on the <a href="/main-2/services/index.html">Services page</a>.</p>
+      <button class="cta-btn cold" id="open-custom-form">🌍 Start Your Custom World</button>
     </div>
   </section>
 
-  <!-- Everywhere Else (logos) -->
+  <!-- 04 — Everywhere Else -->
   <section>
     <div class="section-header">
       <span class="section-num">// 04</span>
@@ -246,26 +436,30 @@
     </div>
     <div class="logo-grid">
       <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="logo-link">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub"> <span>GitHub</span>
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" width="44" height="44">
+        <span>GitHub</span>
       </a>
       <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="logo-link">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn"> <span>LinkedIn</span>
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn" width="44" height="44">
+        <span>LinkedIn</span>
       </a>
       <a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener" class="logo-link">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/orcid.svg" alt="ORCID"> <span>ORCID</span>
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/orcid.svg" alt="ORCID" width="44" height="44">
+        <span>ORCID</span>
       </a>
       <a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener" class="logo-link">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" alt="X"> <span>X</span>
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" alt="X" width="44" height="44">
+        <span>X</span>
       </a>
       <a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener" class="logo-link">
-        <!-- Official Medium "M" mark -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1043.63 592.71" width="60" height="60" fill="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1043.63 592.71" width="44" height="44" fill="currentColor" aria-label="Medium" style="opacity:0.4;">
           <path d="M588.67 296.36c0 163.67-131.78 296.35-294.33 296.35S0 460 0 296.36 131.78 0 294.34 0s294.33 132.69 294.33 296.36M911.56 296.36c0 154.06-65.89 279-147.17 279s-147.17-124.94-147.17-279 65.88-279 147.16-279 147.17 124.9 147.17 279M1043.63 296.36c0 138-23.17 249.94-51.76 249.94s-51.75-111.91-51.75-249.94 23.17-249.94 51.75-249.94 51.76 111.9 51.76 249.94"/>
         </svg>
         <span>Medium</span>
       </a>
       <a href="/main-2/vault/" class="logo-link vault-logo">
-        <img src="/assets/img/aion-logo.jpg" alt="Vault" style="border-radius:50%"> <span>The Vault</span>
+        <img src="/assets/img/aion-logo.jpg" alt="The Vault" width="44" height="44">
+        <span>The Vault</span>
       </a>
     </div>
   </section>
@@ -274,7 +468,7 @@
 
 <footer>
   <div>
-    <div>AionSystem · Sheldon K. Salmon · Game Systems Architect · © <span id="copyright-year"></span></div>
+    <div>AionSystem · Sheldon K. Salmon · World Architect · © <span id="copyright-year"></span></div>
     <div class="footer-legal">Lore is not decoration — it is load-bearing architecture.</div>
   </div>
   <ul class="footer-links" role="list">
@@ -289,30 +483,32 @@
 </footer>
 
 <!-- ===== GENERAL INQUIRY MODAL ===== -->
-<div class="modal-overlay" id="general-modal">
+<div class="modal-overlay" id="general-modal" role="dialog" aria-modal="true" aria-labelledby="general-modal-title">
   <div class="modal-box">
-    <button class="modal-close" data-modal="general-modal">×</button>
-    <div class="modal-title">General Inquiry</div>
-    <form id="general-form">
+    <button class="modal-close" data-modal="general-modal" aria-label="Close modal">✕</button>
+    <div class="modal-title" id="general-modal-title">General Inquiry</div>
+    <form id="general-form" novalidate>
       <div class="form-row">
-        <div class="form-group"><label>Full Name *</label><input type="text" name="name" required></div>
-        <div class="form-group"><label>Email *</label><input type="email" name="email" required></div>
+        <div class="form-group"><label>Full Name <span style="color:var(--hot-secondary)">*</span></label><input type="text" name="name" required autocomplete="name" placeholder="Jane Doe"></div>
+        <div class="form-group"><label>Email <span style="color:var(--hot-secondary)">*</span></label><input type="email" name="email" required autocomplete="email" placeholder="jane@studio.com"></div>
       </div>
-      <div class="form-group"><label>Company / Studio</label><input type="text" name="company"></div>
-      <div class="form-group"><label>Service Interested In</label>
+      <div class="form-group"><label>Company / Studio</label><input type="text" name="company" placeholder="Your studio name (optional)"></div>
+      <div class="form-group">
+        <label>Service Interested In</label>
         <select name="service">
           <option value="">— Select —</option>
           <option value="System Diagnostic">System Diagnostic &amp; Loophole Hardening</option>
-          <option value="Lore-to-Mechanics">Lore‑to‑Mechanics Blueprint</option>
-          <option value="Pre-Code GDD">Pre‑Code Authority Document</option>
+          <option value="Lore-to-Mechanics">Lore-to-Mechanics Blueprint</option>
+          <option value="Pre-Code GDD">Pre-Code Authority Document</option>
           <option value="Quest Architecture">Quest &amp; Narrative Architecture</option>
           <option value="Economy Systems">Game Economy &amp; Resource Systems</option>
-          <option value="World-State">World‑State &amp; Dynamic Events</option>
+          <option value="World-State">World-State &amp; Dynamic Events</option>
           <option value="Full Build">Full Build from Concept</option>
           <option value="Other / Not sure">Other / Not sure</option>
         </select>
       </div>
-      <div class="form-group"><label>Budget Range</label>
+      <div class="form-group">
+        <label>Budget Range</label>
         <select name="budget">
           <option value="">— Select —</option>
           <option value="Under $500">Under $500</option>
@@ -321,17 +517,18 @@
           <option value="$5,000+">$5,000+</option>
         </select>
       </div>
-      <div class="form-group"><label>Message *</label><textarea name="message" rows="4" required placeholder="What are you building? What do you need help with?"></textarea></div>
+      <div class="form-group"><label>Message <span style="color:var(--hot-secondary)">*</span></label><textarea name="message" rows="4" required placeholder="What are you building? What do you need help with?"></textarea></div>
       <div class="form-actions">
-        <button type="button" class="cta-btn" id="confirm-general">Confirm Answers</button>
+        <button type="button" class="form-btn amber" id="confirm-general">Confirm Answers →</button>
         <div class="nda-section" id="general-nda">
-          <div class="nda-text"><strong>Mutual Non‑Disclosure Agreement (Preview)</strong><br>By requesting an NDA, both parties agree to keep all project details confidential. A formal NDA will be provided via DocuSign upon engagement.</div>
+          <div class="nda-text"><strong>Mutual Non-Disclosure Agreement (Preview)</strong><br>By requesting an NDA, both parties agree to keep all project details confidential. A formal NDA will be provided via DocuSign upon engagement.</div>
           <div class="nda-check">
-            <input type="checkbox" id="general-nda-check"> <label for="general-nda-check">I request an NDA and agree to receive the formal document.</label>
+            <input type="checkbox" id="general-nda-check">
+            <label for="general-nda-check">I request an NDA and agree to receive the formal document.</label>
           </div>
           <div class="form-group"><label>Signatory Name</label><input type="text" name="nda-signer" placeholder="Your full legal name"></div>
-          <div class="form-group"><label>Signatory Title</label><input type="text" name="nda-title" placeholder="e.g., CEO, CTO"></div>
-          <button type="button" class="cta-btn primary" id="send-general">Send Inquiry</button>
+          <div class="form-group"><label>Signatory Title</label><input type="text" name="nda-title" placeholder="e.g., CEO, Creative Director"></div>
+          <button type="button" class="form-btn send" id="send-general">Send Inquiry ↗</button>
         </div>
       </div>
     </form>
@@ -339,26 +536,25 @@
 </div>
 
 <!-- ===== CUSTOM GAME WORLD MODAL ===== -->
-<div class="modal-overlay" id="custom-modal">
+<div class="modal-overlay" id="custom-modal" role="dialog" aria-modal="true" aria-labelledby="custom-modal-title">
   <div class="modal-box">
-    <button class="modal-close" data-modal="custom-modal">×</button>
-    <div class="modal-title">Custom Game World Consultation</div>
-    <form id="custom-form">
-      <!-- Basic Info -->
+    <button class="modal-close" data-modal="custom-modal" aria-label="Close modal">✕</button>
+    <div class="modal-title" id="custom-modal-title">Custom Game World Consultation</div>
+    <form id="custom-form" novalidate>
       <div class="form-row">
-        <div class="form-group"><label>Full Name *</label><input type="text" name="name" required></div>
-        <div class="form-group"><label>Email *</label><input type="email" name="email" required></div>
+        <div class="form-group"><label>Full Name <span style="color:var(--hot-secondary)">*</span></label><input type="text" name="name" required autocomplete="name" placeholder="Jane Doe"></div>
+        <div class="form-group"><label>Email <span style="color:var(--hot-secondary)">*</span></label><input type="email" name="email" required autocomplete="email" placeholder="jane@studio.com"></div>
       </div>
-      <div class="form-group"><label>Company / Studio</label><input type="text" name="company"></div>
+      <div class="form-group"><label>Company / Studio</label><input type="text" name="company" placeholder="Your studio name (optional)"></div>
 
-      <!-- World Concept -->
-      <div class="form-group"><label>World Concept *</label>
+      <div class="form-group">
+        <label>World Concept <span style="color:var(--hot-secondary)">*</span></label>
         <textarea name="concept" rows="3" required placeholder="Describe your world in 3–5 sentences: factions, power structures, central conflict, what makes it distinct."></textarea>
       </div>
 
-      <!-- Genre & Readiness -->
       <div class="form-row">
-        <div class="form-group"><label>Genre *</label>
+        <div class="form-group">
+          <label>Genre <span style="color:var(--hot-secondary)">*</span></label>
           <select name="genre" required>
             <option value="">— Select —</option>
             <option value="Fantasy RPG">Fantasy RPG</option>
@@ -366,16 +562,17 @@
             <option value="MMORPG / Persistent World">MMORPG / Persistent World</option>
             <option value="Action RPG">Action RPG</option>
             <option value="Post-apocalyptic">Post-apocalyptic</option>
-            <option value="Historical-mythological hybrid">Historical‑mythological hybrid</option>
+            <option value="Historical-mythological hybrid">Historical-mythological hybrid</option>
             <option value="Contemporary with supernatural">Contemporary with supernatural</option>
             <option value="Other (describe in concept)">Other (describe in concept)</option>
           </select>
         </div>
-        <div class="form-group"><label>What do you have ready? *</label>
+        <div class="form-group">
+          <label>What do you have ready? <span style="color:var(--hot-secondary)">*</span></label>
           <select name="readiness" required>
             <option value="">— Select —</option>
             <option value="Completed lore bible / world doc">Completed lore bible / world doc</option>
-            <option value="Partial lore — factions and world exist, mechanics not designed">Partial lore — factions and world exist, mechanics not designed</option>
+            <option value="Partial lore — factions and world exist, mechanics not designed">Partial lore — factions exist, mechanics not designed</option>
             <option value="Rough notes only — concept stage">Rough notes only — concept stage</option>
             <option value="Existing GDD that needs lore integrated">Existing GDD that needs lore integrated</option>
             <option value="Nothing written yet — starting from scratch">Nothing written yet — starting from scratch</option>
@@ -383,47 +580,51 @@
         </div>
       </div>
 
-      <!-- Systems Needed (checkboxes) -->
       <div class="form-group">
-        <label>Which systems most need attention? (select all that apply)</label>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
-          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);background:rgba(168,85,247,0.06);padding:4px 12px;border-radius:12px;border:1px solid var(--border)"><input type="checkbox" name="systems" value="Combat & abilities"> Combat &amp; abilities</label>
-          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);background:rgba(168,85,247,0.06);padding:4px 12px;border-radius:12px;border:1px solid var(--border)"><input type="checkbox" name="systems" value="Economy & resources"> Economy &amp; resources</label>
-          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);background:rgba(168,85,247,0.06);padding:4px 12px;border-radius:12px;border:1px solid var(--border)"><input type="checkbox" name="systems" value="Progression & leveling"> Progression &amp; leveling</label>
-          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);background:rgba(168,85,247,0.06);padding:4px 12px;border-radius:12px;border:1px solid var(--border)"><input type="checkbox" name="systems" value="Quest & narrative logic"> Quest &amp; narrative logic</label>
-          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);background:rgba(168,85,247,0.06);padding:4px 12px;border-radius:12px;border:1px solid var(--border)"><input type="checkbox" name="systems" value="Lore-to-mechanics integration"> Lore‑to‑mechanics integration</label>
-          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);background:rgba(168,85,247,0.06);padding:4px 12px;border-radius:12px;border:1px solid var(--border)"><input type="checkbox" name="systems" value="World-state & dynamic events"> World‑state &amp; dynamic events</label>
-          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);background:rgba(168,85,247,0.06);padding:4px 12px;border-radius:12px;border:1px solid var(--border)"><input type="checkbox" name="systems" value="Crafting & resource systems"> Crafting &amp; resource systems</label>
-          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--muted);background:rgba(168,85,247,0.06);padding:4px 12px;border-radius:12px;border:1px solid var(--border)"><input type="checkbox" name="systems" value="All of the above"> All of the above</label>
+        <label>Which systems most need attention?</label>
+        <div class="system-checks">
+          <label><input type="checkbox" name="systems" value="Combat & abilities"> Combat &amp; abilities</label>
+          <label><input type="checkbox" name="systems" value="Economy & resources"> Economy &amp; resources</label>
+          <label><input type="checkbox" name="systems" value="Progression & leveling"> Progression &amp; leveling</label>
+          <label><input type="checkbox" name="systems" value="Quest & narrative logic"> Quest &amp; narrative logic</label>
+          <label><input type="checkbox" name="systems" value="Lore-to-mechanics integration"> Lore-to-mechanics integration</label>
+          <label><input type="checkbox" name="systems" value="World-state & dynamic events"> World-state &amp; dynamic events</label>
+          <label><input type="checkbox" name="systems" value="Crafting & resource systems"> Crafting &amp; resource systems</label>
+          <label><input type="checkbox" name="systems" value="All of the above"> All of the above</label>
         </div>
       </div>
 
-      <!-- Development situation, references, constraints -->
       <div class="form-row">
-        <div class="form-group"><label>Development situation *</label>
+        <div class="form-group">
+          <label>Development Situation <span style="color:var(--hot-secondary)">*</span></label>
           <select name="team" required>
             <option value="">— Select —</option>
-            <option value="Solo developer — I'm building it myself">Solo developer — I'm building it myself</option>
+            <option value="Solo developer — I'm building it myself">Solo developer — building it myself</option>
             <option value="Small indie team — 2–5 people">Small indie team — 2–5 people</option>
-            <option value="Studio — 6 or more people with defined roles">Studio — 6 or more people with defined roles</option>
-            <option value="Seeking funding / publishing — need pitch-ready package">Seeking funding / publishing — need pitch‑ready package</option>
-            <option value="Early concept — team not assembled yet">Early concept — team not assembled yet</option>
+            <option value="Studio — 6 or more people with defined roles">Studio — 6+ people, defined roles</option>
+            <option value="Seeking funding / publishing — need pitch-ready package">Seeking funding / publishing</option>
+            <option value="Early concept — team not assembled yet">Early concept — team not assembled</option>
           </select>
         </div>
-        <div class="form-group"><label>Expected timeline</label>
-          <input type="text" name="timeline" placeholder="e.g. 'I need the lore bible in 4 weeks', or 'No rush, planning ahead'">
+        <div class="form-group">
+          <label>Expected Timeline</label>
+          <input type="text" name="timeline" placeholder="e.g. 'Lore bible in 4 weeks', 'Planning ahead'">
         </div>
       </div>
-      <div class="form-group"><label>Reference Games (3 you admire, 1 you want to avoid) *</label>
-        <textarea name="references" rows="2" required placeholder="e.g. 'I love the lore depth of Elder Scrolls, the economy of EVE Online, and the combat of Dark Souls. I want to avoid the grind of old school MMOs.'"></textarea>
+
+      <div class="form-group">
+        <label>Reference Games <span style="color:var(--hot-secondary)">*</span></label>
+        <textarea name="references" rows="2" required placeholder="3 you admire, 1 you want to avoid — and why each one matters."></textarea>
       </div>
-      <div class="form-group"><label>Non‑negotiables or constraints</label>
+
+      <div class="form-group">
+        <label>Non-Negotiables or Constraints</label>
         <textarea name="constraints" rows="2" placeholder="Core mechanic, narrative rule, engine choice, budget cap, etc."></textarea>
       </div>
 
-      <!-- Budget & Attachment -->
       <div class="form-row">
-        <div class="form-group"><label>Budget range</label>
+        <div class="form-group">
+          <label>Budget Range</label>
           <select name="budget">
             <option value="">— Select —</option>
             <option value="Under $500">Under $500</option>
@@ -433,26 +634,24 @@
             <option value="$15,000+">$15,000+</option>
           </select>
         </div>
-        <div class="form-group"><label>Attachments</label>
-          <div style="border:1px dashed var(--border);border-radius:6px;padding:12px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;cursor:default">
-            📎 Drop files or share links<br>
-            <span style="font-size:0.6rem;color:var(--dim)">(We'll handle attachments via email; paste links to Google Drive, Dropbox, etc. below)</span>
-          </div>
-          <input type="text" name="attachment_links" placeholder="Link to docs, images, or reference materials (optional)" style="margin-top:4px">
+        <div class="form-group">
+          <label>Attachment Links</label>
+          <div class="attachment-placeholder">📎 Paste links to Google Drive, Dropbox, etc.<span>File uploads handled via email after initial contact.</span></div>
+          <input type="text" name="attachment_links" placeholder="Link to docs, images, or references (optional)" style="margin-top:6px;">
         </div>
       </div>
 
-      <!-- Form actions (Confirm, NDA, Send) -->
       <div class="form-actions">
-        <button type="button" class="cta-btn violet" id="confirm-custom">Confirm Answers</button>
+        <button type="button" class="form-btn confirm" id="confirm-custom">Confirm Answers →</button>
         <div class="nda-section" id="custom-nda">
-          <div class="nda-text"><strong>Mutual Non‑Disclosure Agreement (Preview)</strong><br>By requesting an NDA, both parties agree to keep all project details confidential. A formal NDA will be provided via DocuSign upon engagement.</div>
+          <div class="nda-text"><strong>Mutual Non-Disclosure Agreement (Preview)</strong><br>By requesting an NDA, both parties agree to keep all project details confidential. A formal NDA will be provided via DocuSign upon engagement.</div>
           <div class="nda-check">
-            <input type="checkbox" id="custom-nda-check"> <label for="custom-nda-check">I request an NDA and agree to receive the formal document.</label>
+            <input type="checkbox" id="custom-nda-check">
+            <label for="custom-nda-check">I request an NDA and agree to receive the formal document.</label>
           </div>
           <div class="form-group"><label>Signatory Name</label><input type="text" name="nda-signer" placeholder="Your full legal name"></div>
-          <div class="form-group"><label>Signatory Title</label><input type="text" name="nda-title" placeholder="e.g., CEO, CTO"></div>
-          <button type="button" class="cta-btn primary" id="send-custom">Send Request</button>
+          <div class="form-group"><label>Signatory Title</label><input type="text" name="nda-title" placeholder="e.g., CEO, Creative Director"></div>
+          <button type="button" class="form-btn send" id="send-custom">Send Request ↗</button>
         </div>
       </div>
     </form>
@@ -460,379 +659,363 @@
 </div>
 
 <script>
-(function () {
-  'use strict';
+(function(){
+'use strict';
 
-  // ===== FULL VISUAL ENGINE (standard cursor, collapse included) =====
-  const concurrency = navigator.hardwareConcurrency || 2;
-  const deviceMem   = navigator.deviceMemory || 2;
-  const lowDevice   = concurrency < 4 || deviceMem < 4;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const concurrency = navigator.hardwareConcurrency || 2;
+const deviceMem = navigator.deviceMemory || 2;
+const lowDevice = concurrency < 4 || deviceMem < 4;
 
-  // WebGL
-  const wglCanvas = document.getElementById('webgl-canvas');
-  let gl = null, glProgram = null, glUniforms = {}, glScrollVel = 0, glMouseDist = 1.0;
-  if (!reducedMotion) {
-    try { gl = wglCanvas.getContext('webgl') || wglCanvas.getContext('experimental-webgl'); } catch (_) {}
-  }
-  if (gl) {
-    const vsrc = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
-    const fsrc = `precision mediump float;uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
-    void main(){vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
-    float ab=0.003*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
-    vec3 col=vec3(0.0);col.r=sin(d*8.0+u_time)*ab;col.b=cos(d*8.0-u_time)*ab;
-    float rf=0.002*sin(uv.x*6.28+u_time*0.7)*u_mouse_dist;col.g=rf;
-    gl_FragColor=vec4(col,0.18*(1.0-smoothstep(0.6,1.0,d)));}`;
-    function cs(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
-    glProgram = gl.createProgram();
-    gl.attachShader(glProgram, cs(gl.VERTEX_SHADER, vsrc));
-    gl.attachShader(glProgram, cs(gl.FRAGMENT_SHADER, fsrc));
-    gl.linkProgram(glProgram); gl.useProgram(glProgram);
-    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(glProgram, 'a_pos');
-    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    glUniforms.res = gl.getUniformLocation(glProgram,'u_res');
-    glUniforms.time = gl.getUniformLocation(glProgram,'u_time');
-    glUniforms.scrollVel = gl.getUniformLocation(glProgram,'u_scroll_vel');
-    glUniforms.mouseDist = gl.getUniformLocation(glProgram,'u_mouse_dist');
-    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-  }
+/* ========== WebGL — hot amber shader ========== */
+const wglCanvas = document.getElementById('webgl-canvas');
+let gl=null,glProgram=null,glUniforms={},glScrollVel=0,glMouseDist=1.0;
+if(!reducedMotion){
+  try{gl=wglCanvas.getContext('webgl')||wglCanvas.getContext('experimental-webgl');}catch(_){}
+}
+if(gl){
+  const vsrc=`attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+  const fsrc=`precision mediump float;
+  uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
+  void main(){
+    vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
+    float ab=0.004*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
+    vec3 col=vec3(0.0);
+    col.r=sin(d*6.0+u_time)*ab*2.5;
+    col.g=cos(d*6.0-u_time*0.7)*ab*0.4;
+    col.b=sin(d*8.0+u_time*1.3)*ab*0.1;
+    float rf=0.003*sin(uv.x*6.28+u_time*0.8)*u_mouse_dist;
+    col.r+=rf*1.5;col.g+=rf*0.25;
+    gl_FragColor=vec4(col,0.2*(1.0-smoothstep(0.5,1.0,d)));
+  }`;
+  function cs(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+  glProgram=gl.createProgram();
+  gl.attachShader(glProgram,cs(gl.VERTEX_SHADER,vsrc));
+  gl.attachShader(glProgram,cs(gl.FRAGMENT_SHADER,fsrc));
+  gl.linkProgram(glProgram);gl.useProgram(glProgram);
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(glProgram,'a_pos');
+  gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  glUniforms.res=gl.getUniformLocation(glProgram,'u_res');
+  glUniforms.time=gl.getUniformLocation(glProgram,'u_time');
+  glUniforms.scrollVel=gl.getUniformLocation(glProgram,'u_scroll_vel');
+  glUniforms.mouseDist=gl.getUniformLocation(glProgram,'u_mouse_dist');
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+}
 
-  // Symbol field
-  const symCanvas = document.getElementById('symbol-canvas');
-  const ctx = symCanvas.getContext('2d');
-  const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','◆','○','●','◉'];
-  let W, H, symbols = [], echoes = [];
-  const mouse = { x: null, y: null, vx: 0, vy: 0, prevX: null, prevY: null };
-  const GRAVITY_R = 200, GRAVITY_STR = 0.015, TANGENTIAL = 0.18;
-  const PHYSICS_FPS = lowDevice ? 30 : 60, PHYSICS_DT = 1000 / PHYSICS_FPS;
+/* ========== Symbol field — hot palette ========== */
+const symCanvas=document.getElementById('symbol-canvas');
+const ctx=symCanvas.getContext('2d');
+const SYMBOL_SET=['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','⚔','⚡','✦'];
+const HOT_COLORS=['#f59e0b','#ef4444','#fcd34d','#f97316'];
+let W,H,symbols=[],echoes=[];
+const mouse={x:null,y:null,vx:0,vy:0,prevX:null,prevY:null};
+const GRAVITY_R=200,GRAVITY_STR=0.015,TANGENTIAL=0.18;
+const PHYSICS_FPS=lowDevice?30:60,PHYSICS_DT=1000/PHYSICS_FPS;
+let isCollapsing=false,collapsePhase=0,collapseStart=0;
+const SNAP_DUR=1500,HOLD_DUR=800,EXPLODE_DUR=600;
+let collapseHoldTimeout=null;
 
-  let isCollapsing = false, collapsePhase = 0, collapseStart = 0;
-  const SNAP_DUR = 1500, HOLD_DUR = 800, EXPLODE_DUR = 600;
-  let collapseHoldTimeout = null;
+function resizeCanvas(){
+  W=symCanvas.width=wglCanvas.width=window.innerWidth;
+  H=symCanvas.height=wglCanvas.height=window.innerHeight;
+  if(gl)gl.viewport(0,0,W,H);
+  initSymbols();
+}
+let resizeTimer=null;
+window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resizeCanvas,150);});
 
-  function resizeCanvas() {
-    W = symCanvas.width = wglCanvas.width = window.innerWidth;
-    H = symCanvas.height = wglCanvas.height = window.innerHeight;
-    if (gl) gl.viewport(0, 0, W, H);
-    initSymbols();
-  }
-  let resizeTimer = null;
-  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeCanvas, 150); });
+function randColor(){return HOT_COLORS[Math.floor(Math.random()*HOT_COLORS.length)];}
 
-  function initSymbols() {
-    const count = Math.floor((W * H) / 7000);
-    symbols = [];
-    for (let i = 0; i < count; i++) {
-      symbols.push({
-        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
-        x: Math.random() * W, y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2,
-        size: 12 + Math.random() * 20,
-        color: Math.random() > 0.5 ? '#a855f7' : '#D4AF37',
-        alpha: 0.15 + Math.random() * 0.25,
-        scrollGlow: 0, inWell: false,
-        active: true,
-        origX: 0, origY: 0,
-        targetX: 0, targetY: 0
-      });
-    }
-  }
-
-  function spawnEcho(x, y) {
-    for (let i = 0; i < 12; i++) {
-      const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.3;
-      const speed = 1.5 + Math.random() * 2;
-      echoes.push({
-        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
-        x, y,
-        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-        size: 8 + Math.random() * 8,
-        color: Math.random() > 0.5 ? '#a855f7' : '#D4AF37',
-        alpha: 0.8, age: 0, maxAge: 600,
-      });
-    }
-  }
-
-  function triggerCollapse() {
-    if (isCollapsing) return;
-    isCollapsing = true; collapsePhase = 1; collapseStart = performance.now();
-    const lattice = [];
-    const hexW = 60, hexH = hexW * Math.sqrt(3) / 2;
-    for (let y = 0; y < H + hexH; y += hexH)
-      for (let x = 0; x < W + hexW; x += hexW)
-        lattice.push({ x: x + (Math.floor(y / hexH) % 2) * (hexW / 2), y });
-    symbols.forEach(s => {
-      s.origX = s.x; s.origY = s.y;
-      const tgt = lattice[Math.floor(Math.random() * lattice.length)];
-      s.targetX = tgt.x; s.targetY = tgt.y;
+function initSymbols(){
+  const count=Math.floor((W*H)/7000);symbols=[];
+  for(let i=0;i<count;i++){
+    symbols.push({
+      char:SYMBOL_SET[Math.floor(Math.random()*SYMBOL_SET.length)],
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2,
+      size:10+Math.random()*18,color:randColor(),
+      alpha:0.1+Math.random()*0.2,
+      scrollGlow:0,inWell:false,active:true,
+      origX:0,origY:0,targetX:0,targetY:0
     });
   }
+}
 
-  function stepCollapse(now) {
-    if (!isCollapsing) return;
-    const elapsed = now - collapseStart;
-    if (collapsePhase === 1) {
-      const p = Math.min(elapsed / SNAP_DUR, 1);
-      const t = 1 - Math.pow(1 - p, 3);
-      symbols.forEach(s => {
-        s.x = s.origX + (s.targetX - s.origX) * t;
-        s.y = s.origY + (s.targetY - s.origY) * t;
-        s.vx = 0; s.vy = 0;
-        s.alpha = 0.15 + 0.35 * p;
-        s.color = '#D4AF37';
-      });
-      if (p >= 1) {
-        collapsePhase = 2; collapseStart = now;
-        if (collapseHoldTimeout) clearTimeout(collapseHoldTimeout);
-        collapseHoldTimeout = setTimeout(() => {
-          if (!isCollapsing) return;
-          collapsePhase = 3; collapseStart = performance.now();
-          symbols.forEach(s => {
-            const a = Math.random() * Math.PI * 2;
-            const spd = 3 + Math.random() * 4;
-            s.vx = Math.cos(a) * spd;
-            s.vy = Math.sin(a) * spd;
-            s.color = '#a855f7';
-            s.alpha = 0.6;
-          });
-          spawnEcho(W / 2, H / 2); spawnEcho(W / 2, H / 2);
-        }, HOLD_DUR);
-      }
-    } else if (collapsePhase === 3) {
-      const p = Math.min(elapsed / EXPLODE_DUR, 1);
-      symbols.forEach(s => {
-        s.alpha = 0.15 + 0.25 * (1 - p);
-        s.vx *= 0.98; s.vy *= 0.98;
-      });
-      if (p >= 1) {
-        isCollapsing = false; collapsePhase = 0;
-        symbols.forEach(s => {
-          s.vx = (Math.random() - 0.5) * 0.2;
-          s.vy = (Math.random() - 0.5) * 0.2;
-          s.color = Math.random() > 0.5 ? '#a855f7' : '#D4AF37';
+function spawnEcho(x,y){
+  for(let i=0;i<12;i++){
+    const angle=(Math.PI*2*i)/12+Math.random()*0.3;
+    const speed=1.5+Math.random()*2.5;
+    echoes.push({
+      char:SYMBOL_SET[Math.floor(Math.random()*SYMBOL_SET.length)],
+      x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      size:8+Math.random()*8,color:randColor(),
+      alpha:0.8,age:0,maxAge:600
+    });
+  }
+}
+
+function triggerCollapse(){
+  if(isCollapsing)return;
+  isCollapsing=true;collapsePhase=1;collapseStart=performance.now();
+  const lattice=[];const hexW=60,hexH=hexW*Math.sqrt(3)/2;
+  for(let y=0;y<H+hexH;y+=hexH)
+    for(let x=0;x<W+hexW;x+=hexW)
+      lattice.push({x:x+(Math.floor(y/hexH)%2)*(hexW/2),y});
+  symbols.forEach(s=>{
+    s.origX=s.x;s.origY=s.y;
+    const tgt=lattice[Math.floor(Math.random()*lattice.length)];
+    s.targetX=tgt.x;s.targetY=tgt.y;
+  });
+}
+
+function stepCollapse(now){
+  if(!isCollapsing)return;
+  const elapsed=now-collapseStart;
+  if(collapsePhase===1){
+    const p=Math.min(elapsed/SNAP_DUR,1);
+    const t=1-Math.pow(1-p,3);
+    symbols.forEach(s=>{
+      s.x=s.origX+(s.targetX-s.origX)*t;s.y=s.origY+(s.targetY-s.origY)*t;
+      s.vx=0;s.vy=0;s.alpha=0.15+0.35*p;s.color='#f59e0b';
+    });
+    if(p>=1){
+      collapsePhase=2;collapseStart=now;
+      if(collapseHoldTimeout)clearTimeout(collapseHoldTimeout);
+      collapseHoldTimeout=setTimeout(()=>{
+        if(!isCollapsing)return;
+        collapsePhase=3;collapseStart=performance.now();
+        symbols.forEach(s=>{
+          const a=Math.random()*Math.PI*2;const spd=3+Math.random()*4;
+          s.vx=Math.cos(a)*spd;s.vy=Math.sin(a)*spd;
+          s.color='#ef4444';s.alpha=0.6;
         });
-      }
+        spawnEcho(W/2,H/2);spawnEcho(W/2,H/2);
+      },HOLD_DUR);
+    }
+  } else if(collapsePhase===3){
+    const p=Math.min(elapsed/EXPLODE_DUR,1);
+    symbols.forEach(s=>{s.alpha=0.15+0.25*(1-p);s.vx*=0.98;s.vy*=0.98;});
+    if(p>=1){
+      isCollapsing=false;collapsePhase=0;
+      symbols.forEach(s=>{
+        s.vx=(Math.random()-0.5)*0.2;s.vy=(Math.random()-0.5)*0.2;
+        s.color=randColor();
+      });
     }
   }
+}
 
-  let lastScrollY = window.scrollY, scrollVel = 0, scrollTimeout = null;
-  function handleScroll() {
-    const sy = window.scrollY; scrollVel = sy - lastScrollY; lastScrollY = sy;
-    glScrollVel = Math.abs(scrollVel) / 60;
-    symbols.forEach(s => { if (Math.abs(s.y - (sy + H / 2)) < 200) s.scrollGlow = 1.0; });
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => { symbols.forEach(s => s.scrollGlow = 0); scrollVel = 0; glScrollVel *= 0.9; }, 300);
-  }
+let lastScrollY=window.scrollY,scrollVel=0,scrollTimeout=null;
+function handleScroll(){
+  const sy=window.scrollY;scrollVel=sy-lastScrollY;lastScrollY=sy;
+  glScrollVel=Math.abs(scrollVel)/60;
+  symbols.forEach(s=>{if(Math.abs(s.y-(sy+H/2))<200)s.scrollGlow=1.0;});
+  clearTimeout(scrollTimeout);
+  scrollTimeout=setTimeout(()=>{symbols.forEach(s=>s.scrollGlow=0);scrollVel=0;},300);
+}
 
-  let lastPhysicsTime = 0;
-  function updatePhysics(now) {
-    if (now - lastPhysicsTime < PHYSICS_DT) return;
-    lastPhysicsTime = now;
-    if (mouse.prevX !== null && mouse.x !== null) { mouse.vx = mouse.x - mouse.prevX; mouse.vy = mouse.y - mouse.prevY; }
-    if (mouse.x !== null) { mouse.prevX = mouse.x; mouse.prevY = mouse.y; }
-
-    if (isCollapsing) { stepCollapse(now); return; }
-
-    symbols.forEach(s => {
-      if (!s.active) return;
-      s.x += s.vx; s.y += s.vy;
-      if (s.x < -50) s.x = W + 50; if (s.x > W + 50) s.x = -50;
-      if (s.y < -50) s.y = H + 50; if (s.y > H + 50) s.y = -50;
-
-      if (mouse.x !== null && mouse.y !== null) {
-        const dx = s.x - mouse.x, dy = s.y - mouse.y; const dist = Math.hypot(dx, dy);
-        if (dist < GRAVITY_R) {
-          const force = GRAVITY_STR * (1 - dist / GRAVITY_R); const angle = Math.atan2(dy, dx);
-          s.vx -= Math.cos(angle) * force; s.vy -= Math.sin(angle) * force;
-          const ta = angle + Math.PI / 2; const spin = TANGENTIAL * (1 - dist / GRAVITY_R);
-          s.vx += Math.cos(ta) * spin * (mouse.vx * 0.05 + 0.5);
-          s.vy += Math.sin(ta) * spin * (mouse.vy * 0.05 + 0.5);
-          s.vx *= 0.99; s.vy *= 0.99; s.inWell = true;
-          glMouseDist = Math.min(glMouseDist, dist / GRAVITY_R);
-        } else { s.inWell = false; }
-      }
-      if (s.scrollGlow > 0.01) s.scrollGlow *= 0.94; else s.scrollGlow = 0;
-    });
-    glMouseDist = Math.min(1, glMouseDist + 0.02);
-  }
-
-  function render() {
-    ctx.clearRect(0, 0, W, H);
-    echoes = echoes.filter(e => {
-      e.age += PHYSICS_DT; if (e.age >= e.maxAge) return false;
-      e.x += e.vx; e.y += e.vy; e.alpha = 0.8 * (1 - e.age / e.maxAge); e.size *= 0.996;
-      ctx.font = `${e.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.shadowColor = e.color; ctx.shadowBlur = 10; ctx.fillStyle = e.color; ctx.globalAlpha = e.alpha;
-      ctx.fillText(e.char, e.x, e.y); return true;
-    });
-    symbols.forEach(s => {
-      if (!s.active && !isCollapsing) return;
-      const glow = s.scrollGlow > 0.01 ? 15 + s.scrollGlow * 20 : (s.inWell ? 25 : 12);
-      ctx.font = `${s.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.shadowColor = s.color; ctx.shadowBlur = glow; ctx.fillStyle = s.color;
-      ctx.globalAlpha = s.alpha + s.scrollGlow * 0.2; ctx.fillText(s.char, s.x, s.y);
-    });
-    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
-  }
-
-  function renderWebGL(t) {
-    if (!gl || !glProgram) return;
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.uniform2f(glUniforms.res, W, H); gl.uniform1f(glUniforms.time, t * 0.001);
-    gl.uniform1f(glUniforms.scrollVel, glScrollVel); gl.uniform1f(glUniforms.mouseDist, glMouseDist);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-  }
-
-  let rafId = null;
-  function loop(t) { updatePhysics(t); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
-
-  window.addEventListener('pointermove', (e) => {
-    if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; }
-  });
-  window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
-  window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
-
-  window.addEventListener('dblclick', (e) => {
-    const tag = e.target.tagName.toLowerCase();
-    const isInteractive = ['a', 'button', 'input', 'select', 'textarea'].includes(tag) ||
-      e.target.closest('a') || e.target.closest('button') || e.target.closest('.cta-btn') ||
-      e.target.closest('.modal-overlay') || e.target.closest('.logo-link') || e.target.closest('.card');
-    if (isInteractive) return;
-    triggerCollapse();
-    spawnEcho(e.clientX, e.clientY);
-  });
-
-  window.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey && e.key === 'Q') { e.preventDefault(); triggerCollapse(); }
-  });
-
-  // Audio
-  let audioCtx = null, audioNodes = null, audioOn = false;
-  const toggle = document.getElementById('audio-toggle');
-  function initAudio() {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
-    audioCtx = new AC();
-    const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-    const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 400; filter.Q.value = 0.8;
-    const osc1 = audioCtx.createOscillator(); osc1.type = 'sine'; osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
-    const osc2 = audioCtx.createOscillator(); osc2.type = 'sawtooth'; osc2.frequency.setValueAtTime(110.5, audioCtx.currentTime);
-    const g2 = audioCtx.createGain(); g2.gain.setValueAtTime(0.15, audioCtx.currentTime);
-    osc1.connect(filter); osc2.connect(g2); g2.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-    osc1.start(); osc2.start();
-    audioNodes = { gain, osc1, osc2 };
-    window.addEventListener('pagehide', () => { try { audioCtx.close(); } catch(_) {} }, { once: true });
-  }
-  function modulateAudio(scrollY) {
-    if (!audioNodes || !audioCtx) return;
-    const pct = scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-    audioNodes.osc1.frequency.setTargetAtTime(55 + pct * 40, audioCtx.currentTime, 0.3);
-  }
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      audioOn = !audioOn;
-      toggle.setAttribute('aria-pressed', String(audioOn));
-      if (audioOn) { if (!audioCtx) initAudio(); else if (audioCtx.state === 'suspended') audioCtx.resume(); }
-      else { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend(); }
-    });
-  }
-
-  let scrollRAFId = null;
-  window.addEventListener('scroll', () => {
-    if (scrollRAFId) return;
-    scrollRAFId = requestAnimationFrame(() => { handleScroll(); modulateAudio(window.scrollY); scrollRAFId = null; });
-  }, { passive: true });
-
-  // Mobile nav
-  const hamburger = document.getElementById('hamburger');
-  const mobileNav = document.getElementById('mobileNav');
-  let navOpen = false;
-  if (hamburger && mobileNav) {
-    document.querySelectorAll('.nav-links a').forEach((link, i) => {
-      const a = document.createElement('a');
-      a.href = link.getAttribute('href'); a.textContent = link.textContent;
-      if (link.getAttribute('target')) a.setAttribute('target', link.getAttribute('target'));
-      if (link.getAttribute('rel')) a.setAttribute('rel', link.getAttribute('rel'));
-      a.style.transitionDelay = `${i * 30}ms`; mobileNav.appendChild(a);
-    });
-    function openMenu() { navOpen = true; mobileNav.classList.add('open'); mobileNav.setAttribute('aria-hidden', 'false'); hamburger.classList.add('open'); hamburger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; setTimeout(() => { const f = mobileNav.querySelector('a'); if (f) f.focus(); }, 100); }
-    function closeMenu() { navOpen = false; mobileNav.classList.remove('open'); mobileNav.setAttribute('aria-hidden', 'true'); hamburger.classList.remove('open'); hamburger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; hamburger.focus(); }
-    hamburger.addEventListener('click', () => navOpen ? closeMenu() : openMenu());
-    mobileNav.addEventListener('click', (e) => { if (e.target.tagName === 'A') closeMenu(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && navOpen) closeMenu(); });
-    mobileNav.addEventListener('keydown', (e) => {
-      if (e.key !== 'Tab') return;
-      const focusable = Array.from(mobileNav.querySelectorAll('a'));
-      if (!focusable.length) return;
-      const first = focusable[0], last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    });
-  }
-
-  const yearSpan = document.getElementById('copyright-year');
-  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-
-  if (!reducedMotion) { resizeCanvas(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
-
-  // ===== MODAL & FORM LOGIC =====
-  function openModal(id) { document.getElementById(id).classList.add('active'); }
-  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-  document.getElementById('open-general-form').addEventListener('click', () => openModal('general-modal'));
-  document.getElementById('open-custom-form').addEventListener('click', () => openModal('custom-modal'));
-  document.querySelectorAll('.modal-close').forEach(btn => {
-    btn.addEventListener('click', () => closeModal(btn.dataset.modal));
-  });
-  document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) closeModal(overlay.id);
-    });
-  });
-
-  // Confirm buttons reveal NDA section
-  document.getElementById('confirm-general').addEventListener('click', () => {
-    document.getElementById('general-nda').classList.add('visible');
-  });
-  document.getElementById('confirm-custom').addEventListener('click', () => {
-    document.getElementById('custom-nda').classList.add('visible');
-  });
-
-  // Compose mailto function
-  function composeMailto(formId, ndaCheckId, subject) {
-    const form = document.getElementById(formId);
-    const data = new FormData(form);
-    let body = '';
-    // Collect all fields except nda-signer and nda-title (handled separately)
-    for (let [key, val] of data.entries()) {
-      if (key === 'nda-signer' || key === 'nda-title') continue;
-      // For checkbox arrays, join values
-      if (key === 'systems' && data.getAll('systems').length > 0) {
-        const checked = data.getAll('systems').join('; ');
-        body += `Systems Needed: ${checked}\n`;
-        continue;
-      }
-      body += `${key.replace(/_/g, ' ')}: ${val}\n`;
+let lastPhysicsTime=0;
+function updatePhysics(now){
+  if(now-lastPhysicsTime<PHYSICS_DT)return;
+  lastPhysicsTime=now;
+  if(mouse.prevX!==null&&mouse.x!==null){mouse.vx=mouse.x-mouse.prevX;mouse.vy=mouse.y-mouse.prevY;}
+  if(mouse.x!==null){mouse.prevX=mouse.x;mouse.prevY=mouse.y;}
+  if(isCollapsing){stepCollapse(now);return;}
+  symbols.forEach(s=>{
+    if(!s.active)return;
+    s.x+=s.vx;s.y+=s.vy;
+    if(s.x<-50)s.x=W+50;if(s.x>W+50)s.x=-50;
+    if(s.y<-50)s.y=H+50;if(s.y>H+50)s.y=-50;
+    if(mouse.x!==null&&mouse.y!==null){
+      const dx=s.x-mouse.x,dy=s.y-mouse.y;const dist=Math.hypot(dx,dy);
+      if(dist<GRAVITY_R){
+        const force=GRAVITY_STR*(1-dist/GRAVITY_R);const angle=Math.atan2(dy,dx);
+        s.vx-=Math.cos(angle)*force;s.vy-=Math.sin(angle)*force;
+        const ta=angle+Math.PI/2;const spin=TANGENTIAL*(1-dist/GRAVITY_R);
+        s.vx+=Math.cos(ta)*spin*(mouse.vx*0.05+0.5);
+        s.vy+=Math.sin(ta)*spin*(mouse.vy*0.05+0.5);
+        s.vx*=0.99;s.vy*=0.99;s.inWell=true;
+        glMouseDist=Math.min(glMouseDist,dist/GRAVITY_R);
+      } else{s.inWell=false;}
     }
-    const nda = document.getElementById(ndaCheckId).checked ? 'Yes' : 'No';
-    body += `NDA Requested: ${nda}\n`;
-    if (document.getElementById(ndaCheckId).checked) {
-      const signer = form.querySelector('input[name="nda-signer"]')?.value || '';
-      const title = form.querySelector('input[name="nda-title"]')?.value || '';
-      body += `NDA Signatory: ${signer}\n`;
-      body += `NDA Title: ${title}\n`;
-    }
-    const mailto = `mailto:sheldon@aionsystem.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
-  }
+    if(s.scrollGlow>0.01)s.scrollGlow*=0.94;else s.scrollGlow=0;
+  });
+  glMouseDist=Math.min(1,glMouseDist+0.02);
+}
 
-  document.getElementById('send-general').addEventListener('click', () => {
-    composeMailto('general-form', 'general-nda-check', 'General Inquiry');
+function render(){
+  ctx.clearRect(0,0,W,H);
+  echoes=echoes.filter(e=>{
+    e.age+=PHYSICS_DT;if(e.age>=e.maxAge)return false;
+    e.x+=e.vx;e.y+=e.vy;e.alpha=0.8*(1-e.age/e.maxAge);e.size*=0.997;
+    ctx.font=`${e.size}px 'JetBrains Mono',monospace`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor=e.color;ctx.shadowBlur=12;
+    ctx.fillStyle=e.color;ctx.globalAlpha=e.alpha;
+    ctx.fillText(e.char,e.x,e.y);return true;
   });
-  document.getElementById('send-custom').addEventListener('click', () => {
-    composeMailto('custom-form', 'custom-nda-check', 'Custom Game World Consultation');
+  symbols.forEach(s=>{
+    if(!s.active&&!isCollapsing)return;
+    const glow=s.scrollGlow>0.01?15+s.scrollGlow*20:(s.inWell?28:10);
+    ctx.font=`${s.size}px 'JetBrains Mono',monospace`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor=s.color;ctx.shadowBlur=glow;
+    ctx.fillStyle=s.color;ctx.globalAlpha=s.alpha+s.scrollGlow*0.2;
+    ctx.fillText(s.char,s.x,s.y);
   });
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+}
+
+function renderWebGL(t){
+  if(!gl||!glProgram)return;
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.uniform2f(glUniforms.res,W,H);gl.uniform1f(glUniforms.time,t*0.001);
+  gl.uniform1f(glUniforms.scrollVel,glScrollVel);gl.uniform1f(glUniforms.mouseDist,glMouseDist);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
+
+function loop(t){updatePhysics(t);render();renderWebGL(t);requestAnimationFrame(loop);}
+
+/* ========== Input ========== */
+window.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){mouse.x=e.clientX;mouse.y=e.clientY;}});
+window.addEventListener('pointerleave',()=>{mouse.x=null;mouse.y=null;mouse.prevX=null;mouse.prevY=null;});
+window.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;spawnEcho(e.clientX,e.clientY);});
+window.addEventListener('dblclick',e=>{
+  const tag=e.target.tagName.toLowerCase();
+  const isInteractive=['a','button','input','select','textarea','label'].includes(tag)||
+    e.target.closest('a')||e.target.closest('button')||
+    e.target.closest('.modal-overlay')||e.target.closest('.card');
+  if(isInteractive)return;
+  triggerCollapse();spawnEcho(e.clientX,e.clientY);
+});
+window.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='Q'){e.preventDefault();triggerCollapse();}});
+
+/* ========== Scroll ========== */
+let scrollRAFId=null;
+window.addEventListener('scroll',()=>{
+  if(scrollRAFId)return;
+  scrollRAFId=requestAnimationFrame(()=>{handleScroll();scrollRAFId=null;});
+},{passive:true});
+
+/* ========== Audio ========== */
+let audioCtx=null,audioNodes=null,audioOn=false;
+const toggle=document.getElementById('audio-toggle');
+function initAudio(){
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  audioCtx=new AC();
+  const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.055,audioCtx.currentTime);
+  const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=300;filter.Q.value=0.6;
+  const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(41,audioCtx.currentTime);
+  const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(82.4,audioCtx.currentTime);
+  const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.12,audioCtx.currentTime);
+  osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
+  osc1.start();osc2.start();audioNodes={gain,osc1,osc2};
+}
+if(toggle){
+  toggle.addEventListener('click',()=>{
+    audioOn=!audioOn;toggle.setAttribute('aria-pressed',String(audioOn));
+    if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}
+    else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}
+  });
+}
+
+/* ========== Mobile nav ========== */
+const hamburger=document.getElementById('hamburger');
+const mobileNav=document.getElementById('mobileNav');
+let navOpen=false;
+if(hamburger&&mobileNav){
+  document.querySelectorAll('.nav-links a').forEach((link,i)=>{
+    const a=document.createElement('a');
+    a.href=link.getAttribute('href');a.textContent=link.textContent;
+    if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));
+    if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));
+    if(link.classList.contains('active'))a.classList.add('active');
+    a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);
+  });
+  function openMenu(){navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);}
+  function closeMenu(){navOpen=false;mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');document.body.style.overflow='';hamburger.focus();}
+  hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());
+  mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navOpen)closeMenu();});
+}
+
+/* ========== Footer year ========== */
+const yearSpan=document.getElementById('copyright-year');
+if(yearSpan)yearSpan.textContent=new Date().getFullYear();
+
+/* ========== Init ========== */
+if(!reducedMotion){resizeCanvas();setTimeout(()=>symCanvas.classList.add('ready'),300);requestAnimationFrame(loop);}
+
+/* ========== Modal logic ========== */
+function openModal(id){
+  const m=document.getElementById(id);if(!m)return;
+  m.classList.add('active');document.body.style.overflow='hidden';
+  setTimeout(()=>{const f=m.querySelector('input,select,textarea,button');if(f)f.focus();},80);
+}
+function closeModal(id){
+  const m=document.getElementById(id);if(!m)return;
+  m.classList.remove('active');document.body.style.overflow='';
+}
+
+document.getElementById('open-general-form').addEventListener('click',()=>openModal('general-modal'));
+document.getElementById('open-custom-form').addEventListener('click',()=>openModal('custom-modal'));
+
+document.querySelectorAll('.modal-close').forEach(btn=>{
+  btn.addEventListener('click',()=>closeModal(btn.dataset.modal));
+});
+document.querySelectorAll('.modal-overlay').forEach(overlay=>{
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal(overlay.id);});
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal-overlay.active').forEach(m=>closeModal(m.id));
+  }
+});
+
+/* Confirm buttons reveal NDA section */
+document.getElementById('confirm-general').addEventListener('click',()=>{
+  document.getElementById('general-nda').classList.add('visible');
+});
+document.getElementById('confirm-custom').addEventListener('click',()=>{
+  document.getElementById('custom-nda').classList.add('visible');
+});
+
+/* Compose mailto and send */
+function composeMailto(formId,ndaCheckId,subject){
+  const form=document.getElementById(formId);
+  const data=new FormData(form);
+  let body='';
+  const seen=new Set();
+  for(let[key,val]of data.entries()){
+    if(key==='nda-signer'||key==='nda-title')continue;
+    if(key==='systems'){
+      if(!seen.has('systems')){
+        const checked=data.getAll('systems').join('; ');
+        body+=`Systems Needed: ${checked}\n`;
+        seen.add('systems');
+      }
+      continue;
+    }
+    body+=`${key.replace(/_/g,' ')}: ${val}\n`;
+  }
+  const nda=document.getElementById(ndaCheckId).checked?'Yes':'No';
+  body+=`NDA Requested: ${nda}\n`;
+  if(document.getElementById(ndaCheckId).checked){
+    const signer=form.querySelector('input[name="nda-signer"]')?.value||'';
+    const title=form.querySelector('input[name="nda-title"]')?.value||'';
+    body+=`NDA Signatory: ${signer}\nNDA Title: ${title}\n`;
+  }
+  window.location.href=`mailto:sheldon@aionsystem.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+document.getElementById('send-general').addEventListener('click',()=>{
+  composeMailto('general-form','general-nda-check','General Inquiry — AionSystem');
+});
+document.getElementById('send-custom').addEventListener('click',()=>{
+  composeMailto('custom-form','custom-nda-check','Custom Game World Consultation — AionSystem');
+});
 
 })();
 </script>
