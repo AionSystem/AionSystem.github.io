@@ -45,6 +45,89 @@
   --glow-cyan:0 0 5px #00d4ff,0 0 10px #00d4ff,0 0 20px rgba(0,212,255,0.4);
   --glow-violet:0 0 5px #a855f7,0 0 10px #a855f7,0 0 20px rgba(168,85,247,0.4);
 }
+
+/* ── STATUS SYSTEM ──────────────────────────────────────────────
+   Three visual states applied to any card or section:
+   .status-staged  : Architecture complete, not yet accepting intake
+   .status-preview : Visible, functional preview — no live intake
+   .status-pending : Spec complete, build scheduled
+──────────────────────────────────────────────────────────────── */
+.status-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;border:1px solid;
+  pointer-events:none;flex-shrink:0;
+}
+/* STAGED — architecture done, intake not open */
+.status-staged{
+  color:#c084fc;border-color:rgba(192,132,252,0.35);
+  background:rgba(192,132,252,0.07);
+}
+.status-staged::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:#c084fc;box-shadow:0 0 5px #c084fc;
+  animation:stagePulse 3s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes stagePulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* PREVIEW — panel is present but data/intake pending */
+.status-preview{
+  color:var(--cyan);border-color:rgba(0,212,255,0.3);
+  background:rgba(0,212,255,0.06);
+}
+.status-preview::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 5px var(--cyan);
+  animation:stagePulse 2s ease-in-out infinite;flex-shrink:0;
+}
+
+/* PENDING — spec complete, not yet built */
+.status-pending{
+  color:var(--amber);border-color:rgba(240,165,0,0.3);
+  background:rgba(240,165,0,0.05);
+}
+.status-pending::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--amber);box-shadow:0 0 5px var(--amber);flex-shrink:0;
+}
+
+/* Card-level overlay — dims and locks any card */
+.card-staged{
+  position:relative;overflow:hidden;
+}
+.card-staged::after{
+  content:'';
+  position:absolute;inset:0;
+  background:rgba(8,9,11,0.35);
+  backdrop-filter:blur(1px);
+  pointer-events:none;border-radius:inherit;
+  border:1px solid rgba(192,132,252,0.12);
+  z-index:1;
+}
+/* The tag sits above the overlay */
+.card-staged .card-status-row{position:relative;z-index:2;}
+.card-staged *:not(.card-status-row):not(.card-status-row *){opacity:0.72;}
+
+/* Section-level staging banner */
+.section-staged-banner{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 18px;margin-bottom:28px;
+  border:1px solid rgba(192,132,252,0.25);
+  border-radius:8px;background:rgba(192,132,252,0.04);
+  max-width:800px;
+}
+.section-staged-banner p{
+  font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
+  color:#c084fc;text-transform:uppercase;line-height:1.5;
+}
+.section-staged-banner p span{color:var(--muted);text-transform:none;letter-spacing:0;}
+
+/* card-status-row sits at top of card, above content */
+.card-status-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;flex-wrap:wrap;gap:6px;
+}
+
 .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--cyan);color:#000;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s ease}
 .skip-nav:focus{top:0}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--font-base);line-height:1.5;overflow-x:hidden}
@@ -92,7 +175,7 @@ section{margin-bottom:80px}
 h1{font-family:var(--sans);font-size:clamp(40px,6vw,72px);font-weight:900;letter-spacing:1px;text-transform:uppercase;line-height:0.95;color:var(--text);margin-bottom:8px}
 h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-amber)}
 .title-line{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:3px;margin-bottom:36px;margin-top:16px}
-.section-header{display:flex;align-items:center;gap:16px;margin-bottom:48px}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:36px}
 .section-num{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:2px}
 .section-title{font-family:var(--sans);font-size:var(--font-h2);font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text);text-shadow:0 0 8px rgba(255,255,255,0.2)}
 .section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px var(--cyan)}
@@ -100,6 +183,8 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 /* ===== CARDS ===== */
 .card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);box-shadow:0 8px 20px rgba(0,0,0,0.3),inset 0 0 30px rgba(0,212,255,0.03);border-radius:16px;padding:32px;transition:all 0.3s var(--ease)}
 .card:hover{border-color:var(--cyan);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(0,212,255,0.2),inset 0 0 20px rgba(0,212,255,0.05);transform:translateY(-4px)}
+/* Suppress hover lift on staged cards */
+.card-staged .card:hover,.card-staged.card:hover{transform:none;box-shadow:0 8px 20px rgba(0,0,0,0.3)}
 
 /* ===== SCARCITY BLOCK ===== */
 .scarcity-block{display:inline-flex;align-items:center;gap:12px;padding:10px 16px;border:1px solid rgba(240,165,0,0.4);border-radius:8px;background:rgba(240,165,0,0.05);margin-bottom:24px}
@@ -116,6 +201,7 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .tier-desc{font-family:var(--sans);font-size:1rem;color:var(--muted);line-height:1.6;flex:1}
 .tier-link{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--cyan);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;transition:border-color 0.2s;align-self:flex-start;cursor:pointer}
 .tier-link:hover{border-bottom-color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.tier-link.disabled{color:var(--dim);cursor:not-allowed;pointer-events:none}
 .tier-validity{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px}
 
 /* ===== COMPLIANCE GRID ===== */
@@ -148,7 +234,7 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .fsve-ev{font-family:var(--sans);font-size:1.1rem;font-weight:700;color:var(--cyan)}
 .redacted-notice{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase}
 
-/* ===== MODAL (matching simulations page) ===== */
+/* ===== MODAL ===== */
 .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s}
 .modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s}
 .modal-box{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:560px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(0,212,255,0.1);position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);max-height:85vh;overflow-y:auto}
@@ -165,6 +251,9 @@ h1 em{color:var(--amber);font-style:normal;display:block;text-shadow:var(--glow-
 .cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--amber-l);border-color:var(--amber-l);box-shadow:0 0 20px var(--amber)}
 .cta-btn.violet{border-color:var(--violet);color:var(--violet)}
 .cta-btn.violet:hover,.cta-btn.violet:focus-visible{background:var(--violet);color:#fff;box-shadow:0 0 20px var(--violet);outline:none}
+.cta-btn.staged{border-color:rgba(192,132,252,0.4);color:#c084fc;cursor:not-allowed;opacity:0.7}
+.cta-btn.staged:hover{background:transparent;box-shadow:none;transform:none}
+
 footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:2}
 .footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap}
 .footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
@@ -188,7 +277,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 
 <nav aria-label="Primary navigation">
   <a href="/" class="nav-logo" aria-label="AionSystem home">
-    <img src="/assets/img/aion-logo.jpg" alt="AionSystem logo" class="nav-logo-img" width="28" height="28">
+    <img src="/assets/img/aion-logo.jpg" alt="AionSystem logo" class="nav-logo-img" width="28" height="28" onerror="this.style.display='none'">
     <span>AION<span>system</span></span>
   </a>
   <ul class="nav-links" role="list">
@@ -209,32 +298,51 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 
 <div class="wrapper" id="main">
 
-  <!-- HERO (unchanged) -->
+  <!-- HERO -->
   <section>
     <div class="eyebrow">// AI Reliability Audit</div>
     <h1>The<em>Reliability</em>Snapshot</h1>
     <div class="title-line">Certainty scoring · STP‑sealed · 48‑hour delivery</div>
+
+    <!-- Page-level status notice -->
+    <div class="section-staged-banner" role="status">
+      <span class="status-tag status-staged">Architecture Staged</span>
+      <p>
+        The full audit intake system is staged and sealed — architecture complete, instruments verified.
+        <span> Register your interest via email and you will be notified the moment intake opens. Founding client terms are locked at current pricing.</span>
+      </p>
+    </div>
+
     <div class="scarcity-block" role="status" aria-live="polite">
       <div class="scarcity-dot"></div>
-      <span class="scarcity-text">3 founding client spots — first come, first sealed</span>
+      <span class="scarcity-text">3 founding client spots — reserved at launch</span>
     </div>
+
     <p style="font-family:var(--serif);font-size:1.4rem;font-weight:300;font-style:italic;max-width:640px;margin-bottom:32px;color:var(--muted)">
-      Up to 10 real AI outputs, run through the <strong style="color:var(--text)">FSVE certainty engine</strong>. 
-      A plain‑language executive report in 48–72 hours. Not a consultant’s guess — a scored certainty architecture.
+      Up to 10 real AI outputs, run through the <strong style="color:var(--text)">FSVE certainty engine</strong>.
+      A plain‑language executive report in 48–72 hours. Not a consultant's guess — a scored certainty architecture.
     </p>
-    <div class="cta-btn primary" style="font-size:1rem;padding:14px 28px;" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">
-      Request an Audit →
-    </div>
+
+    <a href="mailto:aionsystem@outlook.com?subject=Audit%20Interest%20—%20Founding%20Client&body=I%20would%20like%20to%20register%20my%20interest%20in%20the%20AI%20Reliability%20Audit%20when%20intake%20opens." class="cta-btn primary" style="font-size:1rem;padding:14px 28px;">
+      Register Audit Interest →
+    </a>
+    <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:12px">
+      Intake opens imminently. Registering now locks you into founding client terms.
+    </p>
   </section>
 
-  <!-- HOW IT WORKS (unchanged) -->
+  <!-- HOW IT WORKS -->
   <section>
     <div class="section-header">
       <span class="section-num">// 01</span>
       <h2 class="section-title">How It Works</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
+    <!-- How It Works is fully specified — shown in full, no staging dim -->
     <div class="card" style="max-width:800px">
+      <div class="card-status-row">
+        <span class="status-tag status-preview">Specification Complete</span>
+      </div>
       <div style="display:flex;flex-direction:column;gap:20px;font-family:var(--sans);font-size:1.1rem;color:var(--muted);line-height:1.7">
         <p><strong style="color:var(--text)">1. Submit up to 10 real AI outputs.</strong> These are the exact responses your system generated — no sanitizing, no cherry‑picking.</p>
         <p><strong style="color:var(--text)">2. FSVE scores each output across 13 epistemic axes.</strong> Evidence strength, validity, completeness, consistency, confidence, risk, and more. Every score is traceable.</p>
@@ -244,7 +352,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     </div>
   </section>
 
-  <!-- STP BEDROCK (unchanged) -->
+  <!-- STP BEDROCK -->
   <section>
     <div class="section-header">
       <span class="section-num">// 02</span>
@@ -252,8 +360,11 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <div class="card" style="max-width:800px">
+      <div class="card-status-row">
+        <span class="status-tag status-preview">Live — v4.0</span>
+      </div>
       <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
-        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-v2.svg" alt="STP badge" style="height:80px;flex-shrink:0">
+        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-v2.svg" alt="STP badge" style="height:80px;flex-shrink:0" onerror="this.style.display='none'">
         <div style="font-family:var(--sans);font-size:1.1rem;color:var(--muted);line-height:1.7">
           <p>Every audit is sealed by the <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:underline">Sovereign Trace Protocol</a> — the same FROZEN‑4.0 stamp that gives individuals temporal sovereignty over their own records now gives your organization cryptographic proof of epistemic integrity.</p>
           <p style="margin-top:16px"><strong style="color:var(--text)">Triple‑time seal.</strong> Your audit report is stamped simultaneously across three civilizational time systems. The SHA‑256 hash is permanent. The record cannot be quietly altered after the fact.</p>
@@ -263,203 +374,276 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     </div>
   </section>
 
-  <!-- CERTIFICATION TIERS (unchanged) -->
+  <!-- CERTIFICATION TIERS -->
   <section>
     <div class="section-header">
       <span class="section-num">// 03</span>
       <h2 class="section-title">Certification Tiers</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
+
+    <div class="section-staged-banner">
+      <span class="status-tag status-staged">Intake Staged</span>
+      <p>
+        All tiers are fully specified and priced.
+        <span> Intake opens at launch. Register interest via email to lock founding client pricing.</span>
+      </p>
+    </div>
+
     <div class="tier-grid">
+
       <!-- Tier 0 -->
-      <div class="card tier-card">
-        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-snapshot-v1.svg" alt="Tier 0 badge" class="tier-badge-img">
+      <div class="card-staged card tier-card">
+        <div class="card-status-row">
+          <span class="status-tag status-staged">Staged — Intake Pending</span>
+        </div>
+        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-snapshot-v1.svg" alt="Tier 0 badge" class="tier-badge-img" onerror="this.style.display='none'">
         <div class="tier-name">Snapshot Verification</div>
         <div class="tier-price">$1,500</div>
         <div class="tier-desc">
-          A lightweight pre‑audit. Up to 10 outputs, FSVE‑scored. A signed verification statement — not a full certification, but a credible trust signal that says <em>this organization takes AI outputs seriously</em>. 30‑day validity.
+          A lightweight pre‑audit. Up to 10 outputs, FSVE‑scored. A signed verification statement — not a full certification, but a credible trust signal. 30‑day validity.
         </div>
-        <div class="tier-link" onclick="location.href='/audit/snapshot/index.html'">Learn More →</div>
+        <span class="tier-link disabled">Intake Opening Soon</span>
         <div class="tier-validity">30‑day certification</div>
       </div>
+
       <!-- Tier 1 -->
-      <div class="card tier-card">
-        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-v2.svg" alt="Tier 1 badge" class="tier-badge-img">
+      <div class="card-staged card tier-card">
+        <div class="card-status-row">
+          <span class="status-tag status-staged">Staged — Intake Pending</span>
+        </div>
+        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-v2.svg" alt="Tier 1 badge" class="tier-badge-img" onerror="this.style.display='none'">
         <div class="tier-name">Full Audit</div>
         <div class="tier-price">$3,000 – $50,000</div>
         <div class="tier-desc">
           Complete certainty audit across 13 FSVE axes. Output‑banded pricing from 25 to 1,000+ outputs. Delivers a Certainty Grade, EDS scorecard, standard badge, and registry listing. 90‑day validity.
         </div>
-        <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">File a Request →</div>
+        <span class="tier-link disabled">Intake Opening Soon</span>
         <div class="tier-validity">90‑day certification · output‑banded</div>
       </div>
+
       <!-- Tier 2 -->
-      <div class="card tier-card">
-        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-digital-v2.svg" alt="Tier 2 badge" class="tier-badge-img">
+      <div class="card-staged card tier-card">
+        <div class="card-status-row">
+          <span class="status-tag status-staged">Staged — Intake Pending</span>
+        </div>
+        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-digital-v2.svg" alt="Tier 2 badge" class="tier-badge-img" onerror="this.style.display='none'">
         <div class="tier-name">Enterprise Retainer</div>
         <div class="tier-price">$25,000/yr</div>
         <div class="tier-desc">
-          Quarterly audits, priority verification, private filing window, annual epistemic debt statement, foresight seal access. Continuous coverage across the retainer year. Each audit produces a 90‑day certification.
+          Quarterly audits, priority verification, private filing window, annual epistemic debt statement, foresight seal access. Each audit produces a 90‑day certification.
         </div>
-        <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">Inquire →</div>
+        <span class="tier-link disabled">Intake Opening Soon</span>
         <div class="tier-validity">90‑day certification per cycle</div>
       </div>
+
       <!-- Tier 3 -->
-      <div class="card tier-card">
-        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-elite-v2.svg" alt="Tier 3 badge" class="tier-badge-img">
+      <div class="card-staged card tier-card">
+        <div class="card-status-row">
+          <span class="status-tag status-staged">Staged — Intake Pending</span>
+        </div>
+        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-elite-v2.svg" alt="Tier 3 badge" class="tier-badge-img" onerror="this.style.display='none'">
         <div class="tier-name">Strategic Retainer</div>
         <div class="tier-price">$100,000+/yr</div>
         <div class="tier-desc">
           Monthly audits, direct written access to Architect, 48‑hour verification, private pre‑disclosure window. For regulated industries and critical infrastructure. 30‑day certification per cycle.
         </div>
-        <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">Inquire →</div>
+        <span class="tier-link disabled">Intake Opening Soon</span>
         <div class="tier-validity">30‑day certification per cycle</div>
       </div>
+
       <!-- Tier 4 -->
-      <div class="card tier-card">
-        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-defense-v2.svg" alt="Tier 4 badge" class="tier-badge-img">
-        <div class="tier-name">Defense & Government Grade</div>
+      <div class="card-staged card tier-card">
+        <div class="card-status-row">
+          <span class="status-tag status-staged">Staged — Intake Pending</span>
+        </div>
+        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-defense-v2.svg" alt="Tier 4 badge" class="tier-badge-img" onerror="this.style.display='none'">
+        <div class="tier-name">Defense &amp; Government Grade</div>
         <div class="tier-price">Negotiated</div>
         <div class="tier-desc">
-          Full standards alignment: NIST AI RMF, CMMC 2.0, EU AI Act Art. 12, FAR/DFARS. Monthly reviews. SCIF‑compatible delivery. 90‑day certification per period.
+          Full standards alignment: NIST AI RMF, CMMC 2.0, EU AI Act Art. 12, FAR/DFARS. Monthly reviews. SCIF‑compatible delivery. 90‑day certification per period.
         </div>
-        <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">Inquire →</div>
+        <span class="tier-link disabled">Intake Opening Soon</span>
         <div class="tier-validity">90‑day certification per period</div>
       </div>
+
       <!-- Tier 5 -->
-      <div class="card tier-card">
-        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-sovereign-v1.svg" alt="Tier 5 badge" class="tier-badge-img">
+      <div class="card-staged card tier-card">
+        <div class="card-status-row">
+          <span class="status-tag status-staged">Staged — Intake Pending</span>
+        </div>
+        <img src="/assets/badges/sovereign-certified/sovereign-certified-badge-sovereign-v1.svg" alt="Tier 5 badge" class="tier-badge-img" onerror="this.style.display='none'">
         <div class="tier-name">Sovereign AI Audit</div>
         <div class="tier-price">$15,000</div>
         <div class="tier-desc">
           Full adversarial stack: PDE, EAE, CAL, SAR, ANTI‑FORGE, FORGE, FSVE — seven instruments. 14‑day assessment. 180‑day certification, 12‑month badge license.
         </div>
-        <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">Request Sovereign Audit →</div>
+        <span class="tier-link disabled">Intake Opening Soon</span>
         <div class="tier-validity">180‑day cert · 12‑month badge</div>
       </div>
+
     </div>
-    <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:16px">Tier 0 &amp; 2: automated intake 24/7. Tier 1, 3, 4, 5: Architect‑led, Monday–Tuesday only. Governing law: New York. Arbitration: JAMS.</p>
+    <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:16px">Tier 0 &amp; 2: automated intake 24/7 at launch. Tier 1, 3, 4, 5: Architect‑led, Monday–Tuesday only. Governing law: New York. Arbitration: JAMS.</p>
   </section>
 
-  <!-- COMPLIANCE BADGES (unchanged) -->
+  <!-- COMPLIANCE BADGES -->
   <section>
     <div class="section-header">
       <span class="section-num">// 04</span>
       <h2 class="section-title">Compliance Badges</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
+
+    <div class="section-staged-banner">
+      <span class="status-tag status-pending">Specification Complete</span>
+      <p>
+        Compliance badge infrastructure is fully specified under THE CONSTITUTION v2.1.
+        <span> Badge issuance pending audit intake launch. Prices and domains are final.</span>
+      </p>
+    </div>
+
     <p style="font-family:var(--serif);font-size:1.2rem;color:var(--muted);margin-bottom:32px">
       Domain‑specific constitutional compliance badges for high‑stakes AI deployments. Issued after a focused audit under THE CONSTITUTION v2.1. Each badge is non‑transferable, SHA‑256 sealed, and bound to your organization.
     </p>
+
     <div class="compliance-grid">
-      <div class="card compliance-card">
-        <img src="/assets/badges/compliance/compliance-constitutional-badge.svg" alt="Constitutional Compliance Badge" class="compliance-badge-img">
+
+      <div class="card-staged card compliance-card">
+        <div class="card-status-row">
+          <span class="status-tag status-pending">Pending Launch</span>
+        </div>
+        <img src="/assets/badges/compliance/compliance-constitutional-badge.svg" alt="Constitutional Compliance Badge" class="compliance-badge-img" onerror="this.style.display='none'">
         <div class="tier-name">Constitutional</div>
         <div class="tier-price">$7,500</div>
-        <div class="tier-desc">
-          The baseline badge. Certifies your AI deployment meets the Nine Laws, falsification protocols, and governance structure of THE CONSTITUTION v2.1 — applicable to any organization.
-        </div>
-        <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">Request Compliance Audit →</div>
+        <div class="tier-desc">Certifies your AI deployment meets the Nine Laws, falsification protocols, and governance structure of THE CONSTITUTION v2.1 — applicable to any organization.</div>
+        <span class="tier-link disabled">Available at Launch</span>
       </div>
-      <div class="card compliance-card">
-        <img src="/assets/badges/compliance/compliance-legal-badge.svg" alt="Legal &amp; Justice AI Compliance Badge" class="compliance-badge-img">
+
+      <div class="card-staged card compliance-card">
+        <div class="card-status-row">
+          <span class="status-tag status-pending">Pending Launch</span>
+        </div>
+        <img src="/assets/badges/compliance/compliance-legal-badge.svg" alt="Legal &amp; Justice AI Compliance Badge" class="compliance-badge-img" onerror="this.style.display='none'">
         <div class="tier-name">Legal &amp; Justice AI</div>
         <div class="tier-price">$12,000</div>
-        <div class="tier-desc">
-          For AI used in legal, judicial, or regulatory contexts. Verifies bias detection, precedent‑anchoring, explainability, and adversarial robustness under constitutional standards.
-        </div>
-        <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">Request Compliance Audit →</div>
+        <div class="tier-desc">For AI used in legal, judicial, or regulatory contexts. Verifies bias detection, precedent‑anchoring, explainability, and adversarial robustness.</div>
+        <span class="tier-link disabled">Available at Launch</span>
       </div>
-      <div class="card compliance-card">
-        <img src="/assets/badges/compliance/compliance-healthcare-badge.svg" alt="Healthcare AI Compliance Badge" class="compliance-badge-img">
+
+      <div class="card-staged card compliance-card">
+        <div class="card-status-row">
+          <span class="status-tag status-pending">Pending Launch</span>
+        </div>
+        <img src="/assets/badges/compliance/compliance-healthcare-badge.svg" alt="Healthcare AI Compliance Badge" class="compliance-badge-img" onerror="this.style.display='none'">
         <div class="tier-name">Healthcare AI</div>
         <div class="tier-price">$12,000</div>
-        <div class="tier-desc">
-          For clinical, diagnostic, or healthcare‑adjacent AI. Validates false‑positive/false‑negative rates, evidence grading, and clinical safety protocols under THE CONSTITUTION v2.1.
-        </div>
-        <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">Request Compliance Audit →</div>
+        <div class="tier-desc">For clinical, diagnostic, or healthcare‑adjacent AI. Validates false‑positive/negative rates, evidence grading, and clinical safety protocols.</div>
+        <span class="tier-link disabled">Available at Launch</span>
       </div>
-      <div class="card compliance-card">
-        <img src="/assets/badges/compliance/compliance-finance-badge.svg" alt="Financial AI Compliance Badge" class="compliance-badge-img">
+
+      <div class="card-staged card compliance-card">
+        <div class="card-status-row">
+          <span class="status-tag status-pending">Pending Launch</span>
+        </div>
+        <img src="/assets/badges/compliance/compliance-finance-badge.svg" alt="Financial AI Compliance Badge" class="compliance-badge-img" onerror="this.style.display='none'">
         <div class="tier-name">Financial AI</div>
         <div class="tier-price">$12,000</div>
-        <div class="tier-desc">
-          For trading, credit, fraud detection, and financial services. Verifies model transparency, fairness in lending, audit trail completeness, and market impact.
-        </div>
-        <div class="tier-link" onclick="window.open('https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml','_blank')">Request Compliance Audit →</div>
+        <div class="tier-desc">For trading, credit, fraud detection, and financial services. Verifies model transparency, fairness in lending, audit trail completeness, and market impact.</div>
+        <span class="tier-link disabled">Available at Launch</span>
       </div>
+
     </div>
     <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:16px">Compliance badges expire after 12 months. Re‑audit required for renewal. Combined audits available at negotiated rates.</p>
   </section>
 
-  <!-- CERTIFIED SLEEVES — interactive, matching simulations page pattern -->
+  <!-- CERTIFIED SLEEVES -->
   <section>
     <div class="section-header">
       <span class="section-num">// 05</span>
       <h2 class="section-title">Certified Sleeves</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
+
+    <div class="section-staged-banner">
+      <span class="status-tag status-staged">Designs Sealed</span>
+      <p>
+        All sleeve designs are finalized and SHA‑256 sealed.
+        <span> Click any sleeve to preview the specification. Issuance begins with audit intake.</span>
+      </p>
+    </div>
+
     <p style="font-family:var(--serif);font-size:1.2rem;color:var(--muted);margin-bottom:32px">
-      Every certification is delivered inside a cryptographic credential sleeve — a forgery‑resistant, visually graded wrapper. Click any sleeve to see the full design.
+      Every certification is delivered inside a cryptographic credential sleeve — a forgery‑resistant, visually graded wrapper. Click any sleeve to preview the design specification.
     </p>
+
     <div class="sleeve-grid">
-      <!-- v1 -->
       <div class="sleeve-card" onclick="openSleeveModal('v1')">
         <div class="card">
+          <div class="card-status-row">
+            <span class="status-tag status-staged">Design Sealed</span>
+          </div>
           <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">🛡️</div>
           <div class="tier-name">v1 — Certified Audit</div>
           <div class="tier-price">Full Certification</div>
-          <div class="tier-desc">The flagship sleeve. Auditor badge, simulator badge, tier badge, triple‑time dates, verification bar. Click to view.</div>
+          <div class="tier-desc">The flagship sleeve. Auditor badge, simulator badge, tier badge, triple‑time dates, verification bar. Click to preview.</div>
         </div>
       </div>
-      <!-- v2 -->
       <div class="sleeve-card" onclick="openSleeveModal('v2')">
         <div class="card">
+          <div class="card-status-row">
+            <span class="status-tag status-staged">Design Sealed</span>
+          </div>
           <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">🔬</div>
           <div class="tier-name">v2 — Simulation Verified</div>
           <div class="tier-price">Tool‑Only Verification</div>
-          <div class="tier-desc">Dark cyan palette. Simulator badge with version, hash, and run URL. Not a full audit. Click to view.</div>
+          <div class="tier-desc">Dark cyan palette. Simulator badge with version, hash, and run URL. Click to preview.</div>
         </div>
       </div>
-      <!-- v3 -->
       <div class="sleeve-card" onclick="openSleeveModal('v3')">
         <div class="card">
+          <div class="card-status-row">
+            <span class="status-tag status-staged">Design Sealed</span>
+          </div>
           <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">🔐</div>
           <div class="tier-name">v3 — Audit Only</div>
           <div class="tier-price">Private Framework</div>
-          <div class="tier-desc">Dark violet palette. Auditor badge only — no simulator slot. For enterprise/defense private builds. Click to view.</div>
+          <div class="tier-desc">Dark violet palette. Auditor badge only — no simulator slot. For enterprise/defense private builds. Click to preview.</div>
         </div>
       </div>
-      <!-- v4 -->
       <div class="sleeve-card" onclick="openSleeveModal('v4')">
         <div class="card">
+          <div class="card-status-row">
+            <span class="status-tag status-staged">Design Sealed</span>
+          </div>
           <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">💎</div>
           <div class="tier-name">v4 — Founder's Sovereign Seal</div>
           <div class="tier-price">Founder‑Exclusive</div>
-          <div class="tier-desc">Black‑and‑gold hyperdiamond sleeve. Only issued under STP‑AUDITOR‑0001. Click to view.</div>
+          <div class="tier-desc">Black‑and‑gold hyperdiamond sleeve. Only issued under STP‑AUDITOR‑0001. Click to preview.</div>
         </div>
       </div>
-      <!-- Auditor Credential -->
       <div class="sleeve-card" onclick="openSleeveModal('auditor')">
         <div class="card">
+          <div class="card-status-row">
+            <span class="status-tag status-staged">Design Sealed</span>
+          </div>
           <div style="font-size:2rem;text-align:center;margin-bottom:8px" aria-hidden="true">📋</div>
           <div class="tier-name">Auditor Credential</div>
           <div class="tier-price">STP Auditor Network</div>
-          <div class="tier-desc">The sleeve carried by certified auditors. Shield badge, rank, specialization, QR. Click to view.</div>
+          <div class="tier-desc">The sleeve carried by certified auditors. Shield badge, rank, specialization, QR. Click to preview.</div>
         </div>
       </div>
     </div>
     <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:16px">All sleeves are SHA‑256 sealed, QR‑verifiable, and carry micro‑text anti‑forgery bands.</p>
   </section>
 
-  <!-- FSVE PREVIEW (unchanged) -->
+  <!-- FSVE PREVIEW -->
   <section>
     <div class="section-header">
       <span class="section-num">// 06</span>
       <h2 class="section-title">What You'll See</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
-    <p style="font-family:var(--serif);font-size:1.2rem;color:var(--muted);margin-bottom:24px">A sample of the FSVE scoring panel — every axis scored, every threshold flagged.</p>
+    <p style="font-family:var(--serif);font-size:1.2rem;color:var(--muted);margin-bottom:24px">A live sample of the FSVE scoring panel — the exact format your report will carry.</p>
     <div class="fsve-excerpt">
       <div class="fsve-header">
         <div class="fsve-title">⬡ FSVE Reliability Snapshot — Sample Output (Redacted)</div>
@@ -482,26 +666,35 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
     </div>
   </section>
 
-  <!-- START YOUR AUDIT (unchanged) -->
+  <!-- START YOUR AUDIT -->
   <section>
     <div class="section-header">
       <span class="section-num">// 07</span>
-      <h2 class="section-title">Start Your Audit</h2>
+      <h2 class="section-title">Register Interest</h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <div class="card" style="max-width:640px;text-align:center">
-      <p style="font-family:var(--serif);font-size:1.3rem;font-style:italic;color:var(--muted);margin-bottom:24px">The first three founding clients receive a complimentary second‑pass audit at six months — same instrument, same threshold, tracked against their original baseline.</p>
-      <a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml" target="_blank" rel="noopener" class="cta-btn primary" style="font-size:1rem;padding:14px 28px">File an Audit Request →</a>
-      <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:16px">Or contact <a href="mailto:aionsystem@outlook.com" style="color:var(--cyan)">aionsystem@outlook.com</a> for questions.</p>
+      <div class="card-status-row" style="justify-content:center;margin-bottom:16px">
+        <span class="status-tag status-staged">Intake Opening Imminently</span>
+      </div>
+      <p style="font-family:var(--serif);font-size:1.3rem;font-style:italic;color:var(--muted);margin-bottom:24px">
+        The first three founding clients receive a complimentary second‑pass audit at six months — same instrument, same threshold, tracked against their original baseline. Register now to hold your spot at current pricing.
+      </p>
+      <a href="mailto:aionsystem@outlook.com?subject=Audit%20Interest%20—%20Founding%20Client&body=Name%3A%0AOrganisation%3A%0ASystem%20type%3A%0ATier%20of%20interest%3A%0AAnything%20else%3A" class="cta-btn primary" style="font-size:1rem;padding:14px 28px;">
+        Register Founding Client Interest →
+      </a>
+      <p style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:16px">
+        Or write directly: <a href="mailto:aionsystem@outlook.com" style="color:var(--cyan)">aionsystem@outlook.com</a>
+      </p>
     </div>
   </section>
 
 </div>
 
 <!-- SLEEVE MODAL -->
-<div class="modal-overlay" id="sleeve-modal">
+<div class="modal-overlay" id="sleeve-modal" role="dialog" aria-modal="true" aria-labelledby="sleeve-modal-heading">
   <div class="modal-box">
-    <button class="modal-close" id="sleeve-modal-close">×</button>
+    <button class="modal-close" id="sleeve-modal-close" aria-label="Close modal">×</button>
     <div id="sleeve-modal-content"></div>
   </div>
 </div>
@@ -523,387 +716,314 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
 </footer>
 
 <script>
-// ===== FULL VISUAL ENGINE (unchanged) =====
 (function () {
-  'use strict';
+'use strict';
 
-  const concurrency = navigator.hardwareConcurrency || 2;
-  const deviceMem   = navigator.deviceMemory || 2;
-  const lowDevice   = concurrency < 4 || deviceMem < 4;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const concurrency = navigator.hardwareConcurrency || 2;
+const deviceMem   = navigator.deviceMemory || 2;
+const lowDevice   = concurrency < 4 || deviceMem < 4;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // WebGL
-  const wglCanvas = document.getElementById('webgl-canvas');
-  let gl = null, glProgram = null, glUniforms = {}, glScrollVel = 0, glMouseDist = 1.0;
-  if (!reducedMotion) {
-    try { gl = wglCanvas.getContext('webgl') || wglCanvas.getContext('experimental-webgl'); } catch (_) {}
-  }
-  if (gl) {
-    const vsrc = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
-    const fsrc = `precision mediump float;uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
-    void main(){vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
-    float ab=0.003*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
-    vec3 col=vec3(0.0);col.r=sin(d*8.0+u_time)*ab;col.b=cos(d*8.0-u_time)*ab;
-    float rf=0.002*sin(uv.x*6.28+u_time*0.7)*u_mouse_dist;col.g=rf;
-    gl_FragColor=vec4(col,0.18*(1.0-smoothstep(0.6,1.0,d)));}`;
-    function cs(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
-    glProgram = gl.createProgram();
-    gl.attachShader(glProgram, cs(gl.VERTEX_SHADER, vsrc));
-    gl.attachShader(glProgram, cs(gl.FRAGMENT_SHADER, fsrc));
-    gl.linkProgram(glProgram); gl.useProgram(glProgram);
-    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(glProgram, 'a_pos');
-    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    glUniforms.res = gl.getUniformLocation(glProgram,'u_res');
-    glUniforms.time = gl.getUniformLocation(glProgram,'u_time');
-    glUniforms.scrollVel = gl.getUniformLocation(glProgram,'u_scroll_vel');
-    glUniforms.mouseDist = gl.getUniformLocation(glProgram,'u_mouse_dist');
-    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-  }
+const wglCanvas = document.getElementById('webgl-canvas');
+let gl = null, glProgram = null, glUniforms = {}, glScrollVel = 0, glMouseDist = 1.0;
+if (!reducedMotion) {
+  try { gl = wglCanvas.getContext('webgl') || wglCanvas.getContext('experimental-webgl'); } catch (_) {}
+}
+if (gl) {
+  const vsrc = `attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+  const fsrc = `precision mediump float;uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
+  void main(){vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
+  float ab=0.003*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
+  vec3 col=vec3(0.0);col.r=sin(d*8.0+u_time)*ab;col.b=cos(d*8.0-u_time)*ab;
+  float rf=0.002*sin(uv.x*6.28+u_time*0.7)*u_mouse_dist;col.g=rf;
+  gl_FragColor=vec4(col,0.18*(1.0-smoothstep(0.6,1.0,d)));}`;
+  function cs(type, src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+  glProgram=gl.createProgram();
+  gl.attachShader(glProgram,cs(gl.VERTEX_SHADER,vsrc));
+  gl.attachShader(glProgram,cs(gl.FRAGMENT_SHADER,fsrc));
+  gl.linkProgram(glProgram);gl.useProgram(glProgram);
+  const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(glProgram,'a_pos');
+  gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  glUniforms.res=gl.getUniformLocation(glProgram,'u_res');
+  glUniforms.time=gl.getUniformLocation(glProgram,'u_time');
+  glUniforms.scrollVel=gl.getUniformLocation(glProgram,'u_scroll_vel');
+  glUniforms.mouseDist=gl.getUniformLocation(glProgram,'u_mouse_dist');
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+}
 
-  // Symbol field
-  const symCanvas = document.getElementById('symbol-canvas');
-  const ctx = symCanvas.getContext('2d');
-  const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','◆','○','●','◉'];
-  let W, H, symbols = [], echoes = [];
-  const mouse = { x: null, y: null, vx: 0, vy: 0, prevX: null, prevY: null };
-  const GRAVITY_R = 200, GRAVITY_STR = 0.015, TANGENTIAL = 0.18;
-  const PHYSICS_FPS = lowDevice ? 30 : 60, PHYSICS_DT = 1000 / PHYSICS_FPS;
+const symCanvas = document.getElementById('symbol-canvas');
+const ctx = symCanvas.getContext('2d');
+const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈','◆','○','●','◉'];
+let W, H, symbols = [], echoes = [];
+const mouse = { x:null, y:null, vx:0, vy:0, prevX:null, prevY:null };
+const GRAVITY_R=200, GRAVITY_STR=0.015, TANGENTIAL=0.18;
+const PHYSICS_FPS=lowDevice?30:60, PHYSICS_DT=1000/PHYSICS_FPS;
 
-  // Collapse state
-  let isCollapsing = false, collapsePhase = 0, collapseStart = 0;
-  const SNAP_DUR = 1500, HOLD_DUR = 800, EXPLODE_DUR = 600;
-  let collapseHoldTimeout = null;
+let isCollapsing=false, collapsePhase=0, collapseStart=0;
+const SNAP_DUR=1500, HOLD_DUR=800, EXPLODE_DUR=600;
+let collapseHoldTimeout=null;
 
-  function resizeCanvas() {
-    W = symCanvas.width = wglCanvas.width = window.innerWidth;
-    H = symCanvas.height = wglCanvas.height = window.innerHeight;
-    if (gl) gl.viewport(0, 0, W, H);
-    initSymbols();
-  }
-  let resizeTimer = null;
-  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resizeCanvas, 150); });
+function resizeCanvas(){
+  W=symCanvas.width=wglCanvas.width=window.innerWidth;
+  H=symCanvas.height=wglCanvas.height=window.innerHeight;
+  if(gl)gl.viewport(0,0,W,H);
+  initSymbols();
+}
+let resizeTimer=null;
+window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resizeCanvas,150);});
 
-  function initSymbols() {
-    const count = Math.floor((W * H) / 7000);
-    symbols = [];
-    for (let i = 0; i < count; i++) {
-      symbols.push({
-        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
-        x: Math.random() * W, y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2,
-        size: 12 + Math.random() * 20,
-        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
-        alpha: 0.15 + Math.random() * 0.25,
-        scrollGlow: 0, inWell: false,
-        active: true,
-        origX: 0, origY: 0,
-        targetX: 0, targetY: 0
-      });
-    }
-  }
-
-  function spawnEcho(x, y) {
-    for (let i = 0; i < 12; i++) {
-      const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.3;
-      const speed = 1.5 + Math.random() * 2;
-      echoes.push({
-        char: SYMBOL_SET[Math.floor(Math.random() * SYMBOL_SET.length)],
-        x, y,
-        vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-        size: 8 + Math.random() * 8,
-        color: Math.random() > 0.5 ? '#00d4ff' : '#f0a500',
-        alpha: 0.8, age: 0, maxAge: 600,
-      });
-    }
-  }
-
-  function triggerCollapse() {
-    if (isCollapsing) return;
-    isCollapsing = true; collapsePhase = 1; collapseStart = performance.now();
-    const lattice = [];
-    const hexW = 60, hexH = hexW * Math.sqrt(3) / 2;
-    for (let y = 0; y < H + hexH; y += hexH)
-      for (let x = 0; x < W + hexW; x += hexW)
-        lattice.push({ x: x + (Math.floor(y / hexH) % 2) * (hexW / 2), y });
-    symbols.forEach(s => {
-      s.origX = s.x; s.origY = s.y;
-      const tgt = lattice[Math.floor(Math.random() * lattice.length)];
-      s.targetX = tgt.x; s.targetY = tgt.y;
+function initSymbols(){
+  const count=Math.floor((W*H)/7000);symbols=[];
+  for(let i=0;i<count;i++){
+    symbols.push({
+      char:SYMBOL_SET[Math.floor(Math.random()*SYMBOL_SET.length)],
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2,
+      size:12+Math.random()*20,
+      color:Math.random()>0.5?'#00d4ff':'#f0a500',
+      alpha:0.15+Math.random()*0.25,
+      scrollGlow:0,inWell:false,active:true,
+      origX:0,origY:0,targetX:0,targetY:0
     });
   }
+}
 
-  function stepCollapse(now) {
-    if (!isCollapsing) return;
-    const elapsed = now - collapseStart;
-    if (collapsePhase === 1) {
-      const p = Math.min(elapsed / SNAP_DUR, 1);
-      const t = 1 - Math.pow(1 - p, 3);
-      symbols.forEach(s => {
-        s.x = s.origX + (s.targetX - s.origX) * t;
-        s.y = s.origY + (s.targetY - s.origY) * t;
-        s.vx = 0; s.vy = 0;
-        s.alpha = 0.15 + 0.35 * p;
-        s.color = '#f0a500';
-      });
-      if (p >= 1) {
-        collapsePhase = 2; collapseStart = now;
-        if (collapseHoldTimeout) clearTimeout(collapseHoldTimeout);
-        collapseHoldTimeout = setTimeout(() => {
-          if (!isCollapsing) return;
-          collapsePhase = 3; collapseStart = performance.now();
-          symbols.forEach(s => {
-            const a = Math.random() * Math.PI * 2;
-            const spd = 3 + Math.random() * 4;
-            s.vx = Math.cos(a) * spd;
-            s.vy = Math.sin(a) * spd;
-            s.color = '#00d4ff';
-            s.alpha = 0.6;
-          });
-          spawnEcho(W / 2, H / 2); spawnEcho(W / 2, H / 2);
-        }, HOLD_DUR);
-      }
-    } else if (collapsePhase === 3) {
-      const p = Math.min(elapsed / EXPLODE_DUR, 1);
-      symbols.forEach(s => {
-        s.alpha = 0.15 + 0.25 * (1 - p);
-        s.vx *= 0.98; s.vy *= 0.98;
-      });
-      if (p >= 1) {
-        isCollapsing = false; collapsePhase = 0;
-        symbols.forEach(s => {
-          s.vx = (Math.random() - 0.5) * 0.2;
-          s.vy = (Math.random() - 0.5) * 0.2;
-          s.color = Math.random() > 0.5 ? '#00d4ff' : '#f0a500';
-        });
-      }
-    }
-  }
-
-  let lastScrollY = window.scrollY, scrollVel = 0, scrollTimeout = null;
-  function handleScroll() {
-    const sy = window.scrollY; scrollVel = sy - lastScrollY; lastScrollY = sy;
-    glScrollVel = Math.abs(scrollVel) / 60;
-    symbols.forEach(s => { if (Math.abs(s.y - (sy + H / 2)) < 200) s.scrollGlow = 1.0; });
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => { symbols.forEach(s => s.scrollGlow = 0); scrollVel = 0; glScrollVel *= 0.9; }, 300);
-  }
-
-  let lastPhysicsTime = 0;
-  function updatePhysics(now) {
-    if (now - lastPhysicsTime < PHYSICS_DT) return;
-    lastPhysicsTime = now;
-    if (mouse.prevX !== null && mouse.x !== null) { mouse.vx = mouse.x - mouse.prevX; mouse.vy = mouse.y - mouse.prevY; }
-    if (mouse.x !== null) { mouse.prevX = mouse.x; mouse.prevY = mouse.y; }
-
-    if (isCollapsing) { stepCollapse(now); return; }
-
-    symbols.forEach(s => {
-      if (!s.active) return;
-      s.x += s.vx; s.y += s.vy;
-      if (s.x < -50) s.x = W + 50; if (s.x > W + 50) s.x = -50;
-      if (s.y < -50) s.y = H + 50; if (s.y > H + 50) s.y = -50;
-
-      if (mouse.x !== null && mouse.y !== null) {
-        const dx = s.x - mouse.x, dy = s.y - mouse.y; const dist = Math.hypot(dx, dy);
-        if (dist < GRAVITY_R) {
-          const force = GRAVITY_STR * (1 - dist / GRAVITY_R); const angle = Math.atan2(dy, dx);
-          s.vx -= Math.cos(angle) * force; s.vy -= Math.sin(angle) * force;
-          const ta = angle + Math.PI / 2; const spin = TANGENTIAL * (1 - dist / GRAVITY_R);
-          s.vx += Math.cos(ta) * spin * (mouse.vx * 0.05 + 0.5);
-          s.vy += Math.sin(ta) * spin * (mouse.vy * 0.05 + 0.5);
-          s.vx *= 0.99; s.vy *= 0.99; s.inWell = true;
-          glMouseDist = Math.min(glMouseDist, dist / GRAVITY_R);
-        } else { s.inWell = false; }
-      }
-      if (s.scrollGlow > 0.01) s.scrollGlow *= 0.94; else s.scrollGlow = 0;
+function spawnEcho(x,y){
+  for(let i=0;i<12;i++){
+    const angle=(Math.PI*2*i)/12+Math.random()*0.3;
+    const speed=1.5+Math.random()*2;
+    echoes.push({
+      char:SYMBOL_SET[Math.floor(Math.random()*SYMBOL_SET.length)],
+      x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+      size:8+Math.random()*8,
+      color:Math.random()>0.5?'#00d4ff':'#f0a500',
+      alpha:0.8,age:0,maxAge:600
     });
-    glMouseDist = Math.min(1, glMouseDist + 0.02);
   }
+}
 
-  function render() {
-    ctx.clearRect(0, 0, W, H);
-    echoes = echoes.filter(e => {
-      e.age += PHYSICS_DT; if (e.age >= e.maxAge) return false;
-      e.x += e.vx; e.y += e.vy; e.alpha = 0.8 * (1 - e.age / e.maxAge); e.size *= 0.996;
-      ctx.font = `${e.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.shadowColor = e.color; ctx.shadowBlur = 10; ctx.fillStyle = e.color; ctx.globalAlpha = e.alpha;
-      ctx.fillText(e.char, e.x, e.y); return true;
-    });
-    symbols.forEach(s => {
-      if (!s.active && !isCollapsing) return;
-      const glow = s.scrollGlow > 0.01 ? 15 + s.scrollGlow * 20 : (s.inWell ? 25 : 12);
-      ctx.font = `${s.size}px 'JetBrains Mono',monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.shadowColor = s.color; ctx.shadowBlur = glow; ctx.fillStyle = s.color;
-      ctx.globalAlpha = s.alpha + s.scrollGlow * 0.2; ctx.fillText(s.char, s.x, s.y);
-    });
-    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
-  }
-
-  function renderWebGL(t) {
-    if (!gl || !glProgram) return;
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.uniform2f(glUniforms.res, W, H); gl.uniform1f(glUniforms.time, t * 0.001);
-    gl.uniform1f(glUniforms.scrollVel, glScrollVel); gl.uniform1f(glUniforms.mouseDist, glMouseDist);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-  }
-
-  let rafId = null;
-  function loop(t) { updatePhysics(t); render(); renderWebGL(t); rafId = requestAnimationFrame(loop); }
-
-  window.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; } });
-  window.addEventListener('pointerleave', () => { mouse.x = null; mouse.y = null; mouse.prevX = null; mouse.prevY = null; });
-  window.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') return; spawnEcho(e.clientX, e.clientY); });
-
-  window.addEventListener('dblclick', (e) => {
-    const tag = e.target.tagName.toLowerCase();
-    const isInteractive = ['a', 'button', 'input', 'select', 'textarea'].includes(tag) ||
-      e.target.closest('a') || e.target.closest('button') || e.target.closest('.cta-btn') ||
-      e.target.closest('.tier-link') || e.target.closest('.card') || e.target.closest('.audience-path') ||
-      e.target.closest('.stage-pip') || e.target.closest('.compliance-card') || e.target.closest('.sleeve-card');
-    if (isInteractive) return;
-    triggerCollapse();
-    spawnEcho(e.clientX, e.clientY);
+function triggerCollapse(){
+  if(isCollapsing)return;
+  isCollapsing=true;collapsePhase=1;collapseStart=performance.now();
+  const lattice=[];
+  const hexW=60,hexH=hexW*Math.sqrt(3)/2;
+  for(let y=0;y<H+hexH;y+=hexH)
+    for(let x=0;x<W+hexW;x+=hexW)
+      lattice.push({x:x+(Math.floor(y/hexH)%2)*(hexW/2),y});
+  symbols.forEach(s=>{
+    s.origX=s.x;s.origY=s.y;
+    const tgt=lattice[Math.floor(Math.random()*lattice.length)];
+    s.targetX=tgt.x;s.targetY=tgt.y;
   });
+}
 
-  window.addEventListener('keydown', (e) => { if (e.ctrlKey && e.shiftKey && e.key === 'Q') { e.preventDefault(); triggerCollapse(); } });
-
-  // Audio
-  let audioCtx = null, audioNodes = null, audioOn = false;
-  const toggle = document.getElementById('audio-toggle');
-  function initAudio() {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
-    audioCtx = new AC();
-    const gain = audioCtx.createGain(); gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-    const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 400; filter.Q.value = 0.8;
-    const osc1 = audioCtx.createOscillator(); osc1.type = 'sine'; osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
-    const osc2 = audioCtx.createOscillator(); osc2.type = 'sawtooth'; osc2.frequency.setValueAtTime(110.5, audioCtx.currentTime);
-    const g2 = audioCtx.createGain(); g2.gain.setValueAtTime(0.15, audioCtx.currentTime);
-    osc1.connect(filter); osc2.connect(g2); g2.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-    osc1.start(); osc2.start();
-    audioNodes = { gain, osc1, osc2 };
-    window.addEventListener('pagehide', () => { try { audioCtx.close(); } catch(_) {} }, { once: true });
-  }
-  function modulateAudio(scrollY) {
-    if (!audioNodes || !audioCtx) return;
-    const pct = scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-    audioNodes.osc1.frequency.setTargetAtTime(55 + pct * 40, audioCtx.currentTime, 0.3);
-  }
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      audioOn = !audioOn;
-      toggle.setAttribute('aria-pressed', String(audioOn));
-      if (audioOn) { if (!audioCtx) initAudio(); else if (audioCtx.state === 'suspended') audioCtx.resume(); }
-      else { if (audioCtx && audioCtx.state === 'running') audioCtx.suspend(); }
+function stepCollapse(now){
+  if(!isCollapsing)return;
+  const elapsed=now-collapseStart;
+  if(collapsePhase===1){
+    const p=Math.min(elapsed/SNAP_DUR,1);
+    const t=1-Math.pow(1-p,3);
+    symbols.forEach(s=>{
+      s.x=s.origX+(s.targetX-s.origX)*t;s.y=s.origY+(s.targetY-s.origY)*t;
+      s.vx=0;s.vy=0;s.alpha=0.15+0.35*p;s.color='#f0a500';
     });
+    if(p>=1){
+      collapsePhase=2;collapseStart=now;
+      if(collapseHoldTimeout)clearTimeout(collapseHoldTimeout);
+      collapseHoldTimeout=setTimeout(()=>{
+        if(!isCollapsing)return;
+        collapsePhase=3;collapseStart=performance.now();
+        symbols.forEach(s=>{
+          const a=Math.random()*Math.PI*2;const spd=3+Math.random()*4;
+          s.vx=Math.cos(a)*spd;s.vy=Math.sin(a)*spd;s.color='#00d4ff';s.alpha=0.6;
+        });
+        spawnEcho(W/2,H/2);spawnEcho(W/2,H/2);
+      },HOLD_DUR);
+    }
+  } else if(collapsePhase===3){
+    const p=Math.min(elapsed/EXPLODE_DUR,1);
+    symbols.forEach(s=>{s.alpha=0.15+0.25*(1-p);s.vx*=0.98;s.vy*=0.98;});
+    if(p>=1){
+      isCollapsing=false;collapsePhase=0;
+      symbols.forEach(s=>{s.vx=(Math.random()-0.5)*0.2;s.vy=(Math.random()-0.5)*0.2;s.color=Math.random()>0.5?'#00d4ff':'#f0a500';});
+    }
   }
+}
 
-  let scrollRAFId = null;
-  window.addEventListener('scroll', () => {
-    if (scrollRAFId) return;
-    scrollRAFId = requestAnimationFrame(() => { handleScroll(); modulateAudio(window.scrollY); scrollRAFId = null; });
-  }, { passive: true });
+let lastScrollY=window.scrollY,scrollVel=0,scrollTimeout=null;
+function handleScroll(){
+  const sy=window.scrollY;scrollVel=sy-lastScrollY;lastScrollY=sy;
+  glScrollVel=Math.abs(scrollVel)/60;
+  symbols.forEach(s=>{if(Math.abs(s.y-(sy+H/2))<200)s.scrollGlow=1.0;});
+  clearTimeout(scrollTimeout);
+  scrollTimeout=setTimeout(()=>{symbols.forEach(s=>s.scrollGlow=0);scrollVel=0;glScrollVel*=0.9;},300);
+}
 
-  // Mobile nav
-  const hamburger = document.getElementById('hamburger');
-  const mobileNav = document.getElementById('mobileNav');
-  let navOpen = false;
-  if (hamburger && mobileNav) {
-    document.querySelectorAll('.nav-links a').forEach((link, i) => {
-      const a = document.createElement('a');
-      a.href = link.getAttribute('href'); a.textContent = link.textContent;
-      if (link.getAttribute('target')) a.setAttribute('target', link.getAttribute('target'));
-      if (link.getAttribute('rel')) a.setAttribute('rel', link.getAttribute('rel'));
-      a.style.transitionDelay = `${i * 30}ms`; mobileNav.appendChild(a);
-    });
-    function openMenu() { navOpen = true; mobileNav.classList.add('open'); mobileNav.setAttribute('aria-hidden', 'false'); hamburger.classList.add('open'); hamburger.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; setTimeout(() => { const f = mobileNav.querySelector('a'); if (f) f.focus(); }, 100); }
-    function closeMenu() { navOpen = false; mobileNav.classList.remove('open'); mobileNav.setAttribute('aria-hidden', 'true'); hamburger.classList.remove('open'); hamburger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; hamburger.focus(); }
-    hamburger.addEventListener('click', () => navOpen ? closeMenu() : openMenu());
-    mobileNav.addEventListener('click', (e) => { if (e.target.tagName === 'A') closeMenu(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && navOpen) closeMenu(); });
-    mobileNav.addEventListener('keydown', (e) => {
-      if (e.key !== 'Tab') return;
-      const focusable = Array.from(mobileNav.querySelectorAll('a'));
-      if (!focusable.length) return;
-      const first = focusable[0], last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    });
-  }
+let lastPhysicsTime=0;
+function updatePhysics(now){
+  if(now-lastPhysicsTime<PHYSICS_DT)return;
+  lastPhysicsTime=now;
+  if(mouse.prevX!==null&&mouse.x!==null){mouse.vx=mouse.x-mouse.prevX;mouse.vy=mouse.y-mouse.prevY;}
+  if(mouse.x!==null){mouse.prevX=mouse.x;mouse.prevY=mouse.y;}
+  if(isCollapsing){stepCollapse(now);return;}
+  symbols.forEach(s=>{
+    if(!s.active)return;
+    s.x+=s.vx;s.y+=s.vy;
+    if(s.x<-50)s.x=W+50;if(s.x>W+50)s.x=-50;
+    if(s.y<-50)s.y=H+50;if(s.y>H+50)s.y=-50;
+    if(mouse.x!==null&&mouse.y!==null){
+      const dx=s.x-mouse.x,dy=s.y-mouse.y;const dist=Math.hypot(dx,dy);
+      if(dist<GRAVITY_R){
+        const force=GRAVITY_STR*(1-dist/GRAVITY_R);const angle=Math.atan2(dy,dx);
+        s.vx-=Math.cos(angle)*force;s.vy-=Math.sin(angle)*force;
+        const ta=angle+Math.PI/2;const spin=TANGENTIAL*(1-dist/GRAVITY_R);
+        s.vx+=Math.cos(ta)*spin*(mouse.vx*0.05+0.5);
+        s.vy+=Math.sin(ta)*spin*(mouse.vy*0.05+0.5);
+        s.vx*=0.99;s.vy*=0.99;s.inWell=true;
+        glMouseDist=Math.min(glMouseDist,dist/GRAVITY_R);
+      } else {s.inWell=false;}
+    }
+    if(s.scrollGlow>0.01)s.scrollGlow*=0.94;else s.scrollGlow=0;
+  });
+  glMouseDist=Math.min(1,glMouseDist+0.02);
+}
 
-  const yearSpan = document.getElementById('copyright-year');
-  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+function render(){
+  ctx.clearRect(0,0,W,H);
+  echoes=echoes.filter(e=>{
+    e.age+=PHYSICS_DT;if(e.age>=e.maxAge)return false;
+    e.x+=e.vx;e.y+=e.vy;e.alpha=0.8*(1-e.age/e.maxAge);e.size*=0.996;
+    ctx.font=`${e.size}px 'JetBrains Mono',monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor=e.color;ctx.shadowBlur=10;ctx.fillStyle=e.color;ctx.globalAlpha=e.alpha;
+    ctx.fillText(e.char,e.x,e.y);return true;
+  });
+  symbols.forEach(s=>{
+    if(!s.active&&!isCollapsing)return;
+    const glow=s.scrollGlow>0.01?15+s.scrollGlow*20:(s.inWell?25:12);
+    ctx.font=`${s.size}px 'JetBrains Mono',monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor=s.color;ctx.shadowBlur=glow;ctx.fillStyle=s.color;
+    ctx.globalAlpha=s.alpha+s.scrollGlow*0.2;ctx.fillText(s.char,s.x,s.y);
+  });
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+}
 
-  if (!reducedMotion) { resizeCanvas(); setTimeout(() => symCanvas.classList.add('ready'), 300); rafId = requestAnimationFrame(loop); }
+function renderWebGL(t){
+  if(!gl||!glProgram)return;
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.uniform2f(glUniforms.res,W,H);gl.uniform1f(glUniforms.time,t*0.001);
+  gl.uniform1f(glUniforms.scrollVel,glScrollVel);gl.uniform1f(glUniforms.mouseDist,glMouseDist);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
+
+let rafId=null;
+function loop(t){updatePhysics(t);render();renderWebGL(t);rafId=requestAnimationFrame(loop);}
+
+window.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){mouse.x=e.clientX;mouse.y=e.clientY;}});
+window.addEventListener('pointerleave',()=>{mouse.x=null;mouse.y=null;mouse.prevX=null;mouse.prevY=null;});
+window.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;spawnEcho(e.clientX,e.clientY);});
+window.addEventListener('dblclick',e=>{
+  const tag=e.target.tagName.toLowerCase();
+  const isInteractive=['a','button','input','select','textarea'].includes(tag)||
+    e.target.closest('a')||e.target.closest('button')||e.target.closest('.cta-btn')||
+    e.target.closest('.tier-link')||e.target.closest('.card')||e.target.closest('.audience-path')||
+    e.target.closest('.stage-pip')||e.target.closest('.compliance-card')||e.target.closest('.sleeve-card');
+  if(isInteractive)return;
+  triggerCollapse();spawnEcho(e.clientX,e.clientY);
+});
+window.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='Q'){e.preventDefault();triggerCollapse();}});
+
+let audioCtx=null,audioNodes=null,audioOn=false;
+const toggle=document.getElementById('audio-toggle');
+function initAudio(){
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  audioCtx=new AC();
+  const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.06,audioCtx.currentTime);
+  const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=400;filter.Q.value=0.8;
+  const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(55,audioCtx.currentTime);
+  const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(110.5,audioCtx.currentTime);
+  const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.15,audioCtx.currentTime);
+  osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
+  osc1.start();osc2.start();audioNodes={gain,osc1,osc2};
+  window.addEventListener('pagehide',()=>{try{audioCtx.close();}catch(_){}},{once:true});
+}
+function modulateAudio(scrollY){
+  if(!audioNodes||!audioCtx)return;
+  const pct=scrollY/(document.documentElement.scrollHeight-window.innerHeight);
+  audioNodes.osc1.frequency.setTargetAtTime(55+pct*40,audioCtx.currentTime,0.3);
+}
+if(toggle){
+  toggle.addEventListener('click',()=>{
+    audioOn=!audioOn;toggle.setAttribute('aria-pressed',String(audioOn));
+    if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}
+    else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}
+  });
+}
+let scrollRAFId=null;
+window.addEventListener('scroll',()=>{
+  if(scrollRAFId)return;
+  scrollRAFId=requestAnimationFrame(()=>{handleScroll();modulateAudio(window.scrollY);scrollRAFId=null;});
+},{passive:true});
+
+const hamburger=document.getElementById('hamburger');
+const mobileNav=document.getElementById('mobileNav');
+let navOpen=false;
+if(hamburger&&mobileNav){
+  document.querySelectorAll('.nav-links a').forEach((link,i)=>{
+    const a=document.createElement('a');
+    a.href=link.getAttribute('href');a.textContent=link.textContent;
+    if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));
+    if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));
+    a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);
+  });
+  function openMenu(){navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);}
+  function closeMenu(){navOpen=false;mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');document.body.style.overflow='';hamburger.focus();}
+  hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());
+  mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navOpen)closeMenu();});
+  mobileNav.addEventListener('keydown',e=>{
+    if(e.key!=='Tab')return;
+    const f=Array.from(mobileNav.querySelectorAll('a'));if(!f.length)return;
+    if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f[f.length-1].focus();}
+    else if(!e.shiftKey&&document.activeElement===f[f.length-1]){e.preventDefault();f[0].focus();}
+  });
+}
+
+const yearSpan=document.getElementById('copyright-year');
+if(yearSpan)yearSpan.textContent=new Date().getFullYear();
+if(!reducedMotion){resizeCanvas();setTimeout(()=>symCanvas.classList.add('ready'),300);rafId=requestAnimationFrame(loop);}
 })();
 
-// ===== SLEEVE MODAL LOGIC (matching simulations page pattern) =====
+// ===== SLEEVE MODAL (unchanged logic) =====
 const sleeveData = {
-  v1: {
-    title: 'v1 — Certified Audit Sleeve',
-    desc: 'The flagship credential. Displays both the simulator badge and the auditor badge, tier classification, triple‑time dates, and a complete verification bar. Issued for Tier 1–5 engagements that include both audit and simulator verification.',
-    img: '/assets/sleeve/small-sleeve/aionsystem_certified_audit_sleeve_smv1.svg',
-    alt: 'Certified Audit Sleeve'
-  },
-  v2: {
-    title: 'v2 — Simulation Verified Sleeve',
-    desc: 'Dark cyan palette. Shows the simulator badge with name, version, SHA‑256 hash, and run URL. No auditor badge. Explicitly states the simulator is verified but not a full audit. For AION Verified Simulators.',
-    img: '/assets/sleeve/small-sleeve/aionsystem_sim_verified_sleeve_smv1.svg',
-    alt: 'Simulation Verified Sleeve'
-  },
-  v3: {
-    title: 'v3 — Audit Only Sleeve',
-    desc: 'Dark violet palette. Auditor badge and tier classification only. No simulator slot. For enterprise, defense, or private Docker‑sealed frameworks that have been audited but have no public simulation.',
-    img: null,
-    alt: 'Audit Only Sleeve'
-  },
-  v4: {
-    title: 'v4 — Founder\'s Sovereign Seal',
-    desc: 'Black‑and‑gold hyperdiamond sleeve. Only issued under STP‑AUDITOR‑0001. Carries the founder’s auditor badge and the highest trust signal in the AION ecosystem.',
-    img: '/assets/sleeve/small-sleeve/aionsystem_founders_sleeve_smv1.svg',
-    alt: 'Founder\'s Sovereign Seal'
-  },
-  auditor: {
-    title: 'Auditor Credential Sleeve',
-    desc: 'The sleeve carried by STP Certified Auditors. Displays the auditor’s personal shield badge, rank, specialization, validity window, and QR verification. Identity is on the badge; the sleeve adds the audit scope.',
-    img: '/assets/sleeve/small-sleeve/aionsystem_auditor_sleeve_smv1.svg',
-    alt: 'Auditor Credential Sleeve'
-  }
+  v1:{title:'v1 — Certified Audit Sleeve',desc:'The flagship credential. Displays both the simulator badge and the auditor badge, tier classification, triple‑time dates, and a complete verification bar. Issued for Tier 1–5 engagements that include both audit and simulator verification.',img:'/assets/sleeve/small-sleeve/aionsystem_certified_audit_sleeve_smv1.svg',alt:'Certified Audit Sleeve'},
+  v2:{title:'v2 — Simulation Verified Sleeve',desc:'Dark cyan palette. Shows the simulator badge with name, version, SHA‑256 hash, and run URL. No auditor badge. Explicitly states the simulator is verified but not a full audit. For AION Verified Simulators.',img:'/assets/sleeve/small-sleeve/aionsystem_sim_verified_sleeve_smv1.svg',alt:'Simulation Verified Sleeve'},
+  v3:{title:'v3 — Audit Only Sleeve',desc:'Dark violet palette. Auditor badge and tier classification only. No simulator slot. For enterprise, defense, or private Docker‑sealed frameworks.',img:null,alt:'Audit Only Sleeve'},
+  v4:{title:'v4 — Founder\'s Sovereign Seal',desc:'Black‑and‑gold hyperdiamond sleeve. Only issued under STP‑AUDITOR‑0001. Carries the founder\'s auditor badge and the highest trust signal in the AION ecosystem.',img:'/assets/sleeve/small-sleeve/aionsystem_founders_sleeve_smv1.svg',alt:'Founder\'s Sovereign Seal'},
+  auditor:{title:'Auditor Credential Sleeve',desc:'The sleeve carried by STP Certified Auditors. Displays the auditor\'s personal shield badge, rank, specialization, validity window, and QR verification.',img:'/assets/sleeve/small-sleeve/aionsystem_auditor_sleeve_smv1.svg',alt:'Auditor Credential Sleeve'}
 };
 
-function openSleeveModal(type) {
-  const data = sleeveData[type];
-  const content = document.getElementById('sleeve-modal-content');
-  let html = `<h3 style="font-family:var(--sans);font-size:1.5rem;color:var(--amber);margin-bottom:12px">${data.title}</h3>`;
-  html += `<p style="font-family:var(--sans);color:var(--muted);margin-bottom:16px">${data.desc}</p>`;
-  if (data.img) {
-    html += `<img src="${data.img}" alt="${data.alt}" class="modal-sleeve-img">`;
-  } else {
-    html += `<p style="font-family:var(--mono);color:var(--dim);margin:16px 0">Sleeve graphic is being finalized.</p>`;
-  }
-  html += `<div class="modal-actions">`;
-  html += `<a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL/issues/new?template=10-audit-request.yml" target="_blank" rel="noopener" class="cta-btn primary">Request Audit →</a>`;
-  html += `<a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener" class="cta-btn">STP GitHub Repo →</a>`;
-  html += `</div>`;
-  content.innerHTML = html;
+function openSleeveModal(type){
+  const data=sleeveData[type];
+  const content=document.getElementById('sleeve-modal-content');
+  let html=`<h3 id="sleeve-modal-heading" style="font-family:var(--sans);font-size:1.5rem;color:var(--amber);margin-bottom:8px">${data.title}</h3>`;
+  html+=`<div style="margin-bottom:12px"><span class="status-tag status-staged">Design Sealed — Issuance Pending Launch</span></div>`;
+  html+=`<p style="font-family:var(--sans);color:var(--muted);margin-bottom:16px">${data.desc}</p>`;
+  if(data.img){html+=`<img src="${data.img}" alt="${data.alt}" class="modal-sleeve-img" onerror="this.style.display='none'">`;}
+  else{html+=`<p style="font-family:var(--mono);color:var(--dim);margin:16px 0;font-size:0.85rem">Sleeve graphic finalizing — available at audit intake launch.</p>`;}
+  html+=`<div class="modal-actions">`;
+  html+=`<a href="mailto:aionsystem@outlook.com?subject=Audit%20Interest%20—%20${encodeURIComponent(data.title)}" class="cta-btn primary">Register Interest →</a>`;
+  html+=`<a href="https://github.com/AionSystem/SOVEREIGN-TRACE-PROTOCOL" target="_blank" rel="noopener" class="cta-btn">STP Repo →</a>`;
+  html+=`</div>`;
+  content.innerHTML=html;
   document.getElementById('sleeve-modal').classList.add('active');
 }
 
-function closeSleeveModal() {
-  document.getElementById('sleeve-modal').classList.remove('active');
-}
-
-document.getElementById('sleeve-modal-close').addEventListener('click', closeSleeveModal);
-document.getElementById('sleeve-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeSleeveModal();
-});
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && document.getElementById('sleeve-modal').classList.contains('active')) {
-    closeSleeveModal();
-  }
-});
+function closeSleeveModal(){document.getElementById('sleeve-modal').classList.remove('active');}
+document.getElementById('sleeve-modal-close').addEventListener('click',closeSleeveModal);
+document.getElementById('sleeve-modal').addEventListener('click',function(e){if(e.target===this)closeSleeveModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('sleeve-modal').classList.contains('active'))closeSleeveModal();});
 </script>
 </body>
 </html>
