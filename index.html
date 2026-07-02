@@ -142,6 +142,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .card-proof{margin-bottom:20px;padding:10px 12px;border-radius:8px;background:rgba(217,70,239,0.06);border:1px solid rgba(217,70,239,0.15);font-family:var(--mono);font-size:9px;color:var(--mid-accent);letter-spacing:1px;line-height:1.7;}
 .card-proof strong{color:#fdf4ff;font-weight:500;}
 
+/* MAIN PRACTICE highlight — Document Red-Team card */
+.card-main{border-width:2px !important;border-color:rgba(217,70,239,0.7) !important;box-shadow:0 4px 24px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.06),0 0 0 1px rgba(217,70,239,0.15),0 0 55px rgba(217,70,239,0.18) !important;}
+.card-main:hover,.card-main:focus-visible{box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 0 1px rgba(217,70,239,0.3),0 0 90px rgba(217,70,239,0.3),0 0 140px rgba(168,85,247,0.12),inset 0 1px 0 rgba(255,255,255,0.1) !important;}
+.main-practice-tag{position:absolute;top:14px;right:14px;z-index:2;font-family:var(--mono);font-size:7px;letter-spacing:2px;text-transform:uppercase;color:#fdf4ff;background:rgba(217,70,239,0.28);border:1px solid rgba(217,70,239,0.6);padding:4px 9px;border-radius:20px;display:flex;align-items:center;gap:5px;}
+.main-practice-tag::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:#fdf4ff;box-shadow:0 0 6px #fdf4ff;}
+
+/* WORK IN PROGRESS pop-out badge */
+.wip-badge{position:absolute;top:14px;right:14px;z-index:2;}
+.wip-badge-trigger{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-mid);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.16);padding:4px 9px;border-radius:20px;cursor:help;}
+.wip-badge-trigger::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:#f59e0b;box-shadow:0 0 6px #f59e0b;animation:blink 2s ease-in-out infinite;}
+.wip-tooltip{position:absolute;top:calc(100% + 8px);right:0;width:220px;background:rgba(8,8,16,0.98);border:1px solid rgba(255,255,255,0.14);border-radius:10px;padding:12px 14px;font-family:var(--body);font-size:11px;font-weight:300;line-height:1.6;color:var(--text-mid);text-align:left;opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity 0.2s var(--ease),transform 0.2s var(--ease),visibility 0.2s;box-shadow:0 12px 32px rgba(0,0,0,0.5);pointer-events:none;}
+.wip-tooltip strong{color:var(--text-bright);font-weight:500;}
+.wip-badge:hover .wip-tooltip,.wip-badge-trigger:focus-visible ~ .wip-tooltip,.wip-badge:focus-within .wip-tooltip{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
+
 /* card corners */
 .card-corner{position:absolute;bottom:12px;right:14px;opacity:0.07;font-family:var(--mono);font-size:8px;letter-spacing:1px;pointer-events:none;line-height:1.4;text-align:right;transition:opacity 0.4s;}
 .card-cold .card-corner{color:var(--cold-secondary);}
@@ -242,8 +256,12 @@ footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);p
     <div class="choice-grid">
 
       <!-- CARD 1: AI RELIABILITY -->
-      <a href="/main-1/index.html" class="choice-card card-cold" aria-label="AI Reliability Architecture — enter the vault">
-        <div class="card-domain-tag"><span class="domain-dot" aria-hidden="true"></span>Practice 01 · AI Domain</div>
+      <a href="/main-1/index.html" class="choice-card card-cold" aria-label="AI Reliability Architecture — enter the vault (work in progress)">
+        <div class="wip-badge" onclick="event.preventDefault()">
+          <span class="wip-badge-trigger" tabindex="0">⚠ In Progress</span>
+          <div class="wip-tooltip"><strong>Work in progress.</strong> This practice is still being built out. You're welcome to look around and ask questions — just know it's not fully operational yet.</div>
+        </div>
+        <div class="card-domain-tag"><span class="domain-dot" aria-hidden="true"></span>Practice 02 · AI Domain</div>
         <div class="card-icon" aria-hidden="true">⬡</div>
         <h2 class="card-title">AI Reliability<br>Architecture</h2>
         <p class="card-subtitle">FSVE · Constitutional Engine · Certainty Scoring</p>
@@ -252,9 +270,10 @@ footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);p
         <div class="card-corner" aria-hidden="true">if(EV &lt; 0.40) → HALT<br>FSVE.score() → certify<br>AION.validate()</div>
       </a>
 
-      <!-- CARD 2: DOCUMENT RED-TEAM (new) -->
-      <a href="/main-3/index.html" class="choice-card card-mid" aria-label="Document Red-Team Analysis — inspect a document">
-        <div class="card-domain-tag"><span class="domain-dot" aria-hidden="true"></span>Practice 02 · Document Domain</div>
+      <!-- CARD 2: DOCUMENT RED-TEAM — MAIN PRACTICE -->
+      <a href="/main-3/index.html" class="choice-card card-mid card-main" aria-label="Document Red-Team Analysis — main practice — inspect a document">
+        <div class="main-practice-tag">Main Practice</div>
+        <div class="card-domain-tag"><span class="domain-dot" aria-hidden="true"></span>Practice 01 · Document Domain</div>
         <div class="card-icon" aria-hidden="true">◈</div>
         <h2 class="card-title">Document<br>Red-Team</h2>
         <p class="card-subtitle">Structural Integrity · Failure Node Mapping · Epistemic Audit</p>
@@ -267,7 +286,11 @@ footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);p
       </a>
 
       <!-- CARD 3: WORLD ARCHITECTURE -->
-      <a href="/main-2/index.html" class="choice-card card-hot" aria-label="World Architect & Game Design — build a world">
+      <a href="/main-2/index.html" class="choice-card card-hot" aria-label="World Architect & Game Design — build a world (work in progress)">
+        <div class="wip-badge" onclick="event.preventDefault()">
+          <span class="wip-badge-trigger" tabindex="0">⚠ In Progress</span>
+          <div class="wip-tooltip"><strong>Work in progress.</strong> This practice is still being built out. You're welcome to look around and ask questions — just know it's not fully operational yet.</div>
+        </div>
         <div class="card-domain-tag"><span class="domain-dot" aria-hidden="true"></span>Practice 03 · World Domain</div>
         <div class="card-icon" aria-hidden="true">⚔</div>
         <h2 class="card-title">World Systems<br>Architecture</h2>
@@ -321,8 +344,8 @@ footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);p
 <footer>
   <div>AionSystem · Sheldon K. Salmon · © <span id="copyright-year"></span></div>
   <ul class="footer-links" role="list">
-    <li><a href="/main-1/index.html">AI Reliability</a></li>
     <li><a href="/main-3/index.html">Document Red-Team</a></li>
+    <li><a href="/main-1/index.html">AI Reliability</a></li>
     <li><a href="/main-2/index.html">World Design</a></li>
     <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
     <li><a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener noreferrer">ORCID ↗</a></li>
@@ -338,14 +361,6 @@ const ctx = canvas.getContext('2d');
 let W, H, t = 0;
 const mouse = { x: -9999, y: -9999, prevX: -9999, prevY: -9999, vx: 0, vy: 0 };
 
-/* ══════════════════════════════════════════════
-   PANEL BOUNDARIES
-   Left third  [0,      W/3)   — cold symbols
-   Mid third   [W/3,  2W/3)   — document scan
-   Right third [2W/3,     W]  — amber embers
-══════════════════════════════════════════════ */
-
-/* ─── LEFT: COLD SYMBOL PHYSICS ─── */
 const SYMBOL_SET = ['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈'];
 const GRAVITY_R = 180, GRAVITY_STR = 0.018, TANGENTIAL = 0.22;
 let symbols = [];
@@ -433,7 +448,6 @@ function drawColdPanel(){
       ctx.beginPath();ctx.arc(x,y,1+glow,0,Math.PI*2);ctx.fill();
     }
   }
-  // circuits
   circuits.forEach(c=>{
     const pulse=Math.sin(t*0.9+c.pulse), a=c.alpha*(0.5+pulse*0.5);
     ctx.globalAlpha=a; ctx.strokeStyle=pulse>0.2?'rgba(6,182,212,0.7)':'rgba(79,70,229,0.5)'; ctx.lineWidth=0.7;
@@ -441,7 +455,6 @@ function drawColdPanel(){
     if(c.dir==='h'){ctx.moveTo(c.x,c.y);ctx.lineTo(c.x+c.len,c.y);ctx.stroke();ctx.globalAlpha=a*2.5;ctx.fillStyle='rgba(6,182,212,0.9)';ctx.beginPath();ctx.arc(c.x+c.len,c.y,1.5,0,Math.PI*2);ctx.fill();}
     else{ctx.moveTo(c.x,c.y);ctx.lineTo(c.x,c.y+c.len);ctx.stroke();ctx.globalAlpha=a*2.5;ctx.fillStyle='rgba(79,70,229,1)';ctx.beginPath();ctx.arc(c.x,c.y+c.len,1.5,0,Math.PI*2);ctx.fill();}
   });
-  // symbols
   symbols.forEach(s=>{
     const glow=s.scrollGlow>0.01?14+s.scrollGlow*18:(s.inWell?22:10);
     ctx.font=`${s.size}px 'JetBrains Mono',monospace`;
@@ -451,7 +464,6 @@ function drawColdPanel(){
     ctx.fillStyle=isCyan?`rgba(6,182,212,${(s.alpha+s.scrollGlow*0.2).toFixed(3)})`:`rgba(129,140,248,${(s.alpha+s.scrollGlow*0.2).toFixed(3)})`;
     ctx.globalAlpha=1; ctx.fillText(s.char,s.x,s.y);
   });
-  // echoes
   echoes.forEach(e=>{
     ctx.globalAlpha=e.alpha; ctx.font=`${e.size}px 'JetBrains Mono',monospace`;
     ctx.textAlign='center'; ctx.textBaseline='middle';
@@ -461,8 +473,6 @@ function drawColdPanel(){
   ctx.shadowBlur=0; ctx.restore();
 }
 
-/* ─── MID: DOCUMENT SCAN FIELD ─── */
-// Doc lines (horizontal text mimicry)
 let docLines=[], scanPulses=[], failureNodes=[], scanPhase=0;
 
 function initDocPanel(){
@@ -476,7 +486,6 @@ function initDocPanel(){
     const isHeader=Math.random()<0.06;
     docLines.push({y,x:indent,w:lineW,alpha,isHeader,highlightPhase:Math.random()*Math.PI*2,highlightActive:false,highlightTimer:0});
   }
-  // Failure nodes — small red dots scattered in mid panel
   failureNodes=[];
   for(let i=0;i<18;i++){
     failureNodes.push({
@@ -490,11 +499,9 @@ function initDocPanel(){
       active:false, activateAt:Math.random()*12,
     });
   }
-  // Scan pulses: horizontal red lines that sweep
   scanPulses=[];
 }
 
-// Randomly trigger line highlights
 function scheduleHighlights(){
   if(Math.random()<0.015){
     const line=docLines[Math.floor(Math.random()*docLines.length)];
@@ -505,26 +512,22 @@ function scheduleHighlights(){
 function drawDocPanel(){
   const x0=W/3, x1=2*W/3;
   ctx.save();
-  // Base fill — very dark with slight magenta undertone
   const bg=ctx.createLinearGradient(x0,0,x1,0);
   bg.addColorStop(0,'rgba(8,4,16,0.95)');
   bg.addColorStop(0.5,'rgba(12,6,20,0.92)');
   bg.addColorStop(1,'rgba(8,4,16,0.95)');
   ctx.fillStyle=bg; ctx.globalAlpha=1; ctx.fillRect(x0,0,x1-x0,H);
 
-  // subtle grid
   ctx.strokeStyle='rgba(168,85,247,0.04)'; ctx.lineWidth=0.5; ctx.globalAlpha=1;
   for(let x=x0;x<x1;x+=48){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
   for(let y=0;y<H;y+=48){ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke();}
 
-  // Mouse glow in mid panel
   if(mouse.x>=x0&&mouse.x<=x1){
     const mg=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,220);
     mg.addColorStop(0,'rgba(217,70,239,0.1)'); mg.addColorStop(0.5,'rgba(168,85,247,0.04)'); mg.addColorStop(1,'transparent');
     ctx.fillStyle=mg; ctx.fillRect(x0,0,x1-x0,H);
   }
 
-  // Scanning beam — horizontal violet line sweeping down
   scanPhase+=0.004;
   const scanY=((Math.sin(scanPhase)*0.5+0.5)*H);
   const scanGrad=ctx.createLinearGradient(x0,scanY-2,x0,scanY+2);
@@ -533,22 +536,18 @@ function drawDocPanel(){
   scanGrad.addColorStop(1,'transparent');
   ctx.fillStyle=scanGrad; ctx.fillRect(x0,scanY-2,x1-x0,4);
 
-  // Doc lines
   scheduleHighlights();
   docLines.forEach(l=>{
     if(l.highlightActive){
       l.highlightTimer+=0.05;
       const hAlpha=Math.max(0,0.8*(1-l.highlightTimer/1.5));
-      // highlight glow
       ctx.fillStyle=`rgba(217,70,239,${hAlpha*0.15})`;
       ctx.globalAlpha=1;
       ctx.fillRect(l.x-4,l.y-5,l.w+8,10);
-      // scan line flash
       ctx.fillStyle=`rgba(239,68,68,${hAlpha*0.6})`;
       ctx.fillRect(l.x,l.y,l.w*hAlpha,1);
       if(l.highlightTimer>1.5){l.highlightActive=false;l.highlightTimer=0;}
     }
-    // base line
     const proximity=mouse.x>=x0&&mouse.x<=x1?Math.max(0,1-Math.abs(l.y-mouse.y)/100)*0.08:0;
     ctx.globalAlpha=l.alpha+proximity;
     if(l.isHeader){
@@ -560,7 +559,6 @@ function drawDocPanel(){
     }
   });
 
-  // Failure nodes
   failureNodes.forEach(n=>{
     if(!n.active&&t>n.activateAt) n.active=true;
     if(!n.active) return;
@@ -570,13 +568,11 @@ function drawDocPanel(){
     ctx.globalAlpha=n.alpha*pulse;
     ctx.fillStyle=col; ctx.shadowColor=col; ctx.shadowBlur=8;
     ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2); ctx.fill();
-    // outer ring
     ctx.globalAlpha=n.alpha*pulse*0.3; ctx.strokeStyle=col; ctx.lineWidth=0.8;
     ctx.beginPath(); ctx.arc(n.x,n.y,n.r+4+pulse*3,0,Math.PI*2); ctx.stroke();
   });
   ctx.shadowBlur=0;
 
-  // Connection threads between nearby failure nodes
   ctx.lineWidth=0.5;
   for(let i=0;i<failureNodes.length;i++){
     if(!failureNodes[i].active) continue;
@@ -592,7 +588,6 @@ function drawDocPanel(){
     }
   }
 
-  // "52 FAILURE NODES" counter — subtle top-left of mid panel
   const activeCount=failureNodes.filter(n=>n.active).length;
   if(activeCount>0){
     ctx.globalAlpha=0.22;
@@ -604,7 +599,6 @@ function drawDocPanel(){
   ctx.restore();
 }
 
-/* ─── RIGHT: AMBER EMBERS ─── */
 let embers=[];
 function buildEmbers(){
   embers=[];
@@ -652,14 +646,12 @@ function drawHotPanel(){
     hg.addColorStop(0,'rgba(245,158,11,0.1)'); hg.addColorStop(0.4,'rgba(239,68,68,0.04)'); hg.addColorStop(1,'transparent');
     ctx.fillStyle=hg; ctx.fillRect(x0,0,W-x0,H);
   }
-  // haze bands
   ctx.strokeStyle='rgba(245,158,11,0.03)'; ctx.lineWidth=0.5;
   const BAND=72;
   for(let y=0;y<H;y+=BAND){
     ctx.globalAlpha=0.4+0.4*Math.sin(t*0.4+y*0.008);
     ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(W,y);ctx.stroke();
   }
-  // embers
   embers.forEach(e=>{
     const lr=e.life/e.maxLife;
     const fade=lr<0.15?lr/0.15:lr>0.75?(1-lr)/0.25:1;
@@ -678,11 +670,9 @@ function drawHotPanel(){
   ctx.restore();
 }
 
-/* ─── AURORA SPINES ─── */
 function drawSpineAuroras(){
   ctx.save();
   const p=Math.sin(t*1.1);
-  // spine 1 — cold/mid junction
   const s1=W/3;
   const g1l=ctx.createLinearGradient(s1-60,0,s1,0);
   g1l.addColorStop(0,'transparent'); g1l.addColorStop(1,`rgba(79,70,229,${0.03+0.02*p})`);
@@ -690,7 +680,6 @@ function drawSpineAuroras(){
   const g1r=ctx.createLinearGradient(s1,0,s1+60,0);
   g1r.addColorStop(0,`rgba(217,70,239,${0.04+0.02*p})`); g1r.addColorStop(1,'transparent');
   ctx.fillStyle=g1r; ctx.fillRect(s1,0,60,H);
-  // spine 2 — mid/hot junction
   const s2=2*W/3;
   const g2l=ctx.createLinearGradient(s2-60,0,s2,0);
   g2l.addColorStop(0,'transparent'); g2l.addColorStop(1,`rgba(168,85,247,${0.04+0.02*p})`);
@@ -701,7 +690,6 @@ function drawSpineAuroras(){
   ctx.restore();
 }
 
-/* ─── RAF LOOP ─── */
 function loop(){
   t+=0.016;
   updateSymbols(); updateEchoes(); updateEmbers();
@@ -713,7 +701,6 @@ function loop(){
   requestAnimationFrame(loop);
 }
 
-/* ─── RESIZE ─── */
 function resize(){
   W=canvas.width=window.innerWidth;
   H=canvas.height=window.innerHeight;
@@ -722,13 +709,11 @@ function resize(){
 let resizeTimer;
 window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,150);});
 
-/* ─── INPUT ─── */
 window.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){mouse.x=e.clientX;mouse.y=e.clientY;}});
 window.addEventListener('pointerleave',()=>{mouse.x=-9999;mouse.y=-9999;});
 window.addEventListener('pointerdown',e=>{
   if(e.pointerType!=='mouse') return;
   if(e.clientX<window.innerWidth/3) spawnEcho(e.clientX,e.clientY);
-  // clicking mid panel activates nearest failure node immediately
   if(e.clientX>=window.innerWidth/3&&e.clientX<=2*window.innerWidth/3){
     const nearest=failureNodes.find(n=>Math.hypot(n.x-e.clientX,n.y-e.clientY)<60);
     if(nearest&&!nearest.active){nearest.active=true;nearest.alpha=nearest.targetAlpha;}
@@ -741,7 +726,6 @@ window.addEventListener('scroll',()=>{
   setTimeout(()=>symbols.forEach(s=>s.scrollGlow=0),300);
 },{passive:true});
 
-/* ─── INIT ─── */
 document.getElementById('copyright-year').textContent=new Date().getFullYear();
 resize();
 requestAnimationFrame(loop);
