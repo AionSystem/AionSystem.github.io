@@ -54,6 +54,7 @@
 .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--cyan);color:#000;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s ease;}
 .skip-nav:focus{top:0}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:var(--font-base);line-height:1.5;overflow-x:hidden;}
+body.modal-lock{overflow:hidden;}
 
 /* ─── CANVAS LAYERS ─── */
 #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.3;}
@@ -63,6 +64,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:va
 .cold-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(79,70,229,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,70,229,0.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10;}
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(6,182,212,0.025) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.4;animation:scan 8s linear infinite;}
 @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(4px)}}
+
+/* ═══════════════════════════════════════
+   WORK-IN-PROGRESS GATE MODAL
+═══════════════════════════════════════ */
+.wip-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,5,15,0.72);backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%);opacity:0;visibility:hidden;transition:opacity 0.35s ease,visibility 0s linear 0.35s;}
+.wip-gate.open{opacity:1;visibility:visible;transition:opacity 0.35s ease,visibility 0s linear 0s;}
+.wip-gate-card{position:relative;width:100%;max-width:520px;background:linear-gradient(160deg,rgba(14,14,34,0.97) 0%,rgba(10,10,26,0.98) 100%);border:1px solid rgba(245,158,11,0.35);border-radius:16px;padding:36px 32px 30px;box-shadow:0 20px 70px rgba(0,0,0,0.7),0 0 0 1px rgba(245,158,11,0.08),0 0 60px rgba(245,158,11,0.1);transform:translateY(14px) scale(0.98);transition:transform 0.4s var(--ease-spring);}
+.wip-gate.open .wip-gate-card{transform:translateY(0) scale(1);}
+.wip-gate-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#fcd34d;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:6px 14px;border-radius:20px;margin-bottom:20px;}
+.wip-gate-badge::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:#f59e0b;box-shadow:0 0 8px #f59e0b;animation:pulse-dot 2s ease-in-out infinite;}
+.wip-gate-title{font-family:var(--display);font-size:clamp(22px,3.5vw,28px);font-weight:700;letter-spacing:-0.5px;text-transform:uppercase;color:var(--text);margin-bottom:14px;line-height:1.15;}
+.wip-gate-body{font-family:var(--body);font-size:14.5px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:14px;}
+.wip-gate-body strong{color:var(--text);font-weight:500;}
+.wip-gate-body:last-of-type{margin-bottom:26px;}
+.wip-gate-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.wip-gate-ack{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:13px 24px;border-radius:6px;border:1px solid var(--cyan);background:rgba(6,182,212,0.12);color:var(--cyan);cursor:pointer;transition:all 0.2s ease;}
+.wip-gate-ack:hover,.wip-gate-ack:focus-visible{background:var(--cyan);color:#000;box-shadow:0 0 24px rgba(6,182,212,0.4);outline:none;}
+.wip-gate-back{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;transition:all 0.2s ease;}
+.wip-gate-back:hover,.wip-gate-back:focus-visible{color:var(--text);border-bottom-color:var(--muted);outline:none;}
 
 /* ─── SEAM LINE — the split's glowing vertical divide ─── */
 .seam-line{
@@ -506,6 +526,20 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 <a href="#main" class="skip-nav">Skip to content</a>
 <div aria-live="polite" aria-atomic="true" class="sr-only" id="canvas-announce"></div>
 
+<!-- WORK-IN-PROGRESS GATE -->
+<div class="wip-gate" id="wipGate" role="dialog" aria-modal="true" aria-labelledby="wipGateTitle" aria-describedby="wipGateBody1">
+  <div class="wip-gate-card">
+    <span class="wip-gate-badge">⚠ Work In Progress</span>
+    <h2 class="wip-gate-title" id="wipGateTitle">This practice is still being built.</h2>
+    <p class="wip-gate-body" id="wipGateBody1">You're looking at the <strong>AI Reliability Architecture</strong> practice. The frameworks, stack data, and numbers shown here are part of an active build — not a finished, fully operational offering yet.</p>
+    <p class="wip-gate-body">You're welcome to explore, read through the specs, and ask questions. Just know that some of what you see is still in development, and some content is illustrative rather than a live, deployed system.</p>
+    <div class="wip-gate-actions">
+      <button type="button" class="wip-gate-ack" id="wipGateAck">I Acknowledge &amp; Wish to Explore →</button>
+      <a href="/" class="wip-gate-back">← Back to main page</a>
+    </div>
+  </div>
+</div>
+
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 <canvas id="fx-canvas" aria-hidden="true"></canvas>
 <div class="cold-grid" aria-hidden="true"></div>
@@ -908,6 +942,47 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 <script>
 (function () {
 'use strict';
+
+/* ═══════════════════════════════════════
+   WORK-IN-PROGRESS GATE
+   Shows on load until acknowledged. Blocks scroll.
+   Choice remembered in localStorage so return
+   visitors aren't re-gated every page load.
+═══════════════════════════════════════ */
+(function initWipGate(){
+  const gate = document.getElementById('wipGate');
+  const ackBtn = document.getElementById('wipGateAck');
+  if (!gate || !ackBtn) return;
+
+  const STORAGE_KEY = 'aion_wip_ack_main1';
+  let alreadyAcked = false;
+  try { alreadyAcked = localStorage.getItem(STORAGE_KEY) === '1'; } catch(_) {}
+
+  function openGate(){
+    gate.classList.add('open');
+    document.body.classList.add('modal-lock');
+    setTimeout(() => ackBtn.focus(), 100);
+  }
+  function closeGate(){
+    gate.classList.remove('open');
+    document.body.classList.remove('modal-lock');
+    try { localStorage.setItem(STORAGE_KEY, '1'); } catch(_) {}
+  }
+
+  if (!alreadyAcked) openGate();
+
+  ackBtn.addEventListener('click', closeGate);
+  gate.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      const focusables = gate.querySelectorAll('button, a[href]');
+      const list = Array.from(focusables);
+      if (!list.length) return;
+      const first = list[0], last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+})();
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const concurrency = navigator.hardwareConcurrency || 2;
