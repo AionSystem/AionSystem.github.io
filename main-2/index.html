@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="description" content="Sheldon K. Salmon — Game Systems Architect. Lore-to-Mechanics. Pre-Code GDD. World Building.">
+<meta name="description" content="Sheldon K. Salmon — Game Systems Architect. Lore-to-Mechanics. Pre-Code GDD. World Building. Note: this practice is an active build, not yet fully operational.">
 <title>Sheldon K. Salmon — World Architect & Game Design</title>
 <meta property="og:title" content="Sheldon K. Salmon — World Architect & Game Design">
-<meta property="og:description" content="Lore-to-Mechanics. Pre-Code GDD. Complete game worlds.">
+<meta property="og:description" content="Lore-to-Mechanics. Pre-Code GDD. Complete game worlds. (Active build — in progress.)">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,6 +46,32 @@
 .skip-nav:focus{top:0}
 
 body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;min-height:100vh;}
+body.modal-lock{overflow:hidden;}
+
+/* ═══════════════════════════════════════
+   WORK-IN-PROGRESS GATE MODAL
+   Default-visible via CSS (no JS delay = no flash of
+   full hero for first-time visitors). A synchronous
+   script right after this markup instantly dismisses it
+   for visitors who already acknowledged, before anything
+   else on the page paints.
+═══════════════════════════════════════ */
+.wip-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(6,3,1,0.78);backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%);opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s;}
+.wip-gate.dismissed{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.3s ease,visibility 0s linear 0.3s;}
+.wip-gate-card{position:relative;width:100%;max-width:520px;background:linear-gradient(160deg,rgba(28,14,4,0.97) 0%,rgba(14,7,2,0.98) 100%);border:1px solid rgba(245,158,11,0.4);border-radius:16px;padding:36px 32px 30px;box-shadow:0 20px 70px rgba(0,0,0,0.75),0 0 0 1px rgba(245,158,11,0.1),0 0 60px rgba(245,158,11,0.12);animation:wipGateIn 0.4s var(--ease-spring);}
+@keyframes wipGateIn{from{opacity:0;transform:translateY(14px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.wip-gate-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--hot-accent);background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:6px 14px;border-radius:20px;margin-bottom:20px;}
+.wip-gate-badge::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulseDot 2s ease-in-out infinite;}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.85)}}
+.wip-gate-title{font-family:var(--display);font-size:clamp(22px,3.5vw,28px);font-weight:700;letter-spacing:-0.5px;text-transform:uppercase;color:var(--text);margin-bottom:14px;line-height:1.15;}
+.wip-gate-body{font-family:var(--body);font-size:14.5px;font-weight:300;color:var(--text-mid);line-height:1.7;margin-bottom:14px;}
+.wip-gate-body strong{color:var(--text);font-weight:500;}
+.wip-gate-body:last-of-type{margin-bottom:26px;}
+.wip-gate-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.wip-gate-ack{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:13px 24px;border-radius:6px;border:1px solid var(--amber);background:var(--amber);color:#000;cursor:pointer;transition:all 0.2s ease;font-weight:500;}
+.wip-gate-ack:hover,.wip-gate-ack:focus-visible{background:var(--hot-accent);border-color:var(--hot-accent);box-shadow:0 0 24px rgba(245,158,11,0.45);outline:none;}
+.wip-gate-back{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);text-decoration:none;border-bottom:1px solid transparent;transition:all 0.2s ease;}
+.wip-gate-back:hover,.wip-gate-back:focus-visible{color:var(--text);border-bottom-color:var(--text-mid);outline:none;}
 
 /* ── CANVAS LAYERS ── */
 #ember-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
@@ -240,6 +266,43 @@ footer{position:relative;z-index:10;border-top:1px solid var(--border);padding:3
 <a href="#main" class="skip-nav">Skip to content</a>
 <div aria-live="polite" aria-atomic="true" class="sr-only" id="canvas-announce"></div>
 
+<!-- WORK-IN-PROGRESS GATE -->
+<div class="wip-gate" id="wipGate" role="dialog" aria-modal="true" aria-labelledby="wipGateTitle" aria-describedby="wipGateBody1">
+  <div class="wip-gate-card">
+    <span class="wip-gate-badge">⚠ Work In Progress</span>
+    <h2 class="wip-gate-title" id="wipGateTitle">This practice is still being built.</h2>
+    <p class="wip-gate-body" id="wipGateBody1">You're looking at the <strong>World Systems Architecture</strong> practice. The portfolio, framework counts, and world details shown here are part of an active build — not a finished, fully operational offering yet.</p>
+    <p class="wip-gate-body">You're welcome to explore, read through it, and ask questions. Just know that some of what you see is still in development, and some content is illustrative rather than a finished, shippable deliverable.</p>
+    <div class="wip-gate-actions">
+      <button type="button" class="wip-gate-ack" id="wipGateAck">I Acknowledge &amp; Wish to Explore →</button>
+      <a href="/" class="wip-gate-back">← Back to main page</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Runs synchronously, before nav/main/canvases are parsed — decides gate
+   state immediately so there is no flash of unblurred hero content for
+   first-time visitors, and no flash of the modal for returning visitors
+   who already acknowledged. */
+(function(){
+  var STORAGE_KEY = 'aion_wip_ack_main2';
+  var acked = false;
+  try { acked = localStorage.getItem(STORAGE_KEY) === '1'; } catch(_) {}
+  if (!acked) {
+    try { acked = sessionStorage.getItem(STORAGE_KEY) === '1'; } catch(_) {}
+  }
+  var gate = document.getElementById('wipGate');
+  if (!gate) return;
+  if (acked) {
+    gate.classList.add('dismissed');
+    gate.setAttribute('aria-hidden', 'true');
+  } else {
+    document.body.classList.add('modal-lock');
+  }
+})();
+</script>
+
 <canvas id="ember-canvas" aria-hidden="true"></canvas>
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
 <div class="heat-grid" aria-hidden="true"></div>
@@ -337,6 +400,62 @@ footer{position:relative;z-index:10;border-top:1px solid var(--border);padding:3
 <script>
 (function(){
 'use strict';
+
+/* ═══════════════════════════════════════
+   WIP GATE INTERACTIVITY
+   Visibility already decided by the early sync script.
+   This wires the acknowledge button, focus trap, and
+   makes background regions inert while the gate is open.
+═══════════════════════════════════════ */
+(function initWipGate(){
+  const gate = document.getElementById('wipGate');
+  const ackBtn = document.getElementById('wipGateAck');
+  if (!gate || !ackBtn) return;
+
+  const STORAGE_KEY = 'aion_wip_ack_main2';
+
+  const bgEls = [
+    document.querySelector('nav[aria-label="Primary navigation"]'),
+    document.getElementById('mobileNav'),
+    document.getElementById('main'),
+    document.querySelector('footer'),
+    document.getElementById('audio-toggle'),
+  ].filter(Boolean);
+
+  function setBackgroundInert(on) {
+    bgEls.forEach(el => {
+      if (on) { el.setAttribute('inert', ''); el.setAttribute('aria-hidden', 'true'); }
+      else { el.removeAttribute('inert'); el.removeAttribute('aria-hidden'); }
+    });
+  }
+
+  const isOpen = !gate.classList.contains('dismissed');
+  if (isOpen) {
+    setBackgroundInert(true);
+    setTimeout(() => ackBtn.focus(), 50);
+  }
+
+  function closeGate(){
+    gate.classList.add('dismissed');
+    gate.removeAttribute('aria-hidden');
+    document.body.classList.remove('modal-lock');
+    setBackgroundInert(false);
+    try { localStorage.setItem(STORAGE_KEY, '1'); } catch(_) {}
+    try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch(_) {}
+  }
+
+  ackBtn.addEventListener('click', closeGate);
+  gate.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      const focusables = gate.querySelectorAll('button, a[href]');
+      const list = Array.from(focusables);
+      if (!list.length) return;
+      const first = list[0], last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+})();
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const lowDevice = (navigator.hardwareConcurrency || 2) < 4;
