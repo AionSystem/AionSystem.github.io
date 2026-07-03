@@ -157,6 +157,29 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .wip-badge:hover .wip-tooltip,.wip-badge-trigger:focus-visible ~ .wip-tooltip,.wip-badge:focus-within .wip-tooltip{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;}
 
 /* card corners */
+
+/* ═══════════════════════════════════════
+   COVER-PAGE CLICK-INTERCEPT GATE
+   Fires when a WIP card is clicked — blocks navigation
+   until the visitor explicitly acknowledges, rather than
+   relying on a hover tooltip alone.
+═══════════════════════════════════════ */
+.cover-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,6,10,0.75);backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%);opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s;}
+.cover-gate.open{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s;}
+.cover-gate-card{position:relative;width:100%;max-width:480px;background:linear-gradient(160deg,rgba(14,14,34,0.98) 0%,rgba(10,10,26,0.99) 100%);border:1px solid rgba(245,158,11,0.35);border-radius:16px;padding:32px 30px 26px;box-shadow:0 20px 70px rgba(0,0,0,0.7),0 0 60px rgba(245,158,11,0.1);transform:translateY(14px) scale(0.98);transition:transform 0.4s var(--ease-spring);}
+.cover-gate.open .cover-gate-card{transform:translateY(0) scale(1);}
+.cover-gate-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#fcd34d;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:6px 14px;border-radius:20px;margin-bottom:18px;}
+.cover-gate-badge::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:#f59e0b;box-shadow:0 0 8px #f59e0b;animation:blink 2s ease-in-out infinite;}
+.cover-gate-title{font-family:var(--display);font-size:clamp(20px,3.2vw,25px);font-weight:700;letter-spacing:-0.5px;text-transform:uppercase;color:var(--text-bright);margin-bottom:12px;line-height:1.15;}
+.cover-gate-body{font-family:var(--body);font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.65;margin-bottom:22px;}
+.cover-gate-body strong{color:var(--text-bright);font-weight:500;}
+.cover-gate-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+.cover-gate-ack{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 22px;border-radius:6px;border:1px solid rgba(217,70,239,0.5);background:rgba(217,70,239,0.14);color:#fdf4ff;cursor:pointer;transition:all 0.2s ease;}
+.cover-gate-ack:hover,.cover-gate-ack:focus-visible{background:rgba(217,70,239,0.35);border-color:rgba(217,70,239,0.8);box-shadow:0 0 24px rgba(217,70,239,0.3);outline:none;}
+.cover-gate-cancel{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);background:none;border:none;cursor:pointer;border-bottom:1px solid transparent;transition:all 0.2s ease;padding:0;}
+.cover-gate-cancel:hover,.cover-gate-cancel:focus-visible{color:var(--text-bright);border-bottom-color:var(--text-mid);outline:none;}
+
+/* card corners */
 .card-corner{position:absolute;bottom:12px;right:14px;opacity:0.07;font-family:var(--mono);font-size:8px;letter-spacing:1px;pointer-events:none;line-height:1.4;text-align:right;transition:opacity 0.4s;}
 .card-cold .card-corner{color:var(--cold-secondary);}
 .card-mid .card-corner{color:var(--mid-accent);}
@@ -202,6 +225,18 @@ footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);p
 </style>
 </head>
 <body>
+<div class="cover-gate" id="coverGate" role="dialog" aria-modal="true" aria-labelledby="coverGateTitle" aria-describedby="coverGateBody">
+  <div class="cover-gate-card">
+    <span class="cover-gate-badge">⚠ Work In Progress</span>
+    <h2 class="cover-gate-title" id="coverGateTitle">Before you go in —</h2>
+    <p class="cover-gate-body" id="coverGateBody">The <strong id="coverGateName">practice</strong> section is still being built. You're welcome to explore, read through it, and ask questions — just know it's not a finished, fully operational offering yet.</p>
+    <div class="cover-gate-actions">
+      <button type="button" class="cover-gate-ack" id="coverGateAck">I Acknowledge &amp; Wish to Explore →</button>
+      <button type="button" class="cover-gate-cancel" id="coverGateCancel">Stay here</button>
+    </div>
+  </div>
+</div>
+
 <a href="#main" class="skip-nav">Skip to content</a>
 <div aria-live="polite" aria-atomic="true" class="sr-only" id="canvas-announce"></div>
 <canvas id="split-canvas" aria-hidden="true"></canvas>
@@ -256,7 +291,7 @@ footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);p
     <div class="choice-grid">
 
       <!-- CARD 1: AI RELIABILITY -->
-      <a href="/main-1/index.html" class="choice-card card-cold" aria-label="AI Reliability Architecture — enter the vault (work in progress)">
+      <a href="/main-1/index.html" class="choice-card card-cold" data-wip-gate="AI Reliability Architecture" aria-label="AI Reliability Architecture — enter the vault (work in progress)">
         <div class="wip-badge" onclick="event.preventDefault()">
           <span class="wip-badge-trigger" tabindex="0">⚠ In Progress</span>
           <div class="wip-tooltip"><strong>Work in progress.</strong> This practice is still being built out. You're welcome to look around and ask questions — just know it's not fully operational yet.</div>
@@ -286,7 +321,7 @@ footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);p
       </a>
 
       <!-- CARD 3: WORLD ARCHITECTURE -->
-      <a href="/main-2/index.html" class="choice-card card-hot" aria-label="World Architect & Game Design — build a world (work in progress)">
+      <a href="/main-2/index.html" class="choice-card card-hot" data-wip-gate="World Systems Architecture" aria-label="World Architect & Game Design — build a world (work in progress)">
         <div class="wip-badge" onclick="event.preventDefault()">
           <span class="wip-badge-trigger" tabindex="0">⚠ In Progress</span>
           <div class="wip-tooltip"><strong>Work in progress.</strong> This practice is still being built out. You're welcome to look around and ask questions — just know it's not fully operational yet.</div>
@@ -729,6 +764,60 @@ window.addEventListener('scroll',()=>{
 document.getElementById('copyright-year').textContent=new Date().getFullYear();
 resize();
 requestAnimationFrame(loop);
+
+/* ═══════════════════════════════════════
+   COVER-PAGE CLICK-INTERCEPT GATE
+   Clicking a card tagged data-wip-gate opens a confirm
+   modal instead of navigating immediately. Document
+   Red-Team (no data-wip-gate attribute) is unaffected.
+═══════════════════════════════════════ */
+(function initCoverGate(){
+  const gate = document.getElementById('coverGate');
+  const ackBtn = document.getElementById('coverGateAck');
+  const cancelBtn = document.getElementById('coverGateCancel');
+  const nameEl = document.getElementById('coverGateName');
+  if (!gate || !ackBtn || !cancelBtn || !nameEl) return;
+
+  let pendingHref = null;
+
+  function openGate(card){
+    pendingHref = card.getAttribute('href');
+    nameEl.textContent = card.getAttribute('data-wip-gate') || 'This practice';
+    gate.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => ackBtn.focus(), 100);
+  }
+  function closeGate(){
+    gate.classList.remove('open');
+    document.body.style.overflow = '';
+    pendingHref = null;
+  }
+
+  document.querySelectorAll('[data-wip-gate]').forEach(card => {
+    card.addEventListener('click', e => {
+      e.preventDefault();
+      openGate(card);
+    });
+  });
+
+  ackBtn.addEventListener('click', () => {
+    const href = pendingHref;
+    closeGate();
+    if (href) window.location.href = href;
+  });
+  cancelBtn.addEventListener('click', closeGate);
+  gate.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeGate(); return; }
+    if (e.key === 'Tab') {
+      const focusables = gate.querySelectorAll('button');
+      const list = Array.from(focusables);
+      if (!list.length) return;
+      const first = list[0], last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+})();
 
 })();
 </script>
