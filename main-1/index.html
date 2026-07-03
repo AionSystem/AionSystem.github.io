@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="description" content="Sheldon K. Salmon — AI Reliability Architect. I find out when your AI is wrong — before it costs you something irreversible. FSVE certainty engine, 300+ frameworks, Docker-sealed.">
+<meta name="description" content="Sheldon K. Salmon — AI Reliability Architect. I find out when your AI is wrong — before it costs you something irreversible. FSVE certainty engine, 300+ frameworks, Docker-sealed. Note: this practice is an active build, not yet fully operational.">
 <title>Sheldon K. Salmon — AI Reliability Architect | AionSystem</title>
 <meta property="og:title" content="Sheldon K. Salmon — AI Reliability Architect | AionSystem">
-<meta property="og:description" content="I find out when your AI is wrong — before it costs you something irreversible.">
+<meta property="og:description" content="I find out when your AI is wrong — before it costs you something irreversible. (Active build — in progress.)">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,10 +68,10 @@ body.modal-lock{overflow:hidden;}
 /* ═══════════════════════════════════════
    WORK-IN-PROGRESS GATE MODAL
 ═══════════════════════════════════════ */
-.wip-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,5,15,0.72);backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%);opacity:0;visibility:hidden;transition:opacity 0.35s ease,visibility 0s linear 0.35s;}
-.wip-gate.open{opacity:1;visibility:visible;transition:opacity 0.35s ease,visibility 0s linear 0s;}
-.wip-gate-card{position:relative;width:100%;max-width:520px;background:linear-gradient(160deg,rgba(14,14,34,0.97) 0%,rgba(10,10,26,0.98) 100%);border:1px solid rgba(245,158,11,0.35);border-radius:16px;padding:36px 32px 30px;box-shadow:0 20px 70px rgba(0,0,0,0.7),0 0 0 1px rgba(245,158,11,0.08),0 0 60px rgba(245,158,11,0.1);transform:translateY(14px) scale(0.98);transition:transform 0.4s var(--ease-spring);}
-.wip-gate.open .wip-gate-card{transform:translateY(0) scale(1);}
+.wip-gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(5,5,15,0.72);backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%);opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s;}
+.wip-gate.dismissed{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.3s ease,visibility 0s linear 0.3s;}
+.wip-gate-card{position:relative;width:100%;max-width:520px;background:linear-gradient(160deg,rgba(14,14,34,0.97) 0%,rgba(10,10,26,0.98) 100%);border:1px solid rgba(245,158,11,0.35);border-radius:16px;padding:36px 32px 30px;box-shadow:0 20px 70px rgba(0,0,0,0.7),0 0 0 1px rgba(245,158,11,0.08),0 0 60px rgba(245,158,11,0.1);animation:wipGateIn 0.4s var(--ease-spring);}
+@keyframes wipGateIn{from{opacity:0;transform:translateY(14px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 .wip-gate-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#fcd34d;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);padding:6px 14px;border-radius:20px;margin-bottom:20px;}
 .wip-gate-badge::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:#f59e0b;box-shadow:0 0 8px #f59e0b;animation:pulse-dot 2s ease-in-out infinite;}
 .wip-gate-title{font-family:var(--display);font-size:clamp(22px,3.5vw,28px);font-weight:700;letter-spacing:-0.5px;text-transform:uppercase;color:var(--text);margin-bottom:14px;line-height:1.15;}
@@ -540,6 +540,29 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   </div>
 </div>
 
+<script>
+/* Runs synchronously, before nav/main/canvases are parsed — decides gate
+   state immediately so there is no flash of unblurred hero content for
+   first-time visitors, and no flash of the modal for returning visitors
+   who already acknowledged. */
+(function(){
+  var STORAGE_KEY = 'aion_wip_ack_main1';
+  var acked = false;
+  try { acked = localStorage.getItem(STORAGE_KEY) === '1'; } catch(_) {}
+  if (!acked) {
+    try { acked = sessionStorage.getItem(STORAGE_KEY) === '1'; } catch(_) {}
+  }
+  var gate = document.getElementById('wipGate');
+  if (!gate) return;
+  if (acked) {
+    gate.classList.add('dismissed');
+    gate.setAttribute('aria-hidden', 'true');
+  } else {
+    document.body.classList.add('modal-lock');
+  }
+})();
+</script>
+
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 <canvas id="fx-canvas" aria-hidden="true"></canvas>
 <div class="cold-grid" aria-hidden="true"></div>
@@ -955,21 +978,39 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   if (!gate || !ackBtn) return;
 
   const STORAGE_KEY = 'aion_wip_ack_main1';
-  let alreadyAcked = false;
-  try { alreadyAcked = localStorage.getItem(STORAGE_KEY) === '1'; } catch(_) {}
 
-  function openGate(){
-    gate.classList.add('open');
-    document.body.classList.add('modal-lock');
-    setTimeout(() => ackBtn.focus(), 100);
+  /* Background regions to make non-interactive and hidden from assistive
+     tech while the gate is open. Gathered now since nav/main/footer exist
+     by this point in parsing. */
+  const bgEls = [
+    document.querySelector('nav[aria-label="Primary navigation"]'),
+    document.getElementById('mobileNav'),
+    document.getElementById('main'),
+    document.querySelector('footer'),
+    document.getElementById('audio-toggle'),
+  ].filter(Boolean);
+
+  function setBackgroundInert(on) {
+    bgEls.forEach(el => {
+      if (on) { el.setAttribute('inert', ''); el.setAttribute('aria-hidden', 'true'); }
+      else { el.removeAttribute('inert'); el.removeAttribute('aria-hidden'); }
+    });
   }
+
+  const isOpen = !gate.classList.contains('dismissed');
+  if (isOpen) {
+    setBackgroundInert(true);
+    setTimeout(() => ackBtn.focus(), 50);
+  }
+
   function closeGate(){
-    gate.classList.remove('open');
+    gate.classList.add('dismissed');
+    gate.removeAttribute('aria-hidden');
     document.body.classList.remove('modal-lock');
+    setBackgroundInert(false);
     try { localStorage.setItem(STORAGE_KEY, '1'); } catch(_) {}
+    try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch(_) {}
   }
-
-  if (!alreadyAcked) openGate();
 
   ackBtn.addEventListener('click', closeGate);
   gate.addEventListener('keydown', e => {
