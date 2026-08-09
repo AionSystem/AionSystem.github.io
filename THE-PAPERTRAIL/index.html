@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Paper Trail Behind Scripture — Sumer to Sophia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#131217;
+    --panel:#1c1a22;
+    --panel-2:#211f28;
+    --ink:#e8e1d0;
+    --ink-dim:#a79c88;
+    --rule: rgba(232,225,208,0.14);
+    --rule-gold: rgba(201,162,39,0.22);
+
+    --lapis:#3a5fa0;
+    --lapis-glow:#7fa0dc;
+    --carnelian:#a8462c;
+    --carnelian-glow:#e08862;
+    --verdigris:#4f8577;
+    --verdigris-glow:#8fc6b6;
+    --electrum:#c9a227;
+    --flag:#7a3030;
+    --flag-glow:#cf8080;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--void);
+    color:var(--ink);
+    font-family:'Source Serif 4', serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2{ font-family:'Fraunces', serif; font-weight:600; margin:0; }
+  .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:0.02em; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding: 32px 22px 40px;
+    border-bottom: 1px solid var(--rule-gold);
+    border-top: 2px solid var(--electrum);
+    background:
+      radial-gradient(ellipse at 15% -10%, rgba(201,162,39,0.16), transparent 55%),
+      radial-gradient(ellipse at 90% 0%, rgba(201,162,39,0.09), transparent 50%),
+      var(--void);
+  }
+  .masthead{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:28px;
+    padding-bottom:20px;
+    border-bottom: 1px solid var(--rule-gold);
+  }
+  .masthead-mark{
+    width:22px; height:22px;
+    flex-shrink:0;
+    border:1.5px solid var(--electrum);
+    border-radius:4px;
+    transform: rotate(45deg);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .masthead-mark::after{
+    content:"";
+    width:7px; height:7px;
+    background: var(--electrum);
+    border-radius:1px;
+  }
+  .masthead-word{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight:500;
+    letter-spacing: 0.24em;
+    color: var(--electrum);
+    text-transform: uppercase;
+  }
+  .masthead-word span{ color: var(--ink-dim); letter-spacing:0.12em; font-weight:400; }
+  .eyebrow{
+    font-size: 11px;
+    color: var(--ink-dim);
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size: clamp(2.1rem, 9vw, 3.2rem);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 em{ font-style: italic; font-weight:500; color: var(--electrum); }
+  .dek{
+    max-width: 58ch;
+    color: var(--ink-dim);
+    font-size: 1.02rem;
+    margin-top:16px;
+  }
+
+  .legend{
+    margin-top: 28px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    border-top:1px solid var(--rule);
+    padding-top: 20px;
+  }
+  .legend-item{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size: 0.86rem;
+    color: var(--ink-dim);
+  }
+  .legend-item b{ color: var(--ink); font-weight:600; }
+  .swatch{
+    width:11px; height:11px;
+    border-radius:2px;
+    margin-top:4px;
+    flex-shrink:0;
+  }
+  .swatch.doc{ background: var(--lapis-glow); }
+  .swatch.syn{ background: var(--carnelian-glow); }
+  .swatch.bridge{ background: var(--verdigris-glow); border:1px dashed rgba(143,198,182,0.9); background: transparent; }
+  .swatch.flag{ background: transparent; border: 1px solid var(--flag-glow); position:relative; }
+  .swatch.flag::before, .swatch.flag::after{
+    content:""; position:absolute; left:1px; right:1px; top:50%; height:1px;
+    background: var(--flag-glow); transform: translateY(-50%) rotate(45deg);
+  }
+  .swatch.flag::after{ transform: translateY(-50%) rotate(-45deg); }
+
+  .swatch.branch{ background:transparent; border:1px dashed var(--ink-dim); }
+
+  .badge-key{
+    margin-top: 16px;
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+    line-height:1.5;
+  }
+
+  /* ---------- PDF DOWNLOAD ---------- */
+  .pdf-download-row{
+    margin-top: 18px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:flex-start;
+  }
+  .pdf-download-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    color: var(--void);
+    background: var(--electrum);
+    border: none;
+    border-radius: 6px;
+    padding: 11px 16px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .pdf-download-btn:hover{ opacity: 0.85; }
+  .pdf-download-btn:active{ opacity: 0.7; }
+  .pdf-download-hint{
+    font-size: 0.68rem;
+    color: var(--ink-dim);
+    max-width: 46ch;
+    line-height: 1.5;
+  }
+
+  @media print{
+    :root{
+      --void:#ffffff;
+      --panel:#f6f6f4;
+      --panel-2:#eeeeec;
+      --ink:#151515;
+      --ink-dim:#3a3a3a;
+      --rule: rgba(0,0,0,0.18);
+      --lapis-glow:#2d4d85;
+      --carnelian-glow:#8a3820;
+      --verdigris-glow:#2f5c50;
+      --electrum:#7a5f14;
+      --flag-glow:#5c1f1f;
+    }
+    body{ background:#fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hero{ background:none !important; }
+    .tier-filter, .back-to-top, .pdf-download-row{ display:none !important; }
+    .rail-track, .rail-fill, .marker{ display:none !important; }
+    .entry{
+      opacity:1 !important;
+      transform:none !important;
+      padding-left: 20px !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .entry.branch::before{ display:none; }
+    .entry.branch .card{ margin-left:0 !important; }
+    .widen-card{ margin-left:20px !important; margin-right:20px !important; }
+    .card, .method-card, .widen-card, .steelman-card, .pattern-card{
+      page-break-inside: avoid;
+      break-inside: avoid;
+      box-shadow:none !important;
+    }
+    .entry.tier-flag .card::before{
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    a{ color:#151515; }
+  }
+
+  /* ---------- TIER FILTER + BACK TO TOP ---------- */
+  .tier-filter{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    padding: 10px 22px;
+    background: rgba(19,18,23,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--rule);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .filter-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing:0.04em;
+    color: var(--ink-dim);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 6px 11px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .filter-btn:hover{ color: var(--electrum); border-color: var(--electrum); }
+  .filter-btn.active{ color: var(--void); background: var(--ink-dim); border-color: var(--ink-dim); }
+  body.filtering .entry{ display:none; }
+  body.filtering .entry.filter-match{ display:block; }
+
+  .back-to-top{
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 20;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--ink-dim);
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 8px 12px;
+    text-decoration:none;
+    opacity: 0.85;
+  }
+  .back-to-top:hover{ opacity:1; color: var(--electrum); border-color: var(--electrum); }
+
+  /* ---------- CONFIDENCE + CATEGORY BADGES ---------- */
+  .confidence{
+    display:inline-block;
+    font-size: 0.64rem;
+    letter-spacing: 0.05em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    margin-left: 6px;
+    background: rgba(201,162,39,0.14);
+    color: var(--electrum);
+    border: 1px solid rgba(201,162,39,0.35);
+  }
+  .category-note{
+    display:inline-block;
+    font-size: 0.64rem;
+    letter-spacing: 0.05em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    margin-left: 6px;
+    background: rgba(143,198,182,0.12);
+    color: var(--verdigris-glow);
+    border: 1px solid rgba(143,198,182,0.3);
+  }
+
+  /* persistent flag banner — survives a cropped screenshot of just the card */
+  .entry.tier-flag .card{ padding-top: 0; overflow:hidden; }
+  .entry.tier-flag .card::before{
+    content: "⚠ FLAGGED — REJECTED OR DISPUTED BY SPECIALISTS";
+    display:block;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    color: var(--void);
+    background: var(--flag-glow);
+    padding: 6px 18px;
+    margin: 0 -18px 16px;
+  }
+
+  /* ---------- TIMELINE ---------- */
+  .timeline{
+    position: relative;
+    padding: 10px 0 10px 0;
+  }
+  .rail-track{
+    position:absolute;
+    left: 30px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--rule);
+  }
+  .rail-fill{
+    position:absolute;
+    left: 30px;
+    top: 0;
+    width: 2px;
+    height: 0%;
+    background: linear-gradient(
+      to bottom,
+      var(--lapis) 0%, var(--lapis) 80%,
+      var(--carnelian) 80%, var(--carnelian) 91%,
+      var(--flag) 91%, var(--flag) 98%,
+      var(--verdigris) 98%, var(--verdigris) 100%
+    );
+    background-size: 2px 2400px;
+    background-repeat: no-repeat;
+    transition: height 0.08s linear;
+  }
+
+  .entry{
+    position: relative;
+    padding: 26px 20px 26px 62px;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .entry.show{ opacity:1; transform: translateY(0); }
+
+  .marker{
+    position:absolute;
+    left: 24px;
+    top: 32px;
+    width: 14px; height:14px;
+    border-radius:50%;
+    background: var(--void);
+    border: 2px solid var(--ink-dim);
+    z-index:2;
+  }
+  .entry.tier-doc .marker{ border-color: var(--lapis-glow); }
+  .entry.tier-syn .marker{ border-color: var(--carnelian-glow); }
+  .entry.tier-bridge .marker{ border-color: var(--verdigris-glow); background: repeating-linear-gradient(45deg, var(--void), var(--void) 2px, rgba(143,198,182,0.4) 2px, rgba(143,198,182,0.4) 3px); }
+
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 18px 18px 20px;
+  }
+  .entry.tier-doc .card{ border-left: 3px solid var(--lapis); }
+  .entry.tier-syn .card{ border-left: 3px solid var(--carnelian); }
+  .entry.tier-bridge .card{ border-left: 3px dashed var(--verdigris); background: var(--panel-2); }
+
+  .date{
+    font-size: 0.74rem;
+    color: var(--ink-dim);
+    margin-bottom: 6px;
+  }
+  .card h2{
+    font-size: 1.28rem;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  .card p{
+    font-size: 0.94rem;
+    color: var(--ink);
+    margin: 0 0 12px;
+  }
+  .card p:last-of-type{ margin-bottom:0; }
+  .tag{
+    display:inline-block;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+  .entry.tier-doc .tag{ background: rgba(58,95,160,0.18); color: var(--lapis-glow); }
+  .entry.tier-syn .tag{ background: rgba(168,70,44,0.18); color: var(--carnelian-glow); }
+  .entry.tier-bridge .tag{ background: rgba(79,133,119,0.18); color: var(--verdigris-glow); }
+
+  .entry.tier-flag .marker{ border-color: var(--flag-glow); background: var(--void); }
+  .entry.tier-flag .card{ border-left: 3px solid var(--flag); background: rgba(122,48,48,0.08); }
+  .entry.tier-flag .tag{ background: rgba(122,48,48,0.22); color: var(--flag-glow); }
+
+  /* branch (Atlantis) styling */
+  .entry.branch{
+    padding-left: 62px;
+  }
+  .entry.branch::before{
+    content:"";
+    position:absolute;
+    left: 31px;
+    top: 39px;
+    width: 22px;
+    height: 1px;
+    border-top: 1px dashed var(--ink-dim);
+  }
+  .entry.branch .card{
+    margin-left: 22px;
+    border-style: dashed;
+    border-color: rgba(167,156,136,0.4);
+  }
+  .branch-flag{
+    display:inline-block;
+    font-size: 0.66rem;
+    color: var(--ink-dim);
+    border: 1px dashed var(--ink-dim);
+    border-radius: 4px;
+    padding: 3px 7px;
+    margin-bottom: 10px;
+  }
+
+  /* ---------- CLOSING ---------- */
+  .closing{
+    max-width: 62ch;
+    margin: 10px auto 0;
+    padding: 36px 24px 64px;
+    border-top: 1px solid var(--rule-gold);
+  }
+  .closing h2{
+    font-size: 1.3rem;
+    margin-bottom: 14px;
+  }
+  .closing p{
+    color: var(--ink-dim);
+    font-size: 0.92rem;
+    margin-bottom: 12px;
+  }
+  .closing strong{ color: var(--ink); font-weight:600; }
+
+  .method{
+    max-width: 62ch;
+    margin: 0 auto;
+    padding: 28px 24px 8px;
+  }
+  .method-card{
+    background: var(--panel);
+    border: 1px solid var(--electrum);
+    border-radius: 10px;
+    padding: 18px 18px 20px;
+  }
+  .method-card h2{
+    font-size: 1.1rem;
+    color: var(--electrum);
+    margin-bottom: 10px;
+  }
+  .method-card p{
+    font-size: 0.9rem;
+    color: var(--ink-dim);
+    margin: 0 0 10px;
+  }
+  .method-card p:last-child{ margin-bottom: 0; }
+  .method-card strong{ color: var(--ink); }
+  .method-card .cite{ font-family:'JetBrains Mono', monospace; font-size:0.78rem; color: var(--ink); }
+
+  .steelman-card{
+    background: var(--panel);
+    border: 1px solid var(--verdigris);
+    border-radius: 10px;
+    padding: 18px 18px 20px;
+  }
+  .steelman-card h2{ font-size: 1.1rem; color: var(--verdigris-glow); margin-bottom: 10px; }
+  .steelman-card p{ font-size: 0.9rem; color: var(--ink-dim); margin: 0 0 10px; }
+  .steelman-card p:last-child{ margin-bottom: 0; }
+  .steelman-card strong{ color: var(--ink); }
+  .steelman-card .cite{ font-family:'JetBrains Mono', monospace; font-size:0.78rem; color: var(--ink); }
+
+  /* ---------- PATTERN CARD (cross-entry analysis, closing) ---------- */
+  .pattern-section{
+    max-width: 62ch;
+    margin: 0 auto;
+    padding: 8px 24px 8px;
+  }
+  .pattern-card{
+    background: var(--panel);
+    border: 1px solid var(--electrum);
+    border-radius: 10px;
+    padding: 20px 20px 22px;
+  }
+  .pattern-label{
+    display:inline-block;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    color: var(--electrum);
+    background: rgba(201,162,39,0.12);
+    border: 1px solid rgba(201,162,39,0.35);
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin-bottom: 14px;
+  }
+  .pattern-card h2{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--ink);
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+  .pattern-card p{ font-size: 0.92rem; color: var(--ink-dim); margin: 0 0 12px; }
+  .pattern-card p:last-of-type{ margin-bottom: 12px; }
+  .pattern-card strong{ color: var(--ink); }
+  .pattern-tag{
+    display:inline-block;
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: rgba(201,162,39,0.18);
+    color: var(--electrum);
+    border: 1px solid rgba(201,162,39,0.35);
+  }
+  @media (min-width: 640px){ .pattern-section{ padding: 8px 48px 8px; } }
+
+  .widen-card{
+    background: var(--panel);
+    border: 1px solid var(--verdigris-glow);
+    border-radius: 10px;
+    padding: 18px 18px 20px;
+    margin: 4px 20px 4px 62px;
+  }
+  .widen-card h2{ font-size: 1.05rem; color: var(--verdigris-glow); margin-bottom: 10px; }
+  .widen-card p{ font-size: 0.88rem; color: var(--ink-dim); margin: 0 0 10px; }
+  .widen-card p:last-child{ margin-bottom: 0; }
+  .widen-card strong{ color: var(--ink); }
+  .widen-card .cite{ font-family:'JetBrains Mono', monospace; font-size:0.76rem; }
+  @media (min-width: 640px){ .widen-card{ margin-left: 80px; margin-right: 40px; } }
+
+  .refs{
+    max-width: 62ch;
+    margin: 0 auto;
+    padding: 8px 24px 56px;
+  }
+  .refs h2{ font-size: 1.2rem; margin-bottom: 14px; }
+  .refs ol{
+    padding-left: 20px;
+    margin: 0;
+  }
+  .refs li{
+    font-size: 0.82rem;
+    color: var(--ink-dim);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .refs li strong{ color: var(--ink); font-weight: 500; }
+
+  @media (min-width: 640px){
+    .hero{ padding: 72px 48px 48px; }
+    .legend{ flex-direction:row; gap: 28px; }
+    .timeline{ max-width: 720px; margin: 0 auto; }
+    .rail-track, .rail-fill{ left: 40px; }
+    .entry{ padding-left: 80px; }
+    .marker{ left: 34px; }
+    .entry.branch::before{ left: 41px; width: 30px; }
+    .entry.branch .card{ margin-left: 30px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .entry{ transition:none; opacity:1; transform:none; }
+    .rail-fill{ transition:none; }
+  }
+</style>
+</head>
+<body>
+<!-- v1.5 — see "Version history" section at the foot of this document for the full changelog against v1.0–v1.4 -->
+<noscript>
+  <style>
+    .entry, .method-card, .widen-card, .steelman-card{ opacity:1 !important; transform:none !important; }
+    .tier-filter, .back-to-top, .pdf-download-row{ display:none !important; }
+  </style>
+</noscript>
+
+  <header class="hero" id="top">
+    <div class="masthead">
+      <div class="masthead-mark" aria-hidden="true"></div>
+      <div class="masthead-word">AionSystem <span>· Sheldon K. Salmon</span></div>
+    </div>
+    <div class="eyebrow">Sumer → Sophia → Kabbalah → Helicon — five research passes deep, five evidence tiers, one closing pattern — v1.6</div>
+    <h1>The Paper Trail <em>Behind Scripture</em></h1>
+    <p class="dek">Fifty entries across six thousand years — the documented chain, the world traditions outside it, the popular claims that don't survive contact with the primary sources, the strongest case against reading this as a chain at all, and the other direction the same Mesopotamian material traveled. Each one dated, sourced, and graded by how solid it actually is.</p>
+    <div class="legend">
+      <div class="legend-item"><span class="swatch doc"></span><span><b>Documented</b> — archaeology, textual scholarship, dated sources</span></div>
+      <div class="legend-item"><span class="swatch syn"></span><span><b>Religious synthesis</b> — later tradition reworking earlier material</span></div>
+      <div class="legend-item"><span class="swatch bridge"></span><span><b>Interpretive bridge</b> — comparative reading, not verified transmission</span></div>
+      <div class="legend-item"><span class="swatch flag"></span><span><b>Flagged</b> — popular claim, rejected or unsupported by mainstream scholarship</span></div>
+      <div class="legend-item"><span class="swatch branch"></span><span><b>Separate branch</b> — dashed, unconnected to the rail: documented on its own terms but not part of the Sumer→Genesis chain</span></div>
+    </div>
+    <p class="badge-key mono">Inside entries: a muted amber badge means "documented, but rests on a single scholar's reading, a disputed date, or a damaged/reconstructed text" — read it as a volume knob on confidence, not a rejection.</p>
+    <div class="pdf-download-row">
+      <button type="button" class="pdf-download-btn mono" id="pdfDownloadBtn">⬇ Download as PDF</button>
+      <span class="pdf-download-hint mono">Opens your browser's print dialog — choose "Save as PDF" as the destination. Good for uploading the full text to an AI tool.</span>
+    </div>
+  </header>
+
+  <nav class="tier-filter mono" id="tierFilter" aria-label="Filter timeline by evidence tier">
+    <button type="button" class="filter-btn active" data-filter="all" aria-pressed="true">All (50)</button>
+    <button type="button" class="filter-btn" data-filter="documented" aria-pressed="false">Documented</button>
+    <button type="button" class="filter-btn" data-filter="synthesis" aria-pressed="false">Synthesis</button>
+    <button type="button" class="filter-btn" data-filter="bridge" aria-pressed="false">Bridge</button>
+    <button type="button" class="filter-btn" data-filter="flagged" aria-pressed="false">Flagged</button>
+  </nav>
+  <a href="#top" class="back-to-top mono" aria-label="Back to top">↑ top</a>
+
+  <div class="method">
+    <div class="method-card">
+      <h2>Method — and the critique aimed at pages like this one</h2>
+      <p>Two names worth knowing before anyone else brings them up. Samuel Sandmel coined <strong>"parallelomania"</strong> in 1962 to describe scholars who spot a similarity and leap to "one text copied the other" without checking whether the shared detail is actually distinctive — or just a motif any two cultures might invent separately. <span class="cite">Sandmel, S., "Parallelomania," Journal of Biblical Literature 81.1 (1962): 1–13.</span></p>
+      <p>Jonathan Z. Smith's <strong>Drudgery Divine</strong> is the harder version of the same critique: 19th- and 20th-century comparative religion built its case by cataloging similarities while ignoring theological differences and social function. <span class="cite">Smith, J.Z., Drudgery Divine (Chicago: University of Chicago Press, 1990).</span></p>
+      <p>So the bar for a "DOCUMENTED — strong" tag below isn't "these look similar." It's three things together: the shared detail is <strong>specific and uncommon</strong> — not a universal motif like "a flood" — the texts were in <strong>plausible contact</strong>, and <strong>named scholars in the primary literature</strong> have made the case, not just popular retellings. Where a parallel doesn't clear that bar, it's tagged as weaker, not smoothed over. Full citations for every entry are in the references at the bottom.</p>
+      <p style="margin-top:14px; padding-top:14px; border-top:1px solid rgba(232,225,208,0.1); font-size:0.78rem;"><strong>Compiled by:</strong> Sheldon K. Salmon, AionSystem. This page argues a borrowing chain; that's a position, not a neutral fact, and it's stated here rather than left implicit.</p>
+    </div>
+  </div>
+
+  <div class="method">
+    <div class="steelman-card">
+      <h2>The strongest case against reading this as a "chain" at all</h2>
+      <p>Everything above argues that later texts reworked earlier ones. The most serious pushback in the field doesn't dispute any single parallel — it disputes the whole shape of the argument. William Hallo's <strong>"contextual approach"</strong>, developed across the multi-volume <em>Context of Scripture</em>, treats the ancient Near East as one shared cultural river that Sumer, Babylon, Ugarit, and Israel all drew from — not a hierarchy where each civilization copies the one before it. On this view, a shared flood story or a shared wisdom-genre isn't evidence that Genesis read a Sumerian tablet; it's evidence both texts grew out of the same regional vocabulary for talking about kingship, catastrophe, and conduct, the way "once upon a time" shows up in unrelated folk traditions without one stealing it from another.</p>
+      <p>This matters most for the entries already tagged weaker above — Enmerkar's "Spell of Nudimmud," the Kesh Temple Hymn's literary priority, the city laments — where "genre parallel" and "direct borrowing" are read by some specialists as the same evidence pointing two different directions. It matters least for entries with a named historical mechanism — the Babylonian Exile, the Cyrus Cylinder, Second Temple Judaism's documented Greek contact — where a two-generation deportation into the culture being "borrowed" from is a much harder coincidence to wave away with "shared river." <span class="cite">Hallo, W.W., and Younger, K.L., Jr., eds., The Context of Scripture (Leiden: Brill, 1997–2002).</span></p>
+    </div>
+  </div>
+
+  <main class="timeline">
+    <div class="rail-track"></div>
+    <div class="rail-fill" id="railFill"></div>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 4500–3000 BCE</div>
+        <h2>Sumer</h2>
+        <p>The first cities rise in southern Mesopotamia — Uruk, Eridu, Ur. Cuneiform appears: the oldest known writing system. This is bedrock — the deepest layer with anything we'd recognize as literature.</p>
+        <span class="tag mono">DOCUMENTED — archaeology, cuneiform tablets</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 2600 BCE</div>
+        <h2>The Kesh Temple Hymn — where "literature" actually starts</h2>
+        <p>Worth separating from the entry above: cuneiform-as-technology is already 700+ years old at this point, and every tablet from those first centuries is pure accounting — grain rations, goats, beer-brewing tallies, no grammar or narrative. The Kesh Temple Hymn, a praise-song to the goddess Ninhursag (Nintud) and her temple, is one half of the actual floor of literature: a text with a poetic voice, found at Tell Abu Salabikh and published by Robert Biggs in 1966, with radiocarbon dates on the tablets running to roughly 2550–2520 BCE.</p>
+        <p><em>Its exact twin is next:</em> the Instructions of Shuruppak, from the same excavation, the same centuries — the two are routinely cited together as the oldest surviving works of literature in the world.</p>
+        <span class="tag mono">DOCUMENTED — Biggs 1966; co-oldest literature with Shuruppak</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 3000–2000 BCE</div>
+        <h2>Enki & Ninhursag</h2>
+        <p>A Sumerian myth describes Dilmun — a paradise land without sickness or death — and a goddess named <em>Ninti</em>, a pun meaning both "Lady of the Rib" and "Lady Who Gives Life." Samuel Noah Kramer read this wordplay as the root beneath Eve's origin from Adam's rib.</p>
+        <p><em>Worth knowing:</em> Kramer's rib-pun reading is famous, but not unanimous — some Assyriologists since have called it more suggestive than demonstrated, since it rests on a single wordplay rather than a matched narrative sequence.</p>
+        <p><em>Parallelomania test, applied directly:</em> specific and uncommon detail — yes, a bilingual pun is unusual; plausible contact — yes, same broader textual world; named scholars in primary literature — one (Kramer), not a chorus. Two of three cleanly, the third only partially. That's why it's tagged contested rather than dismissed.</p>
+        <span class="tag mono">DOCUMENTED — Kramer 1945; reading contested</span>
+        <span class="confidence mono">SINGLE-SCHOLAR READING</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 2600 BCE</div>
+        <h2>Instructions of Shuruppak</h2>
+        <p>The oldest known wisdom text — a father's proverb-advice to his son, attributed to the legendary king of Shuruppak. Nili Samet's 2021 study finds it shares a redactional pattern with Proverbs: both grew by accretion over centuries, both use opening/closing formulas, both got layered with religious framing as they aged.</p>
+        <p><em>Provenance:</em> the oldest exemplar is the same Abu Salabikh find as the Kesh Temple Hymn above. Unlike Kesh, this one kept being copied for over a thousand years — Old Babylonian school copies from Nippur and Ur, an Akkadian bilingual version from 15th-century BCE Ugarit, and fragments as far out as Emar and Hattusa. It's one of the most widely re-copied texts in the entire scribal curriculum, which is itself part of why the Proverbs comparison is taken seriously.</p>
+        <p><em>Weaker link than it first looks:</em> this is a shared genre and editorial process, not shared wording — no direct textual borrowing has been demonstrated.</p>
+        <span class="tag mono">DOCUMENTED — Samet 2021; structural, not direct borrowing</span>
+        <span class="confidence mono">STRUCTURAL PARALLEL ONLY</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">compiled Ur III–Old Babylonian, c. 2100–1650 BCE</div>
+        <h2>The Sumerian King List</h2>
+        <p>The actual document behind the "ten antediluvian kings" comparison further down this timeline — named here directly rather than left implicit. Its most complete copy, the Weld-Blundell prism, lists eight or ten kings ruling before the flood in absurd reign-lengths (tens of thousands of years each), then a single line — "the flood swept over" — after which kingship descends from heaven a second time and ordinary reigns resume. The structural echo with Genesis 5's ten patriarchs from Adam to Noah, also ending at a flood, is exact enough that it's been the reference point for that comparison since the List was first assembled by Thorkild Jacobsen.</p>
+        <p><em>Worth knowing:</em> Jacobsen himself argued the antediluvian section reads as a later addition, spliced onto a King List that originally started only after the flood — meaning the ten-king structure may be a somewhat separate literary layer rather than an original core.</p>
+        <span class="tag mono">DOCUMENTED — Jacobsen 1939; antediluvian section possibly a later addition</span>
+        <span class="confidence mono">SECTION MAY BE LATER ADDITION</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">Ur III period, c. 2100–2000 BCE</div>
+        <h2>Enmerkar and the Lord of Aratta — the "Spell of Nudimmud"</h2>
+        <p>A Nippur scribal composition in which Enmerkar, king of Uruk, invokes an incantation of Enki concerning a lost golden age when Shubur, Hamazi, Sumer, Akkad, and the Martu lands all addressed Enlil in a single tongue. Samuel Kramer compared this directly to the Tower of Babel as far back as his 1956 <em>History Begins at Sumer</em> — a one-language world, disrupted, roughly 1,500 years before Genesis 11 was written down.</p>
+        <p><em>Softer than the flood chain:</em> translators genuinely disagree on whether Enki is being asked to restore a lost unity or to break an existing one — the reverse of Babel's own sequence if it's the latter. "One language, later confused" is also a common enough motif elsewhere that it clears a lower bar than something as specific as the Sargon/Moses basket match.</p>
+        <p><em>Parallelomania test, applied directly:</em> specific and uncommon detail — no, "one language, later divided" recurs independently across unrelated cultures; plausible contact — yes; named scholars in primary literature — one (Kramer), and translators disagree about which direction the text even runs. Fails the first leg of the test outright, which is exactly why it's tagged the weakest link on this page rather than folded silently into the strong chain above it.</p>
+        <span class="tag mono">DOCUMENTED — Kramer 1956; translation-dependent, weaker parallel</span>
+        <span class="confidence mono">WEAK PARALLEL — TRANSLATION-DEPENDENT</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 2000 BCE</div>
+        <h2>The Sumerian city laments</h2>
+        <p>Five known compositions — mourning Ur, Uruk, Nippur, Eridu, and Sumer-and-Ur as a whole — written within decades of the actual historical fall of the Ur III dynasty around 2004 BCE. Since their decipherment, scholars have set them beside the biblical Book of Lamentations and found precise, specific overlap: F.W. Dobbs-Allsopp's 1993 study catalogs a personified city mourned as a woman, the identical phrase "found no rest" describing both the Ur Lament's goddess and Lamentations' exiled Zion, the absence of musicians from the ruined city in both traditions, and shattered pottery used as a metaphor for the dead in both.</p>
+        <p><em>Genre, not proven borrowing:</em> the parallels are specific enough that early researchers assumed direct literary dependence, but the current transmission record doesn't support Judean scribes actually reading these particular Sumerian tablets — most scholars now read it as a shared ancient Near Eastern lament tradition rather than one text copying another.</p>
+        <span class="tag mono">DOCUMENTED — Dobbs-Allsopp 1993; genre parallel, not proven borrowing</span>
+        <span class="confidence mono">GENRE PARALLEL, NOT PROVEN BORROWING</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">composition likely Ur III or earlier; extant tablet c. 1600 BCE</div>
+        <h2>Eridu Genesis (the Sumerian Flood Story, Ziusudra)</h2>
+        <p>The actual missing link in the chain above: a Sumerian-language flood narrative that sits between Shuruppak's world and Atrahasis's, currently skipped over entirely. It opens with the creation of humanity, names the first five antediluvian cities, and has Enki secretly warn the pious king Ziusudra of Shuruppak that the gods intend to flood the earth — Ziusudra builds a boat, survives, and is granted eternal life in Dilmun. Thorkild Jacobsen, who gave the piece its modern name in 1981, worked from the single badly damaged tablet found at Nippur in 1893 and left untranslated until 1912.</p>
+        <p><em>Worth knowing:</em> the extant tablet dates to around 1600 BCE, but the composition is generally judged much older — the story's own internal logic (kingship descending before the flood, ending at the same point the Sumerian King List does) points to a Ur III-era or earlier oral and scribal tradition, not a 1600 BCE invention.</p>
+        <span class="tag mono">DOCUMENTED — Jacobsen 1981; oldest Mesopotamian flood narrative, damaged and reconstructed</span>
+        <span class="confidence mono">TABLET DAMAGED — TEXT RECONSTRUCTED</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 1800 BCE</div>
+        <h2>Atrahasis Epic</h2>
+        <p>The gods, frustrated by humanity's noise, send a flood — and warn one man to build a boat and save his family and animals. Divine warning, ark, survival: the narrative skeleton predates Noah by over a thousand years.</p>
+        <span class="tag mono">DOCUMENTED — Old Babylonian tablets</span>
+      </div>
+    </section>
+
+    <div class="widen-card">
+      <h2>Where the timeline widens</h2>
+      <p>Everything above this point is one continuous chain — Sumer feeding Genesis feeding everything downstream. Starting here, the timeline also marks where the major world traditions outside that chain begin, so this doesn't read as a story about only the Abrahamic lineage. Hinduism, Zoroastrianism, Buddhism, Jainism, Confucianism, and Taoism arose independently, with their own textual histories untouched by Mesopotamia — they're tagged <strong>"independent origin"</strong> rather than folded into the borrowing chain, because that's what the evidence actually shows.</p>
+      <p>Worth naming directly: Karl Jaspers coined <strong>"the Axial Age"</strong> in 1949 for the fact that Zoroaster, the Buddha, Mahavira, Confucius, Laozi, and the Hebrew prophets were all arguably active within a few centuries of each other — roughly 800–200 BCE — on different continents, with no contact between most of them. <span class="cite">Jaspers, K., Vom Ursprung und Ziel der Geschichte (1949); Eng. The Origin and Goal of History (1953).</span> The concept itself is contested, not settled fact — Bellah and Joas call it "widely, but not universally, accepted." <span class="cite">Bellah, R.N., and Joas, H., eds., The Axial Age and Its Consequences (Cambridge, MA: Harvard University Press, 2012).</span></p>
+    </div>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 1500–1200 BCE (Rigveda, oral)</div>
+        <h2>Hinduism — the Vedic tradition</h2>
+        <p>The Rigveda, the oldest of the four Vedas, is composed in early Sanskrit and transmitted orally with extraordinary fidelity for a millennium before being written down. Its dating puts it roughly contemporary with Ugarit's tablets and older than Genesis by a wide margin — worth sitting with, since "ancient" gets used loosely and this genuinely predates most of the chain above it.</p>
+        <p><em>No borrowing claim here, in either direction:</em> Vedic religion develops out of Indo-Aryan migration into the Punjab, on a separate track from Mesopotamia, with no documented contact this early. It belongs on the timeline for chronological honesty, not because it connects to the chain.</p>
+        <span class="tag mono">DOCUMENTED — independent origin, no connection to the chain above</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 1200 BCE</div>
+        <h2>Epic of Gilgamesh, final form</h2>
+        <p>The same flood is folded into Gilgamesh as the Utnapishtim episode — sealed boat, birds sent out to find land, a mountain landing. Genesis's flood tracks this almost beat for beat.</p>
+        <span class="tag mono">DOCUMENTED — Standard Babylonian tablets</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 1200–1100 BCE (standard version)</div>
+        <h2>Enuma Elish</h2>
+        <p>Babylon's creation epic: the primordial sea, Tiamat, is split by Marduk into sky and earth; light exists before sun, moon, and stars; the waters are divided above and below; humanity is fashioned last, followed by divine rest. Genesis 1 runs through nearly the same sequence.</p>
+        <p><em>The famous word-link doesn't actually hold:</em> Hebrew <em>tehom</em> ("the deep") was long assumed to derive straight from Tiamat's name. Philological work since Heidel (1951) shows that's not possible — both words descend independently from a common Semitic root for "sea." The sequence-parallel is real; the pun connecting them isn't.</p>
+        <span class="tag mono">DOCUMENTED — shared structure, corrected etymology</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 1400–1200 BCE</div>
+        <h2>Ugarit: the Baal Cycle</h2>
+        <p>Tablets from Ras Shamra (discovered 1928) preserve Baal's title "Cloud-Rider" and his combat with Yamm, the sea. Psalm 29's storm-theophany and Yahweh's fights with Leviathan/the sea (Psalms 18, 74) reuse this imagery so closely that Mark S. Smith and Frank Moore Cross read Yahweh's early portrait as directly built from Baal's — with Yahweh cast as the victor in Baal's place.</p>
+        <p><em>What's different:</em> Yahweh absorbs Baal's role inside a monotheistic system with no divine council contest — the imagery transfers, the theology doesn't. That's the pattern worth naming every time: borrowed language, redirected meaning.</p>
+        <span class="tag mono">DOCUMENTED — Cross 1973; M.S. Smith 2001</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">extant copies, c. 8th–7th century BCE</div>
+        <h2>The Sargon Birth Legend</h2>
+        <p>Sargon of Akkad, in his own inscribed words: born in secret to a priestess, sealed in a reed basket with bitumen, set on a river, drawn out by a water-carrier who raised him as his own son. Moses' infancy account (Exodus 2) matches this sequence closely enough — the specific objects, not just the theme — that most scholars read it as a deliberate literary echo, not coincidence.</p>
+        <p><em>Provenance:</em> the surviving fragments come from the Library of Ashurbanipal at Nineveh, discovered in 1867 and now in the British Museum — a royal Neo-Assyrian archive, not a folk retelling.</p>
+        <p><em>Open question:</em> which way, and how directly. The surviving Sargon copies date from roughly the same centuries many scholars place the shaping of Exodus, so direct dependence is plausible, but the exact transmission path isn't settled.</p>
+        <span class="tag mono">DOCUMENTED — Lewis 1980; dependency direction debated</span>
+        <span class="confidence mono">DIRECTION OF BORROWING DEBATED</span>
+      </div>
+    </section>
+
+    <div class="widen-card">
+      <h2>The other direction the same material traveled</h2>
+      <p>Everything on this page so far traces one route: Mesopotamia into Israel, mostly through the Babylonian Exile a century or two from here. But the Fertile Crescent wasn't a one-way pipe into Judaism — the same mythological material was moving into Greece at almost the same time, through a completely different corridor (Anatolia and the Levantine coast, not Babylon), and it's one of the best-documented cases in all of comparative mythology. Almost nobody who knows the Sumer-Genesis parallels has heard of this one.</p>
+    </div>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">Hesiod c. 730–705 BCE; Kumarbi Cycle tablets c. 13th century BCE</div>
+        <h2>Hesiod's <em>Theogony</em> and the Hurrian-Hittite Kumarbi Cycle</h2>
+        <p>Hesiod's succession myth — Ouranos castrated and overthrown by Kronos, Kronos in turn overthrown by Zeus — has a startlingly close predecessor from a completely different direction than anything else on this page: the Hurrian-Hittite "Kingship in Heaven" cycle, recovered from the Hittite royal archive at Hattusa, written in Hittite but carrying Hurrian and Babylonian divine names. Its own succession runs Alalu, overthrown by Anu, overthrown in turn by Kumarbi — who bites off and swallows Anu's genitals and becomes pregnant with the storm-god Teshub, who eventually overthrows him. M.L. West, in the most exhaustive modern treatment of the question, lays the three known versions side by side — Hurrian-Hittite (Alalu, Anu, Kumarbi, Teshub), Babylonian (Anu, Ea, Marduk), Greek (Ouranos, Kronos, Zeus) — and finds the same three-generation pattern in each: a personified Sky, a cunning middle god, and a storm-god who ends up king.</p>
+        <p><em>Not the same corridor as Genesis:</em> this material didn't reach Greece through Babylonian exile or any Judean contact — the standard reconstruction runs through Anatolia and Phoenician intermediaries during the 9th–7th century BCE "orientalizing" contact period, well attested archaeologically at trade sites like Al Mina in north Syria. Same Near Eastern mythological substrate, a different route, a different destination, arriving in Greek epic at almost the same moment it was reaching Hebrew scripture.</p>
+        <p><em>Worth knowing:</em> the mechanism doesn't match exactly — Kronos castrates Ouranos with a sickle, where Kumarbi bites and swallows Anu — and classicist Carolina López-Ruiz notes an Orphic theogony (preserved in the Derveni papyrus) actually tracks the Kumarbi swallowing-motif more closely than Hesiod's own version does, suggesting the Near Eastern pattern reached Greece more than once, through more than one channel.</p>
+        <span class="tag mono">DOCUMENTED — West 1997; "most scholars posit a direct transmission"</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">earliest references c. 5th century BCE (Pindar, Epicharmus); fullest surviving form 1st–2nd century CE (Ovid, Apollodorus)</div>
+        <h2>Deucalion's Flood — the Greek Noah, and why it's a weaker case than Hesiod above</h2>
+        <p>Zeus floods the earth to punish humanity; Deucalion, warned in advance, builds a chest or ark with his wife Pyrrha, survives, and the two repopulate the earth. Second Temple Jewish and early Christian writers themselves noticed the resemblance and speculated that Noah, Deucalion, and the Mesopotamian flood hero were garbled memories of the same person — this comparison isn't a modern invention.</p>
+        <p><em>Run through the same three-part test the Hesiod entry above just passed:</em> specific and uncommon detail — no. A god destroying humanity by flood while sparing one righteous household is one of the most widely distributed motifs on earth, appearing in cultures with no plausible Near Eastern contact at all, including across the pre-Columbian Americas. The one genuinely distinctive Greek detail — Deucalion and Pyrrha repopulating the earth by throwing stones over their shoulders, which turn into people — actually diverges from the Mesopotamian pattern rather than matching it, where survivors simply have children. Plausible contact — yes, general contact existed by the Classical period. Named scholars establishing direct borrowing rather than shared ancient flood-motif geography — no; Johannes Haubold's study of Greek-Mesopotamian literary contact treats this as convergent common ground, not demonstrated transmission the way the Sargon Legend or the Kumarbi Cycle are.</p>
+        <p><em>Placed here on purpose:</em> right next to the Hesiod entry, so the difference is visible in the same reading — one Greek myth with a documented transmission route and named mechanism, one Greek myth that merely looks similar. That contrast is the whole method of this page in miniature.</p>
+        <span class="tag mono">DOCUMENTED — Haubold 2013; universal motif, not demonstrated borrowing</span>
+        <span class="confidence mono">WEAK PARALLEL — UNIVERSAL MOTIF</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">587–539 BCE</div>
+        <h2>Babylonian Exile</h2>
+        <p>Judah's elite is deported to Babylon and lives inside Mesopotamian civilization for two generations — direct, sustained exposure to these older myths. Most scholars treat this as the likely transmission point, not distant folk memory.</p>
+        <span class="tag mono">DOCUMENTED — historical record</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 592 BCE</div>
+        <h2>Ezekiel names Tammuz directly</h2>
+        <p>In a vision of Jerusalem's temple, Ezekiel sees women "weeping for Tammuz" at the temple gate (Ezekiel 8:14) — Tammuz being Dumuzi, Inanna's consort in Sumerian myth, mourned in an annual Mesopotamian ritual. This isn't an inferred parallel or a philologist's reconstruction. A biblical author names a Mesopotamian deity and its cult practice outright, as something people around him were actually doing.</p>
+        <span class="tag mono">DOCUMENTED — direct textual reference, not inferred</span>
+      </div>
+    </section>
+
+    <section class="entry tier-flag" data-status="flagged">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">Old Babylonian copies, c. 1750 BCE (older tradition)</div>
+        <h2>Inanna's Descent to the Netherworld — the "dying-and-rising god" claim</h2>
+        <p>The Tammuz named two cards back is Dumuzi, and this is his story: Inanna descends to the underworld, is killed by her sister Ereshkigal, and can only return to the living on condition that someone take her place — she chooses Dumuzi. Online, this gets folded into the widely circulated claim that Jesus's resurrection copies an earlier "dying-and-rising god." It's the single most common Sumer-specific version of that claim, so it earns a flag of its own rather than sitting silently under the Ezekiel entry.</p>
+        <p><em>What the specialists actually found:</em> close philological work on the Sumerian and Akkadian texts shows Dumuzi does not rise — the "coming up" once read as his resurrection has been shown to be either Inanna meeting him in the underworld or a reference to the month named for him, and Gilgamesh itself lists Tammuz among Ishtar's lovers who died and stayed dead. Jonathan Z. Smith's 1987 <em>Encyclopedia of Religion</em> entry "Dying and Rising Gods" — a separate piece from the <em>Drudgery Divine</em> already cited on this page — used exactly this case to argue the whole category doesn't survive contact with the primary texts. Tryggve Mettinger pushed back in 2001 for a couple of other ancient Near Eastern deities, but even he doesn't restore Dumuzi to the category.</p>
+        <span class="tag mono">FLAGGED — Smith 1987; category rejected for this specific god</span>
+      </div>
+    </section>
+
+    <section class="entry tier-flag" data-status="flagged">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">Pyramid Texts, c. 2400–2300 BCE (oldest attestation)</div>
+        <h2>Osiris — the other "dying-and-rising god" claim</h2>
+        <p>Killed by his brother Set, dismembered, and reassembled by his wife Isis, Osiris is the most widely circulated version of the "Christianity copied an earlier resurrected god" claim online — more common by search volume than the Sumerian version just above. It deserves its own flag rather than a silent ride on Dumuzi's coattails, since the two cases actually fail for different reasons.</p>
+        <p><em>What the specialists actually found:</em> even Tryggve Mettinger — the scholar most sympathetic to reviving the "dying-and-rising gods" category, and the one who successfully makes a case for Baal, Melqart, and Adonis — explicitly excludes Osiris from it. Osiris doesn't return to the land of the living. He becomes ruler of the underworld and judge of the dead, permanently — the pattern later Egyptian pharaohs themselves follow into the afterlife, not a resurrection template. Jonathan Z. Smith reads the entire tradition as growing out of mummification practice — preparing a body for ongoing existence among the dead, not restoring it to life among the living. Two very different mechanisms, same rejected conclusion.</p>
+        <span class="tag mono">FLAGGED — Mettinger 2001; category rejected even by its strongest defender</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">539 BCE (artifact); found 1879 CE</div>
+        <h2>The Cyrus Cylinder</h2>
+        <p>A different kind of evidence than everything else here — not a borrowed myth, an independent artifact. Cyrus's own inscription, unearthed in Babylon, describes his policy of returning displaced peoples and rebuilding their temples. It never names Jerusalem or the Jews, but it confirms the general imperial policy Ezra 1 describes Cyrus applying to them — two records, two religious framings (Marduk's will vs. Yahweh's), describing what looks like the same real administrative act.</p>
+        <span class="tag mono">DOCUMENTED — independent corroboration, not textual borrowing</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 1000–500 BCE, edited after exile</div>
+        <h2>Genesis is compiled</h2>
+        <p>Textual scholarship traces Genesis to multiple woven sources, finalized after the exile — the Documentary Hypothesis, most accessibly laid out in Richard Elliott Friedman's <em>Who Wrote the Bible?</em> It reworks older Mesopotamian flood and paradise material into a monotheistic frame — a later retelling, not a record made at the time of Sumer.</p>
+        <p><em>Worth knowing:</em> the classical four-source model (J/E/P/D) is the dominant framework, not a settled one. Rolf Rendtorff and Erhard Blum argue for a <strong>fragmentary model</strong> — small independent units accreting into larger blocks, no continuous J or E ever existing as a document. John Van Seters argues a <strong>supplementary model</strong> — a core text expanded in layers by later writers, rather than several complete parallel sources later spliced together. Both remove the clean four-document picture; neither restores single, unedited authorship. Multi-source, post-exile editing is solid across every model; the exact source map is what's still argued — see Joseph Blenkinsopp's 1992 <em>The Pentateuch</em> for the fullest single-volume overview of where the field actually stands.</p>
+        <span class="tag mono">DOCUMENTED — Friedman 1987; model debated</span>
+        <span class="confidence mono">SOURCE MODEL DEBATED</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 1200–1000 BCE (Gathas); tradition places him later</div>
+        <h2>Zoroaster and the founding of Zoroastrianism</h2>
+        <p>The Gathas — Zoroaster's own hymns, in Old Avestan — are linguistically close to the Rigveda's Sanskrit, which is the main evidence for an early date. Mary Boyce, the standard modern authority, argued for roughly 1200–1000 BCE on those grounds. Later Zoroastrian and Greek tradition placed him much later, sometimes centuries closer to the Persian Empire itself — the dating has never fully settled.</p>
+        <p><em>Why it's here twice, in effect:</em> this entry is the tradition on its own terms. The Persian-period entry directly below is what happens when it meets Judaism during the exile — worth keeping those two separate rather than collapsing founder and influence into one line.</p>
+        <span class="tag mono">DOCUMENTED — Boyce 1979; dating genuinely unsettled</span>
+        <span class="confidence mono">DATING UNSETTLED</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">539–330 BCE</div>
+        <h2>Persian period</h2>
+        <p>Persian rule brings sustained contact with Zoroastrian dualism — a cosmic adversary, ranks of angels, a linear end-time. Ideas barely present in earlier Israelite religion enter Jewish thought here.</p>
+        <span class="tag mono">DOCUMENTED</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">traditional 563–483 BCE; corrected c. 480–400 BCE</div>
+        <h2>Buddhism and Jainism — the śramaṇa movements</h2>
+        <p>Siddhartha Gautama and Mahavira are near-contemporaries, both teaching in the same region of northeast India, both rejecting Vedic Brahmanical ritual authority in favor of personal liberation through conduct and insight. The long-standard dates for the Buddha (563–483 BCE) came from 19th-century calculation; a 1988 Göttingen symposium of specialists shifted scholarly opinion toward a death somewhere between 480 and 350 BCE instead, with no full consensus since.</p>
+        <p><em>Same oral-transmission gap as everywhere else on this page:</em> neither teacher wrote anything down. The Pali Canon wasn't committed to writing until roughly the 1st century BCE, centuries after the fact — the same kind of gap that separates Moses from Exodus's composition, handled with the same honesty here.</p>
+        <span class="tag mono">DOCUMENTED — Bechert 1991–97; dating actively revised</span>
+        <span class="confidence mono">DATING ACTIVELY REVISED</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">551–479 BCE</div>
+        <h2>Confucius and Confucianism</h2>
+        <p>Kong Qiu's teachings on ritual propriety, filial duty, and ethical governance were compiled by his disciples into the Analects after his death. Whether Confucianism is a "religion" in the Western sense is genuinely debated — it centers ethics and ancestor veneration over cosmology or a personal god — but it's included here because it shaped East Asian moral and religious life as deeply as anything else on this page shaped its own region.</p>
+        <span class="tag mono">DOCUMENTED — independent origin, no connection to the chain above</span>
+        <span class="category-note mono">NO DEITY, REVELATION, OR FLOOD NARRATIVE — CATEGORICALLY DIFFERENT SHAPE THAN THE CHAIN ABOVE</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">legendary 6th c. BCE; text likely 4th c. BCE</div>
+        <h2>Taoism — Laozi and the Tao Te Ching</h2>
+        <p>Sima Qian's 1st-century-BCE history places Laozi as an older contemporary of Confucius, but modern scholars (A.C. Graham among them) generally date the Tao Te Ching itself to around the 4th century BCE — and some question whether "Laozi" names one historical person at all, rather than a compiled voice.</p>
+        <p><em>Stated as plainly as the Shuruppak or Sargon entries above:</em> legendary founder-date and actual-text-date are two different claims. Conflating them is exactly the kind of move this page tries not to make anywhere else.</p>
+        <span class="tag mono">DOCUMENTED — Graham 1989; founder's historicity uncertain</span>
+        <span class="confidence mono">FOUNDER HISTORICITY UNCERTAIN</span>
+        <span class="category-note mono">NO DEITY, REVELATION, OR FLOOD NARRATIVE — CATEGORICALLY DIFFERENT SHAPE THAN THE CHAIN ABOVE</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc branch" data-status="documented" data-branch="true">
+      <div class="marker"></div>
+      <div class="card">
+        <span class="branch-flag mono">SEPARATE BRANCH — DOES NOT REJOIN</span>
+        <div class="date mono">360 BCE</div>
+        <h2>Plato writes Atlantis</h2>
+        <p>In the <em>Timaeus</em> and <em>Critias</em>, Plato invents a lost island civilization as philosophical allegory. No Sumerian, Egyptian, or Mesopotamian text describes anything matching it, and no find ties it to Sumer. It's Greek philosophy, not inherited myth — worth naming precisely so it doesn't get pulled into the main chain by association.</p>
+        <span class="tag mono">DOCUMENTED — as literary invention</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 300–200 BCE</div>
+        <h2>The apkallu, the ten kings, and the Watchers</h2>
+        <p>Mesopotamian tradition names seven antediluvian sages (apkallu) and ten antediluvian kings who ruled before the flood. The Book of Watchers (in 1 Enoch) turns the apkallu into the fallen Watchers, and Genesis 5 gives ten patriarchs from Adam to Noah — matching the ten-king structure almost exactly. The match gets specific: Enoch is seventh from Adam; the apkallu sage Utuabzu, said to have "ascended to heaven," is seventh on the Mesopotamian list. Same position, same claim, opposite verdict — Jewish writers took Babylon's own heroes and recast them as the villains of Genesis 6.</p>
+        <p><em>What's different:</em> the apkallu don't rebel or sin in the Mesopotamian sources — they're revered culture-heroes. The Watchers' crime is a Jewish addition, not something carried over. Kvanvig's own reviewers flag this as the weak joint in an otherwise strong case, which is exactly why it's worth stating plainly here.</p>
+        <span class="tag mono">DOCUMENTED — Kvanvig 1988, 2011; Annus 2010</span>
+        <span class="confidence mono">ACKNOWLEDGED WEAK JOINT IN THE CHAIN</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">200 BCE – 70 CE</div>
+        <h2>Second Temple Judaism</h2>
+        <p>Greek philosophy folds in through thinkers like Philo of Alexandria, who reads the Jewish God through the Stoic/Platonic <em>Logos</em> — a divine reasoning principle structuring the cosmos. Judaism is now a genuine multi-tradition synthesis, centuries before Jesus.</p>
+        <p><em>The claim ran in both directions, explicitly, in antiquity:</em> a century before Philo, the Jewish philosopher Aristobulus was already arguing that Greek poets and philosophers — Orpheus, Musaeus, eventually Plato himself — had drawn on Moses and the Torah without admitting it. Two and a half centuries later, the pagan Platonist Numenius of Apamea said essentially the same thing from the other side, in a line preserved by Clement of Alexandria and Eusebius that's still quoted today: <em>"What is Plato but Moses speaking Attic Greek?"</em> Neither claim holds up as history — Plato predates any plausible direct contact with Jewish scripture by centuries — but the fact that both a Jewish apologist and a pagan philosopher independently reached for the same rhetorical move, from opposite sides, is itself a real data point about how thinkable "the traditions are secretly one" already was by the 2nd century CE.</p>
+        <span class="tag mono">DOCUMENTED — Ridings 1995 on the "dependency theme"; the claim itself is not historical</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">1st century CE</div>
+        <h2>Jesus movement</h2>
+        <p>A Jewish apocalyptic movement emerges inside this already-synthesized world. It doesn't require a personal journey abroad to explain its ideas — they were already circulating locally.</p>
+        <span class="tag mono">DOCUMENTED — movement; theology is faith claim</span>
+      </div>
+    </section>
+
+    <section class="entry tier-syn" data-status="synthesis">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">1st century CE</div>
+        <h2>Paul</h2>
+        <p>Paul never meets the living Jesus; his authority rests on a personal revelatory experience. He pushes the movement open to non-Jews and builds the atonement/resurrection theology that becomes mainstream Christianity — a distinct architecture from the Jerusalem church James led.</p>
+        <span class="tag mono">SCHOLARLY CONSENSUS ON DIVERGENCE</span>
+      </div>
+    </section>
+
+    <section class="entry tier-syn" data-status="synthesis">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">2nd century CE</div>
+        <h2>Gnosticism — Monad, Sophia, Demiurge</h2>
+        <p>Roughly three thousand years after Sumer, Gnostic writers fuse Platonism, Judaism, and Christianity into a new emanation cosmology — the Monad, the Pleroma, Sophia's fall, the ignorant Demiurge. A genuine synthesis of everything upstream, built by people reading Plato and Genesis side by side — not preserved Sumerian material, but a new construction several layers removed from it.</p>
+        <span class="tag mono">LATER SYNTHESIS — Nag Hammadi, heresiological sources</span>
+      </div>
+    </section>
+
+    <section class="entry tier-syn" data-status="synthesis">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">216–274 CE</div>
+        <h2>Mani and Manichaeism — the actual East-West bridge</h2>
+        <p>Mani grew up inside an Elcesaite Jewish-Christian baptismal sect in Sasanian Mesopotamia — the same regional current that produced Gnosticism — before breaking away to found his own religion. He named himself the final prophet in a line running through Adam, Zoroaster, the Buddha, and Jesus, and built a systematic dualism of Light and Darkness explicitly meant to supersede and unify all four. His religion spread from North Africa to southern China within a few centuries; a young Augustine of Hippo was a Manichaean hearer for nearly a decade before his conversion.</p>
+        <p><em>This is the connection the "independent origin" entries above don't have:</em> Mani didn't parallel Buddhism, Zoroastrianism, and Christianity by coincidence — he sat inside all three currents and fused them on purpose, with his own name attached to the act.</p>
+        <p><em>Worth sitting with:</em> Manichaeism is the one tradition on this entire page with no living adherents today — the last documented communities in western China faded out well after the year 1000, having outlasted the religion's presence everywhere else it once spread. A faith that once ran from North Africa to the Pacific coast, gone; worth remembering next to every "and it's still practiced today" entry elsewhere on this page.</p>
+        <span class="tag mono">DOCUMENTED — Gardner 2020; explicit, self-declared synthesis</span>
+      </div>
+    </section>
+
+    <section class="entry tier-flag" data-status="flagged">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">Roman cult flourished c. 100–400 CE</div>
+        <h2>"Christianity copied Mithras" — the Roman mystery-cult claim</h2>
+        <p>The most-repeated version of the copycat claim online: Mithras born of a virgin on December 25th in a cave, worshipped by shepherds, twelve disciples, dead three days and risen. Almost every specific in that sentence fails to survive contact with the primary Mithraic material.</p>
+        <p><em>What the specialists actually found:</em> no ancient source gives Mithras a birth date at all — December 25th is attested only for Sol Invictus, on calendars that don't appear until the mid-4th century CE, generations after Christian tradition was already forming. The actual Mithraic birth iconography shows the god emerging fully grown from solid rock, arms raised, which is not a virgin birth by any reading. Manfred Clauss, the standard modern authority on Roman Mithraism, finds no evidence anyone in the cult called the rock-attendants "shepherds" before modern popularizers did. And the timeline runs backward from what the claim needs: the Roman mystery cult itself is a 2nd-century-CE phenomenon, emerging alongside early Christianity, not centuries before it — whatever borrowing happened, if any, the direction is unsettled at best.</p>
+        <span class="tag mono">FLAGGED — Clauss 2000; Beck 2006; core claims unsupported by primary iconography</span>
+      </div>
+    </section>
+
+    <section class="entry tier-flag" data-status="flagged">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">325 CE</div>
+        <h2>Nicaea "decided the Bible" — a popular myth</h2>
+        <p>The most common misconception about how the Bible was assembled, significantly amplified by Dan Brown's <em>The Da Vinci Code</em> (2003). The Council of Nicaea was convened by Constantine to settle the Arian controversy — whether Christ was of the same substance as God the Father — and produced the Nicene Creed. Its surviving twenty canons regulate clergy discipline and church order. None of them mention which books belong in scripture.</p>
+        <span class="tag mono">FLAGGED — Ehrman, among others, on the historical record</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">367–419 CE</div>
+        <h2>The New Testament canon actually forms</h2>
+        <p>Athanasius of Alexandria's Festal Letter 39 (367 CE) is the first surviving document to list exactly the 27 books that make up today's New Testament — no more, no fewer. Regional councils at Rome (382 CE), Hippo (393 CE), and Carthage (397, 419 CE) affirmed matching lists in the decades after.</p>
+        <span class="tag mono">DOCUMENTED — Metzger 1987</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">382–405 CE</div>
+        <h2>Jerome's Vulgate</h2>
+        <p>Commissioned by Pope Damasus I, Jerome translates the Bible into Latin working mostly from Bethlehem — and breaks with precedent by going to the Hebrew directly for the Old Testament rather than the Greek Septuagint everyone else was using. The Vulgate becomes the standard text of Western Christianity for over a thousand years, effectively until the printing press changes what "standard" can mean.</p>
+        <span class="tag mono">DOCUMENTED</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">610–632 CE; standardized c. 650s CE</div>
+        <h2>Islam emerges — the Qur'an and the prophetic chain</h2>
+        <p>Muhammad's prophetic career unfolds in an Arabian peninsula already dense with Jewish and Christian communities — Najran's Christians, Jewish tribes in Medina, Christian Arab kingdoms bordering Byzantium and Persia. The Qur'an places itself explicitly inside the same prophetic line already running through this timeline — Adam, Noah, Abraham, Moses, Jesus — not as a break from it but as its confirmation and correction. Islamic scholarship names this directly: the Qur'an as <em>muhaymin</em>, authoritative over the earlier revelations, affirming what's true in them and correcting what's been altered.</p>
+        <span class="tag mono">DOCUMENTED — third redaction of the same textual family, self-declared</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">7th century CE</div>
+        <h2>Qur'anic parallels: Cave of Treasures, Alexander Romance, Infancy Gospel</h2>
+        <p>Three specific, well-mapped parallels. Iblis's refusal to bow to Adam — "I am fire, he is dirt" — matches the 6th-century Syriac <em>Cave of Treasures</em> almost line for line, a detail absent from the Bible itself. Dhul-Qarnayn's wall against Gog and Magog (Qur'an 18) tracks a Syriac Alexander legend composed around 629 CE — so close to Muhammad's own lifetime that van Bladel could match an uncommon shared phrase for "fetid water" at the sunset across both languages. Jesus breathing life into clay birds (Qur'an 3:49, 5:110) comes not from any canonical Gospel but from the apocryphal <em>Infancy Gospel of Thomas</em>, already circulating in the region for centuries.</p>
+        <p><em>Two readings, stated fairly:</em> academic scholarship reads this as literary reuse of circulating material. Islamic tradition reads it the other way — that these accounts preserve genuine detail lost from a corrupted Bible, which the Qur'an restores rather than borrows. This isn't a vague appeal to faith; it has a name and a mechanism. The doctrine is <em>tahrif</em> — that earlier scriptures were textually corrupted by their own communities — and the Qur'an's own authority to correct them rests on <em>isnad</em>, the chain-of-transmission method Islamic scholarship uses to authenticate a report back to its source. Both readings are represented in the sources below; this page states the comparative-literature case because that's its method, not a verdict on which is true.</p>
+        <span class="tag mono">DOCUMENTED — Witztum 2011; van Bladel 2008; Reynolds 2018</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">8th–12th century CE</div>
+        <h2>The translation movement — Neoplatonism's road to Kabbalah</h2>
+        <p>Baghdad's House of Wisdom (est. c. 830 CE) translated Plato, Aristotle, and the Neoplatonists into Arabic, building the <em>falsafa</em> tradition — al-Kindi, al-Farabi, Avicenna. That current ran through Muslim Spain, where Jewish philosophers worked inside it directly: Solomon ibn Gabirol wrote a Neoplatonic emanation treatise in Arabic in 11th-century Córdoba. This is the real bridge between two entries already in this timeline — not a myth crossing cultures, but the same emanation logic underneath Sophia and the Monad, carried forward by Islamic civilization into the milieu the Kabbalists were reading in, a century before the Bahir appears.</p>
+        <span class="tag mono">DOCUMENTED — mechanism established; line to specific Kabbalists is looser</span>
+        <span class="confidence mono">MECHANISM SOLID, SPECIFIC LINK LOOSER</span>
+      </div>
+    </section>
+
+    <section class="entry tier-syn" data-status="synthesis">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">12th–13th century CE</div>
+        <h2>Kabbalah — Ein Sof and the Sefirot</h2>
+        <p>A millennium after Gnosticism, Jewish mysticism in Provence and Spain (Sefer ha-Bahir, then the Zohar) produces a structure that echoes it closely: Ein Sof, the unknowable infinite, emanates ten Sefirot; the lowest, the Shekhinah, is a feminine divine presence that "falls" toward the material world — Sophia's role, almost beat for beat. Gershom Scholem, founder of the modern academic study of Kabbalah, flagged the parallel directly — at one point arguing the Bahir contains a near-literal translation of the Greek Gnostic term <em>pleroma</em>.</p>
+        <p><em>Genuinely contested, and it's moved since Scholem:</em> Moshe Idel — Scholem's own successor in the field — directly refutes the Gnostic-diffusion claim in his 1988 <em>Kabbalah: New Perspectives</em>, arguing the relevant concepts are already present in early rabbinic sources and don't need an external Gnostic source at all. A separate line of scholarship proposes the Shekhinah's feminization owes more to 12th-century Provençal Christian devotion to Mary than to ancient Gnosticism. Three readings are live in the field, not two — Scholem's diffusion claim is now the minority position, not the default.</p>
+        <span class="tag mono">CONTESTED — Scholem 1962/1987; later scholarship divided</span>
+        <span class="confidence mono">CONTESTED — SCHOLEM'S READING NOW A MINORITY POSITION</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">1382–1395 CE</div>
+        <h2>The Wycliffe Bible</h2>
+        <p>The first complete English Bible, translated from Jerome's Vulgate under John Wycliffe's direction, with a revised version completed by his associate John Purvey after Wycliffe's death. Rome considered vernacular scripture dangerous in the hands of laypeople; Wycliffe's followers, the Lollards, were persecuted, and in 1428 — decades after his death — Wycliffe's bones were exhumed and burned by order of the Council of Constance.</p>
+        <span class="tag mono">DOCUMENTED</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 1455 CE</div>
+        <h2>The Gutenberg Bible</h2>
+        <p>Johannes Gutenberg prints Jerome's Vulgate in Mainz using movable type — the first major book produced this way in the West, roughly 180 copies. Not a new translation, but the technological hinge everything after it depends on: for the first time, a fixed text can be reproduced faster than scribes could ever copy it by hand.</p>
+        <span class="tag mono">DOCUMENTED</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">c. 800–200 BCE (Upanishads); c. 200 BCE–200 CE (Bhagavad Gita); c. 7th–17th century CE (bhakti movement)</div>
+        <h2>Hinduism's classical turn — Upanishads, Gita, and bhakti</h2>
+        <p><em>Placed here rather than back at the Rigveda, on purpose:</em> the Sikhism entry two cards down references "Hindu bhakti devotionalism" as something Guru Nanak drew on — but this page never actually established what that was, jumping straight from 1500 BCE hymns to a 1469 CE synthesis. This entry closes that gap. The Upanishads turn Vedic ritualism toward philosophical speculation on Brahman and Atman; the Bhagavad Gita synthesizes ritual duty, devotion, and knowledge into one path; and the bhakti movement — beginning with the Tamil Alvars and Nayanars in the south, spreading north over centuries — reorients the whole tradition around personal, emotional devotion to a chosen deity rather than priestly ritual.</p>
+        <p><em>The actual bridge to Sikhism:</em> north Indian bhakti poet-saints like Kabir (15th century) — writing in the vernacular, rejecting caste and empty ritual, blending devotional Hinduism with Islamic mysticism already active in the same Punjab-adjacent milieu — are Guru Nanak's direct contemporaries and closest devotional cousins, not a vague regional backdrop.</p>
+        <span class="tag mono">DOCUMENTED — independent origin; establishes the background the Sikhism entry below assumes</span>
+      </div>
+    </section>
+
+    <section class="entry tier-syn" data-status="synthesis">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">b. 1469 CE</div>
+        <h2>Sikhism — Guru Nanak</h2>
+        <p>Born in Punjab, Guru Nanak founded a monotheistic tradition that deliberately draws on both currents already active in the region: Hindu bhakti devotionalism and Sufi Islamic mysticism, rejecting caste distinction and ritual formalism from both sides. Nine successor Gurus followed; their teachings were compiled into the Guru Granth Sahib, itself treated as the living, final Guru.</p>
+        <p><em>Placed in the synthesis tier on purpose:</em> unlike the "independent origin" entries earlier in this timeline, Sikhism is an explicit, documented fusion of two already-established traditions — the same category as Gnosticism, Manichaeism, and Paul, just five centuries later and in a different region.</p>
+        <span class="tag mono">DOCUMENTED — deliberate synthesis of Hindu and Islamic currents</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">1522–1536 CE</div>
+        <h2>The Tyndale Bible</h2>
+        <p>William Tyndale translates the New Testament directly from Greek — not Jerome's Latin — publishing it in 1526 while in exile, and produces much of the Old Testament from Hebrew before his capture. He's strangled and burned for heresy in 1536, in Belgium, reportedly praying "Lord, open the King of England's eyes" at the end. Coverdale finishes the first complete printed English Bible the following year.</p>
+        <span class="tag mono">DOCUMENTED</span>
+      </div>
+    </section>
+
+    <section class="entry tier-doc" data-status="documented">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">1611 CE</div>
+        <h2>The King James Version</h2>
+        <p>Forty-seven scholars, six committees, commissioned by James I in 1604 and published in 1611. It's usually described as a fresh translation, but a rigorous 1998 word-by-word sampling study found Tyndale's actual wording makes up about 84% of the KJV New Testament and 76% of the Old Testament books he'd translated — the "new" 1611 Bible is, to a striking degree, Tyndale's own translation, published seventy-five years after the crown that authorized it had executed him for making it.</p>
+        <span class="tag mono">DOCUMENTED — Nielson & Skousen 1998</span>
+      </div>
+    </section>
+
+    <section class="entry tier-flag" data-status="flagged">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">1976 CE</div>
+        <h2>Sitchin's Anunnaki / ancient-astronaut reading</h2>
+        <p>The most common source feeding "Sumer knew more than they should have" claims online. Zecharia Sitchin's <em>The 12th Planet</em> reads the Anunnaki as extraterrestrials and Nibiru as an undiscovered planet on a 3,600-year orbit. Working Assyriologists reject the underlying translations — the Sumerian and Akkadian terms don't say what the theory needs them to say. Naming this clearly matters, because it's the theory most likely to quietly shape "everything connects" intuitions from outside the documented record.</p>
+        <span class="tag mono">FLAGGED — rejected by mainstream Assyriology</span>
+      </div>
+    </section>
+
+    <section class="entry tier-bridge" data-status="bridge">
+      <div class="marker"></div>
+      <div class="card">
+        <div class="date mono">Ongoing — the interpretive lens</div>
+        <h2>Comparative mythology (Jung, Campbell)</h2>
+        <p>Separate cultures independently produce structurally similar myths — flood, paradise lost, fall from grace — because they're answering the same human questions, not necessarily because one buried civilization wrote a single original story that fragmented. It's a real, legitimate lens. It's also the piece you're actively building, not a chain of documented transmission like everything above it.</p>
+        <span class="tag mono">INTERPRETIVE — your synthesis, not recovered history</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="closing">
+    <h2>How to hold this</h2>
+    <p><strong>The solid chain (blue):</strong> Sumer → Genesis → Second Temple Judaism runs on real textual and archaeological evidence. Each layer demonstrably read and reworked the one beneath it. Mani and Sikhism's founders sit in this territory too, in their own way — documented lives, at documented dates.</p>
+    <p><strong>The synthesis layer (rust):</strong> Paul, the Gnostics, Manichaeism, Sikhism — documented acts of new construction, deliberately fusing what came before, not hidden continuations of anything older.</p>
+    <p><strong>Independent origin (still blue, tagged separately):</strong> Hinduism, Zoroastrianism, Buddhism, Jainism, Confucianism, Taoism aren't part of the Sumer-to-Genesis chain and never claim to be. They're here so the page doesn't read as Abrahamic-only — dated and sourced with the same rigor, held to the same "what's different" standard, just without a borrowing claim attached.</p>
+    <p><strong>The bridge (green, dashed):</strong> where you connect it all into one continuous puzzle is comparative mythology — a real intellectual tradition, but distinct from the documented chain.</p>
+    <p><strong>The flag (red, crossed):</strong> claims that circulate widely — Sitchin's Anunnaki reading, Osiris and Mithras as pre-Christian resurrection templates, the Nicaea-decided-the-canon myth — but that specialists reject outright. Naming these explicitly is what keeps the page honest instead of accidentally importing pseudo-history alongside the real chain.</p>
+    <p><strong>One instinct, used two ways:</strong> if the parallels felt more persuasive by the fortieth entry than they did at the tenth, that's not a flaw in you — that's the same pattern-recognition instinct comparative mythology runs on. It's also the exact instinct Sitchin, and the Osiris/Mithras copycat claims, misuse. This page isn't asking you to turn that instinct off. It's asking you to apply the same three-part test — specific and uncommon, plausible contact, named scholars in primary literature — to the claim in front of you, including the ones on this page that don't clear it. The discipline is knowing when to brake, not just where.</p>
+  </div>
+
+  <div class="pattern-section">
+    <div class="pattern-card">
+      <div class="pattern-label mono">CROSS-ENTRY PATTERN — ANALYSIS, NOT A 51ST DOCUMENTED ENTRY</div>
+      <h2>Sixty centuries, one variable: what actually predicts how long one of these lasts</h2>
+      <p>Every tradition above that's still practiced today made a documented, datable break from being tied to one place. Every one that's extinct never did. That's not a claim about which religion is true. It's a claim about which ones survive contact with time — and it's checkable against the fifty entries above.</p>
+      <p>Historian of religion Jonathan Z. Smith — already in this page's references for two other works — drew the relevant distinction in a third: <strong>locative</strong> religious systems, bound to a specific temple, city, or king's patronage, versus <strong>utopian</strong> ones (from Greek <em>ou-topos</em>, "no place") that detach from any single location and travel. Smith proposed this as a lens for reading religious texts, not as a theory of survival — the causal claim below is this page's own application of his categories to its own dataset, not something Smith himself argued.</p>
+      <p><em>What actually died on this page:</em> Sumerian religion, Babylonian religion, Canaanite/Ugaritic worship of Baal, Egyptian religion, Roman Mithraism, the Greek Olympian cults as living worship. Every one of them was locative — bound to a temple whose funding depended on a king, a city, or an empire that eventually fell, conquered, or simply stopped paying for it. None of them ever produced a closed, portable canon that could be practiced somewhere else, by someone else, after the temple was gone. When the place died, the religion had nowhere else to exist.</p>
+      <p><em>What survived, and when it detached:</em> Judaism reconstitutes around Torah and synagogue after the Second Temple falls in 70 CE — a datable pivot away from a place-bound sacrificial cult toward a portable, text-centered one. Christianity opens past ethnic and geographic boundary within a generation, through Paul. Islam is text-fixed and portable from its first decades. Sikhism states outright that the text itself is the final Guru — no place, no human successor required. Buddhism's canon travels with a monastic order that needs no home temple. Confucianism and Taoism are the partial exception — no missionary portability, but a different kind of place-independence: Confucianism in particular gets embedded in an examination bureaucracy that regenerates its own scholar-class for over a thousand years, outliving any one dynasty that employed it.</p>
+      <p><em>Where the clean version of this breaks, and has to:</em> Gnosticism and Manichaeism were both portable and both textual, and both went extinct anyway — so portability is necessary but not sufficient. Mani was executed by the Sasanian Persian state in 274 CE. Rome's Diocletian ordered Manichaean leaders burned alive with their scriptures in 297 CE. In China, Manichaeism survived for over a century only under Uyghur state protection — and when Uyghur power collapsed in 840 CE, the Tang court's Huichang persecution of 843–845 CE named Manichaeism explicitly alongside Buddhism, Zoroastrianism, and Nestorian Christianity for destruction. Three empires, three separate purges, and Manichaeism never held a state patron of its own long enough to reach the demographic scale that would have let it survive losing any one of them. A portable canon gets you into the fight. It doesn't guarantee you win it.</p>
+      <p><em>What this is not saying:</em> this is not the claim that one truth underlies all of these traditions, or that their convergent survival strategy means they're secretly the same thing pointing at the same reality. That's a different, older claim — the perennialist one, associated with writers like René Guénon — and it's a metaphysical position, not a historical one. Nothing in this page's evidence tiers can confirm or rule it out, and it shouldn't borrow the authority of the documented entries above by sitting quietly next to them unlabeled. This pattern stays at the level the evidence actually supports: institutional and textual survival mechanics, not shared hidden truth.</p>
+      <p><em>What would break this pattern:</em> a locative tradition, never canonized, never detached from a single place, that nonetheless survived 2,000+ years as a living practice — or a portable, canon-closed tradition that held continuous state backing for centuries and still died out for reasons unrelated to external conquest or suppression. Neither shows up among these fifty entries. If you know of one, that's the thing that would actually falsify this, not just complicate it.</p>
+      <span class="pattern-tag mono">PATTERN — J.Z. Smith 1978 (locative/utopian categories); causal application is this page's own, offered at reduced confidence relative to the documented entries above</span>
+    </div>
+  </div>
+
+  <div class="refs">
+    <h2>References</h2>
+    <ol>
+      <li><strong>Annus, Amar.</strong> "On the Origin of Watchers: A Comparative Study of the Antediluvian Wisdom in Mesopotamian and Jewish Traditions." <em>Journal for the Study of the Pseudepigrapha</em> 19.4 (2010): 277–320.</li>
+      <li><strong>Bechert, Heinz, ed.</strong> <em>The Dating of the Historical Buddha / Die Datierung des historischen Buddha.</em> 3 vols. Göttingen: Vandenhoeck & Ruprecht, 1991–1997.</li>
+      <li><strong>Beck, Roger.</strong> <em>The Religion of the Mithras Cult in the Roman Empire: Mysteries of the Unconquered Sun.</em> Oxford: Oxford University Press, 2006.</li>
+      <li><strong>Bellah, Robert N., and Hans Joas, eds.</strong> <em>The Axial Age and Its Consequences.</em> Cambridge, MA: Harvard University Press, 2012.</li>
+      <li><strong>Biggs, Robert D.</strong> "The Abū Ṣalābīkh Tablets: A Preliminary Survey." <em>Journal of Cuneiform Studies</em> 20.2 (1966): 73–88.</li>
+      <li><strong>Blenkinsopp, Joseph.</strong> <em>The Pentateuch: An Introduction to the First Five Books of the Bible.</em> New York: Doubleday, 1992.</li>
+      <li><strong>Boyce, Mary.</strong> <em>Zoroastrians: Their Religious Beliefs and Practices.</em> London: Routledge & Kegan Paul, 1979.</li>
+      <li><strong>Clauss, Manfred.</strong> <em>The Roman Cult of Mithras: The God and His Mysteries.</em> Translated by Richard Gordon. Edinburgh: Edinburgh University Press, 2000.</li>
+      <li><strong>Cross, Frank Moore.</strong> <em>Canaanite Myth and Hebrew Epic: Essays in the History of the Religion of Israel.</em> Cambridge, MA: Harvard University Press, 1973.</li>
+      <li><strong>Dobbs-Allsopp, F.W.</strong> <em>Weep, O Daughter of Zion: A Study of the City-Lament Genre in the Hebrew Bible.</em> Biblica et Orientalia 44. Rome: Editrice Pontificio Istituto Biblico, 1993.</li>
+      <li><strong>Ehrman, Bart D.</strong> <em>Jesus, Interrupted: Revealing the Hidden Contradictions in the Bible.</em> New York: HarperOne, 2009 (on the Nicaea/canon misconception).</li>
+      <li><strong>Friedman, Richard Elliott.</strong> <em>Who Wrote the Bible?</em> New York: Summit Books, 1987.</li>
+      <li><strong>Gardner, Iain.</strong> <em>The Founder of Manichaeism: Rethinking the Life of Mani.</em> Foreword by Jason BeDuhn. Cambridge: Cambridge University Press, 2020.</li>
+      <li><strong>Graham, A.C.</strong> <em>Disputers of the Tao: Philosophical Argument in Ancient China.</em> La Salle, IL: Open Court, 1989.</li>
+      <li><strong>Hallo, William W., and K. Lawson Younger, Jr., eds.</strong> <em>The Context of Scripture.</em> 3 vols. Leiden: Brill, 1997–2002.</li>
+      <li><strong>Haubold, Johannes.</strong> <em>Greece and Mesopotamia: Dialogues in Literature.</em> Cambridge: Cambridge University Press, 2013.</li>
+      <li><strong>Heidel, Alexander.</strong> <em>The Babylonian Genesis: The Story of Creation.</em> 2nd ed. Chicago: University of Chicago Press, 1951.</li>
+      <li><strong>Idel, Moshe.</strong> <em>Kabbalah: New Perspectives.</em> New Haven: Yale University Press, 1988.</li>
+      <li><strong>Jacobsen, Thorkild.</strong> <em>The Sumerian King List.</em> Assyriological Studies 11. Chicago: Oriental Institute, 1939; and "The Eridu Genesis." <em>Journal of Biblical Literature</em> 100.4 (1981): 513–529.</li>
+      <li><strong>Jaspers, Karl.</strong> <em>Vom Ursprung und Ziel der Geschichte.</em> Munich: Piper, 1949. English trans. <em>The Origin and Goal of History.</em> New Haven: Yale University Press, 1953.</li>
+      <li><strong>Kramer, Samuel Noah.</strong> "Enki and Ninhursag: A Sumerian 'Paradise' Myth." <em>Bulletin of the American Schools of Oriental Research</em>, Supplementary Studies 1 (1945); and <em>History Begins at Sumer: Thirty-Nine Firsts in Recorded History.</em> Philadelphia: University of Pennsylvania Press, 1956.</li>
+      <li><strong>Kvanvig, Helge S.</strong> <em>Roots of Apocalyptic: The Mesopotamian Background of the Enoch Figure and of the Son of Man.</em> WMANT 61. Neukirchen-Vluyn: Neukirchener Verlag, 1988; and <em>Primeval History: Babylonian, Biblical, and Enochic — An Intertextual Reading.</em> Leiden: Brill, 2011.</li>
+      <li><strong>Lewis, Brian.</strong> <em>The Sargon Legend: A Study of the Akkadian Text and the Tale of the Hero Who Was Exposed at Birth.</em> ASOR Dissertation Series 4. Cambridge, MA: American Schools of Oriental Research, 1980.</li>
+      <li><strong>López-Ruiz, Carolina.</strong> <em>When the Gods Were Born: Greek Cosmogonies and the Near East.</em> Cambridge, MA: Harvard University Press, 2010.</li>
+      <li><strong>Mettinger, Tryggve N.D.</strong> <em>The Riddle of Resurrection: "Dying and Rising Gods" in the Ancient Near East.</em> Coniectanea Biblica, Old Testament Series 50. Stockholm: Almqvist & Wiksell International, 2001.</li>
+      <li><strong>Metzger, Bruce M.</strong> <em>The Canon of the New Testament: Its Origin, Development, and Significance.</em> Oxford: Clarendon Press, 1987.</li>
+      <li><strong>Nielson, Jon, and Royal Skousen.</strong> "How Much of the King James Bible Is William Tyndale's? An Estimation Based on Sampling." <em>Reformation</em> 3.1 (1998): 49–74.</li>
+      <li><strong>Rendtorff, Rolf.</strong> <em>The Problem of the Process of Transmission in the Pentateuch.</em> Translated by John J. Scullion. JSOTSup 89. Sheffield: JSOT Press, 1990 (German original 1977).</li>
+      <li><strong>Reynolds, Gabriel Said.</strong> <em>The Qur'an and the Bible: Text and Commentary.</em> New Haven: Yale University Press, 2018.</li>
+      <li><strong>Ridings, Daniel.</strong> <em>The Attic Moses: The Dependency Theme in Some Early Christian Writers.</em> Studia Graeca et Latina Gothoburgensia 59. Göteborg: Acta Universitatis Gothoburgensis, 1995.</li>
+      <li><strong>Samet, Nili.</strong> "Redaction Patterns in Biblical Wisdom Literature in Light of the Instructions of Shuruppak." <em>Zeitschrift für die alttestamentliche Wissenschaft</em> 133.2 (2021): 208–224.</li>
+      <li><strong>Sandmel, Samuel.</strong> "Parallelomania." <em>Journal of Biblical Literature</em> 81.1 (1962): 1–13.</li>
+      <li><strong>Scholem, Gershom.</strong> <em>Origins of the Kabbalah.</em> Translated by Allan Arkush, edited by R.J. Zwi Werblowsky. Princeton, NJ: Princeton University Press, 1987 (German original 1962).</li>
+      <li><strong>Smith, Jonathan Z.</strong> "Dying and Rising Gods." In <em>The Encyclopedia of Religion</em>, vol. 4, 521–27. New York: Macmillan, 1987; <em>Drudgery Divine: On the Comparison of Early Christianities and the Religions of Late Antiquity.</em> Chicago: University of Chicago Press, 1990; and <em>Map Is Not Territory: Studies in the History of Religions.</em> Leiden: E.J. Brill, 1978.</li>
+      <li><strong>Smith, Mark S.</strong> <em>The Origins of Biblical Monotheism: Israel's Polytheistic Background and the Ugaritic Texts.</em> New York: Oxford University Press, 2001.</li>
+      <li><strong>van Bladel, Kevin.</strong> "The Alexander Legend in the Qur'an 18:83–102." In <em>The Qur'an in Its Historical Context</em>, edited by Gabriel Said Reynolds, 175–203. London: Routledge, 2008.</li>
+      <li><strong>Van Seters, John.</strong> <em>Prologue to History: The Yahwist as Historian in Genesis.</em> Louisville: Westminster/John Knox Press, 1992.</li>
+      <li><strong>West, M.L.</strong> <em>The East Face of Helicon: West Asiatic Elements in Greek Poetry and Myth.</em> Oxford: Clarendon Press, 1997.</li>
+      <li><strong>Witztum, Joseph.</strong> "The Syriac Milieu of the Qur'an: The Recasting of Biblical Narratives." PhD diss., Princeton University, 2011.</li>
+    </ol>
+    <p style="font-size:0.78rem; color:var(--ink-dim); margin-top:16px;">Cited by author-year in each entry's tag above. Primary academic sources throughout — no encyclopedia or apologetics-site intermediaries.</p>
+  </div>
+
+  <div class="refs">
+    <h2>Primary sources online</h2>
+    <p style="font-size:0.85rem; color:var(--ink-dim); margin-bottom:14px;">Every "DOCUMENTED" tag above points to a bibliography entry. These point past the bibliography to the actual texts, free to read — so "documented" is one click from the artifact, not just a footnote you have to take on faith.</p>
+    <ul style="padding-left:20px; margin:0; font-size:0.85rem; color:var(--ink-dim); line-height:1.8;">
+      <li><strong style="color:var(--ink);">ORACC</strong> (Open Richly Annotated Cuneiform Corpus) — transliterations and translations of Sumerian and Akkadian texts, including royal inscriptions like Sargon's. <span class="mono" style="font-size:0.78rem;">oracc.museum.upenn.edu</span></li>
+      <li><strong style="color:var(--ink);">CDLI</strong> (Cuneiform Digital Library Initiative) — photographs and catalog records of individual cuneiform tablets, findspot data included. <span class="mono" style="font-size:0.78rem;">cdli.earth</span></li>
+      <li><strong style="color:var(--ink);">ETCSL</strong> (Electronic Text Corpus of Sumerian Literature) — full transliterations and English translations of ~400 Sumerian literary works, including the Kesh Temple Hymn, Instructions of Shuruppak, and Enmerkar and the Lord of Aratta. Oxford-hosted; the project itself is no longer updated, but the corpus remains online. <span class="mono" style="font-size:0.78rem;">etcsl.orinst.ox.ac.uk</span></li>
+      <li><strong style="color:var(--ink);">Nag Hammadi Library</strong> — full English translations of the Gnostic texts behind the Sophia/Demiurge entry. <span class="mono" style="font-size:0.78rem;">gnosis.org/naghamm/nhl.html</span></li>
+      <li><strong style="color:var(--ink);">Sefaria</strong> — searchable Hebrew Bible, Talmud, and Jewish mystical texts including the Bahir and Zohar behind the Kabbalah entry. <span class="mono" style="font-size:0.78rem;">sefaria.org</span></li>
+    </ul>
+  </div>
+
+  <div class="refs">
+    <h2>Version history</h2>
+    <p style="font-size:0.85rem; color:var(--ink-dim); margin-bottom:10px;"><strong style="color:var(--ink);">v1.0</strong> — original 45-entry build. Retired. Superseded by every item below.</p>
+    <p style="font-size:0.85rem; color:var(--ink-dim); margin-bottom:10px;"><strong style="color:var(--ink);">v1.1</strong> — full structural and content revision following a 15-role adversarial review. Changes:</p>
+    <ul style="padding-left:20px; margin:0 0 10px; font-size:0.82rem; color:var(--ink-dim); line-height:1.75;">
+      <li>Added Osiris and Mithras entries (flagged tier) — the two most-circulated online "Christianity copied an earlier god" claims were previously unaddressed.</li>
+      <li>Added a Hindu classical-turn entry (Upanishads/Gita/bhakti) closing the gap where the Sikhism entry referenced Hindu devotionalism that was never established.</li>
+      <li>Added a steelman card presenting the strongest case against reading this page as a "chain" at all (Hallo/Younger contextual approach).</li>
+      <li>Added confidence badges to 14 entries distinguishing single-scholar readings, contested dates, and reconstructed texts from field-consensus entries carrying the same tier color.</li>
+      <li>Added category-difference badges to Confucianism and Taoism, which lack deity/revelation/flood structure but were tagged identically to traditions that have it.</li>
+      <li>Named the Documentary Hypothesis's alternative supplementary and fragmentary models explicitly, with citations, rather than naming only the scholars who challenged the four-source model.</li>
+      <li>Added Moshe Idel as the named specific counter-scholar to Scholem's Gnostic-diffusion claim in the Kabbalah entry.</li>
+      <li>Added verified findspot/provenance detail to the Instructions of Shuruppak and Sargon Birth Legend entries.</li>
+      <li>Added the tahrif/isnad mechanism to the Qur'anic-parallels entry's "Islamic tradition" side, which previously named the academic side only.</li>
+      <li>Added a note that Manichaeism is the one tradition on the page with no living adherents today.</li>
+      <li>Added a compiler's-note placeholder for authorship transparency.</li>
+      <li>Added a cognitive-security paragraph to the closing section, naming the pattern-matching instinct the page itself trains.</li>
+      <li>Fixed a no-JS/archival failure mode: entries defaulted to invisible (opacity:0) with no fallback if JavaScript didn't run; added a <code>&lt;noscript&gt;</code> override.</li>
+      <li>Added <code>data-status</code> attributes to every entry so scrapers and AI summarizers can distinguish asserted from rejected claims without parsing tag text.</li>
+      <li>Added a persistent "FLAGGED" banner baked into flagged-tier cards via CSS, so a cropped screenshot can't lose the warning.</li>
+      <li>Added a sticky tier-filter bar and back-to-top control for navigating 48 entries on mobile.</li>
+      <li>Added a 5th legend entry for the "separate branch" (Atlantis) visual style, which previously rendered with no corresponding legend key.</li>
+      <li>Added a Primary Sources Online section with verified links to ORACC, CDLI, ETCSL, the Nag Hammadi Library, and Sefaria.</li>
+      <li>Added 8 new bibliography entries (Beck, Blenkinsopp, Clauss, Hallo & Younger, Idel, Mettinger, Rendtorff, Van Seters) — three of them for scholars the page already named in-text but had never actually cited.</li>
+      <li>Updated entry count from 45 to 48 throughout.</li>
+    </ul>
+    <p style="font-size:0.78rem; color:var(--ink-dim);">Not yet resolved, carried forward as open items: full paraphrase-distance audit against source texts; expanded Islamic-tradition sourcing to primary hadith/tafsir rather than secondary academic description of the doctrine.</p>
+    <p style="font-size:0.85rem; color:var(--ink-dim); margin:16px 0 10px;"><strong style="color:var(--ink);">v1.2</strong> — added a "Download as PDF" button:</p>
+    <ul style="padding-left:20px; margin:0; font-size:0.82rem; color:var(--ink-dim); line-height:1.75;">
+      <li>Client-side only, via the browser's native print-to-PDF — no external library, so it can't break from a dead CDN.</li>
+      <li>Fixed a real bug this surfaced: the scroll-triggered fade-in meant any entry a visitor hadn't scrolled to yet still had <code>opacity:0</code> at print time and would have exported blank. A <code>beforeprint</code> listener now force-shows all 48 entries first — and it catches native Ctrl+P/File→Print too, not just the button.</li>
+      <li>Added a full print stylesheet: light background, dark text, decorative rail/markers/filter bar/back-to-top hidden, page breaks kept out of the middle of a card.</li>
+      <li>No-JS visitors don't see a dead button — it's hidden in the <code>&lt;noscript&gt;</code> fallback, since their entries are already forced visible and the browser's own print menu works regardless.</li>
+    </ul>
+    <p style="font-size:0.85rem; color:var(--ink-dim); margin:16px 0 10px;"><strong style="color:var(--ink);">v1.3</strong> — added the Greek branch of the same Near Eastern material, extending the page past the Abrahamic-plus-independent-origins structure:</p>
+    <ul style="padding-left:20px; margin:0; font-size:0.82rem; color:var(--ink-dim); line-height:1.75;">
+      <li>Added Hesiod's <em>Theogony</em> and the Hurrian-Hittite Kumarbi Cycle — the best-documented case in comparative mythology that almost never appears alongside the Sumer-Genesis material, showing the same Near Eastern mythological substrate reached Greece through a different corridor (Anatolia/Phoenicia) at almost the same time it was reaching Israel through exile.</li>
+      <li>Added a connecting note ("The other direction the same material traveled") framing why Greek material belongs on a page that's otherwise been Abrahamic-plus-independent-origins.</li>
+      <li>Added Deucalion's Flood as a deliberate contrast case, run through the same three-part parallelomania test the Method card defines — and shown failing it, right next to the Hesiod entry that passes it. The universal-flood-motif problem the Method card warns about in the abstract, demonstrated concretely.</li>
+      <li>Expanded the Second Temple Judaism entry with Aristobulus and Numenius of Apamea — showing the "these traditions are secretly one" claim was made explicitly, from both directions, by ancient writers themselves, not invented by modern comparative religion.</li>
+      <li>Added 3 new bibliography entries (Haubold, Ridings, West), all independently verified before inclusion.</li>
+      <li>Updated entry count from 48 to 50 throughout.</li>
+    </ul>
+    <p style="font-size:0.85rem; color:var(--ink-dim); margin:16px 0 10px;"><strong style="color:var(--ink);">v1.4</strong> — added a closing cross-entry pattern, deliberately built as its own category rather than folded into the tier system:</p>
+    <ul style="padding-left:20px; margin:0; font-size:0.82rem; color:var(--ink-dim); line-height:1.75;">
+      <li>Added "Sixty centuries, one variable" — an analysis of what actually predicts which traditions on this page are still practiced today versus extinct, using Jonathan Z. Smith's locative/utopian distinction (Map Is Not Territory, 1978) applied to this page's own fifty entries.</li>
+      <li>Explicitly labeled as a different epistemic category from the documented entries above it — a checkable pattern, not a 51st dated fact, and not a claim that the traditions share a hidden metaphysical truth. That distinction is stated in the card itself, not left implicit.</li>
+      <li>Includes its own counter-case (Manichaeism's extinction despite being portable and textual) and its own falsification criteria, matching the same discipline the rest of the page holds every other claim to.</li>
+      <li>Styled as a new card family (electrum/gold accent) rather than reusing the bridge tier, since "cross-entry pattern about the dataset" and "individual comparative-mythology reading" are different kinds of claims that would blur together under one label.</li>
+    </ul>
+    <p style="font-size:0.85rem; color:var(--ink-dim); margin:16px 0 10px;"><strong style="color:var(--ink);">v1.5</strong> — pre-publish structural and citation QA pass, before this page's own launch post went out:</p>
+    <ul style="padding-left:20px; margin:0; font-size:0.82rem; color:var(--ink-dim); line-height:1.75;">
+      <li>Added a missing bibliography entry for Carolina López-Ruiz — named in the Hesiod entry making a specific claim about the Orphic theogony, with no matching citation. Verified against the actual published book before adding.</li>
+      <li>Added a missing third work (<em>Map Is Not Territory</em>, 1978) to Jonathan Z. Smith's existing bibliography entry, and corrected the pattern-card's inaccurate "already cited three times" claim — he'd been cited twice before, for two other works, not the one actually being drawn on.</li>
+      <li>Added <code>aria-pressed</code> state to the tier-filter buttons, dynamically toggled in JS — previously the active filter was only signaled visually via a CSS class, invisible to screen readers.</li>
+      <li>Removed a dead, unreferenced <code>id="backToTop"</code> attribute.</li>
+      <li>Full structural re-verification: tag balance, duplicate-ID check, data-status/tier consistency across all 50 entries, and an automated sweep of every scholar-name-plus-year mention in the body text cross-checked against the bibliography — confirmed clean after the two citation fixes above.</li>
+      <li>Bibliography count: 39 (was 38 before this pass).</li>
+    </ul>
+    <p style="font-size:0.78rem; color:var(--ink-dim);">Compiler's-note placeholder: resolved in v1.6.</p>
+    <p style="font-size:0.85rem; color:var(--ink-dim); margin:16px 0 10px;"><strong style="color:var(--ink);">v1.6</strong> — compiler's note filled in, and a black-and-gold visual pass:</p>
+    <ul style="padding-left:20px; margin:0; font-size:0.82rem; color:var(--ink-dim); line-height:1.75;">
+      <li>Compiler's note now reads "Sheldon K. Salmon, AionSystem" instead of the unfilled placeholder.</li>
+      <li>Added a masthead wordmark row above the eyebrow — a diamond mark plus "AionSystem · Sheldon K. Salmon," styled as a text placeholder in the same letter-spaced mono treatment used elsewhere on the page. This is a stand-in for a real logo image, not a substitute for one — swap in an actual graphic when available.</li>
+      <li>Shifted the hero's atmospheric background glow from blue/orange to gold-toned, added a 2px gold top-accent stripe, and gold-tinted the non-functional structural hairlines (masthead divider, closing-section top border) via a new <code>--rule-gold</code> variable.</li>
+      <li>Gold hover states on the tier-filter buttons and back-to-top link, replacing the previous neutral-gray hover.</li>
+      <li>Deliberately did not touch the tier swatch colors (lapis/carnelian/verdigris/flag) or any entry-card left-border — those encode DOCUMENTED/SYNTHESIS/BRIDGE/FLAGGED and changing them would break the color-to-meaning association built up across all fifty entries. The brand and chrome moved toward black-and-gold; the evidence coding didn't.</li>
+      <li>Four AION-inspired UX mechanics (scroll-position wayfinding, multi-select filtering, hero stats strip, tighter badge rhythm) were proposed and declined — HTML structure/behavior otherwise unchanged from v1.5.</li>
+    </ul>
+  </div>
+
+<script>
+  (function(){
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var entries = document.querySelectorAll('.entry');
+    if('IntersectionObserver' in window && !reduce){
+      var io = new IntersectionObserver(function(items){
+        items.forEach(function(item){
+          if(item.isIntersecting){ item.target.classList.add('show'); io.unobserve(item.target); }
+        });
+      }, { threshold: 0.15 });
+      entries.forEach(function(e){ io.observe(e); });
+    } else {
+      entries.forEach(function(e){ e.classList.add('show'); });
+    }
+
+    var fill = document.getElementById('railFill');
+    function updateRail(){
+      var track = document.querySelector('.rail-track');
+      if(!track) return;
+      var rect = track.getBoundingClientRect();
+      var total = track.offsetHeight;
+      var viewed = Math.min(total, Math.max(0, -rect.top + window.innerHeight * 0.5));
+      var pct = total > 0 ? (viewed / total) * 100 : 0;
+      fill.style.height = pct + '%';
+    }
+    window.addEventListener('scroll', updateRail, { passive: true });
+    window.addEventListener('resize', updateRail);
+    updateRail();
+
+    // force every entry visible before any print/PDF export, regardless of
+    // how the print was triggered (button, Ctrl+P, browser menu) — otherwise
+    // anything never scrolled into view still has opacity:0 and prints blank
+    window.addEventListener('beforeprint', function(){
+      entries.forEach(function(en){ en.classList.add('show'); });
+    });
+
+    var pdfBtn = document.getElementById('pdfDownloadBtn');
+    if(pdfBtn){
+      pdfBtn.addEventListener('click', function(){
+        window.print();
+      });
+    }
+
+    // tier filter bar
+    var filterBar = document.getElementById('tierFilter');
+    if(filterBar){
+      filterBar.addEventListener('click', function(e){
+        var btn = e.target.closest('.filter-btn');
+        if(!btn) return;
+        var filter = btn.getAttribute('data-filter');
+        var buttons = filterBar.querySelectorAll('.filter-btn');
+        buttons.forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+        if(filter === 'all'){
+          document.body.classList.remove('filtering');
+          entries.forEach(function(en){ en.classList.remove('filter-match'); });
+        } else {
+          document.body.classList.add('filtering');
+          entries.forEach(function(en){
+            if(en.getAttribute('data-status') === filter){
+              en.classList.add('filter-match');
+              if(!en.classList.contains('show')){ en.classList.add('show'); }
+            } else {
+              en.classList.remove('filter-match');
+            }
+          });
+        }
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
