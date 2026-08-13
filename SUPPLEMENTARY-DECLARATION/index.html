@@ -1,1 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplementary Declaration of Principles — Principles 9 Through 15</title>
+<meta name="description" content="An independent, proposed extension (Principles 9-15) to the IAA Declaration of Principles Concerning the Conduct of SETI, 2026 Update.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Literata:ital,opsz,wght@0,18..144,400;0,18..144,500;0,18..144,600;1,18..144,400&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1e3d;
+    --navy-soft: #33475b;
+    --paper: #f4f6f9;
+    --paper-card: #ffffff;
+    --amber: #a67c27;
+    --amber-deep: #8a6620;
+    --slate: #4a5568;
+    --hairline: #d4d0c8;
+    --status-red: #7a2020;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: #1c2430;
+    font-family: 'Literata', Georgia, serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Sequence bar, the signature element ---------- */
+  .sequence-bar {
+    display: flex;
+    width: 100%;
+    height: 6px;
+  }
+  .sequence-bar .seg {
+    flex: 1;
+    background: var(--hairline);
+  }
+  .sequence-bar .seg.new {
+    background: var(--amber);
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .status-line {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--status-red);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 1.15;
+    color: var(--navy);
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-style: italic;
+    font-size: 19px;
+    color: var(--navy-soft);
+    margin: 0 0 28px;
+    max-width: 620px;
+  }
+  .seq-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 11px;
+    color: var(--slate);
+    margin-top: 6px;
+    letter-spacing: 0.02em;
+  }
+  .seq-labels .grp { display: flex; gap: 2px; }
+
+  .author-block {
+    margin-top: 28px;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--navy-soft);
+    line-height: 1.9;
+  }
+  .author-block strong { color: var(--navy); }
+  .author-block a { color: var(--amber-deep); text-decoration: none; border-bottom: 1px solid transparent; }
+  .author-block a:hover { border-bottom-color: var(--amber-deep); }
+
+  /* ---------- Action row ---------- */
+  .actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 22px;
+    border-radius: 3px;
+    text-decoration: none;
+    display: inline-block;
+    border: 1.5px solid var(--navy);
+    transition: all 0.15s ease;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: var(--paper);
+  }
+  .btn-primary:hover { background: #182d54; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--navy);
+  }
+  .btn-secondary:hover { background: rgba(15,30,61,0.06); }
+
+  /* ---------- Status box ---------- */
+  .status-box {
+    margin-top: 32px;
+    padding: 18px 20px;
+    background: var(--paper-card);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--status-red);
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    color: var(--navy-soft);
+    line-height: 1.75;
+  }
+
+  /* ---------- TOC nav ---------- */
+  nav.toc {
+    margin: 44px 0;
+    padding: 24px 26px;
+    background: var(--paper-card);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+  }
+  nav.toc h2 {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin: 0 0 14px;
+  }
+  nav.toc ol {
+    margin: 0;
+    padding-left: 22px;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 14px;
+    color: var(--navy);
+  }
+  nav.toc li { margin-bottom: 9px; }
+  nav.toc a { color: var(--navy); text-decoration: none; }
+  nav.toc a:hover { color: var(--amber-deep); text-decoration: underline; }
+
+  /* ---------- Content ---------- */
+  main { padding: 8px 0 80px; }
+
+  section { padding-top: 52px; scroll-margin-top: 20px; }
+  section:first-of-type { padding-top: 20px; }
+
+  h2.section-head {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  h3.principle-head {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-weight: 600;
+    font-size: 25px;
+    color: var(--navy);
+    margin: 0 0 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .principle-num {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--amber-deep);
+    background: rgba(166,124,39,0.12);
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+
+  .grounded {
+    font-family: 'Public Sans', sans-serif;
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--slate);
+    margin: 10px 0 20px;
+    line-height: 1.7;
+  }
+
+  p { margin: 0 0 15px; font-size: 16.5px; }
+  ul.principle-list { margin: 0 0 8px; padding-left: 0; list-style: none; }
+  ul.principle-list li {
+    margin: 0 0 15px;
+    padding-left: 22px;
+    position: relative;
+    font-size: 16.5px;
+  }
+  ul.principle-list li::before {
+    content: "\2014";
+    position: absolute;
+    left: 0;
+    color: var(--amber-deep);
+  }
+
+  .hard-limit {
+    background: rgba(166,124,39,0.08);
+    border-left: 3px solid var(--amber);
+    padding: 14px 16px;
+    margin: 4px 0 15px;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .revision-note {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 13px;
+    color: var(--navy-soft);
+    background: var(--paper-card);
+    border: 1px solid var(--hairline);
+    padding: 18px 20px;
+    border-radius: 4px;
+    line-height: 1.75;
+    margin: 18px 0;
+  }
+
+  .plain-terms {
+    background: var(--paper-card);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 32px 34px;
+  }
+  .plain-terms p {
+    font-style: italic;
+    color: #2a3240;
+  }
+  .plain-terms-label {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--amber-deep);
+    margin-bottom: 14px;
+  }
+
+  .sources dt {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--navy);
+    margin-top: 16px;
+  }
+  .sources dd {
+    margin: 4px 0 0;
+    font-size: 15px;
+    color: var(--slate);
+  }
+
+  footer {
+    border-top: 1px solid var(--hairline);
+    padding: 36px 0 60px;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 12.5px;
+    color: var(--slate);
+    line-height: 1.8;
+  }
+  footer a { color: var(--amber-deep); }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 30px; }
+    .subtitle { font-size: 16px; }
+    h3.principle-head { font-size: 21px; flex-wrap: wrap; }
+    p, ul.principle-list li { font-size: 15.5px; }
+    .actions { flex-direction: column; }
+    .btn { text-align: center; }
+  }
+
+  a:focus-visible, .btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sequence-bar" aria-hidden="true">
+  <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
+  <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
+  <div class="seg new"></div><div class="seg new"></div><div class="seg new"></div><div class="seg new"></div>
+  <div class="seg new"></div><div class="seg new"></div><div class="seg new"></div>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="status-line">Independent Proposal &mdash; Not an Official IAA Publication</div>
+    <h1>Supplementary Declaration of Principles</h1>
+    <p class="subtitle">Concerning the Full Scope of First Contact with Extraterrestrial Intelligence &mdash; Principles 9 Through 15, a Proposed Extension to the IAA Declaration of Principles Concerning the Conduct of the Search for Extraterrestrial Intelligence (SETI), 2026 Update.</p>
+
+    <div class="seq-labels">
+      <div class="grp">Their Principles &mdash; 1 through 8, unmodified</div>
+      <div class="grp" style="color: var(--amber-deep); font-weight: 600;">Proposed &mdash; 9 through 15</div>
+    </div>
+
+    <div class="author-block">
+      <div><strong>Sheldon K. Salmon</strong> &middot; AionSystem</div>
+      <div>ORCID: <a href="https://orcid.org/0009-0005-8057-5115">0009-0005-8057-5115</a></div>
+      <div>LinkedIn: <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378">sheldon-k-salmon-b0901b378</a></div>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="#status">Read the Document</a>
+      <a class="btn btn-secondary" href="expansion-declaration-principles-9-15.pdf" download>Download Formatted PDF</a>
+    </div>
+
+    <div class="status-box">
+      This is an independently developed supplementary framework. It has not been reviewed or endorsed by the IAA SETI Committee and carries no ratified or binding status of any kind. It does not speak for the 350+ researchers who built the document it extends, and it proposes nothing that contradicts, weakens, or amends Principles 1 through 8. Offered humbly, as independent structural contribution to a live policy conversation.
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Table of contents">
+    <h2>On This Page</h2>
+    <ol>
+      <li><a href="#status">Status of This Document</a></li>
+      <li><a href="#p9">Principle 9 &mdash; Legal Status and Scope of Authority</a></li>
+      <li><a href="#p10">Principle 10 &mdash; Biological and Medical Safety</a></li>
+      <li><a href="#p11">Principle 11 &mdash; Non-Institutional and Non-Credentialed Discoverer Provisions</a></li>
+      <li><a href="#p12">Principle 12 &mdash; Embodied and Physical Contact Verification</a></li>
+      <li><a href="#p13">Principle 13 &mdash; Emergency and Compressed-Timeline Procedures</a></li>
+      <li><a href="#p14">Principle 14 &mdash; Operational Governance for Sustained Relationships</a></li>
+      <li><a href="#p15">Principle 15 &mdash; Cross-Value-System Ethical Considerations</a></li>
+      <li><a href="#closing">Closing Note</a></li>
+      <li><a href="#plain">In Plain Terms</a></li>
+      <li><a href="#sources">Sources and As-Of Date</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section id="status">
+      <h2 class="section-head">Status of This Document</h2>
+      <p>This is an independently developed supplementary framework. It is not an official publication of the International Academy of Astronautics, has not been reviewed or endorsed by the IAA SETI Committee, and carries no ratified or binding status of any kind. It is offered in the spirit of unsolicited, rigorous structural contribution to a live and important policy conversation &mdash; the same spirit in which independent researchers have historically submitted structural findings on draft international instruments for expert consideration, not as a rival document and not as a claim to speak for the 350+ researchers who built the instrument this extends.</p>
+      <p><strong>Authored by:</strong> Sheldon K. Salmon (AionSystem), with AI-assisted research and drafting support, 2026.</p>
+      <p><strong>Relationship to the real Declaration:</strong> Principles 1 through 8 of the 2026 Declaration are treated here as correct, sufficient, and unmodified for the scope they were built to cover &mdash; astronomy-based SETI, technosignature verification, and the communications discipline around a confirmed remote detection. Nothing below contradicts, weakens, or proposes to replace any part of that document. Every Principle that follows exists because a genuinely complete first-contact protocol is a larger project than a SETI protocol, and the difference between the two is where these seven Principles live.</p>
+      <p><strong>Methodology:</strong> This extension was built from two independent lines of analysis, cross-checked against each other rather than relied on alone. The first is a structural taxonomy of first-contact scenarios &mdash; over 60 entries spanning film, television, literature, video games, real-world contact attempts, mythology across six world regions, and original hypotheticals &mdash; built specifically to stress-test the real Declaration's eight Principles against the full shape of how contact could plausibly happen, not only the shape (a remote radio or optical signal) the current instrument addresses. The second is a formal structural red-team of the ratified Declaration text itself, examined as a document independent of any scenario. The resulting seven Principles were then themselves subjected to the same discipline: a full structural red-team of this document (which caught and corrected a real internal contradiction), followed by a dedicated fact-verification pass on every external citation used, one of which was corrected for overstated precision.</p>
+      <p><strong>A note on register.</strong> Principles 1&ndash;8 use consistently aspirational language (&ldquo;should,&rdquo; rarely &ldquo;shall&rdquo;). Where a genuine hard limit or deadline is required to close a gap identified in the analysis, that is stated in binding terms below and marked as such, since soft procedure at exactly the points that need hard procedure was itself one of the analysis's central findings.</p>
+    </section>
+
+    <section id="p9">
+      <h3 class="principle-head"><span class="principle-num">09</span> Legal Status and Scope of Authority</h3>
+      <p class="grounded">Grounded in: formal structural analysis of the 2026 Declaration's own header and institutional status.</p>
+      <ul class="principle-list">
+        <li>The 2026 Declaration is, by its own header, a Position Paper of a non-governmental scientific academy. It carries no binding legal force over any government, commercial entity, or non-IAA-affiliated research program. This should be stated plainly rather than left implicit, because the actors most likely to control a high-value first detection &mdash; classified national programs, commercial satellite and telescope operators, non-affiliated space agencies &mdash; are under no obligation to observe any of Principles 1 through 8.</li>
+        <li>Nations that choose to act on this recommendation should be encouraged to pursue incorporation of the verification (Principle 1), notification (Principle 3), and non-reply (Principle 7) provisions into binding domestic legislation, and, where feasible, into a protocol under an existing international instrument such as the Outer Space Treaty (1967) or through the UN Committee on the Peaceful Uses of Outer Space (COPUOS).</li>
+        <li>Any entity, governmental, commercial, or individual, that becomes aware of a credible detection is strongly encouraged to voluntarily adopt Principles 1 through 8 and this supplement in full, regardless of institutional affiliation.</li>
+        <li>A defined mechanism, pursued through COPUOS or an equivalent body, should be developed specifically to extend the notification and reply-consultation provisions (Principles 3 and 7) to non-IAA state and commercial actors, since these two provisions are the most safety-critical in the entire framework regardless of who detects first.</li>
+      </ul>
+    </section>
+
+    <section id="p10">
+      <h3 class="principle-head"><span class="principle-num">10</span> Biological and Medical Safety</h3>
+      <p class="grounded">Grounded in: The Reckoning Tide (XenoContact Taxonomy #45); Outer Space Treaty Article IX (1967), verified precisely rather than paraphrased from memory &mdash; including the real forward/backward asymmetry in its enforcement language and COSPAR's non-binding status; the historical pattern of the Columbian Exchange.</p>
+      <ul class="principle-list">
+        <li>Any confirmed or credible physical contact event &mdash; arrival, artifact recovery, or embodied encounter of any kind &mdash; should immediately trigger bidirectional biological containment protocols. Article IX of the Outer Space Treaty (1967) already names both directions in its own text &mdash; avoiding &ldquo;harmful contamination&rdquo; of celestial bodies, and avoiding &ldquo;adverse changes in the environment of the Earth resulting from the introduction of extraterrestrial matter&rdquo; &mdash; though legal scholarship notes the Treaty's active obligation to adopt measures is more clearly established for the latter (backward) direction than the former. The operational standards actually in use today, COSPAR's Planetary Protection Policy, are widely respected but explicitly non-binding soft law, not codified legal requirement &mdash; the same structural weakness Principle 9 already identifies in the SETI Declaration itself, appearing independently in a second domain of space governance.</li>
+        <li>&ldquo;Bidirectional&rdquo; is deliberate: protocols should protect Earth biology from extraterrestrial biological material, and protect any extraterrestrial party from Earth-origin pathogens, with equal priority. Historical precedent establishes that contact between two populations with no shared immunity has been catastrophic in at least one direction before; nothing in the current framework acknowledges the risk runs both ways.</li>
+        <li>A standing medical and biosafety working group should be established alongside the Post-Detection Sub-Committee described in Principle 6, tasked specifically with developing bidirectional contamination protocols in advance of any confirmed event. Given the medical and public-health character of this work, its formation and funding are most appropriately initiated by the World Health Organization, under the existing framework of the International Health Regulations (2005), in coordination with the IAA SETI Committee.</li>
+        <li>No delegation, landing party, or physical exchange should proceed without a pre-established containment and monitoring period, the duration and terms of which should be set by the working group above rather than negotiated ad hoc in the moment.</li>
+      </ul>
+    </section>
+
+    <section id="p11">
+      <h3 class="principle-head"><span class="principle-num">11</span> Non-Institutional and Non-Credentialed Discoverer Provisions</h3>
+      <p class="grounded">Grounded in: E.T. the Extra-Terrestrial, Bashar, John Was Trying to Contact Aliens, Perry Rhodan (XenoContact Taxonomy, Sections 7, 9, and 12); the formal finding that Principle 1's verification method and Principle 2's protections both presume institutional standing the discoverer may not have; AARO's real reporting infrastructure, verified precisely rather than assumed.</p>
+      <ul class="principle-list">
+        <li>A credible first-contact event may be experienced or discovered by a private individual with no institutional affiliation, no access to multiple observation facilities, and no relationship to any body named in Principle 3's notification list. Principles 1 and 3 as written do not anticipate this.</li>
+        <li>A clear, publicized, low-barrier reporting channel should be established &mdash; a dedicated portal or hotline &mdash; through which any individual can report a credible contact claim and receive a good-faith initial evaluation without first securing institutional backing. The real precedent here is narrower than it might first appear: the U.S. All-domain Anomaly Resolution Office (AARO) does operate a working channel today, but only for current or former government employees, service members, and contractors, plus a separate pathway for civilian pilots specifically. A direct channel for the general public has been publicly stated as forthcoming by AARO but had not launched as of the most recent verifiable reporting. This Principle proposes closing that same gap for first-contact claims specifically.</li>
+        <li>The protections described in Principle 2 (safety from harassment, doxxing, and negative professional or personal repercussions) are hereby explicitly extended to non-institutional discoverers, who face this risk with materially less institutional support than a credentialed researcher.</li>
+        <li>Where a non-institutional discoverer's claim cannot be independently verified by the standard described in Principle 1, this should be stated as an epistemic limitation of the case, not treated as grounds to dismiss the claim without a documented good-faith review.</li>
+      </ul>
+    </section>
+
+    <section id="p12">
+      <h3 class="principle-head"><span class="principle-num">12</span> Embodied and Physical Contact Verification</h3>
+      <p class="grounded">Grounded in: Body Snatchers, Parasyte, The Unbidden Guest, The Unknowing Vessel (XenoContact Taxonomy #46, #47); the formal finding that Principle 1's independent-multi-facility-observation standard has no application to a claim with no remote signal at all.</p>
+      <ul class="principle-list">
+        <li>Where a credible claim involves direct, physical, or embodied contact rather than a remote signal, Principle 1's verification standard should be adapted, not treated as inapplicable by default.</li>
+        <li>The adapted standard should require: multiple independent witness accounts where more than one witness exists; physical trace evidence handled under standard forensic chain-of-custody practice; and, where feasible, direct examination by an independently constituted rapid-response scientific team drawn from a pre-established roster.</li>
+        <li>It should be stated plainly, not obscured, that some embodied contact claims &mdash; an encounter with no physical trace, a claimed possession or direct-communication event &mdash; may be fundamentally unverifiable by any external method available to science today.</li>
+        <li>A credible but unverifiable claim should be neither dismissed nor treated as confirmed. It should be retained in an open, actively monitored status, revisited if new information emerges, rather than forced into a binary confirmed/rejected disposition the evidence doesn't actually support &mdash; mirroring how AARO itself already handles a large share of its own case archive.</li>
+      </ul>
+    </section>
+
+    <section id="p13">
+      <h3 class="principle-head"><span class="principle-num">13</span> Emergency and Compressed-Timeline Procedures</h3>
+      <p class="grounded">Grounded in: The Silent Handshake (#41), The Reckoning Tide (#45), Mass Effect (#27, the First Contact War as the direct consequence of no such protocol existing); the formal finding that neither Principle 3 nor Principle 7 specifies a deadline or a tie-breaking mechanism.</p>
+      <ul class="principle-list">
+        <li>Where circumstances do not permit the deliberative timeline implied by Principles 3 and 7 &mdash; a reply demanded in real time, a delegation physically present and awaiting response &mdash; a pre-authorized emergency decision protocol should exist rather than be improvised in the moment.</li>
+        <li>The United Nations, in consultation with the IAA SETI Committee and the broader international bodies named in Principle 7, should pre-designate a small, standing emergency contact authority with clearly bounded, provisional decision-making power. This authority should never have power to make a final, binding, treaty-level commitment on humanity's behalf.</li>
+      </ul>
+      <div class="hard-limit">
+        <p style="margin:0;"><strong>A maximum consultation period is hereby proposed for Principle 7's process even in non-emergency cases: no more than 90 days from confirmed detection, absent a formally declared extraordinary circumstance.</strong> Where consultation has not concluded within this period, the default disposition shall be continued silence &mdash; not an affirmative reply &mdash; automatically. This is stated as a hard limit deliberately, closing the specific gap identified in the formal analysis of the ratified text.</p>
+      </div>
+    </section>
+
+    <section id="p14">
+      <h3 class="principle-head"><span class="principle-num">14</span> Operational Governance for Sustained Relationships</h3>
+      <p class="grounded">Grounded in: Alien Nation, Star Trek, Destiny, Andromeda (XenoContact Taxonomy, Sections 6, 8, 13); the real 2026 UAP disclosure situation's own multi-year unresolved status; the formal finding that Principle 6's Sub-Committee is explicitly advisory only.</p>
+      <ul class="principle-list">
+        <li>Where contact is confirmed to be an ongoing relationship rather than a single, concluded event, a new Operational Relations Body should be convened, working alongside &mdash; not replacing or amending the charter of &mdash; the Post-Detection Sub-Committee described in Principle 6. That Sub-Committee's advisory charter should remain intact and unmodified; the gap this Principle closes is better served by a distinct body with a different mandate.</li>
+        <li>The Operational Relations Body should hold explicit authority to negotiate provisional terms of the ongoing relationship on behalf of the Principle 7 consultation process, subject to mandatory ratification review by the full international consultation body no less often than every two years.</li>
+        <li>This provision exists because an advisory-only body cannot govern a relationship that does not end. The current framework has no answer for what happens after Principle 7's single reply decision if the other party remains present, responsive, and engaged for years or generations.</li>
+      </ul>
+    </section>
+
+    <section id="p15">
+      <h3 class="principle-head"><span class="principle-num">15</span> Cross-Value-System Ethical Considerations</h3>
+      <p class="grounded">Grounded in: The Exclusionary Interlocutor (#44), The Sincerity Taboo (#42), The Costly Reply (#43); the formal finding that Principle 8's ethical framework is entirely self-directed, with no provision for ethical conflict originating from the other party's own value system.</p>
+      <ul class="principle-list">
+        <li>Where an extraterrestrial party's stated values, communication norms, or conditions for contact conflict with established human ethical or legal norms &mdash; including conditions restricting which categories of humans may serve as interlocutors &mdash; Principle 8's framework should be extended by a standing cross-cultural ethics consultation body.</li>
+        <li>No condition imposed by an extraterrestrial party that would require violation of fundamental human rights principles, as established in the Universal Declaration of Human Rights (1948) and subsequent binding instruments derived from it, should be complied with absent full Principle 7-level international consultation and the explicit, informed consent of any affected class of persons.</li>
+        <li>Where the extraterrestrial party's own framework holds that a request is not a violation by their own standards, this disagreement should be documented and reported through the Principle 3 channel as part of the formal record, not silently resolved in either direction without disclosure.</li>
+      </ul>
+    </section>
+
+    <section id="closing">
+      <h2 class="section-head">Closing Note</h2>
+      <p>Seven Principles, zero contradictions of the eight they extend. Principle 9 is placed first among these seven deliberately: the other six each assume some binding authority to extend, and the formal analysis found that authority does not currently exist for anyone outside the IAA's voluntary professional community. Principle 9 is the one the rest depend on.</p>
+      <div class="revision-note">
+        <strong>Revision note:</strong> an earlier draft of this document proposed expanding Principle 6's Sub-Committee itself into an operational body &mdash; a real amendment to the document this extends, not the &ldquo;zero contradictions&rdquo; claimed above. A subsequent red-team pass caught it; Principle 14 now proposes a new, separate body instead, leaving Principle 6 fully intact. A further section-by-section scan corrected four additional issues, including a stale methodology description and an undefined evidentiary standard in Principle 12, since resolved with a real, cited precedent.
+      </div>
+      <p>This document will be revised as the underlying taxonomy and analysis are revised. Corrections, disagreements, and independent review are invited in the same spirit this document was offered.</p>
+    </section>
+
+    <section id="plain">
+      <h2 class="section-head">In Plain Terms</h2>
+      <div class="plain-terms">
+        <div class="plain-terms-label">A note for readers outside this document's own register</div>
+        <p>In June 2026, the International Academy of Astronautics, a real international scientific organization, formally adopted a set of rules &mdash; built over several years with input from more than 350 researchers and practitioners around the world &mdash; for what happens if astronomers ever detect a signal from an intelligent civilization somewhere else in the universe.</p>
+        <p>It says: check carefully, check again with other observatories, don't panic anyone, tell the world and the United Nations once you're sure, and don't send anything back until the international community has had a chance to weigh in together.</p>
+        <p>It's a genuinely careful, well-built document. It's also built for exactly one kind of contact: a signal, picked up remotely, by trained scientists, with time to think it over.</p>
+        <p>That's not the only way this could plausibly happen. It might not even be the most likely way. Contact could come from something physically arriving. It could happen to an ordinary person with no observatory and no institution behind them. It could demand an answer in seconds, not months. It could come from something whose biology puts people at real physical risk just from proximity, or whose sense of time, or idea of what's true and what's polite, doesn't work anything like ours.</p>
+        <p>This document doesn't argue with the real one. It adds seven principles the real one had no room for, numbered 9 through 15, written to sit right after their 8, not instead of them.</p>
+        <p>The first one is the one everything else depends on: the real document, it turns out, isn't actually binding on anyone outside the community that agreed to follow it. A government or a private company that finds something first isn't required to follow any of these rules at all. The other six build on that: what to do if contact makes people physically sick just from being near each other. What to do if the person who found out isn't a scientist and has nowhere to turn. What &ldquo;verification&rdquo; even means when there's no signal to re-check, just someone's word. What happens when there's no time to ask anyone's permission before answering. What happens if the relationship doesn't end after one conversation, but continues for years. And what happens if the other side's own values conflict with ours, and staying in contact means someone has to bend.</p>
+        <p>None of this claims to speak for the 350+ researchers who built the real document, and it isn't official in any way. It was built by stress-testing the real document against a wide, carefully sourced catalogue of first-contact scenarios &mdash; then the resulting proposal was itself formally red-teamed and fact-checked before being finalized. It's offered in that spirit: not a rival, a genuine attempt to help finish the job.</p>
+      </div>
+    </section>
+
+    <section id="sources">
+      <h2 class="section-head">Sources and As-Of Date</h2>
+      <dl class="sources">
+        <dt>The 2026 Declaration itself</dt>
+        <dd>International Academy of Astronautics, ratified June 1, 2026.</dd>
+
+        <dt>Outer Space Treaty, Article IX (1967)</dt>
+        <dd>verified against primary legal analysis. The Treaty's active enforcement obligation is stronger for backward contamination than forward &mdash; a real asymmetry, not smoothed over.</dd>
+
+        <dt>COSPAR Planetary Protection Policy</dt>
+        <dd>confirmed as respected but explicitly non-binding soft law.</dd>
+
+        <dt>AARO reporting infrastructure</dt>
+        <dd>verified as of the most recent available public reporting; general-public access confirmed absent, civilian pilot reporting confirmed real via FAA-forwarded PIREPs.</dd>
+
+        <dt>International Health Regulations (2005)</dt>
+        <dd>the real WHO-administered legal framework for international public health emergency coordination.</dd>
+
+        <dt>The 1977 &ldquo;Wow!&rdquo; signal</dt>
+        <dd>the real historical case of a candidate detection never independently re-observed, used to test Principle 1's repeatability assumption.</dd>
+
+        <dt>The XenoContact Taxonomy</dt>
+        <dd>60+ entries, 8 axes, international expansion across six world regions &mdash; the full scenario base this document was stress-tested against.</dd>
+      </dl>
+      <p style="margin-top:22px; font-size:14px; color:var(--slate);">All figures and citations as of August 2026 and subject to revision at source.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div>Sheldon K. Salmon &middot; AionSystem &middot; ORCID <a href="https://orcid.org/0009-0005-8057-5115">0009-0005-8057-5115</a></div>
+    <div style="margin-top:6px;">This page is not affiliated with, endorsed by, or reviewed by the International Academy of Astronautics.</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
 
