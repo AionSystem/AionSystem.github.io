@@ -1,1 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="Contact Sheldon K. Salmon — Red-Team Framework Designer and Structural Integrity Analyst. Submit a document for adversarial review, inquire about services, or start a framework build.">
+<title>Contact — Document Red-Team Analysis | AionSystem</title>
+<meta property="og:title" content="Contact — Document Red-Team Analysis | AionSystem">
+<meta property="og:description" content="Submit a document. Request a red-team audit. Start a framework build. Direct line to the analyst.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:rgba(6,3,10,1);
+  --surface:rgba(16,8,24,0.6);
+  --panel:rgba(22,10,34,0.65);
+  --border:rgba(217,70,239,0.16);
+  --border-h:rgba(217,70,239,0.42);
+  --mid:#d946ef;
+  --mid-d:#a21caf;
+  --mid-l:#e879f9;
+  --peri:#a855f7;
+  --peri-l:#c084fc;
+  --accent:#f0abfc;
+  --red:#ef4444;
+  --amber:#f59e0b;
+  --text:#f0eaff;
+  --muted:#7a5a9a;
+  --dim:#3a1a5a;
+  --glow-mid:0 0 5px #d946ef,0 0 10px #d946ef,0 0 20px rgba(217,70,239,0.5);
+  --glow-peri:0 0 5px #a855f7,0 0 10px #a855f7,0 0 20px rgba(168,85,247,0.4);
+  --mono:'JetBrains Mono',monospace;
+  --display:'Space Grotesk',sans-serif;
+  --body:'Inter',sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
+  --font-base:clamp(16px,1vw + 8px,20px);
+  --font-h1:clamp(44px,7.5vw + 12px,92px);
+  --font-h2:clamp(26px,3.5vw + 8px,42px);
+}
+.skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--mid);color:#000;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s;}
+.skip-nav:focus{top:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:var(--font-base);line-height:1.5;overflow-x:hidden;}
 
+#doc-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.9;}
+#sym-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
+#sym-canvas.ready{opacity:0.65}
+.mid-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(217,70,239,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(217,70,239,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10;}
+.scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(217,70,239,0.018) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.35;}
+
+.audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(6,3,10,0.72);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;}
+.audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid);box-shadow:var(--glow-mid);outline:none;}
+.audio-toggle[aria-pressed="true"]{border-color:var(--red);color:var(--red);}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(6,3,10,0.78);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 30px rgba(217,70,239,0.05);opacity:1;}
+.nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--mid-l);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px;}
+.nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--mid);box-shadow:0 0 10px rgba(217,70,239,0.4);}
+.nav-logo span{color:var(--muted)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--text);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;padding-bottom:2px;transition:all 0.2s ease;}
+.nav-links a:hover,.nav-links a.active{color:var(--mid-l);border-bottom-color:var(--mid-l);text-shadow:0 0 8px var(--mid);}
+.nav-links a:focus-visible{outline:2px solid var(--mid);outline-offset:4px;border-radius:2px;}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;width:32px;height:32px;flex-direction:column;justify-content:space-between;align-items:flex-end;padding:4px 0;}
+.nav-hamburger span{display:block;height:2px;background:var(--text);transition:all 0.3s var(--ease-spring);border-radius:2px;}
+.nav-hamburger span:nth-child(1){width:100%}.nav-hamburger span:nth-child(2){width:70%}.nav-hamburger span:nth-child(3){width:100%}
+.nav-hamburger.open span:nth-child(1){transform:translateY(10px) rotate(45deg)}.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}.nav-hamburger.open span:nth-child(3){transform:translateY(-10px) rotate(-45deg)}
+.nav-hamburger:focus-visible{outline:2px solid var(--mid);outline-offset:4px;border-radius:2px}
+.mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:rgba(6,3,10,0.97);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;pointer-events:none;border-top:1px solid var(--border);}
+.mobile-nav.open{transform:translateY(0);visibility:visible;pointer-events:all;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0s;}
+.mobile-nav a{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;gap:8px;transition:all 0.15s ease;opacity:0;transform:translateY(6px);}
+.mobile-nav a:nth-child(2n){border-right:none}.mobile-nav.open a{opacity:1;transform:translateY(0)}
+.mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--dim);flex-shrink:0;}
+.mobile-nav a:hover,.mobile-nav a:focus-visible{color:var(--mid-l);background:rgba(217,70,239,0.04);outline:none;}
+.mobile-nav a:hover::before{background:var(--mid-l);box-shadow:0 0 6px var(--mid-l);}
+.mobile-nav a:last-child:nth-child(2n+1){grid-column:1/-1;border-right:none;}
+
+.wrapper{position:relative;z-index:20;max-width:1200px;margin:0 auto;padding:100px 40px 80px;}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--peri-l);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.eyebrow::before,.eyebrow::after{content:'';display:inline-block;width:20px;height:1px;background:var(--red);flex-shrink:0;box-shadow:0 0 8px rgba(239,68,68,0.6);}
+h1{font-family:var(--display);font-size:var(--font-h1);font-weight:700;letter-spacing:-2px;text-transform:uppercase;line-height:0.92;color:var(--text);margin-bottom:8px;text-align:center;}
+h1 em{display:block;font-style:normal;background:linear-gradient(135deg,var(--mid-l) 0%,var(--peri) 45%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;animation:gradShift 6s ease-in-out infinite;}
+@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.title-line{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:40px;margin-top:12px;text-align:center;}
+
+section{position:relative;z-index:20;padding:60px 40px;max-width:1200px;margin:0 auto}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:36px}
+.section-num{font-family:var(--mono);font-size:11px;color:var(--peri-l);letter-spacing:2px}
+.section-title{font-family:var(--display);font-size:var(--font-h2);font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);}
+.section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px rgba(217,70,239,0.15)}
+
+.card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;transition:border-color 0.3s var(--ease),box-shadow 0.3s var(--ease),transform 0.3s var(--ease);}
+.card:hover{border-color:var(--border-h);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(217,70,239,0.12);transform:translateY(-3px);}
+
+.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--mid);color:var(--mid-l);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer;}
+.cta-btn.primary{background:rgba(217,70,239,0.12);color:var(--accent);border-color:var(--mid)}
+.cta-btn:hover,.cta-btn:focus-visible{background:var(--mid);color:#000;border-color:var(--mid);box-shadow:var(--glow-mid);outline:none;}
+.cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--mid-d);color:#fff;border-color:var(--mid-d);box-shadow:var(--glow-mid);}
+.cta-btn.peri{border-color:var(--peri);color:var(--peri-l)}
+.cta-btn.peri:hover,.cta-btn.peri:focus-visible{background:var(--peri);color:#fff;box-shadow:var(--glow-peri);outline:none;}
+
+.logo-grid{display:flex;flex-wrap:wrap;gap:28px;align-items:center;}
+.logo-link{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;font-family:var(--mono);font-size:0.7rem;color:var(--muted);transition:all 0.2s;}
+.logo-link:hover{color:var(--mid-l);text-shadow:0 0 8px var(--mid);}
+.logo-link img{width:54px;height:54px;object-fit:contain;filter:brightness(0) invert(0.6);transition:filter 0.2s;}
+.logo-link:hover img{filter:brightness(0) invert(0.8) sepia(1) saturate(3) hue-rotate(260deg);}
+.vault-logo img{filter:none !important;border-radius:50%;}
+.vault-logo:hover img{filter:none !important;}
+
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.3s ease,visibility 0s linear 0.3s;}
+.modal-overlay.active{opacity:1;visibility:visible;transition:opacity 0.3s ease,visibility 0s linear 0s;}
+.modal-box{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:720px;width:92%;box-shadow:0 20px 40px rgba(0,0,0,0.6),0 0 30px rgba(217,70,239,0.08);position:relative;transform:scale(0.95);transition:transform 0.3s var(--ease);max-height:90vh;overflow-y:auto;}
+.modal-overlay.active .modal-box{transform:scale(1);}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;transition:color 0.2s;}
+.modal-close:hover{color:var(--mid-l);text-shadow:0 0 8px var(--mid);}
+.modal-title{font-family:var(--display);font-size:1.5rem;font-weight:700;color:var(--mid-l);margin-bottom:16px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-family:var(--mono);font-size:0.7rem;letter-spacing:1px;color:var(--muted);margin-bottom:4px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:0.8rem;outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--mid);box-shadow:0 0 8px rgba(217,70,239,0.3);}
+.form-group select option{background:#0a0c1a;color:var(--text);}
+.form-actions{display:flex;gap:12px;align-items:center;margin-top:24px;flex-wrap:wrap;}
+.nda-section{display:none;flex-direction:column;gap:12px;margin-top:16px;padding:16px;border:1px solid var(--border);border-radius:8px;background:rgba(0,0,0,0.25);}
+.nda-section.visible{display:flex;}
+.nda-section label{font-family:var(--mono);font-size:0.7rem;color:var(--muted);}
+.nda-check{display:flex;align-items:center;gap:8px;}
+.nda-text{font-family:var(--body);font-size:0.8rem;color:var(--muted);line-height:1.55;margin-bottom:8px;}
+
+.connect-grid{display:flex;flex-wrap:wrap;gap:40px;margin-bottom:40px;}
+.connect-grid strong{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
+.connect-grid a{color:var(--mid-l);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:1px;transition:all 0.2s ease}
+.connect-grid a:hover,.connect-grid a:focus-visible{text-shadow:var(--glow-mid);outline:none}
+
+footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:20;}
+.footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
+.footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
+.footer-links a:hover,.footer-links a:focus-visible{color:var(--mid-l);text-shadow:var(--glow-mid);outline:none;}
+.footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px;}
+
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#doc-canvas,#sym-canvas,.scan-lines{display:none}}
+@media(max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}section{padding:40px 20px}.wrapper{padding:80px 20px 60px}footer{flex-direction:column}.footer-links{flex-wrap:wrap;gap:16px}}
+@media(max-width:480px){.modal-box{padding:24px 16px}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-nav">Skip to content</a>
+<div aria-live="polite" aria-atomic="true" class="sr-only" id="canvas-announce"></div>
+<canvas id="doc-canvas" aria-hidden="true"></canvas>
+<canvas id="sym-canvas" aria-hidden="true"></canvas>
+<div class="mid-grid" aria-hidden="true"></div>
+<div class="scan-lines" aria-hidden="true"></div>
+<button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone">♪</button>
+
+<nav aria-label="Primary navigation">
+  <a href="/main-3/" class="nav-logo" aria-label="AionSystem home">
+    <img src="/assets/img/aion-logo.jpg" alt="AionSystem" class="nav-logo-img" width="28" height="28" onerror="this.style.display='none'">
+    <span>AION<span>system</span></span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="/main-3/about/">About</a></li>
+    <li><a href="/main-3/services/">Services</a></li>
+    <li><a href="/main-3/process/">Process</a></li>
+    <li><a href="/main-3/portfolio/">Portfolio</a></li>
+    <li><a href="/main-3/contact/" class="active">Contact</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobileNav"><span></span><span></span><span></span></button>
+</nav>
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true"></nav>
+
+<main class="wrapper" id="main">
+
+  <div class="eyebrow">// Direct Line</div>
+  <h1>Contact the<em>Analyst</em></h1>
+  <div class="title-line">Document Red-Team · Structural Integrity · Framework Builds</div>
+
+  <!-- Direct Email -->
+  <section id="email">
+    <div class="section-header">
+      <span class="section-num">// 01</span>
+      <h2 class="section-title">Direct Email</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div class="card" style="max-width:800px;">
+      <p style="font-family:var(--mono);font-size:1.1rem;color:var(--text);margin-bottom:14px;">
+        📧 <a href="mailto:aionsystem@outlook.com" style="color:var(--mid-l);text-shadow:0 0 8px rgba(217,70,239,0.5);text-decoration:underline;">aionsystem@outlook.com</a>
+      </p>
+      <p style="font-family:var(--body);font-size:clamp(14px,1.3vw,16px);color:var(--muted);line-height:1.7;">
+        Fastest path to a response. All document submissions, service inquiries, and framework discussions start here. I respond within 24–48 hours.
+      </p>
+    </div>
+  </section>
+
+  <!-- Submit a Document -->
+  <section id="submit-doc">
+    <div class="section-header">
+      <span class="section-num">// 02</span>
+      <h2 class="section-title">Submit a Document</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div class="card" style="max-width:800px;">
+      <p style="font-family:var(--body);font-size:clamp(14px,1.3vw,16px);color:var(--muted);line-height:1.7;margin-bottom:20px;">
+        Send the document. Receive the findings. Every failure node scored, every gap named, every fix written. The more detail you provide now, the faster I can get to work.
+      </p>
+      <button class="cta-btn primary" id="open-audit-form">📋 Open Document Submission Form</button>
+    </div>
+  </section>
+
+  <!-- AION Build -->
+  <section id="aion-build">
+    <div class="section-header">
+      <span class="section-num">// 03</span>
+      <h2 class="section-title">Custom AION Build</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div class="card" style="max-width:800px;">
+      <p style="font-family:var(--body);font-size:clamp(14px,1.3vw,16px);color:var(--muted);line-height:1.7;margin-bottom:20px;">
+        Need a custom red-team framework built for your specific document ecosystem? Full pipeline design, custom instruments, FORGE certification, and Gauntlet verification. Scoped individually.
+      </p>
+      <button class="cta-btn peri" id="open-custom-form">🔒 Start a Custom Build</button>
+    </div>
+  </section>
+
+  <!-- Everywhere Else -->
+  <section id="elsewhere">
+    <div class="section-header">
+      <span class="section-num">// 04</span>
+      <h2 class="section-title">Everywhere Else</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div class="logo-grid">
+      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub">
+        <span>GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn">
+        <span>LinkedIn</span>
+      </a>
+      <a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/orcid.svg" alt="ORCID">
+        <span>ORCID</span>
+      </a>
+      <a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener" class="logo-link">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg" alt="X">
+        <span>X</span>
+      </a>
+      <a href="https://medium.com/@sheldonksalmon" target="_blank" rel="noopener" class="logo-link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1043.63 592.71" width="54" height="54" fill="currentColor">
+          <path d="M588.67 296.36c0 163.67-131.78 296.35-294.33 296.35S0 460 0 296.36 131.78 0 294.34 0s294.33 132.69 294.33 296.36M911.56 296.36c0 154.06-65.89 279-147.17 279s-147.17-124.94-147.17-279 65.88-279 147.16-279 147.17 124.9 147.17 279M1043.63 296.36c0 138-23.17 249.94-51.76 249.94s-51.75-111.91-51.75-249.94 23.17-249.94 51.75-249.94 51.76 111.9 51.76 249.94"/>
+        </svg>
+        <span>Medium</span>
+      </a>
+      <a href="/main-3/" class="logo-link vault-logo">
+        <img src="/assets/img/aion-logo.jpg" alt="AionSystem">
+        <span>Home</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>
+    <div>AionSystem · Sheldon K. Salmon · Red-Team Framework Designer · © <span id="copyright-year"></span></div>
+    <div class="footer-legal">I find what kills a document before it costs you. All analyses are original independent work.</div>
+  </div>
+  <ul class="footer-links" role="list">
+    <li><a href="/main-3/about/">About</a></li>
+    <li><a href="/main-3/services/">Services</a></li>
+    <li><a href="/main-3/process/">Process</a></li>
+    <li><a href="/main-3/portfolio/">Portfolio</a></li>
+    <li><a href="/main-3/contact/">Contact</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+  </ul>
+</footer>
+
+<!-- DOCUMENT SUBMISSION MODAL -->
+<div class="modal-overlay" id="audit-modal" role="dialog" aria-modal="true" aria-labelledby="audit-modal-title">
+  <div class="modal-box">
+    <button class="modal-close" data-modal="audit-modal" aria-label="Close">×</button>
+    <div class="modal-title" id="audit-modal-title">Document Red-Team Submission</div>
+    <form id="audit-form">
+      <div class="form-group"><label>Full Name *</label><input type="text" name="name" required></div>
+      <div class="form-group"><label>Email *</label><input type="email" name="email" required></div>
+      <div class="form-group"><label>Company / Organization</label><input type="text" name="company"></div>
+      <div class="form-group"><label>Document Title / Name</label><input type="text" name="doc_title"></div>
+      <div class="form-group"><label>Document Type *</label><select name="doctype" required>
+        <option>Contract</option>
+        <option>Governance Framework</option>
+        <option>AI Policy</option>
+        <option>Technical Specification</option>
+        <option>Regulatory Filing</option>
+        <option>Internal Policy</option>
+        <option>White Paper</option>
+        <option>Terms of Service</option>
+        <option>Privacy Policy</option>
+        <option>Compliance Manual</option>
+        <option>Other</option>
+      </select></div>
+      <div class="form-group"><label>Document URL / Link (optional)</label><input type="url" name="doc_url" placeholder="https://..."></div>
+      <div class="form-group"><label>Page Count (approx.)</label><input type="number" name="pages" min="1"></div>
+      <div class="form-group"><label>Primary Concern / Focus Area</label><textarea name="concern" rows="2" placeholder="e.g., enforcement mechanisms, undefined terms, liability gaps"></textarea></div>
+      <div class="form-group"><label>Service Tier *</label><select name="tier" required>
+        <option>Free First Pass (up to 10 pages)</option>
+        <option>Anvil Pass ($1,500)</option>
+        <option>Full Workshop Pass ($5,000)</option>
+        <option>Multi-Pass Deep Audit ($15,000)</option>
+        <option>FORGE Certification ($25k–35k)</option>
+        <option>Full Gauntlet ($35k–50k)</option>
+      </select></div>
+      <div class="form-group"><label>Urgency *</label><select name="urgency" required>
+        <option>Standard (5–10 business days)</option>
+        <option>Priority (48–72h, +50%)</option>
+        <option>Expedited (24h, 2×)</option>
+      </select></div>
+      <div class="form-group"><label>NDA Required?</label>
+        <div style="display:flex;gap:16px;margin-top:4px;">
+          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--text);cursor:pointer;"><input type="radio" name="nda" value="no" checked> No</label>
+          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--text);cursor:pointer;"><input type="radio" name="nda" value="yes"> Yes</label>
+        </div>
+      </div>
+      <div class="form-group"><label>Related Documents (if any)</label><textarea name="related" rows="2" placeholder="e.g., annexes, referenced policies, prior versions"></textarea></div>
+      <div class="form-group"><label>Additional Notes</label><textarea name="notes" rows="2" placeholder="Anything else I should know before starting"></textarea></div>
+      <div class="form-actions">
+        <button type="button" class="cta-btn primary" id="confirm-audit">Confirm Details</button>
+        <div class="nda-section" id="audit-nda">
+          <div class="nda-text"><strong style="color:var(--text);">Mutual Non‑Disclosure Agreement (Preview)</strong><br>By requesting an NDA, both parties agree to keep all project details confidential. A formal NDA will be provided upon engagement.</div>
+          <div class="nda-check"><input type="checkbox" id="audit-nda-check"> <label for="audit-nda-check" style="cursor:pointer;">I request an NDA and agree to receive the formal document.</label></div>
+          <div class="form-group"><label>Signatory Name</label><input type="text" name="nda-signer" placeholder="Your full legal name"></div>
+          <div class="form-group"><label>Signatory Title</label><input type="text" name="nda-title" placeholder="e.g., CEO, CTO"></div>
+          <button type="button" class="cta-btn" id="send-audit">Send Request</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- CUSTOM BUILD MODAL -->
+<div class="modal-overlay" id="custom-modal" role="dialog" aria-modal="true" aria-labelledby="custom-modal-title">
+  <div class="modal-box">
+    <button class="modal-close" data-modal="custom-modal" aria-label="Close">×</button>
+    <div class="modal-title" id="custom-modal-title">Custom AION Build</div>
+    <form id="custom-form">
+      <div class="form-group"><label>Full Name *</label><input type="text" name="name" required></div>
+      <div class="form-group"><label>Email *</label><input type="email" name="email" required></div>
+      <div class="form-group"><label>Company / Organization</label><input type="text" name="company"></div>
+      <div class="form-group"><label>Framework / Document Type *</label><select name="framework_type" required>
+        <option>Contract Red-Team Framework</option>
+        <option>Governance Framework Audit System</option>
+        <option>AI Policy Red-Team Toolkit</option>
+        <option>Technical Standards Validation</option>
+        <option>Regulatory Compliance Scanner</option>
+        <option>Internal Policy Review Engine</option>
+        <option>Custom (describe below)</option>
+      </select></div>
+      <div class="form-group"><label>Project Description (framework purpose, constraints)</label><textarea name="description" rows="4"></textarea></div>
+      <div class="form-group"><label>Target Document Ecosystem</label><select name="environment">
+        <option>Contracts</option>
+        <option>Governance & Compliance</option>
+        <option>AI Policy</option>
+        <option>Technical Standards</option>
+        <option>Mixed / Custom</option>
+      </select></div>
+      <div class="form-group"><label>Desired Timeline *</label><select name="timeline" required>
+        <option>12 hours (expedited)</option>
+        <option>24 hours (expedited)</option>
+        <option>3–7 days</option>
+        <option>1–2 weeks</option>
+        <option>2–4 weeks</option>
+        <option>1–2 months</option>
+        <option>3+ months</option>
+      </select></div>
+      <div class="form-group"><label>Integration Requirements</label><textarea name="integration" rows="2" placeholder="e.g., existing CI/CD, APIs, compliance"></textarea></div>
+      <div class="form-group"><label>Estimated Budget Range *</label><select name="budget" required>
+        <option>$15,000 – $25,000</option>
+        <option>$25,000 – $50,000</option>
+        <option>$50,000+</option>
+      </select></div>
+      <div class="form-group"><label>NDA Required?</label>
+        <div style="display:flex;gap:16px;margin-top:4px;">
+          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--text);cursor:pointer;"><input type="radio" name="nda" value="no" checked> No</label>
+          <label style="display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:0.7rem;color:var(--text);cursor:pointer;"><input type="radio" name="nda" value="yes"> Yes</label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="cta-btn peri" id="confirm-custom">Confirm Details</button>
+        <div class="nda-section" id="custom-nda">
+          <div class="nda-text"><strong style="color:var(--text);">Mutual Non‑Disclosure Agreement (Preview)</strong><br>By requesting an NDA, both parties agree to keep all project details confidential. A formal NDA will be provided upon engagement.</div>
+          <div class="nda-check"><input type="checkbox" id="custom-nda-check"> <label for="custom-nda-check" style="cursor:pointer;">I request an NDA and agree to receive the formal document.</label></div>
+          <div class="form-group"><label>Signatory Name</label><input type="text" name="nda-signer" placeholder="Your full legal name"></div>
+          <div class="form-group"><label>Signatory Title</label><input type="text" name="nda-title" placeholder="e.g., CEO, CTO"></div>
+          <button type="button" class="cta-btn" id="send-custom">Send Request</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ... JavaScript (same as previous version but updated to match new form fields) ... */
+(function(){
+'use strict';
+
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const lowDevice=(navigator.hardwareConcurrency||2)<4;
+
+const docCanvas=document.getElementById('doc-canvas');
+const dc=docCanvas.getContext('2d');
+const symCanvas=document.getElementById('sym-canvas');
+const sc=symCanvas.getContext('2d');
+let W,H,t=0;
+const mouse={x:-9999,y:-9999,prevX:-9999,prevY:-9999,vx:0,vy:0};
+
+let docLines=[],failureNodes=[],scanPhase=0,scanPhase2=0;
+function buildDocField(){
+  docLines=[];
+  const ls=13;
+  for(let y=80;y<H-60;y+=ls){
+    const ind=28+Math.random()*55;
+    const lw=Math.random()*(W-ind-60)+80;
+    const isHdr=Math.random()<0.055;
+    const isInd=Math.random()<0.18;
+    docLines.push({y,x:ind+(isInd?30:0),w:isInd?lw*0.72:lw,alpha:0.03+Math.random()*0.055,isHdr,isInd,hlActive:false,hlTimer:0,hlColor:Math.random()<0.55?'mid':'red',phase:Math.random()*Math.PI*2});
+  }
+  failureNodes=[];
+  for(let i=0;i<22;i++){
+    const sev=Math.random()<0.18?'critical':(Math.random()<0.45?'major':'minor');
+    failureNodes.push({x:55+Math.random()*(W-110),y:80+Math.random()*(H-140),r:sev==='critical'?3.5:sev==='major'?2.5:1.8,alpha:0,targetAlpha:sev==='critical'?0.9:sev==='major'?0.7:0.5,sev,active:false,activateAt:1+Math.random()*14,phase:Math.random()*Math.PI*2});
+  }
+}
+function scheduleHl(){if(Math.random()<0.012){const l=docLines[Math.floor(Math.random()*docLines.length)];if(!l.hlActive){l.hlActive=true;l.hlTimer=0;}}}
+function drawDocField(){
+  dc.clearRect(0,0,W,H);
+  const bg=dc.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'rgba(6,3,10,1)');bg.addColorStop(0.5,'rgba(9,4,14,1)');bg.addColorStop(1,'rgba(6,3,10,1)');
+  dc.fillStyle=bg;dc.fillRect(0,0,W,H);
+  if(mouse.x>-100){const mg=dc.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,280);mg.addColorStop(0,'rgba(217,70,239,0.08)');mg.addColorStop(0.5,'rgba(168,85,247,0.03)');mg.addColorStop(1,'transparent');dc.fillStyle=mg;dc.fillRect(0,0,W,H);}
+  scanPhase+=0.003;scanPhase2+=0.007;
+  const sY=((Math.sin(scanPhase)*0.5+0.5)*H);
+  const sY2=((Math.cos(scanPhase2)*0.5+0.5)*H);
+  const sGrad=dc.createLinearGradient(0,sY-3,0,sY+3);sGrad.addColorStop(0,'transparent');sGrad.addColorStop(0.5,'rgba(217,70,239,0.25)');sGrad.addColorStop(1,'transparent');dc.fillStyle=sGrad;dc.fillRect(0,sY-3,W,6);
+  const sGrad2=dc.createLinearGradient(0,sY2-2,0,sY2+2);sGrad2.addColorStop(0,'transparent');sGrad2.addColorStop(0.5,'rgba(239,68,68,0.12)');sGrad2.addColorStop(1,'transparent');dc.fillStyle=sGrad2;dc.fillRect(0,sY2-2,W,4);
+  scheduleHl();
+  docLines.forEach(l=>{
+    const prox=Math.max(0,1-Math.abs(l.y-mouse.y)/80)*0.05;
+    const scanP=Math.max(0,1-Math.abs(l.y-sY)/28)*0.12;
+    if(l.hlActive){l.hlTimer+=0.04;const hA=Math.max(0,1-l.hlTimer/1.8);const hC=l.hlColor==='mid'?'rgba(217,70,239,':'rgba(239,68,68,';dc.fillStyle=hC+(hA*0.11)+')';dc.globalAlpha=1;dc.fillRect(l.x-4,l.y-5,l.w+8,10);dc.fillStyle=hC+(hA*0.65)+')';dc.fillRect(l.x,l.y,l.w*Math.min(1,l.hlTimer*0.8),1);if(l.hlTimer>1.8){l.hlActive=false;l.hlTimer=0;}}
+    dc.globalAlpha=l.alpha+prox+scanP;
+    if(l.isHdr){dc.fillStyle='rgba(232,121,249,0.6)';dc.fillRect(l.x,l.y,l.w*0.46,1.5);dc.fillStyle='rgba(168,85,247,0.45)';dc.beginPath();dc.arc(l.x-8,l.y+0.5,2,0,Math.PI*2);dc.fill();}
+    else if(l.isInd){dc.fillStyle='rgba(168,85,247,0.32)';dc.fillRect(l.x,l.y,l.w,0.7);}
+    else{dc.fillStyle='rgba(120,90,160,0.4)';dc.fillRect(l.x,l.y,l.w,0.8);}
+  });
+  failureNodes.forEach(n=>{
+    if(!n.active&&t>n.activateAt)n.active=true;
+    if(!n.active)return;
+    n.alpha=Math.min(n.targetAlpha,n.alpha+0.004);
+    const pulse=0.5+0.5*Math.sin(t*1.8+n.phase);
+    const col=n.sev==='critical'?'#ef4444':n.sev==='major'?'#d946ef':'#a855f7';
+    dc.globalAlpha=n.alpha*(0.7+0.3*pulse);
+    dc.fillStyle=col;dc.shadowColor=col;dc.shadowBlur=n.sev==='critical'?14:8;
+    dc.beginPath();dc.arc(n.x,n.y,n.r,0,Math.PI*2);dc.fill();
+    dc.globalAlpha=n.alpha*pulse*0.22;dc.strokeStyle=col;dc.lineWidth=0.8;
+    dc.beginPath();dc.arc(n.x,n.y,n.r+4+pulse*4,0,Math.PI*2);dc.stroke();
+    dc.shadowBlur=0;
+  });
+  dc.lineWidth=0.5;
+  for(let i=0;i<failureNodes.length;i++){
+    if(!failureNodes[i].active)continue;
+    for(let j=i+1;j<failureNodes.length;j++){
+      if(!failureNodes[j].active)continue;
+      const d=Math.hypot(failureNodes[i].x-failureNodes[j].x,failureNodes[i].y-failureNodes[j].y);
+      if(d<130){const isCrit=failureNodes[i].sev==='critical'||failureNodes[j].sev==='critical';dc.globalAlpha=(1-d/130)*0.13*failureNodes[i].alpha;dc.strokeStyle=isCrit?'rgba(239,68,68,0.8)':'rgba(217,70,239,0.7)';dc.beginPath();dc.moveTo(failureNodes[i].x,failureNodes[i].y);dc.lineTo(failureNodes[j].x,failureNodes[j].y);dc.stroke();}
+    }
+  }
+  const active=failureNodes.filter(n=>n.active).length;
+  const crit=failureNodes.filter(n=>n.active&&n.sev==='critical').length;
+  if(active>0){dc.globalAlpha=0.16;dc.font="9px 'JetBrains Mono',monospace";dc.fillStyle=crit>0?'#ef4444':'#d946ef';dc.textAlign='left';dc.fillText(`∂ SCAN ACTIVE · ${active} NODES · ${crit} CRITICAL`,22,H-22);}
+  dc.globalAlpha=1;dc.shadowBlur=0;
+}
+
+const SYMS=['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈'];
+const MCOLS=['#d946ef','#e879f9','#a855f7','#c084fc','#f0abfc'];
+const GR=180,GS=0.018,TG=0.22;
+const PFPS=lowDevice?30:60,PDT=1000/PFPS;
+let symbols=[],echoes=[];
+function initSymbols(){
+  symbols=[];const n=Math.floor((W*H)/7000);
+  for(let i=0;i<n;i++)symbols.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,size:11+Math.random()*18,alpha:0.10+Math.random()*0.20,inWell:false,scrollGlow:0,phase:Math.random()*Math.PI*2,origX:0,origY:0,targetX:0,targetY:0});
+}
+function updateSymbols(){
+  mouse.vx=mouse.x-mouse.prevX;mouse.vy=mouse.y-mouse.prevY;mouse.prevX=mouse.x;mouse.prevY=mouse.y;
+  symbols.forEach(s=>{
+    s.x+=s.vx;s.y+=s.vy;
+    if(s.x<-40)s.x=W+40;if(s.x>W+40)s.x=-40;if(s.y<-40)s.y=H+40;if(s.y>H+40)s.y=-40;
+    if(mouse.x>-100){const dx=s.x-mouse.x,dy=s.y-mouse.y,d=Math.hypot(dx,dy);if(d<GR&&d>1){const f=GS*(1-d/GR),a=Math.atan2(dy,dx);s.vx-=Math.cos(a)*f;s.vy-=Math.sin(a)*f;const ta=a+Math.PI/2,sp=TG*(1-d/GR);s.vx+=Math.cos(ta)*sp*(mouse.vx*.04+.5);s.vy+=Math.sin(ta)*sp*(mouse.vy*.04+.5);s.vx*=.985;s.vy*=.985;s.inWell=true;}else{s.inWell=false;s.vx*=.998;s.vy*=.998;}}else{s.inWell=false;}
+    if(s.scrollGlow>0.01)s.scrollGlow*=.93;else s.scrollGlow=0;
+  });
+}
+function spawnEcho(x,y){for(let i=0;i<10;i++){const a=(Math.PI*2*i)/10+Math.random()*.4,sp=1.5+Math.random()*2.5;echoes.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:9+Math.random()*8,color:MCOLS[Math.floor(Math.random()*MCOLS.length)],alpha:0.8,age:0,maxAge:500});}}
+function updateEchoes(){echoes=echoes.filter(e=>{e.age+=16;if(e.age>=e.maxAge)return false;e.x+=e.vx;e.y+=e.vy;e.alpha=0.8*(1-e.age/e.maxAge);e.vx*=.97;e.vy*=.97;return true;});}
+function drawSymbols(){
+  sc.clearRect(0,0,W,H);
+  echoes.forEach(e=>{sc.globalAlpha=e.alpha;sc.font=`${e.size}px 'JetBrains Mono',monospace`;sc.textAlign='center';sc.textBaseline='middle';sc.shadowColor=e.color;sc.shadowBlur=12;sc.fillStyle=e.color;sc.fillText(e.char,e.x,e.y);});
+  symbols.forEach(s=>{
+    const glow=s.scrollGlow>.01?14+s.scrollGlow*18:s.inWell?22:10;
+    sc.font=`${s.size}px 'JetBrains Mono',monospace`;sc.textAlign='center';sc.textBaseline='middle';
+    const isMid=Math.sin(t*.3+s.phase)>0;
+    sc.shadowColor=isMid?'#d946ef':'#a855f7';sc.shadowBlur=glow;
+    const a=Math.min(0.85,s.alpha+s.scrollGlow*.2);
+    sc.fillStyle=isMid?`rgba(217,70,239,${a.toFixed(3)})`:`rgba(168,85,247,${a.toFixed(3)})`;
+    sc.globalAlpha=1;sc.fillText(s.char,s.x,s.y);
+  });
+  sc.shadowBlur=0;sc.globalAlpha=1;
+}
+
+let isCollapsing=false,collapsePhase=0,collapseStart=0;
+const SNAP=1500,HOLD=800,EXPLODE=600;let holdTO=null;
+function triggerCollapse(){
+  if(isCollapsing)return;isCollapsing=true;collapsePhase=1;collapseStart=performance.now();
+  const lat=[],hW=60,hH=hW*Math.sqrt(3)/2;
+  for(let y=0;y<H+hH;y+=hH)for(let x=0;x<W+hW;x+=hW)lat.push({x:x+(Math.floor(y/hH)%2)*(hW/2),y});
+  symbols.forEach(s=>{s.origX=s.x;s.origY=s.y;const tg=lat[Math.floor(Math.random()*lat.length)];s.targetX=tg.x;s.targetY=tg.y;});
+}
+function stepCollapse(now){
+  if(!isCollapsing)return;const el=now-collapseStart;
+  if(collapsePhase===1){const p=Math.min(el/SNAP,1),tt=1-Math.pow(1-p,3);symbols.forEach(s=>{s.x=s.origX+(s.targetX-s.origX)*tt;s.y=s.origY+(s.targetY-s.origY)*tt;s.vx=0;s.vy=0;s.alpha=0.1+0.38*p;});if(p>=1){collapsePhase=2;collapseStart=now;clearTimeout(holdTO);holdTO=setTimeout(()=>{if(!isCollapsing)return;collapsePhase=3;collapseStart=performance.now();symbols.forEach(s=>{const a=Math.random()*Math.PI*2,sp=3+Math.random()*4;s.vx=Math.cos(a)*sp;s.vy=Math.sin(a)*sp;s.alpha=0.65;});spawnEcho(W/2,H/2);},HOLD);}}
+  else if(collapsePhase===3){const p=Math.min(el/EXPLODE,1);symbols.forEach(s=>{s.alpha=0.1+0.22*(1-p);s.vx*=.98;s.vy*=.98;});if(p>=1){isCollapsing=false;collapsePhase=0;symbols.forEach(s=>{s.vx=(Math.random()-.5)*.25;s.vy=(Math.random()-.5)*.25;s.alpha=0.10+Math.random()*.20;});}}
+}
+
+let lastPT=0;
+function loop(ts){
+  t+=0.016;
+  if(ts-lastPT>=PDT){lastPT=ts;if(isCollapsing)stepCollapse(ts);else updateSymbols();updateEchoes();}
+  drawDocField();drawSymbols();
+  requestAnimationFrame(loop);
+}
+function resize(){W=docCanvas.width=symCanvas.width=window.innerWidth;H=docCanvas.height=symCanvas.height=window.innerHeight;buildDocField();initSymbols();}
+let rT;window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(resize,150);});
+
+window.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){mouse.x=e.clientX;mouse.y=e.clientY;}});
+window.addEventListener('pointerleave',()=>{mouse.x=-9999;mouse.y=-9999;});
+window.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;spawnEcho(e.clientX,e.clientY);const near=failureNodes.find(n=>Math.hypot(n.x-e.clientX,n.y-e.clientY)<50&&!n.active);if(near){near.active=true;near.alpha=near.targetAlpha;}});
+window.addEventListener('dblclick',e=>{const tag=e.target.tagName.toLowerCase();const inter=['a','button','input','select','textarea'].includes(tag)||e.target.closest('a')||e.target.closest('button')||e.target.closest('.cta-btn')||e.target.closest('.card')||e.target.closest('.logo-link')||e.target.closest('.modal-overlay');if(!inter)triggerCollapse();});
+window.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='Q'){e.preventDefault();triggerCollapse();}});
+let stimer;window.addEventListener('scroll',()=>{const sy=window.scrollY;symbols.forEach(s=>{if(Math.abs(s.y-(sy+H/2))<180)s.scrollGlow=1.0;});clearTimeout(stimer);stimer=setTimeout(()=>symbols.forEach(s=>s.scrollGlow=0),300);},{passive:true});
+
+let audioCtx=null,audioOn=false;
+const toggle=document.getElementById('audio-toggle');
+function initAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audioCtx=new AC();const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.055,audioCtx.currentTime);const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=280;filter.Q.value=0.8;const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(38,audioCtx.currentTime);const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(76.4,audioCtx.currentTime);const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.1,audioCtx.currentTime);osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc1.start();osc2.start();window.addEventListener('pagehide',()=>{try{audioCtx.close();}catch(_){}},{once:true});}
+if(toggle){toggle.addEventListener('click',()=>{audioOn=!audioOn;toggle.setAttribute('aria-pressed',String(audioOn));if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}});}
+
+const hamburger=document.getElementById('hamburger'),mobileNav=document.getElementById('mobileNav');let navOpen=false;
+if(hamburger&&mobileNav){document.querySelectorAll('.nav-links a').forEach((link,i)=>{const a=document.createElement('a');a.href=link.getAttribute('href');a.textContent=link.textContent;if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);});
+function openMenu(){navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);}
+function closeMenu(){navOpen=false;mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');document.body.style.overflow='';hamburger.focus();}
+hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navOpen)closeMenu();});mobileNav.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const f=Array.from(mobileNav.querySelectorAll('a'));if(!f.length)return;if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f[f.length-1].focus();}else if(!e.shiftKey&&document.activeElement===f[f.length-1]){e.preventDefault();f[0].focus();}});}
+
+document.getElementById('copyright-year').textContent=new Date().getFullYear();
+if(!reducedMotion){resize();setTimeout(()=>symCanvas.classList.add('ready'),300);requestAnimationFrame(loop);}
+
+function openModal(id){document.getElementById(id).classList.add('active');}
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+document.getElementById('open-audit-form').addEventListener('click',()=>openModal('audit-modal'));
+document.getElementById('open-custom-form').addEventListener('click',()=>openModal('custom-modal'));
+document.querySelectorAll('.modal-close').forEach(btn=>{btn.addEventListener('click',()=>closeModal(btn.dataset.modal));});
+document.querySelectorAll('.modal-overlay').forEach(overlay=>{overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal(overlay.id);});});
+document.getElementById('confirm-audit').addEventListener('click',()=>{document.getElementById('audit-nda').classList.add('visible');});
+document.getElementById('confirm-custom').addEventListener('click',()=>{document.getElementById('custom-nda').classList.add('visible');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-overlay.active').forEach(m=>closeModal(m.id));}});
+
+function composeMailto(formId,ndaCheckId,subject){
+  const form=document.getElementById(formId);const data=new FormData(form);let body='';
+  for(let[key,val]of data.entries()){if(key==='nda-signer'||key==='nda-title')continue;body+=`${key}: ${val}\n`;}
+  const nda=document.getElementById(ndaCheckId).checked?'Yes':'No';body+=`NDA Requested: ${nda}\n`;
+  if(document.getElementById(ndaCheckId).checked){body+=`NDA Signatory: ${form.querySelector('input[name="nda-signer"]').value}\n`;body+=`NDA Title: ${form.querySelector('input[name="nda-title"]').value}\n`;}
+  window.location.href=`mailto:aionsystem@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+document.getElementById('send-audit').addEventListener('click',()=>composeMailto('audit-form','audit-nda-check','Document Red-Team Submission'));
+document.getElementById('send-custom').addEventListener('click',()=>composeMailto('custom-form','custom-nda-check','Custom AION Build Inquiry'));
+})();
+</script>
+</body>
+</html>
