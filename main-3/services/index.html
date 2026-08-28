@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="robots" content="index, follow">
-<meta name="description" content="Sheldon K. Salmon — AI Adversarial Structural Integrity Analysis. Document red-team services: Free First Pass, Anvil Pass, Full Workshop Pass, Multi-Pass Deep Audit, FORGE Certification, Full Gauntlet, AION Build, and more.">
+<meta name="description" content="Sheldon K. Salmon — AI Adversarial Structural Integrity Analysis. Document red-team services: Targeted Pass, Full Structural Review, Comprehensive Adversarial Review, Framework Services, Retainer, and more.">
 <title>Services — Document Red-Team Analysis | AionSystem</title>
 <meta property="og:title" content="Services — Document Red-Team Analysis | AionSystem">
 <meta property="og:description" content="AI Adversarial Structural Integrity Analysis. I find what kills a document before it costs you.">
@@ -42,17 +42,25 @@
   --ease:cubic-bezier(0.16,1,0.3,1);
   --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
 }
+/* FIX QUAL-04: CSS fallback for nav logo image failure */
 .nav-logo-img{background:var(--text-dim);}
+
 .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--mid);color:#000;font-family:var(--mono);font-size:12px;letter-spacing:2px;text-decoration:none;transition:top 0.2s;}
 .skip-nav:focus{top:0}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden;}
+
+/* CANVAS */
 #webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.35;}
 #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s var(--ease);}
 #symbol-canvas.ready{opacity:0.48}
 .mid-haze{position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(217,70,239,0.016) 1px,rgba(0,0,0,0) 2px);opacity:0.55;}
+
+/* AUDIO */
 .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(6,3,10,0.75);backdrop-filter:blur(12px);color:var(--text-mid);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s var(--ease);}
 .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:0 0 18px rgba(217,70,239,0.35);outline:none;}
 .audio-toggle[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);box-shadow:0 0 18px rgba(240,171,252,0.35);}
+
+/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(6,3,10,0.78);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 40px rgba(217,70,239,0.04);animation:fadeInNav 0.6s var(--ease) 0.2s both;}
 @keyframes fadeInNav{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 .nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--text);text-transform:uppercase;text-decoration:none;}
@@ -73,12 +81,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--text-dim);flex-shrink:0;transition:background 0.15s,box-shadow 0.15s;}
 .mobile-nav a:hover,.mobile-nav a.active{color:var(--mid-l);background:rgba(217,70,239,0.04);outline:none;}
 .mobile-nav a:hover::before,.mobile-nav a.active::before{background:var(--mid-l);box-shadow:0 0 6px var(--mid-l);}
+
+/* PAGE LAYOUT */
 .wrapper{position:relative;z-index:3;max-width:1200px;margin:0 auto;padding:100px 40px 80px;}
 .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--mid-l);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:12px;}
 .eyebrow::before,.eyebrow::after{content:'';display:inline-block;width:20px;height:1px;background:var(--red);flex-shrink:0;box-shadow:0 0 8px rgba(239,68,68,0.6);}
 h1{font-family:var(--display);font-size:clamp(40px,6vw,80px);font-weight:700;letter-spacing:-2px;text-transform:uppercase;line-height:0.92;color:var(--text);margin-bottom:8px;text-align:center;}
 h1 em{display:block;font-style:normal;background:linear-gradient(135deg,#fdf4ff,var(--mid-l),var(--peri));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(217,70,239,0.3));}
 .title-line{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:40px;margin-top:12px;text-align:center;}
+
+/* PROMO NOTES */
 .promo-note{background:var(--surface);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:16px;padding:24px 36px;text-align:center;margin-bottom:24px;max-width:860px;margin-left:auto;margin-right:auto;box-shadow:var(--glow),inset 0 1px 0 rgba(255,255,255,0.03);position:relative;overflow:hidden;}
 .promo-note::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--mid),var(--accent),var(--mid),transparent);opacity:0.7;}
 .promo-note h3{font-family:var(--display);font-size:17px;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
@@ -86,15 +98,21 @@ h1 em{display:block;font-style:normal;background:linear-gradient(135deg,#fdf4ff,
 .promo-note strong{color:var(--text);font-weight:500;}
 .promo-note a{color:var(--peri-l);text-decoration:none;border-bottom:1px solid transparent;transition:border-color 0.2s;}
 .promo-note a:hover,.promo-note a:focus-visible{border-bottom-color:var(--peri-l);outline:none;}
+
+/* TIER LABEL */
 .tier-label{font-family:var(--mono);font-size:9px;letter-spacing:4px;color:var(--peri-l);text-transform:uppercase;margin:40px 0 16px;padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
 .tier-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* SERVICE CARDS */
 .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-bottom:48px;}
 .service-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:12px;transition:all 0.35s var(--ease);position:relative;overflow:hidden;cursor:default;}
 .service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--mid),var(--accent),var(--peri));opacity:0;transition:opacity 0.3s var(--ease);}
 .service-card:hover::before{opacity:1;}
 .service-card:hover{border-color:var(--border-h);transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 50px rgba(217,70,239,0.1),inset 0 1px 0 rgba(255,255,255,0.04);}
+/* FIX CSS-02: add font-family to service-icon for correct symbol rendering */
 .service-icon{font-size:2rem;line-height:1;font-family:var(--mono);}
 .service-tier-tag{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);background:rgba(217,70,239,0.07);padding:2px 8px;border-radius:10px;border:1px solid rgba(217,70,239,0.12);display:inline-block;width:fit-content;}
+/* ENH-01: Founder badge on each card */
 .founder-tag{font-family:var(--mono);font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--mid);background:rgba(217,70,239,0.07);border:1px solid rgba(217,70,239,0.25);border-radius:20px;padding:2px 9px;display:inline-block;width:fit-content;margin-top:-4px;}
 .service-title{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);}
 .service-desc{font-family:var(--body);font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.65;flex:1;}
@@ -105,6 +123,8 @@ h1 em{display:block;font-style:normal;background:linear-gradient(135deg,#fdf4ff,
 .service-link:hover,.service-link:focus-visible{background:rgba(217,70,239,0.12);border-color:var(--border-h);color:var(--accent);box-shadow:var(--glow);outline:none;}
 .service-link.peri{border-color:rgba(168,85,247,0.28);color:var(--peri-l);}
 .service-link.peri:hover{background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.55);color:#ddd6fe;box-shadow:0 0 20px rgba(168,85,247,0.2);}
+
+/* MODAL */
 .modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(5,3,8,0.92);backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.4s var(--ease);}
 .modal-overlay.active{opacity:1;visibility:visible;}
 .modal-box{background:rgba(14,6,22,0.97);backdrop-filter:blur(32px);border:1px solid var(--border);border-radius:20px;padding:40px 48px;max-width:720px;width:92%;max-height:85vh;overflow-y:auto;transform:scale(0.95) translateY(20px);transition:all 0.4s var(--ease-spring);position:relative;box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 60px rgba(217,70,239,0.07),inset 0 1px 0 rgba(255,255,255,0.03);}
@@ -112,6 +132,7 @@ h1 em{display:block;font-style:normal;background:linear-gradient(135deg,#fdf4ff,
 .modal-overlay.active .modal-box{transform:scale(1) translateY(0);}
 .modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--text-dim);font-size:1.6rem;cursor:pointer;font-family:var(--mono);line-height:1;transition:all 0.2s var(--ease);padding:4px;border-radius:4px;}
 .modal-close:hover,.modal-close:focus-visible{color:var(--mid-l);transform:rotate(90deg);outline:none;}
+/* FIX CSS-03: add font-family to modal-icon */
 .modal-icon{font-size:2.2rem;margin-bottom:8px;font-family:var(--mono);}
 .modal-title{font-family:var(--display);font-size:24px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:4px;}
 .modal-sub{font-family:var(--mono);font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
@@ -130,11 +151,14 @@ h1 em{display:block;font-style:normal;background:linear-gradient(135deg,#fdf4ff,
 .modal-table td:last-child,.modal-table th:last-child{color:var(--accent);}
 .modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
 .modal-note{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;line-height:1.6;margin-bottom:14px;padding:10px 12px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:6px;}
+
+/* FOOTER */
 footer{position:relative;z-index:3;border-top:1px solid var(--border);padding:32px 40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);}
 .footer-legal{font-size:8px;color:var(--text-dim);margin-top:4px;letter-spacing:1px;}
 .footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap;}
 .footer-links a{color:var(--text-dim);text-decoration:none;transition:color 0.2s;}
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--mid-l);text-shadow:0 0 8px rgba(217,70,239,0.4);outline:none;}
+
 @media(max-width:800px){nav{padding:0 20px;}.nav-links{display:none;}.nav-hamburger{display:flex;}.wrapper{padding:80px 20px 60px;}.services-grid{grid-template-columns:1fr;}.modal-box{padding:28px 24px;}.promo-note{padding:20px 24px;}footer{padding:24px 20px;flex-direction:column;align-items:center;text-align:center;}.footer-links{justify-content:center;}}
 @media(max-width:480px){.modal-box{padding:24px 16px;}h1{letter-spacing:-1px;}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#webgl-canvas,#symbol-canvas,.mid-haze{display:none}}
@@ -145,10 +169,12 @@ footer{position:relative;z-index:3;border-top:1px solid var(--border);padding:32
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
 <div class="mid-haze" aria-hidden="true"></div>
+<!-- FIX BUG-04: type="button" on audio toggle -->
 <button type="button" class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
 
 <nav aria-label="Primary navigation">
   <a href="/main-3/" class="nav-logo" aria-label="AionSystem home">
+    <!-- FIX QUAL-04: removed onerror inline JS; CSS .nav-logo-img background handles failure -->
     <img src="/assets/img/aion-logo.jpg" alt="AionSystem" class="nav-logo-img" width="28" height="28">
     <span>AION<span class="dot">·</span>SYSTEM</span>
   </a>
@@ -160,137 +186,35 @@ footer{position:relative;z-index:3;border-top:1px solid var(--border);padding:32
     <li><a href="/main-3/contact/">Contact</a></li>
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
   </ul>
+  <!-- FIX BUG-04: type="button" on hamburger -->
   <button type="button" class="nav-hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
     <span></span><span></span><span></span>
   </button>
 </nav>
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true"></nav>
 
+<!-- FIX QUAL-01: <main> element instead of <div> -->
 <main class="wrapper" id="main">
   <div class="eyebrow">// What I Deliver</div>
   <h1>Document <em>Services</em></h1>
   <div class="title-line">AI Adversarial Structural Integrity Analysis · I find what kills a document before it costs you</div>
 
-  <!-- Founder note -->
+  <!-- ENH-01 / Founder note -->
   <div class="promo-note">
     <h3>◈ Founder-Rate Lock — First 10 Clients Per Service</h3>
     <p>The first 10 clients on any service lock in today's price <strong>permanently</strong>, even as list price rises in future catalog versions. This is not a discount — it is today's price, held because early trust carries real value. Slots are tracked internally and <strong>disclosed on request</strong>. Once a service's 10 slots are filled, the founder rate is closed for that service permanently.</p>
   </div>
+
+  <!-- ENH-02: Referral program block -->
   <div class="promo-note">
     <h3>⊕ Referral Program</h3>
     <p>Attorneys, compliance consultants, and investors who regularly encounter documents needing structural review receive a <strong>standing 10% commission</strong> on the first completed and paid engagement from any client they introduce. No minimum volume. No exclusivity required. A one-page referral agreement is executed before any commission is owed. <a href="mailto:aionsystem@outlook.com">Inquire to become a referral partner →</a></p>
   </div>
 
-  <!-- ==================== FREE TIER ==================== -->
-  <div class="tier-label">Free Tier — The First Pass</div>
+  <!-- TIER 0 -->
+  <div class="tier-label">Tier 0 — Individual Services</div>
   <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon" aria-hidden="true">◇</div>
-      <div class="service-tier-tag">Free · Lead Magnet</div>
-      <div class="service-title">The First Pass</div>
-      <div class="service-desc">Workshop 2 (Anvil) only · 1 framework (PDE) · Protocol v3.3 · 1 pass · No fusion, FORGE, or Gauntlet. A 1–2 page report on 2–3 real issues within 72 hours. Proves the method works before you commit to a full engagement.</div>
-      <div class="service-pricing"><span>Free</span><span>1 document, up to 10 pages</span><span>Capped at 5 per month</span></div>
-      <div class="service-actions"><a href="/main-3/contact/" class="service-link">Submit a document →</a></div>
-    </div>
-  </div>
 
-  <!-- ==================== TIER 1 ==================== -->
-  <div class="tier-label">Tier 1 — The Anvil Pass · $1,500</div>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon" aria-hidden="true">◈</div>
-      <div class="service-tier-tag">1 · First Structural Scan</div>
-      <div class="founder-tag">◈ Founder Rate</div>
-      <div class="service-title">The Anvil Pass</div>
-      <div class="service-desc">Workshop 2 (Anvil) only · All 4 Anvil frameworks (PDE, PROPORTION, EPE, TDAF) · Protocol v3.3 · 1 pass · Full severity ratings · Full epistemic tagging. A 5–10 page report for documents up to 50 pages where you need a first-pass structural scan.</div>
-      <div class="service-pricing"><span>$1,500 USD</span><span>5–7 business days</span><span>Up to 50 pages</span></div>
-      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-anvil">Read More →</button></div>
-    </div>
-    <div class="service-card">
-      <div class="service-icon" aria-hidden="true">∇</div>
-      <div class="service-tier-tag">1A · Entry (lighter)</div>
-      <div class="founder-tag">◈ Founder Rate</div>
-      <div class="service-title">Targeted Pass</div>
-      <div class="service-desc">One document section. One concern. One instrument set. The cleanest and most demonstrable finding from that scope, with proposed resolution language ready for direct insertion. Ideal for single high-stakes clauses or new client validation.</div>
-      <div class="service-pricing"><span>$1,200 USD</span><span>5 business days</span><span>1 section</span></div>
-      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-1a">Read More →</button></div>
-    </div>
-  </div>
-
-  <!-- ==================== TIER 2 ==================== -->
-  <div class="tier-label">Tier 2 — The Full Workshop Pass · $5,000</div>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon" aria-hidden="true">∑</div>
-      <div class="service-tier-tag">2 · Full Findings + Fixes</div>
-      <div class="founder-tag">◈ Founder Rate</div>
-      <div class="service-title">Full Workshop Pass</div>
-      <div class="service-desc">Workshops 2–5 (Anvil, Crucible, Temper, Resolution) · All instruments across all workshops · 1 pass · Killed findings documented · Upstream failure node identified · Zombie Node identified · Immunization Node proposed. A 15–25 page report with resolution language. For high-stakes documents where you need both findings AND fixes.</div>
-      <div class="service-pricing"><span>$5,000 USD</span><span>10 business days</span><span>Up to 50 pages base</span></div>
-      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-fullworkshop">Read More →</button></div>
-    </div>
-  </div>
-
-  <!-- ==================== TIER 3 ==================== -->
-  <div class="tier-label">Tier 3 — The Multi-Pass Deep Audit · $15,000</div>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon" aria-hidden="true">⊕</div>
-      <div class="service-tier-tag">3 · Maximum Depth</div>
-      <div class="founder-tag">◈ Founder Rate</div>
-      <div class="service-title">Multi-Pass Deep Audit</div>
-      <div class="service-desc">Workshops 2–5 · All instruments · 2–3 passes · Fusion 1 (consolidating pass 1 and pass 2 findings) · Negation testing across passes · Killed findings from each pass documented. A 30–50 page report for documents where you need maximum depth before production.</div>
-      <div class="service-pricing"><span>$15,000 USD</span><span>15 business days</span><span>Up to 50 pages base</span></div>
-      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-deepaudit">Read More →</button></div>
-    </div>
-  </div>
-
-  <!-- ==================== TIER 4 ==================== -->
-  <div class="tier-label">Tier 4 — FORGE Certification · $25,000–$35,000</div>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon" aria-hidden="true">⊢</div>
-      <div class="service-tier-tag">4 · Scored & Certified</div>
-      <div class="founder-tag">◈ Founder Rate</div>
-      <div class="service-title">FORGE Certification</div>
-      <div class="service-desc">Workshops 2–6 (Anvil, Crucible, Temper, Resolution, FORGE) · All instruments including FORGE v2.1 and FSVE v4.0 · 3–5 passes · Final Fusion · Polymath Council scoring (5 core roles) · Extended Council option (15 specialists) · Full 11-axis EV scoring · Uq and Cq scores · Dual Convergence Gate with Cq-adjusted validity threshold · FORGE Badge with final scores · Consumer Guidance Action. A 40–60 page report with certification. For mission-critical documents where you need a numerical certainty score and consequence-gated certification.</div>
-      <div class="service-pricing"><span>$25,000–$35,000 USD</span><span>By agreement</span><span>Includes final certification</span></div>
-      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-forge">Read More →</button></div>
-    </div>
-  </div>
-
-  <!-- ==================== TIER 5 ==================== -->
-  <div class="tier-label">Tier 5 — The Full Gauntlet · $35,000–$50,000</div>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon" aria-hidden="true">⊨</div>
-      <div class="service-tier-tag">5 · External Hostile Proof</div>
-      <div class="founder-tag">◈ Founder Rate</div>
-      <div class="service-title">Full Gauntlet</div>
-      <div class="service-desc">Workshops 2–7 (full pipeline including FORGE and Gauntlet) · All instruments · 3–5 passes · Final Fusion · FORGE certification with full scoring · 1–3 Gauntlet rounds with external hostile review · Revision pass after each Reject · Verification pass with quote checking against primary sources · Publication-ready report with full provenance · FORGE Badge + Gauntlet verdict. For mission-critical documents where you need proof the analysis survived both internal certification AND external hostile attack.</div>
-      <div class="service-pricing"><span>$35,000–$50,000 USD</span><span>By agreement</span><span>Full provenance included</span></div>
-      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-gauntlet">Read More →</button></div>
-    </div>
-  </div>
-
-  <!-- ==================== TIER 6 ==================== -->
-  <div class="tier-label">Tier 6 — The AION Build · Custom</div>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-icon" aria-hidden="true">∞</div>
-      <div class="service-tier-tag">6 · Custom Framework</div>
-      <div class="founder-tag">◈ Founder Rate</div>
-      <div class="service-title">The AION Build</div>
-      <div class="service-desc">Building a custom framework from scratch for the client's specific document type · Full pipeline design · Custom instruments if needed · Multi-pass execution · FORGE certification · Full Gauntlet · Ongoing advisory. For organizations that want their own red-team framework built around their specific document ecosystem.</div>
-      <div class="service-pricing"><span>Custom pricing</span><span>Scoped individually</span><span>Full ownership of framework</span></div>
-      <div class="service-actions"><a href="/main-3/contact/" class="service-link">Discuss a build →</a></div>
-    </div>
-  </div>
-
-  <!-- ==================== ADDITIONAL SERVICES ==================== -->
-  <div class="tier-label">Additional Services</div>
-  <div class="services-grid">
-    <!-- Individual -->
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">◇</div>
       <div class="service-tier-tag">0A · Individual</div>
@@ -300,16 +224,99 @@ footer{position:relative;z-index:3;border-top:1px solid var(--border);padding:32
       <div class="service-pricing"><span>Fixed $299 USD</span><span>7–10 business days</span><span>1 clause / under 3 pages</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-0a">Read More →</button></div>
     </div>
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">∂</div>
       <div class="service-tier-tag">0B · Individual</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Self-Review Checklist</div>
-      <div class="service-desc">A structured worksheet — not a custom engagement. The questions the instrument stack asks, simplified so a non-business person can pressure-test their own document. An on-ramp toward 0A or 1A.</div>
+      <div class="service-desc">A structured worksheet — not a custom engagement. The questions the instrument stack asks, simplified so a non-business person can pressure-test their own document. An on-ramp toward 0A or 1A for people who realise they want a second set of eyes.</div>
       <div class="service-pricing"><span>One-time $99–$149 USD</span><span>Immediate delivery</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-0b">Read More →</button></div>
     </div>
-    <!-- Framework -->
+
+  </div>
+
+  <!-- TIER 1 -->
+  <div class="tier-label">Tier 1 — Document Reliability Review</div>
+  <div class="services-grid">
+
+    <div class="service-card">
+      <div class="service-icon" aria-hidden="true">◈</div>
+      <div class="service-tier-tag">1A · Entry</div>
+      <div class="founder-tag">◈ Founder Rate</div>
+      <div class="service-title">Targeted Pass</div>
+      <div class="service-desc">One document section. One concern. One instrument set. The cleanest and most demonstrable finding from that scope, with proposed resolution language ready for direct insertion. Entry point for new clients or single high-stakes clauses.</div>
+      <div class="service-pricing"><span>Fixed $1,200 USD</span><span>5 business days</span></div>
+      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-1a">Read More →</button></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon" aria-hidden="true">∇</div>
+      <div class="service-tier-tag">1B · Full</div>
+      <div class="founder-tag">◈ Founder Rate</div>
+      <div class="service-title">Full Structural Review</div>
+      <div class="service-desc">Complete adversarial review of the full document using all applicable instruments. Every section tested. Every provision pressure-checked against every other. Full findings register, severity-tiered, with the document's own text as the only required evidence.</div>
+      <div class="service-pricing"><span>From $4,500 USD</span><span>10 business days</span><span>Up to 30 pages base</span></div>
+      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-1b">Read More →</button></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon" aria-hidden="true">Σ</div>
+      <div class="service-tier-tag">1C · Maximum</div>
+      <div class="founder-tag">◈ Founder Rate</div>
+      <div class="service-title">Comprehensive Adversarial Review</div>
+      <div class="service-desc">Maximum analytical pressure. Multiple independent passes with strict non-duplication enforcement. Cross-instrument convergence testing. Propagation analysis. Root-cause identification at the architectural level. For regulatory submissions, AI governance frameworks, and standards.</div>
+      <div class="service-pricing"><span>From $9,500 USD</span><span>15 business days</span><span>Up to 30 pages base</span></div>
+      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-1c">Read More →</button></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon" aria-hidden="true">⊢</div>
+      <div class="service-tier-tag">1D · Certificate</div>
+      <div class="founder-tag">◈ Founder Rate</div>
+      <div class="service-title">Structural Integrity Certificate</div>
+      <div class="service-desc">Independent validation pass. Same adversarial instruments as a Targeted Pass, but the deliverable is a certificate rather than a finding. If a Critical or High finding is surfaced instead of a clean pass, you receive the finding at no additional charge.</div>
+      <div class="service-pricing"><span>Fixed $1,200 USD</span><span>5 business days</span></div>
+      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-1d">Read More →</button></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon" aria-hidden="true">→</div>
+      <div class="service-tier-tag">1E · Comment</div>
+      <div class="founder-tag">◈ Founder Rate</div>
+      <div class="service-title">Pre-Publication Structural Comment</div>
+      <div class="service-desc">A Targeted Pass run on a draft document during its public comment window, with the finding structured for direct submission as a formal comment. Same adversarial method, different format — built to influence a document before it is finalised.</div>
+      <div class="service-pricing"><span>Fixed $1,200 USD</span><span>5 business days or deadline</span></div>
+      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-1e">Read More →</button></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon" aria-hidden="true">∞</div>
+      <div class="service-tier-tag">1F · Annual</div>
+      <div class="founder-tag">◈ Founder Rate</div>
+      <div class="service-title">Certified Mark License</div>
+      <div class="service-desc">The right to display an "AionSystem Reviewed" seal on the public-facing version of a reviewed document, re-verified annually against the current instrument stack. Requires a current Clean Certificate as prerequisite. A re-verified standing mark, not a one-time historical record.</div>
+      <div class="service-pricing"><span>$400 USD / year</span><span>Requires prior clean certificate</span></div>
+      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-1f">Read More →</button></div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon" aria-hidden="true">≡</div>
+      <div class="service-tier-tag">1G · Bundle</div>
+      <div class="founder-tag">◈ Founder Rate</div>
+      <div class="service-title">Document Family Bundle</div>
+      <div class="service-desc">Multiple related documents submitted together, reviewed with shared context. 10% off combined base price for 2 related documents. 15% off for 3 or more. Applies to 1B and 1C base prices only — page-band and other add-ons unaffected.</div>
+      <div class="service-pricing"><span>−10% (2 docs)</span><span>−15% (3+ docs)</span><span>On 1B / 1C base only</span></div>
+      <div class="service-actions"><button type="button" class="service-link" data-modal="modal-1g">Read More →</button></div>
+    </div>
+
+  </div>
+
+  <!-- TIER 2 -->
+  <div class="tier-label">Tier 2 — Framework Services</div>
+  <div class="services-grid">
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">⊕</div>
       <div class="service-tier-tag">2A · Design</div>
@@ -319,195 +326,510 @@ footer{position:relative;z-index:3;border-top:1px solid var(--border);padding:32
       <div class="service-pricing"><span>From $6,500 USD</span><span>15 business days</span><span>Up to 5 instruments</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-2a">Read More →</button></div>
     </div>
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">∂</div>
       <div class="service-tier-tag">2B · Audit</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Framework Audit</div>
-      <div class="service-desc">Adversarial structural review of an existing framework or internal review process. Does it detect what it claims to detect? Does it have coverage gaps? Does it self-validate in ways that undermine its findings?</div>
+      <div class="service-desc">Adversarial structural review of an existing framework or internal review process. Does it detect what it claims to detect? Does it have coverage gaps? Does it self-validate in ways that undermine its findings? Same method applied to documents, now applied to the framework itself.</div>
       <div class="service-pricing"><span>Fixed $3,800 USD</span><span>10 business days</span><span>Up to 10 instruments</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-2b">Read More →</button></div>
     </div>
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">↔</div>
       <div class="service-tier-tag">2C · Evolution</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Framework Evolution</div>
-      <div class="service-desc">Take an existing framework through a structured self-scan and produce a resolved next version with a complete changelog. How AionSystem manages its own stack: every version increment is a discrete deliverable.</div>
+      <div class="service-desc">Take an existing framework through a structured self-scan and produce a resolved next version with a complete changelog. How AionSystem manages its own stack: every version increment is a discrete deliverable with numbered findings, explicit resolutions, and a versioned document replacing the prior.</div>
       <div class="service-pricing"><span>From $2,800 USD</span><span>10 business days</span><span>Up to 30 resolved findings</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-2c">Read More →</button></div>
     </div>
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">∧</div>
       <div class="service-tier-tag">2D · Workshop</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Adversarial Methodology Workshop</div>
-      <div class="service-desc">A live session teaching a client's internal team the adversarial structural thinking process — not the proprietary instruments, but the transferable discipline.</div>
+      <div class="service-desc">A live session teaching a client's internal team the adversarial structural thinking process — not the proprietary instruments, but the transferable discipline: how to pressure-test a document against itself, distinguish surface findings from structural ones, apply epistemic tagging.</div>
       <div class="service-pricing"><span>Half-day $2,800 USD</span><span>Full-day $4,500 USD</span><span>Remote only</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-2d">Read More →</button></div>
     </div>
-    <!-- Consultation -->
+
+  </div>
+
+  <!-- TIER 3 + 4 -->
+  <div class="tier-label">Tier 3 — Consultation · Tier 4 — Retainer &amp; Maintenance</div>
+  <div class="services-grid">
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">⊗</div>
-      <div class="service-tier-tag">Consultation</div>
+      <div class="service-tier-tag">Tier 3 · Consultation</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Consultation Session</div>
-      <div class="service-desc">A single scheduled paid analytical session. Scoping, interpreting findings, discussing framework design options, or any direct question requiring analytical engagement.</div>
+      <div class="service-desc">A single scheduled paid analytical session. Scoping, interpreting findings, discussing framework design options, or any direct question requiring analytical engagement. No free discovery calls for individual clients. The output is useful regardless of whether a further engagement follows.</div>
       <div class="service-pricing"><span>$350 USD / 60 minutes</span><span>Scheduled in advance</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-t3">Read More →</button></div>
     </div>
-    <!-- Retainer -->
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">∀</div>
-      <div class="service-tier-tag">Retainer</div>
+      <div class="service-tier-tag">Tier 4 · Retainer</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Monthly Retainer</div>
-      <div class="service-desc">Priority access and a recurring structured review cadence. One Targeted Pass per month applied to any document. Priority scheduling on all services (5-day turnaround reduction). Quarterly framework health check. Minimum 3-month commitment.</div>
+      <div class="service-desc">Priority access and a recurring structured review cadence. One Targeted Pass per month applied to any document. Priority scheduling on all services (5-day turnaround reduction). Quarterly framework health check. Minimum 3-month commitment. Cancel anytime after with 30 days notice.</div>
       <div class="service-pricing"><span>$2,200 USD / month</span><span>3-month minimum</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-t4">Read More →</button></div>
     </div>
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">∃</div>
-      <div class="service-tier-tag">Maintenance</div>
+      <div class="service-tier-tag">Tier 4B · Maintenance</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Structural Watch</div>
-      <div class="service-desc">Recurring delta scans against an established baseline. AI capability advances after delivery. New exploitation techniques surface. The document gets amended. Each of these can reopen a gap that was correctly closed at review time.</div>
+      <div class="service-desc">Recurring delta scans against an established baseline. AI capability advances after delivery. New exploitation techniques surface. The document gets amended. Each of these can reopen a gap that was correctly closed at review time. No permanent-safety claim — ongoing vigilance instead.</div>
       <div class="service-pricing"><span>Monthly $600 USD</span><span>Quarterly $850</span><span>Semi-annual $1,200</span><span>Annual $1,800</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-t4b">Read More →</button></div>
     </div>
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">∈</div>
-      <div class="service-tier-tag">Capacity</div>
+      <div class="service-tier-tag">Tier 4C · Capacity</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Reserved Capacity Contract</div>
-      <div class="service-desc">Guarantee a future queue slot for a specific month, independent of which specific service will ultimately be booked. $1,500 credited in full against the eventual engagement invoice. Maximum 2 concurrent reservations.</div>
+      <div class="service-desc">Guarantee a future queue slot for a specific month, independent of which specific service will ultimately be booked. $1,500 credited in full against the eventual engagement invoice. Maximum 2 concurrent reservations — a genuine reservation on scarce capacity, not a refundable deposit.</div>
       <div class="service-pricing"><span>$1,500 USD — credited to invoice</span><span>Max 2 concurrent</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-t4c">Read More →</button></div>
     </div>
-    <!-- Specialized -->
+
+  </div>
+
+  <!-- TIER 5 + 6 -->
+  <div class="tier-label">Tier 5 — Specialized · Tier 6 — Packaged</div>
+  <div class="services-grid">
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">⊢</div>
-      <div class="service-tier-tag">Specialized</div>
+      <div class="service-tier-tag">5A · Expert Declaration</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Expert Technical Declaration</div>
-      <div class="service-desc">For disputes, arbitrations, or regulatory proceedings where the structural integrity of a governance document is at issue. A written technical declaration describing the finding, the method, and the confidence basis.</div>
+      <div class="service-desc">For disputes, arbitrations, or regulatory proceedings where the structural integrity of a governance document is at issue. A written technical declaration describing the finding, the method, and the confidence basis — produced by an independent expert. Technical opinion, not legal opinion.</div>
       <div class="service-pricing"><span>$350 USD/hour</span><span>4-hour minimum ($1,400)</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-5a">Read More →</button></div>
     </div>
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">⊨</div>
-      <div class="service-tier-tag">Competitive</div>
+      <div class="service-tier-tag">5B · Competitive</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Competitive Framework Analysis</div>
-      <div class="service-desc">Structural comparison of a client's framework against a competitor's published equivalent. Where does the competitor's framework have coverage gaps yours addresses? Where does yours have gaps theirs reveals?</div>
+      <div class="service-desc">Structural comparison of a client's framework against a competitor's published equivalent. Where does the competitor's framework have coverage gaps yours addresses? Where does yours have gaps theirs reveals? Structural, not evaluative. Publicly published frameworks only.</div>
       <div class="service-pricing"><span>From $6,500 USD</span><span>15 business days</span><span>Two docs, up to 30pp each</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-5b">Read More →</button></div>
     </div>
-    <!-- Packages -->
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">◈</div>
-      <div class="service-tier-tag">Package</div>
+      <div class="service-tier-tag">6A · Package</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">AI Governance Launch Package</div>
-      <div class="service-desc">For organisations publishing or adopting a new AI governance framework, model policy, or AI-specific standard. Includes: Comprehensive Adversarial Review (1C) + Adversarial Methodology Workshop (half-day) + Certified Mark License (first year).</div>
+      <div class="service-desc">For organisations publishing or adopting a new AI governance framework, model policy, or AI-specific standard. Includes: Comprehensive Adversarial Review (1C) + Adversarial Methodology Workshop (half-day) + Certified Mark License (first year). Maximum scrutiny plus internal capability and external signal.</div>
       <div class="service-pricing"><span>$11,500 USD bundle</span><span>Standalone equivalent: $12,700</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-6a">Read More →</button></div>
     </div>
+
     <div class="service-card">
       <div class="service-icon" aria-hidden="true">⊕</div>
-      <div class="service-tier-tag">Package</div>
+      <div class="service-tier-tag">6B · Package</div>
       <div class="founder-tag">◈ Founder Rate</div>
       <div class="service-title">Framework Launch Package</div>
-      <div class="service-desc">For clients building a new internal analytical framework from scratch — built, taught, and immediately put through its first version cycle. Includes: Framework Design (2A base) + 90-minute training/onboarding + First version self-scan.</div>
+      <div class="service-desc">For clients building a new internal analytical framework from scratch — built, taught, and immediately put through its first version cycle. Includes: Framework Design (2A base) + 90-minute training/onboarding + First version self-scan. Solves the assembly problem.</div>
       <div class="service-pricing"><span>$8,500 USD bundle</span><span>Standalone equivalent: $9,450</span></div>
       <div class="service-actions"><button type="button" class="service-link" data-modal="modal-6b">Read More →</button></div>
     </div>
+
   </div>
 </main>
 
-<!-- ==================== MODALS ==================== -->
-<!-- New pipeline tier modals -->
-<div class="modal-overlay" id="modal-anvil" role="dialog" aria-modal="true" aria-labelledby="modal-anvil-title">
+<!-- ═══ MODALS (all type="button" on close buttons, BUG-04) ═══ -->
+
+<div class="modal-overlay" id="modal-0a" role="dialog" aria-modal="true" aria-labelledby="modal-0a-title">
   <div class="modal-box">
-    <button type="button" class="modal-close" data-close="modal-anvil" aria-label="Close">✕</button>
+    <button type="button" class="modal-close" data-close="modal-0a" aria-label="Close">✕</button>
+    <div class="modal-icon">◇</div>
+    <div class="modal-title" id="modal-0a-title">Plain-Language Risk Flag</div>
+    <div class="modal-sub">0A · Individual · $299 USD · 7–10 business days</div>
+    <div class="modal-meta"><span>individual</span><span>lease</span><span>freelance contract</span><span>personal NDA</span><span>licensing clause</span></div>
+    <div class="modal-bio">
+      <p>One clause or one short document, reviewed with a single adversarial instrument. The deliverable is a one-page, plain-English flag: what the risk is, why it's there, and one suggested fix — written for someone who is not going to read a formatted findings register and doesn't need one.</p>
+      <p>This is the right service <strong>before signing something</strong>, not after a dispute has already started. Built for individuals: a lease clause, a freelance or gig contract, a platform ToS or licensing clause affecting a creator's own work, a personal NDA.</p>
+      <p><em>Not a discounted version of 1A.</em> Narrower scope, format, and turnaround by design. A business document or anything requiring multi-instrument analysis belongs in Tier 1.</p>
+    </div>
+    <div class="modal-pricing"><span>Fixed $299 USD</span><span>7–10 business days</span><span>1 clause / under 3 pages</span></div>
+    <div class="modal-note">Not legal advice. Findings describe structural gaps in a document's own logic — not legal exposure. Engage legal counsel separately for compliance or liability questions.</div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Submit a document →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-0b" role="dialog" aria-modal="true" aria-labelledby="modal-0b-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-0b" aria-label="Close">✕</button>
+    <div class="modal-icon">∂</div>
+    <div class="modal-title" id="modal-0b-title">Self-Review Checklist</div>
+    <div class="modal-sub">0B · Individual · $99–$149 USD · Immediate delivery</div>
+    <div class="modal-meta"><span>individual</span><span>worksheet</span><span>self-review</span><span>one-time purchase</span></div>
+    <div class="modal-bio">
+      <p>A structured worksheet, not a custom engagement. AionSystem is not applying its instruments to your specific document — this is a plain-language version of the questions the instrument stack asks, built so a non-business person can pressure-test their own document themselves.</p>
+      <p>What to look for. What a conflicting clause looks like. What an ambiguous enforcement mechanism looks like. How to flag it in your own words. This is a product — the same checklist works across documents. An on-ramp toward 0A or 1A for people who go through it and realise they want a second set of eyes.</p>
+    </div>
+    <div class="modal-pricing"><span>$99–$149 USD one-time</span><span>Immediate delivery on purchase</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Purchase →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-1a" role="dialog" aria-modal="true" aria-labelledby="modal-1a-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-1a" aria-label="Close">✕</button>
     <div class="modal-icon">◈</div>
-    <div class="modal-title" id="modal-anvil-title">The Anvil Pass</div>
-    <div class="modal-sub">Tier 1 · $1,500 USD · 5–7 business days</div>
-    <div class="modal-meta"><span>first structural scan</span><span>Anvil workshop</span><span>4 frameworks</span><span>epistemic tags</span></div>
+    <div class="modal-title" id="modal-1a-title">Targeted Pass</div>
+    <div class="modal-sub">1A · Entry · $1,200 USD · 5 business days</div>
+    <div class="modal-meta"><span>contracts</span><span>governance</span><span>AI policy</span><span>technical specifications</span><span>standards</span></div>
     <div class="modal-bio">
-      <p>Workshop 2 (Anvil) only · All 4 Anvil frameworks (PDE v0.6, PROPORTION v1.2.2, EPE v0.4, TDAF v1.5) · Protocol v3.3 · 1 pass · Full severity ratings · Full epistemic tagging.</p>
-      <p>Deliverable: a 5–10 page report with the most load-bearing findings, severity-rated, and tagged with confidence basis. For documents up to 50 pages where you need a first-pass structural scan.</p>
-      <p>If the scan completes with no Critical or High findings, you may receive a Structural Integrity Certificate (see additional services) at no extra charge.</p>
+      <p>One document section. One concern. One instrument set. The cleanest and most demonstrable finding from that scope, with proposed resolution language ready for direct insertion.</p>
+      <p>The right entry point when a client has a specific worry, wants to validate the method before a larger engagement, or needs an independent structural check on a single high-stakes clause before publication or submission.</p>
+      <p>If the scope completes with no Critical or High finding, an <strong>AI Adversarial Structural Integrity Certificate</strong> is delivered in place of a finding.</p>
     </div>
-    <div class="modal-pricing"><span>$1,500 USD</span><span>Up to 50 pages base</span></div>
+    <div class="modal-pricing"><span>Fixed $1,200 USD</span><span>5 business days</span></div>
+    <table class="modal-table"><thead><tr><th>Add-on</th><th>Price</th></tr></thead><tbody>
+      <tr><td>Expedited delivery (48 hours)</td><td>+$600</td></tr>
+      <tr><td>Additional finding, same scope (max 3 extra)</td><td>+$400 each</td></tr>
+      <tr><td>60-minute follow-up consultation</td><td>+$350</td></tr>
+    </tbody></table>
+    <div class="modal-note">Add-on cap: maximum 3 additional findings (4 total). For 5+ findings the Full Structural Review (1B) at $4,500 is more efficient.</div>
     <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Submit a document →</a></div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-fullworkshop" role="dialog" aria-modal="true" aria-labelledby="modal-fullworkshop-title">
+<div class="modal-overlay" id="modal-1b" role="dialog" aria-modal="true" aria-labelledby="modal-1b-title">
   <div class="modal-box">
-    <button type="button" class="modal-close" data-close="modal-fullworkshop" aria-label="Close">✕</button>
-    <div class="modal-icon">∑</div>
-    <div class="modal-title" id="modal-fullworkshop-title">Full Workshop Pass</div>
-    <div class="modal-sub">Tier 2 · $5,000 USD · 10 business days</div>
+    <button type="button" class="modal-close" data-close="modal-1b" aria-label="Close">✕</button>
+    <div class="modal-icon">∇</div>
+    <div class="modal-title" id="modal-1b-title">Full Structural Review</div>
+    <div class="modal-sub">1B · Full · From $4,500 USD · 10 business days</div>
+    <div class="modal-meta"><span>governance frameworks</span><span>AI policy</span><span>regulatory submissions</span><span>technical standards</span></div>
     <div class="modal-bio">
-      <p>Workshops 2–5 (Anvil, Crucible, Temper, Resolution) · All instruments across all workshops · Protocol v3.3 · 1 pass · Killed findings documented · Upstream failure node identified · Zombie Node identified · Immunization Node proposed.</p>
-      <p>Deliverable: a 15–25 page report with resolution language for all Critical and High findings. For high-stakes documents where you need both findings AND fixes.</p>
-      <p>Page-band add-ons apply beyond 50 pages (see page-band table).</p>
+      <p>Complete adversarial review of the full document using all applicable instruments. Every section tested. Every provision pressure-checked against every other. Full findings register severity-tiered Critical / High / Medium / Low, with the document's own text as the only required evidence.</p>
+      <p>Includes: complete findings register, epistemic confidence tags on all findings, executive summary (top 3 findings), proposed resolution language for Critical and High findings, professional .docx delivery in AionSystem house style.</p>
+      <p>If the document completes with no Critical or High findings: an <strong>AI Adversarial Structural Integrity Certificate</strong> is included.</p>
     </div>
-    <div class="modal-pricing"><span>$5,000 USD base</span><span>Up to 50 pages</span></div>
+    <div class="modal-pricing"><span>Base $4,500 USD (up to 30pp)</span><span>10 business days</span></div>
+    <table class="modal-table"><thead><tr><th>Document length</th><th>Add-on</th></tr></thead><tbody>
+      <tr><td>1–30 pages</td><td>Included</td></tr>
+      <tr><td>31–60 pages</td><td>+$800</td></tr>
+      <tr><td>61–100 pages</td><td>+$1,600</td></tr>
+      <tr><td>101–150 pages</td><td>+$2,400</td></tr>
+      <tr><td>151+ pages</td><td>+$3,200</td></tr>
+    </tbody></table>
+    <table class="modal-table"><thead><tr><th>Optional add-on</th><th>Price</th></tr></thead><tbody>
+      <tr><td>Resolution language for Medium + Low findings</td><td>+$1,000</td></tr>
+      <tr><td>Expedited delivery (5 business days)</td><td>+$1,200</td></tr>
+      <tr><td>60-minute debrief consultation</td><td>+$350</td></tr>
+    </tbody></table>
     <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Submit a document →</a></div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-deepaudit" role="dialog" aria-modal="true" aria-labelledby="modal-deepaudit-title">
+<div class="modal-overlay" id="modal-1c" role="dialog" aria-modal="true" aria-labelledby="modal-1c-title">
   <div class="modal-box">
-    <button type="button" class="modal-close" data-close="modal-deepaudit" aria-label="Close">✕</button>
-    <div class="modal-icon">⊕</div>
-    <div class="modal-title" id="modal-deepaudit-title">Multi-Pass Deep Audit</div>
-    <div class="modal-sub">Tier 3 · $15,000 USD · 15 business days</div>
+    <button type="button" class="modal-close" data-close="modal-1c" aria-label="Close">✕</button>
+    <div class="modal-icon">Σ</div>
+    <div class="modal-title" id="modal-1c-title">Comprehensive Adversarial Review</div>
+    <div class="modal-sub">1C · Maximum · From $9,500 USD · 15 business days</div>
+    <div class="modal-meta"><span>high-stakes regulatory</span><span>AI governance</span><span>standards bodies</span><span>multi-pass convergence</span></div>
     <div class="modal-bio">
-      <p>Workshops 2–5 · All instruments · 2–3 passes · Fusion 1 (consolidating pass 1 and pass 2 findings) · Negation testing across passes · Killed findings from each pass documented.</p>
-      <p>Deliverable: a 30–50 page report with the complete findings register, killed list, and resolution language. For documents where you need maximum depth before production.</p>
-      <p>Page-band add-ons apply beyond 50 pages.</p>
+      <p>Maximum analytical pressure. Multiple independent passes with strict non-duplication enforcement — each pass must find new failure modes, not restate prior findings. Cross-instrument convergence testing identifies findings that survive multiple independent analytical lineages — the strongest available confidence signal. Propagation analysis maps what happens downstream when each failure mode activates. Root-cause identification at the architectural level.</p>
+      <p><em>Best for:</em> documents governing high-stakes decisions, regulatory submissions facing adversarial scrutiny, AI governance frameworks, and standards intended for wide adoption.</p>
     </div>
-    <div class="modal-pricing"><span>$15,000 USD base</span><span>Up to 50 pages</span></div>
+    <div class="modal-pricing"><span>Base $9,500 USD (up to 30pp)</span><span>15 business days</span></div>
+    <table class="modal-table"><thead><tr><th>Document length</th><th>Add-on</th></tr></thead><tbody>
+      <tr><td>1–30 pages</td><td>Included</td></tr>
+      <tr><td>31–60 pages</td><td>+$1,400</td></tr>
+      <tr><td>61–100 pages</td><td>+$2,800</td></tr>
+      <tr><td>101–150 pages</td><td>+$4,200</td></tr>
+      <tr><td>151+ pages</td><td>+$5,600</td></tr>
+    </tbody></table>
+    <table class="modal-table"><thead><tr><th>Optional add-on</th><th>Price</th></tr></thead><tbody>
+      <tr><td>Expedited delivery (8 business days)</td><td>+$2,500</td></tr>
+      <tr><td>90-minute debrief consultation</td><td>+$500</td></tr>
+    </tbody></table>
     <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Submit a document →</a></div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-forge" role="dialog" aria-modal="true" aria-labelledby="modal-forge-title">
+<div class="modal-overlay" id="modal-1d" role="dialog" aria-modal="true" aria-labelledby="modal-1d-title">
   <div class="modal-box">
-    <button type="button" class="modal-close" data-close="modal-forge" aria-label="Close">✕</button>
+    <button type="button" class="modal-close" data-close="modal-1d" aria-label="Close">✕</button>
     <div class="modal-icon">⊢</div>
-    <div class="modal-title" id="modal-forge-title">FORGE Certification</div>
-    <div class="modal-sub">Tier 4 · $25,000–$35,000 USD · By agreement</div>
+    <div class="modal-title" id="modal-1d-title">Structural Integrity Certificate</div>
+    <div class="modal-sub">1D · Certificate · $1,200 USD · 5 business days</div>
     <div class="modal-bio">
-      <p>Workshops 2–6 (Anvil, Crucible, Temper, Resolution, FORGE) · All instruments including FORGE v2.1 and FSVE v4.0 · 3–5 passes · Final Fusion · Polymath Council scoring (5 core roles) · Extended Council option (15 specialists) · Full 11-axis EV scoring · Uq and Cq scores · Dual Convergence Gate with Cq-adjusted validity threshold · FORGE Badge with final scores · Consumer Guidance Action (PROCEED / HUMAN_REVIEW / BLOCK).</p>
-      <p>Deliverable: a 40–60 page report with certification. For mission-critical documents where you need a numerical certainty score and consequence-gated certification — regulations, major contracts, foundational policies.</p>
+      <p>For a client who has already received a review or clearance from another source and wants an independent validation pass. Scope and method are identical to a Targeted Pass — same adversarial instruments, same rigour — but the deliverable is framed as a certificate rather than a finding.</p>
+      <p>If the scope reveals a Critical or High finding instead of a clean pass, the client receives the finding in standard Targeted Pass format at no additional charge. The fixed price covers the work, not a guaranteed outcome.</p>
     </div>
-    <div class="modal-pricing"><span>$25,000–$35,000 USD</span><span>Final certification included</span></div>
-    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Discuss certification →</a></div>
+    <div class="modal-pricing"><span>Fixed $1,200 USD</span><span>5 business days</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Submit for certification →</a></div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-gauntlet" role="dialog" aria-modal="true" aria-labelledby="modal-gauntlet-title">
+<div class="modal-overlay" id="modal-1e" role="dialog" aria-modal="true" aria-labelledby="modal-1e-title">
   <div class="modal-box">
-    <button type="button" class="modal-close" data-close="modal-gauntlet" aria-label="Close">✕</button>
-    <div class="modal-icon">⊨</div>
-    <div class="modal-title" id="modal-gauntlet-title">Full Gauntlet</div>
-    <div class="modal-sub">Tier 5 · $35,000–$50,000 USD · By agreement</div>
+    <button type="button" class="modal-close" data-close="modal-1e" aria-label="Close">✕</button>
+    <div class="modal-icon">→</div>
+    <div class="modal-title" id="modal-1e-title">Pre-Publication Structural Comment</div>
+    <div class="modal-sub">1E · Comment · $1,200 USD · 5 business days or deadline</div>
     <div class="modal-bio">
-      <p>Workshops 2–7 (full pipeline including FORGE and Gauntlet) · All instruments · 3–5 passes · Final Fusion · FORGE certification with full scoring · 1–3 Gauntlet rounds with external hostile review · Revision pass after each Reject · Verification pass with quote checking against primary sources · Publication-ready report with full provenance · FORGE Badge + Gauntlet verdict.</p>
-      <p>For mission-critical documents where you need proof the analysis survived both internal certification AND external hostile attack.</p>
+      <p>A Targeted Pass run on a draft document during its public comment window, with the finding structured for direct submission as a formal comment. Same adversarial method as 1A, delivered in a different format: influencing a document before it is finalised, using the structural analysis as a formal comment submission.</p>
+      <p>Comment submissions to public processes are made in the client's name unless AionSystem attribution is authorised in writing. Confirm the deadline at intake so scheduling can account for it.</p>
     </div>
-    <div class="modal-pricing"><span>$35,000–$50,000 USD</span><span>Full provenance included</span></div>
-    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Discuss the Gauntlet →</a></div>
+    <div class="modal-pricing"><span>Fixed $1,200 USD</span><span>5 business days or deadline, whichever is earlier</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Submit a document →</a></div>
   </div>
 </div>
 
-<!-- Existing modals (0a,0b,1a,1b,1c,1d,1e,1f,1g,2a,2b,2c,2d,t3,t4,t4b,t4c,5a,5b,6a,6b) go here unchanged -->
-<!-- To keep the answer manageable, I'll include a placeholder comment but in a real deployment you must include all existing modals exactly as before. They are not omitted in your actual file. -->
+<div class="modal-overlay" id="modal-1f" role="dialog" aria-modal="true" aria-labelledby="modal-1f-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-1f" aria-label="Close">✕</button>
+    <div class="modal-icon">∞</div>
+    <div class="modal-title" id="modal-1f-title">Certified Mark License</div>
+    <div class="modal-sub">1F · Annual · $400 USD/year · Requires prior clean certificate</div>
+    <div class="modal-bio">
+      <p>The right to display an "AionSystem Reviewed" seal on the public-facing version of the reviewed document for as long as the license is current. Re-verified annually against the current AionSystem instrument stack — a lightweight delta re-scan of the same scope.</p>
+      <p>The one-time Clean Certificate documents what was true on a specific date. The Certified Mark License is a distinct product: a <strong>renewable standing mark</strong>, not a permanent historical record. Because AI capability and exploitation technique both continue to advance, the mark is re-verified at each annual renewal.</p>
+      <p>If re-verification surfaces a Critical or High finding: the mark is <strong>suspended, not silently continued</strong>, until the finding is resolved. The client is offered the Priority Remediation Rate ($600) on a Targeted Pass to resolve it.</p>
+    </div>
+    <div class="modal-pricing"><span>$400 USD/year</span><span>Annual re-verification within 10 business days of renewal date</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Apply for license →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-1g" role="dialog" aria-modal="true" aria-labelledby="modal-1g-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-1g" aria-label="Close">✕</button>
+    <div class="modal-icon">≡</div>
+    <div class="modal-title" id="modal-1g-title">Document Family Bundle</div>
+    <div class="modal-sub">1G · Bundle · −10% (2 docs) / −15% (3+ docs) on 1B/1C base</div>
+    <div class="modal-bio">
+      <p>When a client submits multiple related documents for review together, the shared context makes reviewing them together genuinely less total effort than the same documents reviewed as unrelated one-off engagements. The Document Family Bundle passes that efficiency back to the client.</p>
+      <p>Applies to 1B and 1C base prices only, where 2 or more documents share a governing framework, issuing institution, or subject matter — confirmed at intake. Page-band add-ons and other per-document add-ons are unaffected by the bundle discount.</p>
+    </div>
+    <div class="modal-pricing"><span>−10% on combined 1B/1C base (2 docs)</span><span>−15% on combined 1B/1C base (3+ docs)</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Submit a document family →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-2a" role="dialog" aria-modal="true" aria-labelledby="modal-2a-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-2a" aria-label="Close">✕</button>
+    <div class="modal-icon">⊕</div>
+    <div class="modal-title" id="modal-2a-title">Framework Design</div>
+    <div class="modal-sub">2A · Design · From $6,500 USD · 15 business days · Up to 5 instruments</div>
+    <div class="modal-bio">
+      <p>A purpose-built analytical framework, designed from scratch for the client's specific domain and use case. Scope definition, instrument architecture, scoring methodology, epistemic tagging protocol, and versioning structure — all delivered as a deployable framework document the client owns outright.</p>
+    </div>
+    <div class="modal-pricing"><span>Base $6,500 USD (up to 5 instruments)</span><span>15 business days</span></div>
+    <table class="modal-table"><thead><tr><th>Add-on</th><th>Price</th></tr></thead><tbody>
+      <tr><td>Each additional instrument beyond 5</td><td>+$800</td></tr>
+      <tr><td>90-minute training/onboarding session</td><td>+$750</td></tr>
+      <tr><td>First Framework Evolution pass</td><td>+$2,200</td></tr>
+    </tbody></table>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Discuss a framework build →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-2b" role="dialog" aria-modal="true" aria-labelledby="modal-2b-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-2b" aria-label="Close">✕</button>
+    <div class="modal-icon">∂</div>
+    <div class="modal-title" id="modal-2b-title">Framework Audit</div>
+    <div class="modal-sub">2B · Audit · $3,800 USD · 10 business days · Up to 10 instruments</div>
+    <div class="modal-bio">
+      <p>The same method applied to documents, applied to the framework itself. Does it detect what it claims to detect? Does it have coverage gaps? Does it self-validate in ways that undermine its findings? Is there a failure mode where the framework produces high-confidence output from low-quality inputs without flagging the discrepancy?</p>
+      <p>Coverage gap analysis, detection-claim validation, self-validation detection, structured findings register, and proposed revisions or additions — all delivered in AionSystem house style.</p>
+    </div>
+    <div class="modal-pricing"><span>Fixed $3,800 USD (up to 10 instruments)</span><span>10 business days</span><span>+$300 per instrument beyond 10</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Submit a framework →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-2c" role="dialog" aria-modal="true" aria-labelledby="modal-2c-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-2c" aria-label="Close">✕</button>
+    <div class="modal-icon">↔</div>
+    <div class="modal-title" id="modal-2c-title">Framework Evolution</div>
+    <div class="modal-sub">2C · Evolution · From $2,800 USD · 10 business days · Up to 30 resolved findings</div>
+    <div class="modal-bio">
+      <p>Take an existing framework through a structured self-scan and produce a resolved next version with a complete changelog. This is how AionSystem manages its own stack: every version increment is a discrete deliverable with numbered findings, explicit resolutions, and a versioned document that replaces the prior.</p>
+      <p>Findings identified but not resolved in the current cycle are documented in a carry-forward register at no additional charge for the documentation itself.</p>
+    </div>
+    <div class="modal-pricing"><span>Base $2,800 USD (up to 30 resolved findings)</span><span>10 business days</span><span>+$500 per additional block of 10 resolved findings</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Submit a framework →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-2d" role="dialog" aria-modal="true" aria-labelledby="modal-2d-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-2d" aria-label="Close">✕</button>
+    <div class="modal-icon">∧</div>
+    <div class="modal-title" id="modal-2d-title">Adversarial Methodology Workshop</div>
+    <div class="modal-sub">2D · Workshop · $2,800–$4,500 USD · Remote only</div>
+    <div class="modal-bio">
+      <p>A session teaching a client's internal team the adversarial structural thinking process — not the proprietary instruments, but the transferable discipline: how to pressure-test a document against itself, how to distinguish surface findings from structural ones, how to apply epistemic tagging.</p>
+      <p>Clients who complete the workshop return for the expert-level engagement when the stakes are high, and become better-informed buyers of every other service in this catalog because they understand the method underneath it.</p>
+    </div>
+    <table class="modal-table"><thead><tr><th>Format</th><th>Duration</th><th>Participants</th><th>Price</th></tr></thead><tbody>
+      <tr><td>Half-day</td><td>3 hours</td><td>Up to 8</td><td>$2,800 USD</td></tr>
+      <tr><td>Full-day</td><td>6 hours</td><td>Up to 12</td><td>$4,500 USD</td></tr>
+    </tbody></table>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Schedule a workshop →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-t3" role="dialog" aria-modal="true" aria-labelledby="modal-t3-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-t3" aria-label="Close">✕</button>
+    <div class="modal-icon">⊗</div>
+    <div class="modal-title" id="modal-t3-title">Consultation Session</div>
+    <div class="modal-sub">Tier 3 · $350 USD / 60 minutes · Scheduled in advance</div>
+    <div class="modal-bio">
+      <p>A single scheduled session. Can be used for: scoping a document review engagement, interpreting findings from a completed report, discussing framework design options, or any other direct question requiring analytical engagement.</p>
+      <p><strong>No free discovery calls for individual and small-organisation clients.</strong> The consultation is the discovery call — a paid analytical session, and the output is useful regardless of whether a further engagement follows. Institutional clients (government bodies, intergovernmental organisations, publicly listed corporations) may request a free 30-minute scoping call — confirm at first contact.</p>
+    </div>
+    <div class="modal-pricing"><span>$350 USD / 60 minutes</span><span>Scheduled in advance · No same-day availability</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Book a session →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-t4" role="dialog" aria-modal="true" aria-labelledby="modal-t4-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-t4" aria-label="Close">✕</button>
+    <div class="modal-icon">∀</div>
+    <div class="modal-title" id="modal-t4-title">Monthly Retainer</div>
+    <div class="modal-sub">Tier 4 · $2,200 USD/month · 3-month minimum</div>
+    <div class="modal-bio">
+      <p>Priority access and a recurring structured review cadence for clients with ongoing documentation or framework work.</p>
+      <p><strong>Included each month:</strong> One Targeted Pass (1A) applied to any document or scope the client designates — or, once per quarter, substitute this credit for one Framework Evolution health-check pass on a client-designated framework. Priority scheduling on all other services (5-day reduction on all standard turnarounds). Quarterly framework health check: a lightweight structural check on one client-designated framework, delivered as a brief findings note.</p>
+    </div>
+    <div class="modal-pricing"><span>$2,200 USD/month</span><span>3-month minimum</span><span>Cancel anytime after with 30 days notice</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Discuss a retainer →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-t4b" role="dialog" aria-modal="true" aria-labelledby="modal-t4b-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-t4b" aria-label="Close">✕</button>
+    <div class="modal-icon">∃</div>
+    <div class="modal-title" id="modal-t4b-title">Structural Watch</div>
+    <div class="modal-sub">Tier 4B · $600–$1,800 USD/scan · After baseline review</div>
+    <div class="modal-bio">
+      <p>Recurring delta scans against an established baseline review. AI capability advances after delivery. New exploitation techniques surface. The document itself gets amended. Each of these can reopen a gap that was correctly closed at review time.</p>
+      <p>A baseline review is required first (1A, 1B, or 1C). Every Structural Watch cycle after that is a delta scan against the established baseline.</p>
+      <p><strong>Priority Remediation Rate:</strong> If a Critical finding surfaces in a previously-reviewed scope, the client receives that remediation pass at 50% off the standard Targeted Pass rate ($600 instead of $1,200) — no expiration on eligibility.</p>
+    </div>
+    <table class="modal-table"><thead><tr><th>Cadence</th><th>Price per scan</th></tr></thead><tbody>
+      <tr><td>Monthly</td><td>$600 USD</td></tr>
+      <tr><td>Quarterly</td><td>$850 USD</td></tr>
+      <tr><td>Semi-annual</td><td>$1,200 USD</td></tr>
+      <tr><td>Annual</td><td>$1,800 USD</td></tr>
+    </tbody></table>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Set up Structural Watch →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-t4c" role="dialog" aria-modal="true" aria-labelledby="modal-t4c-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-t4c" aria-label="Close">✕</button>
+    <div class="modal-icon">∈</div>
+    <div class="modal-title" id="modal-t4c-title">Reserved Capacity Contract</div>
+    <div class="modal-sub">Tier 4C · $1,500 USD — credited to invoice · Max 2 concurrent</div>
+    <div class="modal-bio">
+      <p>Guarantee one engagement slot within a specified future month, with priority over all non-reserved work in that window. The $1,500 fee is credited in full against whatever engagement is ultimately booked into that slot.</p>
+      <p>If the reserved slot goes unused — the client does not book an engagement into the reserved window — the fee is forfeited. This is what makes the arrangement a genuine reservation on scarce capacity rather than a refundable deposit. No more than 2 concurrent Reserved Capacity Contracts are held at any time.</p>
+    </div>
+    <div class="modal-pricing"><span>$1,500 USD — credited in full to eventual invoice</span><span>Max 2 concurrent reservations</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Reserve a slot →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-5a" role="dialog" aria-modal="true" aria-labelledby="modal-5a-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-5a" aria-label="Close">✕</button>
+    <div class="modal-icon">⊢</div>
+    <div class="modal-title" id="modal-5a-title">Expert Technical Declaration</div>
+    <div class="modal-sub">5A · $350 USD/hour · 4-hour minimum ($1,400)</div>
+    <div class="modal-bio">
+      <p>For disputes, arbitrations, or regulatory proceedings where the structural integrity of a governance document is at issue. A written technical declaration describing the structural finding, the method used to identify it, and the confidence basis behind it — produced by an independent expert applying the AionSystem method.</p>
+      <p><strong>Technical opinion, not legal opinion.</strong> No position is taken on liability, compliance status, or which party should prevail. Hours beyond the agreed scope cap require written client authorisation before they are billed.</p>
+    </div>
+    <div class="modal-pricing"><span>$350 USD/hour</span><span>4-hour minimum ($1,400)</span><span>Turnaround by written agreement at scoping</span></div>
+    <div class="modal-note">Not legal advice. This is a technical opinion on structural properties — not legal exposure, compliance status, or which party should prevail.</div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Discuss a declaration →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-5b" role="dialog" aria-modal="true" aria-labelledby="modal-5b-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-5b" aria-label="Close">✕</button>
+    <div class="modal-icon">⊨</div>
+    <div class="modal-title" id="modal-5b-title">Competitive Framework Analysis</div>
+    <div class="modal-sub">5B · From $6,500 USD · 15 business days · Publicly published frameworks only</div>
+    <div class="modal-bio">
+      <p>A structural comparison of a client's framework against a competitor's published equivalent — for market positioning and internal improvement, not legal purposes. Where does the competitor's framework have coverage gaps your framework addresses? Where does your framework have gaps the competitor's reveals?</p>
+      <p>Structural, not evaluative — maps where each has coverage the other lacks, not which is better. Restricted to publicly published frameworks only. AionSystem does not accept engagements involving a competitor's confidential or non-public material under this service.</p>
+    </div>
+    <div class="modal-pricing"><span>Base $6,500 USD (two documents, up to 30pp each)</span><span>15 business days</span><span>Page-band add-ons per 1B apply to each document beyond 30 pages</span></div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Discuss a comparison →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-6a" role="dialog" aria-modal="true" aria-labelledby="modal-6a-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-6a" aria-label="Close">✕</button>
+    <div class="modal-icon">◈</div>
+    <div class="modal-title" id="modal-6a-title">AI Governance Launch Package</div>
+    <div class="modal-sub">6A · $11,500 USD bundle (standalone: $12,700)</div>
+    <div class="modal-bio">
+      <p>For an organisation publishing or adopting a new AI governance framework, model policy, or AI-specific standard, and wanting maximum scrutiny before it goes live, plus the internal capability and external signal to back it up.</p>
+    </div>
+    <div class="modal-pricing"><span>Bundle $11,500 USD</span><span>Standalone equivalent: $12,700</span></div>
+    <table class="modal-table"><thead><tr><th>Included</th><th>Standalone value</th></tr></thead><tbody>
+      <tr><td>1C · Comprehensive Adversarial Review (base, up to 30pp)</td><td>$9,500</td></tr>
+      <tr><td>2D · Adversarial Methodology Workshop (half-day, up to 8)</td><td>$2,800</td></tr>
+      <tr><td>1F · Certified Mark License (first year)</td><td>$400</td></tr>
+    </tbody></table>
+    <div class="modal-note">Turnaround: per 1C standard (15 business days). Workshop and Certified Mark scheduled after Review completes — the Workshop can use the completed findings as a live worked example. Page-band add-ons apply separately if document exceeds 30 pages.</div>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Discuss the launch package →</a></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-6b" role="dialog" aria-modal="true" aria-labelledby="modal-6b-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-6b" aria-label="Close">✕</button>
+    <div class="modal-icon">⊕</div>
+    <div class="modal-title" id="modal-6b-title">Framework Launch Package</div>
+    <div class="modal-sub">6B · $8,500 USD bundle (standalone: $9,450)</div>
+    <div class="modal-bio">
+      <p>For a client building a new internal analytical framework from scratch, and wanting it built, taught, and immediately put through its first version cycle. No new work types — this solves the assembly problem for a buyer who doesn't yet know the catalog well enough to combine services themselves.</p>
+    </div>
+    <div class="modal-pricing"><span>Bundle $8,500 USD</span><span>Standalone equivalent: $9,450</span></div>
+    <table class="modal-table"><thead><tr><th>Included</th><th>Standalone value</th></tr></thead><tbody>
+      <tr><td>2A · Framework Design (base, up to 5 instruments)</td><td>$6,500</td></tr>
+      <tr><td>90-minute training/onboarding session</td><td>$750</td></tr>
+      <tr><td>First Framework Evolution pass</td><td>$2,200</td></tr>
+    </tbody></table>
+    <div class="modal-actions"><a href="/main-3/contact/" class="service-link">Discuss the framework package →</a></div>
+  </div>
+</div>
 
 <footer>
   <div>
@@ -525,7 +847,321 @@ footer{position:relative;z-index:3;border-top:1px solid var(--border);padding:32
 </footer>
 
 <script>
-/* ... keep all existing JavaScript unchanged ... */
+(function(){
+'use strict';
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const lowDevice=(navigator.hardwareConcurrency||2)<4||(navigator.deviceMemory||2)<4;
+
+/* ── WebGL violet shader ── */
+const wglCanvas=document.getElementById('webgl-canvas');
+let gl=null,glProgram=null,glUniforms={},glScrollVel=0,glMouseDist=1.0;
+if(!reducedMotion){try{gl=wglCanvas.getContext('webgl')||wglCanvas.getContext('experimental-webgl');}catch(_){}}
+if(gl){
+  const vsrc=`attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+  const fsrc=`precision mediump float;
+  uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
+  void main(){
+    vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
+    float ab=0.004*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
+    vec3 col=vec3(0.0);
+    col.b=sin(d*6.0+u_time)*ab*1.5;col.r=sin(d*6.0+u_time)*ab*2.2;
+    col.g=cos(d*6.0-u_time*0.7)*ab*0.15;
+    float rf=0.003*sin(uv.x*6.28+u_time*0.8)*u_mouse_dist;
+    col.r+=rf*1.8;col.b+=rf*0.8;
+    gl_FragColor=vec4(col,0.2*(1.0-smoothstep(0.5,1.0,d)));
+  }`;
+  // FIX NEW-BUG-01: WebGL shader error checking
+  function cs(type,src){
+    const s=gl.createShader(type);
+    gl.shaderSource(s,src);
+    gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){
+      console.warn('Shader compile error:',gl.getShaderInfoLog(s));
+      gl.deleteShader(s);
+      return null;
+    }
+    return s;
+  }
+  const vs=cs(gl.VERTEX_SHADER,vsrc),fs=cs(gl.FRAGMENT_SHADER,fsrc);
+  if(vs&&fs){
+    glProgram=gl.createProgram();
+    gl.attachShader(glProgram,vs);gl.attachShader(glProgram,fs);
+    gl.linkProgram(glProgram);
+    if(!gl.getProgramParameter(glProgram,gl.LINK_STATUS)){
+      console.warn('WebGL program link error:',gl.getProgramInfoLog(glProgram));
+      glProgram=null;
+    } else {
+      gl.useProgram(glProgram);
+      const buf=gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+      const loc=gl.getAttribLocation(glProgram,'a_pos');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+      glUniforms.res=gl.getUniformLocation(glProgram,'u_res');
+      glUniforms.time=gl.getUniformLocation(glProgram,'u_time');
+      glUniforms.scrollVel=gl.getUniformLocation(glProgram,'u_scroll_vel');
+      glUniforms.mouseDist=gl.getUniformLocation(glProgram,'u_mouse_dist');
+      gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+    }
+  }
+}
+
+/* ── Symbol field ── */
+const symCanvas=document.getElementById('symbol-canvas');
+const ctx=symCanvas.getContext('2d');
+const SYMS=['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈'];
+const COLS=['#d946ef','#e879f9','#a855f7','#c084fc','#f0abfc'];
+let W,H,symbols=[],echoes=[];
+const mouse={x:null,y:null,vx:0,vy:0,prevX:null,prevY:null};
+const GR=200,GS=0.015,TG=0.18;
+const PFPS=lowDevice?30:60,PDT=1000/PFPS;
+let isCollapsing=false,collapsePhase=0,collapseStart=0,holdTO=null;
+
+function resizeCanvas(){
+  W=symCanvas.width=wglCanvas.width=window.innerWidth;
+  H=symCanvas.height=wglCanvas.height=window.innerHeight;
+  if(gl&&glProgram)gl.viewport(0,0,W,H);
+  initSymbols();
+}
+let rT=null;
+window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(resizeCanvas,150);});
+
+function rc(){return COLS[Math.floor(Math.random()*COLS.length)];}
+function initSymbols(){
+  const n=Math.floor((W*H)/7000);symbols=[];
+  for(let i=0;i<n;i++)symbols.push({
+    char:SYMS[Math.floor(Math.random()*SYMS.length)],
+    x:Math.random()*W,y:Math.random()*H,
+    vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,
+    size:10+Math.random()*18,color:rc(),
+    alpha:0.1+Math.random()*0.2,scrollGlow:0,inWell:false,
+    origX:0,origY:0,targetX:0,targetY:0
+  });
+}
+function spawnEcho(x,y){
+  for(let i=0;i<12;i++){
+    const a=(Math.PI*2*i)/12+Math.random()*.3,sp=1.5+Math.random()*2.5;
+    echoes.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x,y,
+      vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:8+Math.random()*8,
+      color:rc(),alpha:0.8,age:0,maxAge:600});
+  }
+}
+
+function triggerCollapse(){
+  if(isCollapsing)return;isCollapsing=true;collapsePhase=1;collapseStart=performance.now();
+  const lat=[],hW=60,hH=hW*Math.sqrt(3)/2;
+  for(let y=0;y<H+hH;y+=hH)for(let x=0;x<W+hW;x+=hW)lat.push({x:x+(Math.floor(y/hH)%2)*(hW/2),y});
+  symbols.forEach(s=>{s.origX=s.x;s.origY=s.y;const tg=lat[Math.floor(Math.random()*lat.length)];s.targetX=tg.x;s.targetY=tg.y;});
+}
+function stepCollapse(now){
+  if(!isCollapsing)return;const el=now-collapseStart;
+  if(collapsePhase===1){
+    const p=Math.min(el/1500,1),tt=1-Math.pow(1-p,3);
+    symbols.forEach(s=>{s.x=s.origX+(s.targetX-s.origX)*tt;s.y=s.origY+(s.targetY-s.origY)*tt;s.vx=0;s.vy=0;s.alpha=0.15+0.35*p;s.color='#e879f9';});
+    if(p>=1){
+      collapsePhase=2;collapseStart=now;clearTimeout(holdTO);
+      holdTO=setTimeout(()=>{
+        if(!isCollapsing)return;collapsePhase=3;collapseStart=performance.now();
+        symbols.forEach(s=>{const a=Math.random()*Math.PI*2,sp=3+Math.random()*4;s.vx=Math.cos(a)*sp;s.vy=Math.sin(a)*sp;s.color='#ef4444';s.alpha=0.6;});
+        spawnEcho(W/2,H/2);
+      },800);
+    }
+  } else if(collapsePhase===3){
+    const p=Math.min(el/600,1);
+    symbols.forEach(s=>{s.alpha=0.15+0.25*(1-p);s.vx*=0.98;s.vy*=0.98;});
+    if(p>=1){isCollapsing=false;collapsePhase=0;symbols.forEach(s=>{s.vx=(Math.random()-.5)*.2;s.vy=(Math.random()-.5)*.2;s.color=rc();});}
+  }
+}
+
+let lastPT=0;
+function updatePhysics(now){
+  if(now-lastPT<PDT)return;lastPT=now;
+  if(mouse.prevX!==null&&mouse.x!==null){mouse.vx=mouse.x-mouse.prevX;mouse.vy=mouse.y-mouse.prevY;}
+  if(mouse.x!==null){mouse.prevX=mouse.x;mouse.prevY=mouse.y;}
+  if(isCollapsing){stepCollapse(now);return;}
+  symbols.forEach(s=>{
+    s.x+=s.vx;s.y+=s.vy;
+    if(s.x<-50)s.x=W+50;if(s.x>W+50)s.x=-50;if(s.y<-50)s.y=H+50;if(s.y>H+50)s.y=-50;
+    if(mouse.x!==null){
+      const dx=s.x-mouse.x,dy=s.y-mouse.y,d=Math.hypot(dx,dy);
+      if(d<GR){
+        const f=GS*(1-d/GR),a=Math.atan2(dy,dx);
+        s.vx-=Math.cos(a)*f;s.vy-=Math.sin(a)*f;
+        const ta=a+Math.PI/2,sp=TG*(1-d/GR);
+        s.vx+=Math.cos(ta)*sp*(mouse.vx*.05+.5);s.vy+=Math.sin(ta)*sp*(mouse.vy*.05+.5);
+        s.vx*=.99;s.vy*=.99;s.inWell=true;
+        glMouseDist=Math.min(glMouseDist,d/GR);
+      } else s.inWell=false;
+    }
+    if(s.scrollGlow>.01)s.scrollGlow*=.94;else s.scrollGlow=0;
+  });
+  glMouseDist=Math.min(1,glMouseDist+.02);
+}
+
+function render(){
+  ctx.clearRect(0,0,W,H);
+  echoes=echoes.filter(e=>{
+    e.age+=PDT;if(e.age>=e.maxAge)return false;
+    e.x+=e.vx;e.y+=e.vy;e.alpha=0.8*(1-e.age/e.maxAge);
+    ctx.font=`${e.size}px 'JetBrains Mono',monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor=e.color;ctx.shadowBlur=12;ctx.fillStyle=e.color;ctx.globalAlpha=e.alpha;
+    ctx.fillText(e.char,e.x,e.y);return true;
+  });
+  symbols.forEach(s=>{
+    const g=s.scrollGlow>.01?15+s.scrollGlow*20:(s.inWell?28:10);
+    ctx.font=`${s.size}px 'JetBrains Mono',monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor=s.color;ctx.shadowBlur=g;ctx.fillStyle=s.color;
+    ctx.globalAlpha=s.alpha+s.scrollGlow*.2;ctx.fillText(s.char,s.x,s.y);
+  });
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+}
+
+function renderWebGL(t){
+  if(!gl||!glProgram)return;
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.uniform2f(glUniforms.res,W,H);gl.uniform1f(glUniforms.time,t*.001);
+  gl.uniform1f(glUniforms.scrollVel,glScrollVel);gl.uniform1f(glUniforms.mouseDist,glMouseDist);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
+
+function loop(t){updatePhysics(t);render();renderWebGL(t);requestAnimationFrame(loop);}
+
+/* ── Input — FIX BUG-05: passive on pointermove; FIX BUG-01: document.pointerleave ── */
+window.addEventListener('pointermove',e=>{
+  if(e.pointerType==='mouse'){mouse.x=e.clientX;mouse.y=e.clientY;}
+},{passive:true});
+// FIX BUG-01: was window.addEventListener — pointerleave on window is unreliable cross-browser
+document.addEventListener('pointerleave',()=>{
+  mouse.x=null;mouse.y=null;mouse.prevX=null;mouse.prevY=null;
+});
+window.addEventListener('pointerdown',e=>{
+  if(e.pointerType!=='mouse')return;spawnEcho(e.clientX,e.clientY);
+});
+window.addEventListener('dblclick',e=>{
+  const tag=e.target.tagName.toLowerCase();
+  const inter=['a','button','input'].includes(tag)||e.target.closest('a')||e.target.closest('button')||e.target.closest('.modal-overlay');
+  if(inter)return;triggerCollapse();spawnEcho(e.clientX,e.clientY);
+});
+window.addEventListener('keydown',e=>{
+  if(e.ctrlKey&&e.shiftKey&&e.key==='Q'){e.preventDefault();triggerCollapse();}
+});
+
+/* ── Scroll — FIX NEW-BUG-09: reset glScrollVel when scrolling stops ── */
+let lastSY=window.scrollY,scrollTO=null;
+window.addEventListener('scroll',()=>{
+  const sy=window.scrollY;glScrollVel=Math.abs(sy-lastSY)/60;lastSY=sy;
+  symbols.forEach(s=>{if(Math.abs(s.y-(sy+H/2))<200)s.scrollGlow=1.0;});
+  clearTimeout(scrollTO);
+  scrollTO=setTimeout(()=>{
+    symbols.forEach(s=>s.scrollGlow=0);
+    glScrollVel=0; // FIX: was missing — scroll glow persisted after scrolling stopped
+  },300);
+},{passive:true});
+
+/* ── FIX BUG-02: Scroll-lock counter prevents modal/mobile-nav overflow conflict ── */
+let scrollLockCount=0;
+function lockScroll(){if(++scrollLockCount===1)document.body.style.overflow='hidden';}
+function unlockScroll(){if(--scrollLockCount<=0){scrollLockCount=0;document.body.style.overflow='';}}
+
+/* ── FIX BUG-03: Focus trap for modals ── */
+function trapFocus(modal){
+  const focusable=modal.querySelectorAll('button,a,[tabindex]:not([tabindex="-1"])');
+  if(!focusable.length)return;
+  const first=focusable[0],last=focusable[focusable.length-1];
+  modal._trap=(e)=>{
+    if(e.key!=='Tab')return;
+    if(e.shiftKey){if(document.activeElement===first){e.preventDefault();last.focus();}}
+    else{if(document.activeElement===last){e.preventDefault();first.focus();}}
+  };
+  modal.addEventListener('keydown',modal._trap);
+}
+function releaseTrap(modal){
+  if(modal._trap){modal.removeEventListener('keydown',modal._trap);delete modal._trap;}
+}
+
+/* ── Modal system ── */
+function openModal(id){
+  const m=document.getElementById(id);if(!m)return;
+  m.classList.add('active');
+  lockScroll();
+  trapFocus(m);
+  setTimeout(()=>{const f=m.querySelector('button,a,[tabindex]');if(f)f.focus();},50);
+}
+function closeModal(id){
+  const m=document.getElementById(id);if(!m)return;
+  releaseTrap(m);
+  m.classList.remove('active');
+  unlockScroll();
+}
+document.querySelectorAll('[data-modal]').forEach(t=>t.addEventListener('click',()=>openModal(t.getAttribute('data-modal'))));
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeModal(b.getAttribute('data-close'))));
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id);}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.active').forEach(m=>closeModal(m.id));});
+
+/* ── Audio — FIX NEW-BUG-08: audio context cleanup on page hide ── */
+let audioCtx=null,audioOn=false;
+const aToggle=document.getElementById('audio-toggle');
+function initAudio(){
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  audioCtx=new AC();
+  const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.055,audioCtx.currentTime);
+  const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=300;filter.Q.value=0.6;
+  const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(38,audioCtx.currentTime);
+  const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(76.4,audioCtx.currentTime);
+  const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.1,audioCtx.currentTime);
+  osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
+  osc1.start();osc2.start();
+  // FIX NEW-BUG-08: clean up audio context on page unload
+  window.addEventListener('pagehide',()=>{try{if(audioCtx)audioCtx.close();}catch(_){}},{once:true});
+}
+if(aToggle){
+  aToggle.addEventListener('click',()=>{
+    audioOn=!audioOn;aToggle.setAttribute('aria-pressed',String(audioOn));
+    if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}
+    else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}
+  });
+}
+
+/* ── Mobile nav — uses lockScroll/unlockScroll (FIX BUG-02) ── */
+const hamburger=document.getElementById('hamburger'),mobileNav=document.getElementById('mobileNav');
+let navOpen=false;
+if(hamburger&&mobileNav){
+  document.querySelectorAll('.nav-links a').forEach((link,i)=>{
+    const a=document.createElement('a');
+    a.href=link.getAttribute('href');a.textContent=link.textContent;
+    if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));
+    if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));
+    if(link.classList.contains('active'))a.classList.add('active');
+    a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);
+  });
+  function openMenu(){
+    navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');
+    hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');
+    lockScroll();
+    setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);
+  }
+  function closeMenu(){
+    navOpen=false;mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');
+    hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');
+    unlockScroll();hamburger.focus();
+  }
+  hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());
+  mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navOpen)closeMenu();});
+}
+
+/* ── Init ── */
+const yearSpan=document.getElementById('copyright-year');
+if(yearSpan)yearSpan.textContent=new Date().getFullYear();
+if(!reducedMotion){
+  resizeCanvas();
+  // FIX QUAL-05: guard setTimeout — check element still in DOM before adding class
+  setTimeout(()=>{if(document.contains(symCanvas))symCanvas.classList.add('ready');},300);
+  requestAnimationFrame(loop);
+}
+
+})();
 </script>
 </body>
 </html>
