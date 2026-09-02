@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="description" content="Sheldon K. Salmon — Red-Team Framework Designer. EU AI Act analysis: 18 failure nodes. ISA Deep-Sea Mining Code: 52 failure nodes. I find what kills a document before it costs you.">
-<title>Sheldon K. Salmon — Document Red-Team Analysis | AionSystem</title>
-<meta property="og:title" content="Sheldon K. Salmon — Document Red-Team Analysis | AionSystem">
-<meta property="og:description" content="Two published structural reviews. EU AI Act: 18 failure nodes, 7 catastrophic. ISA Code: 52 failure nodes, 4 critical. Every finding ships with resolution text.">
+<meta name="description" content="Sheldon K. Salmon — How to Work With Me. Rules, communication, engagement, and boundaries for document red-teaming.">
+<title>Rules — How to Work With Me | AionSystem</title>
+<meta property="og:title" content="Rules — How to Work With Me | AionSystem">
+<meta property="og:description" content="The rules exist so your document gets my full attention. Read them before sending anything.">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/png" href="/assets/img/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,23 +49,16 @@
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:var(--font-base);line-height:1.5;overflow-x:hidden;}
 
-/* CANVAS LAYERS */
 #doc-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.9;}
 #sym-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
 #sym-canvas.ready{opacity:0.65}
 .mid-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(217,70,239,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(217,70,239,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10;}
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(217,70,239,0.018) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.35;}
 
-/* SEAM LINE */
-.seam-line{position:fixed;top:0;bottom:0;left:var(--split);width:1px;background:linear-gradient(to bottom,transparent 0%,rgba(217,70,239,0.0) 8%,rgba(217,70,239,0.6) 30%,rgba(168,85,247,0.8) 50%,rgba(217,70,239,0.6) 70%,rgba(217,70,239,0.0) 92%,transparent 100%);z-index:12;pointer-events:none;animation:seamPulse 4s ease-in-out infinite;}
-@keyframes seamPulse{0%,100%{opacity:0.7}50%{opacity:1;box-shadow:0 0 12px rgba(217,70,239,0.5),0 0 24px rgba(168,85,247,0.25);}}
-
-/* AUDIO TOGGLE */
 .audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(6,3,10,0.72);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;}
 .audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid);box-shadow:var(--glow-mid);outline:none;}
 .audio-toggle[aria-pressed="true"]{border-color:var(--red);color:var(--red);}
 
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(6,3,10,0.78);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 30px rgba(217,70,239,0.05);opacity:1;}
 .nav-logo{font-family:var(--mono);font-size:13px;letter-spacing:3px;color:var(--mid-l);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px;}
 .nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--mid);box-shadow:0 0 10px rgba(217,70,239,0.4);}
@@ -88,189 +81,50 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .mobile-nav a:hover::before{background:var(--mid-l);box-shadow:0 0 6px var(--mid-l);}
 .mobile-nav a:last-child:nth-child(2n+1){grid-column:1/-1;border-right:none;}
 
-/* HERO ANIMATIONS */
-.reveal-hero{opacity:0;transform:translateY(24px);animation:revealUp 0.7s var(--ease) forwards;}
-.reveal-hero.d-0{animation-delay:0ms}.reveal-hero.d-1{animation-delay:150ms}.reveal-hero.d-2{animation-delay:220ms}.reveal-hero.d-3{animation-delay:320ms}.reveal-hero.d-4{animation-delay:400ms}.reveal-hero.d-5{animation-delay:480ms}
-.reveal-right{opacity:0;transform:translateX(20px);animation:revealRight 0.75s var(--ease) forwards;}
-.reveal-right.d-0{animation-delay:200ms}.reveal-right.d-1{animation-delay:340ms}.reveal-right.d-2{animation-delay:460ms}.reveal-right.d-3{animation-delay:560ms}.reveal-right.d-4{animation-delay:660ms}
-@keyframes revealUp{to{opacity:1;transform:translateY(0)}}
-@keyframes revealRight{to{opacity:1;transform:translateX(0)}}
+/* NAV GATE */
+.nav-locked .nav-links,
+.nav-locked .nav-hamburger{
+  display:none !important;
+}
+.nav-locked .mobile-nav{
+  display:none !important;
+}
 
-/* SPLIT HERO */
-.hero-split-wrap{position:relative;z-index:20;min-height:100vh;display:grid;grid-template-columns:var(--split) 1fr;padding-top:56px;}
-.hero-left{position:relative;display:flex;flex-direction:column;justify-content:center;padding:60px 48px 60px 40px;background:linear-gradient(100deg,rgba(6,3,10,0.92) 0%,rgba(12,6,20,0.65) 100%);min-height:calc(100vh - 56px);}
-.hero-left::before{content:'';position:absolute;top:0;bottom:0;left:0;width:3px;background:linear-gradient(to bottom,transparent,var(--mid-d) 30%,var(--mid) 65%,transparent);opacity:0.55;}
-.hero-right{position:relative;display:flex;flex-direction:column;justify-content:center;padding:60px 40px 60px 52px;min-height:calc(100vh - 56px);background:linear-gradient(100deg,rgba(12,6,18,0.55) 0%,rgba(6,3,10,0.78) 100%);}
-.hero-right::after{content:'';position:absolute;top:0;bottom:0;right:0;width:2px;background:linear-gradient(to bottom,transparent,rgba(168,85,247,0.3) 40%,rgba(168,85,247,0.15) 70%,transparent);opacity:0.4;}
-
-/* LEFT CONTENT */
-.hero-logo-wrap{display:flex;align-items:center;gap:16px;margin-bottom:32px}
-.hero-logo-img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:1.5px solid var(--mid);box-shadow:0 0 20px rgba(217,70,239,0.45),0 0 40px rgba(168,85,247,0.2);transition:box-shadow 0.4s;}
-.hero-logo-img:hover{box-shadow:0 0 28px rgba(217,70,239,0.7),0 0 56px rgba(168,85,247,0.35);}
-.hero-logo-wordmark{font-family:var(--mono);font-size:12px;letter-spacing:4px;color:var(--mid-l);text-transform:uppercase}
-.hero-logo-wordmark span{color:var(--muted)}
-.hero-logo-tagline{font-family:var(--mono);font-size:9px;letter-spacing:2.5px;color:var(--dim);text-transform:uppercase;margin-top:3px;}
-.hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--peri-l);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
-.hero-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--peri-l);box-shadow:0 0 8px var(--peri-l);flex-shrink:0;}
-.hero-name{font-family:var(--display);font-size:var(--font-h1);font-weight:700;letter-spacing:-2px;line-height:0.9;color:var(--text);text-transform:uppercase;margin-bottom:8px;}
-.hero-name em{display:block;font-style:normal;background:linear-gradient(135deg,var(--mid-l) 0%,var(--peri) 45%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;animation:gradShift 6s ease-in-out infinite;}
+.wrapper{position:relative;z-index:20;max-width:900px;margin:0 auto;padding:100px 24px 80px;}
+.hero-centered{text-align:center;margin-bottom:40px;}
+.hero-centered .hero-logo-wrap{display:flex;align-items:center;gap:16px;justify-content:center;margin-bottom:20px;}
+.hero-centered .hero-logo-img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:1.5px solid var(--mid);box-shadow:0 0 20px rgba(217,70,239,0.45),0 0 40px rgba(168,85,247,0.2);}
+.hero-centered .hero-logo-wordmark{font-family:var(--mono);font-size:12px;letter-spacing:4px;color:var(--mid-l);text-transform:uppercase}
+.hero-centered .hero-logo-wordmark span{color:var(--muted)}
+.hero-centered .hero-logo-tagline{font-family:var(--mono);font-size:9px;letter-spacing:2.5px;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.hero-centered h1{font-family:var(--display);font-size:var(--font-h1);font-weight:700;letter-spacing:-2px;line-height:0.9;color:var(--text);text-transform:uppercase;margin-bottom:12px;}
+.hero-centered h1 em{display:block;font-style:normal;background:linear-gradient(135deg,var(--mid-l) 0%,var(--peri) 45%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;animation:gradShift 6s ease-in-out infinite;}
+.hero-centered p{font-family:var(--body);font-size:clamp(14px,1.4vw,17px);font-weight:300;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.65;}
 @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.hero-title{font-family:var(--mono);font-size:clamp(10px,1.1vw,13px);color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;margin-top:20px;line-height:1.8;}
-.hero-title strong{color:var(--text);font-weight:500;}
-.hero-divider{width:56px;height:2px;background:linear-gradient(90deg,var(--mid),var(--peri));margin:28px 0;box-shadow:0 0 12px rgba(217,70,239,0.6);position:relative;overflow:visible;}
-.hero-divider::after{content:'';position:absolute;top:-3px;left:0;width:8px;height:8px;border-radius:50%;background:var(--mid-l);box-shadow:0 0 10px var(--mid-l);animation:scanDot 3.5s ease-in-out infinite;}
-@keyframes scanDot{0%{left:0;opacity:1}60%{left:54px;opacity:1}65%{opacity:0}66%{left:0;opacity:0}70%{opacity:1}}
-.hero-stats{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
-.hero-stat{display:flex;align-items:center;gap:14px;padding:10px 16px;border:1px solid var(--border);border-radius:6px;background:rgba(16,8,24,0.45);backdrop-filter:blur(8px);transition:all 0.25s ease;cursor:default;}
-.hero-stat:hover{border-color:rgba(217,70,239,0.35);background:rgba(16,8,24,0.75);transform:translateX(4px);}
-.hero-stat-val{font-family:var(--display);font-size:clamp(18px,2vw,24px);font-weight:700;letter-spacing:-0.5px;min-width:52px;}
-.c-mid{color:var(--mid-l);text-shadow:0 0 10px rgba(217,70,239,0.5);}
-.c-peri{color:var(--peri-l);text-shadow:0 0 10px rgba(168,85,247,0.5);}
-.c-red{color:#f87171;text-shadow:0 0 10px rgba(239,68,68,0.4);}
-.hero-stat-label{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;line-height:1.5;}
 
-/* RIGHT CONTENT */
-.hero-hook{font-family:var(--body);font-size:clamp(1.3rem,2.8vw,2.3rem);font-weight:300;font-style:italic;max-width:640px;margin-bottom:14px;line-height:1.25;color:var(--text);}
-.hero-hook em{font-style:normal;color:var(--mid-l);text-shadow:0 0 12px rgba(217,70,239,0.5);}
-.hero-hook strong{font-style:normal;font-weight:600;color:var(--accent);}
-.hero-sub{font-family:var(--body);font-size:clamp(14px,1.4vw,17px);font-weight:300;color:var(--muted);max-width:540px;margin-bottom:28px;line-height:1.65;}
-.hero-sub strong{font-weight:600;color:var(--text);}
-
-/* AUDIENCE SPLIT */
-.audience-split{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;max-width:560px;margin-bottom:24px;}
-.audience-path{padding:16px 20px;background:var(--surface);backdrop-filter:blur(12px);display:flex;flex-direction:column;gap:6px;transition:all 0.25s ease;text-decoration:none;position:relative;overflow:hidden;}
-.audience-path::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform 0.3s ease;}
-.audience-path.doc::after{background:var(--mid);}
-.audience-path.peer::after{background:var(--peri);}
-.audience-path:hover::after,.audience-path:focus-visible::after{transform:scaleX(1);}
-.audience-path:hover,.audience-path:focus-visible{outline:none;background:rgba(22,10,34,0.85);}
-.path-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;}
-.audience-path.doc .path-label{color:var(--mid-l);}
-.audience-path.peer .path-label{color:var(--peri-l);}
-.path-headline{font-family:var(--display);font-size:clamp(12px,1.2vw,15px);font-weight:700;letter-spacing:1px;color:var(--text);text-transform:uppercase;}
-.path-desc{font-family:var(--mono);font-size:9.5px;color:var(--muted);letter-spacing:1px;}
-
-/* CTAs */
-.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;}
-.badge-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;}
-.badge-group{display:flex;flex-direction:column;gap:4px;}
-.badge-group img{height:18px;border-radius:3px;}
-.badge-translation{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;}
-
-/* CTA BUTTONS */
-.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--mid);color:var(--mid-l);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer;}
-.cta-btn.primary{background:rgba(217,70,239,0.12);color:var(--accent);border-color:var(--mid)}
-.cta-btn:hover,.cta-btn:focus-visible{background:var(--mid);color:#000;border-color:var(--mid);box-shadow:var(--glow-mid);outline:none;}
-.cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--mid-d);color:#fff;border-color:var(--mid-d);box-shadow:var(--glow-mid);}
-.cta-btn.peri{border-color:var(--peri);color:var(--peri-l)}
-.cta-btn.peri:hover,.cta-btn.peri:focus-visible{background:var(--peri);color:#fff;box-shadow:var(--glow-peri);outline:none;}
-
-/* GLASS CARDS */
-.proof-card,.service-card,.stack-card,.method-card,.vault-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);box-shadow:0 8px 20px rgba(0,0,0,0.45),inset 0 0 30px rgba(217,70,239,0.02);transition:all 0.3s var(--ease);}
-.proof-card:hover,.service-card:hover,.stack-card:hover,.method-card:hover{border-color:rgba(217,70,239,0.35);box-shadow:0 12px 30px rgba(0,0,0,0.6),0 0 25px rgba(217,70,239,0.12),inset 0 0 20px rgba(217,70,239,0.03);transform:translateY(-4px);}
-.vault-card{border-radius:0}
-.vault-card:hover{border-color:var(--peri);box-shadow:0 12px 30px rgba(0,0,0,0.6),0 0 25px rgba(168,85,247,0.2);transform:translateY(-4px);position:relative;z-index:2;}
-
-/* SECTIONS */
-section{position:relative;z-index:20;padding:60px 40px;max-width:1200px;margin:0 auto}
-.section-header{display:flex;align-items:center;gap:16px;margin-bottom:48px}
+section.rules-section{max-width:800px;margin:0 auto 48px;}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
 .section-num{font-family:var(--mono);font-size:11px;color:var(--peri-l);letter-spacing:2px}
 .section-title{font-family:var(--display);font-size:var(--font-h2);font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);}
 .section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px rgba(217,70,239,0.15)}
+.rule-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:28px 24px;margin-bottom:16px;transition:all 0.3s var(--ease);}
+.rule-card:hover{border-color:var(--border-h);box-shadow:0 12px 30px rgba(0,0,0,0.5),0 0 25px rgba(217,70,239,0.1);transform:translateY(-2px);}
+.rule-card h3{font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--mid-l);margin-bottom:8px;}
+.rule-card p{font-family:var(--body);font-size:14px;font-weight:300;color:var(--muted);line-height:1.7;}
 
-/* PROOF GRID */
-.proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
-.proof-card{padding:32px 28px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;}
-.proof-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity 0.3s ease;}
-.proof-card.mid-top::before{background:linear-gradient(90deg,var(--mid),transparent);}
-.proof-card.peri-top::before{background:linear-gradient(90deg,var(--peri),transparent);}
-.proof-card.red-top::before{background:linear-gradient(90deg,var(--red),transparent);}
-.proof-card:hover::before{opacity:1;}
-.proof-icon{font-size:1.8rem;line-height:1;}
-.proof-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
-.proof-value{font-family:var(--display);font-size:clamp(26px,3.2vw,40px);font-weight:700;letter-spacing:-1px;line-height:1;}
-.proof-card.mid-top .proof-value{color:var(--mid-l);text-shadow:var(--glow-mid);}
-.proof-card.peri-top .proof-value{color:var(--peri-l);text-shadow:var(--glow-peri);}
-.proof-card.red-top .proof-value{color:#f87171;text-shadow:var(--glow-red);}
-.proof-desc{font-family:var(--body);font-size:0.9rem;color:var(--muted);line-height:1.55;}
-.proof-link{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:inherit;text-decoration:none;text-transform:uppercase;opacity:0.7;border-bottom:1px solid transparent;transition:all 0.2s ease;margin-top:auto;display:inline-block;}
-.proof-link:hover,.proof-link:focus-visible{opacity:1;border-bottom-color:currentColor;outline:none;}
-.proof-card.mid-top .proof-link{color:var(--mid-l);}
-.proof-card.peri-top .proof-link{color:var(--peri-l);}
-.proof-card.red-top .proof-link{color:#f87171;}
+.agree-wrap{text-align:center;margin-top:32px;margin-bottom:32px;}
+.agree-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;letter-spacing:3px;text-transform:uppercase;padding:14px 30px;border:1px solid var(--mid);color:var(--accent);background:rgba(217,70,239,0.08);border-radius:6px;cursor:pointer;transition:all 0.25s var(--ease);}
+.agree-btn:hover,.agree-btn:focus-visible{background:var(--mid-d);color:#fff;box-shadow:var(--glow-mid);outline:none;}
+.agree-note{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--dim);margin-top:8px;text-transform:uppercase;}
 
-/* SERVICES GRID */
-.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
-.vault-card{padding:32px 28px;display:flex;flex-direction:column;gap:12px}
-.service-title{font-family:var(--mono);font-size:14px;letter-spacing:2px;text-transform:uppercase;margin:0}
-.service-desc{font-family:var(--body);font-size:1rem;color:var(--muted);line-height:1.55;flex:1}
-.service-link{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--mid-l);text-decoration:none;text-transform:uppercase;border-bottom:1px solid transparent;transition:border-color 0.2s ease;}
-.service-link:hover,.service-link:focus-visible{border-bottom-color:var(--mid-l);text-shadow:var(--glow-mid);outline:none;}
+footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);position:relative;z-index:20;}
+.footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap;}
+.footer-links a{color:var(--dim);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover,.footer-links a:focus-visible{color:var(--mid-l);text-shadow:0 0 8px rgba(217,70,239,0.4);outline:none;}
 
-/* METHODOLOGY PIPELINE */
-.method-demo{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:rgba(6,3,10,0.75);backdrop-filter:blur(20px);margin-bottom:32px;}
-.method-demo-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-.method-demo-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
-.method-timer{font-family:var(--mono);font-size:10px;color:var(--peri-l);letter-spacing:1px;}
-.method-stages{display:flex;overflow:hidden;}
-.method-stage{flex:0 0 100%;padding:32px;display:none;flex-direction:column;gap:16px;}
-.method-stage.active{display:flex;}
-.stage-num{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
-.stage-name{font-family:var(--display);font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);}
-.stage-name em{font-style:normal;color:var(--mid-l);}
-.stage-content{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.7;padding:16px;border:1px solid var(--border);border-radius:8px;background:rgba(0,0,0,0.45);}
-.stage-content .hi{color:var(--mid-l);}
-.stage-content .val{color:var(--peri-l);}
-.stage-content .cr{color:#f87171;}
-.stage-progress{display:flex;gap:8px;align-items:center;padding:0 32px 24px;}
-.stage-pip{height:3px;flex:1;background:rgba(255,255,255,0.07);border-radius:2px;transition:background 0.4s ease;cursor:pointer;}
-.stage-pip.done{background:var(--peri);}
-.stage-pip.active-pip{background:var(--mid-l);box-shadow:0 0 8px var(--mid-l);}
-.method-strip{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin-top:24px;}
-.method-step{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);box-shadow:0 8px 20px rgba(0,0,0,0.4);padding:12px 18px;border-radius:10px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--text);}
-.method-arrow{font-family:var(--mono);color:var(--peri-l);font-size:1.3rem;margin:0 2px;}
-
-/* SCARCITY BLOCK */
-.scarcity-block{display:inline-flex;align-items:center;gap:12px;padding:10px 16px;border:1px solid rgba(217,70,239,0.35);border-radius:8px;background:rgba(217,70,239,0.06);margin-bottom:24px;}
-.scarcity-dot{width:8px;height:8px;border-radius:50%;background:var(--mid-l);box-shadow:0 0 8px var(--mid-l);animation:pdot 2s ease-in-out infinite;flex-shrink:0;}
-@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.85)}}
-.scarcity-text{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--mid-l);text-transform:uppercase;}
-
-/* STACK TABLE */
-.stack-card{padding:32px;max-width:800px;border-radius:8px}
-.stack-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.75rem}
-.stack-table caption{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-align:left;padding-bottom:12px}
-.stack-table th,.stack-table td{text-align:left;padding:12px 8px;border-bottom:1px solid var(--border)}
-.stack-table th{color:var(--peri-l);}
-.stack-table tr:hover td{background:rgba(217,70,239,0.03)}
-.severity-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:0.65rem;font-weight:600;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);}
-.s-critical{background:rgba(239,68,68,0.12);color:#f87171;box-shadow:0 0 8px rgba(239,68,68,0.3)}
-.s-major{background:rgba(217,70,239,0.12);color:var(--mid-l);box-shadow:0 0 8px rgba(217,70,239,0.3)}
-.s-minor{background:rgba(168,85,247,0.12);color:var(--peri-l);box-shadow:0 0 8px rgba(168,85,247,0.3)}
-.s-resolved{background:rgba(34,197,94,0.1);color:#86efac;box-shadow:0 0 8px rgba(34,197,94,0.2)}
-.tilt-card{transform-style:preserve-3d;will-change:transform}
-
-/* CONNECT */
-.connect-grid{display:flex;flex-wrap:wrap;gap:40px;margin-bottom:40px;}
-.connect-grid strong{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
-.connect-grid a{color:var(--mid-l);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:1px;transition:all 0.2s ease}
-.connect-grid a:hover,.connect-grid a:focus-visible{text-shadow:var(--glow-mid);outline:none}
-.closing-statement{border-top:1px solid var(--border);padding-top:40px;display:flex;flex-direction:column;gap:16px;max-width:640px;}
-.closing-line{font-family:var(--body);font-size:clamp(1.1rem,2vw,1.55rem);font-weight:300;font-style:italic;color:var(--muted);line-height:1.4;}
-.closing-line strong{font-style:normal;color:var(--peri-l);font-weight:600;}
-.closing-cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;}
-
-/* FOOTER */
-footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:20;}
-.footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
-.footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
-.footer-links a:hover,.footer-links a:focus-visible{color:var(--mid-l);text-shadow:var(--glow-mid);outline:none;}
-.footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px;}
-
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#doc-canvas,#sym-canvas,.scan-lines,.seam-line{display:none}.reveal-hero,.reveal-right{opacity:1;transform:none}}
-@media(max-width:900px){.seam-line{display:none}.hero-split-wrap{grid-template-columns:1fr}.hero-left{min-height:auto;padding:40px 20px 32px;background:none}.hero-left::before{display:none}.hero-right{min-height:auto;padding:20px 20px 48px;background:none}.hero-right::after{display:none}.hero-name{font-size:clamp(34px,9vw,58px)}.hero-stats{flex-direction:row;flex-wrap:wrap}.hero-stat{flex:1;min-width:140px;}.proof-grid{grid-template-columns:1fr}.services-grid{grid-template-columns:1fr}}
-@media(max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}section{padding:40px 20px}footer{flex-direction:column}.footer-links{flex-wrap:wrap;gap:16px}.audience-split{grid-template-columns:1fr;max-width:100%}.audience-path:first-child{border-right:none;border-bottom:1px solid var(--border);}}
-@media(max-width:480px){.hero-ctas{flex-direction:column}.cta-btn{justify-content:center}.closing-cta-row{flex-direction:column}.hero-stats{flex-direction:column;}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#doc-canvas,#sym-canvas,.scan-lines{display:none}}
+@media(max-width:800px){nav{padding:0 20px}.nav-hamburger{display:flex}.wrapper{padding:80px 16px 60px;}.hero-centered h1{font-size:clamp(34px,9vw,58px);}.rule-card{padding:20px 16px;}}
+@media(max-width:480px){.hero-centered h1{letter-spacing:-1px;}}
 </style>
 </head>
 <body>
@@ -280,10 +134,9 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 <canvas id="sym-canvas" aria-hidden="true"></canvas>
 <div class="mid-grid" aria-hidden="true"></div>
 <div class="scan-lines" aria-hidden="true"></div>
-<div class="seam-line" aria-hidden="true"></div>
 <button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone">♪</button>
 
-<nav aria-label="Primary navigation">
+<nav aria-label="Primary navigation" id="main-nav" class="nav-locked">
   <a href="/main-3/" class="nav-logo" aria-label="AionSystem home">
     <img src="/assets/img/aion-logo.jpg" alt="AionSystem" class="nav-logo-img" width="28" height="28" onerror="this.style.display='none'">
     <span>AION<span>system</span></span>
@@ -300,267 +153,188 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 </nav>
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true"></nav>
 
-<main id="main">
-<div class="hero-split-wrap" role="banner">
+<main class="wrapper" id="main">
 
-  <!-- LEFT: IDENTITY -->
-  <div class="hero-left">
-    <div class="hero-logo-wrap reveal-hero d-0">
+  <!-- CENTERED HERO -->
+  <div class="hero-centered">
+    <div class="hero-logo-wrap">
       <img src="/assets/img/aion-logo.jpg" alt="AionSystem" class="hero-logo-img" width="64" height="64" onerror="this.style.display='none'">
       <div>
         <div class="hero-logo-wordmark">AION<span>system</span></div>
-        <div class="hero-logo-tagline">Red-Team Framework Designer</div>
+        <div class="hero-logo-tagline">How to Work With Me</div>
       </div>
     </div>
-    <div class="hero-eyebrow reveal-hero d-1">Document Red-Team · Structural Integrity</div>
-    <h1 class="hero-name reveal-hero d-2">Find The<em>Kill</em></h1>
-    <p class="hero-title reveal-hero d-3">
-      <strong>Sheldon K. Salmon</strong><br>
-      Red-Team Framework Designer<br>
-      Structural Integrity Analyst<br>
-      Advocatus Diaboli (Method)<br>
-      Evans Mills, New York
-    </p>
-    <div class="hero-divider reveal-hero d-3"></div>
-    <div class="hero-stats reveal-hero d-4" aria-label="Key metrics">
-      <div class="hero-stat">
-        <span class="hero-stat-val c-red">18</span>
-        <span class="hero-stat-label">EU AI Act<br>Failure Nodes</span>
-      </div>
-      <div class="hero-stat">
-        <span class="hero-stat-val c-mid">52</span>
-        <span class="hero-stat-label">ISA Code<br>Failure Nodes</span>
-      </div>
-      <div class="hero-stat">
-        <span class="hero-stat-val c-peri">6</span>
-        <span class="hero-stat-label">External Reviews<br>Survived</span>
-      </div>
-    </div>
+    <h1>Read Before<em>You Send</em></h1>
+    <p>These rules exist so your document gets my full attention. If you can't follow them, don't send anything.</p>
   </div>
 
-  <!-- RIGHT: VALUE -->
-  <div class="hero-right">
-    <p class="hero-hook reveal-right d-0">
-      When your document is wrong — <em>I find out</em> before it costs you <strong>something irreversible.</strong>
-    </p>
-    <p class="hero-sub reveal-right d-1">
-      Contracts, governance frameworks, AI policies, technical specifications — complex documents have failure modes their authors did not see. Not because the authors weren't rigorous. Because <strong>nobody reads their own document as an adversary.</strong>
-    </p>
-    <div class="audience-split reveal-right d-2" role="navigation" aria-label="Choose your path">
-      <a href="/main-3/services/" class="audience-path doc" aria-label="I need a document red-teamed">
-        <span class="path-label">Client Path</span>
-        <span class="path-headline">Red-team my document →</span>
-        <span class="path-desc">Findings scored. Resolution text delivered. Every gap named.</span>
-      </a>
-      <a href="/main-3/portfolio/" class="audience-path peer" aria-label="I want to see the methodology in action">
-        <span class="path-label">Analyst Path</span>
-        <span class="path-headline">Show me the work →</span>
-        <span class="path-desc">EU AI Act + ISA. 70 nodes total. Published DOIs.</span>
-      </a>
+  <!-- RULES SECTIONS -->
+  <section class="rules-section">
+    <div class="section-header">
+      <span class="section-num">// 00</span>
+      <h2 class="section-title">Identity &amp; Boundaries</h2>
+      <div class="section-line" aria-hidden="true"></div>
     </div>
-    <div class="hero-ctas reveal-right d-3">
-      <a href="/main-3/services/" class="cta-btn primary">Submit a Document →</a>
-      <a href="/main-3/about/" class="cta-btn">Meet the Analyst →</a>
+    <div class="rule-card">
+      <h3>Who I Am</h3>
+      <p>I find what kills a document before it costs you. Red-Team Framework Designer. Structural Integrity Analyst. Modern Advocatus Diaboli. I read documents. I find the seams. I report them.</p>
     </div>
-    <div class="badge-row reveal-right d-4">
-      <div class="badge-group">
-        <img src="https://img.shields.io/badge/EU_AI_Act-18_Failure_Nodes-d946ef?style=flat" alt="EU AI Act 18 failure nodes" loading="lazy">
-        <span class="badge-translation">Published — DOI: 10.5281/zenodo.22135551</span>
-      </div>
-      <div class="badge-group">
-        <img src="https://img.shields.io/badge/ISA_Analysis-52_Failure_Nodes-a855f7?style=flat" alt="52 failure nodes" loading="lazy">
-        <span class="badge-translation">Published — DOI: 10.5281/zenodo.21326719</span>
-      </div>
-      <div class="badge-group">
-        <img src="https://img.shields.io/badge/Resolution_Text-100%25_Coverage-f0abfc?style=flat" alt="100% resolution text" loading="lazy">
-        <span class="badge-translation">Every finding ships with repair language</span>
-      </div>
+    <div class="rule-card">
+      <h3>AI Usage</h3>
+      <p>AI runs the instruments. I decide what's load-bearing. The judgment is human. Always.</p>
     </div>
-  </div>
-</div>
+    <div class="rule-card">
+      <h3>Legal Disclaimer</h3>
+      <p>This is structural analysis, not legal advice. I find and name structural failure nodes. I do not certify a document as legally sound, safe, or compliant.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Liability</h3>
+      <p>My total liability is limited to the fee paid. I am not your insurance, your lawyer, or your compliance officer.</p>
+    </div>
+  </section>
 
-<!-- PROOF -->
-<section id="section-proof">
-  <div class="section-header">
-    <span class="section-num">// 00</span>
-    <h2 class="section-title">Published Evidence</h2>
-    <div class="section-line" aria-hidden="true"></div>
-  </div>
-  <div class="proof-grid" role="list">
+  <section class="rules-section">
+    <div class="section-header">
+      <span class="section-num">// 01</span>
+      <h2 class="section-title">Who I Work With &amp; Refuse</h2>
+      <div class="section-line" aria-hidden="true"></div>
+    </div>
+    <div class="rule-card">
+      <h3>Global Neutrality</h3>
+      <p>Any country. Any company. Anywhere. I take no sides. Your politics are not my politics. The document is the only thing in the room.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Refusals</h3>
+      <p>Pushy? Threats? Pressure? Claims to improve my business? Talk down to me? I refuse. Also: I will not red-team another company's document for you to become a bad actor. Morals are subjective. Mine are mine.</p>
+    </div>
+    <div class="rule-card">
+      <h3>War &amp; Military</h3>
+      <p>I do not deal with war documents or military strategy. Not because I can't. Because I know what I'm capable of building. Some doors stay closed.</p>
+    </div>
+  </section>
 
-    <!-- EU AI ACT — LEAD PROOF -->
-    <div class="proof-card mid-top" role="listitem">
-      <div class="proof-icon" aria-hidden="true">∑</div>
-      <div class="proof-label">EU AI Act — Articles 51–56</div>
-      <div class="proof-value">18</div>
-      <div class="proof-desc">Three-pass adversarial pipeline on the EU AI Act's systemic-risk provisions. 18 structural failure nodes. 7 catastrophic. Multiple rounds of external verification. Zero fabrication..</div>
-      <a href="https://doi.org/10.5281/zenodo.22135551" target="_blank" rel="noopener noreferrer" class="proof-link">View DOI ↗</a>
+  <section class="rules-section">
+    <div class="section-header">
+      <span class="section-num">// 02</span>
+      <h2 class="section-title">Engagement &amp; Payment</h2>
+      <div class="section-line" aria-hidden="true"></div>
     </div>
+    <div class="rule-card">
+      <h3>How Engagement Works</h3>
+      <p>1. You send the document. 2. I confirm scope and price. 3. You pay before work begins. 4. I run the method. 5. I send the written report. That's it.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Payment</h3>
+      <p>Stripe payment link. You click. You pay. The money clears. I start. No invoices. No net-30. No crypto. No wire transfers. No checks. Payment first. Then work.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Refunds &amp; Chargebacks</h3>
+      <p>No refunds once work has started. Chargeback? The engagement is void. Future work declined.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Engagement Models</h3>
+      <p>Flat fee, severity-based pricing, silence/exclusivity retainer, catastrophic find bonus, one-question retainer, annual adversarial watch. Pick one or I'll recommend.</p>
+    </div>
+  </section>
 
-    <!-- ISA CODE — SECONDARY PROOF -->
-    <div class="proof-card peri-top" role="listitem">
-      <div class="proof-icon" aria-hidden="true">◈</div>
-      <div class="proof-label">ISA Deep-Sea Mining Code</div>
-      <div class="proof-value">52</div>
-      <div class="proof-desc">Independent structural review of the UN's draft Regional Environmental Management Plan guidance. 52 failure nodes. 4 critical gaps. Published and checkable.</div>
-      <a href="https://doi.org/10.5281/zenodo.21326719" target="_blank" rel="noopener noreferrer" class="proof-link">View DOI ↗</a>
+  <section class="rules-section">
+    <div class="section-header">
+      <span class="section-num">// 03</span>
+      <h2 class="section-title">Communication Rules</h2>
+      <div class="section-line" aria-hidden="true"></div>
     </div>
+    <div class="rule-card">
+      <h3>Email Reading Days</h3>
+      <p>I read emails on Tuesdays and Thursdays only. Anything else waits or gets ignored. I prefer people who pay attention.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Email Reply Days</h3>
+      <p>I reply on weekends. Because by then I've had days to think and test angles.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Scheduled Outbox</h3>
+      <p>If I finish early, it sits until the weekend. If I think of a new angle, I pull it back and rework before it reaches you.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Phone Calls</h3>
+      <p>I prefer email or forms. Calls are scheduled, paid, and triple my standard rate. Unscheduled calls are ignored.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Forms vs. Structured Email</h3>
+      <p>Use the website forms. Or structured email. Tell me what you need, what the document is, what worries you, what outcome you want.</p>
+    </div>
+  </section>
 
-    <!-- RESOLUTION COVERAGE -->
-    <div class="proof-card red-top" role="listitem">
-      <div class="proof-icon" aria-hidden="true">⊢</div>
-      <div class="proof-label">Resolution Coverage</div>
-      <div class="proof-value">100%</div>
-      <div class="proof-desc">Every finding in both published reviews shipped with ready-to-insert resolution text. Not a problem list — a corrected document section. That is the difference between an audit and a fix.</div>
-      <a href="/main-3/services/" class="proof-link">See what you receive →</a>
+  <section class="rules-section">
+    <div class="section-header">
+      <span class="section-num">// 04</span>
+      <h2 class="section-title">Delivery &amp; Scope</h2>
+      <div class="section-line" aria-hidden="true"></div>
     </div>
-  </div>
-</section>
+    <div class="rule-card">
+      <h3>Standard Delivery</h3>
+      <p>5–10 business days. This is the pace I recommend. It gives me time to think creatively.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Rushed Delivery</h3>
+      <p>You pay more. Rushed work isn't the same work done quicker. It's a different tier of analysis. I add more frameworks because I have less time to sit and think.</p>
+    </div>
+    <div class="rule-card">
+      <h3>Document Formats</h3>
+      <p>PDF, .docx, .txt, or a readable link. Length and overage fees confirmed before payment.</p>
+    </div>
+    <div class="rule-card">
+      <h3>No Guarantee of Finding</h3>
+      <p>A clean pass means I didn't find a problem this pass. It doesn't mean the document is perfect. My job is to think more creatively than a generative AI bad actor would.</p>
+    </div>
+  </section>
 
-<!-- SERVICES -->
-<section id="section-services">
-  <div class="section-header">
-    <span class="section-num">// 01</span>
-    <h2 class="section-title">What I Deliver</h2>
-    <div class="section-line" aria-hidden="true"></div>
-  </div>
-  <div class="services-grid" role="list">
-    <div class="vault-card" role="listitem">
-      <div aria-hidden="true" style="font-size:2rem">∂</div>
-      <h3 class="service-title" style="color:var(--mid-l)">Document Red-Team</h3>
-      <p class="service-desc">Adversarial structural analysis of complex documents. Every undefined term, missing enforcement mechanism, exploitable loophole, and structural failure node — found before the document goes into production.</p>
-      <a href="/main-3/services/" class="cta-btn peri">See the full service →</a>
+  <section class="rules-section">
+    <div class="section-header">
+      <span class="section-num">// 05</span>
+      <h2 class="section-title">Confidentiality &amp; Ownership</h2>
+      <div class="section-line" aria-hidden="true"></div>
     </div>
-    <div class="vault-card" role="listitem">
-      <div aria-hidden="true" style="font-size:2rem">◈</div>
-      <h3 class="service-title" style="color:var(--peri-l)">Failure Node Mapping</h3>
-      <p class="service-desc">Every failure node scored by severity. Critical, major, minor — with the mechanism of failure named precisely for each one. Delivered as a structured findings register, not a narrative report.</p>
-      <a href="/main-3/services/" class="cta-btn peri">Browse deliverables →</a>
+    <div class="rule-card">
+      <h3>Confidentiality</h3>
+      <p>Every document is confidential by default. NDA or no NDA. Not shared, posted, or discussed unless authorized.</p>
     </div>
-    <div class="vault-card" role="listitem">
-      <div aria-hidden="true" style="font-size:2rem">⊢</div>
-      <h3 class="service-title" style="color:var(--accent)">Resolution Text</h3>
-      <p class="service-desc">Every finding comes with ready-to-insert resolution language. Not a problem list — a corrected document. You receive the fix, not just the diagnosis. Author's intent preserved, loopholes closed.</p>
-      <a href="/main-3/contact/" class="cta-btn peri">Submit a document →</a>
+    <div class="rule-card">
+      <h3>Ownership</h3>
+      <p>The report is yours once paid. I retain the method. Case study rights only with written permission, unless the document was already public.</p>
     </div>
-  </div>
-</section>
+    <div class="rule-card">
+      <h3>Data Protection</h3>
+      <p>Stored securely during review. Deleted on request after engagement closes. No training on your document. No retention beyond what's needed.</p>
+    </div>
+  </section>
 
-<!-- METHODOLOGY — FULL AION PIPELINE -->
-<section id="section-method">
-  <div class="section-header">
-    <span class="section-num">// 02</span>
-    <h2 class="section-title">The Method</h2>
-    <div class="section-line" aria-hidden="true"></div>
-  </div>
-  <p style="font-family:var(--body);font-size:1.1rem;color:var(--muted);margin-bottom:32px">
-    Document to certification in six stages. Typical engagement: <strong style="color:var(--peri-l)">5–10 business days.</strong>
-  </p>
-  <div class="method-demo" role="region" aria-label="Methodology walkthrough">
-    <div class="method-demo-header">
-      <div class="method-demo-title">The AION Pipeline — click steps to advance</div>
-      <div class="method-timer" id="method-timer">Stage 1 / 6</div>
+  <section class="rules-section">
+    <div class="section-header">
+      <span class="section-num">// 06</span>
+      <h2 class="section-title">Disagreements &amp; Capacity</h2>
+      <div class="section-line" aria-hidden="true"></div>
     </div>
-    <div class="method-stages" id="method-stages">
-      <div class="method-stage active" data-stage="0">
-        <div class="stage-num">Stage 01 / 06</div>
-        <div class="stage-name">Foundry <em>Grounding</em></div>
-        <div class="stage-content"><span class="val">Document received.</span><br><span class="val">Ground truth ledger opened. Every claim must be tied to the document's own text.</span><br><br><span class="hi">→ No external assumptions. No invented mechanics.</span></div>
-      </div>
-      <div class="method-stage" data-stage="1">
-        <div class="stage-num">Stage 02 / 06</div>
-        <div class="stage-name">Anvil <em>First Attack</em></div>
-        <div class="stage-content"><span class="hi">Four frameworks loaded:</span><br><span class="hi">  PDE · PROPORTION · EPE · TDAF</span><br><br><span class="cr">→ Every clause tested. Every assumption surfaced.</span><br><span class="cr">→ Undefined terms flagged. Missing enforcement named.</span></div>
-      </div>
-      <div class="method-stage" data-stage="2">
-        <div class="stage-num">Stage 03 / 06</div>
-        <div class="stage-name">Crucible <em>Independent Attack</em></div>
-        <div class="stage-content"><span class="hi">Three new frameworks. Different lens.</span><br><span class="hi">  TGA · MPTE · QAE</span><br><br><span class="val">→ The document is attacked from a completely different direction.</span><br><span class="val">→ No conceptual echo allowed. New findings must be new.</span></div>
-      </div>
-      <div class="method-stage" data-stage="3">
-        <div class="stage-num">Stage 04 / 06</div>
-        <div class="stage-name">Temper <em>Negation Testing</em></div>
-        <div class="stage-content"><span class="cr">Findings are attacked by their own system.</span><br><span class="cr">Weak findings are killed. Strong findings survive.</span><br><br><span class="hi">  "Can this finding be negated?"</span><br><span class="hi">  "Can this resolution fail?"</span><br><span class="val">→ Only survivors move forward.</span></div>
-      </div>
-      <div class="method-stage" data-stage="4">
-        <div class="stage-num">Stage 05 / 06</div>
-        <div class="stage-name">Resolution <em>Fix Architecture</em></div>
-        <div class="stage-content"><span class="val">Every surviving finding gets ready-to-insert resolution text.</span><br><span class="val">The Immunization Node is named — the fix that makes the failure impossible to reassert.</span><br><br><span class="hi">→ Not a problem list. A corrected document.</span></div>
-      </div>
-      <div class="method-stage" data-stage="5">
-        <div class="stage-num">Stage 06 / 06</div>
-        <div class="stage-name">Gauntlet <em>External Proof</em></div>
-        <div class="stage-content"><span class="cr">15 hostile roles. One verdict.</span><br><span class="cr">The report is attacked externally.</span><br><span class="cr">Quotes verified against primary sources.</span><br><br><span class="val">→ INSTALL / CONDITIONAL / REJECT / CONDEMN</span><br><span class="val">→ Only the strongest work survives.</span></div>
-      </div>
+    <div class="rule-card">
+      <h3>Disagreements</h3>
+      <p>Send a written rebuttal. I review once. If it changes my analysis, I revise free. If not, the finding stands. We don't go back and forth.</p>
     </div>
-    <div class="stage-progress" role="tablist" aria-label="Methodology stages">
-      <div class="stage-pip active-pip" role="tab" aria-selected="true" aria-label="Stage 1" tabindex="0" data-pip="0"></div>
-      <div class="stage-pip" role="tab" aria-selected="false" aria-label="Stage 2" tabindex="-1" data-pip="1"></div>
-      <div class="stage-pip" role="tab" aria-selected="false" aria-label="Stage 3" tabindex="-1" data-pip="2"></div>
-      <div class="stage-pip" role="tab" aria-selected="false" aria-label="Stage 4" tabindex="-1" data-pip="3"></div>
-      <div class="stage-pip" role="tab" aria-selected="false" aria-label="Stage 5" tabindex="-1" data-pip="4"></div>
-      <div class="stage-pip" role="tab" aria-selected="false" aria-label="Stage 6" tabindex="-1" data-pip="5"></div>
+    <div class="rule-card">
+      <h3>Capacity</h3>
+      <p>I work alone. When the queue is full, I say so. First paid engagement gets the slot.</p>
     </div>
-  </div>
-  <div class="method-strip" role="list" aria-label="Method overview">
-    <div class="method-step" role="listitem">◈ Foundry</div><span class="method-arrow" aria-hidden="true">→</span>
-    <div class="method-step" role="listitem">∂ Anvil</div><span class="method-arrow" aria-hidden="true">→</span>
-    <div class="method-step" role="listitem">∇ Crucible</div><span class="method-arrow" aria-hidden="true">→</span>
-    <div class="method-step" role="listitem">⚑ Temper</div><span class="method-arrow" aria-hidden="true">→</span>
-    <div class="method-step" role="listitem">⊢ Resolution</div><span class="method-arrow" aria-hidden="true">→</span>
-    <div class="method-step" role="listitem">▲ Gauntlet</div>
-  </div>
-  <p style="text-align:center;margin-top:24px"><a href="/main-3/services/" class="cta-btn peri">See full engagement process →</a></p>
-</section>
+    <div class="rule-card">
+      <h3>Exclusivity &amp; Silence</h3>
+      <p>Public document you don't want as a case study? Commission exclusivity before I start. Same confidentiality. No report. No case study. No DOI.</p>
+    </div>
+  </section>
 
-<!-- ENGAGEMENT -->
-<section id="section-engage">
-  <div class="section-header">
-    <span class="section-num">// 03</span>
-    <h2 class="section-title">Submit a Document</h2>
-    <div class="section-line" aria-hidden="true"></div>
+  <!-- AGREE GATE -->
+  <div class="agree-wrap">
+    <button class="agree-btn" id="agreeBtn">I Agree — Enter AionSystem</button>
+    <div class="agree-note">You must agree before navigation unlocks.</div>
   </div>
-  <div class="stack-card">
-    <p class="service-title" style="margin-bottom:16px;color:var(--mid-l)">The Document Red-Team Engagement</p>
-    <div class="scarcity-block" role="status" aria-live="polite">
-      <div class="scarcity-dot"></div>
-      <span class="scarcity-text">Accepting new documents — capacity limited</span>
-    </div>
-    <p style="font-family:var(--body);font-size:1.05rem;color:var(--muted);margin-bottom:24px">
-      Send the document. Receive the findings. Every failure node scored, every gap named, every fix written. Not a consultant's opinion — a <em style="color:var(--peri-l)">structural adversarial analysis</em> with resolution text attached to every finding.
-    </p>
-    <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:24px">
-      <div><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px">Typical Turnaround</strong><span style="color:var(--peri-l);font-size:1.2rem">5–10 business days</span></div>
-      <div><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px">Deliverable</strong><span style="color:var(--mid-l)">Findings register + resolution text</span></div>
-      <div><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px">Document Types</strong><span style="color:var(--accent)">Contracts · Governance · AI Policy · Specs</span></div>
-    </div>
-    <a href="/main-3/contact/" class="cta-btn primary">Submit a Document →</a>
-  </div>
-</section>
 
-<!-- CONNECT -->
-<section id="section-connect">
-  <div class="section-header">
-    <span class="section-num">// 04</span>
-    <h2 class="section-title">Connect</h2>
-    <div class="section-line" aria-hidden="true"></div>
-  </div>
-  <div class="connect-grid">
-    <div><strong>Contact</strong><a href="mailto:aionsystem@outlook.com">aionsystem@outlook.com</a></div>
-    <div><strong>GitHub</strong><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">github.com/AionSystem</a></div>
-    <div><strong>LinkedIn</strong><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">Sheldon K. Salmon</a></div>
-    <div><strong>ORCID</strong><a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener noreferrer">0009-0005-8057-5115</a></div>
-    <div><strong>X</strong><a href="https://x.com/OCEAN_AION" target="_blank" rel="noopener noreferrer">@OCEAN_AION</a></div>
-    <div><strong>Portfolio</strong><a href="/main-3/portfolio/">Case Studies →</a></div>
-  </div>
-  <div class="closing-statement">
-    <p class="closing-line">Every document has a kill. <strong>The question is whether you find it — or your counterparty does.</strong></p>
-    <div class="closing-cta-row">
-      <a href="/main-3/contact/" class="cta-btn primary">Submit a Document →</a>
-      <a href="mailto:aionsystem@outlook.com" class="cta-btn">Direct line →</a>
-    </div>
-  </div>
-</section>
 </main>
 
 <footer>
@@ -591,7 +365,6 @@ const symCanvas = document.getElementById('sym-canvas');
 const sc = symCanvas.getContext('2d');
 let W, H, t = 0;
 const mouse = { x:-9999, y:-9999, prevX:-9999, prevY:-9999, vx:0, vy:0 };
-function getSeamX(){ return W * 0.42; }
 
 let docLines = [], failureNodes = [], scanPhase = 0, scanPhase2 = 0;
 function buildDocField(){
@@ -621,31 +394,16 @@ function drawDocField(){
     mg.addColorStop(0,'rgba(217,70,239,0.08)'); mg.addColorStop(0.5,'rgba(168,85,247,0.03)'); mg.addColorStop(1,'transparent');
     dc.fillStyle=mg; dc.fillRect(0,0,W,H);
   }
-  const sx=getSeamX();
-  const sg=dc.createLinearGradient(sx-55,0,sx+55,0);
-  sg.addColorStop(0,'transparent'); sg.addColorStop(0.5,`rgba(217,70,239,${0.06+0.03*Math.sin(t*0.5)})`); sg.addColorStop(1,'transparent');
-  dc.fillStyle=sg; dc.globalAlpha=0.8; dc.fillRect(sx-55,0,110,H); dc.globalAlpha=1;
   scanPhase+=0.003; scanPhase2+=0.007;
   const sY=((Math.sin(scanPhase)*0.5+0.5)*H);
   const sY2=((Math.cos(scanPhase2)*0.5+0.5)*H);
-  const sGrad=dc.createLinearGradient(0,sY-3,0,sY+3);
-  sGrad.addColorStop(0,'transparent'); sGrad.addColorStop(0.5,'rgba(217,70,239,0.25)'); sGrad.addColorStop(1,'transparent');
-  dc.fillStyle=sGrad; dc.fillRect(0,sY-3,W,6);
-  const sGrad2=dc.createLinearGradient(0,sY2-2,0,sY2+2);
-  sGrad2.addColorStop(0,'transparent'); sGrad2.addColorStop(0.5,'rgba(239,68,68,0.12)'); sGrad2.addColorStop(1,'transparent');
-  dc.fillStyle=sGrad2; dc.fillRect(0,sY2-2,W,4);
+  const sGrad=dc.createLinearGradient(0,sY-3,0,sY+3);sGrad.addColorStop(0,'transparent');sGrad.addColorStop(0.5,'rgba(217,70,239,0.25)');sGrad.addColorStop(1,'transparent');dc.fillStyle=sGrad;dc.fillRect(0,sY-3,W,6);
+  const sGrad2=dc.createLinearGradient(0,sY2-2,0,sY2+2);sGrad2.addColorStop(0,'transparent');sGrad2.addColorStop(0.5,'rgba(239,68,68,0.12)');sGrad2.addColorStop(1,'transparent');dc.fillStyle=sGrad2;dc.fillRect(0,sY2-2,W,4);
   scheduleHl();
   docLines.forEach(l=>{
     const prox=Math.max(0,1-Math.abs(l.y-mouse.y)/80)*0.05;
     const scanP=Math.max(0,1-Math.abs(l.y-sY)/28)*0.12;
-    if(l.hlActive){
-      l.hlTimer+=0.04;
-      const hA=Math.max(0,1-l.hlTimer/1.8);
-      const hC=l.hlColor==='mid'?'rgba(217,70,239,':'rgba(239,68,68,';
-      dc.fillStyle=hC+(hA*0.11)+')'; dc.globalAlpha=1; dc.fillRect(l.x-4,l.y-5,l.w+8,10);
-      dc.fillStyle=hC+(hA*0.65)+')'; dc.fillRect(l.x,l.y,l.w*Math.min(1,l.hlTimer*0.8),1);
-      if(l.hlTimer>1.8){l.hlActive=false;l.hlTimer=0;}
-    }
+    if(l.hlActive){l.hlTimer+=0.04;const hA=Math.max(0,1-l.hlTimer/1.8);const hC=l.hlColor==='mid'?'rgba(217,70,239,':'rgba(239,68,68,';dc.fillStyle=hC+(hA*0.11)+')';dc.globalAlpha=1;dc.fillRect(l.x-4,l.y-5,l.w+8,10);dc.fillStyle=hC+(hA*0.65)+')';dc.fillRect(l.x,l.y,l.w*Math.min(1,l.hlTimer*0.8),1);if(l.hlTimer>1.8){l.hlActive=false;l.hlTimer=0;}}
     dc.globalAlpha=l.alpha+prox+scanP;
     if(l.isHdr){dc.fillStyle='rgba(232,121,249,0.6)';dc.fillRect(l.x,l.y,l.w*0.46,1.5);dc.fillStyle='rgba(168,85,247,0.45)';dc.beginPath();dc.arc(l.x-8,l.y+0.5,2,0,Math.PI*2);dc.fill();}
     else if(l.isInd){dc.fillStyle='rgba(168,85,247,0.32)';dc.fillRect(l.x,l.y,l.w,0.7);}
@@ -670,12 +428,7 @@ function drawDocField(){
     for(let j=i+1;j<failureNodes.length;j++){
       if(!failureNodes[j].active)continue;
       const d=Math.hypot(failureNodes[i].x-failureNodes[j].x,failureNodes[i].y-failureNodes[j].y);
-      if(d<130){
-        const isCrit=failureNodes[i].sev==='critical'||failureNodes[j].sev==='critical';
-        dc.globalAlpha=(1-d/130)*0.13*failureNodes[i].alpha;
-        dc.strokeStyle=isCrit?'rgba(239,68,68,0.8)':'rgba(217,70,239,0.7)';
-        dc.beginPath();dc.moveTo(failureNodes[i].x,failureNodes[i].y);dc.lineTo(failureNodes[j].x,failureNodes[j].y);dc.stroke();
-      }
+      if(d<130){const isCrit=failureNodes[i].sev==='critical'||failureNodes[j].sev==='critical';dc.globalAlpha=(1-d/130)*0.13*failureNodes[i].alpha;dc.strokeStyle=isCrit?'rgba(239,68,68,0.8)':'rgba(217,70,239,0.7)';dc.beginPath();dc.moveTo(failureNodes[i].x,failureNodes[i].y);dc.lineTo(failureNodes[j].x,failureNodes[j].y);dc.stroke();}
     }
   }
   const active=failureNodes.filter(n=>n.active).length;
@@ -686,42 +439,36 @@ function drawDocField(){
 
 const SYMS=['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈'];
 const MCOLS=['#d946ef','#e879f9','#a855f7','#c084fc','#f0abfc'];
-const GR=180,GS=0.018,TG=0.22,SR=120,SS=0.004;
+const GR=180,GS=0.018,TG=0.22;
 const PFPS=lowDevice?30:60,PDT=1000/PFPS;
-let symbols=[],echoes=[],seamParticles=[];
+let symbols=[],echoes=[];
 function initSymbols(){
   symbols=[];const n=Math.floor((W*H)/7000);
-  for(let i=0;i<n;i++)symbols.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,size:11+Math.random()*18,alpha:0.10+Math.random()*0.20,inWell:false,seamGlow:0,scrollGlow:0,phase:Math.random()*Math.PI*2,origX:0,origY:0,targetX:0,targetY:0});
+  for(let i=0;i<n;i++)symbols.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,size:11+Math.random()*18,alpha:0.10+Math.random()*0.20,inWell:false,scrollGlow:0,phase:Math.random()*Math.PI*2,origX:0,origY:0,targetX:0,targetY:0});
 }
 function updateSymbols(){
   mouse.vx=mouse.x-mouse.prevX;mouse.vy=mouse.y-mouse.prevY;mouse.prevX=mouse.x;mouse.prevY=mouse.y;
-  const seamX=getSeamX();
   symbols.forEach(s=>{
     s.x+=s.vx;s.y+=s.vy;
     if(s.x<-40)s.x=W+40;if(s.x>W+40)s.x=-40;if(s.y<-40)s.y=H+40;if(s.y>H+40)s.y=-40;
     if(mouse.x>-100){const dx=s.x-mouse.x,dy=s.y-mouse.y,d=Math.hypot(dx,dy);if(d<GR&&d>1){const f=GS*(1-d/GR),a=Math.atan2(dy,dx);s.vx-=Math.cos(a)*f;s.vy-=Math.sin(a)*f;const ta=a+Math.PI/2,sp=TG*(1-d/GR);s.vx+=Math.cos(ta)*sp*(mouse.vx*.04+.5);s.vy+=Math.sin(ta)*sp*(mouse.vy*.04+.5);s.vx*=.985;s.vy*=.985;s.inWell=true;}else{s.inWell=false;s.vx*=.998;s.vy*=.998;}}else{s.inWell=false;}
-    const sdx=seamX-s.x,sd=Math.abs(sdx);
-    if(sd<SR&&s.y<H*1.2){const sf=SS*(1-sd/SR);s.vx+=Math.sign(sdx)*sf*.3;s.vy-=sf*.15;s.seamGlow=Math.max(s.seamGlow,1-sd/SR);}else{s.seamGlow*=.95;}
     if(s.scrollGlow>0.01)s.scrollGlow*=.93;else s.scrollGlow=0;
   });
 }
 function spawnEcho(x,y){for(let i=0;i<10;i++){const a=(Math.PI*2*i)/10+Math.random()*.4,sp=1.5+Math.random()*2.5;echoes.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:9+Math.random()*8,color:MCOLS[Math.floor(Math.random()*MCOLS.length)],alpha:0.8,age:0,maxAge:500});}}
 function updateEchoes(){echoes=echoes.filter(e=>{e.age+=16;if(e.age>=e.maxAge)return false;e.x+=e.vx;e.y+=e.vy;e.alpha=0.8*(1-e.age/e.maxAge);e.vx*=.97;e.vy*=.97;return true;});}
-function spawnSeamP(){if(Math.random()>.18)return;const sx=getSeamX()+(Math.random()-.5)*3;seamParticles.push({x:sx,y:H+10,vy:-(0.4+Math.random()*.8),alpha:0.5+Math.random()*.4,size:0.8+Math.random()*1.6,hue:Math.random()>.5?'mid':'peri'});}
-function updateSeamP(){seamParticles=seamParticles.filter(p=>{p.y+=p.vy;p.alpha*=.993;return p.y>-10&&p.alpha>.02;});if(seamParticles.length<55)spawnSeamP();}
 function drawSymbols(){
   sc.clearRect(0,0,W,H);
   echoes.forEach(e=>{sc.globalAlpha=e.alpha;sc.font=`${e.size}px 'JetBrains Mono',monospace`;sc.textAlign='center';sc.textBaseline='middle';sc.shadowColor=e.color;sc.shadowBlur=12;sc.fillStyle=e.color;sc.fillText(e.char,e.x,e.y);});
   symbols.forEach(s=>{
-    const sb=s.seamGlow*.5,glow=s.scrollGlow>.01?14+s.scrollGlow*18:s.inWell?22:s.seamGlow>.1?18+s.seamGlow*14:9;
+    const glow=s.scrollGlow>.01?14+s.scrollGlow*18:s.inWell?22:10;
     sc.font=`${s.size}px 'JetBrains Mono',monospace`;sc.textAlign='center';sc.textBaseline='middle';
-    const ss2=s.seamGlow>.3,isMid=Math.sin(t*.3+s.phase)>0;
-    sc.shadowColor=ss2?'#f0abfc':isMid?'#d946ef':'#a855f7';sc.shadowBlur=glow;
-    const a=Math.min(0.85,s.alpha+s.scrollGlow*.2+sb);
-    sc.fillStyle=ss2?`rgba(240,171,252,${a.toFixed(3)})`:isMid?`rgba(217,70,239,${a.toFixed(3)})`:`rgba(168,85,247,${a.toFixed(3)})`;
+    const isMid=Math.sin(t*.3+s.phase)>0;
+    sc.shadowColor=isMid?'#d946ef':'#a855f7';sc.shadowBlur=glow;
+    const a=Math.min(0.85,s.alpha+s.scrollGlow*.2);
+    sc.fillStyle=isMid?`rgba(217,70,239,${a.toFixed(3)})`:`rgba(168,85,247,${a.toFixed(3)})`;
     sc.globalAlpha=1;sc.fillText(s.char,s.x,s.y);
   });
-  seamParticles.forEach(p=>{sc.globalAlpha=p.alpha;sc.shadowBlur=6;sc.shadowColor=p.hue==='mid'?'#d946ef':'#a855f7';sc.fillStyle=p.hue==='mid'?'#e879f9':'#c084fc';sc.beginPath();sc.arc(p.x,p.y,p.size,0,Math.PI*2);sc.fill();});
   sc.shadowBlur=0;sc.globalAlpha=1;
 }
 
@@ -742,11 +489,10 @@ function stepCollapse(now){
 let lastPT=0;
 function loop(ts){
   t+=0.016;
-  if(ts-lastPT>=PDT){lastPT=ts;if(isCollapsing)stepCollapse(ts);else updateSymbols();updateEchoes();updateSeamP();}
+  if(ts-lastPT>=PDT){lastPT=ts;if(isCollapsing)stepCollapse(ts);else updateSymbols();updateEchoes();}
   drawDocField();drawSymbols();
   requestAnimationFrame(loop);
 }
-
 function resize(){W=docCanvas.width=symCanvas.width=window.innerWidth;H=docCanvas.height=symCanvas.height=window.innerHeight;buildDocField();initSymbols();}
 let rT;window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(resize,150);});
 
@@ -757,27 +503,53 @@ window.addEventListener('dblclick',e=>{const tag=e.target.tagName.toLowerCase();
 window.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='Q'){e.preventDefault();triggerCollapse();}});
 let stimer;window.addEventListener('scroll',()=>{const sy=window.scrollY;symbols.forEach(s=>{if(Math.abs(s.y-(sy+H/2))<180)s.scrollGlow=1.0;});clearTimeout(stimer);stimer=setTimeout(()=>symbols.forEach(s=>s.scrollGlow=0),300);},{passive:true});
 
-const mStages=document.querySelectorAll('.method-stage');
-const mPips=document.querySelectorAll('.stage-pip');
-const mTimer=document.getElementById('method-timer');
-let curStage=0,autoAdv=null;
-function goStage(n){mStages.forEach((s,i)=>s.classList.toggle('active',i===n));mPips.forEach((p,i)=>{p.classList.toggle('done',i<n);p.classList.toggle('active-pip',i===n);p.setAttribute('aria-selected',i===n?'true':'false');p.setAttribute('tabindex',i===n?'0':'-1');});if(mTimer)mTimer.textContent=`Stage ${n+1} / ${mStages.length}`;curStage=n;}
-mPips.forEach((pip,i)=>{pip.addEventListener('click',()=>{clearInterval(autoAdv);goStage(i);});pip.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();clearInterval(autoAdv);goStage(i);}if(e.key==='ArrowRight'){e.preventDefault();clearInterval(autoAdv);goStage(Math.min(i+1,mStages.length-1));}if(e.key==='ArrowLeft'){e.preventDefault();clearInterval(autoAdv);goStage(Math.max(i-1,0));}});});
-const methSec=document.getElementById('section-method');if(methSec){const mo=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)autoAdv=setInterval(()=>goStage((curStage+1)%mStages.length),4500);else clearInterval(autoAdv);});},{threshold:0.4});mo.observe(methSec);}
-
 const hamburger=document.getElementById('hamburger'),mobileNav=document.getElementById('mobileNav');let navOpen=false;
-if(hamburger&&mobileNav){document.querySelectorAll('.nav-links a').forEach((link,i)=>{const a=document.createElement('a');a.href=link.getAttribute('href');a.textContent=link.textContent;if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);});
-function openMenu(){navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);}
-function closeMenu(){navOpen=false;mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');document.body.style.overflow='';hamburger.focus();}
-hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navOpen)closeMenu();});mobileNav.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const f=Array.from(mobileNav.querySelectorAll('a'));if(!f.length)return;if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f[f.length-1].focus();}else if(!e.shiftKey&&document.activeElement===f[f.length-1]){e.preventDefault();f[0].focus();}});}
+function closeMenu(){navOpen=false;mobileNav.classList.remove('open');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');document.body.style.overflow='';}
+if(hamburger&&mobileNav){
+  document.querySelectorAll('.nav-links a').forEach((link,i)=>{const a=document.createElement('a');a.href=link.getAttribute('href');a.textContent=link.textContent;if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);});
+  function openMenu(){navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);}
+  hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());
+  mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navOpen)closeMenu();});
+  mobileNav.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const f=Array.from(mobileNav.querySelectorAll('a'));if(!f.length)return;if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f[f.length-1].focus();}else if(!e.shiftKey&&document.activeElement===f[f.length-1]){e.preventDefault();f[0].focus();}});
+}
 
-let audioCtx=null,audioNodes=null,audioOn=false;
-const aToggle=document.getElementById('audio-toggle');
-function initAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audioCtx=new AC();const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.055,audioCtx.currentTime);const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=280;filter.Q.value=0.8;const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(38,audioCtx.currentTime);const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(76.4,audioCtx.currentTime);const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.1,audioCtx.currentTime);osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc1.start();osc2.start();audioNodes={gain,osc1,osc2};window.addEventListener('pagehide',()=>{try{audioCtx.close();}catch(_){}},{once:true});}
-if(aToggle){aToggle.addEventListener('click',()=>{audioOn=!audioOn;aToggle.setAttribute('aria-pressed',String(audioOn));if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}});}
+let audioCtx=null,audioOn=false;
+const toggle=document.getElementById('audio-toggle');
+function initAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audioCtx=new AC();const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.055,audioCtx.currentTime);const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=280;filter.Q.value=0.8;const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(38,audioCtx.currentTime);const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(76.4,audioCtx.currentTime);const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.1,audioCtx.currentTime);osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc1.start();osc2.start();window.addEventListener('pagehide',()=>{try{audioCtx.close();}catch(_){}},{once:true});}
+if(toggle){toggle.addEventListener('click',()=>{audioOn=!audioOn;toggle.setAttribute('aria-pressed',String(audioOn));if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}});}
 
 document.getElementById('copyright-year').textContent=new Date().getFullYear();
+
+// Agreement gate
+const agreeBtn = document.getElementById('agreeBtn');
+if (agreeBtn) {
+  agreeBtn.addEventListener('click', function() {
+    // Unlock navigation
+    document.getElementById('main-nav').classList.remove('nav-locked');
+    // Persist agreement
+    try { localStorage.setItem('aion-agreed','true'); } catch(e) {}
+    // Scroll to top to reveal nav
+    window.scrollTo({top:0,behavior:'smooth'});
+    // Hide the agree section or mark as done
+    agreeBtn.textContent = 'Agreed ✓';
+    agreeBtn.disabled = true;
+  });
+}
+
+// Check localStorage on load
+try {
+  if (localStorage.getItem('aion-agreed') === 'true') {
+    document.getElementById('main-nav').classList.remove('nav-locked');
+    if (agreeBtn) {
+      agreeBtn.textContent = 'Agreed ✓';
+      agreeBtn.disabled = true;
+    }
+  }
+} catch(e) {}
+
 if(!reducedMotion){resize();setTimeout(()=>symCanvas.classList.add('ready'),300);requestAnimationFrame(loop);}
+
 })();
 </script>
 </body>
