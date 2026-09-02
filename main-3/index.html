@@ -40,9 +40,8 @@
   --ease:cubic-bezier(0.16,1,0.3,1);
   --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
   --font-base:clamp(16px,1vw + 8px,20px);
-  --font-h1:clamp(44px,7.5vw + 12px,92px);
-  --font-h2:clamp(26px,3.5vw + 8px,42px);
-  --split:42%;
+  --font-h1:clamp(40px,8vw,92px);
+  --font-h2:clamp(24px,4vw,42px);
 }
 .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--mid);color:#000;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-decoration:none;transition:top 0.2s;}
 .skip-nav:focus{top:0}
@@ -122,9 +121,36 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
 .footer-links a{color:var(--dim);text-decoration:none;transition:color 0.2s;}
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--mid-l);text-shadow:0 0 8px rgba(217,70,239,0.4);outline:none;}
 
+/* Enhanced mobile responsive rules */
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#doc-canvas,#sym-canvas,.scan-lines{display:none}}
-@media(max-width:800px){nav{padding:0 20px}.nav-hamburger{display:flex}.wrapper{padding:80px 16px 60px;}.hero-centered h1{font-size:clamp(34px,9vw,58px);}.rule-card{padding:20px 16px;}}
-@media(max-width:480px){.hero-centered h1{letter-spacing:-1px;}}
+@media(max-width:800px){
+  nav{padding:0 20px}
+  .nav-hamburger{display:flex}
+  .wrapper{padding:80px 20px 60px}
+  .hero-centered h1{font-size:clamp(34px,9vw,58px)}
+  .rule-card{padding:20px 16px}
+  .section-header{flex-wrap:wrap;gap:8px}
+  .section-title{font-size:clamp(20px,5vw,30px)}
+  .section-num{margin-right:8px}
+  .agree-btn{width:100%;justify-content:center;padding:16px 20px}
+  .hero-centered .hero-logo-wrap{flex-direction:column;gap:10px}
+  .hero-centered .hero-logo-img{width:56px;height:56px}
+  .hero-centered .hero-logo-wordmark{font-size:11px}
+}
+@media(max-width:480px){
+  .wrapper{padding:70px 12px 50px}
+  .hero-centered h1{letter-spacing:-1px;font-size:clamp(30px,9vw,42px)}
+  .hero-centered p{font-size:13px}
+  .rule-card h3{font-size:12px}
+  .rule-card p{font-size:13px}
+  .section-header{flex-direction:column;align-items:flex-start}
+  .section-line{display:none}
+  .mobile-nav{grid-template-columns:1fr}
+  .mobile-nav a{border-right:none}
+  .mobile-nav a:last-child:nth-child(2n+1){grid-column:auto}
+  footer{flex-direction:column;align-items:center;text-align:center;padding:24px 12px}
+  .footer-links{justify-content:center;gap:14px}
+}
 </style>
 </head>
 <body>
@@ -227,16 +253,14 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
       <h3>Payment</h3>
       <p>Stripe payment link. You click. You pay. The money clears. I start. No invoices. No net-30. No crypto. No wire transfers. No checks. Payment first. Then work.</p>
     </div>
-    <!-- NEW RULE CARD ADDED HERE -->
     <div class="rule-card">
-      <h3>Minimum Engagement & No Discounts</h3>
+      <h3>Minimum Engagement &amp; No Discounts</h3>
       <p>Every engagement starts at $1,200. No discounts, no exceptions — not for nonprofits, startups, volume, referrals, or anyone else. The price is the price. Asking for a discount ends the conversation.</p>
     </div>
     <div class="rule-card">
       <h3>Refunds &amp; Chargebacks</h3>
       <p>No refunds once work has started. Chargeback? The engagement is void. Future work declined.</p>
     </div>
-    <!-- UPDATED ENGAGEMENT MODELS CARD -->
     <div class="rule-card">
       <h3>Engagement Models</h3>
       <p>Pricing is fixed per service tier. Custom scopes are quoted individually. See the <a href="/main-3/services/">Services page</a> for current tiers and prices.</p>
@@ -531,19 +555,14 @@ document.getElementById('copyright-year').textContent=new Date().getFullYear();
 const agreeBtn = document.getElementById('agreeBtn');
 if (agreeBtn) {
   agreeBtn.addEventListener('click', function() {
-    // Unlock navigation
     document.getElementById('main-nav').classList.remove('nav-locked');
-    // Persist agreement
     try { localStorage.setItem('aion-agreed','true'); } catch(e) {}
-    // Scroll to top to reveal nav
     window.scrollTo({top:0,behavior:'smooth'});
-    // Hide the agree section or mark as done
     agreeBtn.textContent = 'Agreed ✓';
     agreeBtn.disabled = true;
   });
 }
 
-// Check localStorage on load
 try {
   if (localStorage.getItem('aion-agreed') === 'true') {
     document.getElementById('main-nav').classList.remove('nav-locked');
