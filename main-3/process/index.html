@@ -158,8 +158,22 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#doc-canvas,#sym-canvas,.scan-lines{display:none}.reveal-hero,.reveal-right{opacity:1;transform:none}}
 @media(max-width:900px){.pipeline-grid{grid-template-columns:1fr}}
-@media(max-width:800px){nav{padding:0 20px}.nav-links{display:none}.nav-hamburger{display:flex}section{padding:40px 20px}.wrapper{padding:80px 20px 60px}footer{flex-direction:column}.footer-links{flex-wrap:wrap;gap:16px}}
-@media(max-width:480px){.hero-ctas{flex-direction:column}.cta-btn{justify-content:center}.closing-cta-row{flex-direction:column}}
+@media(max-width:800px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .nav-hamburger{display:flex}
+  section{padding:40px 20px}
+  .wrapper{padding:80px 20px 60px}
+  .stack-card{padding:20px}
+  .stack-table th,.stack-table td{padding:10px 4px}
+  footer{flex-direction:column;align-items:center;text-align:center}
+  .footer-links{justify-content:center;gap:16px}
+}
+@media(max-width:480px){
+  .hero-ctas{flex-direction:column}
+  .cta-btn{justify-content:center;width:100%}
+  .closing-cta-row{flex-direction:column}
+}
 </style>
 </head>
 <body>
@@ -177,11 +191,13 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     <span>AION<span>system</span></span>
   </a>
   <ul class="nav-links" role="list">
-    <li><a href="/main-3/about/">About</a></li>
+    <li><a href="/main-3/">Home</a></li>
     <li><a href="/main-3/services/">Services</a></li>
     <li><a href="/main-3/process/" class="active">Process</a></li>
     <li><a href="/main-3/portfolio/">Portfolio</a></li>
+    <li><a href="/main-3/about/">About</a></li>
     <li><a href="/main-3/contact/">Contact</a></li>
+    <li><a href="/main-3/rules/">Rules</a></li>
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobileNav"><span></span><span></span><span></span></button>
@@ -191,7 +207,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 <main class="wrapper" id="main">
   <div class="eyebrow">// How We Work</div>
   <h1>The <em>Process</em></h1>
-  <div class="title-line">Seven Workshops · Two Tiers · Full Adversarial Pipeline</div>
+  <div class="title-line">Seven Workshops · Tiered Pricing · Full Adversarial Pipeline</div>
 
   <!-- INTAKE -->
   <section id="intake">
@@ -201,7 +217,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <p style="font-family:var(--body);font-size:1.1rem;color:var(--muted);max-width:640px;margin-bottom:24px">
-      Send the document. Tell me what worries you. I'll confirm the scope, the tier, and the turnaround before any work begins. No ambiguity. No surprises.
+      Send the document. Tell me what worries you. I'll confirm the scope, the tier, and the turnaround before any work begins. No ambiguity. No surprises. <strong>Minimum engagement $1,200. No discounts. No exceptions.</strong>
     </p>
   </section>
 
@@ -343,14 +359,16 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 <footer>
   <div>
     <div>AionSystem · Sheldon K. Salmon · Red-Team Framework Designer · © <span id="copyright-year"></span></div>
-    <div class="footer-legal">I find what kills a document before it costs you. All analyses are original independent work.</div>
+    <div class="footer-legal">Not legal advice. Findings describe structural properties of documents — not legal exposure or compliance status.</div>
   </div>
   <ul class="footer-links" role="list">
-    <li><a href="/main-3/about/">About</a></li>
+    <li><a href="/main-3/">Home</a></li>
     <li><a href="/main-3/services/">Services</a></li>
     <li><a href="/main-3/process/">Process</a></li>
     <li><a href="/main-3/portfolio/">Portfolio</a></li>
+    <li><a href="/main-3/about/">About</a></li>
     <li><a href="/main-3/contact/">Contact</a></li>
+    <li><a href="/main-3/rules/">Rules</a></li>
     <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
   </ul>
@@ -535,7 +553,7 @@ window.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='Q'){e.p
 let stimer;window.addEventListener('scroll',()=>{const sy=window.scrollY;symbols.forEach(s=>{if(Math.abs(s.y-(sy+H/2))<180)s.scrollGlow=1.0;});clearTimeout(stimer);stimer=setTimeout(()=>symbols.forEach(s=>s.scrollGlow=0),300);},{passive:true});
 
 const hamburger=document.getElementById('hamburger'),mobileNav=document.getElementById('mobileNav');let navOpen=false;
-if(hamburger&&mobileNav){document.querySelectorAll('.nav-links a').forEach((link,i)=>{const a=document.createElement('a');a.href=link.getAttribute('href');a.textContent=link.textContent;if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);});
+if(hamburger&&mobileNav){document.querySelectorAll('.nav-links a').forEach((link,i)=>{const a=document.createElement('a');a.href=link.getAttribute('href');a.textContent=link.textContent;if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));if(link.classList.contains('active'))a.classList.add('active');a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);});
 function openMenu(){navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);}
 function closeMenu(){navOpen=false;mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');document.body.style.overflow='';hamburger.focus();}
 hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navOpen)closeMenu();});mobileNav.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const f=Array.from(mobileNav.querySelectorAll('a'));if(!f.length)return;if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f[f.length-1].focus();}else if(!e.shiftKey&&document.activeElement===f[f.length-1]){e.preventDefault();f[0].focus();}});}
