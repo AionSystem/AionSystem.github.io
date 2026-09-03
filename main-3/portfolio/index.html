@@ -42,6 +42,26 @@
   --ease:cubic-bezier(0.16,1,0.3,1);
   --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
 }
+/* Light theme overrides */
+body.light{
+  --bg:#f8f8f8;
+  --surface:rgba(255,255,255,0.9);
+  --panel:rgba(255,255,255,0.95);
+  --mid:#b8860b;
+  --mid-d:#8b6508;
+  --mid-l:#b8860b;
+  --peri:#8b6508;
+  --peri-l:#6b4d0a;
+  --accent:#8b6508;
+  --red:#c0392b;
+  --border:rgba(0,0,0,0.1);
+  --border-h:rgba(0,0,0,0.3);
+  --glow:0 0 20px rgba(0,0,0,0.05);
+  --glow-strong:0 0 30px rgba(0,0,0,0.1),0 0 60px rgba(0,0,0,0.05);
+  --text:#111111;
+  --text-mid:#444444;
+  --text-dim:#888888;
+}
 .nav-logo-img{background:var(--text-dim);}
 .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--mid);color:#000;font-family:var(--mono);font-size:12px;letter-spacing:2px;text-decoration:none;transition:top 0.2s;}
 .skip-nav:focus{top:0}
@@ -50,10 +70,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16
 #symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s var(--ease);}
 #symbol-canvas.ready{opacity:0.48}
 .mid-haze{position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(217,70,239,0.016) 1px,rgba(0,0,0,0) 2px);opacity:0.55;}
-.audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(6,3,10,0.75);backdrop-filter:blur(12px);color:var(--text-mid);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s var(--ease);}
-.audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:0 0 18px rgba(217,70,239,0.35);outline:none;}
+
+.theme-toggle{position:fixed;bottom:24px;left:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(12px);color:var(--text-mid);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s var(--ease);}
+.theme-toggle:hover,.theme-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:var(--glow);outline:none;}
+.audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(12px);color:var(--text-mid);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s var(--ease);}
+.audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:var(--glow);outline:none;}
 .audio-toggle[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);box-shadow:0 0 18px rgba(240,171,252,0.35);}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(6,3,10,0.78);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 40px rgba(217,70,239,0.04);animation:fadeInNav 0.6s var(--ease) 0.2s both;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:var(--surface);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 40px rgba(217,70,239,0.04);animation:fadeInNav 0.6s var(--ease) 0.2s both;}
 @keyframes fadeInNav{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 .nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--text);text-transform:uppercase;text-decoration:none;}
 .nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--border);box-shadow:0 0 10px rgba(217,70,239,0.2);}
@@ -65,7 +88,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-hamburger span{display:block;height:2px;background:var(--text-mid);transition:all 0.3s var(--ease-spring);border-radius:2px;}
 .nav-hamburger span:nth-child(1){width:100%}.nav-hamburger span:nth-child(2){width:70%}.nav-hamburger span:nth-child(3){width:100%}
 .nav-hamburger.open span:nth-child(1){transform:translateY(10px) rotate(45deg)}.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}.nav-hamburger.open span:nth-child(3){transform:translateY(-10px) rotate(-45deg)}
-.mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:rgba(5,3,8,0.97);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;pointer-events:none;border-top:1px solid var(--border);}
+.mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:var(--surface);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;pointer-events:none;border-top:1px solid var(--border);}
 .mobile-nav.open{transform:translateY(0);visibility:visible;pointer-events:all;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0s;}
 .mobile-nav a{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;gap:8px;transition:all 0.15s;opacity:0;transform:translateY(6px);}
 .mobile-nav.open a{opacity:1;transform:translateY(0)}
@@ -73,6 +96,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--text-dim);flex-shrink:0;transition:background 0.15s,box-shadow 0.15s;}
 .mobile-nav a:hover,.mobile-nav a.active{color:var(--mid-l);background:rgba(217,70,239,0.04);outline:none;}
 .mobile-nav a:hover::before,.mobile-nav a.active::before{background:var(--mid-l);box-shadow:0 0 6px var(--mid-l);}
+
 .wrapper{position:relative;z-index:3;max-width:1200px;margin:0 auto;padding:100px 40px 80px;}
 .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--mid-l);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:12px;}
 .eyebrow::before,.eyebrow::after{content:'';display:inline-block;width:20px;height:1px;background:var(--red);flex-shrink:0;box-shadow:0 0 8px rgba(239,68,68,0.6);}
@@ -148,6 +172,7 @@ footer{position:relative;z-index:3;border-top:1px solid var(--border);padding:32
 <canvas id="webgl-canvas" aria-hidden="true"></canvas>
 <canvas id="symbol-canvas" aria-hidden="true"></canvas>
 <div class="mid-haze" aria-hidden="true"></div>
+<button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle day/night mode">☀</button>
 <button type="button" class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
 
 <nav aria-label="Primary navigation">
@@ -466,12 +491,16 @@ if(gl){
 const symCanvas=document.getElementById('symbol-canvas');
 const ctx=symCanvas.getContext('2d');
 const SYMS=['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈'];
-const COLS=['#d946ef','#e879f9','#a855f7','#c084fc','#f0abfc'];
+const DARK_COLS=['#d946ef','#e879f9','#a855f7','#c084fc','#f0abfc'];
+const LIGHT_COLS=['#b8860b','#8b6508','#444444','#111111','#666666'];
 let W,H,symbols=[],echoes=[];
 const mouse={x:null,y:null,vx:0,vy:0,prevX:null,prevY:null};
 const GR=200,GS=0.015,TG=0.18;
 const PFPS=lowDevice?30:60,PDT=1000/PFPS;
 let isCollapsing=false,collapsePhase=0,collapseStart=0,holdTO=null;
+
+function isLight(){ return document.body.classList.contains('light'); }
+function getColors(){ return isLight() ? LIGHT_COLS : DARK_COLS; }
 
 function resizeCanvas(){
   W=symCanvas.width=wglCanvas.width=window.innerWidth;
@@ -482,7 +511,7 @@ function resizeCanvas(){
 let rT=null;
 window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(resizeCanvas,150);});
 
-function rc(){return COLS[Math.floor(Math.random()*COLS.length)];}
+function rc(){ const cols=getColors(); return cols[Math.floor(Math.random()*cols.length)]; }
 function initSymbols(){
   const n=Math.floor((W*H)/7000);symbols=[];
   for(let i=0;i<n;i++)symbols.push({
@@ -513,12 +542,12 @@ function stepCollapse(now){
   if(!isCollapsing)return;const el=now-collapseStart;
   if(collapsePhase===1){
     const p=Math.min(el/1500,1),tt=1-Math.pow(1-p,3);
-    symbols.forEach(s=>{s.x=s.origX+(s.targetX-s.origX)*tt;s.y=s.origY+(s.targetY-s.origY)*tt;s.vx=0;s.vy=0;s.alpha=0.15+0.35*p;s.color='#e879f9';});
+    symbols.forEach(s=>{s.x=s.origX+(s.targetX-s.origX)*tt;s.y=s.origY+(s.targetY-s.origY)*tt;s.vx=0;s.vy=0;s.alpha=0.15+0.35*p;s.color=isLight()?'#8b6508':'#e879f9';});
     if(p>=1){
       collapsePhase=2;collapseStart=now;clearTimeout(holdTO);
       holdTO=setTimeout(()=>{
         if(!isCollapsing)return;collapsePhase=3;collapseStart=performance.now();
-        symbols.forEach(s=>{const a=Math.random()*Math.PI*2,sp=3+Math.random()*4;s.vx=Math.cos(a)*sp;s.vy=Math.sin(a)*sp;s.color='#ef4444';s.alpha=0.6;});
+        symbols.forEach(s=>{const a=Math.random()*Math.PI*2,sp=3+Math.random()*4;s.vx=Math.cos(a)*sp;s.vy=Math.sin(a)*sp;s.color=isLight()?'#c0392b':'#ef4444';s.alpha=0.6;});
         spawnEcho(W/2,H/2);
       },800);
     }
@@ -699,6 +728,21 @@ if(hamburger&&mobileNav){
 
 const yearSpan=document.getElementById('copyright-year');
 if(yearSpan)yearSpan.textContent=new Date().getFullYear();
+
+// Theme toggle
+const themeToggle=document.getElementById('theme-toggle');
+if(themeToggle){
+  themeToggle.addEventListener('click',()=>{
+    document.body.classList.toggle('light');
+    try{localStorage.setItem('aion-theme', document.body.classList.contains('light')?'light':'dark');}catch(e){}
+    initSymbols();
+  });
+  try{
+    const saved=localStorage.getItem('aion-theme');
+    if(saved==='light') document.body.classList.add('light');
+  }catch(e){}
+}
+
 if(!reducedMotion){
   resizeCanvas();
   setTimeout(()=>{if(document.contains(symCanvas))symCanvas.classList.add('ready');},300);
