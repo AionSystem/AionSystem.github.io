@@ -44,6 +44,24 @@
   --font-h1:clamp(40px,6vw,80px);
   --font-h2:clamp(24px,3vw,40px);
 }
+body.light{
+  --bg:#f8f8f8;
+  --surface:rgba(255,255,255,0.9);
+  --panel:rgba(255,255,255,0.95);
+  --mid:#b8860b;
+  --mid-d:#8b6508;
+  --mid-l:#b8860b;
+  --peri:#8b6508;
+  --peri-l:#6b4d0a;
+  --accent:#8b6508;
+  --red:#c0392b;
+  --amber:#e67e22;
+  --border:rgba(0,0,0,0.1);
+  --border-h:rgba(0,0,0,0.3);
+  --text:#111111;
+  --text-mid:#444444;
+  --text-dim:#888888;
+}
 .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--mid);color:#000;font-family:var(--mono);font-size:12px;letter-spacing:2px;text-decoration:none;transition:top 0.2s;}
 .skip-nav:focus{top:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -55,11 +73,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:va
 .mid-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(217,70,239,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(217,70,239,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10;}
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(217,70,239,0.018) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.35;}
 
-.audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:rgba(6,3,10,0.72);backdrop-filter:blur(12px);color:var(--text-mid);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;}
-.audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:0 0 18px rgba(217,70,239,0.35);outline:none;}
+.theme-toggle,.audio-toggle{position:fixed;bottom:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(12px);color:var(--text-mid);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;}
+.theme-toggle{left:24px;font-size:1.2rem;}
+.audio-toggle{right:24px;}
+.theme-toggle:hover,.audio-toggle:hover,.theme-toggle:focus-visible,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:0 0 18px rgba(217,70,239,0.35);outline:none;}
 .audio-toggle[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(6,3,10,0.78);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 40px rgba(217,70,239,0.04);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:var(--surface);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 40px rgba(217,70,239,0.04);}
 .nav-logo{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--text);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px;}
 .nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--border);box-shadow:0 0 10px rgba(217,70,239,0.2);}
 .nav-logo .dot{color:var(--mid-l);}
@@ -70,7 +90,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-hamburger span{display:block;height:2px;background:var(--text-mid);transition:all 0.3s var(--ease-spring);border-radius:2px;}
 .nav-hamburger span:nth-child(1){width:100%}.nav-hamburger span:nth-child(2){width:70%}.nav-hamburger span:nth-child(3){width:100%}
 .nav-hamburger.open span:nth-child(1){transform:translateY(10px) rotate(45deg)}.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}.nav-hamburger.open span:nth-child(3){transform:translateY(-10px) rotate(-45deg)}
-.mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:rgba(5,3,8,0.97);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;pointer-events:none;border-top:1px solid var(--border);}
+.mobile-nav{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99;background:var(--surface);backdrop-filter:blur(24px);display:grid;grid-template-columns:1fr 1fr;align-content:start;transform:translateY(-110%);visibility:hidden;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0.4s;overflow-y:auto;pointer-events:none;border-top:1px solid var(--border);}
 .mobile-nav.open{transform:translateY(0);visibility:visible;pointer-events:all;transition:transform 0.4s var(--ease-spring),visibility 0s linear 0s;}
 .mobile-nav a{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;gap:8px;transition:all 0.15s;opacity:0;transform:translateY(6px);}
 .mobile-nav.open a{opacity:1;transform:translateY(0)}
@@ -130,6 +150,7 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
 <canvas id="sym-canvas" aria-hidden="true"></canvas>
 <div class="mid-grid" aria-hidden="true"></div>
 <div class="scan-lines" aria-hidden="true"></div>
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle day/night mode">☀</button>
 <button class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone">♪</button>
 
 <nav aria-label="Primary navigation">
@@ -161,7 +182,7 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     Effective Date: January 1, 2025 · Last Updated: January 1, 2025
   </div>
 
-  <!-- SECTION 1 -->
+  <!-- SECTIONS 1–40 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>1. Definitions</h2>
@@ -179,7 +200,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 2 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>2. Acceptance of Terms</h2>
@@ -188,7 +208,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 3 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>3. Services Description & Scope</h2>
@@ -201,7 +220,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 4 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>4. Client Obligations & Representations</h2>
@@ -217,7 +235,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 5 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>5. Engagement & Payment</h2>
@@ -234,7 +251,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 6 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>6. Refund & Cancellation Policy</h2>
@@ -244,7 +260,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 7 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>7. Confidentiality & Data Protection</h2>
@@ -260,7 +275,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 8 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>8. Data Breach Response</h2>
@@ -274,7 +288,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 9 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>9. Intellectual Property</h2>
@@ -291,7 +304,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 10 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>10. License to Deliverables</h2>
@@ -300,7 +312,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 11 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>11. No Legal Advice & Disclaimer</h2>
@@ -309,7 +320,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 12 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>12. No Guarantee of Finding or Enforceability</h2>
@@ -319,7 +329,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 13 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>13. AI Disclosure</h2>
@@ -328,7 +337,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 14 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>14. Warranties & Disclaimers</h2>
@@ -343,7 +351,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 15 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>15. Limitation of Liability</h2>
@@ -353,7 +360,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 16 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>16. Indemnification</h2>
@@ -367,7 +373,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 17 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>17. Third-Party Reliance</h2>
@@ -376,7 +381,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 18 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>18. Force Majeure</h2>
@@ -392,7 +396,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 19 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>19. Suspension of Services</h2>
@@ -400,7 +403,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 20 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>20. Termination</h2>
@@ -415,7 +417,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 21 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>21. Dispute Resolution</h2>
@@ -427,7 +428,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 22 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>22. Class Action Waiver</h2>
@@ -435,7 +435,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 23 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>23. Time Limitation for Claims</h2>
@@ -443,7 +442,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 24 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>24. Notices</h2>
@@ -452,7 +450,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 25 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>25. Modifications to Terms</h2>
@@ -462,7 +459,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 26 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>26. Third-Party Services & Links</h2>
@@ -471,7 +467,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 27 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>27. Acceptable Use</h2>
@@ -486,7 +481,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 28 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>28. Export Controls & Sanctions</h2>
@@ -494,7 +488,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 29 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>29. Entire Agreement & Severability</h2>
@@ -504,7 +497,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 30 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>30. Independent Contractor</h2>
@@ -512,7 +504,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 31 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>31. Insurance & Professional Liability</h2>
@@ -521,7 +512,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 32 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>32. Non-Solicitation</h2>
@@ -529,7 +519,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 33 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>33. Electronic Signatures</h2>
@@ -537,7 +526,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 34 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>34. Currency & Payment Processing</h2>
@@ -546,7 +534,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 35 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>35. Deliverable Acceptance Period</h2>
@@ -555,7 +542,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 36 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>36. Copyright & Modification of Reports</h2>
@@ -564,7 +550,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 37 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>37. No Duty to Update</h2>
@@ -572,7 +557,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 38 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>38. Accessibility & Version History</h2>
@@ -581,7 +565,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 39 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>39. Survival</h2>
@@ -589,7 +572,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- SECTION 40 -->
   <section class="tos-section">
     <div class="tos-card">
       <h2>40. Whistleblower & Regulatory Disclosure</h2>
@@ -597,7 +579,6 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     </div>
   </section>
 
-  <!-- FINAL NOTE -->
   <section class="tos-section">
     <div class="tos-card" style="text-align:center;">
       <p style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;">End of Terms of Service</p>
@@ -640,6 +621,7 @@ let W,H,t=0;
 const mouse={x:-9999,y:-9999,prevX:-9999,prevY:-9999,vx:0,vy:0};
 
 let docLines=[],failureNodes=[],scanPhase=0,scanPhase2=0;
+function isLight(){ return document.body.classList.contains('light'); }
 function buildDocField(){
   docLines=[];
   const ls=13;
@@ -660,30 +642,68 @@ function scheduleHl(){if(Math.random()<0.012){const l=docLines[Math.floor(Math.r
 function drawDocField(){
   dc.clearRect(0,0,W,H);
   const bg=dc.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'rgba(6,3,10,1)');bg.addColorStop(0.5,'rgba(9,4,14,1)');bg.addColorStop(1,'rgba(6,3,10,1)');
+  if(isLight()){
+    bg.addColorStop(0,'rgba(248,248,248,1)');
+    bg.addColorStop(0.5,'rgba(245,245,245,1)');
+    bg.addColorStop(1,'rgba(248,248,248,1)');
+  } else {
+    bg.addColorStop(0,'rgba(6,3,10,1)');
+    bg.addColorStop(0.5,'rgba(9,4,14,1)');
+    bg.addColorStop(1,'rgba(6,3,10,1)');
+  }
   dc.fillStyle=bg;dc.fillRect(0,0,W,H);
-  if(mouse.x>-100){const mg=dc.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,280);mg.addColorStop(0,'rgba(217,70,239,0.08)');mg.addColorStop(0.5,'rgba(168,85,247,0.03)');mg.addColorStop(1,'transparent');dc.fillStyle=mg;dc.fillRect(0,0,W,H);}
+  if(mouse.x>-100){
+    const mg=dc.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,280);
+    mg.addColorStop(0,isLight()?'rgba(184,134,11,0.08)':'rgba(217,70,239,0.08)');
+    mg.addColorStop(0.5,isLight()?'rgba(139,101,8,0.03)':'rgba(168,85,247,0.03)');
+    mg.addColorStop(1,'transparent');
+    dc.fillStyle=mg;dc.fillRect(0,0,W,H);
+  }
   scanPhase+=0.003;scanPhase2+=0.007;
   const sY=((Math.sin(scanPhase)*0.5+0.5)*H);
   const sY2=((Math.cos(scanPhase2)*0.5+0.5)*H);
-  const sGrad=dc.createLinearGradient(0,sY-3,0,sY+3);sGrad.addColorStop(0,'transparent');sGrad.addColorStop(0.5,'rgba(217,70,239,0.25)');sGrad.addColorStop(1,'transparent');dc.fillStyle=sGrad;dc.fillRect(0,sY-3,W,6);
-  const sGrad2=dc.createLinearGradient(0,sY2-2,0,sY2+2);sGrad2.addColorStop(0,'transparent');sGrad2.addColorStop(0.5,'rgba(239,68,68,0.12)');sGrad2.addColorStop(1,'transparent');dc.fillStyle=sGrad2;dc.fillRect(0,sY2-2,W,4);
+  const sGrad=dc.createLinearGradient(0,sY-3,0,sY+3);
+  sGrad.addColorStop(0,'transparent');
+  sGrad.addColorStop(0.5,isLight()?'rgba(184,134,11,0.25)':'rgba(217,70,239,0.25)');
+  sGrad.addColorStop(1,'transparent');
+  dc.fillStyle=sGrad;dc.fillRect(0,sY-3,W,6);
+  const sGrad2=dc.createLinearGradient(0,sY2-2,0,sY2+2);
+  sGrad2.addColorStop(0,'transparent');
+  sGrad2.addColorStop(0.5,isLight()?'rgba(192,57,43,0.12)':'rgba(239,68,68,0.12)');
+  sGrad2.addColorStop(1,'transparent');
+  dc.fillStyle=sGrad2;dc.fillRect(0,sY2-2,W,4);
   scheduleHl();
   docLines.forEach(l=>{
     const prox=Math.max(0,1-Math.abs(l.y-mouse.y)/80)*0.05;
     const scanP=Math.max(0,1-Math.abs(l.y-sY)/28)*0.12;
-    if(l.hlActive){l.hlTimer+=0.04;const hA=Math.max(0,1-l.hlTimer/1.8);const hC=l.hlColor==='mid'?'rgba(217,70,239,':'rgba(239,68,68,';dc.fillStyle=hC+(hA*0.11)+')';dc.globalAlpha=1;dc.fillRect(l.x-4,l.y-5,l.w+8,10);dc.fillStyle=hC+(hA*0.65)+')';dc.fillRect(l.x,l.y,l.w*Math.min(1,l.hlTimer*0.8),1);if(l.hlTimer>1.8){l.hlActive=false;l.hlTimer=0;}}
+    if(l.hlActive){
+      l.hlTimer+=0.04;
+      const hA=Math.max(0,1-l.hlTimer/1.8);
+      const hC=l.hlColor==='mid'?(isLight()?'rgba(184,134,11,':'rgba(217,70,239,') : (isLight()?'rgba(192,57,43,':'rgba(239,68,68,');
+      dc.fillStyle=hC+(hA*0.11)+')';dc.globalAlpha=1;dc.fillRect(l.x-4,l.y-5,l.w+8,10);
+      dc.fillStyle=hC+(hA*0.65)+')';dc.fillRect(l.x,l.y,l.w*Math.min(1,l.hlTimer*0.8),1);
+      if(l.hlTimer>1.8){l.hlActive=false;l.hlTimer=0;}
+    }
     dc.globalAlpha=l.alpha+prox+scanP;
-    if(l.isHdr){dc.fillStyle='rgba(232,121,249,0.6)';dc.fillRect(l.x,l.y,l.w*0.46,1.5);dc.fillStyle='rgba(168,85,247,0.45)';dc.beginPath();dc.arc(l.x-8,l.y+0.5,2,0,Math.PI*2);dc.fill();}
-    else if(l.isInd){dc.fillStyle='rgba(168,85,247,0.32)';dc.fillRect(l.x,l.y,l.w,0.7);}
-    else{dc.fillStyle='rgba(120,90,160,0.4)';dc.fillRect(l.x,l.y,l.w,0.8);}
+    if(l.isHdr){
+      dc.fillStyle=isLight()?'rgba(139,101,8,0.6)':'rgba(232,121,249,0.6)';
+      dc.fillRect(l.x,l.y,l.w*0.46,1.5);
+      dc.fillStyle=isLight()?'rgba(139,101,8,0.45)':'rgba(168,85,247,0.45)';
+      dc.beginPath();dc.arc(l.x-8,l.y+0.5,2,0,Math.PI*2);dc.fill();
+    } else if(l.isInd){
+      dc.fillStyle=isLight()?'rgba(139,101,8,0.32)':'rgba(168,85,247,0.32)';
+      dc.fillRect(l.x,l.y,l.w,0.7);
+    } else {
+      dc.fillStyle=isLight()?'rgba(100,100,100,0.4)':'rgba(120,90,160,0.4)';
+      dc.fillRect(l.x,l.y,l.w,0.8);
+    }
   });
   failureNodes.forEach(n=>{
     if(!n.active&&t>n.activateAt)n.active=true;
     if(!n.active)return;
     n.alpha=Math.min(n.targetAlpha,n.alpha+0.004);
     const pulse=0.5+0.5*Math.sin(t*1.8+n.phase);
-    const col=n.sev==='critical'?'#ef4444':n.sev==='major'?'#d946ef':'#a855f7';
+    const col=n.sev==='critical'?(isLight()?'#c0392b':'#ef4444'):n.sev==='major'?(isLight()?'#8b6508':'#d946ef'):(isLight()?'#666666':'#a855f7');
     dc.globalAlpha=n.alpha*(0.7+0.3*pulse);
     dc.fillStyle=col;dc.shadowColor=col;dc.shadowBlur=n.sev==='critical'?14:8;
     dc.beginPath();dc.arc(n.x,n.y,n.r,0,Math.PI*2);dc.fill();
@@ -697,23 +717,37 @@ function drawDocField(){
     for(let j=i+1;j<failureNodes.length;j++){
       if(!failureNodes[j].active)continue;
       const d=Math.hypot(failureNodes[i].x-failureNodes[j].x,failureNodes[i].y-failureNodes[j].y);
-      if(d<130){const isCrit=failureNodes[i].sev==='critical'||failureNodes[j].sev==='critical';dc.globalAlpha=(1-d/130)*0.13*failureNodes[i].alpha;dc.strokeStyle=isCrit?'rgba(239,68,68,0.8)':'rgba(217,70,239,0.7)';dc.beginPath();dc.moveTo(failureNodes[i].x,failureNodes[i].y);dc.lineTo(failureNodes[j].x,failureNodes[j].y);dc.stroke();}
+      if(d<130){
+        const isCrit=failureNodes[i].sev==='critical'||failureNodes[j].sev==='critical';
+        dc.globalAlpha=(1-d/130)*0.13*failureNodes[i].alpha;
+        dc.strokeStyle=isLight()?(isCrit?'rgba(192,57,43,0.8)':'rgba(139,101,8,0.7)'):(isCrit?'rgba(239,68,68,0.8)':'rgba(217,70,239,0.7)');
+        dc.beginPath();dc.moveTo(failureNodes[i].x,failureNodes[i].y);dc.lineTo(failureNodes[j].x,failureNodes[j].y);dc.stroke();
+      }
     }
   }
   const active=failureNodes.filter(n=>n.active).length;
   const crit=failureNodes.filter(n=>n.active&&n.sev==='critical').length;
-  if(active>0){dc.globalAlpha=0.16;dc.font="9px 'JetBrains Mono',monospace";dc.fillStyle=crit>0?'#ef4444':'#d946ef';dc.textAlign='left';dc.fillText(`∂ SCAN ACTIVE · ${active} NODES · ${crit} CRITICAL`,22,H-22);}
+  if(active>0){
+    dc.globalAlpha=0.16;dc.font="9px 'JetBrains Mono',monospace";
+    dc.fillStyle=crit>0?(isLight()?'#c0392b':'#ef4444'):(isLight()?'#8b6508':'#d946ef');
+    dc.textAlign='left';
+    dc.fillText(`∂ SCAN ACTIVE · ${active} NODES · ${crit} CRITICAL`,22,H-22);
+  }
   dc.globalAlpha=1;dc.shadowBlur=0;
 }
 
 const SYMS=['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈'];
-const MCOLS=['#d946ef','#e879f9','#a855f7','#c084fc','#f0abfc'];
+const MCOLS_DARK=['#d946ef','#e879f9','#a855f7','#c084fc','#f0abfc'];
+const MCOLS_LIGHT=['#b8860b','#8b6508','#444444','#111111','#666666'];
 const GR=180,GS=0.018,TG=0.22;
 const PFPS=lowDevice?30:60,PDT=1000/PFPS;
 let symbols=[],echoes=[];
+function getMCOLS(){ return isLight() ? MCOLS_LIGHT : MCOLS_DARK; }
 function initSymbols(){
-  symbols=[];const n=Math.floor((W*H)/7000);
-  for(let i=0;i<n;i++)symbols.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,size:11+Math.random()*18,alpha:0.10+Math.random()*0.20,inWell:false,scrollGlow:0,phase:Math.random()*Math.PI*2,origX:0,origY:0,targetX:0,targetY:0});
+  symbols=[];
+  const n=Math.floor((W*H)/7000);
+  const cols=getMCOLS();
+  for(let i=0;i<n;i++)symbols.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,size:11+Math.random()*18,alpha:0.10+Math.random()*0.20,inWell:false,scrollGlow:0,phase:Math.random()*Math.PI*2,origX:0,origY:0,targetX:0,targetY:0,color:cols[Math.floor(Math.random()*cols.length)]});
 }
 function updateSymbols(){
   mouse.vx=mouse.x-mouse.prevX;mouse.vy=mouse.y-mouse.prevY;mouse.prevX=mouse.x;mouse.prevY=mouse.y;
@@ -724,19 +758,35 @@ function updateSymbols(){
     if(s.scrollGlow>0.01)s.scrollGlow*=.93;else s.scrollGlow=0;
   });
 }
-function spawnEcho(x,y){for(let i=0;i<10;i++){const a=(Math.PI*2*i)/10+Math.random()*.4,sp=1.5+Math.random()*2.5;echoes.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:9+Math.random()*8,color:MCOLS[Math.floor(Math.random()*MCOLS.length)],alpha:0.8,age:0,maxAge:500});}}
+function spawnEcho(x,y){
+  const cols=getMCOLS();
+  for(let i=0;i<10;i++){
+    const a=(Math.PI*2*i)/10+Math.random()*.4,sp=1.5+Math.random()*2.5;
+    echoes.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:9+Math.random()*8,color:cols[Math.floor(Math.random()*cols.length)],alpha:0.8,age:0,maxAge:500});
+  }
+}
 function updateEchoes(){echoes=echoes.filter(e=>{e.age+=16;if(e.age>=e.maxAge)return false;e.x+=e.vx;e.y+=e.vy;e.alpha=0.8*(1-e.age/e.maxAge);e.vx*=.97;e.vy*=.97;return true;});}
 function drawSymbols(){
   sc.clearRect(0,0,W,H);
-  echoes.forEach(e=>{sc.globalAlpha=e.alpha;sc.font=`${e.size}px 'JetBrains Mono',monospace`;sc.textAlign='center';sc.textBaseline='middle';sc.shadowColor=e.color;sc.shadowBlur=12;sc.fillStyle=e.color;sc.fillText(e.char,e.x,e.y);});
+  echoes.forEach(e=>{
+    sc.globalAlpha=e.alpha;
+    sc.font=`${e.size}px 'JetBrains Mono',monospace`;
+    sc.textAlign='center';sc.textBaseline='middle';
+    sc.shadowColor=e.color;sc.shadowBlur=12;sc.fillStyle=e.color;
+    sc.fillText(e.char,e.x,e.y);
+  });
   symbols.forEach(s=>{
     const glow=s.scrollGlow>.01?14+s.scrollGlow*18:s.inWell?22:10;
-    sc.font=`${s.size}px 'JetBrains Mono',monospace`;sc.textAlign='center';sc.textBaseline='middle';
+    sc.font=`${s.size}px 'JetBrains Mono',monospace`;
+    sc.textAlign='center';sc.textBaseline='middle';
     const isMid=Math.sin(t*.3+s.phase)>0;
-    sc.shadowColor=isMid?'#d946ef':'#a855f7';sc.shadowBlur=glow;
+    sc.shadowColor=isLight()? (isMid?'#b8860b':'#888888') : (isMid?'#d946ef':'#a855f7');
+    sc.shadowBlur=glow;
     const a=Math.min(0.85,s.alpha+s.scrollGlow*.2);
-    sc.fillStyle=isMid?`rgba(217,70,239,${a.toFixed(3)})`:`rgba(168,85,247,${a.toFixed(3)})`;
-    sc.globalAlpha=1;sc.fillText(s.char,s.x,s.y);
+    sc.fillStyle=isLight()? (isMid?'rgba(184,134,11,' : 'rgba(68,68,68,' ) : (isMid?`rgba(217,70,239,`:`rgba(168,85,247,`);
+    sc.fillStyle += a.toFixed(3)+')';
+    sc.globalAlpha=1;
+    sc.fillText(s.char,s.x,s.y);
   });
   sc.shadowBlur=0;sc.globalAlpha=1;
 }
@@ -782,6 +832,21 @@ let audioCtx=null,audioOn=false;
 const toggle=document.getElementById('audio-toggle');
 function initAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audioCtx=new AC();const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.055,audioCtx.currentTime);const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=280;filter.Q.value=0.8;const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(38,audioCtx.currentTime);const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(76.4,audioCtx.currentTime);const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.1,audioCtx.currentTime);osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc1.start();osc2.start();window.addEventListener('pagehide',()=>{try{audioCtx.close();}catch(_){}},{once:true});}
 if(toggle){toggle.addEventListener('click',()=>{audioOn=!audioOn;toggle.setAttribute('aria-pressed',String(audioOn));if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}});}
+
+// Theme toggle
+const themeToggle=document.getElementById('theme-toggle');
+if(themeToggle){
+  themeToggle.addEventListener('click',()=>{
+    document.body.classList.toggle('light');
+    try{localStorage.setItem('aion-theme', document.body.classList.contains('light')?'light':'dark');}catch(e){}
+    initSymbols();
+    buildDocField();
+  });
+  try{
+    const saved=localStorage.getItem('aion-theme');
+    if(saved==='light') document.body.classList.add('light');
+  }catch(e){}
+}
 
 document.getElementById('copyright-year').textContent=new Date().getFullYear();
 if(!reducedMotion){resize();setTimeout(()=>symCanvas.classList.add('ready'),300);requestAnimationFrame(loop);}
