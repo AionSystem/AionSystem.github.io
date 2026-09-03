@@ -556,18 +556,22 @@ if(toggle){toggle.addEventListener('click',()=>{audioOn=!audioOn;toggle.setAttri
 
 document.getElementById('copyright-year').textContent=new Date().getFullYear();
 
-// Agreement gate
+// Agreement gate with redirect
 const agreeBtn = document.getElementById('agreeBtn');
 if (agreeBtn) {
   agreeBtn.addEventListener('click', function() {
     document.getElementById('main-nav').classList.remove('nav-locked');
     try { localStorage.setItem('aion-agreed','true'); } catch(e) {}
-    window.scrollTo({top:0,behavior:'smooth'});
     agreeBtn.textContent = 'Agreed ✓';
     agreeBtn.disabled = true;
+    // Redirect to Home page after short delay
+    setTimeout(function(){
+      window.location.href = '/main-3/index.html';
+    }, 600);
   });
 }
 
+// If already agreed, unlock nav but do not auto-redirect
 try {
   if (localStorage.getItem('aion-agreed') === 'true') {
     document.getElementById('main-nav').classList.remove('nav-locked');
