@@ -168,11 +168,13 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
     <span>AION<span>system</span></span>
   </a>
   <ul class="nav-links" role="list">
-    <li><a href="/main-3/about/">About</a></li>
+    <li><a href="/main-3/">Home</a></li>
     <li><a href="/main-3/services/">Services</a></li>
     <li><a href="/main-3/process/">Process</a></li>
     <li><a href="/main-3/portfolio/">Portfolio</a></li>
+    <li><a href="/main-3/about/">About</a></li>
     <li><a href="/main-3/contact/">Contact</a></li>
+    <li><a href="/main-3/terms/">Terms</a></li>
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="mobileNav"><span></span><span></span><span></span></button>
@@ -370,14 +372,16 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
 <footer>
   <div>
     <div>AionSystem · Sheldon K. Salmon · Red-Team Framework Designer · © <span id="copyright-year"></span></div>
-    <div class="footer-legal">I find what kills a document before it costs you. All analyses are original independent work.</div>
+    <div class="footer-legal">Not legal advice. Findings describe structural properties of documents — not legal exposure or compliance status. Minimum engagement $1,200. No discounts. No free passes.</div>
   </div>
   <ul class="footer-links" role="list">
-    <li><a href="/main-3/about/">About</a></li>
+    <li><a href="/main-3/">Home</a></li>
     <li><a href="/main-3/services/">Services</a></li>
     <li><a href="/main-3/process/">Process</a></li>
     <li><a href="/main-3/portfolio/">Portfolio</a></li>
+    <li><a href="/main-3/about/">About</a></li>
     <li><a href="/main-3/contact/">Contact</a></li>
+    <li><a href="/main-3/terms/">Terms</a></li>
     <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
     <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
   </ul>
@@ -536,7 +540,7 @@ let stimer;window.addEventListener('scroll',()=>{const sy=window.scrollY;symbols
 const hamburger=document.getElementById('hamburger'),mobileNav=document.getElementById('mobileNav');let navOpen=false;
 function closeMenu(){navOpen=false;mobileNav.classList.remove('open');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');document.body.style.overflow='';}
 if(hamburger&&mobileNav){
-  document.querySelectorAll('.nav-links a').forEach((link,i)=>{const a=document.createElement('a');a.href=link.getAttribute('href');a.textContent=link.textContent;if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);});
+  document.querySelectorAll('.nav-links a').forEach((link,i)=>{const a=document.createElement('a');a.href=link.getAttribute('href');a.textContent=link.textContent;if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));if(link.classList.contains('active'))a.classList.add('active');a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);});
   function openMenu(){navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);}
   hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());
   mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});
