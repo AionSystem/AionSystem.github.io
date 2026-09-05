@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="description" content="Sheldon K. Salmon — Portfolio. Public adversarial reviews of major documents: The Hippocratic Oath, EU AI Act, ISA Seabed. Working proofs: Geneva Conventions, US Constitution, UN Charter.">
-<title>Portfolio — Document Red-Team Proof | AionSystem</title>
-<meta property="og:title" content="Portfolio — Document Red-Team Proof | AionSystem">
-<meta property="og:description" content="Public adversarial reviews of major documents. Full red-team process demonstrated: attack passes, role councils, multi-model stress testing, verdicts.">
+<meta name="robots" content="index, follow">
+<meta name="description" content="Sheldon K. Salmon — Document Red-Team Case Studies. EU AI Act: 18 failure nodes. Hippocratic Oath: 21 failure nodes. ISA Deep-Sea Mining Code: 52 failure nodes. Published, DOI-linked, verifiable.">
+<title>Portfolio — Document Red-Team Analysis | AionSystem</title>
+<meta property="og:title" content="Portfolio — Document Red-Team Analysis | AionSystem">
+<meta property="og:description" content="Published structural reviews. EU AI Act: 18 failure nodes. Hippocratic Oath: 21. ISA Deep-Sea Mining Code: 52. Survived external hostile review. Zero fabrication.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aionsystem.github.io/main-3/portfolio/">
+<meta property="og:image" content="https://aionsystem.github.io/assets/img/aion-logo.jpg">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="x-content-type-options" content="nosniff">
+<meta name="x-content-type-options" content="nosniff">  
 <link rel="canonical" href="https://aionsystem.github.io/main-3/portfolio/">
 <link rel="icon" type="image/png" href="/assets/img/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,6 +45,7 @@
   --ease:cubic-bezier(0.16,1,0.3,1);
   --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
 }
+/* Light theme overrides */
 body.light{
   --bg:#f8f8f8;
   --surface:rgba(255,255,255,0.9);
@@ -62,23 +65,22 @@ body.light{
   --text-mid:#444444;
   --text-dim:#888888;
 }
-body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden;}
+.nav-logo-img{background:var(--text-dim);}
 .skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:12px 24px;background:var(--mid);color:#000;font-family:var(--mono);font-size:12px;letter-spacing:2px;text-decoration:none;transition:top 0.2s;}
 .skip-nav:focus{top:0}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-#doc-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.9;}
-#sym-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
-#sym-canvas.ready{opacity:0.65}
-.mid-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(92,72,65,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(92,72,65,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10;}
-.scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(92,72,65,0.018) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.35;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden;}
+#webgl-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.35;}
+#symbol-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s var(--ease);}
+#symbol-canvas.ready{opacity:0.48}
+.mid-haze{position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(92,72,65,0.016) 1px,rgba(0,0,0,0) 2px);opacity:0.55;}
 
-.theme-toggle,.audio-toggle{position:fixed;bottom:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(12px);color:var(--text-mid);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s var(--ease);}
-.theme-toggle{left:24px;font-size:1.2rem;}
-.audio-toggle{right:24px;}
-.theme-toggle:hover,.audio-toggle:hover,.theme-toggle:focus-visible,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:var(--glow);outline:none;}
+.theme-toggle{position:fixed;bottom:24px;left:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(12px);color:var(--text-mid);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s var(--ease);}
+.theme-toggle:hover,.theme-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:var(--glow);outline:none;}
+.audio-toggle{position:fixed;bottom:24px;right:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(12px);color:var(--text-mid);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s var(--ease);}
+.audio-toggle:hover,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:var(--glow);outline:none;}
 .audio-toggle[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);box-shadow:0 0 18px rgba(182,160,150,0.35);}
-
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:var(--surface);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 40px rgba(92,72,65,0.04);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:var(--surface);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 40px rgba(92,72,65,0.04);animation:fadeInNav 0.6s var(--ease) 0.2s both;}
+@keyframes fadeInNav{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 .nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--text);text-transform:uppercase;text-decoration:none;}
 .nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--border);box-shadow:0 0 10px rgba(92,72,65,0.2);}
 .nav-logo .dot{color:var(--mid-l);}
@@ -94,109 +96,183 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .mobile-nav a{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;padding:20px 24px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;gap:8px;transition:all 0.15s;opacity:0;transform:translateY(6px);}
 .mobile-nav.open a{opacity:1;transform:translateY(0)}
 .mobile-nav a:nth-child(2n){border-right:none}
-.mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--text-dim);flex-shrink:0;}
+.mobile-nav a::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--text-dim);flex-shrink:0;transition:background 0.15s,box-shadow 0.15s;}
 .mobile-nav a:hover,.mobile-nav a.active{color:var(--mid-l);background:rgba(92,72,65,0.04);outline:none;}
-.mobile-nav a:hover::before{background:var(--mid-l);box-shadow:0 0 6px var(--mid-l);}
+.mobile-nav a:hover::before,.mobile-nav a.active::before{background:var(--mid-l);box-shadow:0 0 6px var(--mid-l);}
 
-.wrapper{position:relative;z-index:20;max-width:1200px;margin:0 auto;padding:100px 40px 80px;}
-.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--peri-l);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.wrapper{position:relative;z-index:3;max-width:1200px;margin:0 auto;padding:100px 40px 80px;}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--mid-l);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:12px;}
 .eyebrow::before,.eyebrow::after{content:'';display:inline-block;width:20px;height:1px;background:var(--red);flex-shrink:0;box-shadow:0 0 8px rgba(70,0,2,0.6);}
 h1{font-family:var(--display);font-size:clamp(40px,6vw,80px);font-weight:700;letter-spacing:-2px;text-transform:uppercase;line-height:0.92;color:var(--text);margin-bottom:8px;text-align:center;}
 h1 em{display:block;font-style:normal;background:linear-gradient(135deg,#f5f0eb,var(--mid-l),var(--peri));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(92,72,65,0.3));}
 .title-line{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:40px;margin-top:12px;text-align:center;}
+.intro-block{background:var(--surface);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:16px;padding:28px 36px;text-align:center;margin-bottom:48px;max-width:860px;margin-left:auto;margin-right:auto;box-shadow:var(--glow),inset 0 1px 0 rgba(255,255,255,0.03);position:relative;overflow:hidden;}
+.intro-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--mid),var(--accent),var(--mid),transparent);opacity:0.7;}
+.intro-block p{font-family:var(--body);font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.7;}
+.intro-block strong{color:var(--text);font-weight:500;}
 
 /* WHAT THIS IS */
-.what-this{background:var(--surface);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:16px;padding:36px 40px;margin-bottom:48px;box-shadow:var(--glow),inset 0 1px 0 rgba(255,255,255,0.03);position:relative;overflow:hidden;}
+.what-this{background:var(--surface);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:16px;padding:32px 36px;margin-bottom:48px;max-width:860px;margin-left:auto;margin-right:auto;box-shadow:var(--glow),inset 0 1px 0 rgba(255,255,255,0.03);position:relative;overflow:hidden;}
 .what-this::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--mid),var(--accent),var(--mid),transparent);opacity:0.7;}
-.what-this h2{font-family:var(--display);font-size:24px;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;}
-.what-this p{font-family:var(--body);font-size:15px;font-weight:300;color:var(--text-mid);line-height:1.8;margin-bottom:12px;}
+.what-this h2{font-family:var(--display);font-size:22px;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;}
+.what-this p{font-family:var(--body);font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.75;margin-bottom:10px;}
 .what-this p:last-child{margin-bottom:0;}
 .what-this strong{color:var(--text);font-weight:500;}
 
-/* PORTFOLIO GRID */
-.portfolio-section{margin-bottom:56px;}
-.section-header{display:flex;align-items:center;gap:16px;margin-bottom:32px;}
-.section-num{font-family:var(--mono);font-size:11px;color:var(--peri-l);letter-spacing:2px;}
-.section-title{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);}
-.section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px rgba(92,72,65,0.15);}
+.case-grid{display:grid;grid-template-columns:1fr;gap:32px;margin-bottom:48px;}
+.case-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:36px 32px;display:flex;flex-direction:column;gap:16px;transition:all 0.35s var(--ease);position:relative;overflow:hidden;}
+.case-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--mid),var(--accent),var(--peri));opacity:0;transition:opacity 0.3s var(--ease);}
+.case-card:hover::before{opacity:1;}
+.case-card:hover{border-color:var(--border-h);transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 50px rgba(92,72,65,0.1),inset 0 1px 0 rgba(255,255,255,0.04);}
+.case-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.case-icon{font-size:2.5rem;line-height:1;font-family:var(--mono);color:var(--mid-l);}
+.case-title-block{flex:1;min-width:200px;}
+.case-title{font-family:var(--display);font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:-0.5px;line-height:1.1;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+.case-subtitle{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);}
+.case-badge{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--mid);background:rgba(92,72,65,0.08);border:1px solid rgba(92,72,65,0.3);border-radius:20px;padding:4px 12px;display:inline-block;width:fit-content;white-space:nowrap;}
+.case-stats{display:flex;flex-wrap:wrap;gap:12px;}
+.case-stat{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--peri-l);background:rgba(92,72,65,0.07);border:1px solid rgba(92,72,65,0.16);border-radius:20px;padding:4px 12px;display:inline-block;}
+.case-desc{font-family:var(--body);font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.7;flex:1;}
+.case-desc strong{color:var(--text);font-weight:500;}
 
-.portfolio-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:24px;transition:all 0.35s var(--ease);position:relative;overflow:hidden;}
-.portfolio-card:hover{border-color:var(--border-h);box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 50px rgba(92,72,65,0.1),inset 0 1px 0 rgba(255,255,255,0.04);}
-.portfolio-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--mid),var(--accent),var(--peri));opacity:0;transition:opacity 0.3s var(--ease);}
-.portfolio-card:hover::before{opacity:1;}
+/* KEY FINDING BOX */
+.key-finding-box{background:rgba(70,0,2,0.06);border:1px solid rgba(70,0,2,0.18);border-radius:12px;padding:18px 22px;margin:8px 0;}
+.key-finding-box h3{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+.key-finding-box p{font-family:var(--body);font-size:14px;font-weight:400;color:var(--text);line-height:1.65;}
 
-.portfolio-badge{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);background:rgba(92,72,65,0.07);padding:3px 12px;border-radius:20px;border:1px solid rgba(92,72,65,0.14);margin-bottom:12px;}
-.portfolio-title{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:-0.5px;text-transform:uppercase;color:var(--text);margin-bottom:8px;}
-.portfolio-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--text-dim);}
-.portfolio-meta span{display:inline-block;background:rgba(92,72,65,0.06);padding:3px 10px;border-radius:20px;border:1px solid rgba(92,72,65,0.12);color:var(--peri-l);}
-
-.key-finding-box{background:rgba(70,0,2,0.08);border:1px solid rgba(70,0,2,0.2);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
-.key-finding-box h3{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
-.key-finding-box p{font-family:var(--body);font-size:15px;font-weight:400;color:var(--text);line-height:1.7;}
-
-.portfolio-desc{font-family:var(--body);font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.7;margin-bottom:16px;}
-
-.portfolio-links{display:flex;flex-wrap:wrap;gap:10px;}
-.portfolio-link{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--mid-l);text-decoration:none;text-transform:uppercase;border:1px solid var(--border);padding:8px 16px;border-radius:6px;transition:all 0.2s var(--ease);display:inline-flex;align-items:center;gap:6px;background:transparent;cursor:pointer;}
-.portfolio-link:hover,.portfolio-link:focus-visible{background:rgba(92,72,65,0.12);border-color:var(--border-h);color:var(--accent);box-shadow:var(--glow);outline:none;}
-.portfolio-link.primary{background:rgba(92,72,65,0.12);color:var(--accent);border-color:var(--mid);}
-.portfolio-link.primary:hover,.portfolio-link.primary:focus-visible{background:var(--mid);color:#000;border-color:var(--mid);box-shadow:var(--glow-strong);outline:none;}
-
-/* PLACEHOLDER */
-.placeholder-note{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;background:rgba(92,72,65,0.04);border:1px dashed var(--border);border-radius:8px;padding:16px 20px;text-align:center;}
+.case-findings{display:flex;flex-direction:column;gap:0;margin:8px 0;}
+.finding-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(18,12,11,0.5);}
+.finding-row:last-child{border-bottom:none;}
+.finding-desc{font-family:var(--mono);font-size:11px;color:var(--text);}
+.finding-sev{font-family:var(--mono);font-size:9px;letter-spacing:1px;padding:2px 8px;border-radius:20px;}
+.s-critical{background:rgba(70,0,2,0.12);color:#f87171;box-shadow:0 0 8px rgba(70,0,2,0.3);}
+.s-major{background:rgba(92,72,65,0.12);color:var(--mid-l);box-shadow:0 0 8px rgba(92,72,65,0.3);}
+.s-minor{background:rgba(65,51,46,0.12);color:var(--peri-l);box-shadow:0 0 8px rgba(65,51,46,0.3);}
+.s-resolved{background:rgba(34,197,94,0.1);color:#86efac;box-shadow:0 0 8px rgba(34,197,94,0.2);}
+.case-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.case-link{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--mid-l);text-decoration:none;text-transform:uppercase;border:1px solid var(--border);padding:10px 18px;border-radius:6px;transition:all 0.2s var(--ease);display:inline-flex;align-items:center;gap:6px;background:transparent;cursor:pointer;}
+.case-link:hover,.case-link:focus-visible{background:rgba(92,72,65,0.12);border-color:var(--border-h);color:var(--accent);box-shadow:var(--glow);outline:none;}
+.case-link.peri{border-color:rgba(65,51,46,0.28);color:var(--peri-l);}
+.case-link.peri:hover{background:rgba(65,51,46,0.1);border-color:rgba(65,51,46,0.55);color:#ddd6fe;box-shadow:0 0 20px rgba(65,51,46,0.2);}
+.verification-note{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;line-height:1.6;padding:10px 14px;background:rgba(34,197,94,0.04);border:1px solid rgba(34,197,94,0.14);border-radius:6px;margin-top:4px;}
 
 /* WORKING PROOFS */
-.working-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+.working-section{margin-bottom:48px;}
+.working-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+.working-num{font-family:var(--mono);font-size:11px;color:var(--peri-l);letter-spacing:2px;}
+.working-title{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);}
+.working-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px rgba(92,72,65,0.15);}
+.working-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
 .working-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:10px;transition:all 0.35s var(--ease);position:relative;overflow:hidden;}
 .working-card:hover{border-color:var(--border-h);box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 50px rgba(92,72,65,0.1);}
-.working-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent);opacity:0;transition:opacity 0.3s var(--ease);}
+.working-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--mid),transparent);opacity:0;transition:opacity 0.3s var(--ease);}
 .working-card:hover::before{opacity:1;}
 .working-icon{font-size:1.8rem;line-height:1;font-family:var(--mono);color:var(--mid-l);}
 .working-name{font-family:var(--display);font-size:20px;font-weight:700;letter-spacing:-0.5px;text-transform:uppercase;color:var(--text);}
 .working-status{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);display:flex;align-items:center;gap:6px;}
-.working-status.active{color:#86efac;text-shadow:0 0 8px rgba(34,197,94,0.3);}
 .working-status.planned{color:var(--peri-l);}
 .working-status.awaiting{color:var(--red);}
 .working-desc{font-family:var(--body);font-size:13px;font-weight:300;color:var(--text-mid);line-height:1.6;flex:1;}
 
 /* CTA */
-.cta-section{text-align:center;margin-top:64px;}
+.cta-section{text-align:center;margin-top:48px;}
 .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:14px 28px;border:1px solid var(--mid);color:var(--mid-l);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer;}
 .cta-btn.primary{background:rgba(92,72,65,0.12);color:var(--accent);border-color:var(--mid);}
 .cta-btn:hover,.cta-btn:focus-visible{background:var(--mid);color:#000;border-color:var(--mid);box-shadow:var(--glow-strong);outline:none;}
 
-footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--text-mid);}
-.footer-legal{font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-top:4px;}
-.footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
-.footer-links a{color:var(--text-mid);text-decoration:none;transition:all 0.2s ease;}
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(1,1,1,0.92);backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.4s var(--ease);}
+.modal-overlay.active{opacity:1;visibility:visible;}
+.modal-box{background:rgba(10,5,4,0.97);backdrop-filter:blur(32px);border:1px solid var(--border);border-radius:20px;padding:40px 48px;max-width:720px;width:92%;max-height:85vh;overflow-y:auto;transform:scale(0.95) translateY(20px);transition:all 0.4s var(--ease-spring);position:relative;box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 60px rgba(92,72,65,0.07),inset 0 1px 0 rgba(255,255,255,0.03);}
+.modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:20px 20px 0 0;background:linear-gradient(90deg,transparent,var(--mid),var(--accent),var(--mid),transparent);opacity:0.6;}
+.modal-overlay.active .modal-box{transform:scale(1) translateY(0);}
+.modal-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--text-dim);font-size:1.6rem;cursor:pointer;font-family:var(--mono);line-height:1;transition:all 0.2s var(--ease);padding:4px;border-radius:4px;}
+.modal-close:hover,.modal-close:focus-visible{color:var(--mid-l);transform:rotate(90deg);outline:none;}
+.modal-icon{font-size:2.2rem;margin-bottom:8px;font-family:var(--mono);}
+.modal-title{font-family:var(--display);font-size:24px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:-0.5px;margin-bottom:4px;}
+.modal-sub{font-family:var(--mono);font-size:10px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
+.modal-meta{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-bottom:20px;}
+.modal-meta span{display:inline-block;background:rgba(92,72,65,0.06);padding:3px 10px;border-radius:10px;border:1px solid rgba(92,72,65,0.12);color:var(--text-dim);}
+.modal-bio{font-family:var(--body);font-size:15px;font-weight:300;color:var(--text-mid);line-height:1.8;margin-bottom:20px;border-left:2px solid var(--border);padding-left:16px;}
+.modal-bio p{margin-bottom:12px;}.modal-bio p:last-child{margin-bottom:0;}
+.modal-bio strong{color:var(--text);font-weight:500;}
+.modal-bio em{color:var(--accent);font-style:italic;}
+.modal-pricing{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.modal-pricing span{font-family:var(--mono);font-size:10px;letter-spacing:0.5px;color:var(--accent);display:inline-block;background:rgba(92,72,65,0.08);padding:5px 14px;border-radius:20px;border:1px solid rgba(92,72,65,0.22);}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+.modal-note{font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px;line-height:1.6;margin-bottom:14px;padding:10px 12px;background:rgba(70,0,2,0.05);border:1px solid rgba(70,0,2,0.15);border-radius:6px;}
+footer{position:relative;z-index:3;border-top:1px solid var(--border);padding:32px 40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);}
+.footer-legal{font-size:8px;color:var(--text-dim);margin-top:4px;letter-spacing:1px;}
+.footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap;}
+.footer-links a{color:var(--text-dim);text-decoration:none;transition:color 0.2s;}
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--mid-l);text-shadow:0 0 8px rgba(92,72,65,0.4);outline:none;}
-
 @media(max-width:800px){
   nav{padding:0 20px;}
   .nav-links{display:none;}
   .nav-hamburger{display:flex;}
   .wrapper{padding:80px 20px 60px;}
-  .portfolio-card{padding:24px;}
-  .what-this{padding:24px;}
+  .modal-box{padding:28px 24px;}
+  .working-grid{grid-template-columns:1fr;}
   footer{padding:24px 20px;flex-direction:column;align-items:center;text-align:center;}
   .footer-links{justify-content:center;}
 }
 @media(max-width:480px){
-  .portfolio-title{font-size:22px;}
-  .key-finding-box p{font-size:14px;}
+  .modal-box{padding:24px 16px;}
+  h1{letter-spacing:-1px;}
+  .case-card{padding:24px 20px;}
+  .what-this{padding:24px 20px;}
+  .key-finding-box{padding:14px 16px;}
   .cta-btn{width:100%;justify-content:center;}
 }
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#doc-canvas,#sym-canvas,.scan-lines{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#webgl-canvas,#symbol-canvas,.mid-haze{display:none}}
 </style>
+<!-- JSON-LD Structured Data for Portfolio Page -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Published Case Studies",
+  "itemListElement": [
+    {
+      "@type": "CreativeWork",
+      "name": "EU AI Act — Articles 51–56",
+      "url": "https://doi.org/10.5281/zenodo.22135551",
+      "description": "18 structural failure nodes identified in the EU AI Act's systemic-risk provisions.",
+      "author": {
+        "@type": "Person",
+        "name": "Sheldon K. Salmon"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Hippocratic Oath & Declaration of Geneva",
+      "url": "https://doi.org/10.5281/zenodo.22267142",
+      "description": "21 failure nodes; 'Do no harm' is undefined, unenforceable. Hardened 2026 Reconstruction proposed.",
+      "author": {
+        "@type": "Person",
+        "name": "Sheldon K. Salmon"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "ISA Deep-Sea Mining Code",
+      "url": "https://doi.org/10.5281/zenodo.21326719",
+      "description": "52 structural failure nodes, 4 critical gaps.",
+      "author": {
+        "@type": "Person",
+        "name": "Sheldon K. Salmon"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <a href="#main" class="skip-nav">Skip to content</a>
-<canvas id="doc-canvas" aria-hidden="true"></canvas>
-<canvas id="sym-canvas" aria-hidden="true"></canvas>
-<div class="mid-grid" aria-hidden="true"></div>
-<div class="scan-lines" aria-hidden="true"></div>
+<canvas id="webgl-canvas" aria-hidden="true"></canvas>
+<canvas id="symbol-canvas" aria-hidden="true"></canvas>
+<div class="mid-haze" aria-hidden="true"></div>
 <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle day/night mode">☀</button>
-<button type="button" class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone">♪</button>
+<button type="button" class="audio-toggle" id="audio-toggle" aria-pressed="false" aria-label="Toggle ambient synthesis tone" title="Toggle ambient audio">♪</button>
 
 <nav aria-label="Primary navigation">
   <a href="/main-3/" class="nav-logo" aria-label="AionSystem home">
@@ -207,12 +283,12 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:4
   <li><a href="/main-3/">Home</a></li>
   <li><a href="/main-3/services/">Services</a></li>
   <li><a href="/main-3/process/">Process</a></li>
-  <li><a href="/main-3/portfolio/" class="active">Portfolio</a></li>
+  <li><a href="/main-3/portfolio/" class="active">Portfolio</a></li> 
   <li><a href="/main-3/about/">About</a></li>
   <li><a href="/main-3/contact/">Contact</a></li>
   <li><a href="/main-3/rules/">Rules</a></li>
   <li><a href="/main-3/terms/">Terms</a></li>
-  <li><a href="/main-3/faq/">FAQ</a></li>
+  <li><a href="/main-3/faq/">FAQ</a></li>  
   <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
 </ul>
   <button type="button" class="nav-hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
@@ -222,35 +298,75 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:4
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true"></nav>
 
 <main class="wrapper" id="main">
-  <div class="eyebrow">// The Evidence</div>
-  <h1>Public <em>Portfolio</em></h1>
-  <div class="title-line">No Case Studies · No Hypotheticals · Real Attacks on Real Documents</div>
+  <div class="eyebrow">// Proof of Method</div>
+  <h1>Case <em>Studies</em></h1>
+  <div class="title-line">Published Structural Reviews · DOI-Linked · Downloadable · Verifiable Against Primary Sources</div>
+
+  <div class="intro-block">
+    <p>I will not beg clients for case study use of what I find in their documents. I find public documents of high stake on my own, rip them apart, red-team them, show my findings and possible resolutions, and create a report that is DOI and/or SSRN. Every potential or current client can see how my report looks, feels, and presents itself. Something they can download and test themselves to see if I'm worth the time and money. <strong>Which I am.</strong></p>
+  </div>
 
   <!-- WHAT THIS IS -->
   <div class="what-this">
     <h2>What This Is</h2>
-    <p>These are <strong>adversarial reviews of major public documents</strong>. Each paper shows the full red-team process: dozens of attack passes, independent role councils, multi-model stress testing, and a public verdict.</p>
+    <p>These are <strong>adversarial reviews of major public documents</strong>. Each case study shows the full red-team process: dozens of attack passes, independent role councils, multi-model stress testing, and a public verdict.</p>
     <p>If your organization relies on a document that has never been attacked this way — a contract, a policy, a regulatory filing, an AI governance framework — then it has <strong>undiscovered structural weaknesses</strong>. The proof below demonstrates what happens when I find them.</p>
     <p><strong>This is not academic writing. This is applied structural failure analysis.</strong></p>
   </div>
 
-  <!-- PORTFOLIO ITEMS -->
-  <div class="portfolio-section">
-    <div class="section-header">
-      <span class="section-num">// 01</span>
-      <h2 class="section-title">Published Proofs</h2>
-      <div class="section-line" aria-hidden="true"></div>
+  <div class="case-grid">
+    <!-- CASE 1: EU AI Act -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-icon" aria-hidden="true">∑</div>
+        <div class="case-title-block">
+          <div class="case-title">EU AI Act — Articles 51–56</div>
+          <div class="case-subtitle">Regulation (EU) 2024/1689 · General-Purpose AI Systemic Risk</div>
+        </div>
+        <div class="case-badge">Published · Survived External Review</div>
+      </div>
+      <div class="case-stats">
+        <span class="case-stat">18 Failure Nodes</span>
+        <span class="case-stat">7 S4 (Catastrophic)</span>
+        <span class="case-stat">11 S3 (Structural)</span>
+        <span class="case-stat">6 Killed Findings</span>
+        <span class="case-stat">6 Gauntlet Rounds Survived</span>
+      </div>
+      <div class="case-desc">
+        <p>Three-pass adversarial structural analysis of the EU AI Act's systemic-risk provisions using the full AION System pipeline. <strong>18 structural failure nodes identified across three independent passes.</strong> The Unified Thesis: the EU regulated systemic cognitive infrastructure using product safety mechanics designed for discrete products — a category error that underpins every downstream failure.</p>
+        <p>Survived multiple rounds of external hostile review by a 15-role rejection council. <strong>Zero fabrication found. 12 quotes independently verified against primary sources. 6 external legislative claims confirmed.</strong></p>
+      </div>
+      <div class="case-findings">
+        <div class="finding-row"><span class="finding-desc">Open-Source Systemic Risk Enforcement Gap</span><span class="finding-sev s-critical">S4</span></div>
+        <div class="finding-row"><span class="finding-desc">Compound Regulatory Inertia Trap (Systemic SPOF)</span><span class="finding-sev s-critical">S4</span></div>
+        <div class="finding-row"><span class="finding-desc">Harmonisation & Evidentiary Gap in Ex-Post Harm</span><span class="finding-sev s-major">S3</span></div>
+        <div class="finding-row"><span class="finding-desc">Self-Assessment Silence Loophole</span><span class="finding-sev s-major">S3</span></div>
+        <div class="finding-row"><span class="finding-desc">14 additional findings archived</span><span class="finding-sev s-resolved">ON FILE</span></div>
+      </div>
+      <div class="case-actions">
+        <a href="https://doi.org/10.5281/zenodo.22135551" target="_blank" rel="noopener noreferrer" class="case-link">View DOI ↗</a>
+        <a href="https://ssrn.com/abstract=7362039" target="_blank" rel="noopener noreferrer" class="case-link">View on SSRN ↗</a>
+        <a href="/assets/pdf/Structural-Fracture-and-Immunization-Architecture-EU-AI-Act-51-56-v3.1.pdf" download class="case-link peri">Download PDF ↓</a>
+        <button type="button" class="case-link peri" data-modal="modal-euaiact">Read Full Case →</button>
+      </div>
+      <div class="verification-note">✓ Full report published. 28-page PDF available for download. Method section included. Revision history documented. All quotes verified against primary sources. Download it. Test it yourself.</div>
     </div>
 
-    <!-- PAPER 1: THE OATH (FULLY EXPANDED) -->
-    <div class="portfolio-card">
-      <div class="portfolio-badge">Paper 01 · Dec 2025</div>
-      <div class="portfolio-title">The Hippocratic Oath</div>
-      <div class="portfolio-meta">
-        <span>22 Passes</span>
-        <span>15-Role Council</span>
-        <span>Multi-Model</span>
-        <span>Gauntlet Verdict</span>
+    <!-- CASE 2: Hippocratic Oath & Declaration of Geneva -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-icon" aria-hidden="true">⚕</div>
+        <div class="case-title-block">
+          <div class="case-title">Hippocratic Oath & Declaration of Geneva</div>
+          <div class="case-subtitle">Foundational Medical Ethics · Hardened 2026 Reconstruction</div>
+        </div>
+        <div class="case-badge">Published · DOI-Linked</div>
+      </div>
+      <div class="case-stats">
+        <span class="case-stat">21 Failure Nodes</span>
+        <span class="case-stat">6-Category Harm Taxonomy</span>
+        <span class="case-stat">7 Clauses Reconstructed</span>
+        <span class="case-stat">DOI: 10.5281/zenodo.22267142</span>
       </div>
 
       <div class="key-finding-box">
@@ -258,84 +374,73 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:4
         <p>"Do no harm" has no definition, no enforcement mechanism, and no adjudicating body. The most trusted promise in medicine is structurally hollow — and AI governance frameworks are now being tethered to it.</p>
       </div>
 
-      <div class="portfolio-desc">
-        <p>A full adversarial structural review of the Hippocratic Oath and the Declaration of Geneva, with a hardened 2026 reconstruction. Six adversarial review passes, three internal 15-role council rounds, a combined SAR → LEGAL → ANTI-FORGE run, a reconciliation pass, and a currency/delta pass. The review demonstrates that both documents are non-binding, unenforceable, and update-less assertions of intent.</p>
-        <p>The paper introduces a six-category harm taxonomy, an independent counter-expert requirement, technological update triggers, and distinct obligation tracks for human physicians and AI systems. Every finding is tied to evidence. Every limitation is named.</p>
+      <div class="case-desc">
+        <p>Independent adversarial structural review of medicine's foundational ethical texts. <strong>"Do no harm" is undefined, unenforceable, and has no adjudication mechanism or technological update trigger.</strong> The review found 21 structural failure nodes across the Oath and the Declaration of Geneva, then proposed a Hardened 2026 Reconstruction with six-category harm definitions, independent counter-expert review, and AI-surgical oversight.</p>
+        <p>Anchored to existing regulatory frameworks — EU AI Act, MDR, GDPR/HIPAA — rather than inventing new abstractions. Every limitation named. Every claim cited.</p>
       </div>
-
-      <div class="portfolio-links">
-        <a href="https://zenodo.org/records/xxxx" class="portfolio-link primary" target="_blank" rel="noopener noreferrer">Read the Full Paper →</a>
-        <a href="https://ssrn.com/abstract=6908500" class="portfolio-link" target="_blank" rel="noopener noreferrer">SSRN ↗</a>
-        <a href="#" class="portfolio-link">Archival Copy ↗</a>
+      <div class="case-findings">
+        <div class="finding-row"><span class="finding-desc">"Do no harm" — undefined, unfalsifiable</span><span class="finding-sev s-critical">CRITICAL</span></div>
+        <div class="finding-row"><span class="finding-desc">No enforcement body or adjudication mechanism</span><span class="finding-sev s-critical">CRITICAL</span></div>
+        <div class="finding-row"><span class="finding-desc">No counter-expert or independent verification</span><span class="finding-sev s-major">MAJOR</span></div>
+        <div class="finding-row"><span class="finding-desc">No technological update trigger</span><span class="finding-sev s-major">MAJOR</span></div>
+        <div class="finding-row"><span class="finding-desc">Hardened 2026 Reconstruction proposed</span><span class="finding-sev s-resolved">RESOLVED</span></div>
       </div>
+      <div class="case-actions">
+        <a href="https://doi.org/10.5281/zenodo.22267142" target="_blank" rel="noopener noreferrer" class="case-link">View DOI ↗</a>
+        <button type="button" class="case-link peri" data-modal="modal-hippocratic">Read Full Case →</button>
+      </div>
+      <div class="verification-note">✓ Published and checkable. Full adversarial review, 21 failure nodes, and hardened reconstruction. All claims carry source citations. Limitations named explicitly.</div>
     </div>
 
-    <!-- PAPER 2: EU AI ACT (PLACEHOLDER - AWAITING EXPANSION) -->
-    <div class="portfolio-card">
-      <div class="portfolio-badge">Paper 02 · Date TBD</div>
-      <div class="portfolio-title">EU AI Act</div>
-      <div class="portfolio-meta">
-        <span>Pass Count TBD</span>
-        <span>Role Council</span>
-        <span>Multi-Model</span>
+    <!-- CASE 3: ISA Deep-Sea Mining Code -->
+    <div class="case-card">
+      <div class="case-header">
+        <div class="case-icon" aria-hidden="true">◈</div>
+        <div class="case-title-block">
+          <div class="case-title">ISA Deep-Sea Mining Code</div>
+          <div class="case-subtitle">ISBA/29/LTC/8 · Active UN Negotiation</div>
+        </div>
+        <div class="case-badge">Published · DOI-Linked</div>
       </div>
-
-      <div class="key-finding-box">
-        <h3>Key Finding</h3>
-        <p>[AWAITING INPUT — Key finding from the EU AI Act adversarial review will be added here.]</p>
+      <div class="case-stats">
+        <span class="case-stat">52 Failure Nodes</span>
+        <span class="case-stat">4 Critical Gaps</span>
+        <span class="case-stat">1 Published Finding</span>
+        <span class="case-stat">DOI: 10.5281/zenodo.21326719</span>
       </div>
-
-      <div class="portfolio-desc">
-        <p>[AWAITING INPUT — Expanded description of the EU AI Act adversarial review, including pass count, method summary, and significance.]</p>
+      <div class="case-desc">
+        <p>Independent adversarial structural review of the ISA's draft Regional Environmental Management Plan guidance, run while the document was in active negotiation at the United Nations. <strong>52 structural failure nodes found across four sections. Four critical gaps left the primary environmental protection obligation legally unenforceable from adoption.</strong></p>
+        <p>Every finding traced to the document's own provisions. No invented mechanics. Ready-to-insert resolution text delivered with each finding.</p>
       </div>
-
-      <div class="portfolio-links">
-        <a href="#" class="portfolio-link primary">Read the Full Paper →</a>
-        <a href="#" class="portfolio-link">SSRN ↗</a>
-        <a href="#" class="portfolio-link">Archival Copy ↗</a>
+      <div class="case-findings">
+        <div class="finding-row"><span class="finding-desc">Primary obligation — no enforcement mechanism</span><span class="finding-sev s-critical">CRITICAL</span></div>
+        <div class="finding-row"><span class="finding-desc">"Serious harm" undefined in operative text</span><span class="finding-sev s-critical">CRITICAL</span></div>
+        <div class="finding-row"><span class="finding-desc">Missing review trigger condition</span><span class="finding-sev s-critical">CRITICAL</span></div>
+        <div class="finding-row"><span class="finding-desc">Annex II — circular dependency loop</span><span class="finding-sev s-critical">CRITICAL</span></div>
+        <div class="finding-row"><span class="finding-desc">18 major exploitable ambiguities</span><span class="finding-sev s-major">MAJOR ×18</span></div>
+        <div class="finding-row"><span class="finding-desc">30 minor structural gaps</span><span class="finding-sev s-minor">MINOR ×30</span></div>
       </div>
-    </div>
-
-    <!-- PAPER 3: ISA SEABED (PLACEHOLDER - AWAITING EXPANSION) -->
-    <div class="portfolio-card">
-      <div class="portfolio-badge">Paper 03 · Date TBD</div>
-      <div class="portfolio-title">ISA Seabed</div>
-      <div class="portfolio-meta">
-        <span>Pass Count TBD</span>
-        <span>Role Council</span>
-        <span>Multi-Model</span>
+      <div class="case-actions">
+        <a href="https://doi.org/10.5281/zenodo.21326719" target="_blank" rel="noopener noreferrer" class="case-link">View DOI ↗</a>
+        <button type="button" class="case-link peri" data-modal="modal-isa">Read Full Case →</button>
       </div>
-
-      <div class="key-finding-box">
-        <h3>Key Finding</h3>
-        <p>[AWAITING INPUT — Key finding from the ISA Seabed adversarial review will be added here.]</p>
-      </div>
-
-      <div class="portfolio-desc">
-        <p>[AWAITING INPUT — Expanded description of the ISA Seabed adversarial review, including pass count, method summary, and significance.]</p>
-      </div>
-
-      <div class="portfolio-links">
-        <a href="#" class="portfolio-link primary">Read the Full Paper →</a>
-        <a href="#" class="portfolio-link">SSRN ↗</a>
-        <a href="#" class="portfolio-link">Archival Copy ↗</a>
-      </div>
+      <div class="verification-note">✓ Published and checkable. One finding released in full. The rest stays off-record — I wasn't engaged to resolve them, and won't present unsolicited work as official.</div>
     </div>
   </div>
 
   <!-- WORKING PROOFS -->
-  <div class="portfolio-section">
-    <div class="section-header">
-      <span class="section-num">// 02</span>
-      <h2 class="section-title">Working Proofs</h2>
-      <div class="section-line" aria-hidden="true"></div>
+  <div class="working-section">
+    <div class="working-header">
+      <span class="working-num">// 02</span>
+      <h2 class="working-title">Working Proofs</h2>
+      <div class="working-line" aria-hidden="true"></div>
     </div>
     <div class="working-grid">
       <div class="working-card">
         <div class="working-icon">⊨</div>
         <div class="working-name">Geneva Conventions</div>
         <div class="working-status planned">Planned</div>
-        <div class="working-desc">Adversarial review of the foundational humanitarian law framework. Will demonstrate the method on multi-party treaty obligations and enforcement gaps.</div>
+        <div class="working-desc">Adversarial review of the foundational humanitarian law framework. Will demonstrate the method on multi-party treaty obligations and enforcement gaps across sovereign states.</div>
       </div>
       <div class="working-card">
         <div class="working-icon">⊢</div>
@@ -364,6 +469,102 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:4
   </div>
 </main>
 
+<!-- EU AI ACT MODAL -->
+<div class="modal-overlay" id="modal-euaiact" role="dialog" aria-modal="true" aria-labelledby="modal-euaiact-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-euaiact" aria-label="Close">✕</button>
+    <div class="modal-icon">∑</div>
+    <div class="modal-title" id="modal-euaiact-title">EU AI Act — Articles 51–56</div>
+    <div class="modal-sub">Regulation (EU) 2024/1689 · Three-Pass Adversarial Pipeline · Published</div>
+    <div class="modal-meta">
+      <span>18 findings</span>
+      <span>7 S4</span>
+      <span>11 S3</span>
+      <span>6 killed</span>
+      <span>6 Gauntlet rounds</span>
+    </div>
+    <div class="modal-bio">
+      <p>The flagship proof of method. A 144-page EU regulation analyzed through the full AION System pipeline: Foundry → Anvil → Crucible → Temper → Resolution → Gauntlet.</p>
+      <p><strong>Three full passes</strong> were run. Each pass independently attacked the document. Findings were stress-tested, negation-tested, and severity-calibrated. Weak findings were killed. Strong findings were escalated.</p>
+      <p><strong>The Unified Thesis:</strong> The Ontological Category Error — the EU regulated systemic cognitive infrastructure using product safety mechanics designed for discrete products. Every downstream failure is a symptom of this upstream mismatch.</p>
+      <p><strong>External verification:</strong> Six rounds of hostile review by a 15-role rejection council. Two rounds returned Reject verdicts — the report was revised after each. The final verification pass returned Conditional with zero fabrication found. 12 quotes verified against primary sources. 6 external legislative claims confirmed.</p>
+      <p><em>Published with DOI. Full 28-page report available for download. Method section included. Revision history documented. Download it and test it yourself.</em></p>
+    </div>
+    <div class="modal-pricing">
+      <span>DOI: 10.5281/zenodo.22135551</span>
+      <span>SSRN: 7362039</span>
+      <span>28-page report</span>
+      <span>Full provenance</span>
+    </div>
+    <div class="modal-actions">
+      <a href="https://doi.org/10.5281/zenodo.22135551" target="_blank" rel="noopener noreferrer" class="case-link">View DOI ↗</a>
+      <a href="https://ssrn.com/abstract=7362039" target="_blank" rel="noopener noreferrer" class="case-link">View on SSRN ↗</a>
+      <a href="/assets/pdf/Structural-Fracture-and-Immunization-Architecture-EU-AI-Act-51-56-v3.1.pdf" download class="case-link">Download PDF ↓</a>
+    </div>
+  </div>
+</div>
+
+<!-- HIPPOCRATIC OATH MODAL -->
+<div class="modal-overlay" id="modal-hippocratic" role="dialog" aria-modal="true" aria-labelledby="modal-hippocratic-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-hippocratic" aria-label="Close">✕</button>
+    <div class="modal-icon">⚕</div>
+    <div class="modal-title" id="modal-hippocratic-title">Hippocratic Oath & Declaration of Geneva</div>
+    <div class="modal-sub">Foundational Medical Ethics · Adversarial Review · Hardened 2026 Reconstruction</div>
+    <div class="modal-meta">
+      <span>21 findings</span>
+      <span>6-category taxonomy</span>
+      <span>7 clauses</span>
+      <span>Published DOI</span>
+    </div>
+    <div class="modal-bio">
+      <p>Medicine's most trusted promise has no enforcement mechanism, no functional definition of "harm," no falsifiable standard, and no technological update trigger. This review attacks both the Hippocratic Oath and the Declaration of Geneva line by line, then reconstructs the Oath as a binding covenant with defined terms, external adjudication, and AI-surgical oversight.</p>
+      <p><strong>Core finding:</strong> "Do no harm" is a rhetorical norm, not a verifiable commitment. The documents are aspirational declarations, not enforceable contracts. The AI era is about to inherit this structural void at scale.</p>
+      <p><strong>The Hardened 2026 Reconstruction</strong> introduces a six-category harm taxonomy calibrated to physician agency, an independent counter-expert review requirement, explicit technological update triggers (90-day comprehensive adversarial testing), and distinct obligation tracks for human physicians and AI systems.</p>
+      <p><strong>Anchored to existing frameworks</strong> — EU AI Act (Annex III), EU MDR, GDPR/HIPAA — not invented abstractions. Every limitation named, including authorship disputes and source verification constraints.</p>
+      <p><em>Published with DOI. Full adversarial review and hardened reconstruction available for download.</em></p>
+    </div>
+    <div class="modal-pricing">
+      <span>DOI: 10.5281/zenodo.22267142</span>
+      <span>Published</span>
+      <span>Checkable</span>
+    </div>
+    <div class="modal-actions">
+      <a href="https://doi.org/10.5281/zenodo.22267142" target="_blank" rel="noopener noreferrer" class="case-link">View DOI ↗</a>
+    </div>
+  </div>
+</div>
+
+<!-- ISA MODAL -->
+<div class="modal-overlay" id="modal-isa" role="dialog" aria-modal="true" aria-labelledby="modal-isa-title">
+  <div class="modal-box">
+    <button type="button" class="modal-close" data-close="modal-isa" aria-label="Close">✕</button>
+    <div class="modal-icon">◈</div>
+    <div class="modal-title" id="modal-isa-title">ISA Deep-Sea Mining Code</div>
+    <div class="modal-sub">ISBA/29/LTC/8 · Active UN Negotiation · Published DOI</div>
+    <div class="modal-meta">
+      <span>52 failure nodes</span>
+      <span>4 critical gaps</span>
+      <span>Unsolicited</span>
+      <span>Uncompensated</span>
+    </div>
+    <div class="modal-bio">
+      <p>This was the first public proof of method. The International Seabed Authority's draft Regional Environmental Management Plan guidance was in active negotiation at the UN. I ran an independent structural review — no client, no fee, no invitation.</p>
+      <p><strong>What came out:</strong> 52 structural failure nodes across four sections. Four critical gaps left the primary environmental protection obligation legally unenforceable from adoption. Every finding was traced to the document's own provisions — no invented mechanics.</p>
+      <p>The resolution language was written and ready to insert. The document could have been corrected before it entered its current negotiation phase.</p>
+      <p><em>One finding published in full, DOI-linked and checkable. The rest stays off-record — I wasn't engaged to resolve them, and won't present unsolicited work as official.</em></p>
+    </div>
+    <div class="modal-pricing">
+      <span>DOI: 10.5281/zenodo.21326719</span>
+      <span>Published</span>
+      <span>Checkable</span>
+    </div>
+    <div class="modal-actions">
+      <a href="https://doi.org/10.5281/zenodo.21326719" target="_blank" rel="noopener noreferrer" class="case-link">View DOI ↗</a>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div>
     <div>AionSystem · Sheldon K. Salmon · Red-Team Framework Designer · © <span id="copyright-year"></span></div>
@@ -379,7 +580,7 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:4
   <li><a href="/main-3/rules/">Rules</a></li>
   <li><a href="/main-3/terms/">Terms</a></li>
   <li><a href="/main-3/privacy/">Privacy</a></li>
-  <li><a href="/main-3/faq/">FAQ</a></li>
+  <li><a href="/main-3/faq/">FAQ</a></li>  
   <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
   <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
 </ul>
@@ -389,206 +590,106 @@ footer{position:relative;z-index:20;border-top:1px solid var(--border);padding:4
 (function(){
 'use strict';
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const lowDevice=(navigator.hardwareConcurrency||2)<4;
+const lowDevice=(navigator.hardwareConcurrency||2)<4||(navigator.deviceMemory||2)<4;
 
-const docCanvas=document.getElementById('doc-canvas');
-const dc=docCanvas.getContext('2d');
-const symCanvas=document.getElementById('sym-canvas');
-const sc=symCanvas.getContext('2d');
-let W,H,t=0;
-const mouse={x:-9999,y:-9999,prevX:-9999,prevY:-9999,vx:0,vy:0};
-function getSeamX(){return W*0.42;}
-function isLight(){return document.body.classList.contains('light');}
-
-let docLines=[],failureNodes=[],scanPhase=0,scanPhase2=0;
-function buildDocField(){
-  docLines=[];
-  const ls=13;
-  for(let y=80;y<H-60;y+=ls){
-    const ind=28+Math.random()*55;
-    const lw=Math.random()*(W-ind-60)+80;
-    const isHdr=Math.random()<0.055;
-    const isInd=Math.random()<0.18;
-    docLines.push({y,x:ind+(isInd?30:0),w:isInd?lw*0.72:lw,alpha:0.03+Math.random()*0.055,isHdr,isInd,hlActive:false,hlTimer:0,hlColor:Math.random()<0.55?'mid':'red',phase:Math.random()*Math.PI*2});
+const wglCanvas=document.getElementById('webgl-canvas');
+let gl=null,glProgram=null,glUniforms={},glScrollVel=0,glMouseDist=1.0;
+if(!reducedMotion){try{gl=wglCanvas.getContext('webgl')||wglCanvas.getContext('experimental-webgl');}catch(_){}}
+if(gl){
+  const vsrc=`attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+  const fsrc=`precision mediump float;
+  uniform vec2 u_res;uniform float u_time,u_scroll_vel,u_mouse_dist;
+  void main(){
+    vec2 uv=(gl_FragCoord.xy/u_res)*2.0-1.0;float d=length(uv);
+    float ab=0.004*(1.0-u_mouse_dist)*0.5+0.001*abs(u_scroll_vel);
+    vec3 col=vec3(0.0);
+    col.r=sin(d*6.0+u_time)*ab*2.5;
+    col.g=cos(d*6.0-u_time*0.7)*ab*0.5;
+    col.b=sin(d*6.0+u_time)*ab*0.3;
+    float rf=0.003*sin(uv.x*6.28+u_time*0.8)*u_mouse_dist;
+    col.r+=rf*2.0;col.g+=rf*0.5;
+    gl_FragColor=vec4(col,0.2*(1.0-smoothstep(0.5,1.0,d)));
+  }`;
+  function cs(type,src){
+    const s=gl.createShader(type);
+    gl.shaderSource(s,src);
+    gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){
+      console.warn('Shader compile error:',gl.getShaderInfoLog(s));
+      gl.deleteShader(s);
+      return null;
+    }
+    return s;
   }
-  failureNodes=[];
-  for(let i=0;i<22;i++){
-    const sev=Math.random()<0.18?'critical':(Math.random()<0.45?'major':'minor');
-    failureNodes.push({x:55+Math.random()*(W-110),y:80+Math.random()*(H-140),r:sev==='critical'?3.5:sev==='major'?2.5:1.8,alpha:0,targetAlpha:sev==='critical'?0.9:sev==='major'?0.7:0.5,sev,active:false,activateAt:1+Math.random()*14,phase:Math.random()*Math.PI*2});
+  const vs=cs(gl.VERTEX_SHADER,vsrc),fs=cs(gl.FRAGMENT_SHADER,fsrc);
+  if(vs&&fs){
+    glProgram=gl.createProgram();
+    gl.attachShader(glProgram,vs);gl.attachShader(glProgram,fs);
+    gl.linkProgram(glProgram);
+    if(!gl.getProgramParameter(glProgram,gl.LINK_STATUS)){
+      console.warn('WebGL program link error:',gl.getProgramInfoLog(glProgram));
+      glProgram=null;
+    } else {
+      gl.useProgram(glProgram);
+      const buf=gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+      const loc=gl.getAttribLocation(glProgram,'a_pos');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+      glUniforms.res=gl.getUniformLocation(glProgram,'u_res');
+      glUniforms.time=gl.getUniformLocation(glProgram,'u_time');
+      glUniforms.scrollVel=gl.getUniformLocation(glProgram,'u_scroll_vel');
+      glUniforms.mouseDist=gl.getUniformLocation(glProgram,'u_mouse_dist');
+      gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+    }
   }
 }
-function scheduleHl(){if(Math.random()<0.012){const l=docLines[Math.floor(Math.random()*docLines.length)];if(!l.hlActive){l.hlActive=true;l.hlTimer=0;}}}
-function drawDocField(){
-  dc.clearRect(0,0,W,H);
-  const bg=dc.createLinearGradient(0,0,W,H);
-  if(isLight()){
-    bg.addColorStop(0,'rgba(248,248,248,1)');
-    bg.addColorStop(0.5,'rgba(245,245,245,1)');
-    bg.addColorStop(1,'rgba(248,248,248,1)');
-  }else{
-    bg.addColorStop(0,'rgba(1,1,1,1)');
-    bg.addColorStop(0.5,'rgba(10,5,4,1)');
-    bg.addColorStop(1,'rgba(1,1,1,1)');
-  }
-  dc.fillStyle=bg;dc.fillRect(0,0,W,H);
-  if(mouse.x>-100){
-    const mg=dc.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,280);
-    mg.addColorStop(0,isLight()?'rgba(184,134,11,0.08)':'rgba(92,72,65,0.08)');
-    mg.addColorStop(0.5,isLight()?'rgba(139,101,8,0.03)':'rgba(65,51,46,0.03)');
-    mg.addColorStop(1,'transparent');
-    dc.fillStyle=mg;dc.fillRect(0,0,W,H);
-  }
-  const sx=getSeamX();
-  const sg=dc.createLinearGradient(sx-55,0,sx+55,0);
-  sg.addColorStop(0,'transparent');
-  sg.addColorStop(0.5,isLight()?`rgba(184,134,11,${0.06+0.03*Math.sin(t*0.5)})`:`rgba(92,72,65,${0.06+0.03*Math.sin(t*0.5)})`);
-  sg.addColorStop(1,'transparent');
-  dc.fillStyle=sg;dc.globalAlpha=0.8;dc.fillRect(sx-55,0,110,H);dc.globalAlpha=1;
-  scanPhase+=0.003;scanPhase2+=0.007;
-  const sY=((Math.sin(scanPhase)*0.5+0.5)*H);
-  const sY2=((Math.cos(scanPhase2)*0.5+0.5)*H);
-  const sGrad=dc.createLinearGradient(0,sY-3,0,sY+3);
-  sGrad.addColorStop(0,'transparent');
-  sGrad.addColorStop(0.5,isLight()?'rgba(184,134,11,0.25)':'rgba(92,72,65,0.25)');
-  sGrad.addColorStop(1,'transparent');
-  dc.fillStyle=sGrad;dc.fillRect(0,sY-3,W,6);
-  const sGrad2=dc.createLinearGradient(0,sY2-2,0,sY2+2);
-  sGrad2.addColorStop(0,'transparent');
-  sGrad2.addColorStop(0.5,isLight()?'rgba(192,57,43,0.12)':'rgba(70,0,2,0.12)');
-  sGrad2.addColorStop(1,'transparent');
-  dc.fillStyle=sGrad2;dc.fillRect(0,sY2-2,W,4);
-  scheduleHl();
-  docLines.forEach(l=>{
-    const prox=Math.max(0,1-Math.abs(l.y-mouse.y)/80)*0.05;
-    const scanP=Math.max(0,1-Math.abs(l.y-sY)/28)*0.12;
-    if(l.hlActive){
-      l.hlTimer+=0.04;
-      const hA=Math.max(0,1-l.hlTimer/1.8);
-      const hC=l.hlColor==='mid'?(isLight()?'rgba(184,134,11,':'rgba(92,72,65,'):(isLight()?'rgba(192,57,43,':'rgba(70,0,2,');
-      dc.fillStyle=hC+(hA*0.11)+')';dc.globalAlpha=1;dc.fillRect(l.x-4,l.y-5,l.w+8,10);
-      dc.fillStyle=hC+(hA*0.65)+')';dc.fillRect(l.x,l.y,l.w*Math.min(1,l.hlTimer*0.8),1);
-      if(l.hlTimer>1.8){l.hlActive=false;l.hlTimer=0;}
-    }
-    dc.globalAlpha=l.alpha+prox+scanP;
-    if(l.isHdr){
-      dc.fillStyle=isLight()?'rgba(139,101,8,0.6)':'rgba(182,160,150,0.6)';
-      dc.fillRect(l.x,l.y,l.w*0.46,1.5);
-      dc.fillStyle=isLight()?'rgba(139,101,8,0.45)':'rgba(65,51,46,0.45)';
-      dc.beginPath();dc.arc(l.x-8,l.y+0.5,2,0,Math.PI*2);dc.fill();
-    }else if(l.isInd){
-      dc.fillStyle=isLight()?'rgba(139,101,8,0.32)':'rgba(65,51,46,0.32)';
-      dc.fillRect(l.x,l.y,l.w,0.7);
-    }else{
-      dc.fillStyle=isLight()?'rgba(100,100,100,0.4)':'rgba(131,109,101,0.4)';
-      dc.fillRect(l.x,l.y,l.w,0.8);
-    }
-  });
-  failureNodes.forEach(n=>{
-    if(!n.active&&t>n.activateAt)n.active=true;
-    if(!n.active)return;
-    n.alpha=Math.min(n.targetAlpha,n.alpha+0.004);
-    const pulse=0.5+0.5*Math.sin(t*1.8+n.phase);
-    const col=n.sev==='critical'?(isLight()?'#c0392b':'#460002'):n.sev==='major'?(isLight()?'#8b6508':'#5C4841'):(isLight()?'#666666':'#B6A096');
-    dc.globalAlpha=n.alpha*(0.7+0.3*pulse);
-    dc.fillStyle=col;dc.shadowColor=col;dc.shadowBlur=n.sev==='critical'?14:8;
-    dc.beginPath();dc.arc(n.x,n.y,n.r,0,Math.PI*2);dc.fill();
-    dc.globalAlpha=n.alpha*pulse*0.22;dc.strokeStyle=col;dc.lineWidth=0.8;
-    dc.beginPath();dc.arc(n.x,n.y,n.r+4+pulse*4,0,Math.PI*2);dc.stroke();
-    dc.shadowBlur=0;
-  });
-  dc.lineWidth=0.5;
-  for(let i=0;i<failureNodes.length;i++){
-    if(!failureNodes[i].active)continue;
-    for(let j=i+1;j<failureNodes.length;j++){
-      if(!failureNodes[j].active)continue;
-      const d=Math.hypot(failureNodes[i].x-failureNodes[j].x,failureNodes[i].y-failureNodes[j].y);
-      if(d<130){
-        const isCrit=failureNodes[i].sev==='critical'||failureNodes[j].sev==='critical';
-        dc.globalAlpha=(1-d/130)*0.13*failureNodes[i].alpha;
-        dc.strokeStyle=isLight()?(isCrit?'rgba(192,57,43,0.8)':'rgba(139,101,8,0.7)'):(isCrit?'rgba(70,0,2,0.8)':'rgba(92,72,65,0.7)');
-        dc.beginPath();dc.moveTo(failureNodes[i].x,failureNodes[i].y);dc.lineTo(failureNodes[j].x,failureNodes[j].y);dc.stroke();
-      }
-    }
-  }
-  const active=failureNodes.filter(n=>n.active).length;
-  const crit=failureNodes.filter(n=>n.active&&n.sev==='critical').length;
-  if(active>0){
-    dc.globalAlpha=0.16;dc.font="9px 'JetBrains Mono',monospace";
-    dc.fillStyle=crit>0?(isLight()?'#c0392b':'#460002'):(isLight()?'#8b6508':'#B6A096');
-    dc.textAlign='left';
-    dc.fillText(`∂ SCAN ACTIVE · ${active} NODES · ${crit} CRITICAL`,22,H-22);
-  }
-  dc.globalAlpha=1;dc.shadowBlur=0;
-}
 
+const symCanvas=document.getElementById('symbol-canvas');
+const ctx=symCanvas.getContext('2d');
 const SYMS=['∇','Σ','∫','∂','λ','⊕','⊗','∈','∀','∃','⊢','⊨','→','↔','∧','∨','¬','≡','≈','≠','≤','≥','∞','∝','Δ','Π','Ω','α','β','γ','δ','ε','θ','μ','σ','φ','ψ','ω','∄','⁂','◈'];
-const MCOLS_DARK=['#5C4841','#836D65','#41332E','#B6A096','#460002'];
-const MCOLS_LIGHT=['#b8860b','#8b6508','#444444','#111111','#666666'];
-const GR=180,GS=0.018,TG=0.22,SR=120,SS=0.004;
+const DARK_COLS=['#5C4841','#836D65','#41332E','#B6A096','#460002'];
+const LIGHT_COLS=['#b8860b','#8b6508','#444444','#111111','#666666'];
+let W,H,symbols=[],echoes=[];
+const mouse={x:null,y:null,vx:0,vy:0,prevX:null,prevY:null};
+const GR=200,GS=0.015,TG=0.18;
 const PFPS=lowDevice?30:60,PDT=1000/PFPS;
-let symbols=[],echoes=[],seamParticles=[];
-function getMCOLS(){return isLight()?MCOLS_LIGHT:MCOLS_DARK;}
-function initSymbols(){
-  symbols=[];
-  const n=Math.floor((W*H)/7000);
-  const cols=getMCOLS();
-  for(let i=0;i<n;i++)symbols.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,size:11+Math.random()*18,alpha:0.10+Math.random()*0.20,inWell:false,seamGlow:0,scrollGlow:0,phase:Math.random()*Math.PI*2,origX:0,origY:0,targetX:0,targetY:0,color:cols[Math.floor(Math.random()*cols.length)]});
+let isCollapsing=false,collapsePhase=0,collapseStart=0,holdTO=null;
+
+function isLight(){ return document.body.classList.contains('light'); }
+function getColors(){ return isLight() ? LIGHT_COLS : DARK_COLS; }
+
+function resizeCanvas(){
+  W=symCanvas.width=wglCanvas.width=window.innerWidth;
+  H=symCanvas.height=wglCanvas.height=window.innerHeight;
+  if(gl&&glProgram)gl.viewport(0,0,W,H);
+  initSymbols();
 }
-function updateSymbols(){
-  mouse.vx=mouse.x-mouse.prevX;mouse.vy=mouse.y-mouse.prevY;mouse.prevX=mouse.x;mouse.prevY=mouse.y;
-  const seamX=getSeamX();
-  symbols.forEach(s=>{
-    s.x+=s.vx;s.y+=s.vy;
-    if(s.x<-40)s.x=W+40;if(s.x>W+40)s.x=-40;if(s.y<-40)s.y=H+40;if(s.y>H+40)s.y=-40;
-    if(mouse.x>-100){const dx=s.x-mouse.x,dy=s.y-mouse.y,d=Math.hypot(dx,dy);if(d<GR&&d>1){const f=GS*(1-d/GR),a=Math.atan2(dy,dx);s.vx-=Math.cos(a)*f;s.vy-=Math.sin(a)*f;const ta=a+Math.PI/2,sp=TG*(1-d/GR);s.vx+=Math.cos(ta)*sp*(mouse.vx*.04+.5);s.vy+=Math.sin(ta)*sp*(mouse.vy*.04+.5);s.vx*=.985;s.vy*=.985;s.inWell=true;}else{s.inWell=false;s.vx*=.998;s.vy*=.998;}}else{s.inWell=false;}
-    const sdx=seamX-s.x,sd=Math.abs(sdx);
-    if(sd<SR&&s.y<H*1.2){const sf=SS*(1-sd/SR);s.vx+=Math.sign(sdx)*sf*.3;s.vy-=sf*.15;s.seamGlow=Math.max(s.seamGlow,1-sd/SR);}else{s.seamGlow*=.95;}
-    if(s.scrollGlow>0.01)s.scrollGlow*=.93;else s.scrollGlow=0;
+let rT=null;
+window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(resizeCanvas,150);});
+
+function rc(){ const cols=getColors(); return cols[Math.floor(Math.random()*cols.length)]; }
+function initSymbols(){
+  const n=Math.floor((W*H)/7000);symbols=[];
+  for(let i=0;i<n;i++)symbols.push({
+    char:SYMS[Math.floor(Math.random()*SYMS.length)],
+    x:Math.random()*W,y:Math.random()*H,
+    vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,
+    size:10+Math.random()*18,color:rc(),
+    alpha:0.1+Math.random()*0.2,scrollGlow:0,inWell:false,
+    origX:0,origY:0,targetX:0,targetY:0
   });
 }
 function spawnEcho(x,y){
-  const cols=getMCOLS();
-  for(let i=0;i<10;i++){
-    const a=(Math.PI*2*i)/10+Math.random()*.4,sp=1.5+Math.random()*2.5;
-    echoes.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:9+Math.random()*8,color:cols[Math.floor(Math.random()*cols.length)],alpha:0.8,age:0,maxAge:500});
+  for(let i=0;i<12;i++){
+    const a=(Math.PI*2*i)/12+Math.random()*.3,sp=1.5+Math.random()*2.5;
+    echoes.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x,y,
+      vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,size:8+Math.random()*8,
+      color:rc(),alpha:0.8,age:0,maxAge:600});
   }
 }
-function updateEchoes(){echoes=echoes.filter(e=>{e.age+=16;if(e.age>=e.maxAge)return false;e.x+=e.vx;e.y+=e.vy;e.alpha=0.8*(1-e.age/e.maxAge);e.vx*=.97;e.vy*=.97;return true;});}
-function spawnSeamP(){if(Math.random()>.18)return;const sx=getSeamX()+(Math.random()-.5)*3;seamParticles.push({x:sx,y:H+10,vy:-(0.4+Math.random()*.8),alpha:0.5+Math.random()*.4,size:0.8+Math.random()*1.6,hue:Math.random()>.5?'mid':'peri'});}
-function updateSeamP(){seamParticles=seamParticles.filter(p=>{p.y+=p.vy;p.alpha*=.993;return p.y>-10&&p.alpha>.02;});if(seamParticles.length<55)spawnSeamP();}
-function drawSymbols(){
-  sc.clearRect(0,0,W,H);
-  echoes.forEach(e=>{
-    sc.globalAlpha=e.alpha;
-    sc.font=`${e.size}px 'JetBrains Mono',monospace`;
-    sc.textAlign='center';sc.textBaseline='middle';
-    sc.shadowColor=e.color;sc.shadowBlur=12;sc.fillStyle=e.color;
-    sc.fillText(e.char,e.x,e.y);
-  });
-  symbols.forEach(s=>{
-    const sb=s.seamGlow*.5,glow=s.scrollGlow>.01?14+s.scrollGlow*18:s.inWell?22:s.seamGlow>.1?18+s.seamGlow*14:9;
-    sc.font=`${s.size}px 'JetBrains Mono',monospace`;
-    sc.textAlign='center';sc.textBaseline='middle';
-    const ss2=s.seamGlow>.3,isMid=Math.sin(t*.3+s.phase)>0;
-    sc.shadowColor=ss2?(isLight()?'#b8860b':'#B6A096'):isMid?(isLight()?'#8b6508':'#B6A096'):(isLight()?'#666666':'#5C4841');
-    sc.shadowBlur=glow;
-    const a=Math.min(0.85,s.alpha+s.scrollGlow*.2+sb);
-    sc.fillStyle=ss2?(isLight()?'rgba(184,134,11,':'rgba(182,160,150,'):isMid?(isLight()?'rgba(139,101,8,':'rgba(182,160,150,'):(isLight()?'rgba(68,68,68,':'rgba(92,72,65,');
-    sc.fillStyle+=a.toFixed(3)+')';
-    sc.globalAlpha=1;
-    sc.fillText(s.char,s.x,s.y);
-  });
-  seamParticles.forEach(p=>{
-    sc.globalAlpha=p.alpha;sc.shadowBlur=6;
-    sc.shadowColor=p.hue==='mid'?(isLight()?'#b8860b':'#B6A096'):(isLight()?'#8b6508':'#5C4841');
-    sc.fillStyle=p.hue==='mid'?(isLight()?'#b8860b':'#B6A096'):(isLight()?'#8b6508':'#5C4841');
-    sc.beginPath();sc.arc(p.x,p.y,p.size,0,Math.PI*2);sc.fill();
-  });
-  sc.shadowBlur=0;sc.globalAlpha=1;
-}
 
-let isCollapsing=false,collapsePhase=0,collapseStart=0;
-const SNAP=1500,HOLD=800,EXPLODE=600;let holdTO=null;
 function triggerCollapse(){
   if(isCollapsing)return;isCollapsing=true;collapsePhase=1;collapseStart=performance.now();
   const lat=[],hW=60,hH=hW*Math.sqrt(3)/2;
@@ -597,46 +698,202 @@ function triggerCollapse(){
 }
 function stepCollapse(now){
   if(!isCollapsing)return;const el=now-collapseStart;
-  if(collapsePhase===1){const p=Math.min(el/SNAP,1),tt=1-Math.pow(1-p,3);symbols.forEach(s=>{s.x=s.origX+(s.targetX-s.origX)*tt;s.y=s.origY+(s.targetY-s.origY)*tt;s.vx=0;s.vy=0;s.alpha=0.1+0.38*p;});if(p>=1){collapsePhase=2;collapseStart=now;clearTimeout(holdTO);holdTO=setTimeout(()=>{if(!isCollapsing)return;collapsePhase=3;collapseStart=performance.now();symbols.forEach(s=>{const a=Math.random()*Math.PI*2,sp=3+Math.random()*4;s.vx=Math.cos(a)*sp;s.vy=Math.sin(a)*sp;s.alpha=0.65;});spawnEcho(W/2,H/2);},HOLD);}}
-  else if(collapsePhase===3){const p=Math.min(el/EXPLODE,1);symbols.forEach(s=>{s.alpha=0.1+0.22*(1-p);s.vx*=.98;s.vy*=.98;});if(p>=1){isCollapsing=false;collapsePhase=0;symbols.forEach(s=>{s.vx=(Math.random()-.5)*.25;s.vy=(Math.random()-.5)*.25;s.alpha=0.10+Math.random()*.20;});}}
+  if(collapsePhase===1){
+    const p=Math.min(el/1500,1),tt=1-Math.pow(1-p,3);
+    symbols.forEach(s=>{s.x=s.origX+(s.targetX-s.origX)*tt;s.y=s.origY+(s.targetY-s.origY)*tt;s.vx=0;s.vy=0;s.alpha=0.15+0.35*p;s.color=isLight()?'#8b6508':'#836D65';});
+    if(p>=1){
+      collapsePhase=2;collapseStart=now;clearTimeout(holdTO);
+      holdTO=setTimeout(()=>{
+        if(!isCollapsing)return;collapsePhase=3;collapseStart=performance.now();
+        symbols.forEach(s=>{const a=Math.random()*Math.PI*2,sp=3+Math.random()*4;s.vx=Math.cos(a)*sp;s.vy=Math.sin(a)*sp;s.color=isLight()?'#c0392b':'#460002';s.alpha=0.6;});
+        spawnEcho(W/2,H/2);
+      },800);
+    }
+  } else if(collapsePhase===3){
+    const p=Math.min(el/600,1);
+    symbols.forEach(s=>{s.alpha=0.15+0.25*(1-p);s.vx*=0.98;s.vy*=0.98;});
+    if(p>=1){isCollapsing=false;collapsePhase=0;symbols.forEach(s=>{s.vx=(Math.random()-.5)*.2;s.vy=(Math.random()-.5)*.2;s.color=rc();});}
+  }
 }
 
 let lastPT=0;
-function loop(ts){
-  t+=0.016;
-  if(ts-lastPT>=PDT){lastPT=ts;if(isCollapsing)stepCollapse(ts);else updateSymbols();updateEchoes();updateSeamP();}
-  drawDocField();drawSymbols();
-  requestAnimationFrame(loop);
+function updatePhysics(now){
+  if(now-lastPT<PDT)return;lastPT=now;
+  if(mouse.prevX!==null&&mouse.x!==null){mouse.vx=mouse.x-mouse.prevX;mouse.vy=mouse.y-mouse.prevY;}
+  if(mouse.x!==null){mouse.prevX=mouse.x;mouse.prevY=mouse.y;}
+  if(isCollapsing){stepCollapse(now);return;}
+  symbols.forEach(s=>{
+    s.x+=s.vx;s.y+=s.vy;
+    if(s.x<-50)s.x=W+50;if(s.x>W+50)s.x=-50;if(s.y<-50)s.y=H+50;if(s.y>H+50)s.y=-50;
+    if(mouse.x!==null){
+      const dx=s.x-mouse.x,dy=s.y-mouse.y,d=Math.hypot(dx,dy);
+      if(d<GR){
+        const f=GS*(1-d/GR),a=Math.atan2(dy,dx);
+        s.vx-=Math.cos(a)*f;s.vy-=Math.sin(a)*f;
+        const ta=a+Math.PI/2,sp=TG*(1-d/GR);
+        s.vx+=Math.cos(ta)*sp*(mouse.vx*.05+.5);s.vy+=Math.sin(ta)*sp*(mouse.vy*.05+.5);
+        s.vx*=.99;s.vy*=.99;s.inWell=true;
+        glMouseDist=Math.min(glMouseDist,d/GR);
+      } else s.inWell=false;
+    }
+    if(s.scrollGlow>.01)s.scrollGlow*=.94;else s.scrollGlow=0;
+  });
+  glMouseDist=Math.min(1,glMouseDist+.02);
 }
 
-function resize(){W=docCanvas.width=symCanvas.width=window.innerWidth;H=docCanvas.height=symCanvas.height=window.innerHeight;buildDocField();initSymbols();}
-let rT;window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(resize,150);});
+function render(){
+  ctx.clearRect(0,0,W,H);
+  echoes=echoes.filter(e=>{
+    e.age+=PDT;if(e.age>=e.maxAge)return false;
+    e.x+=e.vx;e.y+=e.vy;e.alpha=0.8*(1-e.age/e.maxAge);
+    ctx.font=`${e.size}px 'JetBrains Mono',monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor=e.color;ctx.shadowBlur=12;ctx.fillStyle=e.color;ctx.globalAlpha=e.alpha;
+    ctx.fillText(e.char,e.x,e.y);return true;
+  });
+  symbols.forEach(s=>{
+    const g=s.scrollGlow>.01?15+s.scrollGlow*20:(s.inWell?28:10);
+    ctx.font=`${s.size}px 'JetBrains Mono',monospace`;ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.shadowColor=s.color;ctx.shadowBlur=g;ctx.fillStyle=s.color;
+    ctx.globalAlpha=s.alpha+s.scrollGlow*.2;ctx.fillText(s.char,s.x,s.y);
+  });
+  ctx.shadowBlur=0;ctx.globalAlpha=1;
+}
 
-window.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){mouse.x=e.clientX;mouse.y=e.clientY;}});
-window.addEventListener('pointerleave',()=>{mouse.x=-9999;mouse.y=-9999;});
-window.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;spawnEcho(e.clientX,e.clientY);const near=failureNodes.find(n=>Math.hypot(n.x-e.clientX,n.y-e.clientY)<50&&!n.active);if(near){near.active=true;near.alpha=near.targetAlpha;}});
-window.addEventListener('dblclick',e=>{const tag=e.target.tagName.toLowerCase();const inter=['a','button','input','select','textarea'].includes(tag)||e.target.closest('a')||e.target.closest('button')||e.target.closest('.cta-btn')||e.target.closest('.portfolio-link');if(!inter)triggerCollapse();});
-window.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='Q'){e.preventDefault();triggerCollapse();}});
-let stimer;window.addEventListener('scroll',()=>{const sy=window.scrollY;symbols.forEach(s=>{if(Math.abs(s.y-(sy+H/2))<180)s.scrollGlow=1.0;});clearTimeout(stimer);stimer=setTimeout(()=>symbols.forEach(s=>s.scrollGlow=0),300);},{passive:true});
+function renderWebGL(t){
+  if(!gl||!glProgram)return;
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.uniform2f(glUniforms.res,W,H);gl.uniform1f(glUniforms.time,t*.001);
+  gl.uniform1f(glUniforms.scrollVel,glScrollVel);gl.uniform1f(glUniforms.mouseDist,glMouseDist);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
 
-const hamburger=document.getElementById('hamburger'),mobileNav=document.getElementById('mobileNav');let navOpen=false;
-if(hamburger&&mobileNav){document.querySelectorAll('.nav-links a').forEach((link,i)=>{const a=document.createElement('a');a.href=link.getAttribute('href');a.textContent=link.textContent;if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));if(link.classList.contains('active'))a.classList.add('active');a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);});
-function openMenu(){navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);}
-function closeMenu(){navOpen=false;mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');document.body.style.overflow='';hamburger.focus();}
-hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navOpen)closeMenu();});mobileNav.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const f=Array.from(mobileNav.querySelectorAll('a'));if(!f.length)return;if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f[f.length-1].focus();}else if(!e.shiftKey&&document.activeElement===f[f.length-1]){e.preventDefault();f[0].focus();}});}
+function loop(t){updatePhysics(t);render();renderWebGL(t);requestAnimationFrame(loop);}
+
+window.addEventListener('pointermove',e=>{
+  if(e.pointerType==='mouse'){mouse.x=e.clientX;mouse.y=e.clientY;}
+},{passive:true});
+document.addEventListener('pointerleave',()=>{
+  mouse.x=null;mouse.y=null;mouse.prevX=null;mouse.prevY=null;
+});
+window.addEventListener('pointerdown',e=>{
+  if(e.pointerType!=='mouse')return;spawnEcho(e.clientX,e.clientY);
+});
+window.addEventListener('dblclick',e=>{
+  const tag=e.target.tagName.toLowerCase();
+  const inter=['a','button','input'].includes(tag)||e.target.closest('a')||e.target.closest('button')||e.target.closest('.modal-overlay');
+  if(inter)return;triggerCollapse();spawnEcho(e.clientX,e.clientY);
+});
+window.addEventListener('keydown',e=>{
+  if(e.ctrlKey&&e.shiftKey&&e.key==='Q'){e.preventDefault();triggerCollapse();}
+});
+
+let lastSY=window.scrollY,scrollTO=null;
+window.addEventListener('scroll',()=>{
+  const sy=window.scrollY;glScrollVel=Math.abs(sy-lastSY)/60;lastSY=sy;
+  symbols.forEach(s=>{if(Math.abs(s.y-(sy+H/2))<200)s.scrollGlow=1.0;});
+  clearTimeout(scrollTO);
+  scrollTO=setTimeout(()=>{
+    symbols.forEach(s=>s.scrollGlow=0);
+    glScrollVel=0;
+  },300);
+},{passive:true});
+
+let scrollLockCount=0;
+function lockScroll(){if(++scrollLockCount===1)document.body.style.overflow='hidden';}
+function unlockScroll(){if(--scrollLockCount<=0){scrollLockCount=0;document.body.style.overflow='';}}
+
+function trapFocus(modal){
+  const focusable=modal.querySelectorAll('button,a,[tabindex]:not([tabindex="-1"])');
+  if(!focusable.length)return;
+  const first=focusable[0],last=focusable[focusable.length-1];
+  modal._trap=(e)=>{
+    if(e.key!=='Tab')return;
+    if(e.shiftKey){if(document.activeElement===first){e.preventDefault();last.focus();}}
+    else{if(document.activeElement===last){e.preventDefault();first.focus();}}
+  };
+  modal.addEventListener('keydown',modal._trap);
+}
+function releaseTrap(modal){
+  if(modal._trap){modal.removeEventListener('keydown',modal._trap);delete modal._trap;}
+}
+
+function openModal(id){
+  const m=document.getElementById(id);if(!m)return;
+  m.classList.add('active');
+  lockScroll();
+  trapFocus(m);
+  setTimeout(()=>{const f=m.querySelector('button,a,[tabindex]');if(f)f.focus();},50);
+}
+function closeModal(id){
+  const m=document.getElementById(id);if(!m)return;
+  releaseTrap(m);
+  m.classList.remove('active');
+  unlockScroll();
+}
+document.querySelectorAll('[data-modal]').forEach(t=>t.addEventListener('click',()=>openModal(t.getAttribute('data-modal'))));
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeModal(b.getAttribute('data-close'))));
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id);}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.active').forEach(m=>closeModal(m.id));});
 
 let audioCtx=null,audioOn=false;
 const aToggle=document.getElementById('audio-toggle');
-function initAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audioCtx=new AC();const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.055,audioCtx.currentTime);const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=280;filter.Q.value=0.8;const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(38,audioCtx.currentTime);const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(76.4,audioCtx.currentTime);const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.1,audioCtx.currentTime);osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc1.start();osc2.start();window.addEventListener('pagehide',()=>{try{audioCtx.close();}catch(_){}},{once:true});}
-if(aToggle){aToggle.addEventListener('click',()=>{audioOn=!audioOn;aToggle.setAttribute('aria-pressed',String(audioOn));if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}});}
+function initAudio(){
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  audioCtx=new AC();
+  const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.055,audioCtx.currentTime);
+  const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=300;filter.Q.value=0.6;
+  const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(38,audioCtx.currentTime);
+  const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(76.4,audioCtx.currentTime);
+  const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.1,audioCtx.currentTime);
+  osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);
+  osc1.start();osc2.start();
+  window.addEventListener('pagehide',()=>{try{if(audioCtx)audioCtx.close();}catch(_){}},{once:true});
+}
+if(aToggle){
+  aToggle.addEventListener('click',()=>{
+    audioOn=!audioOn;aToggle.setAttribute('aria-pressed',String(audioOn));
+    if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}
+    else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}
+  });
+}
 
+const hamburger=document.getElementById('hamburger'),mobileNav=document.getElementById('mobileNav');
+let navOpen=false;
+if(hamburger&&mobileNav){
+  document.querySelectorAll('.nav-links a').forEach((link,i)=>{
+    const a=document.createElement('a');
+    a.href=link.getAttribute('href');a.textContent=link.textContent;
+    if(link.getAttribute('target'))a.setAttribute('target',link.getAttribute('target'));
+    if(link.getAttribute('rel'))a.setAttribute('rel',link.getAttribute('rel'));
+    if(link.classList.contains('active'))a.classList.add('active');
+    a.style.transitionDelay=`${i*30}ms`;mobileNav.appendChild(a);
+  });
+  function openMenu(){
+    navOpen=true;mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');
+    hamburger.classList.add('open');hamburger.setAttribute('aria-expanded','true');
+    lockScroll();
+    setTimeout(()=>{const f=mobileNav.querySelector('a');if(f)f.focus();},100);
+  }
+  function closeMenu(){
+    navOpen=false;mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');
+    hamburger.classList.remove('open');hamburger.setAttribute('aria-expanded','false');
+    unlockScroll();hamburger.focus();
+  }
+  hamburger.addEventListener('click',()=>navOpen?closeMenu():openMenu());
+  mobileNav.addEventListener('click',e=>{if(e.target.tagName==='A')closeMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navOpen)closeMenu();});
+}
+
+const yearSpan=document.getElementById('copyright-year');
+if(yearSpan)yearSpan.textContent=new Date().getFullYear();
+
+// Theme toggle
 const themeToggle=document.getElementById('theme-toggle');
 if(themeToggle){
   themeToggle.addEventListener('click',()=>{
     document.body.classList.toggle('light');
     try{localStorage.setItem('aion-theme', document.body.classList.contains('light')?'light':'dark');}catch(e){}
     initSymbols();
-    buildDocField();
   });
   try{
     const saved=localStorage.getItem('aion-theme');
@@ -644,8 +901,12 @@ if(themeToggle){
   }catch(e){}
 }
 
-document.getElementById('copyright-year').textContent=new Date().getFullYear();
-if(!reducedMotion){resize();setTimeout(()=>symCanvas.classList.add('ready'),300);requestAnimationFrame(loop);}
+if(!reducedMotion){
+  resizeCanvas();
+  setTimeout(()=>{if(document.contains(symCanvas))symCanvas.classList.add('ready');},300);
+  requestAnimationFrame(loop);
+}
+
 })();
 </script>
 </body>
