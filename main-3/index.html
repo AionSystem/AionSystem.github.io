@@ -137,6 +137,21 @@ h1 em{display:block;font-style:normal;background:linear-gradient(135deg,#f5f0eb,
 .proof-item-count{font-family:var(--display);font-size:28px;font-weight:700;color:var(--text);}
 .proof-item-desc{font-family:var(--body);font-size:12px;font-weight:300;color:var(--text-mid);line-height:1.6;margin-top:4px;}
 
+.tool-ad{background:var(--surface);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:16px;max-width:720px;margin:0 auto 48px;position:relative;overflow:hidden;box-shadow:var(--glow);}
+.tool-ad::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--mid),var(--accent),var(--mid),transparent);opacity:0.7;}
+.tool-ad-toggle{width:100%;display:flex;align-items:center;gap:16px;padding:20px 24px;background:transparent;border:none;cursor:pointer;text-align:left;font:inherit;color:inherit;transition:background 0.2s var(--ease);}
+.tool-ad-toggle:hover,.tool-ad-toggle:focus-visible{background:rgba(92,72,65,0.07);outline:none;}
+.tool-ad-badge{flex-shrink:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#000;background:var(--accent);padding:5px 10px;border-radius:20px;font-weight:600;}
+.tool-ad-title{flex:1;font-family:var(--body);font-size:14px;color:var(--text);font-weight:500;line-height:1.4;}
+.tool-ad-chevron{flex-shrink:0;font-family:var(--mono);font-size:20px;line-height:1;color:var(--mid-l);transition:transform 0.3s var(--ease);}
+.tool-ad-toggle[aria-expanded="true"] .tool-ad-chevron{transform:rotate(45deg);}
+.tool-ad-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.4s var(--ease);}
+.tool-ad-panel.open{grid-template-rows:1fr;}
+.tool-ad-panel-inner{overflow:hidden;}
+.tool-ad-body{padding:4px 24px 24px;border-top:1px solid var(--border);margin-top:4px;padding-top:16px;}
+.tool-ad-body p{font-family:var(--body);font-size:13px;font-weight:300;color:var(--text-mid);line-height:1.7;margin-bottom:16px;}
+.tool-ad-body .cta-btn{font-size:11px;}
+
 .section-block{max-width:900px;margin:0 auto 48px;}
 .section-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
 .section-num{font-family:var(--mono);font-size:11px;color:var(--peri-l);letter-spacing:2px;}
@@ -283,6 +298,23 @@ footer{position:relative;z-index:3;border-top:1px solid var(--border);padding:32
   <!-- NEW: Portfolio prominent link (Task #9) -->
   <div style="text-align:center;margin-top:-20px;margin-bottom:32px;">
     <a href="/main-3/portfolio/" class="cta-btn">Download the Reports · Verify Every Finding →</a>
+  </div>
+
+  <!-- NEW: Free tool advertisement (AION Scaffold) -->
+  <div class="tool-ad">
+    <button type="button" class="tool-ad-toggle" id="toolAdToggle" aria-expanded="false" aria-controls="toolAdBody">
+      <span class="tool-ad-badge">New · Free Tool</span>
+      <span class="tool-ad-title">AION Scaffold — paste a file tree, get the real folder structure back.</span>
+      <span class="tool-ad-chevron" aria-hidden="true">+</span>
+    </button>
+    <div class="tool-ad-panel" id="toolAdPanel">
+      <div class="tool-ad-panel-inner">
+        <div class="tool-ad-body" id="toolAdBody" inert>
+          <p>Paste a file tree — or point it at a real local folder — and AION Scaffold builds the matching folders and files instantly, ready to download as a ZIP, a shell script, or a plain tree file. It ships with the exact folder structure used in every AionSystem report tier, so it also doubles as a quick way to see what a Tier 1–6 deliverable actually contains. Runs entirely in your browser: nothing you paste is ever uploaded anywhere.</p>
+          <a href="https://aionsystem.github.io/AION-SCAFFOLDING" class="cta-btn primary" target="_blank" rel="noopener noreferrer">Try it here →</a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <section class="section-block">
@@ -581,6 +613,20 @@ if(themeToggle){
 
 const yearSpan=document.getElementById('copyright-year');
 if(yearSpan)yearSpan.textContent=new Date().getFullYear();
+
+// Free tool advertisement (AION Scaffold) — expand/collapse
+const toolAdToggle=document.getElementById('toolAdToggle');
+const toolAdPanel=document.getElementById('toolAdPanel');
+const toolAdBody=document.getElementById('toolAdBody');
+if(toolAdToggle&&toolAdPanel&&toolAdBody){
+  toolAdToggle.addEventListener('click',()=>{
+    const willOpen=toolAdToggle.getAttribute('aria-expanded')!=='true';
+    toolAdToggle.setAttribute('aria-expanded',String(willOpen));
+    toolAdPanel.classList.toggle('open',willOpen);
+    toolAdBody.toggleAttribute('inert',!willOpen);
+  });
+}
+
 if(!reducedMotion){resizeCanvas();setTimeout(()=>{if(document.contains(symCanvas))symCanvas.classList.add('ready');},300);requestAnimationFrame(loop);}
 })();
 </script>
