@@ -203,7 +203,7 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
   <li><a href="/main-3/portfolio/">Portfolio</a></li>
   <li><a href="/main-3/about/">About</a></li>
   <li><a href="/main-3/contact/">Contact</a></li>
-  <li><a href="/main-3/rules/" class="active">Rules</a></li>
+  <li><a href="/main-3/rules/?read=1" class="active">Rules</a></li>
   <li><a href="/main-3/terms/">Terms</a></li>
   <li><a href="/main-3/faq/">FAQ</a></li>
   <li><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
@@ -430,7 +430,7 @@ footer{border-top:1px solid var(--border);padding:32px 20px;max-width:1200px;mar
   <li><a href="/main-3/portfolio/">Portfolio</a></li>
   <li><a href="/main-3/about/">About</a></li>
   <li><a href="/main-3/contact/">Contact</a></li>
-  <li><a href="/main-3/rules/">Rules</a></li>
+  <li><a href="/main-3/rules/?read=1">Rules</a></li>
   <li><a href="/main-3/terms/">Terms</a></li>
   <li><a href="/main-3/privacy/">Privacy</a></li>
   <li><a href="/main-3/faq/">FAQ</a></li>
@@ -694,13 +694,19 @@ if (agreeBtn) {
     agreeBtn.textContent = 'Agreed ✓';
     agreeBtn.disabled = true;
     setTimeout(function(){
-      window.location.href = '/main-3/index.html';
+      window.location.href = '/main-3/';
     }, 600);
   });
 }
 
 try {
-  if (localStorage.getItem('aion-agreed') === 'true') {
+  const urlParams = new URLSearchParams(window.location.search);
+  const forceRead = urlParams.has('read');
+  if (localStorage.getItem('aion-agreed') === 'true' && !forceRead) {
+    // Auto-redirect to home if already agreed and not explicitly reading
+    window.location.replace('/main-3/');
+  } else if (localStorage.getItem('aion-agreed') === 'true') {
+    // Unlock nav and update button if explicitly reading
     document.getElementById('main-nav').classList.remove('nav-locked');
     if (agreeBtn) {
       agreeBtn.textContent = 'Agreed ✓';
