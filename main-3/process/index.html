@@ -125,6 +125,13 @@ section{position:relative;z-index:20;padding:60px 40px;max-width:1200px;margin:0
 .section-title{font-family:var(--display);font-size:var(--font-h2);font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);}
 .section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px rgba(92,72,65,0.15)}
 
+/* INTAKE STEPS */
+.intake-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:32px;max-width:860px;}
+.intake-step{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:12px;padding:24px;}
+.intake-step-num{font-family:var(--mono);font-size:11px;color:var(--mid-l);letter-spacing:2px;margin-bottom:8px;}
+.intake-step-title{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.intake-step-desc{font-family:var(--body);font-size:14px;color:var(--muted);line-height:1.6;}
+
 /* PIPELINE GRID */
 .pipeline-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
 .pipeline-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:12px;transition:all 0.35s var(--ease);position:relative;overflow:hidden;}
@@ -206,7 +213,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       "@type": "ListItem",
       "position": 2,
       "name": "Anvil",
-      "description": "First attack. Four frameworks loaded: PDE, PROPORTION, EPE, TDAF."
+      "description": "First attack. Frameworks loaded: OCTOPUS, PDE, PROPORTION, EPE, TDAF."
     },
     {
       "@type": "ListItem",
@@ -288,6 +295,25 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
     <p style="font-family:var(--body);font-size:1.1rem;color:var(--muted);max-width:640px;margin-bottom:24px">
       Send the document. Tell me what worries you. I'll confirm the scope, the tier, and the turnaround before any work begins. No ambiguity. No surprises. <strong>Minimum engagement $1,200. No discounts. No exceptions.</strong>
     </p>
+    
+    <!-- ADDED: Intake Sequence to close the CTA friction seam -->
+    <div class="intake-steps">
+      <div class="intake-step">
+        <div class="intake-step-num">01</div>
+        <div class="intake-step-title">Submit</div>
+        <div class="intake-step-desc">You send the document and state your primary concern or the specific adversary you are worried about.</div>
+      </div>
+      <div class="intake-step">
+        <div class="intake-step-num">02</div>
+        <div class="intake-step-title">Scope</div>
+        <div class="intake-step-desc">I review the artifact, confirm the correct service tier, and provide a fixed-price invoice with a delivery date.</div>
+      </div>
+      <div class="intake-step">
+        <div class="intake-step-num">03</div>
+        <div class="intake-step-title">Execute</div>
+        <div class="intake-step-desc">Upon payment, the pipeline begins. You receive the Findings Register and resolution text on the agreed date.</div>
+      </div>
+    </div>
   </section>
 
   <!-- CORE PIPELINE -->
@@ -312,7 +338,8 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
         <div class="pipeline-icon" aria-hidden="true">∂</div>
         <div class="pipeline-num">Workshop 02</div>
         <div class="pipeline-name">Anvil</div>
-        <div class="pipeline-desc">First attack. Four frameworks loaded: PDE, PROPORTION, EPE, TDAF. Every clause tested. Every assumption surfaced. Undefined terms flagged. Missing enforcement named.</div>
+        <!-- FIXED: Arithmetic mismatch. Changed "Four" to "Frameworks" to match the 5 tags below -->
+        <div class="pipeline-desc">First attack. Frameworks loaded: OCTOPUS, PDE, PROPORTION, EPE, TDAF. Every clause tested. Every assumption surfaced. Undefined terms flagged. Missing enforcement named.</div>
         <div class="pipeline-meta"><span>OCTOPUS v1.3</span><span>PDE v0.6</span><span>PROPORTION v1.2.2</span><span>EPE v0.4</span><span>Protocol v3.3</span></div>
       </div>
       <div class="pipeline-card core">
@@ -347,7 +374,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <p style="font-family:var(--body);font-size:1rem;color:var(--muted);margin-bottom:32px">
-      Before any document analysis begins, I build the prompts that drive the instruments. This is a separate, commissionable service for clients who need custom prompt architectures for their own AI‑assisted workflows. Five frameworks are loaded to construct, test, and harden the prompt system.
+      Before any document analysis begins, I build the prompts that drive the instruments. This is a separate, commissionable service for clients who need custom prompt architectures for their own AI‑assisted workflows. Five frameworks are loaded to construct, test, and harden the prompt system. <em>(Scoped and priced as a custom Framework Design engagement.)</em>
     </p>
     <div class="pipeline-grid">
       <div class="pipeline-card optional">
@@ -399,7 +426,8 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div style="overflow-x:auto">
         <table class="stack-table">
           <caption>Deliverables by Tier</caption>
-          <thead><tr><th scope="col">Deliverable</th><th scope="col">Standard</th><th scope="col">Certified</th><th scope="col">Gauntlet</th></tr></thead>
+          <!-- FIXED: Mapped table headers directly to Services page pricing tiers to eliminate ambiguity -->
+          <thead><tr><th scope="col">Deliverable</th><th scope="col">Core (Tiers 1–4)</th><th scope="col">FORGE (Tier 5)</th><th scope="col">Gauntlet (Tier 6)</th></tr></thead>
           <tbody>
             <tr><td>Findings Register</td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
             <tr><td>Severity Scoring (S1–S4)</td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
@@ -423,8 +451,9 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:24px;margin-bottom:32px">
-      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Targeted Pass</strong><span style="color:var(--peri-l);font-size:1.2rem">5 business days</span></div>
-      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Full Structural Review</strong><span style="color:var(--mid-l);font-size:1.2rem">10 business days</span></div>
+      <!-- FIXED: Renamed timeline labels to match Services page tiers -->
+      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Worth Time / Anvil</strong><span style="color:var(--peri-l);font-size:1.2rem">5–7 business days</span></div>
+      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Workshop / Multi-Pass</strong><span style="color:var(--mid-l);font-size:1.2rem">10–15 business days</span></div>
       <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">FORGE Certification</strong><span style="color:var(--amber);font-size:1.2rem">By agreement</span></div>
       <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Full Gauntlet</strong><span style="color:var(--red);font-size:1.2rem">By agreement</span></div>
     </div>
@@ -607,7 +636,7 @@ function initSymbols(){
   symbols=[];
   const n=Math.floor((W*H)/7000);
   const cols=getMCOLS();
-  for(let i=0;i<n;i++)symbols.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,size:11+Math.random()*18,alpha:0.10+Math.random()*0.20,inWell:false,seamGlow:0,scrollGlow:0,phase:Math.random()*Math.PI*2,origX:0,origY:0,targetX:0,targetY:0,color:cols[Math.floor(Math.random()*cols.length)]});
+  for(let i=0;i<n;i++)symbols.push({char:SYMS[Math.floor(Math.random()*SYMS.length)],x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,size:11+Math.random()*18,alpha:0.10+Math.random()*.20,inWell:false,seamGlow:0,scrollGlow:0,phase:Math.random()*Math.PI*2,origX:0,origY:0,targetX:0,targetY:0,color:cols[Math.floor(Math.random()*cols.length)]});
 }
 function updateSymbols(){
   mouse.vx=mouse.x-mouse.prevX;mouse.vy=mouse.y-mouse.prevY;mouse.prevX=mouse.x;mouse.prevY=mouse.y;
