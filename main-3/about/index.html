@@ -146,6 +146,17 @@ h1 em{color:transparent;font-style:normal;display:block;background:linear-gradie
 .portfolio-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:14px 24px;border:1px solid var(--mid);color:var(--mid-l);background:rgba(92,72,65,0.08);border-radius:6px;transition:all 0.25s var(--ease);}
 .portfolio-btn:hover,.portfolio-btn:focus-visible{background:var(--mid-d);color:#fff;box-shadow:var(--glow-mid);outline:none;}
 
+.proof-note{background:var(--surface);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:16px;padding:22px 32px;margin-bottom:32px;max-width:620px;position:relative;overflow:hidden;}
+.proof-note::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--mid),var(--accent),var(--mid),transparent);opacity:0.6;}
+.proof-note p{font-family:var(--body);font-size:15px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:12px;}
+.proof-note p:last-of-type{margin-bottom:0;}
+.proof-note strong{color:var(--text);font-weight:500;}
+.proof-note .mono-text{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--dim);line-height:1.6;margin-bottom:14px;}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--mid);color:var(--mid-l);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer;}
+.cta-btn:hover,.cta-btn:focus-visible{background:var(--mid);color:#000;border-color:var(--mid);box-shadow:var(--glow-mid);outline:none;}
+.cta-btn.peri{border-color:var(--peri);color:var(--peri-l);}
+.cta-btn.peri:hover,.cta-btn.peri:focus-visible{background:var(--peri);color:#fff;box-shadow:var(--glow-peri);outline:none;}
+
 .sidebar{position:sticky;top:72px;}
 .sidebar-card{padding:28px;margin-bottom:16px;border-radius:20px;}
 .sidebar-card h3{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--peri-l);text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);}
@@ -286,6 +297,20 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1100px;margin:0
       <p>I carry the title <strong>Advocatus Diaboli</strong> — the Devil's Advocate — as a formalized method, not an ecclesiastical office. The Catholic Church employed the Promotor Fidei for centuries as the official whose sole duty was to argue against the evidence before it became doctrine. In 1983, the Church kept the office but removed the adversarial function.</p>
       <p>No secular equivalent replaced it. So I built one. The Advocatus Diaboli Protocol is a seven-check adversarial instrument reconstructed from the historical method, tested against my own work and against the EU AI Act itself.</p>
       <p>I claim the function, not the office. The full reconstruction is published with a DOI.</p>
+    </div>
+
+    <div class="section-label">Dive Into the Mind</div>
+    <div class="proof-note">
+      <p><strong>Risk in the Risk in the Risk: Recursive Risk Discovery as a Polymath's Converted Function (The Advocatus Diaboli).</strong> The first-person account of the cognitive architecture behind the pipeline: measured hyperphantasia (VVIQ 78/80), a persistent spatial reasoning environment, and the recursive premortem method built on top of both.</p>
+      <p>The paper names its own limit plainly: every claim currently rests on self-report, and §7 specifies what independent validation would have to look like before that changes. Read it on that basis.</p>
+      <p class="mono-text">
+        PDF MIRROR v1.0 · 2026-09-07 · mirror of the DOI version of record — if these diverge, the DOI governs.<br>
+        DOI: 10.5281/zenodo.22665348
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;">
+        <a href="/assets/pdf/salmon-2026-risk-in-the-risk.pdf" download class="cta-btn">Download the method paper (PDF mirror) ↓</a>
+        <a href="https://doi.org/10.5281/zenodo.22665348" target="_blank" rel="noopener noreferrer" class="cta-btn peri">DOI — version of record ↗</a>
+      </div>
     </div>
 
     <div class="section-label">Operating Principles</div>
@@ -571,7 +596,7 @@ let rT;window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(resi
 window.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){mouse.x=e.clientX;mouse.y=e.clientY;}});
 window.addEventListener('pointerleave',()=>{mouse.x=-9999;mouse.y=-9999;});
 window.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;spawnEcho(e.clientX,e.clientY);});
-window.addEventListener('dblclick',e=>{const inter=['a','button','input','select','textarea'].includes(e.target.tagName.toLowerCase())||e.target.closest('a')||e.target.closest('button')||e.target.closest('.sidebar-card')||e.target.closest('.method-block')||e.target.closest('.contact-link');if(inter)return;triggerCollapse();});
+window.addEventListener('dblclick',e=>{const inter=['a','button','input','select','textarea'].includes(e.target.tagName.toLowerCase())||e.target.closest('a')||e.target.closest('button')||e.target.closest('.sidebar-card')||e.target.closest('.method-block')||e.target.closest('.contact-link')||e.target.closest('.proof-note');if(inter)return;triggerCollapse();});
 window.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&e.key==='Q'){e.preventDefault();triggerCollapse();}});
 let scrollTimer;window.addEventListener('scroll',()=>{const sy=window.scrollY;glScrollVel=Math.abs(sy)/60;symbols.forEach(s=>{if(Math.abs(s.y-(sy+H/2))<180)s.scrollGlow=1.0;});clearTimeout(scrollTimer);scrollTimer=setTimeout(()=>{symbols.forEach(s=>s.scrollGlow=0);glScrollVel*=.9;},300);},{passive:true});
 
