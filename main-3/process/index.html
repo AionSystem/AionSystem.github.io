@@ -6,7 +6,7 @@
 <meta name="description" content="Sheldon K. Salmon — Engagement Process. From document submission to certified structural review: Foundry, Anvil, Crucible, Temper, Resolution, FORGE, Gauntlet.">
 <title>Process — Document Red-Team Analysis | AionSystem</title>
 <meta property="og:title" content="Process — Document Red-Team Analysis | AionSystem">
-<meta property="og:description" content="Seven core workshops plus optional prompt engineering. Every finding scored and fixed.">
+<meta property="og:description" content="Seven core workshops plus custom architecture. Every finding scored and fixed.">
 <meta property="og:type" content="website">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -46,7 +46,6 @@
   --font-h1:clamp(44px,7.5vw + 12px,92px);
   --font-h2:clamp(26px,3.5vw + 8px,42px);
 }
-/* Light theme */
 body.light{
   --bg:#f8f8f8;
   --surface:rgba(255,255,255,0.9);
@@ -72,22 +71,16 @@ body.light{
 .skip-nav:focus{top:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:var(--font-base);line-height:1.5;overflow-x:hidden;}
-
-/* CANVAS LAYERS */
 #doc-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.9;}
 #sym-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1.2s ease;}
 #sym-canvas.ready{opacity:0.65}
 .mid-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(92,72,65,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(92,72,65,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:10;}
 .scan-lines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(92,72,65,0.018) 1px,rgba(0,0,0,0) 2px);pointer-events:none;z-index:11;opacity:0.35;}
-
-/* Theme + Audio toggles */
 .theme-toggle,.audio-toggle{position:fixed;bottom:24px;z-index:200;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);backdrop-filter:blur(12px);color:var(--muted);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;}
 .theme-toggle{left:24px;font-size:1.2rem;}
 .audio-toggle{right:24px;}
 .theme-toggle:hover,.audio-toggle:hover,.theme-toggle:focus-visible,.audio-toggle:focus-visible{border-color:var(--mid);color:var(--mid-l);box-shadow:var(--glow-mid);outline:none;}
 .audio-toggle[aria-pressed="true"]{border-color:var(--red);color:var(--red);}
-
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:var(--surface);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 0 40px rgba(92,72,65,0.04);}
 .nav-logo{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--text);text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:10px;}
 .nav-logo-img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--border);box-shadow:0 0 10px rgba(92,72,65,0.2);}
@@ -108,8 +101,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .mobile-nav a:hover,.mobile-nav a.active{color:var(--mid-l);background:rgba(92,72,65,0.04);}
 .mobile-nav a:hover::before{background:var(--mid-l);box-shadow:0 0 6px var(--mid-l);}
 .mobile-nav a:last-child:nth-child(2n+1){grid-column:1/-1;border-right:none;}
-
-/* PAGE LAYOUT */
 .wrapper{position:relative;z-index:20;max-width:1200px;margin:0 auto;padding:100px 40px 80px;}
 .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:4px;color:var(--peri-l);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:12px;}
 .eyebrow::before,.eyebrow::after{content:'';display:inline-block;width:20px;height:1px;background:var(--red);flex-shrink:0;box-shadow:0 0 8px rgba(70,0,2,0.6);}
@@ -117,22 +108,16 @@ h1{font-family:var(--display);font-size:var(--font-h1);font-weight:700;letter-sp
 h1 em{display:block;font-style:normal;background:linear-gradient(135deg,var(--mid-l) 0%,var(--peri) 45%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;animation:gradShift 6s ease-in-out infinite;}
 @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .title-line{font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:40px;margin-top:12px;text-align:center;}
-
-/* SECTIONS */
 section{position:relative;z-index:20;padding:60px 40px;max-width:1200px;margin:0 auto}
 .section-header{display:flex;align-items:center;gap:16px;margin-bottom:48px}
 .section-num{font-family:var(--mono);font-size:11px;color:var(--peri-l);letter-spacing:2px}
 .section-title{font-family:var(--display);font-size:var(--font-h2);font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);}
 .section-line{flex:1;height:1px;background:var(--border);box-shadow:0 0 10px rgba(92,72,65,0.15)}
-
-/* INTAKE STEPS */
 .intake-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:32px;max-width:860px;}
 .intake-step{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:12px;padding:24px;}
 .intake-step-num{font-family:var(--mono);font-size:11px;color:var(--mid-l);letter-spacing:2px;margin-bottom:8px;}
 .intake-step-title{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px;}
 .intake-step-desc{font-family:var(--body);font-size:14px;color:var(--muted);line-height:1.6;}
-
-/* PIPELINE GRID */
 .pipeline-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
 .pipeline-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:12px;transition:all 0.35s var(--ease);position:relative;overflow:hidden;}
 .pipeline-card:hover{border-color:var(--border-h);transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 50px rgba(92,72,65,0.1),inset 0 1px 0 rgba(255,255,255,0.04);}
@@ -149,8 +134,6 @@ section{position:relative;z-index:20;padding:60px 40px;max-width:1200px;margin:0
 .pipeline-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
 .pipeline-meta span{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--peri-l);background:rgba(65,51,46,0.07);border:1px solid rgba(65,51,46,0.16);border-radius:20px;padding:3px 10px;}
 .pipeline-card.optional .pipeline-meta span{color:var(--amber);border-color:rgba(55,37,33,0.3);background:rgba(55,37,33,0.06);}
-
-/* DELIVERABLES TABLE */
 .stack-card{background:var(--surface);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:800px;}
 .stack-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.75rem}
 .stack-table caption{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-align:left;padding-bottom:12px}
@@ -162,22 +145,18 @@ section{position:relative;z-index:20;padding:60px 40px;max-width:1200px;margin:0
 .s-major{background:rgba(92,72,65,0.12);color:var(--mid-l);box-shadow:0 0 8px rgba(92,72,65,0.3)}
 .s-minor{background:rgba(65,51,46,0.12);color:var(--peri-l);box-shadow:0 0 8px rgba(65,51,46,0.3)}
 .s-resolved{background:rgba(34,197,94,0.1);color:#86efac;box-shadow:0 0 8px rgba(34,197,94,0.2)}
-
-/* CTA */
+.s-na{background:rgba(107,93,85,0.1);color:var(--dim);box-shadow:none}
 .cta-btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:12px 24px;border:1px solid var(--mid);color:var(--mid-l);background:transparent;transition:all 0.2s ease;border-radius:4px;backdrop-filter:blur(8px);cursor:pointer;}
 .cta-btn.primary{background:rgba(92,72,65,0.12);color:var(--accent);border-color:var(--mid)}
 .cta-btn:hover,.cta-btn:focus-visible{background:var(--mid);color:#000;border-color:var(--mid);box-shadow:var(--glow-mid);outline:none;}
 .cta-btn.primary:hover,.cta-btn.primary:focus-visible{background:var(--mid-d);color:#fff;border-color:var(--mid-d);box-shadow:var(--glow-mid);}
 .cta-btn.peri{border-color:var(--peri);color:var(--peri-l)}
 .cta-btn.peri:hover,.cta-btn.peri:focus-visible{background:var(--peri);color:#fff;box-shadow:var(--glow-peri);outline:none;}
-
-/* FOOTER */
 footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:10px;color:var(--muted);position:relative;z-index:20;}
 .footer-links{display:flex;gap:24px;list-style:none;flex-wrap:wrap;}
 .footer-links a{color:var(--muted);text-decoration:none;transition:all 0.2s ease}
 .footer-links a:hover,.footer-links a:focus-visible{color:var(--mid-l);text-shadow:var(--glow-mid);outline:none;}
 .footer-legal{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:1px;margin-top:4px;}
-
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#doc-canvas,#sym-canvas,.scan-lines{display:none}}
 @media(max-width:900px){.pipeline-grid{grid-template-columns:1fr}}
 @media(max-width:800px){
@@ -195,7 +174,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
   .cta-btn{justify-content:center;width:100%}
 }
 </style>
-<!-- JSON-LD Structured Data for Process Page -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -283,7 +261,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 <main class="wrapper" id="main">
   <div class="eyebrow">// How We Work</div>
   <h1>The <em>Process</em></h1>
-  <div class="title-line">Seven Workshops + Prompt Engineering · Tiered Pricing · Full Adversarial Pipeline</div>
+  <div class="title-line">Seven Workshops + Custom Architecture · Tiered Pricing · Full Adversarial Pipeline</div>
 
   <!-- INTAKE -->
   <section id="intake">
@@ -293,10 +271,9 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <p style="font-family:var(--body);font-size:1.1rem;color:var(--muted);max-width:640px;margin-bottom:24px">
-      Send the document. Tell me what worries you. I'll confirm the scope, the tier, and the turnaround before any work begins. No ambiguity. No surprises. <strong>Minimum engagement $1,200. No discounts. No exceptions.</strong>
+      Send the document. Tell me what worries you. I'll confirm the scope, the tier, and the turnaround before any work begins. No ambiguity. No surprises. <strong>Minimum engagement $1,500. No discounts. No exceptions.</strong>
     </p>
     
-    <!-- ADDED: Intake Sequence to close the CTA friction seam -->
     <div class="intake-steps">
       <div class="intake-step">
         <div class="intake-step-num">01</div>
@@ -338,7 +315,6 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
         <div class="pipeline-icon" aria-hidden="true">∂</div>
         <div class="pipeline-num">Workshop 02</div>
         <div class="pipeline-name">Anvil</div>
-        <!-- FIXED: Arithmetic mismatch. Changed "Four" to "Frameworks" to match the 5 tags below -->
         <div class="pipeline-desc">First attack. Frameworks loaded: OCTOPUS, PDE, PROPORTION, EPE, TDAF. Every clause tested. Every assumption surfaced. Undefined terms flagged. Missing enforcement named.</div>
         <div class="pipeline-meta"><span>OCTOPUS v1.3</span><span>PDE v0.6</span><span>PROPORTION v1.2.2</span><span>EPE v0.4</span><span>Protocol v3.3</span></div>
       </div>
@@ -361,28 +337,28 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
         <div class="pipeline-num">Workshop 05</div>
         <div class="pipeline-name">Resolution</div>
         <div class="pipeline-desc">Fix architecture. Every surviving finding gets ready-to-insert resolution text. The Immunization Node is named — the fix that makes the failure impossible to reassert.</div>
-        <div class="pipeline-meta"><span>Protocol v3.3</span><span>ITI v0.1</span><span>DTE v1.1</span><span>CUA-SPEC v0.2</span><span>Advocatus Diaboli Protocol v0.8</span></div>
+        <div class="pipeline-meta"><span>Protocol v3.3</span><span>ITI v0.1</span><span>DTE v1.1</span><span>CUA-SPEC v0.2</span><span>Advocatus Diaboli v0.9</span></div>
       </div>
     </div>
   </section>
 
-  <!-- PROMPT ENGINEERING WORKSHOP -->
-  <section id="prompt-workshop">
+  <!-- CUSTOM ARCHITECTURE -->
+  <section id="custom-architecture">
     <div class="section-header">
       <span class="section-num">// 02</span>
-      <h2 class="section-title">Prompt Engineering Workshop <span style="font-size:0.6em;color:var(--amber)">(Optional)</span></h2>
+      <h2 class="section-title">Custom Architecture <span style="font-size:0.6em;color:var(--amber)">(The AION Build)</span></h2>
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <p style="font-family:var(--body);font-size:1rem;color:var(--muted);margin-bottom:32px">
-      Before any document analysis begins, I build the prompts that drive the instruments. This is a separate, commissionable service for clients who need custom prompt architectures for their own AI‑assisted workflows. Five frameworks are loaded to construct, test, and harden the prompt system. <em>(Scoped and priced as a custom Framework Design engagement.)</em>
+      For organizations that need their own sovereign red-team pipeline or a custom analytical framework built from scratch. Scope, architecture, scoring methodology, and epistemic tagging protocol tailored to your specific document ecosystem. You own the framework outright. <em>(Scoped and priced as a custom enterprise engagement.)</em>
     </p>
     <div class="pipeline-grid">
       <div class="pipeline-card optional">
-        <div class="pipeline-icon" aria-hidden="true">◈</div>
-        <div class="pipeline-num">Workshop — Prompt</div>
-        <div class="pipeline-name">Prompt Build</div>
-        <div class="pipeline-desc">Custom prompt design and adversarial testing. The output is a production‑ready prompt stack for your specific document ecosystem, built to survive misuse and edge cases.</div>
-        <div class="pipeline-meta"><span>PROTOCOL v3.3</span><span>PROTOCOL RESEARCH v2.0</span><span>bedrock-redteam-protocol v0.2</span><span>current-rider-protocol v2</span><span>bedrock-prompting-protocol</span></div>
+        <div class="pipeline-icon" aria-hidden="true">∞</div>
+        <div class="pipeline-num">Custom · Enterprise Architecture</div>
+        <div class="pipeline-name">The AION Build</div>
+        <div class="pipeline-desc">Custom instrument design and adversarial testing. The output is a production‑ready diagnostic stack for your specific document ecosystem, built to survive misuse and edge cases.</div>
+        <div class="pipeline-meta"><span>PROTOCOL v3.3</span><span>PDE v0.6</span><span>PROPORTION v1.2.2</span><span>Custom Instrument Stack</span></div>
       </div>
     </div>
   </section>
@@ -395,7 +371,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <p style="font-family:var(--body);font-size:1rem;color:var(--muted);margin-bottom:32px">
-      Available on higher tiers. These two workshops transform a structural audit into a scored, externally proven certification.
+      Available on higher tiers (Gauntlet &amp; Leviathan). These two workshops transform a structural audit into a scored, externally proven certification.
     </p>
     <div class="pipeline-grid">
       <div class="pipeline-card optional">
@@ -426,17 +402,16 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div style="overflow-x:auto">
         <table class="stack-table">
           <caption>Deliverables by Tier</caption>
-          <!-- FIXED: Mapped table headers directly to Services page pricing tiers to eliminate ambiguity -->
-          <thead><tr><th scope="col">Deliverable</th><th scope="col">Core (Tiers 1–4)</th><th scope="col">FORGE (Tier 5)</th><th scope="col">Gauntlet (Tier 6)</th></tr></thead>
+          <thead><tr><th scope="col">Deliverable</th><th scope="col">Scout (Tier 1)</th><th scope="col">Anvil &amp; Leviathan (Tiers 2 &amp; 4)</th><th scope="col">Gauntlet &amp; Custom (Tier 3+)</th></tr></thead>
           <tbody>
             <tr><td>Findings Register</td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
             <tr><td>Severity Scoring (S1–S4)</td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
             <tr><td>Epistemic Tags</td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
-            <tr><td>Resolution Text</td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
-            <tr><td>Killed Findings List</td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
-            <tr><td>FORGE Badge + Scores</td><td><span class="severity-badge s-major">No</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
-            <tr><td>External Hostile Verdict</td><td><span class="severity-badge s-major">No</span></td><td><span class="severity-badge s-major">No</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
-            <tr><td>Quote Verification vs Primary</td><td><span class="severity-badge s-major">No</span></td><td><span class="severity-badge s-major">No</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
+            <tr><td>Resolution Text</td><td><span class="severity-badge s-na">No</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
+            <tr><td>Killed Findings List</td><td><span class="severity-badge s-na">No</span></td><td><span class="severity-badge s-resolved">Yes</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
+            <tr><td>Provenance Seal / Dossier</td><td><span class="severity-badge s-na">No</span></td><td><span class="severity-badge s-na">No</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
+            <tr><td>External Hostile Verdict</td><td><span class="severity-badge s-na">No</span></td><td><span class="severity-badge s-na">No</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
+            <tr><td>Quote Verification vs Primary</td><td><span class="severity-badge s-na">No</span></td><td><span class="severity-badge s-na">No</span></td><td><span class="severity-badge s-resolved">Yes</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -451,11 +426,10 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
       <div class="section-line" aria-hidden="true"></div>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:24px;margin-bottom:32px">
-      <!-- FIXED: Renamed timeline labels to match Services page tiers -->
-      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Worth Time / Anvil</strong><span style="color:var(--peri-l);font-size:1.2rem">5–7 business days</span></div>
-      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Workshop / Multi-Pass</strong><span style="color:var(--mid-l);font-size:1.2rem">10–15 business days</span></div>
-      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">FORGE Certification</strong><span style="color:var(--amber);font-size:1.2rem">By agreement</span></div>
-      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Full Gauntlet</strong><span style="color:var(--red);font-size:1.2rem">By agreement</span></div>
+      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Scout Pass (Tier 1)</strong><span style="color:var(--peri-l);font-size:1.2rem">5 business days</span></div>
+      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Anvil Pass (Tier 2)</strong><span style="color:var(--mid-l);font-size:1.2rem">10 business days</span></div>
+      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Gauntlet / Leviathan</strong><span style="color:var(--amber);font-size:1.2rem">By agreement</span></div>
+      <div style="flex:1;min-width:200px"><strong style="font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Custom AION Build</strong><span style="color:var(--red);font-size:1.2rem">By agreement</span></div>
     </div>
   </section>
 
@@ -471,7 +445,7 @@ footer{border-top:1px solid var(--border);padding:40px;max-width:1200px;margin:0
 <footer>
   <div>
     <div>AionSystem · Sheldon K. Salmon · Red-Team Framework Designer · © <span id="copyright-year"></span></div>
-    <div class="footer-legal">Not legal advice. Findings describe structural properties of documents — not legal exposure or compliance status. Minimum engagement $1,200. No discounts. No free passes.</div>
+    <div class="footer-legal">Not legal advice. Findings describe structural properties of documents — not legal exposure or compliance status. Minimum engagement $1,500. No discounts. No free passes.</div>
   </div>
   <ul class="footer-links" role="list">
   <li><a href="/main-3/">Home</a></li>
@@ -734,7 +708,6 @@ const aToggle=document.getElementById('audio-toggle');
 function initAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audioCtx=new AC();const gain=audioCtx.createGain();gain.gain.setValueAtTime(0.055,audioCtx.currentTime);const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=280;filter.Q.value=0.8;const osc1=audioCtx.createOscillator();osc1.type='sine';osc1.frequency.setValueAtTime(38,audioCtx.currentTime);const osc2=audioCtx.createOscillator();osc2.type='sawtooth';osc2.frequency.setValueAtTime(76.4,audioCtx.currentTime);const g2=audioCtx.createGain();g2.gain.setValueAtTime(0.1,audioCtx.currentTime);osc1.connect(filter);osc2.connect(g2);g2.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc1.start();osc2.start();window.addEventListener('pagehide',()=>{try{audioCtx.close();}catch(_){}},{once:true});}
 if(aToggle){aToggle.addEventListener('click',()=>{audioOn=!audioOn;aToggle.setAttribute('aria-pressed',String(audioOn));if(audioOn){if(!audioCtx)initAudio();else if(audioCtx.state==='suspended')audioCtx.resume();}else{if(audioCtx&&audioCtx.state==='running')audioCtx.suspend();}});}
 
-// Theme toggle
 const themeToggle=document.getElementById('theme-toggle');
 if(themeToggle){
   themeToggle.addEventListener('click',()=>{
