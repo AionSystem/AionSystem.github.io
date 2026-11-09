@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heterogeneity Under Observability — Supplement</title>
+<style>
+  :root {
+    --paper: #fbfaf7;
+    --ink: #1a1a1a;
+    --muted: #666;
+    --border: #d8d3ca;
+    --accent: #4a5f52;
+    --warn: #a8825c;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 760px; margin: 0 auto; padding: 48px 24px 96px; }
+  header { margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  h1 { font-size: 26px; font-weight: 600; line-height: 1.25; margin: 0 0 8px 0; letter-spacing: -0.005em; }
+  .subtitle { font-size: 17px; color: var(--muted); margin: 0 0 16px 0; line-height: 1.4; }
+  .byline { font-size: 14px; color: var(--muted); margin: 0; }
+  h2 { font-size: 18px; font-weight: 600; margin: 48px 0 12px 0; letter-spacing: -0.005em; }
+  p { margin: 0 0 16px 0; }
+  .downloads {
+    font-size: 14px; margin: 0 0 32px 0; padding: 16px 20px;
+    background: #fff; border: 1px solid var(--border); border-radius: 3px;
+  }
+  .downloads a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+  .downloads a:hover { color: var(--accent); }
+  .downloads .sep { color: var(--border); margin: 0 8px; }
+  .downloads .note { display: block; margin-top: 8px; color: var(--muted); font-size: 13px; }
+
+  .sim { margin: 24px 0; padding: 20px; background: #fff; border: 1px solid var(--border); border-radius: 3px; }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  .control-row label { flex: 0 0 220px; color: var(--muted); }
+  .control-row input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent);
+    height: 24px;
+    cursor: pointer;
+  }
+  .control-row .value {
+    flex: 0 0 40px;
+    text-align: right;
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  .toggle-row { padding: 12px 0 4px; border-top: 1px solid var(--border); margin-top: 8px; }
+  .toggle-row label {
+    flex: 1;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+  }
+  .toggle-row input[type="checkbox"] {
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .output { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .output-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; }
+  .output-row .label { color: var(--muted); }
+  .output-row .value {
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 13px;
+  }
+  .output-row.primary .value { color: var(--accent); font-weight: 600; }
+  .output-row.naive .value { color: var(--warn); }
+
+  .visual { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+  .visual svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 500 / 160;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .caption { font-size: 13px; color: var(--muted); margin-top: 12px; line-height: 1.5; }
+
+  .scene { margin: 32px 0; padding: 20px; background: #fff; border: 1px solid var(--border); border-radius: 3px; }
+  .scene-title { font-size: 14px; font-weight: 600; margin: 0 0 8px 0; }
+  .scene svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 500 / 120;
+    margin: 12px 0;
+  }
+  .scene p { font-size: 14px; color: var(--muted); margin: 8px 0 0 0; line-height: 1.5; }
+
+  code {
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 13px;
+    background: #f0eee9;
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+  .formula {
+    font-family: "SF Mono", Monaco, Consolas, monospace;
+    font-size: 13px;
+    background: #f0eee9;
+    padding: 12px 16px;
+    border-radius: 3px;
+    margin: 16px 0;
+    color: var(--ink);
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  a { color: var(--accent); }
+  .reset-btn {
+    font-size: 12px;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 16px;
+  }
+  .reset-btn:hover { color: var(--ink); border-color: var(--ink); }
+  .abstraction-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    line-height: 1.5;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Heterogeneity Under Observability</h1>
+    <p class="subtitle">An Acquisition-Cost Framework for Assessing Diversity as a Cyber-Physical Defense</p>
+    <p class="byline">Sheldon K. Salmon · AionSystem · Response to DARPA-SN-27-17</p>
+  </header>
+
+  <div class="downloads">
+    <a href="./heterogeneity-under-observability.pdf">Full paper (PDF)</a>
+    <span class="sep">·</span>
+    <a href="./heterogeneity-under-observability-8pp.pdf">Submission version, 8 pages (PDF)</a>
+    <span class="note">This page is a supplement to the paper. The paper states the argument; the interactive model and scenes below are a worked example of the §4.1 formula, the §7.2–§7.3 metric distinction, and the §4.6 illustrations.</span>
+  </div>
+
+  <section>
+    <h2>Summary</h2>
+    <p>The FLASH RFI asks whether heterogeneity reduces adversary knowledge transfer. This response shows that the answer depends on the adversary's acquisition model. Heterogeneity multiplies the adversary's cost by up to a factor of N when the adversary must acquire each variant separately (class-attacking A₁, capture-then-exploit A₂-hybrid), and does nothing when the adversary probes the deployed instance in real time (A₂-pure). The framework supplies a metric — H<sub>d_variant</sub> — that predicts the multiplier, an evaluation protocol that tests the metric against a calibrated exploit-development agent, and a set of declared assumptions under which the argument holds.</p>
+  </section>
+
+  <section>
+    <h2>Interactive model of the §4.1 formula and its two metrics (§7.2–§7.3)</h2>
+    <p>The formula in §4.1 gives the adversary's cost under A₂-hybrid as a function of two quantities computed from the same fleet: H<sub>d_node</sub> (the fraction of critical failure nodes that are variant-specific) and H<sub>d_variant</sub> (the fraction of variants whose <em>cheapest</em> path to compromise is variant-specific). The formula uses H<sub>d_variant</sub>. When a fleet has a cheap shared node, the two metrics diverge (§7.3), and using H<sub>d_node</sub> in the formula overstates the adversary's burden by up to a factor of N.</p>
+
+    <div class="sim" id="sim">
+      <div class="control-row">
+        <label for="n-slider">Variants <em>N</em></label>
+        <input type="range" min="2" max="20" value="10" step="1" id="n-slider">
+        <span class="value" id="n-value">10</span>
+      </div>
+      <div class="control-row">
+        <label for="vs-slider">Variant-specific critical nodes per variant</label>
+        <input type="range" min="0" max="20" value="9" step="1" id="vs-slider">
+        <span class="value" id="vs-value">9</span>
+      </div>
+      <div class="control-row">
+        <label for="sh-slider">Shared critical nodes</label>
+        <input type="range" min="0" max="10" value="1" step="1" id="sh-slider">
+        <span class="value" id="sh-value">1</span>
+      </div>
+      <div class="control-row toggle-row">
+        <label>
+          <input type="checkbox" checked id="cheapest-toggle">
+          The shared node is the cheapest path to compromise (exploiting the shared node is easier than exploiting any variant-specific node)
+        </label>
+      </div>
+
+      <div class="output">
+        <div class="output-row">
+          <span class="label">H<sub>d_node</sub> (diagnostic)</span>
+          <span class="value" id="hd-node-value">0.989</span>
+        </div>
+        <div class="output-row primary">
+          <span class="label">H<sub>d_variant</sub> (used by formula)</span>
+          <span class="value" id="hd-variant-value">0.000</span>
+        </div>
+        <div class="output-row">
+          <span class="label">Cycle count at H<sub>d_variant</sub></span>
+          <span class="value" id="cycles-variant">1.00</span>
+        </div>
+        <div class="output-row naive">
+          <span class="label">Cycle count if H<sub>d_node</sub> were used (naive)</span>
+          <span class="value" id="cycles-node">9.90</span>
+        </div>
+        <div class="output-row naive">
+          <span class="label">Overstatement factor</span>
+          <span class="value" id="overstatement">9.9×</span>
+        </div>
+      </div>
+
+      <div class="visual">
+        <svg viewBox="0 0 500 160" role="img" aria-label="Bar comparison of H_d_node and H_d_variant">
+          <title>Bar comparison of H_d_node and H_d_variant</title>
+
+          <text x="0" y="40" font-size="12" fill="#666">H<tspan font-size="9" baseline-shift="sub">d_node</tspan></text>
+          <rect x="90" y="25" width="370" height="22" fill="#e8e6e2" rx="2"/>
+          <rect id="hd-node-bar" x="90" y="25" width="366" height="22" fill="#a8825c" rx="2"/>
+          <text id="hd-node-label" x="466" y="40" font-size="11" fill="#666" font-family="monospace">0.989</text>
+
+          <text x="0" y="115" font-size="12" fill="#666">H<tspan font-size="9" baseline-shift="sub">d_variant</tspan></text>
+          <rect x="90" y="100" width="370" height="22" fill="#e8e6e2" rx="2"/>
+          <rect id="hd-variant-bar" x="90" y="100" width="0" height="22" fill="#4a5f52" rx="2"/>
+          <text id="hd-variant-label" x="466" y="115" font-size="11" fill="#666" font-family="monospace">0.000</text>
+        </svg>
+        <p class="caption">The formula uses the lower bar. When the shared node is cheapest, H<sub>d_variant</sub> is 0 even though H<sub>d_node</sub> is near 1, and the naive use of H<sub>d_node</sub> overstates the adversary's burden by up to a factor of N.</p>
+      </div>
+
+      <button class="reset-btn" id="reset-btn">Reset to worked example (9+1 case from §7.3)</button>
+
+      <p class="abstraction-note">
+        <strong>Model scope.</strong> This model binarizes H<sub>d_variant</sub> to {0, 1} based on whether the shared node is the cheapest path to compromise; the paper's formula treats H<sub>d_variant</sub> as continuous over [0, 1]. The model uses unit values for c_capture and c_exploit so that cost equals cycle count; the paper's formula allows arbitrary magnitudes. The model assumes a single transfer cluster; the paper's Assumption 7 addresses multi-cluster cases. Where the model's display and the paper disagree, the paper governs.
+      </p>
+    </div>
+
+    <div class="formula">Cost = [1 + H_d_variant · (N − 1)] × (c_capture + c_exploit)
+
+Under the model's illustrative values c_capture = c_exploit = 1,
+cost is measured in cycle count.</div>
+  </section>
+
+  <section>
+    <h2>The scenes of §4.6</h2>
+    <p>Five scenes from the paper (§4.6), shown as static diagrams. Scene 1 is the baseline. Scene 2 is the ceiling. Scene 3 is the intermediate case. Scene 4 is the case where apparent heterogeneity collapses to H<sub>d_variant</sub> = 0. Scene 5 is the case where capture is sublinear in N.</p>
+
+    <div class="scene">
+      <p class="scene-title">Scene 1 — homogeneous fleet, H<sub>d_variant</sub> = 0</p>
+      <svg viewBox="0 0 500 120" role="img" aria-label="Four identical doors, one key opens all">
+        <title>Scene 1: homogeneous fleet</title>
+        <g fill="#e8e6e2" stroke="#8b8b8b" stroke-width="1">
+          <rect x="20" y="30" width="50" height="80" rx="2"/>
+          <rect x="100" y="30" width="50" height="80" rx="2"/>
+          <rect x="180" y="30" width="50" height="80" rx="2"/>
+          <rect x="260" y="30" width="50" height="80" rx="2"/>
+        </g>
+        <g fill="#666">
+          <circle cx="45" cy="70" r="6"/>
+          <circle cx="125" cy="70" r="6"/>
+          <circle cx="205" cy="70" r="6"/>
+          <circle cx="285" cy="70" r="6"/>
+        </g>
+        <text x="340" y="60" font-size="13" fill="#1a1a1a">One key</text>
+        <text x="340" y="78" font-size="13" fill="#1a1a1a">opens all four.</text>
+      </svg>
+      <p>All doors share one lock. The adversary picks it once, studies it, and opens every door. Cost: 1 × (c_capture + c_exploit).</p>
+    </div>
+
+    <div class="scene">
+      <p class="scene-title">Scene 2 — fully heterogeneous fleet, H<sub>d_variant</sub> = 1</p>
+      <svg viewBox="0 0 500 120" role="img" aria-label="Four doors, each with a distinct lock">
+        <title>Scene 2: fully heterogeneous fleet</title>
+        <g stroke="#8b8b8b" stroke-width="1">
+          <rect x="20" y="30" width="50" height="80" rx="2" fill="#d8e2dc"/>
+          <rect x="100" y="30" width="50" height="80" rx="2" fill="#e8dcca"/>
+          <rect x="180" y="30" width="50" height="80" rx="2" fill="#e0d8d0"/>
+          <rect x="260" y="30" width="50" height="80" rx="2" fill="#d4dae0"/>
+        </g>
+        <g fill="#666">
+          <circle cx="45" cy="70" r="6"/>
+          <rect x="119" y="65" width="12" height="10" rx="1"/>
+          <polygon points="205,64 212,70 205,76"/>
+          <path d="M 275 65 L 285 65 L 285 75 L 275 75 Z M 280 65 L 280 60"/>
+        </g>
+        <text x="340" y="52" font-size="13" fill="#1a1a1a">Four different locks.</text>
+        <text x="340" y="70" font-size="13" fill="#1a1a1a">Every door</text>
+        <text x="340" y="88" font-size="13" fill="#1a1a1a">needs its own pick.</text>
+      </svg>
+      <p>Every door has a distinct lock. The adversary's technique for door 1 does not open door 2. The building is compromised for the cost of N distinct lock picks: N × (c_capture + c_exploit). At H<sub>d_variant</sub> = 1, the formula's multiplier reaches its maximum.</p>
+    </div>
+
+    <div class="scene">
+      <p class="scene-title">Scene 3 — mixed fleet, H<sub>d_variant</sub> = 0.3, N = 10</p>
+      <svg viewBox="0 0 500 100" role="img" aria-label="Three unique-lock door types and seven shared-lock door types">
+        <title>Scene 3: mixed fleet</title>
+        <g stroke="#8b8b8b" stroke-width="1">
+          <rect x="20" y="20" width="30" height="60" rx="2" fill="#d8e2dc"/>
+          <rect x="60" y="20" width="30" height="60" rx="2" fill="#e8dcca"/>
+          <rect x="100" y="20" width="30" height="60" rx="2" fill="#e0d8d0"/>
+        </g>
+        <g fill="#666">
+          <circle cx="35" cy="50" r="4"/>
+          <circle cx="75" cy="50" r="4"/>
+          <circle cx="115" cy="50" r="4"/>
+        </g>
+        <g fill="#e8e6e2" stroke="#8b8b8b" stroke-width="1">
+          <rect x="180" y="20" width="30" height="60" rx="2"/>
+          <rect x="220" y="20" width="30" height="60" rx="2"/>
+          <rect x="260" y="20" width="30" height="60" rx="2"/>
+          <rect x="300" y="20" width="30" height="60" rx="2"/>
+          <rect x="340" y="20" width="30" height="60" rx="2"/>
+          <rect x="380" y="20" width="30" height="60" rx="2"/>
+          <rect x="420" y="20" width="30" height="60" rx="2"/>
+        </g>
+        <g fill="#666">
+          <circle cx="195" cy="50" r="4"/>
+          <circle cx="235" cy="50" r="4"/>
+          <circle cx="275" cy="50" r="4"/>
+          <circle cx="315" cy="50" r="4"/>
+          <circle cx="355" cy="50" r="4"/>
+          <circle cx="395" cy="50" r="4"/>
+          <circle cx="435" cy="50" r="4"/>
+        </g>
+        <text x="20" y="98" font-size="12" fill="#666">3 unique types (3 distinct picks)</text>
+        <text x="280" y="98" font-size="12" fill="#666">7 types share one lock (1 pick)</text>
+      </svg>
+      <p>Ten variant types, ten instances each. Three types have unique locks (30 instances); seven types share one lock (70 instances). The adversary picks four locks total — three unique, one shared — and compromises all ten variants (100 instances). Cycle count: 1 + 0.3·(10 − 1) = 3.7, rounded up to 4.</p>
+    </div>
+
+    <div class="scene">
+      <p class="scene-title">Scene 4 — apparent heterogeneity, H<sub>d_node</sub> ≈ 1 but H<sub>d_variant</sub> = 0</p>
+      <svg viewBox="0 0 500 120" role="img" aria-label="Four doors that look different but share the same lock">
+        <title>Scene 4: apparent heterogeneity</title>
+        <g stroke="#8b8b8b" stroke-width="1">
+          <rect x="20" y="30" width="50" height="80" rx="2" fill="#d8e2dc"/>
+          <rect x="100" y="30" width="50" height="80" rx="2" fill="#e8dcca"/>
+          <rect x="180" y="30" width="50" height="80" rx="2" fill="#e0d8d0"/>
+          <rect x="260" y="30" width="50" height="80" rx="2" fill="#d4dae0"/>
+        </g>
+        <g fill="#666">
+          <circle cx="45" cy="70" r="6"/>
+          <circle cx="125" cy="70" r="6"/>
+          <circle cx="205" cy="70" r="6"/>
+          <circle cx="285" cy="70" r="6"/>
+        </g>
+        <text x="340" y="52" font-size="13" fill="#1a1a1a">Four appearances.</text>
+        <text x="340" y="70" font-size="13" fill="#1a1a1a">Same lock.</text>
+      </svg>
+      <p>The hulls, sensor suites, and vendor names differ. The firmware does not. The adversary's exploit transfers, and H<sub>d_node</sub> reports a differentiated fleet while the formula correctly reports a homogeneous one.</p>
+    </div>
+
+    <div class="scene">
+      <p class="scene-title">Scene 5 — shared hallway, capture is sublinear in N</p>
+      <svg viewBox="0 0 500 120" role="img" aria-label="One door leading to a central corridor that reaches three other rooms">
+        <title>Scene 5: shared hallway</title>
+        <rect x="20" y="40" width="50" height="60" rx="2" fill="#d8e2dc" stroke="#8b8b8b" stroke-width="1"/>
+        <circle cx="45" cy="70" r="5" fill="#666"/>
+        <line x1="70" y1="70" x2="150" y2="70" stroke="#8b8b8b" stroke-width="2"/>
+        <line x1="150" y1="30" x2="150" y2="110" stroke="#8b8b8b" stroke-width="2"/>
+        <line x1="150" y1="30" x2="230" y2="30" stroke="#8b8b8b" stroke-width="2"/>
+        <line x1="150" y1="70" x2="230" y2="70" stroke="#8b8b8b" stroke-width="2"/>
+        <line x1="150" y1="110" x2="230" y2="110" stroke="#8b8b8b" stroke-width="2"/>
+        <g fill="#e8e6e2" stroke="#8b8b8b" stroke-width="1">
+          <rect x="230" y="10" width="50" height="40" rx="2"/>
+          <rect x="230" y="50" width="50" height="40" rx="2"/>
+          <rect x="230" y="90" width="50" height="40" rx="2"/>
+        </g>
+        <text x="300" y="40" font-size="13" fill="#1a1a1a">Reachable through</text>
+        <text x="300" y="58" font-size="13" fill="#1a1a1a">the hallway:</text>
+        <text x="300" y="78" font-size="13" fill="#666" font-family="monospace">c_capture / k_cap</text>
+        <text x="300" y="96" font-size="12" fill="#666">k_cap = 4 (1 entry + 3 rooms)</text>
+      </svg>
+      <p>One door leads to a corridor that reaches every room. The adversary captures one door (c_capture) and studies all four variants reachable through the corridor without a separate physical capture. The effective per-variant capture cost is c_capture / k_cap, where k_cap is the average number of variants reachable per capture. This is still A₂-hybrid: capture happens, then study; the topology reduces the cost, not the class.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Scope and declared assumptions</h2>
+    <p>The paper declares its assumptions and its limitations. The summary below is a one-paragraph version; the full list is in §12 of the paper.</p>
+    <p><strong>Assumptions.</strong> The argument holds when four conditions are met: (1) the family has genuine degrees of freedom that provably preserve required behavior; (2) the adversary's acquisition model is A₁ or A₂-hybrid, not A₂-pure; (3) capture and exploit costs are independent across variants, with no transfer missed by the §7.2 independence test; and (4) the H<sub>d_variant</sub> used in the formula is the post-test, post-reduction value, not the raw node ratio.</p>
+    <p><strong>Limitations.</strong> The metric is analyst-dependent at three judgment points (L9). The evaluation protocol is proposed, not run. The framework has not been tested against a real fleet. The anchor domain is UUV/USV, named from public regulatory documents (COLREGs, 33 CFR Part 83); the response does not claim program participation, fleet data, or operational experience in the domain.</p>
+    <p><strong>What would falsify the argument.</strong> Flat time-to-compromise under A₂-hybrid; H<sub>d_variant</sub> uncorrelated with documented failure history; the A₁ structural multiplier not shared with A₂-hybrid. These are stated in §12 and Annex B of the paper.</p>
+  </section>
+
+  <footer>
+    <p>This page is a supplement to a response submitted to DARPA-SN-27-17. It is served at this address for the convenience of reviewers.</p>
+  </footer>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  function $(id) { return document.getElementById(id); }
+
+  var state = {
+    N: 10,
+    vsNodes: 9,
+    sharedNodes: 1,
+    sharedCheapest: true
+  };
+
+  var DEFAULTS = Object.freeze({
+    N: 10,
+    vsNodes: 9,
+    sharedNodes: 1,
+    sharedCheapest: true
+  });
+
+  function computeH() {
+    var N = Math.max(1, state.N);
+    var vs = state.vsNodes;
+    var sh = state.sharedNodes;
+    var unionNodes = sh + vs * N;
+    var vsTotal = vs * N;
+
+    var hdNode = 0;
+    if (unionNodes > 0) {
+      hdNode = vsTotal / unionNodes;
+    }
+
+    var hdVariant;
+    if (vs === 0 && sh === 0) {
+      hdVariant = 0;
+    } else if (sh === 0) {
+      hdVariant = 1;
+    } else if (vs === 0) {
+      hdVariant = 0;
+    } else {
+      hdVariant = state.sharedCheapest ? 0 : 1;
+    }
+
+    return { hdNode: hdNode, hdVariant: hdVariant };
+  }
+
+  function computeCycles(h) {
+    return 1 + h * (state.N - 1);
+  }
+
+  function update() {
+    var metrics = computeH();
+    var cyclesVariant = computeCycles(metrics.hdVariant);
+    var cyclesNode = computeCycles(metrics.hdNode);
+    var overstatement = cyclesVariant > 0 ? cyclesNode / cyclesVariant : 1;
+
+    $('n-value').textContent = state.N;
+    $('vs-value').textContent = state.vsNodes;
+    $('sh-value').textContent = state.sharedNodes;
+
+    $('hd-node-value').textContent = metrics.hdNode.toFixed(3);
+    $('hd-variant-value').textContent = metrics.hdVariant.toFixed(3);
+    $('cycles-variant').textContent = cyclesVariant.toFixed(2);
+    $('cycles-node').textContent = cyclesNode.toFixed(2);
+    $('overstatement').textContent = overstatement.toFixed(1) + '\u00D7';
+
+    var maxBarWidth = 370;
+    var nodeBar = $('hd-node-bar');
+    var variantBar = $('hd-variant-bar');
+
+    if (nodeBar) {
+      nodeBar.setAttribute('width', String(metrics.hdNode * maxBarWidth));
+    }
+    if (variantBar) {
+      variantBar.setAttribute('width', String(metrics.hdVariant * maxBarWidth));
+    }
+
+    $('hd-node-label').textContent = metrics.hdNode.toFixed(3);
+    $('hd-variant-label').textContent = metrics.hdVariant.toFixed(3);
+  }
+
+  function attachListeners() {
+    $('n-slider').addEventListener('input', function(e) {
+      state.N = parseInt(e.target.value, 10);
+      update();
+    });
+    $('vs-slider').addEventListener('input', function(e) {
+      state.vsNodes = parseInt(e.target.value, 10);
+      update();
+    });
+    $('sh-slider').addEventListener('input', function(e) {
+      state.sharedNodes = parseInt(e.target.value, 10);
+      update();
+    });
+    $('cheapest-toggle').addEventListener('change', function(e) {
+      state.sharedCheapest = e.target.checked;
+      update();
+    });
+    $('reset-btn').addEventListener('click', function() {
+      state.N = DEFAULTS.N;
+      state.vsNodes = DEFAULTS.vsNodes;
+      state.sharedNodes = DEFAULTS.sharedNodes;
+      state.sharedCheapest = DEFAULTS.sharedCheapest;
+      $('n-slider').value = DEFAULTS.N;
+      $('vs-slider').value = DEFAULTS.vsNodes;
+      $('sh-slider').value = DEFAULTS.sharedNodes;
+      $('cheapest-toggle').checked = DEFAULTS.sharedCheapest;
+      update();
+    });
+  }
+
+  function init() {
+    try {
+      attachListeners();
+      update();
+    } catch (err) {
+      if (window.console && console.error) {
+        console.error('Page initialization failed:', err);
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
