@@ -81,6 +81,15 @@
     margin-top: 3px;
     flex-shrink: 0;
   }
+  .toggle-row.is-disabled { opacity: 0.55; }
+  .toggle-row.is-disabled label { cursor: not-allowed; }
+  .toggle-row.is-disabled input[type="checkbox"] { cursor: not-allowed; }
+  .toggle-row.is-disabled label::after {
+    content: ' (no effect — all nodes are shared)';
+    color: var(--warn);
+    font-size: 12px;
+    font-weight: 400;
+  }
 
   .output { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
   .output-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; }
@@ -113,6 +122,7 @@
     aspect-ratio: 500 / 120;
     margin: 12px 0;
   }
+  .scene svg.scene-svg-short { aspect-ratio: 500 / 100; }
   .scene p { font-size: 14px; color: var(--muted); margin: 8px 0 0 0; line-height: 1.5; }
 
   code {
@@ -161,6 +171,33 @@
     line-height: 1.5;
     font-style: italic;
   }
+
+  /* Mobile: stack label above slider at <= 480px */
+  @media (max-width: 480px) {
+    .container { padding: 24px 16px 64px; }
+    .control-row {
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .control-row label {
+      order: 1;
+      flex: 1 1 100%;
+      margin-bottom: 6px;
+    }
+    .control-row input[type="range"] {
+      order: 2;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .control-row .value {
+      order: 3;
+      flex: 0 0 40px;
+    }
+    .toggle-row label { flex: 1 1 100%; }
+    h1 { font-size: 22px; }
+    .subtitle { font-size: 15px; }
+  }
 </style>
 </head>
 <body>
@@ -173,9 +210,9 @@
   </header>
 
   <div class="downloads">
-    <a href="./heterogeneity-under-observability.pdf">Full paper (PDF)</a>
+    <a href="./assets/heterogeneity-under-observability.pdf">Full paper (PDF)</a>
     <span class="sep">·</span>
-    <a href="./heterogeneity-under-observability-8pp.pdf">Submission version, 8 pages (PDF)</a>
+    <a href="./assets/heterogeneity-under-observability-8pp.pdf">Submission version, 8 pages (PDF)</a>
     <span class="note">This page is a supplement to the paper. The paper states the argument; the interactive model and scenes below are a worked example of the §4.1 formula, the §7.2–§7.3 metric distinction, and the §4.6 illustrations.</span>
   </div>
 
@@ -204,14 +241,14 @@
         <input type="range" min="0" max="10" value="1" step="1" id="sh-slider">
         <span class="value" id="sh-value">1</span>
       </div>
-      <div class="control-row toggle-row">
+      <div class="control-row toggle-row" id="toggle-row">
         <label>
           <input type="checkbox" checked id="cheapest-toggle">
           The shared node is the cheapest path to compromise (exploiting the shared node is easier than exploiting any variant-specific node)
         </label>
       </div>
 
-      <div class="output">
+      <div class="output" aria-live="polite" aria-atomic="false">
         <div class="output-row">
           <span class="label">H<sub>d_node</sub> (diagnostic)</span>
           <span class="value" id="hd-node-value">0.989</span>
@@ -229,7 +266,7 @@
           <span class="value" id="cycles-node">9.90</span>
         </div>
         <div class="output-row naive">
-          <span class="label">Overstatement factor</span>
+          <span class="label">Ratio (naive / correct)</span>
           <span class="value" id="overstatement">9.9×</span>
         </div>
       </div>
@@ -260,8 +297,7 @@
 
     <div class="formula">Cost = [1 + H_d_variant · (N − 1)] × (c_capture + c_exploit)
 
-Under the model's illustrative values c_capture = c_exploit = 1,
-cost is measured in cycle count.</div>
+The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
   </section>
 
   <section>
@@ -315,7 +351,7 @@ cost is measured in cycle count.</div>
 
     <div class="scene">
       <p class="scene-title">Scene 3 — mixed fleet, H<sub>d_variant</sub> = 0.3, N = 10</p>
-      <svg viewBox="0 0 500 100" role="img" aria-label="Three unique-lock door types and seven shared-lock door types">
+      <svg viewBox="0 0 500 100" class="scene-svg-short" role="img" aria-label="Three unique-lock door types and seven shared-lock door types">
         <title>Scene 3: mixed fleet</title>
         <g stroke="#8b8b8b" stroke-width="1">
           <rect x="20" y="20" width="30" height="60" rx="2" fill="#d8e2dc"/>
@@ -432,8 +468,26 @@ cost is measured in cycle count.</div>
     sharedCheapest: true
   });
 
+  function sanitizeState() {
+    if (typeof state.N !== 'number' || isNaN(state.N) || state.N < 1) {
+      state.N = 1;
+    } else {
+      state.N = Math.floor(state.N);
+    }
+    if (typeof state.vsNodes !== 'number' || isNaN(state.vsNodes) || state.vsNodes < 0) {
+      state.vsNodes = 0;
+    } else {
+      state.vsNodes = Math.floor(state.vsNodes);
+    }
+    if (typeof state.sharedNodes !== 'number' || isNaN(state.sharedNodes) || state.sharedNodes < 0) {
+      state.sharedNodes = 0;
+    } else {
+      state.sharedNodes = Math.floor(state.sharedNodes);
+    }
+  }
+
   function computeH() {
-    var N = Math.max(1, state.N);
+    var N = state.N;
     var vs = state.vsNodes;
     var sh = state.sharedNodes;
     var unionNodes = sh + vs * N;
@@ -463,10 +517,12 @@ cost is measured in cycle count.</div>
   }
 
   function update() {
+    sanitizeState();
+
     var metrics = computeH();
     var cyclesVariant = computeCycles(metrics.hdVariant);
     var cyclesNode = computeCycles(metrics.hdNode);
-    var overstatement = cyclesVariant > 0 ? cyclesNode / cyclesVariant : 1;
+    var ratio = cyclesVariant > 0 ? cyclesNode / cyclesVariant : 1;
 
     $('n-value').textContent = state.N;
     $('vs-value').textContent = state.vsNodes;
@@ -476,7 +532,7 @@ cost is measured in cycle count.</div>
     $('hd-variant-value').textContent = metrics.hdVariant.toFixed(3);
     $('cycles-variant').textContent = cyclesVariant.toFixed(2);
     $('cycles-node').textContent = cyclesNode.toFixed(2);
-    $('overstatement').textContent = overstatement.toFixed(1) + '\u00D7';
+    $('overstatement').textContent = ratio.toFixed(1) + '\u00D7';
 
     var maxBarWidth = 370;
     var nodeBar = $('hd-node-bar');
@@ -491,6 +547,27 @@ cost is measured in cycle count.</div>
 
     $('hd-node-label').textContent = metrics.hdNode.toFixed(3);
     $('hd-variant-label').textContent = metrics.hdVariant.toFixed(3);
+
+    // a11y: aria-valuetext for screen readers
+    var nSlider = $('n-slider');
+    var vsSlider = $('vs-slider');
+    var shSlider = $('sh-slider');
+    if (nSlider) nSlider.setAttribute('aria-valuetext', state.N + ' variant' + (state.N === 1 ? '' : 's'));
+    if (vsSlider) vsSlider.setAttribute('aria-valuetext', state.vsNodes + ' variant-specific critical node' + (state.vsNodes === 1 ? '' : 's') + ' per variant');
+    if (shSlider) shSlider.setAttribute('aria-valuetext', state.sharedNodes + ' shared critical node' + (state.sharedNodes === 1 ? '' : 's'));
+
+    // Disable toggle when vs === 0 (toggle has no effect)
+    var toggle = $('cheapest-toggle');
+    var toggleRow = $('toggle-row');
+    if (toggle && toggleRow) {
+      if (state.vsNodes === 0) {
+        toggle.disabled = true;
+        toggleRow.classList.add('is-disabled');
+      } else {
+        toggle.disabled = false;
+        toggleRow.classList.remove('is-disabled');
+      }
+    }
   }
 
   function attachListeners() {
