@@ -31,14 +31,51 @@
   .byline { font-size: 14px; color: var(--muted); margin: 0; }
   h2 { font-size: 18px; font-weight: 600; margin: 48px 0 12px 0; letter-spacing: -0.005em; }
   p { margin: 0 0 16px 0; }
-  .downloads {
-    font-size: 14px; margin: 0 0 32px 0; padding: 16px 20px;
-    background: #fff; border: 1px solid var(--border); border-radius: 3px;
+
+  /* Download panels: two boxes of equal weight, side by side on desktop */
+  .downloads-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 0 0 32px 0;
   }
-  .downloads a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
-  .downloads a:hover { color: var(--accent); }
-  .downloads .sep { color: var(--border); margin: 0 8px; }
-  .downloads .note { display: block; margin-top: 8px; color: var(--muted); font-size: 13px; }
+  .downloads-panel {
+    font-size: 14px;
+    padding: 16px 20px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+  }
+  .downloads-panel h3 {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .downloads-panel a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    display: block;
+    margin: 0 0 6px 0;
+  }
+  .downloads-panel a:hover { color: var(--accent); }
+  .downloads-panel a:last-of-type { margin-bottom: 0; }
+  .downloads-panel .note {
+    display: block;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .downloads-panel .note strong { color: var(--ink); font-weight: 600; }
 
   .sim { margin: 24px 0; padding: 20px; background: #fff; border: 1px solid var(--border); border-radius: 3px; }
 
@@ -173,7 +210,10 @@
     font-style: italic;
   }
 
-  /* Mobile: stack label above slider at <= 480px */
+  /* Mobile: stack download panels, stack control rows */
+  @media (max-width: 640px) {
+    .downloads-grid { grid-template-columns: 1fr; }
+  }
   @media (max-width: 480px) {
     .container { padding: 24px 16px 64px; }
     .control-row {
@@ -205,7 +245,7 @@
     body { background: #fff; }
     .container { max-width: none; padding: 0; }
     .control-row input[type="range"], .reset-btn { display: none; }
-    .scene, .sim { break-inside: avoid; }
+    .scene, .sim, .downloads-panel { break-inside: avoid; }
   }
 </style>
 </head>
@@ -218,11 +258,18 @@
     <p class="byline">AionSystem · Response to DARPA-SN-27-17</p>
   </header>
 
-  <div class="downloads">
-    <a href="./assets/pdf/HETEROGENEITY-UNDER-OBSERVABILITY-FULL.pdf">Full paper (PDF)</a>
-    <span class="sep">·</span>
-    <a href="./assets/pdf/HETEROGENEITY-UNDER-OBSERVABILITY-FLASH-RFI.pdf">Submission version, 14 pages (PDF)</a>
-    <span class="note">This page supplements the paper. The paper states the argument; the interactive model and scenes below work through the §4.1 formula, the §7.2–§7.3 metric distinction, and the §4.6 scenes.</span>
+  <div class="downloads-grid">
+    <div class="downloads-panel">
+      <h3>Response documents</h3>
+      <a href="./assets/pdf/HETEROGENEITY-UNDER-OBSERVABILITY-FULL.pdf">Full paper (PDF)</a>
+      <a href="./assets/pdf/HETEROGENEITY-UNDER-OBSERVABILITY-FLASH-RFI.pdf">Submission version, 14 pages (PDF)</a>
+      <span class="note">The paper states the argument. The interactive model and scenes on this page work through the §4.1 formula, the §7.2–§7.3 metric distinction, and the §4.6 scenes.</span>
+    </div>
+    <div class="downloads-panel">
+      <h3>Self-evaluation toolkit</h3>
+      <a href="./assets/pdf/HUO-METRIC-BUILD-PROMPT.pdf">Metric test toolkit, build prompt (PDF)</a>
+      <span class="note"><strong>A build prompt, not a paper.</strong> Give it to any capable AI and it produces a simulator, an analyst worksheet, and a pilot design. The toolkit lets a program manager check the framework's arithmetic and metric procedure without trusting the author's claims. It does not measure real adversary cost; that is what the pilot design in deliverable three is for.</span>
+    </div>
   </div>
 
   <section>
@@ -502,9 +549,9 @@ The model sets (c_capture + c_exploit) = 1, so cost equals cycle count.</div>
 
     var hdVariant;
     if (vs === 0) {
-      hdVariant = 0;                       // every critical node is shared
+      hdVariant = 0;
     } else if (sh === 0) {
-      hdVariant = 1;                       // no shared path to take
+      hdVariant = 1;
     } else {
       hdVariant = state.sharedCheapest ? 0 : 1;
     }
@@ -556,7 +603,6 @@ The model sets (c_capture + c_exploit) = 1, so cost equals cycle count.</div>
     $('vs-slider').setAttribute('aria-valuetext', state.vsNodes + ' variant-specific critical node' + (state.vsNodes === 1 ? '' : 's') + ' per variant');
     $('sh-slider').setAttribute('aria-valuetext', state.sharedNodes + ' shared critical node' + (state.sharedNodes === 1 ? '' : 's'));
 
-    // The toggle only matters when both kinds of node exist.
     var toggle = $('cheapest-toggle');
     var row = $('toggle-row');
     var label = $('toggle-label');
