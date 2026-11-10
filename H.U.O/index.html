@@ -85,7 +85,7 @@
   .toggle-row.is-disabled label { cursor: not-allowed; }
   .toggle-row.is-disabled input[type="checkbox"] { cursor: not-allowed; }
   .toggle-row.is-disabled label::after {
-    content: ' (no effect — all nodes are shared)';
+    content: ' (' attr(data-reason) ')';
     color: var(--warn);
     font-size: 12px;
     font-weight: 400;
@@ -100,6 +100,7 @@
   }
   .output-row.primary .value { color: var(--accent); font-weight: 600; }
   .output-row.naive .value { color: var(--warn); }
+  .status { font-size: 13px; color: var(--ink); margin: 12px 0 0 0; line-height: 1.5; }
 
   .visual { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
 
@@ -194,9 +195,17 @@
       order: 3;
       flex: 0 0 40px;
     }
-    .toggle-row label { flex: 1 1 100%; }
+    .toggle-row { padding: 12px 0 4px; }
+    .toggle-row label { flex: 1 1 100%; margin-bottom: 0; }
     h1 { font-size: 22px; }
     .subtitle { font-size: 15px; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .container { max-width: none; padding: 0; }
+    .control-row input[type="range"], .reset-btn { display: none; }
+    .scene, .sim { break-inside: avoid; }
   }
 </style>
 </head>
@@ -206,24 +215,24 @@
   <header>
     <h1>Heterogeneity Under Observability</h1>
     <p class="subtitle">An Acquisition-Cost Framework for Assessing Diversity as a Cyber-Physical Defense</p>
-    <p class="byline">Sheldon K. Salmon · AionSystem · Response to DARPA-SN-27-17</p>
+    <p class="byline">AionSystem · Response to DARPA-SN-27-17</p>
   </header>
 
   <div class="downloads">
     <a href="./assets/heterogeneity-under-observability.pdf">Full paper (PDF)</a>
     <span class="sep">·</span>
     <a href="./assets/heterogeneity-under-observability-8pp.pdf">Submission version, 8 pages (PDF)</a>
-    <span class="note">This page is a supplement to the paper. The paper states the argument; the interactive model and scenes below are a worked example of the §4.1 formula, the §7.2–§7.3 metric distinction, and the §4.6 illustrations.</span>
+    <span class="note">This page supplements the paper. The paper states the argument; the interactive model and scenes below work through the §4.1 formula, the §7.2–§7.3 metric distinction, and the §4.6 scenes.</span>
   </div>
 
   <section>
     <h2>Summary</h2>
-    <p>The FLASH RFI asks whether heterogeneity reduces adversary knowledge transfer. This response shows that the answer depends on the adversary's acquisition model. Heterogeneity multiplies the adversary's cost by up to a factor of N when the adversary must acquire each variant separately (class-attacking A₁, capture-then-exploit A₂-hybrid), and does nothing when the adversary probes the deployed instance in real time (A₂-pure). The framework supplies a metric — H<sub>d_variant</sub> — that predicts the multiplier, an evaluation protocol that tests the metric against a calibrated exploit-development agent, and a set of declared assumptions under which the argument holds.</p>
+    <p>The FLASH RFI asks whether heterogeneity reduces adversary knowledge transfer. The answer depends on the adversary’s acquisition model. Heterogeneity multiplies the adversary’s cost by up to a factor of N when the adversary must acquire each variant separately (class-attacking A₁, capture-then-exploit A₂-hybrid). For static or slow-dynamic heterogeneity it does not change the cost when the adversary probes the deployed instance in real time (A₂-pure). The paper proposes a metric, H<sub>d_variant</sub>, that predicts the multiplier; a method for determining which adversary class applies to a program (§2.1); an evaluation protocol that tests the prediction (§9); and a set of declared assumptions under which the argument holds.</p>
   </section>
 
   <section>
     <h2>Interactive model of the §4.1 formula and its two metrics (§7.2–§7.3)</h2>
-    <p>The formula in §4.1 gives the adversary's cost under A₂-hybrid as a function of two quantities computed from the same fleet: H<sub>d_node</sub> (the fraction of critical failure nodes that are variant-specific) and H<sub>d_variant</sub> (the fraction of variants whose <em>cheapest</em> path to compromise is variant-specific). The formula uses H<sub>d_variant</sub>. When a fleet has a cheap shared node, the two metrics diverge (§7.3), and using H<sub>d_node</sub> in the formula overstates the adversary's burden by up to a factor of N.</p>
+    <p>The formula in §4.1 gives the adversary’s cost under A₂-hybrid as a function of two quantities computed from the same fleet: H<sub>d_node</sub> (the fraction of critical failure nodes that are variant-specific) and H<sub>d_variant</sub> (the fraction of variants whose <em>cheapest</em> path to compromise is variant-specific). The formula uses H<sub>d_variant</sub>. When a fleet has a cheap shared node, the two diverge (§7.3), and using H<sub>d_node</sub> in the formula overstates the adversary’s burden, by up to a factor of N. In the opposite structure it understates it (§7.2).</p>
 
     <div class="sim" id="sim">
       <div class="control-row">
@@ -242,13 +251,13 @@
         <span class="value" id="sh-value">1</span>
       </div>
       <div class="control-row toggle-row" id="toggle-row">
-        <label>
+        <label id="toggle-label">
           <input type="checkbox" checked id="cheapest-toggle">
           The shared node is the cheapest path to compromise (exploiting the shared node is easier than exploiting any variant-specific node)
         </label>
       </div>
 
-      <div class="output" aria-live="polite" aria-atomic="false">
+      <div class="output">
         <div class="output-row">
           <span class="label">H<sub>d_node</sub> (diagnostic)</span>
           <span class="value" id="hd-node-value">0.989</span>
@@ -267,42 +276,44 @@
         </div>
         <div class="output-row naive">
           <span class="label">Ratio (naive / correct)</span>
-          <span class="value" id="overstatement">9.9×</span>
+          <span class="value" id="overstatement">9.90×</span>
         </div>
+        <p class="status" id="status" aria-live="polite"></p>
       </div>
 
       <div class="visual">
         <svg viewBox="0 0 500 160" role="img" aria-label="Bar comparison of H_d_node and H_d_variant">
           <title>Bar comparison of H_d_node and H_d_variant</title>
 
-          <text x="0" y="40" font-size="12" fill="#666">H<tspan font-size="9" baseline-shift="sub">d_node</tspan></text>
+          <text x="0" y="40" font-size="12" fill="#666">H<tspan dy="3" font-size="9">d_node</tspan></text>
           <rect x="90" y="25" width="370" height="22" fill="#e8e6e2" rx="2"/>
           <rect id="hd-node-bar" x="90" y="25" width="366" height="22" fill="#a8825c" rx="2"/>
           <text id="hd-node-label" x="466" y="40" font-size="11" fill="#666" font-family="monospace">0.989</text>
 
-          <text x="0" y="115" font-size="12" fill="#666">H<tspan font-size="9" baseline-shift="sub">d_variant</tspan></text>
+          <text x="0" y="115" font-size="12" fill="#666">H<tspan dy="3" font-size="9">d_variant</tspan></text>
           <rect x="90" y="100" width="370" height="22" fill="#e8e6e2" rx="2"/>
           <rect id="hd-variant-bar" x="90" y="100" width="0" height="22" fill="#4a5f52" rx="2"/>
           <text id="hd-variant-label" x="466" y="115" font-size="11" fill="#666" font-family="monospace">0.000</text>
         </svg>
-        <p class="caption">The formula uses the lower bar. When the shared node is cheapest, H<sub>d_variant</sub> is 0 even though H<sub>d_node</sub> is near 1, and the naive use of H<sub>d_node</sub> overstates the adversary's burden by up to a factor of N.</p>
+        <p class="caption">The formula uses the lower bar. When the shared node is cheapest, H<sub>d_variant</sub> is 0 even though H<sub>d_node</sub> is near 1.</p>
       </div>
 
       <button class="reset-btn" id="reset-btn">Reset to worked example (9+1 case from §7.3)</button>
 
       <p class="abstraction-note">
-        <strong>Model scope.</strong> This model binarizes H<sub>d_variant</sub> to {0, 1} based on whether the shared node is the cheapest path to compromise; the paper's formula treats H<sub>d_variant</sub> as continuous over [0, 1]. The model uses unit values for c_capture and c_exploit so that cost equals cycle count; the paper's formula allows arbitrary magnitudes. The model assumes a single transfer cluster; the paper's Assumption 7 addresses multi-cluster cases. Where the model's display and the paper disagree, the paper governs.
+        <strong>Model scope.</strong> This model sets H<sub>d_variant</sub> to 0 or 1 according to whether the shared node is the cheapest path to compromise; the paper’s formula treats H<sub>d_variant</sub> as continuous over [0, 1]. The model uses unit values for c_capture and c_exploit so that cost equals cycle count; the paper’s formula allows arbitrary magnitudes. The model assumes a single transfer cluster (Assumption 7) and one capture per variant (k_cap = 1, Assumption 6). Where the model and the paper differ, the paper governs.
       </p>
     </div>
 
-    <div class="formula">Cost = [1 + H_d_variant · (N − 1)] × (c_capture + c_exploit)
+    <div class="formula">Cycles = 1 + H_d_variant · (N − 1)
+Cost   = ⌈Cycles⌉ × (c_capture + c_exploit)     (k_cap = 1)
 
-The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
+The model sets (c_capture + c_exploit) = 1, so cost equals cycle count.</div>
   </section>
 
   <section>
     <h2>The scenes of §4.6</h2>
-    <p>Five scenes from the paper (§4.6), shown as static diagrams. Scene 1 is the baseline. Scene 2 is the ceiling. Scene 3 is the intermediate case. Scene 4 is the case where apparent heterogeneity collapses to H<sub>d_variant</sub> = 0. Scene 5 is the case where capture is sublinear in N.</p>
+    <p>Five scenes from the paper (§4.6), shown as static diagrams. Doors are drawn as four for legibility; the paper’s scenes use 100 doors (Scenes 1, 2, 4) and ten variant types (Scene 3). Scene 1 is the baseline. Scene 2 is the ceiling. Scene 3 is the intermediate case. Scene 4 is the case where apparent heterogeneity collapses to H<sub>d_variant</sub> = 0. Scene 5 is the case where captures grow more slowly than the cycle count.</p>
 
     <div class="scene">
       <p class="scene-title">Scene 1 — homogeneous fleet, H<sub>d_variant</sub> = 0</p>
@@ -346,7 +357,7 @@ The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
         <text x="340" y="70" font-size="13" fill="#1a1a1a">Every door</text>
         <text x="340" y="88" font-size="13" fill="#1a1a1a">needs its own pick.</text>
       </svg>
-      <p>Every door has a distinct lock. The adversary's technique for door 1 does not open door 2. The building is compromised for the cost of N distinct lock picks: N × (c_capture + c_exploit). At H<sub>d_variant</sub> = 1, the formula's multiplier reaches its maximum.</p>
+      <p>Every door has a distinct lock. The adversary’s technique for door 1 does not open door 2. The building is compromised for the cost of N distinct lock picks: N × (c_capture + c_exploit). At H<sub>d_variant</sub> = 1, the formula’s multiplier reaches its maximum.</p>
     </div>
 
     <div class="scene">
@@ -384,11 +395,11 @@ The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
         <text x="20" y="98" font-size="12" fill="#666">3 unique types (3 distinct picks)</text>
         <text x="280" y="98" font-size="12" fill="#666">7 types share one lock (1 pick)</text>
       </svg>
-      <p>Ten variant types, ten instances each. Three types have unique locks (30 instances); seven types share one lock (70 instances). The adversary picks four locks total — three unique, one shared — and compromises all ten variants (100 instances). Cycle count: 1 + 0.3·(10 − 1) = 3.7, rounded up to 4.</p>
+      <p>Ten variant types, ten instances each. Three types have unique locks (30 instances); seven types share one lock (70 instances). The adversary picks four locks in total, three unique and one shared, and compromises all ten variants (100 instances). The formula gives 1 + 0.3·(10 − 1) = 3.7 cycles; the exact count is 0.3·10 + 1 = 4, the ceiling of 3.7 (§4.5).</p>
     </div>
 
     <div class="scene">
-      <p class="scene-title">Scene 4 — apparent heterogeneity, H<sub>d_node</sub> ≈ 1 but H<sub>d_variant</sub> = 0</p>
+      <p class="scene-title">Scene 4 — apparent heterogeneity, H<sub>d_variant</sub> = 0</p>
       <svg viewBox="0 0 500 120" role="img" aria-label="Four doors that look different but share the same lock">
         <title>Scene 4: apparent heterogeneity</title>
         <g stroke="#8b8b8b" stroke-width="1">
@@ -406,11 +417,11 @@ The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
         <text x="340" y="52" font-size="13" fill="#1a1a1a">Four appearances.</text>
         <text x="340" y="70" font-size="13" fill="#1a1a1a">Same lock.</text>
       </svg>
-      <p>The hulls, sensor suites, and vendor names differ. The firmware does not. The adversary's exploit transfers, and H<sub>d_node</sub> reports a differentiated fleet while the formula correctly reports a homogeneous one.</p>
+      <p>The hulls, sensor suites, and vendor names differ. The firmware does not. The adversary’s exploit transfers. A count that treats appearance differences as differentiation reports a diverse fleet; the §7.2 test finds the transfer, and the formula, using the post-test H<sub>d_variant</sub>, reports a homogeneous one.</p>
     </div>
 
     <div class="scene">
-      <p class="scene-title">Scene 5 — shared hallway, capture is sublinear in N</p>
+      <p class="scene-title">Scene 5 — shared hallway, captures grow more slowly than cycles</p>
       <svg viewBox="0 0 500 120" role="img" aria-label="One door leading to a central corridor that reaches three other rooms">
         <title>Scene 5: shared hallway</title>
         <rect x="20" y="40" width="50" height="60" rx="2" fill="#d8e2dc" stroke="#8b8b8b" stroke-width="1"/>
@@ -425,25 +436,25 @@ The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
           <rect x="230" y="50" width="50" height="40" rx="2"/>
           <rect x="230" y="90" width="50" height="40" rx="2"/>
         </g>
-        <text x="300" y="40" font-size="13" fill="#1a1a1a">Reachable through</text>
-        <text x="300" y="58" font-size="13" fill="#1a1a1a">the hallway:</text>
-        <text x="300" y="78" font-size="13" fill="#666" font-family="monospace">c_capture / k_cap</text>
+        <text x="300" y="40" font-size="13" fill="#1a1a1a">One capture reaches</text>
+        <text x="300" y="58" font-size="13" fill="#1a1a1a">all four variants:</text>
+        <text x="300" y="78" font-size="11" fill="#666" font-family="monospace">captures = ⌈cycles / k_cap⌉</text>
         <text x="300" y="96" font-size="12" fill="#666">k_cap = 4 (1 entry + 3 rooms)</text>
       </svg>
-      <p>One door leads to a corridor that reaches every room. The adversary captures one door (c_capture) and studies all four variants reachable through the corridor without a separate physical capture. The effective per-variant capture cost is c_capture / k_cap, where k_cap is the average number of variants reachable per capture. This is still A₂-hybrid: capture happens, then study; the topology reduces the cost, not the class.</p>
+      <p>One door leads to a corridor that reaches every room. The adversary captures one door and studies all four variants reachable through the corridor without a separate physical capture. The number of captures is max(1, ⌈cycles / k_cap⌉), where k_cap is the average number of variants reachable per capture; c_exploit is still paid per cycle. This is still A₂-hybrid: capture happens, then study. Topology changes the capture term, not the class.</p>
     </div>
   </section>
 
   <section>
     <h2>Scope and declared assumptions</h2>
-    <p>The paper declares its assumptions and its limitations. The summary below is a one-paragraph version; the full list is in §12 of the paper.</p>
-    <p><strong>Assumptions.</strong> The argument holds when four conditions are met: (1) the family has genuine degrees of freedom that provably preserve required behavior; (2) the adversary's acquisition model is A₁ or A₂-hybrid, not A₂-pure; (3) capture and exploit costs are independent across variants, with no transfer missed by the §7.2 independence test; and (4) the H<sub>d_variant</sub> used in the formula is the post-test, post-reduction value, not the raw node ratio.</p>
-    <p><strong>Limitations.</strong> The metric is analyst-dependent at three judgment points (L9). The evaluation protocol is proposed, not run. The framework has not been tested against a real fleet. The anchor domain is UUV/USV, named from public regulatory documents (COLREGs, 33 CFR Part 83); the response does not claim program participation, fleet data, or operational experience in the domain.</p>
+    <p>The paper declares its assumptions and limitations in §12. This is a short version.</p>
+    <p><strong>Assumptions.</strong> The argument holds when these conditions are met: (1) the family has genuine degrees of freedom that provably preserve required behavior; (2) the adversary’s acquisition class is A₁ or A₂-hybrid, determined per program by the method in §2.1; (3) the §7.2 test has identified every transfer between variants; (4) the H<sub>d_variant</sub> used in the formula is the post-test, post-reduction value, not the raw node ratio; (5) the capture term is adjusted for deployment topology; and (6) the non-independent variants form a single transfer cluster.</p>
+    <p><strong>Limitations.</strong> The correspondence between H<sub>d_variant</sub> and adversary cost is a hypothesis (L1). The evaluation protocol is proposed, not run (L2). The metric is analyst-dependent at three judgment points (L9). The defender’s burden includes an H<sub>d_variant</sub> computation that may grow as N² (L8). Exploitation through a shared specification or through specified in-envelope behavior is not priced by the formula (L10). The framework has not been tested on a real fleet. The anchor domain is UUV/USV, named from public regulatory documents (COLREGs, 33 CFR Part 83).</p>
     <p><strong>What would falsify the argument.</strong> Flat time-to-compromise under A₂-hybrid; H<sub>d_variant</sub> uncorrelated with documented failure history; the A₁ structural multiplier not shared with A₂-hybrid. These are stated in §12 and Annex B of the paper.</p>
   </section>
 
   <footer>
-    <p>This page is a supplement to a response submitted to DARPA-SN-27-17. It is served at this address for the convenience of reviewers.</p>
+    <p>This page supplements a response submitted to DARPA-SN-27-17.</p>
   </footer>
 
 </div>
@@ -454,13 +465,6 @@ The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
 
   function $(id) { return document.getElementById(id); }
 
-  var state = {
-    N: 10,
-    vsNodes: 9,
-    sharedNodes: 1,
-    sharedCheapest: true
-  };
-
   var DEFAULTS = Object.freeze({
     N: 10,
     vsNodes: 9,
@@ -468,43 +472,39 @@ The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
     sharedCheapest: true
   });
 
+  var state = {
+    N: DEFAULTS.N,
+    vsNodes: DEFAULTS.vsNodes,
+    sharedNodes: DEFAULTS.sharedNodes,
+    sharedCheapest: DEFAULTS.sharedCheapest
+  };
+
+  function clampInt(v, min, fallback) {
+    if (typeof v !== 'number' || isNaN(v)) return fallback;
+    v = Math.floor(v);
+    return v < min ? min : v;
+  }
+
   function sanitizeState() {
-    if (typeof state.N !== 'number' || isNaN(state.N) || state.N < 1) {
-      state.N = 1;
-    } else {
-      state.N = Math.floor(state.N);
-    }
-    if (typeof state.vsNodes !== 'number' || isNaN(state.vsNodes) || state.vsNodes < 0) {
-      state.vsNodes = 0;
-    } else {
-      state.vsNodes = Math.floor(state.vsNodes);
-    }
-    if (typeof state.sharedNodes !== 'number' || isNaN(state.sharedNodes) || state.sharedNodes < 0) {
-      state.sharedNodes = 0;
-    } else {
-      state.sharedNodes = Math.floor(state.sharedNodes);
-    }
+    state.N = clampInt(state.N, 1, 1);
+    state.vsNodes = clampInt(state.vsNodes, 0, 0);
+    state.sharedNodes = clampInt(state.sharedNodes, 0, 0);
   }
 
   function computeH() {
     var N = state.N;
     var vs = state.vsNodes;
     var sh = state.sharedNodes;
-    var unionNodes = sh + vs * N;
     var vsTotal = vs * N;
+    var unionNodes = sh + vsTotal;
 
-    var hdNode = 0;
-    if (unionNodes > 0) {
-      hdNode = vsTotal / unionNodes;
-    }
+    var hdNode = unionNodes > 0 ? vsTotal / unionNodes : 0;
 
     var hdVariant;
-    if (vs === 0 && sh === 0) {
-      hdVariant = 0;
+    if (vs === 0) {
+      hdVariant = 0;                       // every critical node is shared
     } else if (sh === 0) {
-      hdVariant = 1;
-    } else if (vs === 0) {
-      hdVariant = 0;
+      hdVariant = 1;                       // no shared path to take
     } else {
       hdVariant = state.sharedCheapest ? 0 : 1;
     }
@@ -516,13 +516,24 @@ The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
     return 1 + h * (state.N - 1);
   }
 
+  function statusText(cyclesNode, cyclesVariant) {
+    var ratio = cyclesNode / cyclesVariant;
+    if (Math.abs(ratio - 1) < 0.005) {
+      return 'H_d_node and H_d_variant give the same cycle count for this fleet.';
+    }
+    if (ratio > 1) {
+      return 'Using H_d_node would overstate the adversary\u2019s burden by ' + ratio.toFixed(2) + '\u00D7.';
+    }
+    return 'Using H_d_node would understate the adversary\u2019s burden (' + ratio.toFixed(2) + '\u00D7 the correct count).';
+  }
+
   function update() {
     sanitizeState();
 
     var metrics = computeH();
     var cyclesVariant = computeCycles(metrics.hdVariant);
     var cyclesNode = computeCycles(metrics.hdNode);
-    var ratio = cyclesVariant > 0 ? cyclesNode / cyclesVariant : 1;
+    var ratio = cyclesNode / cyclesVariant;
 
     $('n-value').textContent = state.N;
     $('vs-value').textContent = state.vsNodes;
@@ -532,42 +543,32 @@ The model sets (c_capture + c_exploit) = 1 so cost equals cycle count.</div>
     $('hd-variant-value').textContent = metrics.hdVariant.toFixed(3);
     $('cycles-variant').textContent = cyclesVariant.toFixed(2);
     $('cycles-node').textContent = cyclesNode.toFixed(2);
-    $('overstatement').textContent = ratio.toFixed(1) + '\u00D7';
+    $('overstatement').textContent = ratio.toFixed(2) + '\u00D7';
+    $('status').textContent = statusText(cyclesNode, cyclesVariant);
 
     var maxBarWidth = 370;
-    var nodeBar = $('hd-node-bar');
-    var variantBar = $('hd-variant-bar');
-
-    if (nodeBar) {
-      nodeBar.setAttribute('width', String(metrics.hdNode * maxBarWidth));
-    }
-    if (variantBar) {
-      variantBar.setAttribute('width', String(metrics.hdVariant * maxBarWidth));
-    }
-
+    $('hd-node-bar').setAttribute('width', String(metrics.hdNode * maxBarWidth));
+    $('hd-variant-bar').setAttribute('width', String(metrics.hdVariant * maxBarWidth));
     $('hd-node-label').textContent = metrics.hdNode.toFixed(3);
     $('hd-variant-label').textContent = metrics.hdVariant.toFixed(3);
 
-    // a11y: aria-valuetext for screen readers
-    var nSlider = $('n-slider');
-    var vsSlider = $('vs-slider');
-    var shSlider = $('sh-slider');
-    if (nSlider) nSlider.setAttribute('aria-valuetext', state.N + ' variant' + (state.N === 1 ? '' : 's'));
-    if (vsSlider) vsSlider.setAttribute('aria-valuetext', state.vsNodes + ' variant-specific critical node' + (state.vsNodes === 1 ? '' : 's') + ' per variant');
-    if (shSlider) shSlider.setAttribute('aria-valuetext', state.sharedNodes + ' shared critical node' + (state.sharedNodes === 1 ? '' : 's'));
+    $('n-slider').setAttribute('aria-valuetext', state.N + ' variant' + (state.N === 1 ? '' : 's'));
+    $('vs-slider').setAttribute('aria-valuetext', state.vsNodes + ' variant-specific critical node' + (state.vsNodes === 1 ? '' : 's') + ' per variant');
+    $('sh-slider').setAttribute('aria-valuetext', state.sharedNodes + ' shared critical node' + (state.sharedNodes === 1 ? '' : 's'));
 
-    // Disable toggle when vs === 0 (toggle has no effect)
+    // The toggle only matters when both kinds of node exist.
     var toggle = $('cheapest-toggle');
-    var toggleRow = $('toggle-row');
-    if (toggle && toggleRow) {
-      if (state.vsNodes === 0) {
-        toggle.disabled = true;
-        toggleRow.classList.add('is-disabled');
-      } else {
-        toggle.disabled = false;
-        toggleRow.classList.remove('is-disabled');
-      }
+    var row = $('toggle-row');
+    var label = $('toggle-label');
+    var reason = '';
+    if (state.vsNodes === 0) {
+      reason = 'no effect \u2014 all nodes are shared';
+    } else if (state.sharedNodes === 0) {
+      reason = 'no effect \u2014 there is no shared node';
     }
+    toggle.disabled = reason !== '';
+    row.classList.toggle('is-disabled', reason !== '');
+    label.setAttribute('data-reason', reason);
   }
 
   function attachListeners() {
