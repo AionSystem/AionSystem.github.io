@@ -42,7 +42,6 @@
   .app { display:flex; height:100%; width:100%; }
   @supports (height:100dvh) { .app { height:100dvh; } }
 
-  /* Sidebar */
   .sidebar { width:248px; flex-shrink:0; background:var(--bg-surface); border-right:1px solid var(--border-subtle);
     display:flex; flex-direction:column; overflow:hidden;
     transition:width 200ms ease, visibility 0s linear 0s; }
@@ -59,7 +58,6 @@
   .side-foot { padding:12px 14px; border-top:1px solid var(--border-subtle); font-size:12px; color:var(--text-dim); display:flex; flex-direction:column; gap:4px; white-space:nowrap; }
   .scrim { display:none; position:fixed; inset:0; z-index:20; background:rgba(0,0,0,.5); }
 
-  /* Main */
   .main { flex:1; min-width:0; display:flex; flex-direction:column; }
   .topbar { display:flex; align-items:center; gap:10px; padding:10px 16px;
     padding-top:calc(10px + env(safe-area-inset-top,0px));
@@ -75,12 +73,10 @@
     overscroll-behavior-y:contain; -webkit-overflow-scrolling:touch; }
   .col { max-width:820px; margin:0 auto; padding:0 20px 40px; }
 
-  /* Views */
   .view { padding-top:34px; }
   .view.home { padding-top:0; }
   .view > .msg:first-child h2 { margin-top:0; }
 
-  /* Hero */
   .hero { text-align:center; padding:44px 0 22px; }
   .hero svg { width:min(300px,70vw); height:auto; overflow:visible; }
   .ring { fill:none; stroke:url(#g); stroke-width:1.1; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1; animation:draw 2.4s ease forwards; }
@@ -95,7 +91,6 @@
   .btn.primary { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
   .btn.primary:hover { filter:brightness(1.08); }
 
-  /* Message-style blocks */
   .msg { display:flex; gap:12px; }
   .av { width:30px; height:30px; flex-shrink:0; border-radius:50%; background:var(--accent-soft); border:1px solid var(--accent); display:grid; place-items:center; color:var(--accent); font-size:12px; font-weight:700; }
   .msg-body { flex:1; min-width:0; }
@@ -115,7 +110,6 @@
   .tags { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 14px; }
   .tags span { font-family:var(--font-mono); font-size:11px; padding:4px 10px; border-radius:999px; border:1px solid var(--border-strong); color:var(--text-muted); }
 
-  /* Case study cards (proof view) */
   .case-card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:20px 22px; margin-bottom:14px; }
   .case-card:last-child { margin-bottom:0; }
   .case-top { display:flex; align-items:flex-start; gap:12px; margin-bottom:4px; }
@@ -139,7 +133,6 @@
   .case-card .acts { margin-top:12px; flex-wrap:wrap; }
   .case-card .btn { background:var(--bg-hover); font-size:13px; padding:8px 14px; }
 
-  /* Reserve filter */
   .filter-bar { display:flex; flex-wrap:wrap; gap:6px; margin:14px 0; }
   .filter-btn { font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; padding:6px 12px; border:1px solid var(--border-strong); border-radius:999px; background:transparent; color:var(--text-muted); }
   .filter-btn:hover { background:var(--bg-hover); color:var(--text-main); }
@@ -163,12 +156,10 @@
   .plan ul { margin:4px 0 8px; padding-left:18px; color:var(--text-muted); } .plan li { margin:4px 0; }
   .plan .btn { margin-top:auto; text-align:center; }
 
-  /* Rules & terms */
   .terms { display:flex; flex-direction:column; gap:10px; }
   .rule-head { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); margin:22px 0 10px; font-weight:600; }
   .rule-head:first-of-type { margin-top:6px; }
 
-  /* Terms of Service */
   .tos-meta { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); letter-spacing:.04em; text-align:center; padding:10px 12px; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); background:var(--bg-surface); margin-bottom:16px; }
   .tos-intro { font-size:14px; color:var(--text-muted); margin-bottom:14px; padding:12px 14px; border:1px dashed var(--border-strong); border-radius:var(--radius-sm); }
   .tos-block { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px 18px; margin-bottom:10px; }
@@ -179,6 +170,11 @@
   .tos-block ul:last-child { margin-bottom:0; }
   .tos-block ul li { margin:4px 0; }
   .tos-block b { color:var(--text-main); }
+  .tos-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:10px 0; }
+  .tos-scroll table { width:100%; border-collapse:collapse; font-size:13px; min-width:480px; }
+  .tos-scroll th { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border-subtle); color:var(--text-main); font-weight:600; font-size:12px; }
+  .tos-scroll td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border-subtle); color:var(--text-muted); vertical-align:top; line-height:1.5; }
+  .tos-scroll tr:last-child td { border-bottom:0; }
 
   .skel { border:1px dashed var(--border-strong); border-radius:var(--radius-md); padding:16px 18px; background:var(--bg-surface); }
   .skel i { display:block; height:9px; border-radius:5px; background:var(--bg-hover); margin:10px 0; }
@@ -190,7 +186,6 @@
 
   footer.foot { padding:36px 0 8px; font-size:12px; color:var(--text-dim); text-align:center; }
 
-  /* Composer */
   .composer { padding:12px 16px 14px;
     padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
     border-top:1px solid var(--border-subtle); background:var(--bg-base); }
@@ -201,7 +196,6 @@
   .send { background:var(--accent); color:var(--accent-ink); border:0; border-radius:var(--radius-sm); padding:8px 14px; font-weight:600; flex-shrink:0; }
   .cmeta { max-width:820px; margin:6px auto 0; font-size:11px; color:var(--text-dim); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
-  /* Chat thread */
   .thread { display:flex; flex-direction:column; gap:10px; padding:4px 0 20px; }
   .bub { max-width:88%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); background:var(--bg-card); }
   .bub.me { align-self:flex-end; background:var(--accent-soft); border-color:var(--accent); }
@@ -211,7 +205,6 @@
   .chip { background:transparent; border:1px solid var(--border-strong); color:var(--text-muted); border-radius:999px; padding:5px 11px; font-size:12px; }
   .chip:hover { background:var(--bg-hover); color:var(--text-main); }
 
-  /* FAQ */
   .faq-group { margin:18px 0 6px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); }
   details.q { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); margin-bottom:8px; }
   details.q[open] { border-color:var(--border-strong); }
@@ -221,7 +214,6 @@
   details.q[open] summary::after { transform:rotate(45deg); }
   details.q .ans { padding:0 16px 14px; color:var(--text-muted); }
 
-  /* Dialogs */
   dialog.intake, dialog.case-dlg { background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-strong); border-radius:var(--radius-md);
     padding:0; width:min(560px,92vw); max-height:90vh; max-height:90dvh; box-shadow:var(--shadow);
     overflow:auto; -webkit-overflow-scrolling:touch; }
@@ -244,12 +236,10 @@
   .acts { display:flex; gap:8px; flex-wrap:wrap; }
   @media (max-width:480px) { .two { grid-template-columns:1fr; } }
 
-  /* Case dialog body */
   .case-dlg .dlg-body p { font-size:14px; margin:8px 0; }
   .case-dlg .dlg-body p:first-child { margin-top:0; }
   .case-dlg .case-stats { margin-bottom:14px; }
 
-  /* Collapsed sidebar (desktop) */
   @media (min-width:821px) {
     .app.nav-collapsed .sidebar { width:0; border-right-width:0; visibility:hidden; transition:width 200ms ease, visibility 0s linear 200ms; }
   }
@@ -311,6 +301,8 @@
     .cmeta span:last-child { display:none; }
     .case-stats span { font-size:10.5px; }
     .tos-block { padding:12px 14px; }
+    .tos-scroll table { font-size:12px; }
+    .tos-scroll th, .tos-scroll td { padding:6px 8px; }
   }
 
   @media (max-width:560px) {
@@ -363,6 +355,7 @@
       <a href="#faq">FAQ</a>
       <a href="#terms">Rules &amp; terms</a>
       <a href="#tos">Terms of Service</a>
+      <a href="#privacy">Privacy Policy</a>
       <a href="#contact">Contact</a>
     </nav>
     <div class="side-foot">
@@ -821,7 +814,7 @@
             </div>
 
             <p style="margin-top:20px"><a class="btn primary" href="#contact" data-intake>Open intake form</a></p>
-            <p class="muted" style="margin-top:8px">Full legal terms: <a href="#tos">Terms of Service</a>.</p>
+            <p class="muted" style="margin-top:8px">Full legal terms: <a href="#tos">Terms of Service</a> · Data handling: <a href="#privacy">Privacy Policy</a>.</p>
           </div></div>
         </section>
 
@@ -1039,7 +1032,197 @@
 
             <div class="card" style="text-align:center;margin-top:14px">
               <p class="muted" style="margin-bottom:8px">End of Terms of Service.</p>
-              <p class="muted" style="margin:0">Questions: <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a></p>
+              <p class="muted" style="margin:0">Questions: <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a> · Data handling: <a href="#privacy">Privacy Policy</a></p>
+            </div>
+          </div></div>
+        </section>
+
+        <!-- PRIVACY POLICY -->
+        <section class="view" id="privacy" hidden>
+          <div class="msg"><div class="av">A</div><div class="msg-body">
+            <h2>Privacy Policy</h2>
+
+            <div class="tos-meta">Effective September 10, 2026 · Last updated November 12, 2026</div>
+
+            <div class="tos-intro">
+              What this site collects, how it’s used, who sees it, and how long it’s kept. Written plainly — no cookies, no trackers, no advertising networks. If something here isn’t clear, email <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a>.
+            </div>
+
+            <div class="tos-block">
+              <h3>1. Controller &amp; contact</h3>
+              <p>The data controller is <b>Sheldon K. Salmon, operating as AionSystem</b>, based in Evans Mills, New York, USA. Contact: <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a>.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>2. What is collected</h3>
+              <p><b>Website visitors.</b> This site does not use cookies, surveillance trackers, or third-party advertising networks. No personal data is collected automatically from visitors.</p>
+              <p><b>Contact forms and email.</b> If you submit a form or send an email, the information you provide is collected — name, email address, company, and any details about your document or inquiry.</p>
+              <p><b>Client documents.</b> Documents submitted for review are treated as confidential. They are used solely to deliver the review. Client documents are never used to train any AI model and are never shared with third parties except as necessary to run the analysis pipeline (see section 5).</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>3. How information is used</h3>
+              <ul>
+                <li>To respond to inquiries and provide requested services.</li>
+                <li>To perform the review and deliver the Findings Register.</li>
+                <li>To maintain records for legal and business purposes.</li>
+                <li>To comply with legal obligations and enforce the Terms of Service.</li>
+              </ul>
+              <p>Personal information and client artifacts are not sold, rented, or syndicated. Data is processed strictly for the review. Nothing is monetized or used for cross-context behavioral modeling.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>4. Lawful basis (GDPR / UK GDPR)</h3>
+              <ul>
+                <li><b>Consent.</b> When you voluntarily provide information via forms or email.</li>
+                <li><b>Contract performance.</b> When processing is necessary to deliver requested services.</li>
+                <li><b>Legitimate interests.</b> To respond to inquiries, maintain records, and protect legal rights.</li>
+              </ul>
+            </div>
+
+            <div class="tos-block">
+              <h3>5. Sub-processors</h3>
+              <p>Third parties are engaged only as necessary to provide the service:</p>
+              <ul>
+                <li><b>Stripe</b> — payment processing. Stripe’s privacy policy applies to payment data.</li>
+                <li><b>Microsoft Outlook</b> — email communication and document transmission.</li>
+                <li><b>GitHub Pages</b> — static website hosting. Does not process client documents.</li>
+                <li><b>AI inference providers</b> — AI is a core instrument in the review. Where cloud-based inference is required, zero-retention enterprise API endpoints are used. Your document is processed in ephemeral memory and is never stored, logged, or used for model training by the provider. If you need strictly local, air-gapped processing, that can be scoped as a Custom AION Build before engagement.</li>
+              </ul>
+            </div>
+
+            <div class="tos-block">
+              <h3>6. International transfers</h3>
+              <p>The practice is based in the United States. If you are located outside the U.S., your data may be transferred to and processed in the U.S. Appropriate safeguards — such as Standard Contractual Clauses — are relied on where required by applicable law.</p>
+              <p><b>Data localization.</b> No separate international data centers are maintained. Data may be processed in the United States regardless of your location.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>7. Retention</h3>
+              <ul>
+                <li><b>Inquiry data.</b> Up to 12 months after last contact, unless an engagement begins.</li>
+                <li><b>Client engagement records (financials).</b> 7 years after completion, for tax and legal requirements.</li>
+                <li><b>Raw client documents.</b> Cryptographically shredded or permanently deleted 30 days after final delivery, or immediately on written request, unless legal retention applies.</li>
+                <li><b>Deliverables.</b> The final report is archived in a sealed, unalterable state for professional liability defense and record-keeping, as described in the Terms of Service (§20, “Report integrity &amp; archival”).</li>
+              </ul>
+            </div>
+
+            <div class="tos-block">
+              <h3>8. Security</h3>
+              <p>Reasonable technical and organizational measures are in place, including:</p>
+              <ul>
+                <li>Encryption in transit and at rest where feasible.</li>
+                <li>Access controls limited to authorized individuals.</li>
+                <li>Periodic review of security practices.</li>
+              </ul>
+              <p>No method of electronic transmission or storage is 100% secure.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>9. Breach notification</h3>
+              <p>If a data breach affects your personal information, you will be notified within 72 hours where required by applicable law (for example, GDPR). For jurisdictions without a specific timeframe, notification is made without undue delay.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>10. Your rights</h3>
+              <p>Rights that may apply depending on your location. To exercise any right, email <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a> with “Privacy Request” in the subject line.</p>
+              <div class="tos-scroll">
+                <table>
+                  <thead>
+                    <tr><th>Jurisdiction</th><th>Key rights</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>European Union (GDPR) / UK (UK GDPR)</td><td>Access, rectification, erasure, restriction, portability, objection, withdraw consent, lodge complaint</td></tr>
+                    <tr><td>California (CCPA/CPRA)</td><td>Know, delete, correct, opt out of sale (no sale occurs), non-discrimination</td></tr>
+                    <tr><td>Brazil (LGPD)</td><td>Confirmation, access, correction, anonymization, portability, deletion, information about sharing</td></tr>
+                    <tr><td>China (PIPL)</td><td>Access, copy, correction, deletion, withdraw consent, restrict processing</td></tr>
+                    <tr><td>Canada (PIPEDA)</td><td>Access, correction, withdrawal of consent</td></tr>
+                    <tr><td>Australia (Privacy Act)</td><td>Access, correction</td></tr>
+                    <tr><td>South Africa (POPIA)</td><td>Access, correction, deletion, objection</td></tr>
+                    <tr><td>Japan (APPI)</td><td>Access, correction, deletion, opt out of direct marketing</td></tr>
+                    <tr><td>Singapore (PDPA)</td><td>Access, correction, withdrawal of consent</td></tr>
+                    <tr><td>US states (Virginia, Colorado, Connecticut, Utah, Nevada)</td><td>Similar to CCPA rights; may include opt out of targeted advertising</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="tos-block">
+              <h3>11. California notice at collection</h3>
+              <p>Under the CCPA and CPRA, this notice is provided at the point of collection. Categories collected: name, email address, company, document details. Purposes: to respond to the inquiry and deliver the requested services. Personal information is not sold or shared for cross-context behavioral advertising.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>12. DSAR procedure</h3>
+              <ul>
+                <li>Email <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a> with “Privacy Request” in the subject line.</li>
+                <li>Identity verification may be requested to protect your data.</li>
+                <li>Response within 30 days, or within the timeframe required by your jurisdiction.</li>
+              </ul>
+            </div>
+
+            <div class="tos-block">
+              <h3>13. Children’s privacy</h3>
+              <p>The service is not directed to individuals under 18. For EU/UK users, data of children under 16 is not processed without parental consent. Data is not knowingly collected from children. If you believe a child has provided data, contact <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a> so it can be removed.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>14. Cookies &amp; tracking</h3>
+              <p>No cookies, web beacons, or similar tracking technologies are used on this site. “Do Not Track” signals are honored; activity is not tracked across third-party websites. If this changes, the policy and any required consent mechanism will be updated.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>15. Automated decision-making</h3>
+              <p>No solely automated decision-making or profiling produces legal or similarly significant effects. AI in the review pipeline generates structural telemetry and failure-node mappings. All final dispositions, severity ratings, and resolution architecture are determined by the human analyst. The AI is an instrument; the analyst is the authority.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>16. Data Processing Addendum (DPA)</h3>
+              <p>For clients who require a formal Data Processing Addendum under GDPR or other privacy laws, client-provided DPAs are red-teamed before execution, and asymmetrical or unenforceable clauses are rejected. There is no pre-approved enterprise DPA template.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>17. Scope of the practice</h3>
+              <p>The practice operates as a solo proprietorship. It does not maintain a formal Data Protection Impact Assessment library, an enterprise privacy team, a designated Data Protection Officer, or a designated EU/UK representative under GDPR Article 27. The privacy model relies on data minimalism and local processing rather than enterprise compliance artifacts.</p>
+              <p>If your procurement requires formal DPIA artifacts, enterprise sub-processor audits, or an EU/UK representative, the practice cannot meet those requirements. In that case the work falls outside the practice’s scope, and this is better established before an engagement begins.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>18. Data flow summary</h3>
+              <p>Personal data flows as follows: (1) collection via email or form; (2) processing by AionSystem (Sheldon K. Salmon) in the United States; (3) limited sharing with sub-processors (Stripe for payments, Microsoft Outlook for email, zero-retention AI inference endpoints); (4) storage on secured local systems; (5) deletion after the retention period. No data is sold or used for advertising.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>19. Feedback on this policy</h3>
+              <p>This privacy policy has been reviewed against the same adversarial frameworks used on client documents. Gaps and loopholes are tested before publication.</p>
+              <p>Client documents are treated as confidential work product and are not used for marketing, case studies, or AI training without explicit written consent.</p>
+              <p>If you find a gap or an exploit path in this policy, send it via <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a>. Valid findings are patched in the next version. No bug bounty is offered.</p>
+              <p>Only what’s needed to deliver the requested service is collected. If it isn’t needed, it isn’t asked for.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>20. Third-party links</h3>
+              <p>This site links to external sites (GitHub, LinkedIn). Their privacy practices are not governed by this policy. Review their policies before providing personal data.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>21. Governing law</h3>
+              <p>This Privacy Policy is governed by the laws of the State of New York, USA. For dispute resolution and other legal terms, see the <a href="#tos">Terms of Service</a>.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>22. Version history</h3>
+              <ul>
+                <li><b>v1.3 — November 12, 2026.</b> Merged into the single-page site. Tone aligned with Terms of Service and Rules. Cross-reference to TOS corrected from §35 to §20. Enterprise-scope statements consolidated into a single section (17).</li>
+                <li><b>v1.2 — September 10, 2026.</b> Closed archival contradiction with Terms §35. Clarified GDPR Art. 22 AI telemetry boundaries. Stripped B2C manifesto language. Aligned pricing floor.</li>
+                <li><b>v1.1 — September 10, 2026.</b> Stripped enterprise compliance theater. Clarified AI sub-processor data handling. Aligned boundaries with Terms and FAQ.</li>
+                <li><b>v1.0 — September 3, 2026.</b> Initial privacy policy published.</li>
+              </ul>
+            </div>
+
+            <div class="card" style="text-align:center;margin-top:14px">
+              <p class="muted" style="margin-bottom:8px">End of Privacy Policy.</p>
+              <p class="muted" style="margin:0">Questions: <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a> · Legal terms: <a href="#tos">Terms of Service</a></p>
             </div>
           </div></div>
         </section>
@@ -1353,6 +1536,7 @@
     faq: 'FAQ',
     terms: 'Rules & terms',
     tos: 'Terms of Service',
+    privacy: 'Privacy Policy',
     contact: 'Contact'
   };
   var views = {};
@@ -1467,14 +1651,20 @@ var FAQ = [
     terms: {
       label: 'Rules & terms',
       prompt: 'What are the rules and terms?',
-      summary: 'The rules cover seven areas: practice and instruments, scope and exclusions, commercial terms, timing and transmission, turnaround and scope, data handling, and rebuttal and capacity. Key points: full prepayment before execution; fixed fees ($1,500 Fast Run, $7,500 Full Scan); full refund if you cancel before work begins, full refund if the whole document has no S3/S4 finding, otherwise non-refundable once the review is done; client NDAs get red-teamed before execution; documents are processed in ephemeral environments and shredded 30 days post-delivery; one written rebuttal per engagement; the practice is asynchronous with no discovery calls, no status meetings, no pitch decks. Full legal terms are in the Terms of Service.',
+      summary: 'The rules cover seven areas: practice and instruments, scope and exclusions, commercial terms, timing and transmission, turnaround and scope, data handling, and rebuttal and capacity. Key points: full prepayment before execution; fixed fees ($1,500 Fast Run, $7,500 Full Scan); full refund if you cancel before work begins, full refund if the whole document has no S3/S4 finding, otherwise non-refundable once the review is done; client NDAs get red-teamed before execution; documents are processed in ephemeral environments and shredded 30 days post-delivery; one written rebuttal per engagement; the practice is asynchronous with no discovery calls, no status meetings, no pitch decks. Full legal terms are in the Terms of Service. Data handling is described in the Privacy Policy.',
       chips: [8, 16, 19]
     },
     tos: {
       label: 'Terms of Service',
       prompt: 'What are the legal terms?',
-      summary: 'The full Terms of Service govern use of this website and engagement of the practice. Key points: solo-practitioner independent contractor (Sheldon K. Salmon, AionSystem); work begins when the document is first opened or read; three refund paths — pre-work cancellation, no S3/S4 finding in the whole document, otherwise non-refundable after review; client documents are confidential by default, processed in ephemeral environments, shredded 30 days post-delivery, never used to train AI; AI tools assist the review but the analyst retains sole authority over findings and severity ratings; liability capped at the engagement fee; deliverable deemed accepted after 14 days; one written rebuttal per engagement; New York law governs disputes with arbitration and class-action waiver; no professional liability (E&O) insurance — if procurement requires an insured provider, this is not a fit.',
+      summary: 'The full Terms of Service govern use of this website and engagement of the practice. Key points: solo-practitioner independent contractor (Sheldon K. Salmon, AionSystem); work begins when the document is first opened or read; three refund paths — pre-work cancellation, no S3/S4 finding in the whole document, otherwise non-refundable after review; client documents are confidential by default, processed in ephemeral environments, shredded 30 days post-delivery, never used to train AI; AI tools assist the review but the analyst retains sole authority over findings and severity ratings; liability capped at the engagement fee; deliverable deemed accepted after 14 days; one written rebuttal per engagement; New York law governs disputes with arbitration and class-action waiver; no professional liability (E&O) insurance — if procurement requires an insured provider, the practice is not a match.',
       chips: [8, 16, 19]
+    },
+    privacy: {
+      label: 'Privacy Policy',
+      prompt: 'How do you handle my data?',
+      summary: 'The privacy policy covers: what is collected (name, email, company, document details from intake only — no cookies, no trackers, no advertising networks); how it is used (solely to deliver the review, never to train AI, never sold or shared); who sees it (Stripe for payments, Outlook for email, zero-retention AI inference endpoints); how long it is kept (inquiry data 12 months, raw documents shredded 30 days post-delivery, financial records 7 years, the deliverable archived sealed for professional liability); and your rights (GDPR, UK GDPR, CCPA/CPRA, LGPD, PIPL, PIPEDA, APP, POPIA, APPI, PDPA and most US state laws — access, correction, deletion, portability, objection). Data is processed in the US with Standard Contractual Clauses where required. The practice does not maintain DPIA artifacts, a DPO, or a designated EU/UK representative — if procurement requires those, the work falls outside the practice’s scope. Email AionSystem@outlook.com with "Privacy Request" to exercise any right.',
+      chips: [16, 17, 2]
     },
     faq: {
       label: 'FAQ',
