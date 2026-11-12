@@ -40,18 +40,19 @@
 
   /* Sidebar */
   .sidebar { width:248px; flex-shrink:0; background:var(--bg-surface); border-right:1px solid var(--border-subtle);
-    display:flex; flex-direction:column; transition:margin-left 200ms ease; }
-  .brand { padding:22px 20px 14px; font-family:var(--font-serif); font-size:22px; letter-spacing:.02em; display:flex; align-items:center; gap:10px; }
-  .brand svg { width:34px; height:auto; }
+    display:flex; flex-direction:column; overflow:hidden;
+    transition:width 200ms ease, margin-left 200ms ease, visibility 0s linear 0s; }
+  .brand { padding:22px 20px 14px; font-family:var(--font-serif); font-size:22px; letter-spacing:.02em; display:flex; align-items:center; gap:10px; white-space:nowrap; }
+  .brand svg { width:34px; height:auto; flex-shrink:0; }
   .cta { margin:0 10px 12px; padding:10px 12px; display:flex; align-items:center; gap:8px; background:var(--accent-soft);
-    border:1px solid var(--accent); border-radius:var(--radius-sm); color:var(--text-main); font-weight:500; }
+    border:1px solid var(--accent); border-radius:var(--radius-sm); color:var(--text-main); font-weight:500; white-space:nowrap; }
   .cta:hover { background:var(--bg-hover); text-decoration:none; }
   .nav { flex:1; min-height:0; overflow-y:auto; padding:0 10px 8px; display:flex; flex-direction:column; gap:2px; }
-  .nav-label { padding:12px 10px 4px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); }
-  .nav a { display:block; padding:8px 10px; border-radius:var(--radius-sm); color:var(--text-muted); }
+  .nav-label { padding:12px 10px 4px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); white-space:nowrap; }
+  .nav a { display:block; padding:8px 10px; border-radius:var(--radius-sm); color:var(--text-muted); white-space:nowrap; }
   .nav a:hover { background:var(--bg-hover); color:var(--text-main); text-decoration:none; }
   .nav a.on { background:var(--bg-hover); color:var(--text-main); box-shadow:inset 2px 0 0 var(--accent); }
-  .side-foot { padding:12px 14px; border-top:1px solid var(--border-subtle); font-size:12px; color:var(--text-dim); display:flex; flex-direction:column; gap:4px; }
+  .side-foot { padding:12px 14px; border-top:1px solid var(--border-subtle); font-size:12px; color:var(--text-dim); display:flex; flex-direction:column; gap:4px; white-space:nowrap; }
   .scrim { display:none; position:fixed; inset:0; z-index:20; background:rgba(0,0,0,.5); }
 
   /* Main */
@@ -59,7 +60,6 @@
   .topbar { display:flex; align-items:center; gap:10px; padding:10px 16px; border-bottom:1px solid var(--border-subtle); background:var(--bg-base); }
   .icon-btn { width:36px; height:36px; display:grid; place-items:center; background:transparent; border:1px solid transparent; border-radius:var(--radius-sm); }
   .icon-btn:hover { background:var(--bg-hover); border-color:var(--border-subtle); }
-  #navBtn { display:none; }
   .title { font-weight:600; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .title small { color:var(--text-dim); font-weight:400; margin-left:8px; }
   .pill { font-size:12px; padding:4px 10px; border:1px solid var(--border-strong); border-radius:999px; color:var(--text-muted); display:inline-flex; gap:6px; align-items:center; }
@@ -68,8 +68,13 @@
   .scroll { flex:1; min-height:0; overflow-y:auto; scrollbar-width:thin; }
   .col { max-width:820px; margin:0 auto; padding:0 20px 40px; }
 
+  /* Views */
+  .view { padding-top:34px; }
+  .view.home { padding-top:0; }
+  .view > .msg:first-child h2 { margin-top:0; }
+
   /* Hero */
-  .hero { text-align:center; padding:56px 0 28px; }
+  .hero { text-align:center; padding:44px 0 22px; }
   .hero svg { width:min(300px,70vw); height:auto; overflow:visible; }
   .ring { fill:none; stroke:url(#g); stroke-width:1.1; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1; animation:draw 2.4s ease forwards; }
   .glow { fill:none; stroke:var(--accent); stroke-width:2.4; opacity:.28; filter:blur(2.2px); stroke-dasharray:1; stroke-dashoffset:1; animation:draw 2.4s ease forwards; }
@@ -84,7 +89,6 @@
   .btn.primary:hover { filter:brightness(1.08); }
 
   /* Message-style blocks */
-  section { padding-top:34px; scroll-margin-top:12px; }
   .msg { display:flex; gap:12px; }
   .av { width:30px; height:30px; flex-shrink:0; border-radius:50%; background:var(--accent-soft); border:1px solid var(--accent); display:grid; place-items:center; color:var(--accent); font-size:12px; font-weight:700; }
   .msg-body { flex:1; min-width:0; }
@@ -122,7 +126,7 @@
 
   footer.foot { padding:36px 0 8px; font-size:12px; color:var(--text-dim); text-align:center; }
 
-  /* Composer (contact bar) */
+  /* Composer (always visible) */
   .composer { padding:12px 16px 14px; border-top:1px solid var(--border-subtle); background:var(--bg-base); }
   .cbox { max-width:820px; margin:0 auto; display:flex; gap:8px; align-items:flex-end; background:var(--bg-card); border:1px solid var(--border-strong); border-radius:var(--radius-md); padding:8px 8px 8px 14px; }
   .cbox:focus-within { border-color:var(--accent); }
@@ -131,6 +135,15 @@
   .send { background:var(--accent); color:var(--accent-ink); border:0; border-radius:var(--radius-sm); padding:8px 14px; font-weight:600; }
   .cmeta { max-width:820px; margin:6px auto 0; font-size:11px; color:var(--text-dim); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
+  /* Chat thread */
+  .thread { display:flex; flex-direction:column; gap:10px; padding:4px 0 20px; }
+  .bub { max-width:88%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); background:var(--bg-card); }
+  .bub.me { align-self:flex-end; background:var(--accent-soft); border-color:var(--accent); }
+  .bub small { display:block; color:var(--text-dim); font-size:11px; margin-bottom:2px; letter-spacing:.04em; }
+  .bub .btn { margin-top:8px; }
+  .chips { max-width:820px; margin:0 auto 8px; display:flex; gap:6px; flex-wrap:wrap; }
+  .chip { background:transparent; border:1px solid var(--border-strong); color:var(--text-muted); border-radius:999px; padding:5px 11px; font-size:12px; }
+  .chip:hover { background:var(--bg-hover); color:var(--text-main); }
 
   /* FAQ */
   .faq-group { margin:18px 0 6px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); }
@@ -142,48 +155,36 @@
   details.q[open] summary::after { transform:rotate(45deg); }
   details.q .ans { padding:0 16px 14px; color:var(--text-muted); }
 
-  /* Ask thread */
-  .thread { max-width:820px; margin:0 auto 10px; max-height:42vh; overflow-y:auto; display:none; flex-direction:column; gap:10px; padding:2px 2px 6px; }
-  .thread.on { display:flex; }
-  .bub { max-width:88%; padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); background:var(--bg-card); }
-  .bub.me { align-self:flex-end; background:var(--accent-soft); border-color:var(--accent); }
-  .bub small { display:block; color:var(--text-dim); font-size:11px; margin-bottom:2px; letter-spacing:.04em; }
-  .chips { max-width:820px; margin:0 auto 8px; display:flex; gap:6px; flex-wrap:wrap; }
-  .chip { background:transparent; border:1px solid var(--border-strong); color:var(--text-muted); border-radius:999px; padding:5px 11px; font-size:12px; }
-  .chip:hover { background:var(--bg-hover); color:var(--text-main); }
+  /* Intake dialog */
+  dialog.intake { background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-strong); border-radius:var(--radius-md);
+    padding:0; width:min(560px,92vw); max-height:90vh; box-shadow:var(--shadow); }
+  dialog.intake::backdrop { background:rgba(0,0,0,.6); backdrop-filter:blur(4px); }
+  .dlg-head { display:flex; align-items:center; gap:10px; padding:14px 18px; border-bottom:1px solid var(--border-subtle); position:sticky; top:0; background:var(--bg-card); }
+  .dlg-head h3 { margin:0; flex:1; font-family:var(--font-serif); font-weight:400; font-size:20px; }
+  .dlg-body { padding:16px 18px 18px; }
+  .fld { margin-bottom:12px; }
+  .fld label { display:block; font-size:12px; color:var(--text-muted); margin-bottom:4px; }
+  .fld input[type=text], .fld input[type=email], .fld input[type=number], .fld select, .fld textarea {
+    width:100%; padding:9px 11px; background:var(--bg-base); border:1px solid var(--border-strong); border-radius:var(--radius-sm); color:var(--text-main); font:inherit; }
+  .fld input:focus, .fld select:focus, .fld textarea:focus { outline:0; border-color:var(--accent); }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .hint { font-size:12px; color:var(--s3); min-height:18px; margin:-4px 0 8px; }
+  .chk { display:flex; gap:8px; align-items:center; font-size:13px; color:var(--text-muted); }
+  .warn { font-size:12px; color:var(--text-dim); border:1px dashed var(--border-strong); border-radius:var(--radius-sm); padding:9px 11px; margin:12px 0; }
+  .acts { display:flex; gap:8px; flex-wrap:wrap; }
+  @media (max-width:480px) { .two { grid-template-columns:1fr; } }
 
-
-  [hidden] { display:none !important; }
-  /* Chat side panel */
-  .thread { display:flex; max-width:none; max-height:none; flex:1; min-height:0; margin:0; padding:12px; }
-  .chips { max-width:none; margin:0; padding:0 12px 8px; }
-  .composer .chips { max-width:820px; margin:0 auto 8px; padding:0; }
-  .panel { width:0; flex-shrink:0; overflow:hidden; background:var(--bg-surface); border-left:0 solid var(--border-subtle);
-    visibility:hidden; transition:width 220ms ease, height 220ms ease, visibility 0s linear 220ms; }
-  .app.chat-open .panel { width:380px; border-left-width:1px; visibility:visible; transition-delay:0s; }
-  .app.chat-open .composer { display:none; }
-  .panel-inner { width:380px; height:100%; display:flex; flex-direction:column; }
-  .phead { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--border-subtle); }
-  .phead .t { flex:1; font-weight:600; }
-  .phead .t small { display:block; font-weight:400; font-size:11px; color:var(--text-dim); }
-  .endbtn { background:transparent; border:1px solid var(--border-strong); color:var(--text-muted); border-radius:var(--radius-sm); padding:5px 10px; font-size:12px; }
-  .endbtn:hover { background:var(--bg-hover); color:var(--text-main); }
-  .pfoot { padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--border-subtle); }
-  .pfoot .cbox { max-width:none; }
-  .pfoot .note { font-size:11px; color:var(--text-dim); margin-top:6px; }
-  @media (max-width:820px) {
-    .panel { position:fixed; left:0; right:0; bottom:0; z-index:25; width:100%; height:0; border-left:0; border-top:0 solid var(--border-subtle); box-shadow:var(--shadow); }
-    .app.chat-open .panel { width:100%; height:58vh; border-top-width:1px; }
-    .panel-inner { width:100%; }
-    .app.chat-open .scroll { padding-bottom:58vh; }
+  /* Collapsed sidebar (desktop) */
+  @media (min-width:821px) {
+    .app.nav-collapsed .sidebar { width:0; border-right-width:0; visibility:hidden; transition:width 200ms ease, visibility 0s linear 200ms; }
   }
 
   @media (max-width:820px) {
     .sidebar { position:fixed; z-index:30; top:0; bottom:0; left:0; margin-left:-260px; width:248px; padding-top:env(safe-area-inset-top,0px); }
     .app.nav-open .sidebar { margin-left:0; }
     .app.nav-open .scrim { display:block; }
-    #navBtn { display:grid; }
     .pill { display:none; }
+    .hero { padding:30px 0 16px; }
   }
   @media (prefers-reduced-motion:reduce) {
     html { scroll-behavior:auto; } .ring,.glow { animation:none; stroke-dashoffset:0; } .comet { display:none; }
@@ -197,10 +198,10 @@
       <svg viewBox="0 0 32 16" aria-hidden="true"><path d="M16.00 8.00C12.47 4.47 8.95 1.25 6.45 1.25C3.95 1.25 2.50 4.47 2.50 8.00C2.50 11.53 3.95 14.75 6.45 14.75C8.95 14.75 12.47 11.53 16.00 8.00C19.53 4.47 23.05 1.25 25.55 1.25C28.05 1.25 29.50 4.47 29.50 8.00C29.50 11.53 28.05 14.75 25.55 14.75C23.05 14.75 19.53 11.53 16.00 8.00Z" fill="none" stroke="var(--accent)" stroke-width="1.6"/></svg>
       Aion
     </div>
-    <a class="cta" href="#contact">＋ Start an engagement</a>
+    <a class="cta" href="#contact" data-intake>＋ Start an engagement</a>
     <nav class="nav" id="nav">
       <div class="nav-label">Overview</div>
-      <a href="#top" class="on">Home</a>
+      <a href="#home" class="on">Home</a>
       <a href="#work">What I do</a>
       <a href="#proof">Published audits</a>
       <div class="nav-label">Engagements</div>
@@ -222,31 +223,36 @@
 
   <div class="main">
     <header class="topbar">
-      <button class="icon-btn" id="navBtn" aria-label="Open menu">☰</button>
-      <div class="title">Sheldon K. Salmon <small>AionSystem</small></div>
+      <button class="icon-btn" id="navBtn" aria-label="Toggle menu" aria-expanded="true">☰</button>
+      <div class="title">Sheldon K. Salmon <small id="crumb">AionSystem</small></div>
       <span class="pill"><span class="dot"></span> Accepting engagements</span>
       <button class="icon-btn" id="themeBtn" aria-label="Toggle light and dark theme">◐</button>
     </header>
 
     <div class="scroll" id="scroll">
-      <div class="col" id="top">
+      <div class="col">
 
-        <div class="hero">
-          <svg viewBox="0 0 32 16" aria-hidden="true">
-            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--text-main)"/></linearGradient></defs>
-            <path class="glow" pathLength="1" d="M16.00 8.00C12.47 4.47 8.95 1.25 6.45 1.25C3.95 1.25 2.50 4.47 2.50 8.00C2.50 11.53 3.95 14.75 6.45 14.75C8.95 14.75 12.47 11.53 16.00 8.00C19.53 4.47 23.05 1.25 25.55 1.25C28.05 1.25 29.50 4.47 29.50 8.00C29.50 11.53 28.05 14.75 25.55 14.75C23.05 14.75 19.53 11.53 16.00 8.00Z"/>
-            <path class="ring" pathLength="1" d="M16.00 8.00C12.47 4.47 8.95 1.25 6.45 1.25C3.95 1.25 2.50 4.47 2.50 8.00C2.50 11.53 3.95 14.75 6.45 14.75C8.95 14.75 12.47 11.53 16.00 8.00C19.53 4.47 23.05 1.25 25.55 1.25C28.05 1.25 29.50 4.47 29.50 8.00C29.50 11.53 28.05 14.75 25.55 14.75C23.05 14.75 19.53 11.53 16.00 8.00Z"/>
-            <circle class="comet" r=".42"><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" path="M16.00 8.00C12.47 4.47 8.95 1.25 6.45 1.25C3.95 1.25 2.50 4.47 2.50 8.00C2.50 11.53 3.95 14.75 6.45 14.75C8.95 14.75 12.47 11.53 16.00 8.00C19.53 4.47 23.05 1.25 25.55 1.25C28.05 1.25 29.50 4.47 29.50 8.00C29.50 11.53 28.05 14.75 25.55 14.75C23.05 14.75 19.53 11.53 16.00 8.00Z"/></circle>
-          </svg>
-          <h1>Authors can’t read their own documents the way an adversary will.</h1>
-          <p>I do that second job: I find the clauses that break when someone reads them to exploit them, before a counterparty does.</p>
-          <div class="row">
-            <a class="btn primary" href="#pricing">See the two engagements</a>
-            <a class="btn" href="#contact">Ask a question</a>
+        <!-- HOME -->
+        <section class="view home" id="home">
+          <div class="hero">
+            <svg viewBox="0 0 32 16" aria-hidden="true">
+              <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--text-main)"/></linearGradient></defs>
+              <path class="glow" pathLength="1" d="M16.00 8.00C12.47 4.47 8.95 1.25 6.45 1.25C3.95 1.25 2.50 4.47 2.50 8.00C2.50 11.53 3.95 14.75 6.45 14.75C8.95 14.75 12.47 11.53 16.00 8.00C19.53 4.47 23.05 1.25 25.55 1.25C28.05 1.25 29.50 4.47 29.50 8.00C29.50 11.53 28.05 14.75 25.55 14.75C23.05 14.75 19.53 11.53 16.00 8.00Z"/>
+              <path class="ring" pathLength="1" d="M16.00 8.00C12.47 4.47 8.95 1.25 6.45 1.25C3.95 1.25 2.50 4.47 2.50 8.00C2.50 11.53 3.95 14.75 6.45 14.75C8.95 14.75 12.47 11.53 16.00 8.00C19.53 4.47 23.05 1.25 25.55 1.25C28.05 1.25 29.50 4.47 29.50 8.00C29.50 11.53 28.05 14.75 25.55 14.75C23.05 14.75 19.53 11.53 16.00 8.00Z"/>
+              <circle class="comet" r=".42"><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" path="M16.00 8.00C12.47 4.47 8.95 1.25 6.45 1.25C3.95 1.25 2.50 4.47 2.50 8.00C2.50 11.53 3.95 14.75 6.45 14.75C8.95 14.75 12.47 11.53 16.00 8.00C19.53 4.47 23.05 1.25 25.55 1.25C28.05 1.25 29.50 4.47 29.50 8.00C29.50 11.53 28.05 14.75 25.55 14.75C23.05 14.75 19.53 11.53 16.00 8.00Z"/></circle>
+            </svg>
+            <h1>Authors can’t read their own documents the way an adversary will.</h1>
+            <p>I do that second job: I find the clauses that break when someone reads them to exploit them, before a counterparty does.</p>
+            <div class="row">
+              <a class="btn primary" href="#pricing">See the two engagements</a>
+              <button class="btn" id="askBtn" type="button">Ask a question</button>
+            </div>
           </div>
-        </div>
+          <div class="thread" id="thread" aria-live="polite"></div>
+        </section>
 
-        <section id="work">
+        <!-- WORK -->
+        <section class="view" id="work" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>What I do</h2>
             <p class="lead">Adversarial review of legal and regulatory documents, for in-house counsel, compliance leads and standards bodies.</p>
@@ -254,7 +260,8 @@
           </div></div>
         </section>
 
-        <section id="proof">
+        <!-- PROOF -->
+        <section class="view" id="proof" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>Published audits</h2>
             <p class="muted">Done unpaid and published, so you can judge the work before you hire me.</p>
@@ -267,7 +274,8 @@
           </div></div>
         </section>
 
-        <section id="deliverable">
+        <!-- DELIVERABLE -->
+        <section class="view" id="deliverable" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>What you get: a Findings Register</h2>
             <p>Each finding cites the exact clause, explains why it fails, and carries a severity rating, so you can check every rating yourself.</p>
@@ -281,7 +289,8 @@
           </div></div>
         </section>
 
-        <section id="pricing">
+        <!-- PRICING -->
+        <section class="view" id="pricing" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>Two engagements</h2>
             <div class="plans">
@@ -293,7 +302,7 @@
                   <li>The three highest-severity findings written up in full</li>
                   <li>Delivered in 5 business days</li>
                 </ul>
-                <a class="btn" href="#contact">Ask about Fast Run</a>
+                <a class="btn" href="#contact" data-intake="Fast Run">Start Fast Run intake</a>
               </div>
               <div class="card plan feat">
                 <h3>Full Scan</h3>
@@ -305,24 +314,27 @@
                   <li>Root-cause classification and insert-ready fix language</li>
                   <li>Delivered in 15 business days</li>
                 </ul>
-                <a class="btn primary" href="#contact">Ask about Full Scan</a>
+                <a class="btn primary" href="#contact" data-intake="Full Scan">Start Full Scan intake</a>
               </div>
             </div>
             <p class="muted" style="margin-top:12px">If your document doesn’t fit either tier, I’ll tell you.</p>
           </div></div>
         </section>
 
-        <section id="process">
+        <!-- PROCESS -->
+        <section class="view" id="process" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>Before you buy</h2>
             <p>Send questions by message and I’ll answer in writing. The process:</p>
             <ol class="steps">
               <li>Written intake</li><li>Payment</li><li>Upload</li><li>Report by email</li>
             </ol>
+            <p style="margin-top:14px"><a class="btn primary" href="#contact" data-intake>Start written intake</a></p>
           </div></div>
         </section>
 
-        <section id="terms">
+        <!-- TERMS -->
+        <section class="view" id="terms" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>Terms</h2>
             <div class="terms">
@@ -333,17 +345,21 @@
           </div></div>
         </section>
 
-        <section id="faq">
+        <!-- FAQ -->
+        <section class="view" id="faq" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>FAQ</h2>
             <div id="faqList"></div>
           </div></div>
         </section>
 
-        <section id="contact">
+        <!-- CONTACT -->
+        <section class="view" id="contact" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>Contact</h2>
-            <p>Questions are answered in writing. Use the box below, or reach me directly:</p>
+            <p>Start with the written intake. It builds an email to me; nothing is sent until you press send in your mail app, and no document is attached at this stage.</p>
+            <p><a class="btn primary" href="#contact" data-intake>Start written intake</a></p>
+            <p class="muted">Questions first? Ask in the box below, or reach me directly:</p>
             <p>
               <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a><br>
               <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" rel="noopener">LinkedIn · Sheldon K. Salmon</a><br>
@@ -358,7 +374,7 @@
     </div>
 
     <div class="composer">
-      <div class="chips" id="chips"><button class="chip" id="resume" hidden>↩ Resume chat</button></div>
+      <div class="chips" id="chips"></div>
       <div class="cbox">
         <textarea id="msg" rows="1" placeholder="Ask a question about an engagement…" aria-label="Your question"></textarea>
         <button class="send" id="send">Ask</button>
@@ -366,62 +382,148 @@
       <div class="cmeta"><span>Instant answers are written in advance. Anything else goes to me by email.</span><span>Fast Run $1,500 · Full Scan $7,500</span></div>
     </div>
   </div>
-  <aside class="panel" id="panel" aria-label="Ask a question">
-    <div class="panel-inner">
-      <div class="phead">
-        <div class="t">Ask Aion<small>Prepared answers · scroll the site freely</small></div>
-        <button class="endbtn" id="endChat" aria-label="End chat and clear it">End chat</button>
-        <button class="icon-btn" id="hideChat" aria-label="Hide chat panel">✕</button>
-      </div>
-      <div class="thread" id="thread" aria-live="polite"></div>
-      <div class="chips" id="pchips"></div>
-      <div class="pfoot">
-        <div class="cbox">
-          <textarea id="pmsg" rows="1" placeholder="Ask a follow-up…" aria-label="Your question"></textarea>
-          <button class="send" id="psend">Ask</button>
-        </div>
-        <div class="note">Not found here? I’ll answer by email: AionSystem@outlook.com</div>
-      </div>
-    </div>
-  </aside>
 </div>
+
+<dialog class="intake" id="intake" aria-labelledby="intakeTitle">
+  <div class="dlg-head"><h3 id="intakeTitle">Written intake</h3><button class="icon-btn" id="intakeClose" aria-label="Close intake form" type="button">✕</button></div>
+  <form class="dlg-body" id="intakeForm" novalidate>
+    <div class="two">
+      <div class="fld"><label for="f-name">Full name *</label><input type="text" id="f-name" name="Name" required autocomplete="name"></div>
+      <div class="fld"><label for="f-email">Email *</label><input type="email" id="f-email" name="Email" required autocomplete="email"></div>
+    </div>
+    <div class="fld"><label for="f-org">Organization</label><input type="text" id="f-org" name="Organization" autocomplete="organization"></div>
+    <div class="fld"><label for="f-title">Document title *</label><input type="text" id="f-title" name="Document title" required></div>
+    <div class="two">
+      <div class="fld"><label for="f-type">Document type *</label><select id="f-type" name="Document type" required>
+        <option>Contract</option><option>Governance framework</option><option>AI policy</option><option>Technical specification</option>
+        <option>Regulatory filing</option><option>Internal policy</option><option>Terms of service</option><option>Standard, code or oath</option><option>Other</option></select></div>
+      <div class="fld"><label for="f-pages">Approx. pages *</label><input type="number" id="f-pages" name="Pages" min="1" required></div>
+    </div>
+    <div class="two">
+      <div class="fld"><label for="f-scope">Scope</label><select id="f-scope" name="Scope"><option>One document</option><option>A set of related documents</option></select></div>
+      <div class="fld"><label for="f-tier">Engagement *</label><select id="f-tier" name="Engagement" required>
+        <option>Fast Run ($1,500)</option><option>Full Scan ($7,500)</option><option>Not sure, advise me</option></select></div>
+    </div>
+    <div class="hint" id="fit" aria-live="polite"></div>
+    <div class="fld"><label for="f-concern">Known concerns or clauses you want pressure-tested (optional)</label><textarea id="f-concern" name="Concerns" rows="3"></textarea></div>
+    <label class="chk"><input type="checkbox" id="f-nda" name="NDA"> I want an NDA in place before I upload</label>
+    <div class="warn">Do not attach or paste the document. After intake and payment you’ll upload it. This form only prepares an email; nothing is sent until you press send.</div>
+    <div class="acts">
+      <button class="btn primary" type="button" id="intakeSend">Prepare email</button>
+      <button class="btn" type="button" id="intakeCopy">Copy as text</button>
+    </div>
+  </form>
+</dialog>
 
 <script>
 (function () {
   var app = document.getElementById('app');
   var root = document.documentElement;
-  function nav(open) { app.classList.toggle('nav-open', open); }
-  document.getElementById('navBtn').onclick = function () { nav(true); };
-  document.getElementById('scrim').onclick = function () { nav(false); };
-  document.getElementById('nav').addEventListener('click', function (e) { if (e.target.closest('a')) nav(false); });
+  var sc = document.getElementById('scroll');
+  var nav = document.getElementById('nav');
+  var navBtn = document.getElementById('navBtn');
+  var crumb = document.getElementById('crumb');
 
+  // ---- Theme -------------------------------------------------------------
   document.getElementById('themeBtn').onclick = function () {
     var next = root.dataset.theme === 'light' ? 'dark' : 'light';
     root.dataset.theme = next;
     try { localStorage.setItem('aion-site-theme', next); } catch (e) {}
   };
 
-  // Highlight the active section in the sidebar
-  var links = {}, sc = document.getElementById('scroll');
-  document.querySelectorAll('#nav a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (en) {
-      en.forEach(function (x) {
-        if (x.isIntersecting && links[x.target.id]) {
-          document.querySelectorAll('#nav a.on').forEach(function (a) { a.classList.remove('on'); });
-          links[x.target.id].classList.add('on');
-        }
-      });
-    }, { root: sc, rootMargin: '-10% 0px -70% 0px' });
-    document.querySelectorAll('#top, section[id]').forEach(function (s) { io.observe(s); });
+  // ---- Sidebar collapse (desktop) / drawer (mobile) ----------------------
+  var mq = window.matchMedia('(max-width:820px)');
+  var KEY = 'aion-nav-collapsed';
+
+  function setCollapsed(on) {
+    app.classList.toggle('nav-collapsed', on);
+    navBtn.setAttribute('aria-expanded', on ? 'false' : 'true');
+    try { localStorage.setItem(KEY, on ? '1' : '0'); } catch (e) {}
   }
+
+  try {
+    if (!mq.matches && localStorage.getItem(KEY) === '1') setCollapsed(true);
+  } catch (e) {}
+
+  navBtn.onclick = function () {
+    if (mq.matches) {
+      app.classList.toggle('nav-open');
+      navBtn.setAttribute('aria-expanded', app.classList.contains('nav-open') ? 'true' : 'false');
+    } else {
+      setCollapsed(!app.classList.contains('nav-collapsed'));
+    }
+  };
+
+  document.getElementById('scrim').onclick = function () {
+    app.classList.remove('nav-open');
+    navBtn.setAttribute('aria-expanded', 'false');
+  };
+
+  function onMqChange() {
+    if (!mq.matches) {
+      app.classList.remove('nav-open');
+      navBtn.setAttribute('aria-expanded', app.classList.contains('nav-collapsed') ? 'false' : 'true');
+    }
+  }
+  if (mq.addEventListener) mq.addEventListener('change', onMqChange);
+  else if (mq.addListener) mq.addListener(onMqChange);
+
+  // ---- Router ------------------------------------------------------------
+  var LABELS = {
+    home: 'AionSystem',
+    work: 'What I do',
+    proof: 'Published audits',
+    deliverable: 'The Findings Register',
+    pricing: 'Fast Run · Full Scan',
+    process: 'Process',
+    faq: 'FAQ',
+    terms: 'Terms',
+    contact: 'Contact'
+  };
+
+  var views = {};
+  document.querySelectorAll('.view').forEach(function (v) { views[v.id] = v; });
+
+  var links = {};
+  nav.querySelectorAll('a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+
+  var current = 'home';
+
+  function show(id) {
+    if (!views[id]) id = 'home';
+    current = id;
+    Object.keys(views).forEach(function (k) { views[k].hidden = (k !== id); });
+    nav.querySelectorAll('a.on').forEach(function (a) { a.classList.remove('on'); });
+    if (links[id]) links[id].classList.add('on');
+    crumb.textContent = LABELS[id] || 'AionSystem';
+    app.classList.remove('nav-open');
+    navBtn.setAttribute('aria-expanded', mq.matches ? 'false' : (app.classList.contains('nav-collapsed') ? 'false' : 'true'));
+    sc.scrollTop = 0;
+  }
+
+  function route() {
+    show((location.hash || '').slice(1) || 'home');
+  }
+
+  window.addEventListener('hashchange', route);
+  route();
+
+  // Programmatic navigation without adding history entries.
+  window.Aion = {
+    go: function (id) {
+      if (!views[id]) id = 'home';
+      try { history.replaceState(null, '', '#' + id); } catch (e) { location.hash = id; }
+      show(id);
+    },
+    current: function () { return current; }
+  };
 })();
 </script>
 <script>
 var FAQ = [
  ["Getting started","What kinds of documents do you review?","Contracts, policies, specifications, frameworks, regulatory filings, oaths, technical standards, and any high-stakes written document where a failed clause is expensive.","document types contract policy standard regulation filing oath specification review"],
- ["Getting started","How does an engagement work?","Written intake, payment, upload, and a report by email. Send questions first and I’ll answer in writing.","process steps work how start begin intake upload"],
- ["Getting started","How do I submit a document?","After intake and payment you upload it. PDF, .docx and .txt are fine. If it’s sensitive, tell me and we’ll agree on a transfer method first.","submit send upload format pdf docx file transfer"],
+ ["Getting started","How does an engagement work?","Written intake, payment, upload, and a report by email. Start with the intake form on this site, or send questions first and I’ll answer in writing.","process steps work how start begin intake upload"],
+ ["Getting started","How do I submit a document?","Start with the written intake form and don’t email the document yet. After intake and payment you upload it. PDF, .docx and .txt are fine. If it’s sensitive, tell me and we’ll agree on a transfer method first.","submit send upload format pdf docx file transfer"],
  ["Getting started","Do you work with clients internationally?","Yes. Any jurisdiction, any counterparty. English-language documents only; if yours isn’t in English, provide a certified translation.","international country abroad jurisdiction language english translation"],
  ["Pricing","What do the two engagements cost?","Fast Run is $1,500: one document up to 75 pages, with the three highest-severity findings written up in full, in 5 business days. Full Scan is $7,500: one document up to 200 pages or a set of related documents, every finding written up, plus compounding-gap analysis, root-cause classification and insert-ready fix language, in 15 business days.","price cost fee fast run full scan tiers how much pricing quote"],
  ["Pricing","What if my document doesn’t fit either tier?","I’ll tell you. I won’t stretch a tier to cover work it isn’t sized for.","fit tier longer pages too big custom other"],
@@ -442,77 +544,179 @@ var FAQ = [
  ["Limits","Do you carry professional liability insurance?","No. I work as a solo practitioner and my liability is limited to the engagement fee. If your procurement requires insured providers, I’m not the right fit.","insurance liability e&o indemnity vendor onboarding"]
 ];
 (function(){
-  var list=document.getElementById('faqList'), last='';
-  FAQ.forEach(function(f,i){
-    if(f[0]!==last){ last=f[0]; var g=document.createElement('div'); g.className='faq-group'; g.textContent=last; list.appendChild(g); }
-    var d=document.createElement('details'); d.className='q'; d.id='q'+i;
-    var sm=document.createElement('summary'); sm.textContent=f[1];
-    var a=document.createElement('div'); a.className='ans'; a.textContent=f[2];
+  var list = document.getElementById('faqList'), last = '';
+  FAQ.forEach(function(f, i){
+    if (f[0] !== last) {
+      last = f[0];
+      var g = document.createElement('div'); g.className = 'faq-group'; g.textContent = last;
+      list.appendChild(g);
+    }
+    var d = document.createElement('details'); d.className = 'q'; d.id = 'q' + i;
+    var sm = document.createElement('summary'); sm.textContent = f[1];
+    var a = document.createElement('div'); a.className = 'ans'; a.textContent = f[2];
     d.appendChild(sm); d.appendChild(a); list.appendChild(d);
   });
 
-  var app=document.getElementById('app'), ta=document.getElementById('msg'), pta=document.getElementById('pmsg'),
-      th=document.getElementById('thread'), chips=document.getElementById('chips'), pchips=document.getElementById('pchips'),
-      resume=document.getElementById('resume');
-  function grow(t){ t.addEventListener('input',function(){ t.style.height='auto'; t.style.height=Math.min(t.scrollHeight,120)+'px'; }); }
-  grow(ta); grow(pta);
-  var STOP=/^(the|and|for|you|your|are|can|does|what|how|do|is|a|an|to|of|in|my|i|it|me|on|with|this|that|will|would|about|have|get)$/;
-  function match(q){
-    var w=q.toLowerCase().replace(/[^a-z0-9\-& ]/g,' ').split(/\s+/).filter(function(x){return x.length>1&&!STOP.test(x);});
-    return FAQ.map(function(f,i){
-      var hay=' '+(f[1]+' '+f[3]).toLowerCase()+' ', n=0;
-      w.forEach(function(x){ if(hay.indexOf(' '+x)>-1) n+=2; else if(x.length>3&&hay.indexOf(x.slice(0,4))>-1) n+=1; });
-      return {i:i,n:n};
-    }).sort(function(a,b){return b.n-a.n;});
-  }
-  function bub(cls,who,text){
-    var b=document.createElement('div'); b.className='bub '+cls;
-    var s=document.createElement('small'); s.textContent=who; var p=document.createElement('div'); p.textContent=text;
-    b.appendChild(s); b.appendChild(p); th.appendChild(b); th.scrollTop=th.scrollHeight; return b;
-  }
-  function suggest(ids,el,keep){
-    Array.prototype.slice.call(el.querySelectorAll('.chip[data-s]')).forEach(function(c){ c.remove(); });
-    ids.forEach(function(i){ var c=document.createElement('button'); c.className='chip'; c.setAttribute('data-s','1'); c.textContent=FAQ[i][1]; c.onclick=function(){ ask(FAQ[i][1]); }; el.appendChild(c); });
-  }
-  function openPanel(){
-    app.classList.add('chat-open');
-    if(!th.children.length) bub('','Aion','Ask about pricing, the process, turnaround, confidentiality or refunds. These are prepared answers; anything else I’ll take by email.');
-    setTimeout(function(){ pta.focus(); },230);
-  }
-  function hidePanel(){
-    app.classList.remove('chat-open');
-    resume.hidden = th.children.length<2;
-  }
-  function endChat(){
-    th.innerHTML=''; pchips.innerHTML=''; resume.hidden=true;
-    app.classList.remove('chat-open');
-  }
-  function ask(q){
-    q=q.trim(); if(!q) return;
-    openPanel();
-    bub('me','You',q); ta.value=''; pta.value=''; ta.style.height=pta.style.height='auto';
-    var m=match(q), top=m[0];
-    if(top.n>=2){
-      bub('','Aion · prepared answer',FAQ[top.i][2]);
-      var rel=m.slice(1,4).filter(function(x){return x.n>0;}).map(function(x){return x.i;});
-      suggest(rel.length?rel:[0,4,8],pchips);
-    } else {
-      var b=bub('','Aion','I don’t have a written answer for that one. Send it to me and I’ll reply in writing.');
-      var a=document.createElement('a'); a.className='btn primary'; a.style.marginTop='8px'; a.textContent='Email this question';
-      a.href='mailto:AionSystem@outlook.com?subject='+encodeURIComponent('Engagement question')+'&body='+encodeURIComponent(q);
-      b.appendChild(a); suggest([4,8,17],pchips);
-    }
-  }
-  suggest([4,8,17],chips);
-  resume.onclick=function(){ resume.hidden=true; app.classList.add('chat-open'); setTimeout(function(){ pta.focus(); },230); };
-  document.getElementById('send').onclick=function(){ ask(ta.value); };
-  document.getElementById('psend').onclick=function(){ ask(pta.value); };
-  document.getElementById('hideChat').onclick=hidePanel;
-  document.getElementById('endChat').onclick=endChat;
-  [ta,pta].forEach(function(t){ t.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); ask(t.value); } }); });
-  document.getElementById('panel').addEventListener('keydown',function(e){ if(e.key==='Escape') hidePanel(); });
-})();
+  var ta = document.getElementById('msg'),
+      th = document.getElementById('thread'),
+      chips = document.getElementById('chips'),
+      sc = document.getElementById('scroll'),
+      home = document.getElementById('home');
 
+  ta.addEventListener('input', function(){
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+  });
+
+  var STOP = /^(the|and|for|you|your|are|can|does|what|how|do|is|a|an|to|of|in|my|i|it|me|on|with|this|that|will|would|about|have|get)$/;
+
+  function match(q){
+    var w = q.toLowerCase().replace(/[^a-z0-9\-& ]/g, ' ').split(/\s+/)
+      .filter(function(x){ return x.length > 1 && !STOP.test(x); });
+    return FAQ.map(function(f, i){
+      var hay = ' ' + (f[1] + ' ' + f[3]).toLowerCase() + ' ', n = 0;
+      w.forEach(function(x){
+        if (hay.indexOf(' ' + x) > -1) n += 2;
+        else if (x.length > 3 && hay.indexOf(x.slice(0, 4)) > -1) n += 1;
+      });
+      return { i: i, n: n };
+    }).sort(function(a, b){ return b.n - a.n; });
+  }
+
+  function bub(cls, who, text){
+    var b = document.createElement('div'); b.className = 'bub' + (cls ? ' ' + cls : '');
+    var s = document.createElement('small'); s.textContent = who;
+    var p = document.createElement('div'); p.textContent = text;
+    b.appendChild(s); b.appendChild(p);
+    th.appendChild(b);
+    return b;
+  }
+
+  function scrollEnd(){
+    sc.scrollTop = sc.scrollHeight;
+  }
+
+  function suggest(ids){
+    Array.prototype.slice.call(chips.querySelectorAll('.chip[data-s]')).forEach(function(c){ c.remove(); });
+    ids.forEach(function(i){
+      var c = document.createElement('button');
+      c.className = 'chip'; c.setAttribute('data-s', '1'); c.type = 'button';
+      c.textContent = FAQ[i][1];
+      c.onclick = function(){ ask(FAQ[i][1]); };
+      chips.appendChild(c);
+    });
+  }
+
+  function ask(q){
+    q = (q || '').trim();
+    if (!q) return;
+
+    // Answers always land in the home conversation.
+    if (home.hidden) window.Aion.go('home');
+
+    bub('me', 'You', q);
+    ta.value = ''; ta.style.height = 'auto';
+
+    var m = match(q), top = m[0];
+
+    if (top.n >= 2) {
+      bub('', 'Aion · prepared answer', FAQ[top.i][2]);
+      var rel = m.slice(1, 4).filter(function(x){ return x.n > 0; }).map(function(x){ return x.i; });
+      suggest(rel.length ? rel : [0, 4, 8]);
+    } else {
+      var b = bub('', 'Aion', 'I don’t have a written answer for that one. Send it to me and I’ll reply in writing.');
+      var a = document.createElement('a');
+      a.className = 'btn primary';
+      a.textContent = 'Email this question';
+      a.href = 'mailto:AionSystem@outlook.com?subject=' + encodeURIComponent('Engagement question')
+             + '&body=' + encodeURIComponent(q);
+      b.appendChild(a);
+      suggest([4, 8, 17]);
+    }
+
+    setTimeout(scrollEnd, 0);
+  }
+
+  // Seed the conversation
+  bub('', 'Aion', 'Ask about pricing, the process, turnaround, confidentiality or refunds. These are prepared answers; anything else I’ll take by email.');
+  suggest([4, 8, 17]);
+
+  document.getElementById('send').onclick = function(){ ask(ta.value); };
+  ta.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(ta.value); }
+  });
+  document.getElementById('askBtn').onclick = function(){
+    ta.focus();
+    setTimeout(scrollEnd, 0);
+  };
+})();
+</script>
+<script>
+(function(){
+  var dlg = document.getElementById('intake'), f = document.getElementById('intakeForm');
+  var tier = document.getElementById('f-tier'), pages = document.getElementById('f-pages'),
+      scope = document.getElementById('f-scope'), fit = document.getElementById('fit');
+
+  function hint(){
+    var n = parseInt(pages.value, 10), t = tier.value, msg = '';
+    if (n > 200) msg = 'Over 200 pages: this may not fit either engagement. I’ll tell you.';
+    else if (t.indexOf('Fast') === 0 && n > 75) msg = 'Fast Run covers up to 75 pages. Full Scan covers up to 200.';
+    else if (t.indexOf('Fast') === 0 && scope.value.indexOf('set') > -1) msg = 'Fast Run is one document. A set of related documents is a Full Scan.';
+    fit.textContent = msg;
+  }
+  [tier, pages, scope].forEach(function(e){ e.addEventListener('input', hint); });
+
+  function open(t){
+    if (t) {
+      for (var i = 0; i < tier.options.length; i++) {
+        if (tier.options[i].text.indexOf(t) === 0) tier.selectedIndex = i;
+      }
+    }
+    hint();
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+  }
+
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('[data-intake]');
+    if (!a) return;
+    e.preventDefault();
+    open(a.getAttribute('data-intake'));
+    document.getElementById('app').classList.remove('nav-open');
+  });
+
+  document.getElementById('intakeClose').onclick = function(){ dlg.close(); };
+  dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+
+  function build(){
+    if (!f.reportValidity()) return null;
+    var out = [], els = f.elements;
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (!el.name) continue;
+      if (el.type === 'checkbox') out.push(el.name + ': ' + (el.checked ? 'Yes, requested before upload' : 'No'));
+      else if (el.value.trim()) out.push(el.name + ': ' + el.value.trim());
+    }
+    out.push('Document attached: No (upload follows intake and payment)');
+    return out.join('\n');
+  }
+
+  document.getElementById('intakeSend').onclick = function(){
+    var b = build(); if (!b) return;
+    location.href = 'mailto:AionSystem@outlook.com?subject='
+      + encodeURIComponent('Written intake: ' + tier.value.split(' (')[0])
+      + '&body=' + encodeURIComponent(b);
+  };
+
+  document.getElementById('intakeCopy').onclick = function(){
+    var b = build(); if (!b) return;
+    var btn = this;
+    function done(m){ btn.textContent = m; setTimeout(function(){ btn.textContent = 'Copy as text'; }, 2000); }
+    try {
+      navigator.clipboard.writeText('To: AionSystem@outlook.com\n\n' + b)
+        .then(function(){ done('Copied'); }, function(){ done('Copy failed'); });
+    } catch (err) { done('Copy failed'); }
+  };
+})();
 </script>
 </body>
 </html>
