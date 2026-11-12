@@ -37,6 +37,7 @@
   button { font:inherit; color:inherit; cursor:pointer; }
   button, a, .chip { touch-action:manipulation; }
   :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  [hidden] { display:none !important; }
 
   .app { display:flex; height:100%; width:100%; }
   @supports (height:100dvh) { .app { height:100dvh; } }
@@ -103,6 +104,7 @@
   .lead { font-size:16px; }
 
   .card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px 18px; }
+  .card b { display:block; margin-bottom:4px; }
   .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
   .proof { display:flex; flex-direction:column; gap:4px; }
   .proof b { font-family:var(--font-serif); font-weight:400; font-size:15px; }
@@ -111,6 +113,9 @@
   .sev { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 12px; }
   .sev span { font-family:var(--font-mono); font-size:12px; padding:3px 9px; border-radius:6px; border:1px solid currentColor; }
   .s4 { color:var(--s4); } .s3 { color:var(--s3); } .s2 { color:var(--s2); } .s1 { color:var(--s1); }
+
+  .tags { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 14px; }
+  .tags span { font-family:var(--font-mono); font-size:11px; padding:4px 10px; border-radius:999px; border:1px solid var(--border-strong); color:var(--text-muted); }
 
   .plans { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; }
   .plan { display:flex; flex-direction:column; gap:8px; }
@@ -121,7 +126,6 @@
   .plan .btn { margin-top:auto; text-align:center; }
 
   .terms { display:flex; flex-direction:column; gap:10px; }
-  .terms .card b { display:block; margin-bottom:4px; }
   .skel { border:1px dashed var(--border-strong); border-radius:var(--radius-md); padding:16px 18px; background:var(--bg-surface); }
   .skel i { display:block; height:9px; border-radius:5px; background:var(--bg-hover); margin:10px 0; }
   .skel i:nth-child(2){width:92%} .skel i:nth-child(3){width:78%} .skel i:nth-child(4){width:55%}
@@ -163,7 +167,7 @@
   details.q[open] summary::after { transform:rotate(45deg); }
   details.q .ans { padding:0 16px 14px; color:var(--text-muted); }
 
-  /* Intake dialog */
+  /* Dialogs */
   dialog.intake { background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-strong); border-radius:var(--radius-md);
     padding:0; width:min(560px,92vw); max-height:90vh; max-height:90dvh; box-shadow:var(--shadow);
     overflow:auto; -webkit-overflow-scrolling:touch; }
@@ -173,13 +177,15 @@
   .dlg-body { padding:16px 18px 18px; }
   .fld { margin-bottom:12px; }
   .fld label { display:block; font-size:12px; color:var(--text-muted); margin-bottom:4px; }
-  .fld input[type=text], .fld input[type=email], .fld input[type=number], .fld select, .fld textarea {
+  .fld input[type=text], .fld input[type=email], .fld input[type=url], .fld input[type=number], .fld select, .fld textarea {
     width:100%; padding:9px 11px; background:var(--bg-base); border:1px solid var(--border-strong); border-radius:var(--radius-sm); color:var(--text-main); font:inherit; }
   .fld input:focus, .fld select:focus, .fld textarea:focus { outline:0; border-color:var(--accent); }
   .two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   .hint { font-size:12px; color:var(--s3); min-height:18px; margin:-4px 0 8px; }
-  .chk { display:flex; gap:10px; align-items:center; font-size:13px; color:var(--text-muted); padding:6px 0; }
-  .chk input { width:18px; height:18px; flex-shrink:0; }
+  .radios { display:flex; gap:16px; margin-top:6px; }
+  .radios label { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-muted); cursor:pointer; padding:4px 0; }
+  .radios input { width:16px; height:16px; flex-shrink:0; }
+  .link-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
   .warn { font-size:12px; color:var(--text-dim); border:1px dashed var(--border-strong); border-radius:var(--radius-sm); padding:9px 11px; margin:12px 0; }
   .acts { display:flex; gap:8px; flex-wrap:wrap; }
   @media (max-width:480px) { .two { grid-template-columns:1fr; } }
@@ -210,7 +216,7 @@
     .send { padding:11px 16px; }
     .btn { padding:12px 18px; }
 
-    .cbox textarea, .fld input[type=text], .fld input[type=email],
+    .cbox textarea, .fld input[type=text], .fld input[type=email], .fld input[type=url],
     .fld input[type=number], .fld select, .fld textarea { font-size:16px; }
     .cbox textarea { line-height:1.4; }
 
@@ -277,6 +283,7 @@
       <a href="#deliverable">The Findings Register</a>
       <a href="#pricing">Fast Run · Full Scan</a>
       <a href="#process">Process</a>
+      <a href="#custom">Custom AION Build</a>
       <div class="nav-label">Terms</div>
       <a href="#faq">FAQ</a>
       <a href="#terms">Refund · Confidentiality · Limits</a>
@@ -387,6 +394,7 @@
               </div>
             </div>
             <p class="muted" style="margin-top:12px">If your document doesn’t fit either tier, I’ll tell you.</p>
+            <p class="muted" style="margin-top:6px">For custom builds — sovereign pipelines, custom frameworks, scoring methodology — see <a href="#custom">Custom AION Build</a>.</p>
           </div></div>
         </section>
 
@@ -399,6 +407,30 @@
               <li>Written intake</li><li>Payment</li><li>Upload</li><li>Report by email</li>
             </ol>
             <p style="margin-top:14px"><a class="btn primary" href="#contact" data-intake>Start written intake</a></p>
+          </div></div>
+        </section>
+
+        <!-- CUSTOM AION BUILD -->
+        <section class="view" id="custom" hidden>
+          <div class="msg"><div class="av">A</div><div class="msg-body">
+            <h2>Custom AION Build</h2>
+            <p class="lead">For organizations requiring a sovereign diagnostic pipeline or a custom analytical framework built from scratch.</p>
+            <p class="muted">Scope, architecture, scoring methodology and epistemic tagging protocol tailored to your specific document ecosystem.</p>
+            <div class="tags">
+              <span>Contract Red-Team Frameworks</span>
+              <span>Governance Framework Audits</span>
+              <span>AI Policy Red-Team Toolkits</span>
+              <span>Technical Standards Validation</span>
+              <span>Regulatory Compliance Scanners</span>
+              <span>Internal Policy Review Engines</span>
+            </div>
+            <p>Full pipeline design, custom instruments, and verification — scoped individually to your requirements. You own the framework outright.</p>
+            <div class="card" style="margin-bottom:14px">
+              <b>NDA clearance gate</b>
+              <p class="muted" style="margin-top:4px;margin-bottom:0">Client-provided NDAs will be subjected to structural red-teaming prior to execution. Asymmetrical, overly broad, or unenforceable clauses will be rejected. Use the provided standard NDA to bypass this gate.</p>
+            </div>
+            <p><strong>Asynchronous boundary.</strong> Custom builds are governed by the same rules as document reviews. No discovery calls, no daily standups, no Zoom meetings. The architecture is built in sustained, uninterrupted reads.</p>
+            <p><a class="btn primary" href="#custom" data-custom>Start architecture scoping</a></p>
           </div></div>
         </section>
 
@@ -425,9 +457,25 @@
         <!-- CONTACT -->
         <section class="view" id="contact" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
-            <h2>Contact</h2>
-            <p>Start with the written intake. It builds an email to me; nothing is sent until you press send in your mail app, and no document is attached at this stage.</p>
-            <p><a class="btn primary" href="#contact" data-intake>Start written intake</a></p>
+            <h2>Contact &amp; intake</h2>
+            <p class="lead">Adversarial intake. Structural clearance. Asynchronous boundary. Direct transmission protocol.</p>
+
+            <div class="card" style="margin-bottom:14px">
+              <p style="font-family:var(--font-mono);font-size:17px;margin-bottom:12px">
+                <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a>
+              </p>
+              <p class="muted" style="margin-bottom:8px">Intake window: Tuesdays and Thursdays. Scheduled outbox: Weekends. Standard response latency: 7 days.</p>
+              <p class="muted" style="margin-bottom:0"><strong style="color:var(--text-main)">Attachment protocol.</strong> Generate the structured transmission via the intake form. Attach the target document and executed NDA to the resulting email payload before transmission.</p>
+              <div class="link-row">
+                <a href="assets/pdf/aion-nda.pdf" download class="btn">Download standard NDA (PDF) ↓</a>
+                <a href="assets/txt/aion-structured-email-template.txt" download class="btn">Download email template (.txt) ↓</a>
+              </div>
+            </div>
+
+            <p><strong>Asynchronous boundary.</strong> Execution is strictly asynchronous. Submitting the intake does not initiate a discovery call, status meeting, or consensus-building workshop.</p>
+
+            <p><a class="btn primary" href="#contact" data-intake>Open intake form</a></p>
+
             <p class="muted">Questions first? Ask in the box below, or reach me directly:</p>
             <p>
               <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a><br>
@@ -453,6 +501,7 @@
   </div>
 </div>
 
+<!-- INTAKE DIALOG -->
 <dialog class="intake" id="intake" aria-labelledby="intakeTitle">
   <div class="dlg-head"><h3 id="intakeTitle">Written intake</h3><button class="icon-btn" id="intakeClose" aria-label="Close intake form" type="button">✕</button></div>
   <form class="dlg-body" id="intakeForm" novalidate>
@@ -465,21 +514,94 @@
     <div class="two">
       <div class="fld"><label for="f-type">Document type *</label><select id="f-type" name="Document type" required>
         <option>Contract</option><option>Governance framework</option><option>AI policy</option><option>Technical specification</option>
-        <option>Regulatory filing</option><option>Internal policy</option><option>Terms of service</option><option>Standard, code or oath</option><option>Other</option></select></div>
+        <option>Regulatory filing</option><option>Internal policy</option><option>White paper</option><option>Terms of service</option>
+        <option>Privacy policy</option><option>Compliance manual</option><option>Standard, code or oath</option><option>Other</option></select></div>
       <div class="fld"><label for="f-pages">Approx. pages *</label><input type="number" id="f-pages" name="Pages" min="1" required></div>
     </div>
+    <div class="fld"><label for="f-url">Document URL / link (optional)</label><input type="url" id="f-url" name="Document URL" placeholder="https://..."></div>
+    <div class="fld"><label for="f-focus">Topological focus / known seams (optional)</label><textarea id="f-focus" name="Topological focus" rows="2" placeholder="e.g., enforcement mechanisms, undefined thresholds, liability gaps"></textarea></div>
     <div class="two">
       <div class="fld"><label for="f-scope">Scope</label><select id="f-scope" name="Scope"><option>One document</option><option>A set of related documents</option></select></div>
       <div class="fld"><label for="f-tier">Engagement *</label><select id="f-tier" name="Engagement" required>
         <option>Fast Run ($1,500)</option><option>Full Scan ($7,500)</option><option>Not sure, advise me</option></select></div>
     </div>
     <div class="hint" id="fit" aria-live="polite"></div>
-    <div class="fld"><label for="f-concern">Known concerns or clauses you want pressure-tested (optional)</label><textarea id="f-concern" name="Concerns" rows="3"></textarea></div>
-    <label class="chk"><input type="checkbox" id="f-nda" name="NDA"> I want an NDA in place before I upload</label>
-    <div class="warn">Do not attach or paste the document. After intake and payment you’ll upload it. This form only prepares an email; nothing is sent until you press send.</div>
+    <div class="fld"><label for="f-timeline">Timeline requirement *</label><select id="f-timeline" name="Timeline" required>
+      <option>Standard (5–10 business days)</option>
+      <option>Scheduled outbox (hold until agreed future date)</option>
+      <option>Flexible / not time-bound</option>
+    </select></div>
+    <div class="fld">
+      <label>NDA required?</label>
+      <div class="radios">
+        <label><input type="radio" name="NDA" value="No" checked> No</label>
+        <label><input type="radio" name="NDA" value="Yes"> Yes</label>
+      </div>
+    </div>
+    <div id="f-nda-fields" hidden>
+      <div class="two">
+        <div class="fld"><label for="f-signer">Signatory name</label><input type="text" id="f-signer" name="NDA signatory"></div>
+        <div class="fld"><label for="f-signer-title">Signatory title</label><input type="text" id="f-signer-title" name="NDA signatory title"></div>
+      </div>
+    </div>
+    <div class="fld"><label for="f-related">Related documents (if any)</label><textarea id="f-related" name="Related documents" rows="2" placeholder="e.g., annexes, referenced policies, prior versions"></textarea></div>
+    <div class="fld"><label for="f-context">Operational context</label><textarea id="f-context" name="Operational context" rows="2" placeholder="Anything else required for structural clearance"></textarea></div>
+    <div class="warn">Do not attach or paste the document. After intake and payment you’ll upload it. This form only prepares an email; nothing is sent until you press send. For custom builds, use the Custom AION Build section.</div>
     <div class="acts">
       <button class="btn primary" type="button" id="intakeSend">Prepare email</button>
       <button class="btn" type="button" id="intakeCopy">Copy as text</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- CUSTOM BUILD DIALOG -->
+<dialog class="intake" id="customDlg" aria-labelledby="customTitle">
+  <div class="dlg-head"><h3 id="customTitle">Custom AION Build scoping</h3><button class="icon-btn" id="customClose" aria-label="Close custom scoping form" type="button">✕</button></div>
+  <form class="dlg-body" id="customForm" novalidate>
+    <div class="two">
+      <div class="fld"><label for="c-name">Full name *</label><input type="text" id="c-name" name="Name" required autocomplete="name"></div>
+      <div class="fld"><label for="c-email">Email *</label><input type="email" id="c-email" name="Email" required autocomplete="email"></div>
+    </div>
+    <div class="fld"><label for="c-org">Organization</label><input type="text" id="c-org" name="Organization" autocomplete="organization"></div>
+    <div class="fld"><label for="c-framework">Framework / document type *</label><select id="c-framework" name="Framework type" required>
+      <option>Contract Red-Team Framework</option>
+      <option>Governance Framework Audit System</option>
+      <option>AI Policy Red-Team Toolkit</option>
+      <option>Technical Standards Validation</option>
+      <option>Regulatory Compliance Scanner</option>
+      <option>Internal Policy Review Engine</option>
+      <option>Custom (describe below)</option>
+    </select></div>
+    <div class="fld"><label for="c-description">Project description (framework purpose, constraints)</label><textarea id="c-description" name="Project description" rows="3"></textarea></div>
+    <div class="two">
+      <div class="fld"><label for="c-env">Target document ecosystem</label><select id="c-env" name="Target ecosystem">
+        <option>Contracts</option><option>Governance &amp; Compliance</option><option>AI Policy</option><option>Technical Standards</option><option>Mixed / Custom</option>
+      </select></div>
+      <div class="fld"><label for="c-timeline">Desired timeline *</label><select id="c-timeline" name="Timeline" required>
+        <option>1–2 weeks</option><option>2–4 weeks</option><option>1–2 months</option><option>3+ months</option>
+      </select></div>
+    </div>
+    <div class="fld"><label for="c-integration">Integration requirements</label><textarea id="c-integration" name="Integration requirements" rows="2" placeholder="e.g., existing CI/CD, APIs, compliance frameworks"></textarea></div>
+    <div class="fld"><label for="c-budget">Estimated budget range *</label><select id="c-budget" name="Budget" required>
+      <option>$15,000 – $25,000</option><option>$25,000 – $50,000</option><option>$50,000+</option>
+    </select></div>
+    <div class="fld">
+      <label>NDA required?</label>
+      <div class="radios">
+        <label><input type="radio" name="NDA" value="No" checked> No</label>
+        <label><input type="radio" name="NDA" value="Yes"> Yes</label>
+      </div>
+    </div>
+    <div id="c-nda-fields" hidden>
+      <div class="two">
+        <div class="fld"><label for="c-signer">Signatory name</label><input type="text" id="c-signer" name="NDA signatory"></div>
+        <div class="fld"><label for="c-signer-title">Signatory title</label><input type="text" id="c-signer-title" name="NDA signatory title"></div>
+      </div>
+    </div>
+    <div class="warn">This form only prepares an email. Nothing is sent until you press send in your mail app. Do not attach documents yet.</div>
+    <div class="acts">
+      <button class="btn primary" type="button" id="customSend">Prepare email</button>
+      <button class="btn" type="button" id="customCopy">Copy as text</button>
     </div>
   </form>
 </dialog>
@@ -572,6 +694,7 @@
     deliverable: 'The Findings Register',
     pricing: 'Fast Run · Full Scan',
     process: 'Process',
+    custom: 'Custom AION Build',
     faq: 'FAQ',
     terms: 'Terms',
     contact: 'Contact'
@@ -616,7 +739,7 @@
   nav.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#"]');
     if (!a) return;
-    if (a.hasAttribute('data-intake')) return;
+    if (a.hasAttribute('data-intake') || a.hasAttribute('data-custom')) return;
     e.preventDefault();
     var id = a.getAttribute('href').slice(1) || 'home';
     if (id !== 'home' && window.Aion.askSection) {
@@ -675,8 +798,8 @@ var FAQ = [
     },
     pricing: {
       label: 'Pricing',
-      prompt: 'What are the two engagements?',
-      summary: 'Fast Run is $1,500 — one document up to 75 pages, the three highest-severity findings written up in full, delivered in 5 business days. Full Scan is $7,500 — one document up to 200 pages or a set of related documents, every finding written up, compounding-gap analysis, root-cause classification and insert-ready fix language, delivered in 15 business days. If your document doesn’t fit either tier, I’ll tell you.',
+      prompt: 'What are the engagements?',
+      summary: 'Two fixed-price engagements: Fast Run is $1,500 — one document up to 75 pages, the three highest-severity findings written up in full, delivered in 5 business days. Full Scan is $7,500 — one document up to 200 pages or a set of related documents, every finding written up, plus compounding-gap analysis, root-cause classification and insert-ready fix language, delivered in 15 business days. If your document doesn’t fit either tier, I’ll tell you. Custom AION Build is scoped individually — see the Custom AION Build section.',
       chips: [4, 5, 8]
     },
     process: {
@@ -684,6 +807,12 @@ var FAQ = [
       prompt: 'How does the process work?',
       summary: 'Four steps, all in writing: written intake, payment, upload, and a report by email. No calls, no meetings. Full payment is made before upload — I send payment details after intake.',
       chips: [1, 2, 7]
+    },
+    custom: {
+      label: 'Custom AION Build',
+      prompt: 'Tell me about custom builds',
+      summary: 'For organizations that need a sovereign diagnostic pipeline or a custom analytical framework built from scratch — contract red-team frameworks, governance audits, AI policy toolkits, technical standards validation, compliance scanners, internal policy engines. Full pipeline design, custom instruments, and verification, scoped individually. You own the framework outright. Client-provided NDAs are themselves red-teamed before execution; asymmetrical or unenforceable clauses are rejected. Same async boundary: no discovery calls, no standups, no Zoom.',
+      chips: [0, 1, 16]
     },
     terms: {
       label: 'Terms',
@@ -700,7 +829,7 @@ var FAQ = [
     contact: {
       label: 'Contact',
       prompt: 'How do I get in touch?',
-      summary: 'Start with the written intake — it builds an email to me; nothing is sent until you press send, and no document is attached at that stage. You can also reach me directly at AionSystem@outlook.com, or on LinkedIn, GitHub and ORCID.',
+      summary: 'Direct transmission: AionSystem@outlook.com. Intake window is Tuesdays and Thursdays. Standard response latency: 7 days. Execution is strictly asynchronous — no discovery calls, no status meetings, no consensus-building workshops. Start with the structured intake form; it builds the email, and nothing is sent until you press send. Attach the target document and executed NDA to the resulting payload.',
       chips: [0, 1, 8]
     }
   };
@@ -843,9 +972,17 @@ var FAQ = [
 </script>
 <script>
 (function(){
-  var dlg = document.getElementById('intake'), f = document.getElementById('intakeForm');
-  var tier = document.getElementById('f-tier'), pages = document.getElementById('f-pages'),
-      scope = document.getElementById('f-scope'), fit = document.getElementById('fit');
+  var intakeDlg = document.getElementById('intake');
+  var intakeForm = document.getElementById('intakeForm');
+  var tier = document.getElementById('f-tier');
+  var pages = document.getElementById('f-pages');
+  var scope = document.getElementById('f-scope');
+  var fit = document.getElementById('fit');
+  var intakeNdaFields = document.getElementById('f-nda-fields');
+
+  var customDlg = document.getElementById('customDlg');
+  var customForm = document.getElementById('customForm');
+  var customNdaFields = document.getElementById('c-nda-fields');
 
   function hint(){
     var n = parseInt(pages.value, 10), t = tier.value, msg = '';
@@ -856,56 +993,97 @@ var FAQ = [
   }
   [tier, pages, scope].forEach(function(e){ e.addEventListener('input', hint); });
 
-  function open(t){
+  function openIntake(t){
     if (t) {
       for (var i = 0; i < tier.options.length; i++) {
         if (tier.options[i].text.indexOf(t) === 0) tier.selectedIndex = i;
       }
     }
     hint();
-    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    if (typeof intakeDlg.showModal === 'function') intakeDlg.showModal(); else intakeDlg.setAttribute('open', '');
+  }
+
+  function openCustom(){
+    if (typeof customDlg.showModal === 'function') customDlg.showModal(); else customDlg.setAttribute('open', '');
   }
 
   document.addEventListener('click', function(e){
+    var c = e.target.closest('[data-custom]');
+    if (c) {
+      e.preventDefault();
+      openCustom();
+      document.getElementById('app').classList.remove('nav-open');
+      return;
+    }
     var a = e.target.closest('[data-intake]');
     if (!a) return;
     e.preventDefault();
-    open(a.getAttribute('data-intake'));
+    openIntake(a.getAttribute('data-intake'));
     document.getElementById('app').classList.remove('nav-open');
   });
 
-  document.getElementById('intakeClose').onclick = function(){ dlg.close(); };
-  dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+  document.getElementById('intakeClose').onclick = function(){ intakeDlg.close(); };
+  document.getElementById('customClose').onclick = function(){ customDlg.close(); };
+  intakeDlg.addEventListener('click', function(e){ if (e.target === intakeDlg) intakeDlg.close(); });
+  customDlg.addEventListener('click', function(e){ if (e.target === customDlg) customDlg.close(); });
 
-  function build(){
-    if (!f.reportValidity()) return null;
-    var out = [], els = f.elements;
+  // NDA radio → show signatory fields
+  intakeForm.addEventListener('change', function(e){
+    if (e.target.name === 'NDA') intakeNdaFields.hidden = e.target.value !== 'Yes';
+  });
+  customForm.addEventListener('change', function(e){
+    if (e.target.name === 'NDA') customNdaFields.hidden = e.target.value !== 'Yes';
+  });
+
+  function buildForm(formEl){
+    if (!formEl.reportValidity()) return null;
+    var out = [], els = formEl.elements;
+    var ndaRadio = formEl.querySelector('input[name="NDA"]:checked');
+    var ndaYes = ndaRadio && ndaRadio.value === 'Yes';
+
     for (var i = 0; i < els.length; i++) {
       var el = els[i];
       if (!el.name) continue;
-      if (el.type === 'checkbox') out.push(el.name + ': ' + (el.checked ? 'Yes, requested before upload' : 'No'));
-      else if (el.value.trim()) out.push(el.name + ': ' + el.value.trim());
+      if (el.type === 'radio') {
+        if (el.checked) out.push(el.name + ': ' + el.value);
+      } else if (el.type === 'checkbox') {
+        out.push(el.name + ': ' + (el.checked ? 'Yes' : 'No'));
+      } else {
+        var v = el.value.trim();
+        if (!v) continue;
+        if ((el.name === 'NDA signatory' || el.name === 'NDA signatory title') && !ndaYes) continue;
+        out.push(el.name + ': ' + v);
+      }
     }
     out.push('Document attached: No (upload follows intake and payment)');
     return out.join('\n');
   }
 
-  document.getElementById('intakeSend').onclick = function(){
-    var b = build(); if (!b) return;
-    location.href = 'mailto:AionSystem@outlook.com?subject='
-      + encodeURIComponent('Written intake: ' + tier.value.split(' (')[0])
-      + '&body=' + encodeURIComponent(b);
-  };
+  function sendMail(formEl, subject){
+    var b = buildForm(formEl);
+    if (!b) return;
+    location.href = 'mailto:AionSystem@outlook.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(b);
+  }
 
-  document.getElementById('intakeCopy').onclick = function(){
-    var b = build(); if (!b) return;
-    var btn = this;
-    function done(m){ btn.textContent = m; setTimeout(function(){ btn.textContent = 'Copy as text'; }, 2000); }
+  function copyText(formEl, btn){
+    var b = buildForm(formEl);
+    if (!b) return;
+    var orig = btn.textContent;
+    function done(m){ btn.textContent = m; setTimeout(function(){ btn.textContent = orig; }, 2000); }
     try {
       navigator.clipboard.writeText('To: AionSystem@outlook.com\n\n' + b)
         .then(function(){ done('Copied'); }, function(){ done('Copy failed'); });
     } catch (err) { done('Copy failed'); }
+  }
+
+  document.getElementById('intakeSend').onclick = function(){
+    sendMail(intakeForm, 'Written intake: ' + tier.value.split(' (')[0]);
   };
+  document.getElementById('customSend').onclick = function(){
+    sendMail(customForm, 'Custom AION Build inquiry');
+  };
+  document.getElementById('intakeCopy').onclick = function(){ copyText(intakeForm, this); };
+  document.getElementById('customCopy').onclick = function(){ copyText(customForm, this); };
 })();
 </script>
 </body>
