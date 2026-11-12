@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="pX0Q3SrkERA0IG8i1u-W9NvbR6WoHaTMOpeIdudKOe8" />  
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="Sheldon K. Salmon — Structural Integrity Analyst & Document Red-Team. Adversarial failure-node mapping for contracts, treaties, and frameworks. Minimum engagement $1,500.">
+<title>Sheldon K. Salmon — Structural Integrity Analyst | AionSystem</title>
+<meta property="og:title" content="Sheldon K. Salmon — Structural Integrity Analyst | AionSystem">
+<meta property="og:description" content="Adversarial document interrogation · Failure-node mapping · Topological review">
+<meta property="og:type" content="website">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://plausible.io; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="x-content-type-options" content="nosniff">  
+<link rel="icon" type="image/png" href="/assets/img/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- Plausible Analytics -->
+<script defer data-domain="aionsystem.github.io" src="https://plausible.io/js/script.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --mid-void:#000000;
+  --mid-primary:#5C4841;
+  --mid-secondary:#2A201D;
+  --mid-accent:#B6A096;
+  --text-bright:#f5f0eb;
+  --text-mid:#a89890;
+  --text-dim:#6b5d55;
+  --bg:#010101;
+  --display:'Space Grotesk',sans-serif;
+  --body:'Inter',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.175,0.885,0.32,1.275);
+}
+
+/* ─── CANVAS ─── */
+#doc-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+body{background:var(--bg);color:var(--text-bright);font-family:var(--body);overflow-x:hidden;min-height:100vh;}
+
+/* ACCESSIBILITY */
+.skip-nav{position:absolute;top:-100%;left:0;z-index:99999;padding:10px 20px;background:var(--mid-primary);color:#fff;font-family:var(--mono);font-size:12px;letter-spacing:2px;text-decoration:none;transition:top 0.2s;}
+.skip-nav:focus{top:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(1,1,1,0.72);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06);animation:fadeInNav 0.6s var(--ease) 0.3s both;}
+@keyframes fadeInNav{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--text-bright);}
+.nav-logo-img{width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.2);}
+.nav-logo .dot{color:var(--mid-secondary)}
+.nav-right{display:flex;align-items:center;gap:28px;}
+.nav-link{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);text-decoration:none;transition:color 0.2s;}
+.nav-link:hover,.nav-link:focus-visible{color:var(--text-bright);outline:none;}
+
+/* ─── HERO ─── */
+.hero{position:relative;z-index:3;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px 60px;text-align:center;}
+.hero-logo-wrap{display:flex;align-items:center;gap:16px;margin-bottom:20px;animation:fadeUp 0.6s var(--ease) 0.3s both;}
+.hero-logo-wrap img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.15);}
+.hero-logo-wordmark{font-family:var(--mono);font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--text-bright);}
+.hero-logo-wordmark span{color:var(--text-mid);}
+.hero-logo-tagline{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);}
+
+/* status badge */
+.hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-mid);border:1px solid rgba(255,255,255,0.08);padding:6px 16px;border-radius:20px;margin-bottom:32px;background:rgba(255,255,255,0.03);backdrop-filter:blur(8px);animation:fadeUp 0.6s var(--ease) 0.5s both;}
+.hero-badge::before{content:'';display:block;width:6px;height:6px;border-radius:50%;background:var(--mid-accent);box-shadow:0 0 8px var(--mid-accent);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* name */
+.hero-name{font-family:var(--display);font-size:clamp(40px,8vw,112px);font-weight:700;letter-spacing:-2px;line-height:0.9;text-transform:uppercase;margin-bottom:8px;animation:fadeUp 0.7s var(--ease) 0.6s both;max-width:100%;overflow-wrap:break-word;}
+.name-cold{color:transparent;background:linear-gradient(135deg,var(--mid-secondary) 0%,var(--mid-primary) 60%,var(--mid-accent) 100%);-webkit-background-clip:text;background-clip:text;}
+.hero-sub-title{font-family:var(--mono);font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px;animation:fadeUp 0.7s var(--ease) 0.7s both;}
+
+/* descriptor */
+.hero-descriptor{font-family:var(--body);font-size:clamp(14px,1.7vw,18px);font-weight:300;color:var(--text-mid);max-width:620px;line-height:1.7;margin:0 auto 40px;animation:fadeUp 0.7s var(--ease) 0.8s both;}
+.hero-descriptor strong{color:var(--text-bright);font-weight:500;}
+
+/* ─── SINGLE MAIN CARD ─── */
+.single-card-wrap{width:100%;max-width:640px;margin:0 auto 32px;animation:fadeUp 0.8s var(--ease) 0.9s both;}
+
+.choice-card{position:relative;display:flex;flex-direction:column;padding:40px 36px 32px;border-radius:16px;text-decoration:none;color:inherit;overflow:hidden;transition:transform 0.4s var(--ease),box-shadow 0.4s var(--ease);cursor:pointer;outline:none;}
+.choice-card::before{content:'';position:absolute;inset:0;border-radius:inherit;transition:opacity 0.4s var(--ease);pointer-events:none;z-index:0;}
+.choice-card>*{position:relative;z-index:1;}
+
+/* MID — bronze/crimson */
+.card-mid{background:linear-gradient(135deg,rgba(10,5,4,0.95) 0%,rgba(18,12,11,0.9) 100%);border:2px solid rgba(92,72,65,0.7);box-shadow:0 4px 24px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.06),0 0 0 1px rgba(92,72,65,0.15),0 0 55px rgba(92,72,65,0.18);}
+.card-mid::before{background:radial-gradient(ellipse at top,rgba(182,160,150,0.18) 0%,transparent 60%),radial-gradient(ellipse at bottom left,rgba(70,0,2,0.12) 0%,transparent 70%);opacity:0.7;}
+.card-mid:hover,.card-mid:focus-visible{transform:translateY(-8px) scale(1.01);border-color:rgba(92,72,65,0.8);box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 0 1px rgba(92,72,65,0.3),0 0 90px rgba(92,72,65,0.3),0 0 140px rgba(70,0,2,0.12),inset 0 1px 0 rgba(255,255,255,0.1);}
+.card-mid:hover::before,.card-mid:focus-visible::before{opacity:1;}
+
+/* card internals */
+.card-domain-tag{font-family:var(--mono);font-size:8px;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px;color:var(--mid-accent);}
+.domain-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--mid-accent);box-shadow:0 0 8px var(--mid-accent);}
+.card-icon{font-size:2rem;line-height:1;margin-bottom:14px;}
+.card-title{font-family:var(--display);font-size:clamp(28px,3.8vw,38px);font-weight:700;letter-spacing:-0.5px;line-height:1.05;text-transform:uppercase;margin-bottom:6px;color:transparent;background:linear-gradient(135deg,#f5f0eb,var(--mid-accent),var(--mid-secondary));-webkit-background-clip:text;background-clip:text;}
+.card-subtitle{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px;}
+.card-desc{font-family:var(--body);font-size:14px;font-weight:300;color:var(--text-mid);line-height:1.65;flex:1;margin-bottom:24px;}
+
+/* proof strip */
+.card-proof{margin-bottom:20px;padding:12px 14px;border-radius:8px;background:rgba(92,72,65,0.06);border:1px solid rgba(92,72,65,0.15);font-family:var(--mono);font-size:9px;color:var(--mid-accent);letter-spacing:1px;line-height:1.7;}
+.card-proof strong{color:#f5f0eb;font-weight:500;}
+
+/* CTAs */
+.card-cta{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:12px 22px;border-radius:6px;font-weight:500;transition:all 0.25s var(--ease);width:fit-content;background:rgba(92,72,65,0.1);border:1px solid rgba(92,72,65,0.28);color:var(--mid-accent);}
+.card-mid:hover .card-cta{background:rgba(92,72,65,0.2);border-color:rgba(92,72,65,0.55);color:#f5f0eb;box-shadow:0 0 20px rgba(92,72,65,0.22);}
+.cta-arrow{transition:transform 0.25s var(--ease);}
+.choice-card:hover .cta-arrow{transform:translateX(5px);}
+
+/* card corners */
+.card-corner{position:absolute;bottom:12px;right:14px;opacity:0.07;font-family:var(--mono);font-size:8px;letter-spacing:1px;pointer-events:none;line-height:1.4;text-align:right;transition:opacity 0.4s;color:var(--mid-accent);}
+.card-mid:hover .card-corner{opacity:0.2;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* ─── PROOF STATS ROW ─── */
+.proof-stats{position:relative;z-index:3;max-width:640px;margin:0 auto 40px;padding:0 20px;text-align:center;animation:fadeUp 0.8s var(--ease) 1s both;}
+.proof-stats-inner{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 24px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;}
+.proof-stat{display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.proof-stat-dot{width:5px;height:5px;border-radius:50%;background:var(--mid-accent);box-shadow:0 0 8px var(--mid-accent);}
+.proof-stat strong{color:var(--mid-accent);font-weight:500;}
+
+/* ─── SOCIAL ROW ─── */
+.social-section{position:relative;z-index:3;max-width:900px;margin:0 auto 40px;padding:0 20px;text-align:center;}
+.social-divider{display:flex;align-items:center;gap:16px;justify-content:center;margin-bottom:16px;}
+.social-divider-line{flex:1;height:1px;background:rgba(255,255,255,0.06);}
+.social-divider-text{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);}
+.social-grid{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:center;}
+.social-link{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:var(--text-mid);transition:color 0.2s;}
+.social-link img{width:40px;height:40px;filter:brightness(0) invert(0.5);transition:filter 0.2s;}
+.social-link:hover img{filter:brightness(0) invert(1);}
+.social-link span{font-family:var(--mono);font-size:7px;letter-spacing:2px;text-transform:uppercase;}
+
+/* ─── FOOTER ─── */
+footer{position:relative;z-index:3;border-top:1px solid rgba(255,255,255,0.05);padding:28px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);}
+.footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap;}
+.footer-links a{color:var(--text-dim);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover,.footer-links a:focus-visible{color:var(--text-bright);outline:none;}
+.footer-legal{margin-top:4px;font-size:8px;color:var(--text-dim);letter-spacing:1px;max-width:600px;line-height:1.6;}
+
+/* ─── RESPONSIVE ─── */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.001ms!important;transition-duration:0.001ms!important}#doc-canvas{display:none}}
+@media(max-width:900px){nav{padding:0 20px;}.hero{padding:72px 20px 48px;}.hero-name{letter-spacing:-1.5px;}}
+@media(max-width:480px){
+  .hero{padding:64px 16px 40px;}
+  .hero-name{font-size:clamp(34px,9vw,52px);letter-spacing:-1px;}
+  .single-card-wrap{max-width:100%;}
+  .card-title{font-size:26px;}
+  footer{flex-direction:column;align-items:center;text-align:center;}
+  .footer-links{justify-content:center;}
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://aionsystem.github.io/#person",
+      "name": "Sheldon K. Salmon",
+      "jobTitle": "Red-Team Framework Designer & Structural Integrity Analyst",
+      "description": "Adversarial document interrogation. I map structural failure nodes before they are exploited.",
+      "url": "https://aionsystem.github.io/",
+      "image": "https://aionsystem.github.io/assets/img/aion-logo.jpg",
+      "sameAs": [
+        "https://github.com/AionSystem",
+        "https://www.linkedin.com/in/sheldon-k-salmon-b0901b378",
+        "https://orcid.org/0009-0005-8057-5115"
+      ],
+      "knowsAbout": [
+        "Document red-teaming",
+        "Structural integrity analysis",
+        "Adversarial document review",
+        "Failure node mapping",
+        "Framework design"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aionsystem.github.io/#website",
+      "url": "https://aionsystem.github.io/",
+      "name": "AionSystem",
+      "description": "Structural document interrogation by Sheldon K. Salmon.",
+      "publisher": {
+        "@id": "https://aionsystem.github.io/#person"
+      },
+      "inLanguage": "en"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a href="#main" class="skip-nav">Skip to content</a>
+<div aria-live="polite" aria-atomic="true" class="sr-only" id="canvas-announce"></div>
+<canvas id="doc-canvas" aria-hidden="true"></canvas>
+
+<nav aria-label="Primary navigation">
+  <a href="/" class="nav-logo" aria-label="AionSystem home">
+    <img src="/assets/img/aion-logo.jpg" alt="AionSystem" class="nav-logo-img" width="26" height="26" onerror="this.style.display='none'">
+    <span>AION<span class="dot">·</span>SYSTEM</span>
+  </a>
+  <div class="nav-right">
+    <a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub ↗</a>
+    <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener noreferrer" class="nav-link">LinkedIn ↗</a>
+  </div>
+</nav>
+
+<main id="main">
+  <div class="hero" role="banner">
+
+    <div class="hero-logo-wrap" style="animation:fadeUp 0.6s var(--ease) 0.3s both;">
+      <img src="/assets/img/aion-logo.jpg" alt="AionSystem" onerror="this.style.display='none'">
+      <div>
+        <div class="hero-logo-wordmark">AION<span>system</span></div>
+        <div class="hero-logo-tagline">Structural Integrity · Document Red-Team</div>
+      </div>
+    </div>
+
+    <div class="hero-badge">Active Practice · Document Red-Team · Evans Mills, NY</div>
+
+    <h1 class="hero-name" aria-label="Sheldon K. Salmon">
+      <span class="name-cold">Sheldon&nbsp;K.&nbsp;Salmon</span>
+    </h1>
+    <p class="hero-sub-title">Adversarial Red-Team Architect · Structural Integrity Analyst</p>
+
+    <p class="hero-descriptor">
+      I map the structural failure nodes in your documents before your counterparties exploit them.<br>
+      <strong>Contracts. Treaties. Specifications. Frameworks. Filings.</strong>
+    </p>
+
+    <p class="hero-descriptor" style="margin-top:-20px;font-size:clamp(12px,1.3vw,15px);">
+      Asynchronous delivery. No discovery calls. No standups.<br>
+      The document is the only thing in the room.
+    </p>
+
+    <!-- SINGLE MAIN CARD -->
+    <div class="single-card-wrap">
+      <a href="/main-3/rules/" class="choice-card card-mid" aria-label="Enter AionSystem — Read the Rules and Boundaries">
+        <div class="card-domain-tag"><span class="domain-dot" aria-hidden="true"></span>Practice 01 · Document Domain</div>
+        <div class="card-icon" aria-hidden="true">◈</div>
+        <h2 class="card-title">Engagement<br>Protocol</h2>
+        <p class="card-subtitle">The Method · The Rules · The Boundaries</p>
+        <p class="card-desc">Review the operational rules and engagement boundaries before submitting a document. This practice operates on strict, asynchronous terms. No discovery calls, no consensus building, no pitch decks. If you have a document and the authority to engage, enter.</p>
+        <div class="card-proof">
+          <strong>Proof over trust.</strong> The telemetry is public. The results are what you pay for.
+        </div>
+        <span class="card-cta">Read the Rules &amp; Boundaries <span class="cta-arrow">→</span></span>
+        <div class="card-corner" aria-hidden="true">enter(document)<br>read rules<br>proof over trust</div>
+      </a>
+    </div>
+
+    <!-- PROOF STATS ROW -->
+    <div class="proof-stats">
+      <div class="proof-stats-inner">
+        <span class="proof-stat"><span class="proof-stat-dot"></span>EU AI Act: <strong>18</strong> nodes</span>
+        <span class="proof-stat"><span class="proof-stat-dot"></span>ISA Deep-Sea Mining Code: <strong>52</strong> nodes</span>
+        <span class="proof-stat"><span class="proof-stat-dot"></span>Hippocratic Oath: <strong>21</strong> nodes</span>
+      </div>
+    </div>
+
+    <p style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);animation:fadeUp 0.8s var(--ease) 1.1s both;display:block;">One practice. One architect. No games.</p>
+  </div>
+
+  <!-- SOCIAL GRID -->
+  <div class="social-section">
+    <div class="social-divider">
+      <div class="social-divider-line"></div>
+      <span class="social-divider-text">Everywhere Else</span>
+      <div class="social-divider-line"></div>
+    </div>
+    <div class="social-grid">
+      <a href="https://github.com/AionSystem" target="_blank" rel="noopener" class="social-link" aria-label="GitHub">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub">
+        <span>GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/linkedin.svg" alt="LinkedIn">
+        <span>LinkedIn</span>
+      </a>
+      <a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener" class="social-link" aria-label="ORCID">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/orcid.svg" alt="ORCID">
+        <span>ORCID</span>
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div>
+    <div>AionSystem · Sheldon K. Salmon · © <span id="copyright-year"></span></div>
+    <div class="footer-legal">Not legal advice. Findings describe structural properties of documents — not legal exposure or compliance status. Minimum engagement $1,500. No discounts. No free passes.</div>
+  </div>
+  <ul class="footer-links" role="list">
+    <li><a href="/main-3/rules/">Document Red-Team</a></li>
+    <li><a href="https://github.com/AionSystem" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+    <li><a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener noreferrer">ORCID ↗</a></li>
+  </ul>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+const canvas = document.getElementById('doc-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, t = 0;
+const mouse = { x: -9999, y: -9999 };
+
+let docLines = [], failureNodes = [], scanPhase = 0;
+
+function initDocPanel(){
+  docLines = [];
+  const lineSpacing = 14;
+  for(let y = 80; y < H - 60; y += lineSpacing){
+    const indent = 24 + Math.random() * 60;
+    const lineW = Math.random() * (W - indent - 80) + 80;
+    const alpha = 0.04 + Math.random() * 0.07;
+    const isHeader = Math.random() < 0.06;
+    docLines.push({y, x: indent, w: lineW, alpha, isHeader, highlightPhase: Math.random() * Math.PI * 2, highlightActive: false, highlightTimer: 0});
+  }
+  failureNodes = [];
+  for(let i = 0; i < 18; i++){
+    failureNodes.push({
+      x: 30 + Math.random() * (W - 60),
+      y: 80 + Math.random() * (H - 140),
+      r: 2 + Math.random() * 2.5,
+      alpha: 0,
+      targetAlpha: 0.6 + Math.random() * 0.4,
+      phase: Math.random() * Math.PI * 2,
+      severity: Math.random() < 0.2 ? 'critical' : (Math.random() < 0.5 ? 'major' : 'minor'),
+      active: false, activateAt: Math.random() * 12,
+    });
+  }
+}
+
+function scheduleHighlights(){
+  if(Math.random() < 0.015){
+    const line = docLines[Math.floor(Math.random() * docLines.length)];
+    line.highlightActive = true; line.highlightTimer = 0;
+  }
+}
+
+function draw(){
+  ctx.clearRect(0, 0, W, H);
+
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, 'rgba(10,5,4,0.95)');
+  bg.addColorStop(0.5, 'rgba(18,12,11,0.92)');
+  bg.addColorStop(1, 'rgba(10,5,4,0.95)');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = 'rgba(131,109,101,0.04)';
+  ctx.lineWidth = 0.5;
+  for(let x = 0; x < W; x += 48){ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();}
+  for(let y = 0; y < H; y += 48){ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();}
+
+  if(mouse.x >= 0 && mouse.x <= W){
+    const mg = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 220);
+    mg.addColorStop(0, 'rgba(182,160,150,0.1)');
+    mg.addColorStop(0.5, 'rgba(92,72,65,0.04)');
+    mg.addColorStop(1, 'transparent');
+    ctx.fillStyle = mg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  scanPhase += 0.004;
+  const scanY = ((Math.sin(scanPhase) * 0.5 + 0.5) * H);
+  const scanGrad = ctx.createLinearGradient(0, scanY - 2, 0, scanY + 2);
+  scanGrad.addColorStop(0, 'transparent');
+  scanGrad.addColorStop(0.5, 'rgba(92,72,65,0.35)');
+  scanGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = scanGrad;
+  ctx.fillRect(0, scanY - 2, W, 4);
+
+  scheduleHighlights();
+  docLines.forEach(l => {
+    if(l.highlightActive){
+      l.highlightTimer += 0.05;
+      const hAlpha = Math.max(0, 0.8 * (1 - l.highlightTimer / 1.5));
+      ctx.fillStyle = `rgba(92,72,65,${hAlpha * 0.15})`;
+      ctx.fillRect(l.x - 4, l.y - 5, l.w + 8, 10);
+      ctx.fillStyle = `rgba(70,0,2,${hAlpha * 0.6})`;
+      ctx.fillRect(l.x, l.y, l.w * hAlpha, 1);
+      if(l.highlightTimer > 1.5){l.highlightActive = false; l.highlightTimer = 0;}
+    }
+    const proximity = mouse.x >= 0 && mouse.x <= W ? Math.max(0, 1 - Math.abs(l.y - mouse.y) / 100) * 0.08 : 0;
+    ctx.globalAlpha = l.alpha + proximity;
+    if(l.isHeader){
+      ctx.fillStyle = 'rgba(182,160,150,0.55)';
+      ctx.fillRect(l.x, l.y, l.w * 0.5, 1.5);
+    } else {
+      ctx.fillStyle = 'rgba(131,109,101,0.4)';
+      ctx.fillRect(l.x, l.y, l.w, 0.8);
+    }
+  });
+
+  failureNodes.forEach(n => {
+    if(!n.active && t > n.activateAt) n.active = true;
+    if(!n.active) return;
+    n.alpha = Math.min(n.targetAlpha, n.alpha + 0.004);
+    const pulse = 0.5 + 0.5 * Math.sin(t * 1.5 + n.phase);
+    const col = n.severity === 'critical' ? '#460002' : (n.severity === 'major' ? '#372521' : '#B6A096');
+    ctx.globalAlpha = n.alpha * pulse;
+    ctx.fillStyle = col;
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = n.alpha * pulse * 0.3;
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r + 4 + pulse * 3, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+  ctx.shadowBlur = 0;
+
+  ctx.lineWidth = 0.5;
+  for(let i = 0; i < failureNodes.length; i++){
+    if(!failureNodes[i].active) continue;
+    for(let j = i + 1; j < failureNodes.length; j++){
+      if(!failureNodes[j].active) continue;
+      const d = Math.hypot(failureNodes[i].x - failureNodes[j].x, failureNodes[i].y - failureNodes[j].y);
+      if(d < 120){
+        const alpha = (1 - d / 120) * 0.18 * failureNodes[i].alpha;
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = 'rgba(92,72,65,0.8)';
+        ctx.beginPath();
+        ctx.moveTo(failureNodes[i].x, failureNodes[i].y);
+        ctx.lineTo(failureNodes[j].x, failureNodes[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  const activeCount = failureNodes.filter(n => n.active).length;
+  if(activeCount > 0){
+    ctx.globalAlpha = 0.22;
+    ctx.font = '9px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#B6A096';
+    ctx.textAlign = 'left';
+    ctx.fillText(`∂ SCAN ACTIVE · ${activeCount} NODES`, 24, H - 22);
+  }
+}
+
+function loop(){
+  t += 0.016;
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function resize(){
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  initDocPanel();
+}
+let resizeTimer;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 150); });
+
+window.addEventListener('pointermove', e => {
+  if(e.pointerType === 'mouse'){
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  }
+});
+window.addEventListener('pointerleave', () => {
+  mouse.x = -9999;
+  mouse.y = -9999;
+});
+window.addEventListener('pointerdown', e => {
+  if(e.pointerType !== 'mouse') return;
+  const nearest = failureNodes.find(n => Math.hypot(n.x - e.clientX, n.y - e.clientY) < 60);
+  if(nearest && !nearest.active){
+    nearest.active = true;
+    nearest.alpha = nearest.targetAlpha;
+  }
+});
+
+document.getElementById('copyright-year').textContent = new Date().getFullYear();
+resize();
+requestAnimationFrame(loop);
+
+})();
+</script>
+</body>
+</html>
