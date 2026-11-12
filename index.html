@@ -109,6 +109,7 @@
 
   .tags { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 14px; }
   .tags span { font-family:var(--font-mono); font-size:11px; padding:4px 10px; border-radius:999px; border:1px solid var(--border-strong); color:var(--text-muted); }
+  .etag { font-family:var(--font-mono); font-size:11px; padding:1px 6px; border-radius:4px; border:1px solid var(--border-strong); color:var(--text-muted); margin-right:2px; }
 
   .case-card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:20px 22px; margin-bottom:14px; }
   .case-card:last-child { margin-bottom:0; }
@@ -346,6 +347,7 @@
       <a href="#work">What I do</a>
       <a href="#proof">Published audits</a>
       <a href="#reserve">Reserve &amp; planned</a>
+      <a href="#about">About</a>
       <div class="nav-label">Engagements</div>
       <a href="#deliverable">The Findings Register</a>
       <a href="#pricing">Fast Run · Full Scan</a>
@@ -402,6 +404,7 @@
             <h2>What I do</h2>
             <p class="lead">Adversarial review of legal and regulatory documents, for in-house counsel, compliance leads and standards bodies.</p>
             <p class="muted">I read your text the way someone looking to exploit it would, and report the clauses that fail under that reading.</p>
+            <p class="muted" style="margin-top:14px;font-size:13px">Who’s behind the practice? See <a href="#about">About</a>.</p>
           </div></div>
         </section>
 
@@ -659,6 +662,47 @@
                 <div class="desc">If it has never been attacked this way, it has undiscovered structural weaknesses. Minimum engagement $1,500. Asynchronous delivery. No discovery calls.</div>
               </div>
             </div>
+          </div></div>
+        </section>
+
+        <!-- ABOUT -->
+        <section class="view" id="about" hidden>
+          <div class="msg"><div class="av">A</div><div class="msg-body">
+            <h2>About</h2>
+            <p class="lead">Sheldon K. Salmon, operating as AionSystem. Solo practice, adversarial review.</p>
+
+            <p>I read documents the way an adversary would, and report the clauses that fail under that reading. Every finding cites the document's own language, gets a severity rating, and carries a tag for how certain the claim is.</p>
+
+            <div class="rule-head">Why this exists</div>
+            <p>Complex documents have failure modes their authors can't see. Not because the authors are careless — because nobody reads their own writing as an adversary. That's the whole practice.</p>
+            <p>The method is a recursive extension of the premortem. Rather than stopping after one pass of <em>imagine this failed, why?</em>, it recurses past that point — isolating the single node whose failure breaks the whole system, decomposing it against documented failure history rather than hypothesized failure, and continuing until it reaches something irreducible.</p>
+
+            <div class="rule-head">How the work runs</div>
+            <div class="terms">
+              <div class="card"><b>Human authority</b>AI tools assist the review — multi-model adversarial simulation and structural mapping. I read the document, decide what counts as a finding, and set every severity rating. Human judgment is the sole authority over findings and certifications.</div>
+              <div class="card"><b>Fingerprinted output</b>Every report records a SHA-256 fingerprint of the document reviewed and of the report itself — so you can confirm which version was reviewed and that the report hasn't been altered.</div>
+              <div class="card"><b>Epistemic tagging</b>Every claim carries a certainty tag. <span class="etag">D</span> directly observed · <span class="etag">R</span> reasoned from evidence · <span class="etag">S</span> strategic judgement · <span class="etag">?</span> unverified or contested. Nothing leaves without a tag.</div>
+            </div>
+
+            <div class="rule-head">The path here</div>
+            <p>Not linear. Military service, time in Japan, healthcare work, then this. The through-line turned out to be one reusable operation rather than a field — find where a system fails, recurse past where most analysis stops, and ground every finding in the document's own text rather than instinct.</p>
+            <p>The practice is young — founded in early 2025 — which is why the published audits are unpaid and public. They're the track record I'd want to check if I were hiring me.</p>
+
+            <div class="rule-head">What the practice declines</div>
+            <p>Engagements that require coercion, consensus-building, or emotional labor. Work on kinetic military strategy, weapons systems architecture, or state-sponsored harm. These are declared at intake, not negotiated after payment. The full exclusion list is on the <a href="#terms">Rules page</a>.</p>
+
+            <div class="rule-head">Verify</div>
+            <div class="card">
+              <p style="margin-bottom:10px">Published work, identifiers, and current contact in one place.</p>
+              <p style="margin-bottom:6px"><a href="https://orcid.org/0009-0005-8057-5115" target="_blank" rel="noopener">ORCID 0009-0005-8057-5115</a> — full index of registered works</p>
+              <p style="margin-bottom:6px"><a href="https://github.com/AionSystem" target="_blank" rel="noopener">GitHub · AionSystem</a> — repositories, framework source</p>
+              <p style="margin-bottom:6px"><a href="https://www.linkedin.com/in/sheldon-k-salmon-b0901b378" target="_blank" rel="noopener">LinkedIn · Sheldon K. Salmon</a></p>
+              <p style="margin-bottom:6px">Published audits: <a href="#proof">EU AI Act Arts. 51–56</a>, <a href="#proof">Hippocratic Oath &amp; Declaration of Geneva</a>, <a href="#proof">ISA Deep-Sea Mining Code</a> — all DOI-linked and downloadable.</p>
+              <p style="margin-bottom:0"><a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a></p>
+            </div>
+
+            <p style="margin-top:18px"><a class="btn primary" href="#contact" data-intake>Open intake form</a></p>
+            <p class="muted" style="margin-top:8px">Full legal terms: <a href="#tos">Terms of Service</a> · Data handling: <a href="#privacy">Privacy Policy</a> · Operational rules: <a href="#terms">Rules &amp; terms</a>.</p>
           </div></div>
         </section>
 
@@ -1529,6 +1573,7 @@
     work: 'What I do',
     proof: 'Published audits',
     reserve: 'Reserve & planned',
+    about: 'About',
     deliverable: 'The Findings Register',
     pricing: 'Fast Run · Full Scan',
     process: 'Process',
@@ -1623,6 +1668,12 @@ var FAQ = [
       prompt: 'What are you working on next?',
       summary: 'The next wave of adversarial reviews: UN Charter, UDHR, Geneva Conventions, Paris Agreement, EU AI Act in full, OECD AI Principles, Biological Weapons Convention, Basel III, WTO Dispute Settlement, WHO International Health Regulations, Declaration of Helsinki, and more. Each is a high-stakes document that has never been attacked this way. Filter by domain. There is also a slot for your document — if it has never been red-teamed, it has undiscovered structural weaknesses.',
       chips: [10, 12, 1]
+    },
+    about: {
+      label: 'About',
+      prompt: 'Who are you?',
+      summary: 'Sheldon K. Salmon, operating as AionSystem. Solo practice, adversarial review. I read documents the way an adversary would and report the clauses that fail under that reading. The method is a recursive premortem — isolate the single node whose failure breaks the whole system, decompose it against documented failure history, continue until it reaches something irreducible. AI tools assist the review; I decide what counts as a finding and set every severity rating. Every claim carries an epistemic tag — [D] data, [R] reasoned, [S] strategic, [?] unverified. The practice is young (founded early 2025), which is why the published audits are unpaid and public — they are the track record. I decline work on kinetic military strategy, weapons systems architecture, and state-sponsored harm. Everything is verifiable through ORCID, GitHub, and the DOI-linked audits.',
+      chips: [0, 10, 19]
     },
     deliverable: {
       label: 'Findings Register',
