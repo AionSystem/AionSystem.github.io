@@ -106,8 +106,6 @@
   .card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px 18px; }
   .card b { display:block; margin-bottom:4px; }
   .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
-  .proof { display:flex; flex-direction:column; gap:4px; }
-  .proof b { font-family:var(--font-serif); font-weight:400; font-size:15px; }
   .tag { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); }
 
   .sev { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 12px; }
@@ -116,6 +114,46 @@
 
   .tags { display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 14px; }
   .tags span { font-family:var(--font-mono); font-size:11px; padding:4px 10px; border-radius:999px; border:1px solid var(--border-strong); color:var(--text-muted); }
+
+  /* Case study cards (proof view) */
+  .case-card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:20px 22px; margin-bottom:14px; }
+  .case-card:last-child { margin-bottom:0; }
+  .case-top { display:flex; align-items:flex-start; gap:12px; margin-bottom:4px; }
+  .case-top > div { flex:1; min-width:0; }
+  .case-icon { font-family:var(--font-serif); font-size:26px; color:var(--accent); line-height:1; flex-shrink:0; margin-top:2px; }
+  .case-title { font-family:var(--font-serif); font-size:21px; font-weight:400; line-height:1.2; }
+  .case-sub { font-size:12px; color:var(--text-dim); margin-top:3px; }
+  .case-stats { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0 10px; }
+  .case-stats span { font-family:var(--font-mono); font-size:11px; padding:3px 9px; border-radius:6px; background:var(--bg-hover); color:var(--text-muted); }
+  .case-card p { font-size:14px; margin:8px 0; }
+  .case-findings { display:flex; flex-direction:column; margin:10px 0 4px; }
+  .case-findings .finding-row { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:7px 0; border-bottom:1px solid var(--border-subtle); font-size:13px; }
+  .case-findings .finding-row:last-child { border-bottom:0; }
+  .case-findings .finding-row > span:first-child { flex:1; min-width:0; }
+  .sev-badge { font-family:var(--font-mono); font-size:11px; padding:2px 8px; border-radius:6px; border:1px solid currentColor; flex-shrink:0; white-space:nowrap; }
+  .sev-badge.crit { color:var(--s4); }
+  .sev-badge.major { color:var(--s3); }
+  .sev-badge.minor { color:var(--s2); }
+  .sev-badge.onfile { color:var(--s1); }
+  .verify-note { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); border:1px dashed var(--border-strong); border-radius:var(--radius-sm); padding:8px 10px; margin-top:10px; line-height:1.5; }
+  .case-card .acts { margin-top:12px; flex-wrap:wrap; }
+  .case-card .btn { background:var(--bg-hover); font-size:13px; padding:8px 14px; }
+
+  /* Reserve filter */
+  .filter-bar { display:flex; flex-wrap:wrap; gap:6px; margin:14px 0; }
+  .filter-btn { font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; padding:6px 12px; border:1px solid var(--border-strong); border-radius:999px; background:transparent; color:var(--text-muted); }
+  .filter-btn:hover { background:var(--bg-hover); color:var(--text-main); }
+  .filter-btn.active { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
+
+  .reserve-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px; }
+  .reserve-card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:14px 16px; display:flex; flex-direction:column; gap:4px; }
+  .reserve-card .name { font-family:var(--font-serif); font-size:16px; font-weight:400; line-height:1.2; }
+  .reserve-card .domain { font-family:var(--font-mono); font-size:10.5px; color:var(--text-dim); letter-spacing:.04em; text-transform:uppercase; }
+  .reserve-card .status { font-family:var(--font-mono); font-size:10.5px; padding:2px 8px; border-radius:6px; border:1px solid currentColor; align-self:flex-start; margin-top:4px; }
+  .reserve-card .status.reserve { color:var(--s3); }
+  .reserve-card .status.planned { color:var(--s2); }
+  .reserve-card .status.awaiting { color:var(--s4); }
+  .reserve-card .desc { font-size:13px; color:var(--text-muted); line-height:1.5; margin-top:4px; }
 
   .plans { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; }
   .plan { display:flex; flex-direction:column; gap:8px; }
@@ -136,7 +174,7 @@
 
   footer.foot { padding:36px 0 8px; font-size:12px; color:var(--text-dim); text-align:center; }
 
-  /* Composer (always visible) */
+  /* Composer */
   .composer { padding:12px 16px 14px;
     padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
     border-top:1px solid var(--border-subtle); background:var(--bg-base); }
@@ -168,12 +206,12 @@
   details.q .ans { padding:0 16px 14px; color:var(--text-muted); }
 
   /* Dialogs */
-  dialog.intake { background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-strong); border-radius:var(--radius-md);
+  dialog.intake, dialog.case-dlg { background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-strong); border-radius:var(--radius-md);
     padding:0; width:min(560px,92vw); max-height:90vh; max-height:90dvh; box-shadow:var(--shadow);
     overflow:auto; -webkit-overflow-scrolling:touch; }
-  dialog.intake::backdrop { background:rgba(0,0,0,.6); backdrop-filter:blur(4px); }
+  dialog.intake::backdrop, dialog.case-dlg::backdrop { background:rgba(0,0,0,.6); backdrop-filter:blur(4px); }
   .dlg-head { display:flex; align-items:center; gap:10px; padding:14px 18px; border-bottom:1px solid var(--border-subtle); position:sticky; top:0; background:var(--bg-card); z-index:1; }
-  .dlg-head h3 { margin:0; flex:1; font-family:var(--font-serif); font-weight:400; font-size:20px; }
+  .dlg-head h3 { margin:0; flex:1; min-width:0; font-family:var(--font-serif); font-weight:400; font-size:20px; line-height:1.2; }
   .dlg-body { padding:16px 18px 18px; }
   .fld { margin-bottom:12px; }
   .fld label { display:block; font-size:12px; color:var(--text-muted); margin-bottom:4px; }
@@ -189,6 +227,11 @@
   .warn { font-size:12px; color:var(--text-dim); border:1px dashed var(--border-strong); border-radius:var(--radius-sm); padding:9px 11px; margin:12px 0; }
   .acts { display:flex; gap:8px; flex-wrap:wrap; }
   @media (max-width:480px) { .two { grid-template-columns:1fr; } }
+
+  /* Case dialog body */
+  .case-dlg .dlg-body p { font-size:14px; margin:8px 0; }
+  .case-dlg .dlg-body p:first-child { margin-top:0; }
+  .case-dlg .case-stats { margin-bottom:14px; }
 
   /* Collapsed sidebar (desktop) */
   @media (min-width:821px) {
@@ -231,16 +274,29 @@
     .hero { padding:30px 0 16px; }
     .hero .row .btn { flex:1 1 160px; text-align:center; }
     .bub { max-width:92%; }
+
+    /* Case cards */
+    .case-card { padding:16px 18px; }
+    .case-top { gap:10px; }
+    .case-title { font-size:18px; }
+    .case-card .btn { font-size:12px; padding:8px 12px; }
+
+    /* Reserve */
+    .filter-bar { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; margin:10px 0; }
+    .filter-bar::-webkit-scrollbar { display:none; }
+    .filter-btn { flex:0 0 auto; }
+    .reserve-grid { grid-template-columns:1fr; }
   }
 
   @media (max-width:480px) {
     .plans, .grid { grid-template-columns:1fr; }
     .title small { display:none; }
     .cmeta span:last-child { display:none; }
+    .case-stats span { font-size:10.5px; }
   }
 
   @media (max-width:560px) {
-    dialog.intake {
+    dialog.intake, dialog.case-dlg {
       inset:0; margin:0; width:100%; max-width:100%;
       height:100vh; height:100dvh; max-height:100vh; max-height:100dvh;
       border:0; border-radius:0;
@@ -279,6 +335,7 @@
       <a href="#home" class="on">Home</a>
       <a href="#work">What I do</a>
       <a href="#proof">Published audits</a>
+      <a href="#reserve">Reserve &amp; planned</a>
       <div class="nav-label">Engagements</div>
       <a href="#deliverable">The Findings Register</a>
       <a href="#pricing">Fast Run · Full Scan</a>
@@ -340,13 +397,259 @@
         <section class="view" id="proof" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>Published audits</h2>
-            <p class="muted">Done unpaid and published, so you can judge the work before you hire me.</p>
-            <div class="grid">
-              <div class="card proof"><b>EU AI Act</b><span class="muted">Arts. 51–56</span><span class="tag">18 failure points</span></div>
-              <div class="card proof"><b>UN Deep-Sea Mining Code</b><span class="muted">ISBA/29/LTC/8</span><span class="tag">published audit</span></div>
-              <div class="card proof"><b>Hippocratic Oath &amp; Declaration of Geneva</b><span class="muted">Comparative adversarial read</span><span class="tag">21 failure points</span></div>
+            <p class="muted">Each case study shows the full adversarial process — role councils, multi-model stress testing, and a public verdict with DOI. I don't use client documents for case studies; client work stays confidential. Instead I attack high-stakes public documents and publish the findings. Download them, verify the quotes against primary sources, test the method yourself.</p>
+
+            <!-- EU AI Act -->
+            <div class="case-card">
+              <div class="case-top">
+                <span class="case-icon" aria-hidden="true">∑</span>
+                <div>
+                  <div class="case-title">EU AI Act — Arts. 51–56</div>
+                  <div class="case-sub">Regulation (EU) 2024/1689 · General-Purpose AI Systemic Risk</div>
+                </div>
+              </div>
+              <div class="case-stats">
+                <span>18 failure nodes</span><span>7 S4</span><span>11 S3</span><span>6 killed findings</span><span>6 Gauntlet rounds</span>
+              </div>
+              <p>Three-pass adversarial structural analysis of the EU AI Act's systemic-risk provisions. <strong>18 structural failure nodes identified across three independent passes.</strong> Unified thesis: the EU regulated systemic cognitive infrastructure using product safety mechanics designed for discrete products — a category error that underpins every downstream failure.</p>
+              <p class="muted">Survived six rounds of external hostile review by a 15-role rejection council. Zero fabrication. 12 quotes verified against primary sources. 6 external legislative claims confirmed.</p>
+              <div class="case-findings">
+                <div class="finding-row"><span>Open-source systemic-risk enforcement gap</span><span class="sev-badge crit">S4</span></div>
+                <div class="finding-row"><span>Compound regulatory inertia trap</span><span class="sev-badge crit">S4</span></div>
+                <div class="finding-row"><span>Harmonisation &amp; evidentiary gap</span><span class="sev-badge major">S3</span></div>
+                <div class="finding-row"><span>Self-assessment silence loophole</span><span class="sev-badge major">S3</span></div>
+                <div class="finding-row"><span>14 additional findings archived</span><span class="sev-badge onfile">ON FILE</span></div>
+              </div>
+              <div class="acts">
+                <a class="btn primary" href="https://doi.org/10.5281/zenodo.22135551" target="_blank" rel="noopener">View DOI ↗</a>
+                <a class="btn" href="https://ssrn.com/abstract=7362039" target="_blank" rel="noopener">SSRN ↗</a>
+                <a class="btn" href="assets/pdf/Structural-Fracture-and-Immunization-Architecture-EU-AI-Act-51-56-v3.1.pdf" download>PDF ↓</a>
+                <button class="btn" type="button" data-case="caseEuAiAct">Read full case →</button>
+              </div>
             </div>
-            <p class="muted" style="margin-top:12px">Repositories on <a href="https://github.com/AionSystem" rel="noopener">GitHub · AionSystem</a>.</p>
+
+            <!-- Hippocratic -->
+            <div class="case-card">
+              <div class="case-top">
+                <span class="case-icon" aria-hidden="true">⚕</span>
+                <div>
+                  <div class="case-title">Hippocratic Oath &amp; Declaration of Geneva</div>
+                  <div class="case-sub">Foundational Medical Ethics · Hardened 2026 Reconstruction</div>
+                </div>
+              </div>
+              <div class="case-stats">
+                <span>21 failure nodes</span><span>6-category harm taxonomy</span><span>7 clauses reconstructed</span>
+              </div>
+              <p>Independent adversarial structural review of medicine's foundational ethical texts. <strong>"Do no harm" is undefined, unenforceable, and has no adjudication mechanism or technological update trigger.</strong> The review found 21 structural failure nodes across the Oath and the Declaration of Geneva, then proposed a Hardened 2026 Reconstruction with six-category harm definitions, independent counter-expert review, and AI-surgical oversight.</p>
+              <p class="muted">Anchored to existing regulatory frameworks — EU AI Act, MDR, GDPR/HIPAA — rather than inventing new abstractions. Every limitation named. Every claim cited.</p>
+              <div class="case-findings">
+                <div class="finding-row"><span>"Do no harm" — undefined, unfalsifiable</span><span class="sev-badge crit">CRIT</span></div>
+                <div class="finding-row"><span>No enforcement body or adjudication mechanism</span><span class="sev-badge crit">CRIT</span></div>
+                <div class="finding-row"><span>No counter-expert or independent verification</span><span class="sev-badge major">MAJOR</span></div>
+                <div class="finding-row"><span>No technological update trigger</span><span class="sev-badge major">MAJOR</span></div>
+                <div class="finding-row"><span>Hardened 2026 Reconstruction proposed</span><span class="sev-badge onfile">RESOLVED</span></div>
+              </div>
+              <div class="acts">
+                <a class="btn primary" href="https://doi.org/10.5281/zenodo.22267142" target="_blank" rel="noopener">View DOI ↗</a>
+                <button class="btn" type="button" data-case="caseHippocratic">Read full case →</button>
+              </div>
+            </div>
+
+            <!-- ISA -->
+            <div class="case-card">
+              <div class="case-top">
+                <span class="case-icon" aria-hidden="true">◈</span>
+                <div>
+                  <div class="case-title">ISA Deep-Sea Mining Code</div>
+                  <div class="case-sub">ISBA/29/LTC/8 · Active UN Negotiation</div>
+                </div>
+              </div>
+              <div class="case-stats">
+                <span>52 failure nodes</span><span>4 critical gaps</span><span>1 published finding</span>
+              </div>
+              <p>Independent adversarial structural review of the ISA's draft Regional Environmental Management Plan guidance, run while the document was in active negotiation at the United Nations. <strong>52 structural failure nodes found across four sections. Four critical gaps left the primary environmental protection obligation legally unenforceable from adoption.</strong></p>
+              <p class="muted">Every finding traced to the document's own provisions. No invented mechanics. The primary finding includes the proposed resolution architecture as a proof of method.</p>
+              <div class="case-findings">
+                <div class="finding-row"><span>Primary obligation — no enforcement mechanism</span><span class="sev-badge crit">CRIT</span></div>
+                <div class="finding-row"><span>"Serious harm" undefined in operative text</span><span class="sev-badge crit">CRIT</span></div>
+                <div class="finding-row"><span>Missing review trigger condition</span><span class="sev-badge crit">CRIT</span></div>
+                <div class="finding-row"><span>Annex II — circular dependency loop</span><span class="sev-badge crit">CRIT</span></div>
+                <div class="finding-row"><span>18 major exploitable ambiguities</span><span class="sev-badge major">MAJOR ×18</span></div>
+                <div class="finding-row"><span>30 minor structural gaps</span><span class="sev-badge minor">MINOR ×30</span></div>
+              </div>
+              <div class="acts">
+                <a class="btn primary" href="https://doi.org/10.5281/zenodo.21326719" target="_blank" rel="noopener">View DOI ↗</a>
+                <button class="btn" type="button" data-case="caseIsa">Read full case →</button>
+              </div>
+            </div>
+
+            <div class="verify-note">✓ All three published with DOIs, checkable against primary sources. One finding from the ISA review is published in full; the other 51 are archived as a structural register. I wasn't engaged to resolve them, and I don't publish unsolicited resolution telemetry for artifacts I wasn't hired to fix.</div>
+          </div></div>
+        </section>
+
+        <!-- RESERVE -->
+        <section class="view" id="reserve" hidden>
+          <div class="msg"><div class="av">A</div><div class="msg-body">
+            <h2>Reserve &amp; planned attacks</h2>
+            <p class="muted">The next wave. Each is a high-stakes document that has never been attacked this way. Filter by domain.</p>
+
+            <div class="filter-bar" role="group" aria-label="Filter by domain">
+              <button class="filter-btn active" data-filter="all" type="button">All</button>
+              <button class="filter-btn" data-filter="global" type="button">Global Governance</button>
+              <button class="filter-btn" data-filter="climate" type="button">Climate</button>
+              <button class="filter-btn" data-filter="ai" type="button">AI &amp; Tech</button>
+              <button class="filter-btn" data-filter="weapons" type="button">Weapons</button>
+              <button class="filter-btn" data-filter="finance" type="button">Finance</button>
+              <button class="filter-btn" data-filter="health" type="button">Health</button>
+              <button class="filter-btn" data-filter="yourdoc" type="button">Your Document</button>
+            </div>
+
+            <div class="reserve-grid" id="reserveGrid">
+              <div class="reserve-card" data-category="global">
+                <div class="name">UN Charter</div>
+                <div class="domain">Global Governance · Treaty</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Security Council veto, enforcement gaps, Article 51 ambiguity.</div>
+              </div>
+              <div class="reserve-card" data-category="global">
+                <div class="name">Universal Declaration of Human Rights</div>
+                <div class="domain">Global Governance · Declaration</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Non-binding, undefined terms, no adjudication mechanism.</div>
+              </div>
+              <div class="reserve-card" data-category="global">
+                <div class="name">Geneva Conventions + Protocols</div>
+                <div class="domain">Global Governance · Treaty</div>
+                <div class="status planned">Planned</div>
+                <div class="desc">Enforcement relies on state prosecution; non-state actor gaps.</div>
+              </div>
+
+              <div class="reserve-card" data-category="climate">
+                <div class="name">Paris Agreement</div>
+                <div class="domain">Climate · Treaty</div>
+                <div class="status planned">Planned</div>
+                <div class="desc">Voluntary NDCs, no enforcement, carbon market loopholes.</div>
+              </div>
+              <div class="reserve-card" data-category="climate">
+                <div class="name">Kunming-Montreal Biodiversity Framework</div>
+                <div class="domain">Climate · Agreement</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">23 targets, no binding compliance pathway. "Protected" undefined.</div>
+              </div>
+              <div class="reserve-card" data-category="climate">
+                <div class="name">UNFCCC Article 6 Rulebook</div>
+                <div class="domain">Climate · Regulation</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Carbon market rules; baseline manipulation, double-counting risks.</div>
+              </div>
+              <div class="reserve-card" data-category="climate">
+                <div class="name">ISA Exploitation Regulations</div>
+                <div class="domain">Climate · Draft Mining Code</div>
+                <div class="status planned">Planned</div>
+                <div class="desc">Royalty rates, environmental liability, inspection powers.</div>
+              </div>
+
+              <div class="reserve-card" data-category="ai">
+                <div class="name">EU AI Act — Full Text</div>
+                <div class="domain">AI &amp; Technology · Regulation</div>
+                <div class="status planned">Planned</div>
+                <div class="desc">All 113 articles. Annex III high-risk categories, enforcement fragmentation.</div>
+              </div>
+              <div class="reserve-card" data-category="ai">
+                <div class="name">OECD AI Principles</div>
+                <div class="domain">AI &amp; Technology · Principles</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Most adopted AI principles globally. Voluntary, undefined terms, no monitoring.</div>
+              </div>
+              <div class="reserve-card" data-category="ai">
+                <div class="name">UNESCO Recommendation on AI Ethics</div>
+                <div class="domain">AI &amp; Technology · Recommendation</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Non-binding, vague "fairness" and "transparency".</div>
+              </div>
+              <div class="reserve-card" data-category="ai">
+                <div class="name">WHO Guidance on AI in Health</div>
+                <div class="domain">AI &amp; Technology · Guidance</div>
+                <div class="status planned">Planned</div>
+                <div class="desc">Direct extension of Hippocratic Oath work. No enforcement, equity gaps.</div>
+              </div>
+
+              <div class="reserve-card" data-category="weapons">
+                <div class="name">Biological Weapons Convention</div>
+                <div class="domain">Weapons &amp; Security · Treaty</div>
+                <div class="status planned">Planned</div>
+                <div class="desc">No verification mechanism at all. Synthetic biology age makes this catastrophic.</div>
+              </div>
+              <div class="reserve-card" data-category="weapons">
+                <div class="name">Chemical Weapons Convention</div>
+                <div class="domain">Weapons &amp; Security · Treaty</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Challenge inspection never used as designed. Political dynamics block enforcement.</div>
+              </div>
+              <div class="reserve-card" data-category="weapons">
+                <div class="name">Treaty on Prohibition of Nuclear Weapons</div>
+                <div class="domain">Weapons &amp; Security · Treaty</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Legally binding but nuclear powers haven't signed. Verification undefined.</div>
+              </div>
+              <div class="reserve-card" data-category="weapons">
+                <div class="name">CCW Lethal Autonomous Weapons Protocol</div>
+                <div class="domain">Weapons &amp; Security · Draft</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">"Meaningful human control" undefined. Core term has no agreed definition.</div>
+              </div>
+
+              <div class="reserve-card" data-category="finance">
+                <div class="name">IMF Articles of Agreement</div>
+                <div class="domain">Finance · Treaty</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Weighted voting ensures affected countries have least say.</div>
+              </div>
+              <div class="reserve-card" data-category="finance">
+                <div class="name">Basel III / IV Framework</div>
+                <div class="domain">Finance · Regulation</div>
+                <div class="status planned">Planned</div>
+                <div class="desc">Relies on bank-internal risk models. Structural trust in self-assessment.</div>
+              </div>
+              <div class="reserve-card" data-category="finance">
+                <div class="name">WTO Dispute Settlement Understanding</div>
+                <div class="domain">Finance · Agreement</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Appellate Body non-functional. Enforcement relies on voluntary compliance.</div>
+              </div>
+              <div class="reserve-card" data-category="finance">
+                <div class="name">UNCLOS Part XI (Deep Seabed)</div>
+                <div class="domain">Finance · Treaty Section</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Common heritage principle vs. parallel system never functioning as designed.</div>
+              </div>
+
+              <div class="reserve-card" data-category="health">
+                <div class="name">WHO International Health Regulations</div>
+                <div class="domain">Health · Regulation</div>
+                <div class="status planned">Planned</div>
+                <div class="desc">No enforcement, self-reported compliance.</div>
+              </div>
+              <div class="reserve-card" data-category="health">
+                <div class="name">Declaration of Helsinki</div>
+                <div class="domain">Health · Declaration</div>
+                <div class="status planned">Planned</div>
+                <div class="desc">Foundational medical research ethics. No enforcement, undefined "vulnerable populations".</div>
+              </div>
+              <div class="reserve-card" data-category="health">
+                <div class="name">Nagoya Protocol</div>
+                <div class="domain">Health · Protocol</div>
+                <div class="status reserve">Reserve</div>
+                <div class="desc">Genetic resources benefit-sharing. Compliance fragmented across national laws.</div>
+              </div>
+
+              <div class="reserve-card" data-category="yourdoc">
+                <div class="name">Your Document</div>
+                <div class="domain">Any Domain · Custom</div>
+                <div class="status awaiting">Awaiting engagement</div>
+                <div class="desc">If it has never been attacked this way, it has undiscovered structural weaknesses. Minimum engagement $1,500. Asynchronous delivery. No discovery calls.</div>
+              </div>
+            </div>
           </div></div>
         </section>
 
@@ -501,9 +804,76 @@
   </div>
 </div>
 
+<!-- CASE STUDY: EU AI Act -->
+<dialog class="case-dlg" id="caseEuAiAct" aria-labelledby="caseEuAiActTitle">
+  <div class="dlg-head">
+    <h3 id="caseEuAiActTitle">∑ · EU AI Act — Arts. 51–56</h3>
+    <button class="icon-btn" data-close-dlg="caseEuAiAct" aria-label="Close case study" type="button">✕</button>
+  </div>
+  <div class="dlg-body">
+    <p class="tag" style="margin-bottom:10px">Regulation (EU) 2024/1689 · Published · DOI-linked</p>
+    <div class="case-stats">
+      <span>18 findings</span><span>7 S4</span><span>11 S3</span><span>6 killed</span><span>6 Gauntlet rounds</span>
+    </div>
+    <p>The flagship proof of method. The systemic-risk provisions of the EU AI Act (Articles 51–56) analyzed through the full AION diagnostic pipeline: Foundry → Anvil → Crucible → Temper → Resolution → FORGE → Gauntlet.</p>
+    <p><strong>Three full passes.</strong> Each pass independently attacked the document. Findings were stress-tested, negation-tested, and severity-calibrated. Weak findings were killed. Strong findings were escalated.</p>
+    <p><strong>The Unified Thesis:</strong> The Ontological Category Error — the EU regulated systemic cognitive infrastructure using product safety mechanics designed for discrete products. Every downstream failure is a symptom of this upstream mismatch.</p>
+    <p><strong>External verification:</strong> Six rounds of hostile review by a 15-role rejection council. Two rounds returned Reject verdicts — the report was revised after each. The final verification pass returned Conditional with zero fabrication found. 12 quotes verified against primary sources. 6 external legislative claims confirmed.</p>
+    <p class="muted">Published with DOI. Full 28-page report available for download. Method section included. Revision history documented. Download it and test it yourself.</p>
+    <div class="acts" style="margin-top:16px">
+      <a class="btn primary" href="https://doi.org/10.5281/zenodo.22135551" target="_blank" rel="noopener">View DOI ↗</a>
+      <a class="btn" href="https://ssrn.com/abstract=7362039" target="_blank" rel="noopener">View on SSRN ↗</a>
+      <a class="btn" href="assets/pdf/Structural-Fracture-and-Immunization-Architecture-EU-AI-Act-51-56-v3.1.pdf" download>Download PDF ↓</a>
+    </div>
+  </div>
+</dialog>
+
+<!-- CASE STUDY: Hippocratic -->
+<dialog class="case-dlg" id="caseHippocratic" aria-labelledby="caseHippocraticTitle">
+  <div class="dlg-head">
+    <h3 id="caseHippocraticTitle">⚕ · Hippocratic Oath &amp; Declaration of Geneva</h3>
+    <button class="icon-btn" data-close-dlg="caseHippocratic" aria-label="Close case study" type="button">✕</button>
+  </div>
+  <div class="dlg-body">
+    <p class="tag" style="margin-bottom:10px">Foundational Medical Ethics · Published · DOI-linked</p>
+    <div class="case-stats">
+      <span>21 findings</span><span>6-category taxonomy</span><span>7 clauses</span><span>Published DOI</span>
+    </div>
+    <p>Medicine's most trusted promise has no enforcement mechanism, no functional definition of "harm," no falsifiable standard, and no technological update trigger. This review attacks both the Hippocratic Oath and the Declaration of Geneva line by line, then reconstructs the Oath as a binding covenant with defined terms, external adjudication, and AI-surgical oversight.</p>
+    <p><strong>Core finding:</strong> "Do no harm" is a rhetorical norm, not a verifiable commitment. The documents are aspirational declarations, not enforceable contracts. The AI era is about to inherit this structural void at scale.</p>
+    <p><strong>The Hardened 2026 Reconstruction</strong> introduces a six-category harm taxonomy calibrated to physician agency, an independent counter-expert review requirement, explicit technological update triggers (90-day comprehensive adversarial testing), and distinct obligation tracks for human physicians and AI systems.</p>
+    <p><strong>Anchored to existing frameworks</strong> — EU AI Act (Annex III), EU MDR, GDPR/HIPAA — not invented abstractions. Every limitation named, including authorship disputes and source verification constraints.</p>
+    <p class="muted">Published with DOI. Full adversarial review and hardened reconstruction available for download.</p>
+    <div class="acts" style="margin-top:16px">
+      <a class="btn primary" href="https://doi.org/10.5281/zenodo.22267142" target="_blank" rel="noopener">View DOI ↗</a>
+    </div>
+  </div>
+</dialog>
+
+<!-- CASE STUDY: ISA -->
+<dialog class="case-dlg" id="caseIsa" aria-labelledby="caseIsaTitle">
+  <div class="dlg-head">
+    <h3 id="caseIsaTitle">◈ · ISA Deep-Sea Mining Code</h3>
+    <button class="icon-btn" data-close-dlg="caseIsa" aria-label="Close case study" type="button">✕</button>
+  </div>
+  <div class="dlg-body">
+    <p class="tag" style="margin-bottom:10px">ISBA/29/LTC/8 · Active UN Negotiation · Published DOI</p>
+    <div class="case-stats">
+      <span>52 failure nodes</span><span>4 critical gaps</span><span>Unsolicited</span><span>Uncompensated</span>
+    </div>
+    <p>This was the first public proof of method. The International Seabed Authority's draft Regional Environmental Management Plan guidance was in active negotiation at the UN. I ran an independent structural review — no client, no fee, no invitation.</p>
+    <p><strong>What came out:</strong> 52 structural failure nodes across four sections. Four critical gaps left the primary environmental protection obligation legally unenforceable from adoption. Every finding was traced to the document's own provisions — no invented mechanics.</p>
+    <p>The primary finding includes the structural analysis and the proposed resolution architecture as a proof of method. The remaining 51 findings are archived as a structural register (findings and severity only). I was not engaged to resolve them, and I do not publish unsolicited resolution telemetry for artifacts I was not hired to fix.</p>
+    <p class="muted">One finding published in full, DOI-linked and checkable. The rest stays off-record.</p>
+    <div class="acts" style="margin-top:16px">
+      <a class="btn primary" href="https://doi.org/10.5281/zenodo.21326719" target="_blank" rel="noopener">View DOI ↗</a>
+    </div>
+  </div>
+</dialog>
+
 <!-- INTAKE DIALOG -->
 <dialog class="intake" id="intake" aria-labelledby="intakeTitle">
-  <div class="dlg-head"><h3 id="intakeTitle">Written intake</h3><button class="icon-btn" id="intakeClose" aria-label="Close intake form" type="button">✕</button></div>
+  <div class="dlg-head"><h3 id="intakeTitle">Written intake</h3><button class="icon-btn" id="intakeClose" data-close-dlg="intake" aria-label="Close intake form" type="button">✕</button></div>
   <form class="dlg-body" id="intakeForm" novalidate>
     <div class="two">
       <div class="fld"><label for="f-name">Full name *</label><input type="text" id="f-name" name="Name" required autocomplete="name"></div>
@@ -556,7 +926,7 @@
 
 <!-- CUSTOM BUILD DIALOG -->
 <dialog class="intake" id="customDlg" aria-labelledby="customTitle">
-  <div class="dlg-head"><h3 id="customTitle">Custom AION Build scoping</h3><button class="icon-btn" id="customClose" aria-label="Close custom scoping form" type="button">✕</button></div>
+  <div class="dlg-head"><h3 id="customTitle">Custom AION Build scoping</h3><button class="icon-btn" id="customClose" data-close-dlg="customDlg" aria-label="Close custom scoping form" type="button">✕</button></div>
   <form class="dlg-body" id="customForm" novalidate>
     <div class="two">
       <div class="fld"><label for="c-name">Full name *</label><input type="text" id="c-name" name="Name" required autocomplete="name"></div>
@@ -642,7 +1012,7 @@
     try { localStorage.setItem('aion-site-theme', next); } catch (e) {}
   };
 
-  // ---- Sidebar collapse (desktop) / drawer (mobile) ----------------------
+  // ---- Sidebar collapse / drawer ----------------------------------------
   var mq = window.matchMedia('(max-width:820px)');
   var KEY = 'aion-nav-collapsed';
 
@@ -672,11 +1042,9 @@
   };
 
   document.getElementById('scrim').onclick = closeDrawer;
-
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && app.classList.contains('nav-open')) closeDrawer();
   });
-
   function onMqChange() {
     closeDrawer();
     navBtn.setAttribute('aria-expanded',
@@ -691,6 +1059,7 @@
     home: 'AionSystem',
     work: 'What I do',
     proof: 'Published audits',
+    reserve: 'Reserve & planned',
     deliverable: 'The Findings Register',
     pricing: 'Fast Run · Full Scan',
     process: 'Process',
@@ -735,7 +1104,6 @@
     current: function () { return current; }
   };
 
-  // ---- Nav clicks: play section summary, fall back to view switch -------
   nav.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -776,7 +1144,6 @@ var FAQ = [
 ];
 
 (function(){
-  // ---- Section summaries: what Aion "says" when you click a nav item -----
   var SECTIONS = {
     work: {
       label: 'What I do',
@@ -787,8 +1154,14 @@ var FAQ = [
     proof: {
       label: 'Published audits',
       prompt: 'Show me your published audits',
-      summary: 'Before you hire me, look at what I’ve published for free. An adversarial audit of the EU AI Act (Arts. 51–56, 18 failure points), the UN Deep-Sea Mining Code (ISBA/29/LTC/8), and a comparative read of the Hippocratic Oath and Declaration of Geneva (21 failure points). All on GitHub, all unpaid, so you can judge the work before you pay.',
+      summary: 'Three free, DOI-linked, downloadable adversarial audits: the EU AI Act Arts. 51–56 (18 failure nodes, 7 S4, survived six rounds of hostile review by a 15-role rejection council), the Hippocratic Oath and Declaration of Geneva (21 failure nodes, plus a Hardened 2026 Reconstruction), and the ISA Deep-Sea Mining Code (52 failure nodes, run while the document was in active UN negotiation). Every claim checkable against primary sources. Click any card to open the full case study.',
       chips: [10, 12, 0]
+    },
+    reserve: {
+      label: 'Reserve & planned',
+      prompt: 'What are you working on next?',
+      summary: 'The next wave of adversarial reviews: UN Charter, UDHR, Geneva Conventions, Paris Agreement, EU AI Act in full, OECD AI Principles, Biological Weapons Convention, Basel III, WTO Dispute Settlement, WHO International Health Regulations, Declaration of Helsinki, and more. Each is a high-stakes document that has never been attacked this way. Filter by domain. There is also a slot for your document — if it has never been red-teamed, it has undiscovered structural weaknesses.',
+      chips: [10, 12, 1]
     },
     deliverable: {
       label: 'Findings Register',
@@ -799,7 +1172,7 @@ var FAQ = [
     pricing: {
       label: 'Pricing',
       prompt: 'What are the engagements?',
-      summary: 'Two fixed-price engagements: Fast Run is $1,500 — one document up to 75 pages, the three highest-severity findings written up in full, delivered in 5 business days. Full Scan is $7,500 — one document up to 200 pages or a set of related documents, every finding written up, plus compounding-gap analysis, root-cause classification and insert-ready fix language, delivered in 15 business days. If your document doesn’t fit either tier, I’ll tell you. Custom AION Build is scoped individually — see the Custom AION Build section.',
+      summary: 'Two fixed-price engagements: Fast Run is $1,500 — one document up to 75 pages, the three highest-severity findings written up in full, delivered in 5 business days. Full Scan is $7,500 — one document up to 200 pages or a set of related documents, every finding written up, plus compounding-gap analysis, root-cause classification and insert-ready fix language, delivered in 15 business days. If your document doesn’t fit either tier, I’ll tell you. Custom AION Build is scoped individually.',
       chips: [4, 5, 8]
     },
     process: {
@@ -834,7 +1207,7 @@ var FAQ = [
     }
   };
 
-  // ---- FAQ rendering -----------------------------------------------------
+  // FAQ rendering
   var list = document.getElementById('faqList'), last = '';
   FAQ.forEach(function(f, i){
     if (f[0] !== last) {
@@ -848,7 +1221,7 @@ var FAQ = [
     d.appendChild(sm); d.appendChild(a); list.appendChild(d);
   });
 
-  // ---- Chat --------------------------------------------------------------
+  // Chat
   var ta = document.getElementById('msg'),
       th = document.getElementById('thread'),
       chips = document.getElementById('chips'),
@@ -861,7 +1234,6 @@ var FAQ = [
   });
 
   var STOP = /^(the|and|for|you|your|are|can|does|what|how|do|is|a|an|to|of|in|my|i|it|me|on|with|this|that|will|would|about|have|get)$/;
-
   function match(q){
     var w = q.toLowerCase().replace(/[^a-z0-9\-& ]/g, ' ').split(/\s+/)
       .filter(function(x){ return x.length > 1 && !STOP.test(x); });
@@ -884,9 +1256,7 @@ var FAQ = [
     return b;
   }
 
-  function scrollEnd(){
-    sc.scrollTop = sc.scrollHeight;
-  }
+  function scrollEnd(){ sc.scrollTop = sc.scrollHeight; }
 
   function suggest(ids){
     Array.prototype.slice.call(chips.querySelectorAll('.chip[data-s]')).forEach(function(c){ c.remove(); });
@@ -903,12 +1273,9 @@ var FAQ = [
     q = (q || '').trim();
     if (!q) return;
     if (home.hidden) window.Aion.go('home');
-
     bub('me', 'You', q);
     ta.value = ''; ta.style.height = 'auto';
-
     var m = match(q), top = m[0];
-
     if (top.n >= 2) {
       bub('', 'Aion · prepared answer', FAQ[top.i][2]);
       var rel = m.slice(1, 4).filter(function(x){ return x.n > 0; }).map(function(x){ return x.i; });
@@ -926,37 +1293,27 @@ var FAQ = [
     setTimeout(scrollEnd, 0);
   }
 
-  // ---- Nav-triggered section summaries ----------------------------------
+  // Nav summaries
   var seen = {};
-
   function askSection(id){
     var s = SECTIONS[id];
     if (!s || seen[id]) { window.Aion.go(id); return; }
     seen[id] = true;
-
     window.Aion.go('home');
-
     bub('me', 'You', s.prompt);
     var b = bub('', 'Aion · ' + s.label, s.summary);
-
     var btn = document.createElement('a');
     btn.className = 'btn';
     btn.href = '#' + id;
     btn.textContent = 'Read the full ' + s.label + ' →';
-    btn.addEventListener('click', function(e){
-      e.preventDefault();
-      window.Aion.go(id);
-    });
+    btn.addEventListener('click', function(e){ e.preventDefault(); window.Aion.go(id); });
     b.appendChild(btn);
-
     suggest(s.chips);
     setTimeout(scrollEnd, 0);
   }
-
   window.Aion = window.Aion || {};
   window.Aion.askSection = askSection;
 
-  // ---- Seed + wiring ----------------------------------------------------
   bub('', 'Aion', 'Ask about pricing, the process, turnaround, confidentiality or refunds. Or click any section on the left and I’ll summarise it here first.');
   suggest([4, 8, 17]);
 
@@ -1002,12 +1359,23 @@ var FAQ = [
     hint();
     if (typeof intakeDlg.showModal === 'function') intakeDlg.showModal(); else intakeDlg.setAttribute('open', '');
   }
-
   function openCustom(){
     if (typeof customDlg.showModal === 'function') customDlg.showModal(); else customDlg.setAttribute('open', '');
   }
+  function openCase(id){
+    var d = document.getElementById(id);
+    if (!d) return;
+    if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+  }
 
   document.addEventListener('click', function(e){
+    var cs = e.target.closest('[data-case]');
+    if (cs) {
+      e.preventDefault();
+      openCase(cs.getAttribute('data-case'));
+      document.getElementById('app').classList.remove('nav-open');
+      return;
+    }
     var c = e.target.closest('[data-custom]');
     if (c) {
       e.preventDefault();
@@ -1022,10 +1390,16 @@ var FAQ = [
     document.getElementById('app').classList.remove('nav-open');
   });
 
-  document.getElementById('intakeClose').onclick = function(){ intakeDlg.close(); };
-  document.getElementById('customClose').onclick = function(){ customDlg.close(); };
-  intakeDlg.addEventListener('click', function(e){ if (e.target === intakeDlg) intakeDlg.close(); });
-  customDlg.addEventListener('click', function(e){ if (e.target === customDlg) customDlg.close(); });
+  // Unified close handlers for all dialogs
+  document.querySelectorAll('dialog.intake, dialog.case-dlg').forEach(function(d){
+    d.addEventListener('click', function(e){ if (e.target === d) d.close(); });
+  });
+  document.querySelectorAll('[data-close-dlg]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var d = document.getElementById(b.getAttribute('data-close-dlg'));
+      if (d) d.close();
+    });
+  });
 
   // NDA radio → show signatory fields
   intakeForm.addEventListener('change', function(e){
@@ -1040,7 +1414,6 @@ var FAQ = [
     var out = [], els = formEl.elements;
     var ndaRadio = formEl.querySelector('input[name="NDA"]:checked');
     var ndaYes = ndaRadio && ndaRadio.value === 'Yes';
-
     for (var i = 0; i < els.length; i++) {
       var el = els[i];
       if (!el.name) continue;
@@ -1058,13 +1431,11 @@ var FAQ = [
     out.push('Document attached: No (upload follows intake and payment)');
     return out.join('\n');
   }
-
   function sendMail(formEl, subject){
     var b = buildForm(formEl);
     if (!b) return;
     location.href = 'mailto:AionSystem@outlook.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(b);
   }
-
   function copyText(formEl, btn){
     var b = buildForm(formEl);
     if (!b) return;
@@ -1084,6 +1455,20 @@ var FAQ = [
   };
   document.getElementById('intakeCopy').onclick = function(){ copyText(intakeForm, this); };
   document.getElementById('customCopy').onclick = function(){ copyText(customForm, this); };
+
+  // Reserve filter
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  var reserveCards = document.querySelectorAll('.reserve-card');
+  filterBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      filterBtns.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var f = btn.getAttribute('data-filter');
+      reserveCards.forEach(function(c){
+        c.hidden = !(f === 'all' || c.getAttribute('data-category') === f);
+      });
+    });
+  });
 })();
 </script>
 </body>
