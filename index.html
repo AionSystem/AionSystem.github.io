@@ -168,6 +168,18 @@
   .rule-head { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-dim); margin:22px 0 10px; font-weight:600; }
   .rule-head:first-of-type { margin-top:6px; }
 
+  /* Terms of Service */
+  .tos-meta { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); letter-spacing:.04em; text-align:center; padding:10px 12px; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); background:var(--bg-surface); margin-bottom:16px; }
+  .tos-intro { font-size:14px; color:var(--text-muted); margin-bottom:14px; padding:12px 14px; border:1px dashed var(--border-strong); border-radius:var(--radius-sm); }
+  .tos-block { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px 18px; margin-bottom:10px; }
+  .tos-block h3 { font-family:var(--font-serif); font-weight:400; font-size:18px; margin:0 0 10px; line-height:1.2; }
+  .tos-block p { margin:0 0 10px; font-size:14px; }
+  .tos-block p:last-child { margin-bottom:0; }
+  .tos-block ul { margin:0 0 10px; padding-left:20px; color:var(--text-muted); font-size:14px; }
+  .tos-block ul:last-child { margin-bottom:0; }
+  .tos-block ul li { margin:4px 0; }
+  .tos-block b { color:var(--text-main); }
+
   .skel { border:1px dashed var(--border-strong); border-radius:var(--radius-md); padding:16px 18px; background:var(--bg-surface); }
   .skel i { display:block; height:9px; border-radius:5px; background:var(--bg-hover); margin:10px 0; }
   .skel i:nth-child(2){width:92%} .skel i:nth-child(3){width:78%} .skel i:nth-child(4){width:55%}
@@ -288,6 +300,9 @@
     .filter-bar::-webkit-scrollbar { display:none; }
     .filter-btn { flex:0 0 auto; }
     .reserve-grid { grid-template-columns:1fr; }
+
+    .tos-block { padding:14px 16px; }
+    .tos-block h3 { font-size:17px; }
   }
 
   @media (max-width:480px) {
@@ -295,6 +310,7 @@
     .title small { display:none; }
     .cmeta span:last-child { display:none; }
     .case-stats span { font-size:10.5px; }
+    .tos-block { padding:12px 14px; }
   }
 
   @media (max-width:560px) {
@@ -346,6 +362,7 @@
       <div class="nav-label">Terms</div>
       <a href="#faq">FAQ</a>
       <a href="#terms">Rules &amp; terms</a>
+      <a href="#tos">Terms of Service</a>
       <a href="#contact">Contact</a>
     </nav>
     <div class="side-foot">
@@ -401,7 +418,6 @@
             <h2>Published audits</h2>
             <p class="muted">Each case study shows the full adversarial process — role councils, multi-model stress testing, and a public verdict with DOI. I don't use client documents for case studies; client work stays confidential. Instead I attack high-stakes public documents and publish the findings. Download them, verify the quotes against primary sources, test the method yourself.</p>
 
-            <!-- EU AI Act -->
             <div class="case-card">
               <div class="case-top">
                 <span class="case-icon" aria-hidden="true">∑</span>
@@ -430,7 +446,6 @@
               </div>
             </div>
 
-            <!-- Hippocratic -->
             <div class="case-card">
               <div class="case-top">
                 <span class="case-icon" aria-hidden="true">⚕</span>
@@ -457,7 +472,6 @@
               </div>
             </div>
 
-            <!-- ISA -->
             <div class="case-card">
               <div class="case-top">
                 <span class="case-icon" aria-hidden="true">◈</span>
@@ -745,14 +759,12 @@
             <h2>Rules &amp; terms</h2>
             <p class="lead">How engagements run, what’s in scope, and how the work is delivered. If these terms don’t match your needs, we’re probably not a good fit.</p>
 
-            <!-- TL;DR -->
             <div class="terms">
               <div class="card"><b>Refund</b>If the whole document — not just the findings written up — has no S3 or S4 finding, you get a full refund and keep the report.</div>
               <div class="card"><b>Confidentiality</b>Your document is confidential by default. It’s used only to produce your report and shredded 30 days after delivery. NDA on request.</div>
               <div class="card"><b>Limits</b>This is an adversarial review, not legal advice. It doesn’t replace your counsel.</div>
             </div>
 
-            <!-- Practice & instruments -->
             <div class="rule-head">Practice &amp; instruments</div>
             <div class="terms">
               <div class="card"><b>The practice</b>Adversarial review of legal and regulatory documents. I read the document the way someone looking to exploit it would, and report the clauses that fail under that reading.</div>
@@ -761,24 +773,21 @@
               <div class="card"><b>Liability</b>Solo practitioner. Liability is capped at the engagement fee. If your procurement requires an insured provider or formal E&amp;O coverage, I’m not the right fit.</div>
             </div>
 
-            <!-- Scope -->
             <div class="rule-head">Scope &amp; exclusions</div>
             <div class="terms">
               <div class="card"><b>Jurisdiction</b>Any jurisdiction, any counterparty. The document is the only thing I look at. Political, ideological and market positions don’t enter the analysis.</div>
               <div class="card"><b>What I decline</b>Engagements that require coercion, consensus-building, or emotional labor. Work on kinetic military strategy, weapons systems architecture, or state-sponsored harm. These are declared at intake rather than negotiated after payment.</div>
             </div>
 
-            <!-- Commercial -->
             <div class="rule-head">Commercial terms</div>
             <div class="terms">
               <div class="card"><b>Sequence</b>Intake → scope confirmation → prepayment → asynchronous execution → report. The engagement begins when I start reading the document.</div>
               <div class="card"><b>Payment</b>Full prepayment. Invoice via Stripe. No Net-30, no crypto, no unwired checks.</div>
               <div class="card"><b>Fees</b>Fixed per tier: Fast Run $1,500; Full Scan $7,500. Custom AION Build scoped individually. No discounts — the fee reflects the work.</div>
-              <div class="card"><b>Refunds &amp; cancellations</b>Full refund if you cancel before I start reading the document. Once the document has been accessed, payment is non-refundable. Chargebacks end the engagement.</div>
+              <div class="card"><b>Refunds &amp; cancellations</b>Full refund if you cancel before I start reading the document. Full refund if the whole document has no S3 or S4 finding (you keep the report). Otherwise, non-refundable once I’ve read the document and made a finding. Chargebacks end the engagement.</div>
               <div class="card"><b>NDAs</b>Client-provided NDAs and MSAs are themselves red-teamed before execution. Asymmetrical, overly broad, or unenforceable clauses are rejected. The standard NDA is available on the <a href="#contact">contact page</a>.</div>
             </div>
 
-            <!-- Timing -->
             <div class="rule-head">Timing &amp; transmission</div>
             <div class="terms">
               <div class="card"><b>Intake windows</b>Tuesdays and Thursdays. Release windows: weekends.</div>
@@ -788,7 +797,6 @@
               <div class="card"><b>Checkpoints</b>Fast Run and Full Scan operate in diagnostic silence — the next message after upload is the report. Custom AION Build includes one structured midpoint checkpoint to confirm scope.</div>
             </div>
 
-            <!-- Turnaround -->
             <div class="rule-head">Turnaround &amp; scope</div>
             <div class="terms">
               <div class="card"><b>Standard velocity</b>Fast Run: 5 business days. Full Scan: 15 business days.</div>
@@ -797,7 +805,6 @@
               <div class="card"><b>What a clean result means</b>A clean pass means I found no S3 or S4 issue within the scope of this review, on this document, at this time. It’s not a guarantee against future exploitation.</div>
             </div>
 
-            <!-- Data handling -->
             <div class="rule-head">Data handling</div>
             <div class="terms">
               <div class="card"><b>Confidentiality</b>Every document is confidential by default, whether or not an NDA is signed. No syndication, no public disclosure, no third-party access.</div>
@@ -806,7 +813,6 @@
               <div class="card"><b>Hostile verification</b>I am the only human who reads your document. Custom AION Build uses fresh-context, isolated AI instances for hostile verification. No human subcontractors.</div>
             </div>
 
-            <!-- Rebuttal -->
             <div class="rule-head">Rebuttal &amp; capacity</div>
             <div class="terms">
               <div class="card"><b>Rebuttal</b>One formal written rebuttal per engagement. If it changes the analysis, I revise the finding. If it doesn’t, the finding stands as written.</div>
@@ -815,6 +821,226 @@
             </div>
 
             <p style="margin-top:20px"><a class="btn primary" href="#contact" data-intake>Open intake form</a></p>
+            <p class="muted" style="margin-top:8px">Full legal terms: <a href="#tos">Terms of Service</a>.</p>
+          </div></div>
+        </section>
+
+        <!-- TERMS OF SERVICE -->
+        <section class="view" id="tos" hidden>
+          <div class="msg"><div class="av">A</div><div class="msg-body">
+            <h2>Terms of Service</h2>
+
+            <div class="tos-meta">Effective September 10, 2026 · Last updated November 12, 2026</div>
+
+            <div class="tos-intro">
+              These terms govern use of this website and engagement of the practice. If any term doesn’t work for you, we’re not a fit and it’s better we know before work starts. Questions: <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a>.
+            </div>
+
+            <div class="tos-block">
+              <h3>1. Definitions &amp; acceptance</h3>
+              <ul>
+                <li><b>Analyst</b> — Sheldon K. Salmon, operating as AionSystem.</li>
+                <li><b>Client</b> — any individual or entity that accesses this website, submits a document, or engages the Analyst’s services.</li>
+                <li><b>Services</b> — adversarial document review, structural analysis, framework design, and related engagements described on this website.</li>
+                <li><b>Document</b> — any contract, policy, framework, specification, filing, or other material submitted by the Client for review.</li>
+                <li><b>Deliverable</b> — the final written report (Findings Register), including severity ratings, clause citations, and any fix language, delivered by the Analyst.</li>
+                <li><b>Confidential Information</b> — any non-public information disclosed by either party.</li>
+                <li><b>Engagement</b> — any specific project or service requested by the Client and accepted by the Analyst.</li>
+              </ul>
+              <p>By using this website, submitting a document, or engaging the Analyst’s services, the Client agrees to these terms. Electronic acceptance — clicking a form button, submitting a form, sending a document — constitutes binding acceptance. No handwritten signature is required.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>2. Services &amp; scope</h3>
+              <p>The Analyst provides adversarial document review: reading the document the way someone looking to exploit it would, and reporting the clauses that fail under that reading, with clause citations, S1–S4 severity ratings, and fix language where appropriate.</p>
+              <p>Three engagement types:</p>
+              <ul>
+                <li><b>Fast Run — $1,500.</b> One document up to 75 pages. The three highest-severity findings written up in full. Delivered in 5 business days.</li>
+                <li><b>Full Scan — $7,500.</b> One document up to 200 pages, or a set of related documents. Every finding written up. Compounding-gap analysis. Root-cause classification. Insert-ready fix language. Delivered in 15 business days.</li>
+                <li><b>Custom AION Build — scoped individually.</b> Sovereign diagnostic pipelines, custom frameworks, scoring methodology, epistemic tagging protocol. The Client owns the framework outright.</li>
+              </ul>
+              <p>Services are limited to the specific document(s) submitted and the engagement type selected. Additional documents or scope require a new engagement.</p>
+              <p>The Analyst may decline an engagement that falls outside the practice’s scope — including kinetic military strategy, weapons systems architecture, or state-sponsored harm. These are stated at intake, not negotiated after payment.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>3. Client obligations</h3>
+              <ul>
+                <li>The Client has the legal right to submit the document for review.</li>
+                <li>The document is accurate and complete as of submission.</li>
+                <li>The document does not contain illegal content, malware, or unauthorized third-party confidential information.</li>
+                <li>The Client will provide necessary information promptly on request.</li>
+                <li>The Client is not subject to United States sanctions or located in an embargoed jurisdiction.</li>
+              </ul>
+              <p><b>Asynchronous boundary.</b> The engagement is strictly asynchronous by design. Requests for discovery calls, status meetings, pitch decks, or consensus-building workshops fall outside the engagement model. If synchronous advisory is needed, it is scoped and billed separately as a retainer.</p>
+              <p>The Analyst relies solely on the submitted document and is not responsible for errors, omissions, or alterations in the Client’s copy.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>4. Engagement &amp; payment</h3>
+              <ul>
+                <li><b>Fees.</b> Fast Run $1,500. Full Scan $7,500. Custom AION Build scoped individually. Fees are fixed for the standard tiers.</li>
+                <li><b>Currency.</b> All fees are in USD. The Client bears any conversion costs.</li>
+                <li><b>Prepayment.</b> Full payment is collected before work begins.</li>
+                <li><b>Method.</b> Stripe invoice. Payment details are sent after the written intake is confirmed. Net-30, checks, wire transfers, and crypto are not accepted.</li>
+                <li><b>Processing fees.</b> Included in the quoted price.</li>
+                <li><b>Taxes.</b> The Client is responsible for applicable taxes, duties, or levies.</li>
+                <li><b>Engagement floor.</b> The minimum engagement is $1,500. Fees for the two standard tiers are fixed.</li>
+              </ul>
+            </div>
+
+            <div class="tos-block">
+              <h3>5. Refund &amp; cancellation</h3>
+              <p>Three paths apply:</p>
+              <ul>
+                <li><b>Pre-work cancellation.</b> The Client may cancel before the Analyst begins reading the document and receive a full refund. No administrative fee is withheld.</li>
+                <li><b>S3/S4 refund.</b> If, after the whole document has been reviewed (not just the findings written up), there is no S3 or S4 finding, the Client receives a full refund and keeps the report. This applies to Fast Run and Full Scan.</li>
+                <li><b>After work has begun.</b> Work begins when the Analyst first opens or reads the document. Once work has begun and an S3 or S4 finding has been made, payment is non-refundable.</li>
+              </ul>
+              <p><b>Chargebacks.</b> If the Client initiates a chargeback after work has begun, the engagement ends and the matter is referred to the payment processor. The Analyst reserves the right to decline future work from the same Client.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>6. Confidentiality &amp; data protection</h3>
+              <p>Confidentiality is the default. Every document is confidential, whether or not an NDA is signed.</p>
+              <ul>
+                <li>The Analyst does not share, publish, or discuss client documents without written authorization.</li>
+                <li>Documents are processed in ephemeral environments using zero-retention AI endpoints.</li>
+                <li>Raw files are shredded 30 days after delivery.</li>
+                <li>Client documents are never used to train any AI model, including third-party models.</li>
+                <li>Retention is limited to what is necessary to complete the engagement and maintain records.</li>
+              </ul>
+              <p><b>NDA.</b> A standard mutual NDA is available on the contact page. Client-provided NDAs are themselves red-teamed before execution; asymmetrical, overly broad, or unenforceable clauses are rejected.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>7. Data breach response</h3>
+              <p>In the event of a data breach affecting client confidential information, the Analyst will:</p>
+              <ul>
+                <li>Notify the Client within 72 hours of discovery.</li>
+                <li>Take reasonable steps to mitigate further exposure.</li>
+                <li>Cooperate with the Client’s reasonable requests regarding the breach.</li>
+              </ul>
+              <p>Liability for any data breach is capped at the total fees paid for the specific engagement.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>8. Intellectual property</h3>
+              <p><b>Client IP.</b> The Client retains ownership of the original document and any pre-existing IP within it.</p>
+              <p><b>Analyst IP.</b> The Analyst retains ownership of the methodology, frameworks, instruments, prompts, and any pre-existing IP used to perform the services.</p>
+              <p><b>Deliverable.</b> On full payment, the final report and the specific deliverables described in the engagement become the Client’s property. The Client may use, adapt, and incorporate the deliverable into its own documents and internal processes. The Client may not resell or redistribute the deliverable as a standalone product.</p>
+              <p><b>Work product.</b> Working drafts, internal notes, and intermediate analyses remain the Analyst’s property and are not delivered to the Client.</p>
+              <p><b>Case study rights.</b> The Analyst may use a client document or deliverable as a case study only with written permission, unless the document was already public. The Client may commission exclusivity to prevent case-study use, subject to additional fees.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>9. Deliverable license</h3>
+              <p>On full payment, the Client receives a non-exclusive, non-transferable, perpetual license to use the deliverable for internal business purposes and for submission to legal counsel or regulatory authorities. The Analyst retains an archival copy for record-keeping and liability protection.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>10. No legal advice</h3>
+              <p>This is structural analysis, not legal advice. Findings describe how a document behaves under adversarial reading. They do not determine legal exposure, compliance status, or enforceability. The Analyst is not a lawyer, and no attorney-client relationship is created by any engagement. The Client should consult independent legal counsel for any question of legal liability, compliance, or regulatory obligation.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>11. No guarantee of finding or enforceability</h3>
+              <p><b>No guarantee of finding.</b> A clean pass means no S3 or S4 issue was found within the scope of this review, on this document, at this time. It is not a guarantee against future exploitation.</p>
+              <p><b>No guarantee of enforceability.</b> The Analyst does not warrant that any fix language will render the document legally enforceable, compliant, or immune from future attack.</p>
+              <p><b>Point-in-time.</b> Findings are based on the document as provided and the laws, regulations, and best practices in effect as of the analysis date.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>12. AI instrument disclosure</h3>
+              <p>The Analyst uses AI tools as part of the review — multi-model adversarial simulation and structural mapping. The Analyst reads the document, decides what counts as a finding, sets every severity rating, and writes the report. Human judgment is the sole authority over findings and certifications.</p>
+              <p>The methodology cannot be decoupled from these instruments. Clients who require a strictly non-AI review process are not a fit for this engagement.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>13. Warranties &amp; disclaimers</h3>
+              <p>Services are provided “as is” and “as available.” The Analyst makes no warranties, express or implied, including warranties of merchantability, fitness for a particular purpose, or non-infringement.</p>
+              <p>The Analyst does not warrant that:</p>
+              <ul>
+                <li>Every structural failure node will be identified.</li>
+                <li>The deliverable will be error-free or complete.</li>
+                <li>The website will be uninterrupted or free of defects.</li>
+                <li>Any specific outcome will be achieved.</li>
+              </ul>
+            </div>
+
+            <div class="tos-block">
+              <h3>14. Limitation of liability</h3>
+              <p><b>Total liability.</b> The Analyst’s total liability arising out of or related to any engagement is capped at the total fees paid for that specific engagement.</p>
+              <p><b>No consequential damages.</b> The Analyst is not liable for any indirect, incidental, special, consequential, or punitive damages, including lost profits, business interruption, reputational harm, or loss of data.</p>
+              <p><b>No third-party liability.</b> The Analyst assumes no responsibility for any third party who accesses or relies on the deliverable.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>15. Indemnification</h3>
+              <p>The Client agrees to indemnify and hold harmless the Analyst from any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys’ fees) arising out of or related to:</p>
+              <ul>
+                <li>The Client’s misuse of the deliverable.</li>
+                <li>The Client’s submission of unauthorized, inaccurate, or illegal documents.</li>
+                <li>The Client’s violation of these terms.</li>
+                <li>Any third-party claim arising from the Client’s disclosure of the deliverable.</li>
+              </ul>
+            </div>
+
+            <div class="tos-block">
+              <h3>16. Third-party reliance</h3>
+              <p>Deliverables are for the internal use of the Client. The Client may share the deliverable with legal counsel, regulatory authorities, and internal contractors or advisors bound by confidentiality for the purpose of implementing the resolution text. The Analyst assumes no responsibility for any third party who accesses or relies on the deliverable.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>17. Force majeure</h3>
+              <p>Neither party is liable for any delay or failure to perform due to causes beyond its reasonable control, including natural disasters, internet disruptions, failure of third-party payment processors or cloud storage, unavailability of AI or software tools, government actions, war, terrorism, or pandemic. Delays caused by force majeure extend the delivery timeline by the period of delay.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>18. Suspension &amp; termination</h3>
+              <p><b>Suspension.</b> The Analyst may suspend services if the Client fails to provide necessary documents or information within 10 business days of request. The delivery timeline is extended by the period of delay.</p>
+              <p><b>By Client.</b> The Client may terminate an engagement before work begins, subject to the cancellation policy in Section 5.</p>
+              <p><b>By Analyst.</b> The Analyst may terminate an engagement, with refund for work not yet performed, if:</p>
+              <ul>
+                <li>The Client engages in abusive, threatening, or illegal conduct.</li>
+                <li>The engagement would facilitate harm, fraud, or violation of law.</li>
+                <li>The Client breaches a material term of these terms.</li>
+              </ul>
+            </div>
+
+            <div class="tos-block">
+              <h3>19. Dispute resolution</h3>
+              <p><b>Informal first.</b> Both parties agree to attempt to resolve any dispute informally, by written notice and good-faith negotiation, for 30 days.</p>
+              <p><b>Mediation.</b> If informal resolution fails, either party may request mediation via remote video conference. Costs are shared equally.</p>
+              <p><b>Arbitration.</b> If mediation fails, disputes are resolved by binding arbitration under the rules of the American Arbitration Association, conducted remotely unless both parties agree in writing to a physical venue.</p>
+              <p><b>Small claims.</b> Either party may bring a claim in small claims court where jurisdiction exists.</p>
+              <p><b>Class action waiver.</b> Disputes are resolved on an individual basis. Both parties waive the right to participate in a class action or collective proceeding.</p>
+              <p><b>Time limit.</b> Any claim arising out of these terms or any engagement must be filed within one year after the cause of action accrues, or it is permanently barred.</p>
+              <p><b>Governing law.</b> These terms are governed by the laws of the State of New York, USA, without regard to conflict of law principles.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>20. Notices, modifications, misc</h3>
+              <p><b>Notices.</b> All notices are in writing via email. Email notices are effective 24 hours after transmission unless a bounce or failure notice is received.</p>
+              <p><b>Modifications.</b> The Analyst may update these terms from time to time. The version in effect at the time of engagement applies to that specific engagement. Material changes to an engagement-specific term require written agreement.</p>
+              <p><b>Severability.</b> If any provision is found unenforceable, the remaining provisions remain in full effect. In the case of a conflict between these terms and a signed engagement letter, the engagement letter controls for the specific project.</p>
+              <p><b>Independent contractor.</b> The Analyst is an independent contractor, not an employee, partner, or joint venturer. The Analyst is responsible for their own taxes, insurance, and business operations.</p>
+              <p><b>Insurance.</b> The Analyst operates as a solo practitioner and does not carry professional liability (E&amp;O) insurance. Total liability is limited to the engagement fee. If the Client’s procurement requires an insured provider, the Analyst is not the right fit.</p>
+              <p><b>Electronic signatures.</b> This agreement may be executed in counterparts, including via electronic signature.</p>
+              <p><b>Acceptable use.</b> The Client agrees not to use the deliverable for illegal purposes, attempt to reverse-engineer the Analyst’s methodology, scrape or automate access to the website, attempt to breach website security, or impersonate any person or entity.</p>
+              <p><b>Export controls.</b> The Client represents that they are not subject to United States sanctions and are not located in an embargoed jurisdiction.</p>
+              <p><b>Deliverable acceptance.</b> Deliverables are deemed accepted if the Client does not provide written notice of material non-conformity within 14 calendar days of delivery. The Client may submit one written rebuttal; if the rebuttal changes the analysis, the finding is revised; if not, the finding stands as written.</p>
+              <p><b>Report integrity &amp; archival.</b> The deliverable is a point-in-time diagnostic. The Client may not alter, redact, or create derivative works of the report and attribute the modified version to the Analyst. The Analyst retains a sealed archival copy of the deliverable for record-keeping and liability protection.</p>
+              <p><b>No duty to update.</b> The Analyst has no obligation to update or revise findings after the delivery date. Subsequent review requires a new engagement.</p>
+              <p><b>Accessibility.</b> The Analyst makes reasonable efforts to ensure the website is accessible. If the Client encounters barriers, they may contact the Analyst for assistance.</p>
+              <p><b>Survival.</b> The following sections survive termination: Definitions, Confidentiality, IP, Limitation of Liability, Indemnification, Dispute Resolution, Class Action Waiver, Time Limit, Governing Law, and any provision that by its nature should survive.</p>
+              <p><b>Whistleblower.</b> Nothing in these terms prevents either party from reporting possible violations of law to any governmental agency or making disclosures protected under applicable whistleblower laws.</p>
+            </div>
+
+            <div class="card" style="text-align:center;margin-top:14px">
+              <p class="muted" style="margin-bottom:8px">End of Terms of Service.</p>
+              <p class="muted" style="margin:0">Questions: <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a></p>
+            </div>
           </div></div>
         </section>
 
@@ -1126,6 +1352,7 @@
     custom: 'Custom AION Build',
     faq: 'FAQ',
     terms: 'Rules & terms',
+    tos: 'Terms of Service',
     contact: 'Contact'
   };
   var views = {};
@@ -1240,7 +1467,13 @@ var FAQ = [
     terms: {
       label: 'Rules & terms',
       prompt: 'What are the rules and terms?',
-      summary: 'The full rules cover seven areas: practice and instruments, scope and exclusions, commercial terms, timing and transmission, turnaround and scope, data handling, and rebuttal and capacity. Key points: full prepayment before execution; fixed fees ($1,500 Fast Run, $7,500 Full Scan); full refund if you cancel before the review starts; no Net-30, no crypto; client NDAs get red-teamed before execution; documents are processed in ephemeral environments and shredded 30 days post-delivery; one written rebuttal per engagement; the practice is asynchronous with no discovery calls, no status meetings, no pitch decks.',
+      summary: 'The rules cover seven areas: practice and instruments, scope and exclusions, commercial terms, timing and transmission, turnaround and scope, data handling, and rebuttal and capacity. Key points: full prepayment before execution; fixed fees ($1,500 Fast Run, $7,500 Full Scan); full refund if you cancel before work begins, full refund if the whole document has no S3/S4 finding, otherwise non-refundable once the review is done; client NDAs get red-teamed before execution; documents are processed in ephemeral environments and shredded 30 days post-delivery; one written rebuttal per engagement; the practice is asynchronous with no discovery calls, no status meetings, no pitch decks. Full legal terms are in the Terms of Service.',
+      chips: [8, 16, 19]
+    },
+    tos: {
+      label: 'Terms of Service',
+      prompt: 'What are the legal terms?',
+      summary: 'The full Terms of Service govern use of this website and engagement of the practice. Key points: solo-practitioner independent contractor (Sheldon K. Salmon, AionSystem); work begins when the document is first opened or read; three refund paths — pre-work cancellation, no S3/S4 finding in the whole document, otherwise non-refundable after review; client documents are confidential by default, processed in ephemeral environments, shredded 30 days post-delivery, never used to train AI; AI tools assist the review but the analyst retains sole authority over findings and severity ratings; liability capped at the engagement fee; deliverable deemed accepted after 14 days; one written rebuttal per engagement; New York law governs disputes with arbitration and class-action waiver; no professional liability (E&O) insurance — if procurement requires an insured provider, this is not a fit.',
       chips: [8, 16, 19]
     },
     faq: {
