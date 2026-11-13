@@ -244,11 +244,16 @@
 
   .bub.thinking {
     align-self:flex-start;
-    display:inline-flex; align-items:center; justify-content:center;
-    padding:10px 18px; min-width:90px; max-width:none; }
+    display:inline-flex; align-items:center;
+    padding:10px 18px; max-width:none; }
+  .bub.thinking .think-row {
+    display:flex; align-items:center; gap:10px; }
   .bub.thinking svg {
-    width:60px; height:30px; overflow:visible;
-    color:var(--accent); display:block; }
+    width:48px; height:24px; overflow:visible;
+    color:var(--accent); display:block; flex-shrink:0; }
+  .think-label {
+    font-family:var(--font-mono); font-size:11px;
+    color:var(--text-dim); letter-spacing:.04em; }
   .think-infinity {
     fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round;
     stroke-dasharray:1; stroke-dashoffset:1;
@@ -620,7 +625,7 @@
 
             <div class="rule-head">How the work runs</div>
             <div class="terms">
-              <div class="card"><b>Human authority</b>AI tools assist the review — multi-model adversarial simulation and structural mapping. I read the document, decide what counts as a finding, and set every severity rating. Human judgment is the sole authority over findings and certifications.</div>
+              <div class="card"><b>Human authority</b>Claude and Perplexity assist the review — both accessed in incognito mode, sessions deleted after delivery, model training off. I read the document, decide what counts as a finding, and set every severity rating. Human judgment is the sole authority over findings and certifications.</div>
               <div class="card"><b>Fingerprinted output</b>Every report records a SHA-256 fingerprint of the document reviewed and of the report itself — so you can confirm which version was reviewed and that the report hasn't been altered.</div>
               <div class="card"><b>Epistemic tagging</b>Every claim carries a certainty tag. <span class="etag">D</span> directly observed · <span class="etag">R</span> reasoned from evidence · <span class="etag">S</span> strategic judgement · <span class="etag">?</span> unverified or contested. Nothing leaves without a tag.</div>
             </div>
@@ -746,7 +751,7 @@
             <div class="rule-head">Practice &amp; instruments</div>
             <div class="terms">
               <div class="card"><b>The practice</b>Adversarial review of legal and regulatory documents. I read the document the way someone looking to exploit it would, and report the clauses that fail under that reading.</div>
-              <div class="card"><b>Instruments</b>AI tools assist the review — multi-model simulation and structural mapping. I retain authority over every finding, every severity rating, and every fix I propose. The report is my work and my responsibility.</div>
+              <div class="card"><b>Instruments</b>Claude and Perplexity assist the review — incognito mode, session deletion after delivery, model training disabled. I retain authority over every finding, every severity rating, and every fix I propose. The report is my work and my responsibility.</div>
               <div class="card"><b>Epistemic boundary</b>Structural analysis, not legal advice. Findings describe how a document behaves under adversarial reading. They don’t determine legal exposure, compliance status, or enforceability. Consult your counsel for binding determinations.</div>
               <div class="card"><b>Liability</b>Solo practitioner. Liability is capped at the engagement fee. If your procurement requires an insured provider or formal E&amp;O coverage, I’m not the right fit.</div>
             </div>
@@ -930,8 +935,8 @@
 
             <div class="tos-block">
               <h3>12. AI instrument disclosure</h3>
-              <p>The Analyst uses AI tools as part of the review — multi-model adversarial simulation and structural mapping. The Analyst reads the document, decides what counts as a finding, sets every severity rating, and writes the report. Human judgment is the sole authority over findings and certifications.</p>
-              <p>The methodology cannot be decoupled from these instruments. Clients who require a strictly non-AI review process are not a fit for this engagement.</p>
+              <p>The Analyst uses <b>Claude</b> and <b>Perplexity</b> as analytical instruments. Both are accessed in incognito mode; chat sessions are deleted after each engagement completes; model-training / improvement settings are disabled in every account.</p>
+              <p>The Analyst reads the document, decides what counts as a finding, sets every severity rating, and writes the report. Human judgment is the sole authority over findings and certifications. The methodology cannot be decoupled from these instruments. Clients who require a strictly non-AI review process are not a fit for this engagement.</p>
             </div>
 
             <div class="tos-block">
@@ -1072,7 +1077,7 @@
                 <li><b>Stripe</b> — payment processing. Stripe’s privacy policy applies to payment data.</li>
                 <li><b>Microsoft Outlook</b> — email communication and document transmission.</li>
                 <li><b>GitHub Pages</b> — static website hosting. Does not process client documents.</li>
-                <li><b>AI inference providers</b> — AI is a core instrument in the review. Where cloud-based inference is required, zero-retention enterprise API endpoints are used. Your document is processed in ephemeral memory and is never stored, logged, or used for model training by the provider. If you need strictly local, air-gapped processing, that can be scoped as a Custom AION Build before engagement.</li>
+                <li><b>Claude and Perplexity</b> — analytical instruments used in the review. Both are accessed in incognito mode; chat sessions are deleted after each engagement completes; model-training / improvement settings are disabled in every account. Where the pipeline requires cloud-based inference, zero-retention API endpoints are used — the document is processed in ephemeral memory and never stored, logged, or used for model training by the provider. If you need strictly local, air-gapped processing, that can be scoped as a Custom AION Build before engagement.</li>
               </ul>
             </div>
 
@@ -1174,7 +1179,7 @@
 
             <div class="tos-block">
               <h3>18. Data flow summary</h3>
-              <p>Personal data flows as follows: (1) collection via email or form; (2) processing by AionSystem (Sheldon K. Salmon) in the United States; (3) limited sharing with sub-processors (Stripe for payments, Microsoft Outlook for email, zero-retention AI inference endpoints); (4) storage on secured local systems; (5) deletion after the retention period. No data is sold or used for advertising.</p>
+              <p>Personal data flows as follows: (1) collection via email or form; (2) processing by AionSystem (Sheldon K. Salmon) in the United States; (3) limited sharing with sub-processors (Stripe for payments, Microsoft Outlook for email, Claude and Perplexity for inference — both incognito, sessions deleted after delivery, model training off); (4) storage on secured local systems; (5) deletion after the retention period. No data is sold or used for advertising.</p>
             </div>
 
             <div class="tos-block">
@@ -1198,6 +1203,7 @@
             <div class="tos-block">
               <h3>22. Version history</h3>
               <ul>
+                <li><b>v1.4 — November 12, 2026.</b> AI sub-processors named (Claude, Perplexity). Data flow summary updated. TOS §12, About, and Rules instrument cards aligned with the same disclosure.</li>
                 <li><b>v1.3 — November 12, 2026.</b> Merged into the single-page site. Tone aligned with Terms of Service and Rules. Cross-reference to TOS corrected from §35 to §20. Enterprise-scope statements consolidated into a single section (17).</li>
                 <li><b>v1.2 — September 10, 2026.</b> Closed archival contradiction with Terms §35. Clarified GDPR Art. 22 AI telemetry boundaries. Stripped B2C manifesto language. Aligned pricing floor.</li>
                 <li><b>v1.1 — September 10, 2026.</b> Stripped enterprise compliance theater. Clarified AI sub-processor data handling. Aligned boundaries with Terms and FAQ.</li>
@@ -1568,6 +1574,7 @@
 <script>
 var FAQ = [
  ["Getting started","What kinds of documents do you review?","Contracts, policies, specifications, frameworks, regulatory filings, oaths, technical standards, and any high-stakes written document where a failed clause is expensive.","document types contract policy standard regulation filing oath specification review"],
+ ["Getting started","Does my document type or industry matter?","No. The frameworks are domain-agnostic — a SaaS MSA, an AI policy, a regulatory filing, an internal ethics code, an architecture spec all run through the same adversarial process. If the document has clauses that could fail under adversarial reading, it is in scope. Domain and industry do not gate the work.","industry domain type sector contract kind matter apply in-scope not matter niche vertical any document"],
  ["Getting started","How does an engagement work?","Written intake, payment, upload, and a report by email. Start with the intake form on this site, or send questions first and I’ll answer in writing.","process steps work how start begin intake upload"],
  ["Getting started","How do I submit a document?","Start with the written intake form and don’t email the document yet. After intake and payment you upload it. PDF, .docx and .txt are fine. If it’s sensitive, tell me and we’ll agree on a transfer method first.","submit send upload format pdf docx file transfer"],
  ["Getting started","Do you work with clients internationally?","Yes. Any jurisdiction, any counterparty. English-language documents only; if yours isn’t in English, provide a certified translation.","international country abroad jurisdiction language english translation"],
@@ -1578,16 +1585,22 @@ var FAQ = [
  ["Pricing","Do you offer refunds?","If the whole document, not just the findings written up, has no S3 or S4 finding, you get a full refund and keep the report.","refund guarantee money back no findings"],
  ["The work","What do I actually receive?","A Findings Register. Each finding cites the exact clause, explains why it fails, and carries a severity rating from S4 (catastrophic) to S1 (negligible). Every report records a SHA-256 fingerprint of the document I reviewed and of the report itself.","receive deliverable report findings register severity s4 s1 sha-256 fingerprint hash"],
  ["The work","What is the turnaround?","Fast Run is 5 business days. Full Scan is 15 business days.","turnaround time deadline days how long fast rush speed"],
- ["The work","Do you use AI?","Yes, AI tools assist my review. I read the document, decide what counts as a finding, and set every severity rating myself. The report is my work and my responsibility.","ai artificial intelligence tools automated chatgpt machine"],
+ ["The work","Do you use AI?","Yes. AI tools assist my review. I read the document, decide what counts as a finding, and set every severity rating myself. The report is my work and my responsibility.","ai artificial intelligence tools automated chatgpt machine"],
  ["The work","Can I see a sample before paying?","A sample finding is coming soon. In the meantime my published audits (EU AI Act Arts. 51–56, UN Deep-Sea Mining Code ISBA/29/LTC/8, Hippocratic Oath and Declaration of Geneva) show the format and depth.","sample example portfolio proof published audits see before"],
  ["The work","What if I disagree with a finding?","You may send one written rebuttal per engagement. If it changes the analysis I revise the finding; if not, it stands as written.","disagree dispute rebuttal challenge wrong finding"],
  ["The work","Will I get updates during the review?","No. Ask anything in writing before you start; the next message after upload is the report.","updates progress status check-in midpoint during"],
  ["The work","What format is the report?","PDF. If you need the findings as a separate structured dataset or an editable file, ask before payment so it can be agreed.","format pdf editable word excel csv deliverable"],
+ ["The work","What AI tools do you use?","Claude and Perplexity. Both are accessed in incognito mode. Chat sessions are deleted after each engagement completes. The \"train the AI\" / model-improvement setting is toggled off in every account. No client document is used to train any model.","ai tools claude perplexity which ai what model incognito private session deletion training off privacy which tools assistant"],
+ ["The work","How deep does the review actually go?","Two stages. First, the document runs through a recursive adversarial pass that surfaces candidate failures. Second, each candidate is verified: is it a real issue, or does it resolve itself under normal use? If it is real, the question becomes what a bad actor does with it if they find it, and what happens if nobody does. Most AI output stops at stage one. The interesting failures live at stage two.","how deep deep review process stages two-stage verification depth thorough recursive method how thorough surface ai output"],
+ ["The work","Why does this matter now?","The cost of finding a gap in a document has collapsed. Anyone — including a bad actor — can now run AI over a document to look for exploitable clauses. That means the cost of not finding the gap first has gone up. Adversarial review closes the space between what an author sees and what an attacker sees, before the attacker gets to it.","why now urgency timing ai threat bad actor exploit cost why matter today relevance why important"],
+ ["Comparison","How is this different from running my document through ChatGPT?","Running a document through an AI will surface issues. It will not tell you which ones a motivated attacker would actually exploit, or which ones collapse under real pressure. AI is one instrument in a deeper process: find the failure, verify it is a real issue, model what happens if a bad actor finds it, or if nobody does. If I can break your document, a motivated attacker can too.","chatgpt gpt ai different comparison vs versus why not just ai already have ai tool run through ai automated generic ai"],
+ ["Comparison","I'm already using AI to review my documents. Why would I need this?","Good. Run it. Then ask the second question: which of the issues it surfaced would survive a motivated attacker trying to exploit them, and which ones would collapse on contact? That second question is where most AI review stops. It is where this work starts.","already using ai have ai tool chatgpt claude copilot chatgpt why need this duplicate ai automated ai contract review tool existing tool"],
  ["Confidentiality","Is my document confidential?","Yes. Your document is used only to produce your report and is deleted after delivery. NDA on request.","confidential confidentiality nda privacy secure delete deletion retain storage"],
  ["Confidentiality","Do you use subcontractors?","No. I do the review myself.","subcontractor outsource team other reviewers staff"],
  ["Limits","Is this legal advice?","No. It is an adversarial review and it doesn’t replace your counsel. Hand the report to your lawyers; they decide what it means for your exposure.","legal advice lawyer counsel compliance attorney different"],
  ["Limits","What if you find nothing serious?","Then you get the refund described above and keep the report. A clean result means I found no S3 or S4 issue in this document at this time; it is not a guarantee against future exploitation.","nothing clean no issues zero none pass guarantee"],
- ["Limits","Do you carry professional liability insurance?","No. I work as a solo practitioner and my liability is limited to the engagement fee. If your procurement requires insured providers, I’m not the right fit.","insurance liability e&o indemnity vendor onboarding"]
+ ["Limits","Do you carry professional liability insurance?","No. I work as a solo practitioner and my liability is limited to the engagement fee. If your procurement requires insured providers, I’m not the right fit.","insurance liability e&o indemnity vendor onboarding"],
+ ["Limits","Will you find every gap?","No. Nothing is perfect, and I do not promise a 100 percent gap-free document. What I aim for is closing the gaps a bad actor or generative AI would find first. The point is to force the attacker to become truly creative — to make breaking your document an active choice rather than the low-hanging fruit an AI can pick off in an afternoon.","every gap all gaps 100 percent guarantee complete coverage gaps miss find everything total coverage"]
 ];
 
 (function(){
@@ -1596,79 +1609,79 @@ var FAQ = [
       label: 'What I do',
       prompt: 'What do you do?',
       summary: 'I do adversarial review of legal and regulatory documents — for in-house counsel, compliance leads and standards bodies. The idea is simple: authors can’t read their own writing the way an adversary will, so I read it that way and report the clauses that break under exploitation.',
-      chips: [0, 1, 2]
+      chips: [0, 2, 3]
     },
     proof: {
       label: 'Published audits',
       prompt: 'Show me your published audits',
-      summary: 'Three free, DOI-linked, downloadable adversarial audits: the EU AI Act Arts. 51–56 (18 failure nodes, 7 S4, survived six rounds of hostile review by a 15-role rejection council), the Hippocratic Oath and Declaration of Geneva (21 failure nodes, plus a Hardened 2026 Reconstruction), and the ISA Deep-Sea Mining Code (52 failure nodes, run while the document was in active UN negotiation). Every claim checkable against primary sources. Click any card to open the full case study.',
-      chips: [10, 12, 0]
+      summary: 'Three free, DOI-linked, downloadable adversarial audits: the EU AI Act Arts. 51–56 (18 failure nodes, 7 S4, survived six rounds of external hostile review by a 15-role rejection council), the Hippocratic Oath and Declaration of Geneva (21 failure nodes, plus a Hardened 2026 Reconstruction), and the ISA Deep-Sea Mining Code (52 failure nodes, run while the document was in active UN negotiation). Every claim checkable against primary sources. Click any card to open the full case study.',
+      chips: [11, 13, 0]
     },
     reserve: {
       label: 'Reserve & planned',
       prompt: 'What are you working on next?',
       summary: 'Three adversarial reviews in active prep: the UN Charter, the Biological Weapons Convention, and the WHO International Health Regulations. Each is a high-stakes document that has never been attacked this way. There is also a slot for your document — if it has never been red-teamed, it has undiscovered structural weaknesses.',
-      chips: [10, 12, 1]
+      chips: [11, 13, 2]
     },
     about: {
       label: 'About',
       prompt: 'Who are you?',
-      summary: 'Sheldon K. Salmon, operating as AionSystem. Solo practice, adversarial review. I read documents the way an adversary would and report the clauses that fail under that reading. The method is a recursive premortem — isolate the single node whose failure breaks the whole system, decompose it against documented failure history, continue until it reaches something irreducible. AI tools assist the review; I decide what counts as a finding and set every severity rating. Every claim carries an epistemic tag — [D] data, [R] reasoned, [S] strategic, [?] unverified. The practice is young (founded early 2025), which is why the published audits are unpaid and public — they are the track record. I decline work on kinetic military strategy, weapons systems architecture, and state-sponsored harm. Everything is verifiable through ORCID, GitHub, and the DOI-linked audits.',
-      chips: [0, 10, 19]
+      summary: 'Sheldon K. Salmon, operating as AionSystem. Solo practice, adversarial review. I read documents the way an adversary would and report the clauses that fail under that reading. The method is a recursive premortem — isolate the single node whose failure breaks the whole system, decompose it against documented failure history, continue until it reaches something irreducible. Claude and Perplexity assist the review — both in incognito mode, sessions deleted after delivery, training off — and I decide what counts as a finding and set every severity rating. Every claim carries an epistemic tag — [D] data, [R] reasoned, [S] strategic, [?] unverified. The practice is young (founded early 2025), which is why the published audits are unpaid and public — they are the track record. I decline work on kinetic military strategy, weapons systems architecture, and state-sponsored harm. Everything is verifiable through ORCID, GitHub, and the DOI-linked audits. If I can break a document, a motivated attacker can too.',
+      chips: [0, 11, 25]
     },
     deliverable: {
       label: 'Findings Register',
       prompt: 'What’s in a Findings Register?',
       summary: 'Every engagement produces a Findings Register. Each finding cites the exact clause, explains why it fails, and gets a severity rating from S4 (catastrophic) down to S1 (negligible). Every report also records a SHA-256 fingerprint of the document I reviewed and of the report itself — so you can verify which version was reviewed and that the report wasn’t altered.',
-      chips: [10, 16, 11]
+      chips: [10, 16, 17]
     },
     pricing: {
       label: 'Pricing',
       prompt: 'What are the engagements?',
       summary: 'Two fixed-price engagements: Fast Run is $1,500 — one document up to 75 pages, the three highest-severity findings written up in full, delivered in 5 business days. Full Scan is $7,500 — one document up to 200 pages or a set of related documents, every finding written up, plus compounding-gap analysis, root-cause classification and insert-ready fix language, delivered in 15 business days. If your document doesn’t fit either tier, I’ll tell you. Custom AION Build is scoped individually.',
-      chips: [4, 5, 8]
+      chips: [5, 6, 9]
     },
     process: {
       label: 'Process',
       prompt: 'How does the process work?',
       summary: 'Four steps, all in writing: written intake, payment, upload, and a report by email. No calls, no meetings. Full payment is made before upload — I send payment details after intake.',
-      chips: [1, 2, 7]
+      chips: [2, 3, 8]
     },
     custom: {
       label: 'Custom AION Build',
       prompt: 'Tell me about custom builds',
       summary: 'For organizations that need a sovereign diagnostic pipeline or a custom analytical framework built from scratch — contract red-team frameworks, governance audits, AI policy toolkits, technical standards validation, compliance scanners, internal policy engines. Full pipeline design, custom instruments, and verification, scoped individually. You own the framework outright. Client-provided NDAs are themselves red-teamed before execution; asymmetrical or unenforceable clauses are rejected. Same async boundary: no discovery calls, no standups, no Zoom.',
-      chips: [0, 1, 16]
+      chips: [0, 2, 22]
     },
     terms: {
       label: 'Rules & terms',
       prompt: 'What are the rules and terms?',
       summary: 'The rules cover seven areas: practice and instruments, scope and exclusions, commercial terms, timing and transmission, turnaround and scope, data handling, and rebuttal and capacity. Key points: full prepayment before execution; fixed fees ($1,500 Fast Run, $7,500 Full Scan); full refund if you cancel before work begins, full refund if the whole document has no S3/S4 finding, otherwise non-refundable once the review is done; client NDAs get red-teamed before execution; documents are processed in ephemeral environments and shredded 30 days post-delivery; one written rebuttal per engagement; the practice is asynchronous with no discovery calls, no status meetings, no pitch decks. Full legal terms are in the Terms of Service. Data handling is described in the Privacy Policy.',
-      chips: [8, 16, 19]
+      chips: [9, 22, 25]
     },
     tos: {
       label: 'Terms of Service',
       prompt: 'What are the legal terms?',
-      summary: 'The full Terms of Service govern use of this website and engagement of the practice. Key points: solo-practitioner independent contractor (Sheldon K. Salmon, AionSystem); work begins when the document is first opened or read; three refund paths — pre-work cancellation, no S3/S4 finding in the whole document, otherwise non-refundable after review; client documents are confidential by default, processed in ephemeral environments, shredded 30 days post-delivery, never used to train AI; AI tools assist the review but the analyst retains sole authority over findings and severity ratings; liability capped at the engagement fee; deliverable deemed accepted after 14 days; one written rebuttal per engagement; New York law governs disputes with arbitration and class-action waiver; no professional liability (E&O) insurance — if procurement requires an insured provider, the practice is not a match.',
-      chips: [8, 16, 19]
+      summary: 'The full Terms of Service govern use of this website and engagement of the practice. Key points: solo-practitioner independent contractor (Sheldon K. Salmon, AionSystem); work begins when the document is first opened or read; three refund paths — pre-work cancellation, no S3/S4 finding in the whole document, otherwise non-refundable after review; client documents are confidential by default, processed in ephemeral environments, shredded 30 days post-delivery, never used to train AI; Claude and Perplexity assist the review — incognito mode, sessions deleted after delivery, model training off — but the analyst retains sole authority over findings and severity ratings; liability capped at the engagement fee; deliverable deemed accepted after 14 days; one written rebuttal per engagement; New York law governs disputes with arbitration and class-action waiver; no professional liability (E&O) insurance — if procurement requires an insured provider, the practice is not a match.',
+      chips: [9, 22, 25]
     },
     privacy: {
       label: 'Privacy Policy',
       prompt: 'How do you handle my data?',
-      summary: 'The privacy policy covers: what is collected (name, email, company, document details from intake only — no cookies, no trackers, no advertising networks); how it is used (solely to deliver the review, never to train AI, never sold or shared); who sees it (Stripe for payments, Outlook for email, zero-retention AI inference endpoints); how long it is kept (inquiry data 12 months, raw documents shredded 30 days post-delivery, financial records 7 years, the deliverable archived sealed for professional liability); and your rights (GDPR, UK GDPR, CCPA/CPRA, LGPD, PIPL, PIPEDA, APP, POPIA, APPI, PDPA and most US state laws — access, correction, deletion, portability, objection). Data is processed in the US with Standard Contractual Clauses where required. The practice does not maintain DPIA artifacts, a DPO, or a designated EU/UK representative — if procurement requires those, the work falls outside the practice’s scope. Email AionSystem@outlook.com with "Privacy Request" to exercise any right.',
-      chips: [16, 17, 2]
+      summary: 'The privacy policy covers: what is collected (name, email, company, document details from intake only — no cookies, no trackers, no advertising networks); how it is used (solely to deliver the review, never to train AI, never sold or shared); who sees it (Stripe for payments, Outlook for email, Claude and Perplexity for inference — both incognito, sessions deleted after delivery, model training off); how long it is kept (inquiry data 12 months, raw documents shredded 30 days post-delivery, financial records 7 years, the deliverable archived sealed for professional liability); and your rights (GDPR, UK GDPR, CCPA/CPRA, LGPD, PIPL, PIPEDA, APP, POPIA, APPI, PDPA and most US state laws — access, correction, deletion, portability, objection). Data is processed in the US with Standard Contractual Clauses where required. The practice does not maintain DPIA artifacts, a DPO, or a designated EU/UK representative — if procurement requires those, the work falls outside the practice’s scope. Email AionSystem@outlook.com with "Privacy Request" to exercise any right.',
+      chips: [22, 23, 17]
     },
     faq: {
       label: 'FAQ',
       prompt: 'What do people ask?',
       summary: 'The FAQ covers pricing, turnaround, confidentiality, AI use, refunds and the limits of the work. Ask a question below, or open the FAQ to read everything.',
-      chips: [10, 11, 16]
+      chips: [0, 5, 10]
     },
     contact: {
       label: 'Contact',
       prompt: 'How do I get in touch?',
       summary: 'Direct transmission: AionSystem@outlook.com. Intake window is Tuesdays and Thursdays. Standard response latency: 7 days. Execution is strictly asynchronous — no discovery calls, no status meetings, no consensus-building workshops. Start with the structured intake form; it builds the email, and nothing is sent until you press send. Attach the target document and executed NDA to the resulting payload.',
-      chips: [0, 1, 8]
+      chips: [3, 4, 8]
     }
   };
 
@@ -1738,6 +1751,8 @@ var FAQ = [
   function thinkingBubble(){
     var b = document.createElement('div');
     b.className = 'bub thinking';
+    var row = document.createElement('div');
+    row.className = 'think-row';
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '0 0 32 16');
     svg.setAttribute('aria-hidden', 'true');
@@ -1746,7 +1761,12 @@ var FAQ = [
     path.setAttribute('pathLength', '1');
     path.setAttribute('d', INFINITY_PATH);
     svg.appendChild(path);
-    b.appendChild(svg);
+    row.appendChild(svg);
+    var label = document.createElement('span');
+    label.className = 'think-label';
+    label.textContent = 'Thinking…';
+    row.appendChild(label);
+    b.appendChild(row);
     th.appendChild(b);
     return b;
   }
@@ -1775,7 +1795,7 @@ var FAQ = [
       suggest(data.chips);
       scrollEnd();
     };
-    var timer = setTimeout(fire, 2000 + Math.random() * 2000);
+    var timer = setTimeout(fire, 1200 + Math.random() * 1200);
     pending = { fire: fire, timer: timer };
   }
 
@@ -1791,7 +1811,7 @@ var FAQ = [
 
     if (top.n >= 2) {
       var rel = m.slice(1, 4).filter(function(x){ return x.n > 0; }).map(function(x){ return x.i; });
-      var nextChips = rel.length ? rel : [0, 4, 8];
+      var nextChips = rel.length ? rel : [0, 5, 10];
       var idx = top.i;
       scheduleReply(function(){
         return { who: 'Aion · prepared answer', text: FAQ[idx][2], chips: nextChips };
@@ -1807,7 +1827,7 @@ var FAQ = [
           who: 'Aion',
           text: 'I don’t have a written answer for that one. Send it to me and I’ll reply in writing.',
           extra: a,
-          chips: [4, 8, 17]
+          chips: [5, 9, 24]
         };
       });
     }
@@ -1841,7 +1861,7 @@ var FAQ = [
   window.Aion.askSection = askSection;
 
   bub('', 'Aion', 'Ask about pricing, the process, turnaround, confidentiality or refunds. Or click any section on the left and I’ll summarise it here first.');
-  suggest([4, 8, 17]);
+  suggest([5, 9, 24]);
 
   document.getElementById('send').onclick = function(){ ask(ta.value); };
   ta.addEventListener('keydown', function(e){
