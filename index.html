@@ -436,7 +436,7 @@
     <header class="topbar">
       <button class="icon-btn" id="navBtn" aria-label="Toggle menu" aria-expanded="true">☰</button>
       <div class="title">Sheldon K. Salmon <small id="crumb">AionSystem</small></div>
-      <span class="pill"><span class="dot"></span> Accepting engagements</span>
+      <span class="pill" id="statusPill"><span class="dot" id="statusDot"></span> <span id="statusText">Accepting engagements</span></span>
       <button class="icon-btn" id="themeBtn" aria-label="Toggle light and dark theme">◐</button>
     </header>
 
@@ -696,6 +696,7 @@
               </div>
             </div>
             <p class="muted" style="margin-top:12px">If your document doesn’t fit either tier, I’ll tell you.</p>
+            <p class="muted" style="margin-top:6px">Business days run Monday to Friday, excluding US federal holidays, and are counted from cleared payment and a complete upload.</p>
             <p class="muted" style="margin-top:6px">For custom frameworks, specifications and book-length builds (from $15,000), see <a href="#custom">Custom AION Build</a>.</p>
           </div></div>
         </section>
@@ -708,6 +709,7 @@
             <ol class="steps">
               <li>Written intake</li><li>Payment</li><li>Upload</li><li>Report by email</li>
             </ol>
+            <p class="muted" style="margin-top:10px">The delivery clock starts when payment has cleared and your complete upload has arrived.</p>
             <p style="margin-top:14px"><a class="btn primary" href="#contact" data-intake>Start written intake</a></p>
           </div></div>
         </section>
@@ -741,6 +743,7 @@
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>Rules &amp; terms</h2>
             <p class="lead">How engagements run, what’s in scope, and how the work is delivered. If these terms don’t match your needs, we’re probably not a good fit.</p>
+            <p class="muted" style="font-size:13px"><b>Order of precedence.</b> A signed engagement letter or NDA controls for its subject, then the Terms of Service, then the Privacy Policy for personal data, then this page, then the FAQ and chat answers, which summarize and add no terms.</p>
 
             <div class="terms">
               <div class="card"><b>Refund</b>If the whole document — not just the findings written up — has no S3 or S4 finding, you get a full refund and keep the report.</div>
@@ -767,14 +770,14 @@
               <div class="card"><b>Sequence</b>Intake → scope confirmation → prepayment → asynchronous execution → report. The engagement begins when I start reading the document.</div>
               <div class="card"><b>Payment</b>Full prepayment. Invoice via Stripe. No Net-30, no crypto, no unwired checks.</div>
               <div class="card"><b>Fees</b>Fixed per tier: Fast Run $1,500; Full Scan $7,500. Custom AION Build from $15,000, scoped individually. No discounts — the fee reflects the work.</div>
-              <div class="card"><b>Refunds &amp; cancellations</b>Full refund if you cancel before I start reading the document. Full refund if the whole document has no S3 or S4 finding (you keep the report). Otherwise, non-refundable once I’ve read the document and made a finding. Chargebacks end the engagement.</div>
+              <div class="card"><b>Refunds &amp; cancellations</b>Full refund if you cancel before I start reading the document. Full refund if the whole document has no S3 or S4 finding (you keep the report). Otherwise, non-refundable once I’ve read the document and made a finding. Each report states the highest severity found anywhere in the document; if you disagree with a rating, use your one written rebuttal (see Rebuttal below). Chargebacks end the engagement.</div>
               <div class="card"><b>NDAs</b>Client-provided NDAs and MSAs are themselves red-teamed before execution. Asymmetrical, overly broad, or unenforceable clauses are rejected. The standard NDA is available on the <a href="#contact">contact page</a>.</div>
             </div>
 
             <div class="rule-head">Timing &amp; transmission</div>
             <div class="terms">
-              <div class="card"><b>Intake windows</b>Tuesdays and Thursdays. Release windows: weekends.</div>
-              <div class="card"><b>Release gate</b>Completed reports go through a final verification pass before release. This is a QA gate, not a delay.</div>
+              <div class="card"><b>Intake and response</b>Written intake is reviewed on Tuesdays and Thursdays, and I answer within 7 days. The delivery clock does not start until payment has cleared and your complete upload has arrived.</div>
+              <div class="card"><b>Release gate</b>Completed reports go through a final verification pass before release. This is a QA gate, not a delay. Reports are sent by email by the end of the due business day; sending earlier, including on a weekend, is early delivery, never late.</div>
               <div class="card"><b>Asynchronous model</b>No discovery calls, no status meetings, no pitch decks. Synchronous advisory, if needed, is scoped and billed as a separate retainer.</div>
               <div class="card"><b>Transmission</b>All documents and context go through the structured intake form or the designated email. Not through chat threads, comments, or side channels.</div>
               <div class="card"><b>Checkpoints</b>Fast Run and Full Scan operate in diagnostic silence — the next message after upload is the report. Custom AION Build includes one structured midpoint checkpoint to confirm scope.</div>
@@ -782,7 +785,7 @@
 
             <div class="rule-head">Turnaround &amp; scope</div>
             <div class="terms">
-              <div class="card"><b>Standard velocity</b>Fast Run: 5 business days. Full Scan: 15 business days.</div>
+              <div class="card"><b>Standard velocity</b>Fast Run: 5 business days. Full Scan: 15 business days. The delivery clock starts when payment has cleared and your complete upload has arrived, whichever is later. Business days are Monday to Friday, excluding US federal holidays.</div>
               <div class="card"><b>Fixed timelines</b>Turnaround is fixed for the two standard engagements. There are no rush or compressed options.</div>
               <div class="card"><b>Formats</b>PDF, .docx or .txt, uploaded as a file after payment.</div>
               <div class="card"><b>What a clean result means</b>A clean pass means I found no S3 or S4 issue within the scope of this review, on this document, at this time. It’s not a guarantee against future exploitation.</div>
@@ -799,7 +802,7 @@
             <div class="rule-head">Rebuttal &amp; capacity</div>
             <div class="terms">
               <div class="card"><b>Rebuttal</b>One formal written rebuttal per engagement. If it changes the analysis, I revise the finding. If it doesn’t, the finding stands as written.</div>
-              <div class="card"><b>Capacity</b>Solo reviewer. When the queue is full, intake pauses. Settlement order governs execution priority.</div>
+              <div class="card"><b>Capacity</b>Solo reviewer. When the queue is full, intake pauses, and the status badge at the top shows whether intake is open. Settlement order governs execution priority.</div>
               <div class="card"><b>Exclusivity</b>If your compliance framework requires absolute exclusivity for a public artifact, that needs to be negotiated and cleared before execution. Same confidentiality. No public registry.</div>
             </div>
 
@@ -813,7 +816,7 @@
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>Terms of Service</h2>
 
-            <div class="tos-meta">Effective September 10, 2026 · Last updated November 14, 2026</div>
+            <div class="tos-meta">Effective September 10, 2026 · Last updated November 15, 2026</div>
 
             <div class="tos-intro">
               These terms govern use of this website and engagement of the practice. If any term doesn’t work for you, we’re not a fit and it’s better we know before work starts. Questions: <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a>.
@@ -843,6 +846,7 @@
                 <li><b>Custom AION Build — from $15,000, scoped individually.</b> Custom frameworks, specifications and book-length documents. The Client owns the finished work outright.</li>
               </ul>
               <p>Services are limited to the specific document(s) submitted and the engagement type selected. Additional documents or scope require a new engagement.</p>
+              <p><b>Delivery timing.</b> Delivery periods run in business days (Monday to Friday, excluding US federal holidays) and start when payment has cleared and the Client’s complete upload has been received, whichever is later. Reports are delivered by email by the end of the due business day. If the Analyst expects to miss a delivery date, the Analyst will say so in writing before the date passes and give a revised date. Section 17 (force majeure) applies. These Terms provide no separate remedy for late delivery.</p>
               <p>The Analyst may decline an engagement that falls outside the practice’s scope — including kinetic military strategy, weapons systems architecture, or state-sponsored harm. These are stated at intake, not negotiated after payment.</p>
             </div>
 
@@ -879,6 +883,7 @@
                 <li><b>Pre-work cancellation.</b> The Client may cancel before the Analyst begins reading the document and receive a full refund. No administrative fee is withheld.</li>
                 <li><b>S3/S4 refund.</b> If, after the whole document has been reviewed (not just the findings written up), there is no S3 or S4 finding, the Client receives a full refund and keeps the report. This applies to Fast Run and Full Scan.</li>
                 <li><b>After work has begun.</b> Work begins when the Analyst first opens or reads the document. Once work has begun and an S3 or S4 finding has been made, payment is non-refundable.</li>
+                <li><b>Who rates.</b> The Analyst assigns every severity rating, and each rating appears next to the clause it applies to. Each report states the highest severity found anywhere in the document, including findings not written up. A Client who disagrees with a rating may send the one written rebuttal described in Section 20 within the 14-day acceptance period; if the rebuttal changes a rating, the refund condition above is re-evaluated, and otherwise the rating stands.</li>
               </ul>
               <p><b>Chargebacks.</b> If the Client initiates a chargeback after work has begun, the engagement ends and the matter is referred to the payment processor. The Analyst reserves the right to decline future work from the same Client.</p>
             </div>
@@ -953,7 +958,7 @@
 
             <div class="tos-block">
               <h3>14. Limitation of liability</h3>
-              <p><b>Total liability.</b> The Analyst’s total liability arising out of or related to any engagement is capped at the total fees paid for that specific engagement.</p>
+              <p><b>Total liability.</b> The Analyst’s total liability arising out of or related to any engagement is capped at the total fees paid for that specific engagement or, if no fees have been paid, $1,500.</p>
               <p><b>No consequential damages.</b> The Analyst is not liable for any indirect, incidental, special, consequential, or punitive damages, including lost profits, business interruption, reputational harm, or loss of data.</p>
               <p><b>No third-party liability.</b> The Analyst assumes no responsibility for any third party who accesses or relies on the deliverable.</p>
             </div>
@@ -1007,6 +1012,7 @@
               <p><b>Notices.</b> All notices are in writing via email. Email notices are effective 24 hours after transmission unless a bounce or failure notice is received.</p>
               <p><b>Modifications.</b> The Analyst may update these terms from time to time. The version in effect at the time of engagement applies to that specific engagement. Material changes to an engagement-specific term require written agreement.</p>
               <p><b>Severability.</b> If any provision is found unenforceable, the remaining provisions remain in full effect. In the case of a conflict between these terms and a signed engagement letter, the engagement letter controls for the specific project.</p>
+              <p><b>Order of precedence.</b> If documents conflict: (1) a signed engagement letter, for that project; (2) a signed NDA, on confidentiality; (3) these Terms of Service; (4) the Privacy Policy, on personal data; (5) the Rules page; (6) the FAQ and chat answers, which summarize these terms and add none.</p>
               <p><b>Independent contractor.</b> The Analyst is an independent contractor, not an employee, partner, or joint venturer. The Analyst is responsible for their own taxes, insurance, and business operations.</p>
               <p><b>Insurance.</b> The Analyst operates as a solo practitioner and does not carry professional liability (E&amp;O) insurance. Total liability is limited to the engagement fee. If the Client’s procurement requires an insured provider, the Analyst is not the right fit.</p>
               <p><b>Electronic signatures.</b> This agreement may be executed in counterparts, including via electronic signature.</p>
@@ -1018,6 +1024,15 @@
               <p><b>Accessibility.</b> The Analyst makes reasonable efforts to ensure the website is accessible. If the Client encounters barriers, they may contact the Analyst for assistance.</p>
               <p><b>Survival.</b> The following sections survive termination: Definitions, Confidentiality, IP, Limitation of Liability, Indemnification, Dispute Resolution, Class Action Waiver, Time Limit, Governing Law, and any provision that by its nature should survive.</p>
               <p><b>Whistleblower.</b> Nothing in these terms prevents either party from reporting possible violations of law to any governmental agency or making disclosures protected under applicable whistleblower laws.</p>
+            </div>
+
+            <div class="tos-block">
+              <h3>21. Version history</h3>
+              <ul>
+                <li><b>v1.2 — November 15, 2026.</b> Delivery clock and business days defined; refund rating process added; order of precedence added; liability floor added.</li>
+                <li><b>v1.1 — November 14, 2026.</b> Confidentiality and AI-tool wording corrected (no zero-retention claim; other AI reviewers disclosed); Custom AION Build priced from $15,000; town removed.</li>
+                <li><b>v1.0 — September 10, 2026.</b> Initial terms effective.</li>
+              </ul>
             </div>
 
             <div class="card" style="text-align:center;margin-top:14px">
@@ -1223,6 +1238,7 @@
         <section class="view" id="faq" hidden>
           <div class="msg"><div class="av">A</div><div class="msg-body">
             <h2>FAQ</h2>
+            <p class="muted" style="margin-bottom:6px">These answers summarize the Terms of Service. If anything differs, the signed agreement and the Terms control.</p>
             <div id="faqList"></div>
           </div></div>
         </section>
@@ -1237,7 +1253,7 @@
               <p style="font-family:var(--font-mono);font-size:17px;margin-bottom:12px">
                 <a href="mailto:AionSystem@outlook.com">AionSystem@outlook.com</a>
               </p>
-              <p class="muted" style="margin-bottom:8px">Intake window: Tuesdays and Thursdays. Scheduled outbox: Weekends. Standard response latency: 7 days.</p>
+              <p class="muted" style="margin-bottom:8px">Intake is reviewed on Tuesdays and Thursdays and I reply within 7 days. The delivery clock starts only after payment has cleared and your complete upload has arrived.</p>
               <p class="muted" style="margin-bottom:0"><strong style="color:var(--text-main)">Documents.</strong> Generate the structured transmission via the intake form. Don’t attach the document yet; after intake and payment you’ll upload it. If you have an executed NDA, you can attach that.</p>
               <div class="link-row">
                 <a href="assets/pdf/aion-nda.pdf" download class="btn">Download standard NDA (PDF) ↓</a>
@@ -1368,7 +1384,7 @@
     <div class="hint" id="fit" aria-live="polite"></div>
     <div class="fld"><label for="f-timeline">Timeline requirement *</label><select id="f-timeline" name="Timeline" required>
       <option>Standard (Fast Run 5 / Full Scan 15 business days)</option>
-      <option>Scheduled outbox (hold until agreed future date)</option>
+      <option>Hold until an agreed future date</option>
       <option>Flexible / not time-bound</option>
     </select></div>
     <div class="fld">
@@ -1386,6 +1402,7 @@
     </div>
     <div class="fld full-only"><label for="f-related">Related documents (if any)</label><textarea id="f-related" name="Related documents" rows="2" placeholder="e.g., annexes, referenced policies, prior versions"></textarea></div>
     <div class="fld full-only"><label for="f-context">Operational context</label><textarea id="f-context" name="Operational context" rows="2" placeholder="Anything else required for structural clearance"></textarea></div>
+    <div class="warn" id="pausedNote" hidden>Intake is paused while the queue is full. You can still send the form; I’ll answer when capacity opens.</div>
     <div class="warn">Do not attach or paste the document. After intake and payment you’ll upload it. This form only prepares an email; nothing is sent until you press send. For custom builds, use the Custom AION Build section.</div>
     <div class="acts">
       <button class="btn primary" type="button" id="intakeSend">Prepare email</button>
@@ -1587,9 +1604,9 @@ var FAQ = [
  ["Pricing","What if my document doesn’t fit either tier?","I’ll tell you. I won’t stretch a tier to cover work it isn’t sized for.","fit tier longer pages too big custom other"],
  ["Pricing","Do you offer discounts?","No. The fees are fixed for the two engagements.","discount nonprofit startup cheaper negotiate"],
  ["Pricing","How do I pay?","Full payment is made before the upload, after written intake. I’ll send payment details at that stage. Net-30 terms are not offered.","pay payment invoice stripe card prepay net-30 crypto"],
- ["Pricing","Do you offer refunds?","If the whole document, not just the findings written up, has no S3 or S4 finding, you get a full refund and keep the report.","refund guarantee money back no findings"],
+ ["Pricing","Do you offer refunds?","If the whole document, not just the findings written up, has no S3 or S4 finding, you get a full refund and keep the report. I rate every finding, each report states the highest severity found anywhere in the document, and if you disagree with a rating you can send your one written rebuttal.","refund guarantee money back no findings"],
  ["The work","What do I actually receive?","A Findings Register. Each finding cites the exact clause, explains why it fails, and carries a severity rating from S4 (catastrophic) to S1 (negligible). Every report records a SHA-256 fingerprint of the document I reviewed and of the report itself.","receive deliverable report findings register severity s4 s1 sha-256 fingerprint hash"],
- ["The work","What is the turnaround?","Fast Run is 5 business days. Full Scan is 15 business days.","turnaround time deadline days how long fast rush speed"],
+ ["The work","What is the turnaround?","Fast Run is 5 business days. Full Scan is 15 business days. The count starts when your payment has cleared and your complete upload has arrived, whichever is later.","turnaround time deadline days how long fast rush speed"],
  ["The work","Do you use AI?","Yes. AI tools assist my review, including other AI systems used as hostile reviewers. I’m the only human involved: I read the document, decide what counts as a finding, and set every severity rating myself. The report is my work and my responsibility.","ai artificial intelligence tools automated chatgpt machine"],
  ["The work","Can I see a sample before paying?","A sample finding is coming soon. In the meantime my published audits (EU AI Act Arts. 51–56, UN Deep-Sea Mining Code ISBA/29/LTC/8, Hippocratic Oath and Declaration of Geneva) show the format and depth.","sample example portfolio proof published audits see before"],
  ["The work","What if I disagree with a finding?","You may send one written rebuttal per engagement. If it changes the analysis I revise the finding; if not, it stands as written.","disagree dispute rebuttal challenge wrong finding"],
@@ -1618,8 +1635,42 @@ var FAQ = [
  ["Limits","What if you find nothing serious?","Then you get the refund described above and keep the report. A clean result means I found no S3 or S4 issue in this document at this time; it is not a guarantee against future exploitation.","nothing clean no issues zero none pass guarantee"],
  ["Limits","Do you carry professional liability insurance?","No. I work as a solo practitioner and my liability is limited to the engagement fee. If your procurement requires insured providers, I’m not the right fit.","insurance liability e&o indemnity vendor onboarding"],
  ["Limits","Will you find every gap?","No. Nothing is perfect, and I do not promise a 100 percent gap-free document. What I aim for is closing the gaps a bad actor or generative AI would find first. The point is to force the attacker to become truly creative — to make breaking your document an active choice rather than the low-hanging fruit an AI can pick off in an afternoon.","every gap all gaps 100 percent guarantee complete coverage gaps miss find everything total coverage"],
- ["Limits","What if my procurement team needs a vendor security review or SOC 2 first?","No SOC 2, no vendor security questionnaire process, and no insurance is offered. Engagements proceed only under the stated terms.","soc 2 soc2 vendor review security questionnaire procurement vendor assessment compliance questionnaire"]
+ ["Limits","What if my procurement team needs a vendor security review or SOC 2 first?","No SOC 2, no vendor security questionnaire process, and no insurance is offered. Engagements proceed only under the stated terms.","soc 2 soc2 vendor review security questionnaire procurement vendor assessment compliance questionnaire"],
+ ["Documents","Can you review a book manuscript or a long framework?","Standard engagements review high-stakes documents such as contracts, policies, specifications and frameworks. If you need a framework, specification or book-length document built from scratch, see Custom AION Build (from $15,000). If you’re not sure which fits, send the intake with the document type and page count and I’ll tell you.","book manuscript novel long framework specification spec build draft chapter author publish"],
+ ["Documents","Can you review a draft or a document still being negotiated?","Yes. Findings apply to the version you submit, and the SHA-256 fingerprint in the report records exactly which version was reviewed.","draft negotiation negotiating work in progress version unsigned not final revision redline"],
+ ["Documents","Do you review public regulations, treaties or standards?","Yes. My published audits are of public documents: the EU AI Act (Arts. 51–56), the Hippocratic Oath and Declaration of Geneva, and the ISA Deep-Sea Mining Code. Standards bodies, regulators and rule-makers are the kind of reader the work is built for.","regulation treaty standard standards body regulator rule rulemaking legislation law act public document government iso technical standard"],
+ ["Documents","What if I change the document after the review?","Findings apply to the version reviewed. I have no duty to update them after delivery, so a revised document needs a new engagement.","change update revise revised new version after review re-review recheck second review amend modify edit"],
+ ["The work","Is the review automated?","No. AI tools assist, but I read the document, decide what counts as a finding, set every severity rating, and write the report. I’m the only human involved.","automated automation automatic done by machine person human manual real reviewer pipeline script software"],
+ ["The work","Who does the review?","Sheldon K. Salmon, a solo practitioner operating as AionSystem. See the About page for background and verification links.","who realperson real person reviewer analyst author behind you founder background experience bio credentials qualified team"],
+ ["The work","What do the S1 to S4 ratings mean?","S4 is catastrophic and S1 is negligible, with S3 and S2 in between. Every rating sits next to the exact clause it applies to, so you can check it yourself. The refund guarantee turns on whether the whole document has any S3 or S4 finding.","severity rating ratings s1 s2 s3 s4 critical catastrophic scale scoring score meaning rate risk level"],
+ ["The work","Do I get suggested fix language?","Full Scan includes insert-ready fix language. Fast Run writes up the three highest-severity findings in full.","fix fixes language remediation redline rewrite replacement clause suggestions recommendations resolution insert-ready"],
+ ["The work","Am I talking to an AI?","No. This box looks up answers I wrote in advance; it isn’t an AI chatting live. Anything it can’t answer goes to me by email, and I reply in writing.","chatbot bot am i talking to ai human real person live chat who is this are you ai machine automated reply"],
+ ["Pricing","Do you do ongoing or retainer work?","The two engagements are one-off. Synchronous advisory, if you need it, is scoped and billed separately as a retainer.","ongoing retainer recurring monthly subscription continuous long-term repeat regular advisory support"],
+ ["Pricing","How much is a custom build?","Custom AION Builds are for frameworks, specifications and book-length documents. They start at $15,000, with expected ranges of $15,000–$25,000, $25,000–$50,000 or $50,000+, depending on scope.","custom build bespoke from scratch framework price cost how much specification book scope range 15000 aion build"],
+ ["Limits","Can you guarantee we’ll pass an audit or be compliant?","No. I don’t certify compliance. Findings describe how a document behaves under adversarial reading; your counsel decides what it means for your exposure, and nothing in the report guarantees an outcome.","guarantee pass audit compliant compliance certify certification certificate approved regulator will it make us compliant assurance sign off"],
+ ["Confidentiality","Where does my document go, and is it used to train AI?","Only into the AI tools disclosed in the Privacy Policy (Claude, Perplexity and other AI systems used as reviewers), in private modes with sessions deleted after delivery and training settings off. I never use client documents to train or fine-tune a model. Providers may keep data briefly under their own terms; if that’s a problem for your document, tell me before sending it.","where document go train training ai model leak leaked used data stored cloud provider privacy secure safe who sees which tools claude perplexity"],
+ ["Confidentiality","How long do you keep my document?","Raw files are permanently deleted 30 days after delivery, or sooner on written request. I keep a sealed copy of the report and financial records.","how long keep retain retention delete deletion destroy stored copy archive hold files data after delivery 30 days"],
+ ["The work","Can I opt out of AI on my document?","No. AI tools are instruments in every review, and the Terms say clients who require a strictly non-AI review are not a fit. I still read the document, decide what counts as a finding, and set every rating myself.","opt out no ai without ai human only strictly non-ai refuse ai do not want ai exclude ai disable ai avoid ai prohibit ai"],
+ ["Confidentiality","Can I get the NDA before I send anything?","Yes. The standard mutual NDA is on the contact page, and you can ask for it before the intake. If you want to use your own, I review it before signing; one-sided or unenforceable clauses are rejected.","nda before send sign first standard nda download contact page get nda template agreement before upload signed first"],
+ ["Confidentiality","What if my document contains personal or regulated data?","Tell me at intake, before sending anything, and I’ll say whether I can take it and what controls would be needed. I have no standard data processing addendum; if you need one, send yours and I’ll review it before signing.","personal data pii gdpr hipaa regulated sensitive privileged patient data dpa data protection special category information"],
+ ["The work","When is the delivery clock counted from?","The 5 or 15 business days start once your payment has cleared and your complete upload has arrived, whichever is later. Business days are Monday to Friday, excluding US federal holidays. Before that, I answer your written intake within about 7 days.","delivery clock counted from count counting timer countdown due date deadline business days holidays weekend payment cleared upload received turnaround clock"],
+ ["The work","What happens if you miss the delivery date?","If I expect to miss it I’ll tell you in writing before the date passes and give a revised date. Delays outside my control extend the timeline as the Terms describe. The Terms don’t promise a separate remedy for late delivery.","miss late delay overdue delayed behind schedule not on time deadline missed what if late penalty remedy"],
+ ["Pricing","Who decides whether there is an S3 or S4 finding for the refund?","I rate every finding, and each rating sits next to the clause it applies to so you can check it. Each report also states the highest severity found anywhere in the document, including findings not written up. If you disagree with a rating, send your one written rebuttal within 14 days of delivery; if it changes the rating, the refund condition is re-evaluated, otherwise the rating stands.","who decides rates rating refund s3 s4 judge dispute rated who says grader fair independent arbiter guarantee condition"],
+ ["Confidentiality","Can I send privileged or attorney-client material?","Tell me at intake, before sending anything. I’m not a law firm and no attorney-client relationship is created, and the same AI-tool disclosures apply to every document. Only send privileged material if you are comfortable with that; if you are not, don’t send it.","privileged attorney client privilege legal privilege confidential counsel work product protected waive privilege"],
+ ["Post-purchase","Can I cite the report publicly?","The report is yours after full payment: you can share it with counsel, regulators and advisers and use it in your own documents. You may not alter it and attribute the changed version to me. If you want to name me or quote the report publicly, ask me first.","cite quote publicly publish public attribute name you reference press share online website attribution credit"],
+ ["Documents","Which version of the document do you review?","The version you upload after payment. The report records its SHA-256 fingerprint, so you can confirm which version was reviewed. If you change the document later, that needs a new engagement.","which version uploaded version latest draft final copy upload version control revision fingerprint confirm"]
 ];
+
+/* keyword boosts for older entries (buyer phrasing) */
+(function(){
+  var B=[["What do I actually receive","get end finish final complete outcome delivered handed hand over"],
+         ["Is my document confidential","private kept who else sees"],
+         ["Do you use subcontractors","who else sees access reads"],
+         ["Am I talking to an AI","real person"],["Who does the review","real person"],
+         ["What kinds of documents do you review","stress test red team attack adversarial pressure break exploit"],
+         ["How deep does the review","stress test red team attack adversarial pressure break exploit"]];
+  B.forEach(function(b){ FAQ.forEach(function(f){ if (f[1].indexOf(b[0])>-1) f[3]+=' '+b[1]; }); });
+})();
 
 (function(){
   var SECTIONS = {
@@ -1662,7 +1713,7 @@ var FAQ = [
     process: {
       label: 'Process',
       prompt: 'How does the process work?',
-      summary: 'Four steps, all in writing: written intake, payment, upload, and a report by email. No calls, no meetings. Full payment is made before upload — I send payment details after intake.',
+      summary: 'Four steps, all in writing: written intake, payment, upload, and a report by email. No calls, no meetings. Full payment is made before upload — I send payment details after intake — and the delivery clock starts when payment has cleared and your complete upload has arrived.',
       chips: [2, 3, 12]
     },
     custom: {
@@ -1698,22 +1749,21 @@ var FAQ = [
     contact: {
       label: 'Contact',
       prompt: 'How do I get in touch?',
-      summary: 'Direct transmission: AionSystem@outlook.com. Intake window is Tuesdays and Thursdays. Standard response latency: 7 days. Execution is strictly asynchronous — no discovery calls, no status meetings, no consensus-building workshops. Start with the structured intake form; it builds the email, and nothing is sent until you press send. Don’t attach the document yet; the upload follows intake and payment.',
+      summary: 'Direct transmission: AionSystem@outlook.com. Intake is reviewed on Tuesdays and Thursdays and I reply within 7 days; the delivery clock starts only after payment has cleared and your complete upload has arrived. Execution is strictly asynchronous — no discovery calls, no status meetings, no consensus-building workshops. Start with the structured intake form; it builds the email, and nothing is sent until you press send. Don’t attach the document yet; the upload follows intake and payment.',
       chips: [3, 4, 12]
     }
   };
 
-  var list = document.getElementById('faqList'), last = '';
-  FAQ.forEach(function(f, i){
-    if (f[0] !== last) {
-      last = f[0];
-      var g = document.createElement('div'); g.className = 'faq-group'; g.textContent = last;
-      list.appendChild(g);
-    }
-    var d = document.createElement('details'); d.className = 'q'; d.id = 'q' + i;
-    var sm = document.createElement('summary'); sm.textContent = f[1];
-    var a = document.createElement('div'); a.className = 'ans'; a.textContent = f[2];
-    d.appendChild(sm); d.appendChild(a); list.appendChild(d);
+  var list = document.getElementById('faqList'), order = [], byCat = {};
+  FAQ.forEach(function(f, i){ if (!byCat[f[0]]) { byCat[f[0]] = []; order.push(f[0]); } byCat[f[0]].push(i); });
+  order.forEach(function(cat){
+    var g = document.createElement('div'); g.className = 'faq-group'; g.textContent = cat; list.appendChild(g);
+    byCat[cat].forEach(function(i){
+      var f = FAQ[i], d = document.createElement('details'); d.className = 'q'; d.id = 'q' + i;
+      var sm = document.createElement('summary'); sm.textContent = f[1];
+      var a = document.createElement('div'); a.className = 'ans'; a.textContent = f[2];
+      d.appendChild(sm); d.appendChild(a); list.appendChild(d);
+    });
   });
 
   var ta = document.getElementById('msg'),
@@ -1727,19 +1777,123 @@ var FAQ = [
     ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
   });
 
-  var STOP = /^(the|and|for|you|your|are|can|does|what|how|do|is|a|an|to|of|in|my|i|it|me|on|with|this|that|will|would|about|have|get)$/;
-  function match(q){
-    var w = q.toLowerCase().replace(/[^a-z0-9\-& ]/g, ' ').split(/\s+/)
-      .filter(function(x){ return x.length > 1 && !STOP.test(x); });
-    return FAQ.map(function(f, i){
-      var hay = ' ' + (f[1] + ' ' + f[3]).toLowerCase() + ' ', n = 0;
-      w.forEach(function(x){
-        if (hay.indexOf(' ' + x) > -1) n += 2;
-        else if (x.length > 3 && hay.indexOf(x.slice(0, 4)) > -1) n += 1;
-      });
-      return { i: i, n: n };
-    }).sort(function(a, b){ return b.n - a.n; });
+  /*MATCHER-START*/
+function buildMatcher(FAQ){
+  var GROUPS = {
+    price:'price prices pricing cost costs fee fees charge charges quote expensive cheap budget afford dollar dollars',
+    pay:'pay payment payments stripe prepay prepayment wire crypto',
+    invoice:'invoice invoices billing bill w9 po',
+    refund:'refund refunds reimburse guarantee cancel cancellation chargeback',
+    turnaround:'turnaround deadline timeline duration fast quick quickly speed rush urgent expedite expedited asap soon tomorrow time days weeks',
+    nda:'nda ndas nondisclosure',
+    confidential:'confidential confidentiality private privacy secret secure security safe protect',
+    keep:'keep retain retention stored storage destroy shred hold archive',
+    delete:'delete deletion erase remove',
+    ai:'ai artificial intelligence chatgpt gpt claude perplexity llm model models',
+    auto:'automated automation automatic bot chatbot machine algorithm',
+    train:'train training trained finetune',
+    legal:'lawyer attorney counsel legal law',
+    sample:'sample example demo preview portfolio proof testimonial',
+    published:'published audits audited doi zenodo',
+    document:'document documents doc docs contract contracts agreement agreements policy policies filing',
+    spec:'spec specification specifications standard standards regulation regulations treaty treaties legislation',
+    pages:'page pages long length large big size lengthy',
+    upload:'upload send submit attach transfer email',
+    link:'link url links',
+    insurance:'insurance insured eo liability indemnity coverage',
+    call:'call calls meeting meetings zoom phone video talk meet discovery',
+    procurement:'procurement vendor vendors onboarding soc2 questionnaire assessment',
+    intl:'international country countries abroad overseas jurisdiction foreign global languages translation translate english french spanish german',
+    report:'report reports deliverable register findings finding output result results',
+    severity:'severity rating ratings rate rates s1 s2 s3 s4 critical catastrophic',
+    sha:'sha256 hash fingerprint tamper integrity version',
+    people:'subcontractor subcontractors outsource staff team employees human person people',
+    start:'start begin onboard engage hire intake started getting',
+    custom:'custom bespoke scratch',
+    retainer:'retainer ongoing recurring subscription monthly continuous',
+    fix:'fix fixes remediation redline redlines rewrite resolution recommend recommendations',
+    discount:'discount discounts coupon nonprofit startup student promo cheaper',
+    disagree:'disagree dispute rebuttal wrong challenge appeal contest',
+    updates:'update updates progress status checkin',
+    format:'format pdf docx word excel csv editable',
+    redact:'redact redaction redacted sanitize',
+    compliance:'compliance compliant certify certification certificate',
+    framework:'framework frameworks',
+    book:'book manuscript novel'
+  };
+  var MAP = {};
+  Object.keys(GROUPS).forEach(function(g){ GROUPS[g].split(' ').forEach(function(w){ MAP[w] = g; }); });
+  var PHRASES = [
+    [/money back/g,'refund'],[/how much/g,'price'],[/how long/g,'turnaround'],[/how fast/g,'turnaround'],
+    [/non[\s-]?disclosure/g,'nda'],[/net[\s-]?30/g,'pay'],[/soc[\s-]?2/g,'soc2'],[/w[\s-]?9/g,'w9'],
+    [/e&o/g,'eo'],[/chat[\s-]?gpt/g,'chatgpt'],[/sha[\s-]?256/g,'sha256'],[/purchase order/g,'invoice'],[/outside (the )?(us|usa|united states|country)/g,'international'],[/privacy polic\w*/g,'policy'],
+    [/credit card/g,'pay'],[/in[\s-]?house/g,'inhouse'],[/fine[\s-]?tun\w*/g,'train'],[/real (person|human)/g,'realperson'],[/talking to/g,'chatbot'],[/google drive|sharepoint|dropbox/g,'link'],
+    [/hold(s)? on to/g,'keep'],[/data processing agreement|\bdpa\b/g,'dpa'],[/draft/g,'draft']
+  ];
+  var STOP = /^(the|and|for|you|your|are|can|could|should|does|did|what|how|do|is|be|a|an|to|of|in|on|at|by|my|me|i|it|its|we|our|us|this|that|these|those|will|would|about|have|has|had|get|got|need|want|like|just|also|any|some|there|if|or|so|as|with|from|into|than|then|they|them|their|please|up|out|go|goes|going|use|used|using|work|works|make|made|am|was|were|been|not|no|yes|but|when|where|which|too|very|really|much|many|more|most|other|one|two|handle|handling|today|now|ever|done|doing|help|tell|say|show)$/;
+  function stem(w){
+    if (w.length>5 && /ing$/.test(w)) return w.slice(0,-3);
+    if (w.length>4 && /ed$/.test(w)) return w.slice(0,-2);
+    if (w.length>4 && /ies$/.test(w)) return w.slice(0,-3)+'y';
+    if (w.length>4 && /es$/.test(w)) return w.slice(0,-2);
+    if (w.length>3 && /s$/.test(w) && !/ss$/.test(w)) return w.slice(0,-1);
+    return w;
   }
+  function toks(text){
+    var t = text.toLowerCase().replace(/[’']/g,"'").replace(/won't/g,'will not').replace(/n't/g,' not');
+    PHRASES.forEach(function(p){ t = t.replace(p[0], ' '+p[1]+' '); });
+    t = t.replace(/[^a-z0-9& -]/g,' ');
+    var out = [];
+    t.split(/\s+/).forEach(function(w){
+      w = w.replace(/^-+|-+$/g,'');
+      if (w.length<2 || STOP.test(w)) return;
+      w = MAP[w] || MAP[stem(w)] || stem(w);
+      if (out.indexOf(w)<0) out.push(w);
+    });
+    return out;
+  }
+  var INTENT = {}; 'price pay invoice refund turnaround nda insurance call retainer discount severity compliance intl procurement format redact sha'.split(' ').forEach(function(g){ INTENT[g]=1; });
+  var N = FAQ.length, entries = FAQ.map(function(f){
+    var q = toks(f[1]), k = toks(f[3]), a = toks(f[2]), wt = {};
+    a.forEach(function(w){ wt[w]=0.4; });
+    k.forEach(function(w){ wt[w]=2; });
+    q.forEach(function(w){ wt[w]=3; });
+    Object.defineProperty(wt,'__q',{value:q,enumerable:false});
+    return wt;
+  });
+  var df = {};
+  entries.forEach(function(wt){ Object.keys(wt).forEach(function(w){ df[w]=(df[w]||0)+1; }); });
+  function idf(w){ var d = df[w]||0; return Math.log(1 + N/(d+0.5)); }
+  var MAXI = Math.log(1 + N/0.5);
+  return function match(q){
+    var qt = toks(q);
+    if (!qt.length) return [];
+    var denom = 0;
+    qt.forEach(function(w){ denom += (df[w] ? idf(w) : MAXI*0.8) * 3; });
+    var res = entries.map(function(wt,i){
+      var s = 0;
+      qt.forEach(function(w){ if (wt[w]) s += idf(w)*wt[w]; });
+      var qs = wt.__q, inter = 0; qt.forEach(function(w){ if (qs.indexOf(w)>-1) inter++; });
+      var jac = inter / (qt.length + qs.length - inter || 1);
+      s += 6 * jac;
+      var mc = 0, miss = 0; qt.forEach(function(w){ if (wt[w] && wt[w]>=2) mc++; else if (INTENT[w]) miss++; });
+      return { i:i, s:s, m:mc, miss:miss, jac:jac, conf: denom ? s/denom : 0 };
+    });
+    res.sort(function(a,b){ return b.s-a.s; });
+    res.single = (qt.length===1 && !!GROUPS[qt[0]]);
+    return res;
+  };
+}
+function decide(res, T1, T2, GAP){
+  if (!res.length) return {type:'none',res:res};
+  var a=res[0], b=res[1]||{s:0};
+  if (a.conf>=T1 && (a.s-b.s)/a.s>=GAP && (a.m>=2 || res.single || a.jac>=0.6) && !a.miss) return {type:'answer',res:res};
+  if (a.conf>=T2 && a.m>=1) return {type:'closest',res:res};
+  return {type:'none',res:res};
+}
+  var match = buildMatcher(FAQ);
+  /*MATCHER-END*/
+
   function bub(cls, who, text){
     var b = document.createElement('div'); b.className = 'bub' + (cls ? ' ' + cls : '');
     var s = document.createElement('small'); s.textContent = who;
@@ -1817,6 +1971,18 @@ var FAQ = [
     pending = { fire: fire, timer: timer };
   }
 
+  function related(res, skip){
+    var out = res.filter(function(x){ return x.i !== skip && x.conf >= 0.15; }).slice(0, 3).map(function(x){ return x.i; });
+    return out.length ? out : [9, 14, 24];
+  }
+  function mailBtn(q){
+    var a = document.createElement('a');
+    a.className = 'btn primary';
+    a.textContent = 'Email this question';
+    a.href = 'mailto:AionSystem@outlook.com?subject=' + encodeURIComponent('Engagement question')
+           + '&body=' + encodeURIComponent(q);
+    return a;
+  }
   function ask(q){
     q = (q || '').trim();
     if (!q) return;
@@ -1825,31 +1991,33 @@ var FAQ = [
     bub('me', 'You', q);
     ta.value = ''; ta.style.height = 'auto';
 
-    var m = match(q), top = m[0];
+    var words = q.split(/\s+/).length;
+    if (words <= 4 && /^(hi|hello|hey|good (morning|afternoon|evening))\b/i.test(q)) {
+      scheduleReply(function(){ return { who: 'Aion', text: 'Hello. Ask about pricing, the process, turnaround, confidentiality or refunds, or tap a question below.', chips: [9, 14, 24] }; });
+      setTimeout(scrollEnd, 0); return;
+    }
+    if (words <= 4 && /^(thanks|thank you|thx|ok|okay|great|cool|got it)\b/i.test(q)) {
+      scheduleReply(function(){ return { who: 'Aion', text: 'You’re welcome. If you’d like to start, use the intake form; otherwise ask me anything else.', chips: [2, 9, 14] }; });
+      setTimeout(scrollEnd, 0); return;
+    }
 
-    if (top.n >= 2) {
-      var rel = m.slice(1, 4).filter(function(x){ return x.n > 0; }).map(function(x){ return x.i; });
-      var nextChips = rel.length ? rel : [0, 9, 14];
-      var idx = top.i;
+    var res = match(q), d = decide(res, 0.45, 0.25, 0.2);
+
+    if (d.type === 'answer') {
+      var idx = res[0].i, nextChips = related(res, idx);
       scheduleReply(function(){
         return { who: 'Aion · prepared answer', text: FAQ[idx][2], chips: nextChips };
       });
+    } else if (d.type === 'closest') {
+      var top3 = res.slice(0, 3).map(function(x){ return x.i; });
+      scheduleReply(function(){
+        return { who: 'Aion', text: 'I’m not sure which of these you mean. Tap the closest one, or email me the question and I’ll answer in writing.', extra: mailBtn(q), chips: top3 };
+      });
     } else {
       scheduleReply(function(){
-        var a = document.createElement('a');
-        a.className = 'btn primary';
-        a.textContent = 'Email this question';
-        a.href = 'mailto:AionSystem@outlook.com?subject=' + encodeURIComponent('Engagement question')
-               + '&body=' + encodeURIComponent(q);
-        return {
-          who: 'Aion',
-          text: 'I don’t have a written answer for that one. Send it to me and I’ll reply in writing.',
-          extra: a,
-          chips: [9, 14, 24]
-        };
+        return { who: 'Aion', text: 'I don’t have a written answer for that one. Send it to me and I’ll reply in writing.', extra: mailBtn(q), chips: [9, 14, 24] };
       });
     }
-
     setTimeout(scrollEnd, 0);
   }
 
@@ -1893,6 +2061,13 @@ var FAQ = [
 </script>
 <script>
 (function(){
+  // Set to false by hand when the queue is full; updates the badge and the intake form.
+  var INTAKE_OPEN = true;
+  if (!INTAKE_OPEN) {
+    document.getElementById('statusText').textContent = 'Intake paused';
+    document.getElementById('statusDot').style.background = 'var(--s3)';
+    document.getElementById('pausedNote').hidden = false;
+  }
   var intakeDlg = document.getElementById('intake');
   var intakeForm = document.getElementById('intakeForm');
   var tier = document.getElementById('f-tier');
