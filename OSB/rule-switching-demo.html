@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crossing vs narrow-channel rule switching: ANS demo</title>
+<style>
+:root{--bg:#f3f1ea;--fg:#14232f;--mut:#566673;--card:#fbfaf6;--bd:#cfd3d0;--ac:#0a5c9e;--ok:#1b7a3d;--warn:#b25e00;--bad:#b3261e;--sea:#dde9ee;--ch:#f3f1ea;--red:#c4372d;--grn:#2e8b4f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1820;--fg:#e3ecf1;--mut:#93a5b1;--card:#13222c;--bd:#27394548;--ac:#5db0f0;--ok:#4cc27a;--warn:#f0a23b;--bad:#ff7b72;--sea:#0a2230;--ch:#10303f;--red:#ff6b5e;--grn:#4cc27a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1820;--fg:#e3ecf1;--mut:#93a5b1;--card:#13222c;--bd:#27394548;--ac:#5db0f0;--ok:#4cc27a;--warn:#f0a23b;--bad:#ff7b72;--sea:#0a2230;--ch:#10303f;--red:#ff6b5e;--grn:#4cc27a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:12px 12px 28px}
+h1{font:600 19px/1.25 Georgia,"Times New Roman",serif;margin:4px 0 2px}
+.sub{color:var(--mut);margin:0 0 10px;font-size:13px}
+select,button,input{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:7px 10px;min-height:38px}
+button{cursor:pointer}button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.row select{flex:1 1 200px}
+canvas{display:block;width:100%;aspect-ratio:3.3/3.2;border:1px solid var(--bd);border-radius:8px;background:var(--sea)}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin:10px 0;font-size:13px}
+.stat div{border-bottom:1px solid var(--bd);padding:3px 0;display:flex;justify-content:space-between;gap:8px}
+.stat b{font-variant-numeric:tabular-nums;text-align:right}
+.chip{display:inline-block;padding:3px 10px;border-radius:999px;color:#fff;font-weight:600}
+.rule{margin:6px 0;padding:8px 10px;border-left:4px solid var(--ac);background:var(--card)}
+#log{font:12px/1.5 ui-monospace,Menlo,monospace;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px;min-height:96px}
+.pass{color:var(--ok);font-weight:600}.fail{color:var(--bad);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:5px 4px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:top}
+details{margin:10px 0}summary{cursor:pointer;font-weight:600}
+.pr{display:grid;grid-template-columns:1fr 84px;gap:6px;align-items:center;margin-top:6px}
+.note{color:var(--mut);font-size:12px;margin-top:14px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style></head><body><main>
+<h1>Crossing rules or narrow-channel rule?</h1>
+<p class="sub">Illustrative autonomous navigation system (ANS) logic for the <i>Ever Smart</i> holdings, run on the paper’s five verification scenarios. Own ship is outbound in the channel.</p>
+<div class="row"><select id="sc" aria-label="Scenario"></select><button id="go" class="p">Pause</button><button id="rs">Reset</button></div>
+<canvas id="cv" aria-label="Plan view of own ship, target vessel and channel entrance"></canvas>
+<div class="row"><label>Speed <select id="spd"><option value="1">1×</option><option value="5">5×</option><option value="20" selected>20×</option><option value="60">60×</option></select></label>
+<label><input type="checkbox" id="act" checked> ANS acts under Rule 17(b)</label></div>
+<div class="row"><label style="flex:1 1 220px">Visibility <b id="visv">10.0</b> nm <input id="vis" type="range" min="0.5" max="10" step="0.5" value="10" style="width:100%"></label></div>
+<div id="state" class="rule"></div>
+<div class="stat" id="stat"></div>
+<div id="log" aria-live="polite"></div>
+<details><summary>Verification run: all five scenarios</summary>
+<div class="row"><button id="all">Run all</button></div><table id="tb"></table></details>
+<details><summary>Placeholder parameters (Appendix A)</summary><div id="pp"></div></details>
+<p class="note">Not a standard and not validated by any Administration, class society or the Court. Thresholds are placeholders to be set by vessel-specific verification. The sensor model is simulated noise, not measured data. The logic is an engineering reading of Evergreen Marine v Nautical Challenge [2021] UKSC 6, which supplies the legal test but no numbers.</p>
+<p class="note">Companion to the MASS Regulatory Bridge working paper (13 November 2026, corrected 14 November 2026), section 4.4 and Appendix A. Limits: (1) the paper’s 5-minute station-keeping duration and heading-oscillation test are not implemented; the simulation uses an instantaneous speed gate; (2) the rows of Appendix A marked “simulation” are the values used here; (3) results depend on the random seed: on the fixed seeds all five scenarios pass, but in a 40-seed check one run of scenario 2 never left the crossing state, a missed detection under sensor noise; (4) withholding Rule 17 action in the degraded state, which this page does not do, causes a collision in scenario 5.</p>
+</main>
+<script>
+const D=Math.PI/180,KN=1/3600,wrap=a=>((a%360)+360)%360,dif=(a,b)=>((a-b+540)%360)-180,brg=(x,y)=>wrap(Math.atan2(x,y)/D),clamp=(v,l,h)=>Math.max(l,Math.min(h,v));
+const P={lat:.12,dCog:5,win:60,filt:60,align:10,close:.5,dist:2,sk:1,dwell:30,hyst:30,steady:.05,ta:480,tb:180,sdDeg:1.5,degN:20,recN:30};
+const PL=[['dCog','Course change (°)'],['win','…sustained over (s)'],['filt','Course filter, low-pass (s)'],['align','Alignment with entrance (°)'],['lat','…or lateral miss of entrance (nm)'],['close','Final-approach closing (kn)'],['dist','Final-approach distance (nm)'],['sk','Station-keeping SOG gate (kn, instantaneous)'],['dwell','Dwell before forward transition (s)'],['hyst','Reversion hysteresis (s)'],['steady','Steady-bearing limit (°/s)'],['ta','Rule 17(a)(ii) TCPA (s)'],['tb','Rule 17(b) TCPA (s)'],['sdDeg','Degraded: bearing-fit residual (°)'],['degN','…sustained for (s)'],['recN','Recovery below threshold (s)']];
+const E={x:-.06,y:0},END=900;
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function fit(T,V){const n=T.length;let st=0,sv=0;for(let i=0;i<n;i++){st+=T[i];sv+=V[i]}const mt=st/n,mv=sv/n;let sxx=0,sxy=0;for(let i=0;i<n;i++){sxx+=(T[i]-mt)**2;sxy+=(T[i]-mt)*(V[i]-mv)}const m=sxx?sxy/sxx:0;let ss=0;for(let i=0;i<n;i++)ss+=(V[i]-mv-m*(T[i]-mt))**2;return{m,sd:Math.sqrt(ss/n)}}
+function wpT(x,y,h,s,wps,spd){return{x,y,h,s,i:0,step(t){let w=wps[this.i];if(Math.hypot(w[0]-this.x,w[1]-this.y)<.06&&this.i<wps.length-1)w=wps[++this.i];this.h=wrap(this.h+clamp(dif(brg(w[0]-this.x,w[1]-this.y),this.h),-.35,.35));this.s+=clamp(spd(t)-this.s,-.02,.02);this.x+=Math.sin(this.h*D)*this.s*KN;this.y+=Math.cos(this.h*D)*this.s*KN}}}
+const creep=()=>({x:-.382,y:.511,h:110,s:2,step(){this.x+=Math.sin(110*D)*2*KN;this.y+=Math.cos(110*D)*2*KN}});
+function erratic(){const u=[Math.sin(318.8*D),Math.cos(318.8*D)],R0=3.125,T=846,A=.008,Pd=47,pos=t=>{const R=R0*(1-t/T)+A*Math.sin(2*Math.PI*t/Pd);return[.06+R*u[0],-2+10*t*KN+R*u[1]]};const p0=pos(0);return{x:p0[0],y:p0[1],h:90,s:8.8,step(t){const n=pos(t+1);this.h=brg(n[0]-this.x,n[1]-this.y);this.s=Math.hypot(n[0]-this.x,n[1]-this.y)/KN;this.x=n[0];this.y=n[1]}}}
+const q=r=>!r.st.has('TRANSITION')&&!r.st.has('SHAPING');
+const SC=[
+{n:'1. Crossing the entrance, no intent to enter',e:'Stays in crossing rules throughout',mk:()=>wpT(-2,.35,90,8.8,[[-1,.35],[5,.35]],t=>t<480?8.8:5),sn:()=>({sb:.3,radar:1}),ok:r=>q(r)&&!r.col&&r.eng>=60},
+{n:'2. Shaping to enter on final approach',e:'Switches to narrow-channel rule at the right point',mk:()=>wpT(-2,.35,90,8.5,[[-1,.35],[-.06,-.1],[-.06,-1.8]],()=>8.5),sn:()=>({sb:.3,radar:1}),ok:r=>r.shape!==null&&!r.col},
+{n:'3. Waiting for pilot (2 kn over ground)',e:'Crossing rules continue, no premature switch',mk:creep,sn:()=>({sb:.3,radar:1}),ok:r=>q(r)&&!r.col&&r.eng>=60},
+{n:'4. Erratic course, steady bearing',e:'Crossing rules engage on bearing, not course',mk:erratic,sn:()=>({sb:.3,radar:1}),ok:r=>q(r)&&!r.col&&r.eng>=60},
+{n:'5. Sensor degradation',e:'Declared degraded state and alert to master',mk:creep,sn:t=>({sb:t<250?.3:t<450?.3+4.7*(t-250)/200:5,radar:t<600?1:0}),ok:r=>r.deg&&!r.col&&!r.st.has('SHAPING')}];
+class ANS{constructor(sim){this.s=sim;this.g=()=>{const r=this.s.rnd;return Math.sqrt(-2*Math.log(r()||1e-9))*Math.cos(2*Math.PI*r())};this.T=[];this.X=[];this.Y=[];this.B=[];this.eh=[];this.ema=null;this.st='CROSSING';this.c={a:0,b:0,c:0,d:0,e:0,f:0};this.deg=false;this.m={}}
+update(t,o,tg,sn){const L=m=>this.s.log(m),dx=tg.x-o.x,dy=tg.y-o.y,b=brg(dx,dy),rm=Math.hypot(dx,dy)+this.g()*.002,bm=b+this.g()*sn.sb;
+const ex=o.x+rm*Math.sin(bm*D),ey=o.y+rm*Math.cos(bm*D);this.ub=this.ub===undefined?bm:this.ub+dif(bm,this.pb);this.pb=bm;
+[this.T,this.X,this.Y,this.B].forEach((a,i)=>{a.push([t,ex,ey,this.ub][i]);if(a.length>60)a.shift()});if(this.T.length<20)return;
+const T3=this.T.slice(-30),vx=fit(T3,this.X.slice(-30)).m,vy=fit(T3,this.Y.slice(-30)).m,cog=brg(vx,vy),sog=Math.hypot(vx,vy)/KN,fb=fit(this.T,this.B);
+this.ema=this.ema===null?cog:wrap(this.ema+dif(cog,this.ema)/P.filt);this.eh.push(this.ema);const old=this.eh[this.eh.length-1-P.win],a=old!==undefined&&Math.abs(dif(this.ema,old))>=P.dCog;
+const sx=E.x-ex,sy=E.y-ey,dS=Math.hypot(sx,sy),bE=dif(cog,brg(sx,sy)),bb=Math.abs(bE)<=P.align||(Math.abs(bE)<90&&dS*Math.sin(Math.abs(bE)*D)<=P.lat),clS=(vx*sx+vy*sy)/dS/KN,cc=clS>=P.close&&dS<P.dist&&sog>P.sk;
+const ox=Math.sin(o.h*D)*o.s*KN,oy=Math.cos(o.h*D)*o.s*KN,px=ex-o.x,py=ey-o.y,rx=vx-ox,ry=vy-oy,v2=rx*rx+ry*ry,tc=v2?-(px*rx+py*ry)/v2:1e9,cpa=tc>0?Math.hypot(px+rx*tc,py+ry*tc):Math.hypot(px,py),closing=(px*rx+py*ry)<0,steady=Math.abs(fb.m)<P.steady&&closing;
+const bad=fb.sd>P.sdDeg||!sn.radar;this.c.e=bad?this.c.e+1:0;this.c.f=!bad?this.c.f+1:0;
+if(!this.deg&&(this.c.e>=P.degN||!sn.radar)){this.deg=true;this.last=this.st;L('ALERT master: sensor degraded'+(sn.radar?' (bearing noise)':' (radar lost, AIS and electro-optical only)')+'. Closure-rate check unavailable. Holding '+this.st+'.');this.s.res.deg=true}
+else if(this.deg&&this.c.f>=P.recN){this.deg=false;L('Sensors recovered. Normal state logic resumes.')}
+const c=this.c,A=a&&bb,B=bb&&cc;
+if(t>=60&&!this.deg){if(this.st==='CROSSING'){c.a=A?c.a+1:0;if(c.a>=P.dwell){this.set('TRANSITION','Course adjustment directed at entrance. Crossing rules still apply. Advisory to master.');c.a=0}}
+else if(this.st==='TRANSITION'){c.b=B?c.b+1:0;c.c=!bb?c.c+1:0;if(c.b>=P.dwell){this.set('SHAPING','Shaping to enter on final approach (range to entrance '+dS.toFixed(2)+' nm). Narrow-channel rule prevails. ALERT master: rule set changed.');c.b=0;this.s.res.shape=this.s.res.shape??t}else if(c.c>=P.hyst){this.set('CROSSING','Reverted to crossing state.');c.c=0}}
+else{c.d=!B?c.d+1:0;if(c.d>=P.hyst){this.set('TRANSITION','Reverted to transition (hysteresis elapsed).');c.d=0}}}
+const vis=this.s.vis,sight=rm<=vis,eng=sight&&(steady||this.deg)&&this.st!=='SHAPING'&&t>=60;
+let rule=!sight?'Target not in sight. Section II (crossing) not engaged; Rules 7 and 19 apply.':this.deg?'Degraded. Risk of collision deemed to exist (Rule 7(a)). Last valid rule set held: '+this.last+'.':this.st==='SHAPING'?'Rule 9 narrow channel prevails.':steady?'Rules 15–17 engaged on steady bearing.':'No risk of collision indicated.';
+const a17=eng&&tc<P.ta&&cpa<.5,b17=eng&&tc<P.tb&&cpa<.2;
+if(a17&&!this.fa){this.fa=1;L('Rule 17(a)(ii) trigger: bearing steady and TCPA '+Math.round(tc)+' s, give-way vessel not acting. Own action permitted.')}
+if(b17&&!this.fb){this.fb=1;L('Rule 17(b) trigger: collision cannot be avoided by give-way vessel alone (TCPA '+Math.round(tc)+' s). Own action required.')}
+if(eng)this.s.res.eng++;this.m={rng:Math.hypot(px,py),brate:fb.m,sd:fb.sd,steady,cpa,tc,cog,sog,a,bb,cc,a17,b17,rule,eng,role:dif(b,o.h)<0?'stand-on (target on port bow)':'give-way'}}
+set(s,msg){this.st=s;this.s.res.st.add(s);this.s.log(s+': '+msg)}}
+class Sim{constructor(i,hl){this.i=i;this.hl=hl;this.t=0;this.rnd=rng(7+i);this.vis=+vis.value;this.o={x:.06,y:-2,h:0,s:10,want:0};this.tg=SC[i].mk();this.L=[];this.res={st:new Set(['CROSSING']),shape:null,eng:0,deg:false,col:false,min:9};this.ans=new ANS(this);this.tr=[[],[]];this.done=false}
+log(m){this.L.push('['+String(this.t/60|0).padStart(2,'0')+':'+String(this.t%60).padStart(2,'0')+'] '+m)}
+step(act){if(this.done)return;const t=this.t,o=this.o;this.tg.step(t);if(this.ans.fb&&act&&o.want===0){o.want=40;this.log('ANS alters course 40° to starboard (large, legible; no port alteration for a vessel on the port side).')}
+o.h=wrap(o.h+clamp(dif(o.want,o.h),-.4,.4));o.x+=Math.sin(o.h*D)*o.s*KN;o.y+=Math.cos(o.h*D)*o.s*KN;
+this.ans.update(t,o,this.tg,SC[this.i].sn(t));const r=Math.hypot(this.tg.x-o.x,this.tg.y-o.y);this.res.min=Math.min(this.res.min,r);
+if(r<.03){this.res.col=true;this.done=true;this.log('COLLISION: no avoiding action effective in time.')}
+if(t%5===0){this.tr[0].push([o.x,o.y]);this.tr[1].push([this.tg.x,this.tg.y])}
+this.t++;if(this.t>=END){this.done=true;this.log('Scenario ended. Closest approach '+this.res.min.toFixed(2)+' nm.')}}}
+const $=id=>document.getElementById(id),cv=$('cv'),cx=cv.getContext('2d'),dpr=window.devicePixelRatio||1;
+let sim,run=true,acc=0;
+SC.forEach((s,i)=>$('sc').add(new Option(s.n,i)));
+PL.forEach(([k,l])=>{const d=document.createElement('div');d.className='pr';d.innerHTML='<label for="p_'+k+'">'+l+'</label><input id="p_'+k+'" type="number" step="any" value="'+P[k]+'">';$('pp').appendChild(d);d.querySelector('input').onchange=e=>{const v=parseFloat(e.target.value);if(v>0)P[k]=v}});
+function reset(){sim=new Sim(+$('sc').value);run=true;$('go').textContent='Pause';acc=0;sim.log('Scenario: '+SC[sim.i].n+'. Expected: '+SC[sim.i].e+'.')}
+function headless(i){const s=new Sim(i);while(!s.done)s.step(true);return s}
+function runAll(){const tb=$('tb');tb.innerHTML='<tr><th>Scenario</th><th>Expected</th><th>Result</th></tr>';SC.forEach((c,i)=>{const s=headless(i),ok=c.ok(s.res);tb.insertAdjacentHTML('beforeend','<tr><td>'+c.n+'</td><td>'+c.e+'</td><td><span class="'+(ok?'pass':'fail')+'">'+(ok?'PASS':'FAIL')+'</span><br>'+[...s.res.st].join(' › ')+(s.res.shape!==null?', switch at '+s.res.shape+' s':'')+(s.res.col?', collision':', min '+s.res.min.toFixed(2)+' nm')+'</td></tr>')})}
+function draw(){const css=getComputedStyle(document.documentElement),c=k=>css.getPropertyValue(k).trim(),W=cv.clientWidth,H=cv.clientHeight;if(cv.width!==Math.round(W*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr)}
+cx.setTransform(dpr,0,0,dpr,0,0);cx.clearRect(0,0,W,H);const X0=-2.4,X1=.9,Y0=-2.2,Y1=1,X=x=>(x-X0)/(X1-X0)*W,Y=y=>(Y1-y)/(Y1-Y0)*H,sc=W/(X1-X0);
+cx.fillStyle=c('--ch');cx.fillRect(X(-.1),Y(0),.2*sc,Y(-2.2)-Y(0));cx.lineWidth=2;cx.strokeStyle=c('--red');cx.beginPath();cx.moveTo(X(-.1),Y(0));cx.lineTo(X(-.1),Y(-2.2));cx.stroke();cx.strokeStyle=c('--grn');cx.beginPath();cx.moveTo(X(.1),Y(0));cx.lineTo(X(.1),Y(-2.2));cx.stroke();
+cx.setLineDash([5,5]);cx.lineWidth=1;cx.strokeStyle=c('--mut');cx.beginPath();cx.arc(X(0),Y(0),P.dist*sc,0,7);cx.stroke();cx.setLineDash([]);
+cx.fillStyle=c('--mut');cx.font='11px system-ui';cx.fillText('final-approach zone '+P.dist+' nm',X(-2.35),Y(.9));cx.fillText('channel entrance',X(.14),Y(.02));cx.beginPath();cx.arc(X(E.x),Y(E.y),4,0,7);cx.fill();
+const col={CROSSING:c('--ac'),TRANSITION:c('--warn'),SHAPING:c('--ok')},sc2=sim.ans.deg?c('--bad'):col[sim.ans.st];
+sim.tr.forEach((p,k)=>{cx.strokeStyle=k?sc2:c('--fg');cx.globalAlpha=.35;cx.lineWidth=2;cx.beginPath();p.forEach((v,j)=>j?cx.lineTo(X(v[0]),Y(v[1])):cx.moveTo(X(v[0]),Y(v[1])));cx.stroke();cx.globalAlpha=1});
+const o=sim.o,g=sim.tg;cx.setLineDash([3,4]);cx.strokeStyle=c('--mut');cx.beginPath();cx.moveTo(X(o.x),Y(o.y));cx.lineTo(X(g.x),Y(g.y));cx.stroke();cx.setLineDash([]);
+const ship=(v,f,l)=>{cx.save();cx.translate(X(v.x),Y(v.y));cx.rotate(v.h*D);cx.fillStyle=f;cx.beginPath();cx.moveTo(0,-11);cx.lineTo(6,8);cx.lineTo(-6,8);cx.closePath();cx.fill();cx.restore();cx.fillStyle=f;cx.fillText(l,X(v.x)+9,Y(v.y)-6)};
+ship(o,c('--fg'),'own');ship(g,sc2,'target');cx.fillStyle=c('--mut');cx.fillText(String(sim.t/60|0)+':'+String(sim.t%60).padStart(2,'0'),8,H-8)}
+function ui(){const m=sim.ans.m,a=sim.ans,col={CROSSING:'--ac',TRANSITION:'--warn',SHAPING:'--ok'},nm=a.deg?'DEGRADED':a.st,cs=a.deg?'--bad':col[a.st];
+$('state').innerHTML='<span class="chip" style="background:var('+cs+')">'+nm+'</span> '+(m.rule||'Warming up sensors…');
+const f=v=>v===undefined?'–':v,y=v=>v?'yes':'no';
+$('stat').innerHTML=m.rng===undefined?'':[['Range',m.rng.toFixed(2)+' nm'],['Role',m.role],['Bearing rate',m.brate.toFixed(3)+' °/s'],['Steady bearing',y(m.steady)],['Target COG / SOG',Math.round(m.cog)+'° / '+m.sog.toFixed(1)+' kn'],['CPA / TCPA',m.cpa.toFixed(2)+' nm / '+(m.tc>0&&m.tc<1e6?Math.round(m.tc)+' s':'–')],['(a) sustained turn',y(m.a)],['(b) aimed at entrance',y(m.bb)],['(c) final approach',y(m.cc)],['Bearing fit residual',m.sd.toFixed(2)+'°'],['17(a)(ii) trigger',y(m.a17)],['17(b) trigger',y(m.b17)]].map(r=>'<div><span>'+r[0]+'</span><b>'+r[1]+'</b></div>').join('');
+$('log').innerHTML=sim.L.slice(-8).map(s=>'<div>'+s.replace(/</g,'&lt;')+'</div>').join('')}
+let last=performance.now();
+function loop(n){const dt=n-last;last=n;if(run&&!sim.done){acc+=Math.min(dt,100)/1000*+$('spd').value;while(acc>=1){sim.step($('act').checked);acc--}}draw();ui();requestAnimationFrame(loop)}
+$('go').onclick=()=>{run=!run;$('go').textContent=run?'Pause':'Resume'};$('rs').onclick=reset;$('sc').onchange=reset;$('all').onclick=runAll;
+$('vis').oninput=e=>{$('visv').textContent=(+e.target.value).toFixed(1);if(sim)sim.vis=+e.target.value};
+$('sc').value=1;reset();runAll();requestAnimationFrame(loop);
+</script></body></html>
